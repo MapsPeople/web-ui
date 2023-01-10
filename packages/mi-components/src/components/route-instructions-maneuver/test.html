@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>mi-route-instructions-maneuver test page</title>
+    <script type="module" src="/build/mi-components.esm.js"></script>
+    <script nomodule src="/build/mi-components.js"></script>
+</head>
+<body>
+    <div style="width: 400px;">
+        <mi-route-instructions-maneuver id="man1"></mi-route-instructions-maneuver>
+    </div>
+    <script>
+        const maneuverElement = document.querySelector('#man1');
+
+        const translations = JSON.stringify({
+            andContinue: 'and continue',
+            continueStraightAhead: 'Continue straight ahead',
+            goLeft: 'Go left',
+            goSharpLeft: 'Go sharp left',
+            goSlightLeft: 'Go slight left',
+            goRight: 'Go right',
+            goSharpRight: 'Go sharp right',
+            goSlightRight: 'Go slight right',
+            turnAround: 'Turn around'
+        });
+
+        maneuverElement.translations = translations;
+
+        maneuverElement.maneuver = JSON.stringify({
+            maneuver: 'left',
+            instructions: 'this-is-a-very-long-text-that-does-not-break-anything-100%-guaranteed qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq',
+            distance: {
+                value: 2
+            }
+        });
+    </script>
+</body>
+</html>

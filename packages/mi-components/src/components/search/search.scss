@@ -1,0 +1,80 @@
+@use '@mapsindoors/midt/background-color';
+@use '@mapsindoors/midt/border';
+@use '@mapsindoors/midt/sizing';
+@use '@mapsindoors/midt/font';
+@use '@mapsindoors/midt/color';
+@use '@mapsindoors/midt/padding';
+
+mi-search {
+    display: block;
+    position: relative;
+
+    input[type="search"] {
+        appearance: none;
+        height: 100%;
+        width: 100%;
+        @include background-color.white(white);
+        @include border.style(solid);
+        @include border.width(medium);
+        @include border.radius(large);
+        @include font.size(large);
+        @include font.family(sans-serif);
+        @include color.black();
+        @include padding.right(xx-large);
+        @include padding.left(x-large);
+        position: relative;
+        background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xMS43MSAxMUgxMi41TDE3LjQ5IDE2TDE2IDE3LjQ5TDExIDEyLjVWMTEuNzFMMTAuNzMgMTEuNDNDOS41OSAxMi40MSA4LjExIDEzIDYuNSAxM0MyLjkxIDEzIDAgMTAuMDkgMCA2LjVDMCAyLjkxIDIuOTEgMCA2LjUgMEMxMC4wOSAwIDEzIDIuOTEgMTMgNi41QzEzIDguMTEgMTIuNDEgOS41OSAxMS40MyAxMC43M0wxMS43MSAxMVpNMiA2LjVDMiA4Ljk5IDQuMDEgMTEgNi41IDExQzguOTkgMTEgMTEgOC45OSAxMSA2LjVDMTEgNC4wMSA4Ljk5IDIgNi41IDJDNC4wMSAyIDIgNC4wMSAyIDYuNVoiIGZpbGw9IiM4RDk4QUEiLz4KPC9zdmc+Cg==");
+        background-repeat: no-repeat;
+        background-position: 8px center;
+
+        &:focus {
+            @include border.blue(60);
+            box-shadow: 0 0 0 2px #cfe0fc; /* blue 20 */
+        }
+    }
+
+    /*
+     * The search field must have a clear button that is visible at all times.
+     * Since most browsers implement a clear button that is only visible when the input field has content,
+     * we hide all native implementations and present our own.
+     */
+
+    input::-webkit-search-cancel-button {
+        -webkit-appearance: none;
+    }
+
+    input::-ms-clear {
+        display: none;
+    }
+
+    input::-moz-search-clear-button {
+        // Available from Firefox version 81
+        -moz-appearance: none;
+    }
+
+    button {
+        position: absolute;
+        right: 14px; /* relates to input field height and button size: button should be placed with equal distance to top, right and bottom */
+        top: 50%;
+        transform: translateY(-50%);
+        width: 20px;
+        height: 20px;
+        @include background-color.gray(60);
+        @include border.radius(circle);
+        @include padding.all(none);
+        border-width: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:focus {
+            outline: 0;
+        }
+
+        svg {
+            fill: white;
+            width: 10px;
+            height: 10px;
+        }
+    }
+}

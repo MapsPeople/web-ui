@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mi-list test page</title>
+
+    <script type="module" src="/build/mi-components.esm.js"></script>
+    <script nomodule src="/build/mi-components.js"></script>
+    <script src="https://app.mapsindoors.com/mapsindoors/js/sdk/4.5.0/mapsindoors-4.5.0.js.gz"></script>
+
+    <style>
+        #categoriesListHorizontalElement mi-list-item-category {
+            width: 20%;
+            height: 128px;
+        }
+
+        @media only screen and (max-width: 600px) {
+            #categoriesListHorizontalElement mi-list-item-category {
+                width: 50%;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+    <div style="max-width: 600px; height: 300px;">
+        <mi-list id="locationsListElement" scroll-buttons-enabled="true" scroll-length="300">
+            <mi-list-item-location unit="imperial"></mi-list-item-location>
+            <mi-list-item-location unit="imperial"></mi-list-item-location>
+            <mi-list-item-location unit="metric"></mi-list-item-location>
+            <mi-list-item-location></mi-list-item-location>
+            <mi-list-item-location></mi-list-item-location>
+        </mi-list>
+    </div>
+    <br><br>
+    <hr><br>
+    <button onclick="addVerticalCategory()">Add new category</button>
+    <div style="width: 600px; height: 200px;">
+        <mi-list id="categoriesListVerticalElement" scroll-buttons-enabled="true" scroll-length="200">
+            <mi-list-item-category></mi-list-item-category>
+            <mi-list-item-category></mi-list-item-category>
+            <mi-list-item-category></mi-list-item-category>
+            <mi-list-item-category></mi-list-item-category>
+            <mi-list-item-category></mi-list-item-category>
+            <mi-list-item-category></mi-list-item-category>
+            <mi-list-item-category></mi-list-item-category>
+            <mi-list-item-category></mi-list-item-category>
+            <mi-list-item-category></mi-list-item-category>
+        </mi-list>
+    </div>
+    <br><br>
+    <hr><br>
+    <div style="height: 200px;">
+        <mi-list id="categoriesListHorizontalElement" scroll-buttons-enabled="true" scroll-length="200">
+            <mi-list-item-category orientation="horizontal"></mi-list-item-category>
+            <mi-list-item-category orientation="horizontal"></mi-list-item-category>
+            <mi-list-item-category orientation="horizontal"></mi-list-item-category>
+            <mi-list-item-category orientation="horizontal"></mi-list-item-category>
+            <mi-list-item-category orientation="horizontal"></mi-list-item-category>
+            <mi-list-item-category orientation="horizontal"></mi-list-item-category>
+            <mi-list-item-category orientation="horizontal"></mi-list-item-category>
+            <mi-list-item-category orientation="horizontal"></mi-list-item-category>
+            <mi-list-item-category orientation="horizontal"></mi-list-item-category>
+        </mi-list>
+    </div>
+
+    <script>
+        // Locations
+        const locationsListElement = document.getElementById('locationsListElement');
+        locationsListElement.addEventListener('locationClicked', event => {
+            alert(JSON.stringify(event.detail));
+        });
+
+        const locationItem = {
+            properties: {
+                name: "Cabinet Room",
+                categories: [
+                    "West Wing", "East Wing"
+                ],
+                floorName: "G",
+                building: "The White House",
+                venue: "The White House",
+                type: "Meetingroom",
+                imageURL: "https://cms.mapsindoors.com/icons/universities/meeting-room.png",
+                geodesicDistance: 156.17531602101909
+            }
+        }
+
+        for (var i = 0; i < locationsListElement.childNodes.length; i++) {
+            if (locationsListElement.childNodes[i].nodeName === 'MI-LIST-ITEM-LOCATION') {
+                locationsListElement
+                    .childNodes[i]
+                    .location = locationItem;
+            }
+        }
+
+        const category = {
+            categoryKey: "CANTEEN",
+            iconUrl: "https://app.mapsindoors.com/mapsindoors/gfx/mapspeopledemo/cat-canteen.png",
+            name: "Canteen"
+        }
+
+        // Categories vertical
+        const categoriesListVerticalElement = document.getElementById('categoriesListVerticalElement');
+        categoriesListVerticalElement.addEventListener('categoryClicked', event => {
+            alert(JSON.stringify(event.detail));
+        });
+
+        for (var i = 0; i < categoriesListVerticalElement.childNodes.length; i++) {
+            if (categoriesListVerticalElement.childNodes[i].nodeName === 'MI-LIST-ITEM-CATEGORY') {
+                categoriesListVerticalElement
+                    .childNodes[i]
+                    .category = category;
+            }
+        }
+
+        // Categories horizontal
+        const categoriesListHorizontalElement = document.getElementById('categoriesListHorizontalElement');
+        categoriesListHorizontalElement.addEventListener('categoryClicked', event => {
+            alert(JSON.stringify(event.detail));
+        });
+        for (var i = 0; i < categoriesListHorizontalElement.childNodes.length; i++) {
+            if (categoriesListHorizontalElement.childNodes[i].nodeName === 'MI-LIST-ITEM-CATEGORY') {
+                categoriesListHorizontalElement
+                    .childNodes[i]
+                    .category = category;
+            }
+        }
+
+        /*
+         * Add a single mocked category to vertical category list.
+         * Used for debugging of scroll-buttons active state.
+         */
+        function addVerticalCategory() {
+            const verticalCategoriesListElement = document.getElementById('categoriesListVerticalElement');
+            const listItemCategoryElement = document.createElement('mi-list-item-category');
+            listItemCategoryElement.category = {
+                categoryKey: "CANTEEN",
+                iconUrl: "https://app.mapsindoors.com/mapsindoors/gfx/mapspeopledemo/cat-canteen.png",
+                name: "New Canteen element"
+            }
+            verticalCategoriesListElement.appendChild(listItemCategoryElement);
+
+        }
+    </script>
+</body>
+
+</html>

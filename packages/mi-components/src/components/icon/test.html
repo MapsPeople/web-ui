@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
+    <title>mi-icon test page</title>
+    <script type="module" src="/build/mi-components.esm.js"></script>
+    <script nomodule src="/build/mi-components.js"></script>
+
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+        div > div {
+            display: inline-block;
+            padding: 1rem;
+            font-size: 0.75rem;
+            color: #999;
+            width: 8rem;
+            text-align: center;
+        }
+
+        mi-icon {
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <p>
+        Icon width/height: <input value="42" type="number" name="size" onchange="iconsizeChanged(event)" />
+    </p>
+    <div id="icons"></div>
+    <script>
+        let iconSize = 42;
+        function renderIcon(iconName) {
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = `${iconName}<br /><mi-icon style="width: ${iconSize}px; height: ${iconSize}px;" icon-name="${iconName}"></mi-icon>`;
+            document.querySelector('#icons').appendChild(wrapper);
+        }
+
+        function renderAll() {
+            document.querySelector('#icons').innerHTML = '';
+            [
+                'walk',
+                'bike',
+                'car',
+                'boat',
+                'bus',
+                'railway',
+                'train',
+                'subway',
+                'transit',
+                'transit-stop',
+                'circle',
+                'marker',
+                'park',
+                'elevator',
+                'stairs',
+                'ladder',
+                'wheelchair-ramp',
+                'wheelchair-lift',
+                'enter',
+                'exit',
+                'arrow-straight',
+                'depart',
+                'arrow-sharp-right',
+                'arrow-sharp-left',
+                'arrow-slight-right',
+                'arrow-slight-left',
+                'arrow-right',
+                'arrow-left',
+                'arrow-u-turn',
+                'toggle',
+                'printer',
+                'circled-plus',
+                'circled-minus',
+                'circled-blocked'
+            ].forEach(iconName => renderIcon(iconName));
+        }
+
+        function iconsizeChanged(event) {
+            iconSize = event.target.value;
+            renderAll();
+        }
+
+        renderAll();
+    </script>
+</body>
+
+</html>

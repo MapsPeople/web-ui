@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>mi-map-googlemaps test page</title>
+    <script type="module" src="/build/mi-components.esm.js"></script>
+    <script nomodule src="/build/mi-components.js"></script>
+    <script src="https://app.mapsindoors.com/mapsindoors/js/sdk/4.13.0/mapsindoors-4.13.0.js.gz"></script>
+
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+
+    </style>
+</head>
+
+<body>
+    <section style="display: flex;">
+        <div id="scroll-container" style="width:400px; height:400px; overflow-y: scroll; color: dimgray;">
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                Ipsum recusandae quo ipsa soluta at numquam exercitationem odio qui, fugiat hic quibusdam sit suscipit ea necessitatibus harum eum atque.
+                Aspernatur, tempora.
+                Voluptas, sapiente tempore quaerat, architecto cupiditate vel ipsam nostrum amet labore illo delectus porro magnam.
+                Accusantium voluptatum harum explicabo odit commodi praesentium ab nemo aut ea dolorum? Molestiae, laudantium repellat.
+                Ipsam explicabo officiis vero veniam unde labore impedit culpa consequatur a eius alias, harum nemo laudantium nostrum.
+                Saepe quaerat voluptates ut nostrum totam harum, minima adipisci, suscipit, expedita incidunt velit.
+            </p>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                Ipsum recusandae quo ipsa soluta at numquam exercitationem odio qui, fugiat hic quibusdam sit suscipit ea necessitatibus harum eum atque.
+                Aspernatur, tempora.
+                Voluptas, sapiente tempore quaerat, architecto cupiditate vel ipsam nostrum amet labore illo delectus porro magnam.
+                Accusantium voluptatum harum explicabo odit commodi praesentium ab nemo aut ea dolorum? Molestiae, laudantium repellat.
+                Ipsam explicabo officiis vero veniam unde labore impedit culpa consequatur a eius alias, harum nemo laudantium nostrum.
+                Saepe quaerat voluptates ut nostrum totam harum, minima adipisci, suscipit, expedita incidunt velit.
+            </p>
+        </div>
+        <mi-scroll-buttons></mi-scroll-buttons>
+    </section>
+
+    <script>
+        const scrollContainerElement = document.getElementById('scroll-container');
+        const miScrollButtonsElement = document.querySelector('mi-scroll-buttons');
+
+        miScrollButtonsElement.scrollContainerElementRef = scrollContainerElement;
+    </script>
+</body>
+</html>

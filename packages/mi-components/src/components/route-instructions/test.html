@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
+    <title>mi-route-instructions test page</title>
+    <script type="module" src="/build/mi-components.esm.js"></script>
+    <script nomodule src="/build/mi-components.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v1.10.1/mapbox-gl.js"></script>
+    <script type="text/javascript" src="//maps.googleapis.com/maps/api/js?v=3&key=AIzaSyBNhmxW2OntKAVs7hjxmAjFscioPcfWZSc&libraries=geometry,places">
+    </script>
+    <script src="https://app.mapsindoors.com/mapsindoors/js/sdk/4.5.1/mapsindoors-4.5.1.js.gz"></script>
+
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <form onsubmit="render(event)">
+        <fieldset>
+            <legend>Setup</legend>
+            <p>
+                API key: <input type="text" disabled name="apiKey" value="demo" /> (change this in the source code and reload)
+            </p>
+            <p>
+                Map provider:
+                <label>
+                    <input type="radio" name="provider" value="google" checked />
+                    Google
+                </label>
+                <label>
+                    <input type="radio" name="provider" value="mapbox" />
+                    Mapbox
+                </label>
+            </p>
+        </fieldset>
+        <fieldset>
+            <legend>Origin</legend>
+            <p>
+                <label>
+                    Latitude*
+                    <input type="text" name="origin[lat]" value="38.897389429704695" />
+                </label>
+                <label>
+                    Longitude*
+                    <input type="text" name="origin[lng]" value="-77.03740973527613" />
+                </label>
+                <label>
+                    zLevel
+                    <input type="text" name="origin[zLevel]" value="0" />
+                </label>
+            </p>
+        </fieldset>
+
+        <fieldset>
+            <legend>Destination</legend>
+            <p>
+                <label>
+                    Latitude*
+                    <input type="text" name="destination[lat]" value="38.897579747054046" />
+                </label>
+                <label>
+                    Longitude*
+                    <input type="text" name="destination[lng]" value="-77.03658652944773" />
+                </label>
+                <label>
+                    zLevel
+                    <input type="text" name="destination[zLevel]" value="1" />
+                </label>
+            </p>
+        </fieldset>
+
+        <fieldset>
+            <legend>Options</legend>
+            <p>
+                <label>
+                    Travel mode
+                    <input type="text" name="travelMode" value="WALKING" />
+                </label>
+            </p>
+            <p>
+                <label>
+                    <input type="checkbox" name="avoidStairs" value="on" />
+                    Avoid stairs
+                </label>
+            </p>
+            <p>
+                <label>
+                    User roles
+                    <input type="text" name="userRoles" />
+                </label>
+            </p>
+        </fieldset>
+        <button type="submit">Render</button>
+    </form>
+
+    <mi-route-instructions></mi-route-instructions>
+
+    <script>
+        mapsindoors.MapsIndoors. setMapsIndoorsApiKey(document.querySelector('input[name="apiKey"]').value);
+
+        function render(event) {
+            event.preventDefault();
+
+            function formValue(name) {
+                return document.querySelector('input[name="' + name + '"]').value;
+            }
+
+            const provider = document.querySelector('input[name="provider"]:checked') ? document.querySelector('input[name="provider"]:checked').value : 'google';
+
+            const routeRequest = {
+                origin: {
+                    lat: parseFloat(formValue('origin[lat]')),
+                    lng: parseFloat(formValue('origin[lng]'))
+                },
+                destination: {
+                    lat: parseFloat(formValue('destination[lat]')),
+                    lng: parseFloat(formValue('destination[lng]'))
+                }
+            };
+
+            const originZ = formValue('origin[zLevel]');
+            if (originZ.length > 0) {
+                routeRequest.origin.floor = parseFloat(originZ);
+            }
+
+            const destinationZ = formValue('destination[zLevel]');
+            if (destinationZ.length > 0) {
+                routeRequest.destination.floor = parseFloat(destinationZ);
+            }
+
+            const travelMode = formValue('travelMode');
+            if (travelMode.length > 0) {
+                routeRequest.travelMode = travelMode;
+            }
+
+            if (document.querySelector('input[name="avoidStairs"]:checked')) {
+                routeRequest.avoidStairs = true;
+            }
+
+            const userRoles = formValue('userRoles');
+            if (userRoles.length > 0) {
+                routeRequest.userRoles = userRoles;
+            }
+
+            let externalDirectionsProvider;
+            if (provider === 'google') {
+                externalDirectionsProvider = new mapsindoors.directions.GoogleMapsProvider()
+            } else if (provider === 'mapbox') {
+                externalDirectionsProvider = new mapsindoors.directions.MapboxProvider('pk.eyJ1IjoiZW5lcHBlciIsImEiOiJjazVzNjB5a3EwODd0M2Ztb3FjYmZmbzJhIn0._fo_iTl7ZHPrl634-F2qYg');
+            }
+
+            const directionsServiceInstance = new mapsindoors.services.DirectionsService(externalDirectionsProvider);
+
+            // Get route from MapsIndoors Directions Service
+            directionsServiceInstance.getRoute(routeRequest).then((route) => {
+                const routeInstructionsElement = document.querySelector('mi-route-instructions');
+                routeInstructionsElement.route = route;
+            });
+        }
+    </script>
+
+</body>
+
+</html>

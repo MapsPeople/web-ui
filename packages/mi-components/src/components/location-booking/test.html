@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<!--
+IMPORTANT!
+Remember to insert apiKey in start of the script below
+-->
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
+    <title>mi-location-boooking test page</title>
+    <script type="module" src="/build/mi-components.esm.js"></script>
+    <script nomodule src="/build/mi-components.js"></script>
+    <script src="https://app.mapsindoors.com/mapsindoors/js/sdk/4.13.0/mapsindoors-4.13.0.js.gz"></script>
+
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <p>
+        <button onClick="setLocation('theGym');">The Gym</button>
+        <button onClick="setLocation('diningRoom');">Dining Room</button>
+        <button onClick="setLocation('paris');">Paris</button>
+        <button onClick="setLocation('stairs');">Stairs (not bookable)</button>
+    </p>
+    <p>
+        <input onClick="setDuration(30)" type="radio" checked="true" name="duration" value="30">30min
+        <input onClick="setDuration(60)" type="radio" name="duration" value="60">60min
+    </p>
+    <hr />
+    <mi-location-booking start-hour="6" stop-hour="8" show="6" ></mi-location-booking>
+
+    <script>
+        const apiKey = ''; // <----- set MapsIndoors API key here
+        if (apiKey === '') {
+            alert('Please set MapsIndoors API key');
+        }
+
+        mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKey);
+
+        const testLocations = {
+            theGym: '0b7ec35506bd46b891e3a290',
+            diningRoom: 'a530396af31545d7a31380dd',
+            paris: '1cc546591ea64393bb69684d',
+            stairs: '7354650d093e4bd797602e6a'
+        };
+
+        function setLocation(locationIdentifier) {
+            mapsindoors.services.LocationsService.getLocation(testLocations[locationIdentifier])
+                .then(location => {
+                    document.querySelector('mi-location-booking').location = location;
+                });
+        }
+
+        function setDuration(value) {
+            // document.querySelector('mi-location-booking').translations = {
+            //     book: 'Book',
+            //     booked: 'Optaget',
+            //     cancel: 'Aflys'
+            // };
+            document.querySelector('mi-location-booking').duration = value;
+        }
+
+        document.querySelector('mi-location-booking').addEventListener('bookingCompleted', (payload) => {
+            console.log('Booking Completed', payload);
+        });
+
+        document.querySelector('mi-location-booking').addEventListener('bookingFailed', (payload) => {
+            console.log('Booking Failed', payload);
+        });
+
+        document.querySelector('mi-location-booking').addEventListener('cancelCompleted', (payload) => {
+            console.log('Cancel Completed', payload);
+        });
+
+        document.querySelector('mi-location-booking').addEventListener('cancelFailed', (payload) => {
+            console.log('Cancel Failed', payload);
+        });
+
+        setDuration(30);
+        setLocation('paris');
+    </script>
+
+</body>
+
+</html>

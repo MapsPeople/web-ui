@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mi-dropdown test page</title>
+    <script type="module" src="/build/mi-components.esm.js"></script>
+    <script nomodule src="/build/mi-components.js"></script>
+    <style>
+        .overflow::part(dropdown-container) {
+            max-height: 320px;
+            overflow-y: auto;
+        }
+
+        .flex-row {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="flex-row">
+        <span>
+            <p>Select</p>
+            <mi-dropdown>
+                <mi-dropdown-item value="Lorem ipsum" text="Lorem ipsum"></mi-dropdown-item>
+                <mi-dropdown-item value="Dolor sit" text="Dolor sit"></mi-dropdown-item>
+                <mi-dropdown-item value="Amet Consectetur" text="Amet Consectetur Amet Consectetur Amet Consectetur Amet Consectetur"></mi-dropdown-item>
+                <mi-dropdown-item value="Adipisicing elit" text="Adipisicing elit"></mi-dropdown-item>
+                <mi-dropdown-item value="Labore vel" text="Labore vel"></mi-dropdown-item>
+            </mi-dropdown>
+        </span>
+        <span>
+            <p>Select with icon</p>
+            <mi-dropdown icon="https://thecatapi.com/api/images/get?format=src&type=static" id="dropdown" label="Cats" filterable multiple items-order="asc">
+                <mi-dropdown-item value="Abyssinian" text="Abyssinian"></mi-dropdown-item>
+                <mi-dropdown-item value="American Bobtail" text="American Bobtail"></mi-dropdown-item>
+                <mi-dropdown-item value="Birman" text="Birman"></mi-dropdown-item>
+                <mi-dropdown-item value="Balinese" text="Balinese"></mi-dropdown-item>
+                <mi-dropdown-item value="Australian Mist" text="Australian Mist"></mi-dropdown-item>
+            </mi-dropdown>
+        </span>
+    </div>
+    <p>Filterable select</p>
+    <mi-dropdown filterable>
+        <mi-dropdown-item value="Lorem ipsum" text="Lorem ipsum"></mi-dropdown-item>
+        <mi-dropdown-item value="Dolor sit" text="Dolor sit"></mi-dropdown-item>
+        <mi-dropdown-item value="Amet Consectetur" text="Amet Consectetur Amet Consectetur Amet Consectetur Amet Consectetur"></mi-dropdown-item>
+        <mi-dropdown-item value="Adipisicing elit" text="Adipisicing elit"></mi-dropdown-item>
+        <mi-dropdown-item value="Labore vel0" text="Labore vel-0"></mi-dropdown-item>
+        <mi-dropdown-item value="Labore vel1" text="Labore vel-1"></mi-dropdown-item>
+        <mi-dropdown-item value="Labore vel2" text="Labore vel-2"></mi-dropdown-item>
+        <mi-dropdown-item value="Labore vel3" text="Labore vel-3"></mi-dropdown-item>
+        <mi-dropdown-item value="Labore vel4" text="Labore vel-4"></mi-dropdown-item>
+    </mi-dropdown>
+
+    <p>Filterable select with checkboxes</p>
+    <mi-dropdown id="dropdown" label="Buildings" filterable multiple items-order="asc">
+        <mi-dropdown-item selected value="Lorem ipsum" text="Lorem ipsum"></mi-dropdown-item>
+        <mi-dropdown-item selected value="Dolor sit" text="Dolor sit"></mi-dropdown-item>
+        <mi-dropdown-item value="Amet Consectetur" text="Amet Consectetur"></mi-dropdown-item>
+        <mi-dropdown-item value="Adipisicing elit" text="Adipisicing elit"></mi-dropdown-item>
+        <mi-dropdown-item value="Labore vel" text="Labore vel"></mi-dropdown-item>
+    </mi-dropdown>
+
+    <p>Filterable select with checkboxes and and item icons</p>
+    <mi-dropdown id="dropdown" label="Dolor sit" filterable multiple open items-order="desc">
+        <mi-dropdown-item selected value="Lorem ipsum">
+            <img src="https://fonts.gstatic.com/s/i/materialiconsoutlined/account_circle/v16/24px.svg" height="16" />Lorem ipsum<img src="https://fonts.gstatic.com/s/i/materialiconsoutlined/account_circle/v16/24px.svg" height="24" />
+        </mi-dropdown-item>
+        <mi-dropdown-item selected value="Dolor sit">
+            <img src="https://fonts.gstatic.com/s/i/materialiconsoutlined/face/v15/24px.svg" height="24" />Dolor sit
+        </mi-dropdown-item>
+        <mi-dropdown-item value="Amet Consectetur"><img
+                src="https://fonts.gstatic.com/s/i/materialiconsoutlined/settings/v18/24px.svg" height="24" />Amet Consectetur
+        </mi-dropdown-item>
+        <mi-dropdown-item value="Adipisicing elit"><img
+                src="https://fonts.gstatic.com/s/i/materialiconsoutlined/pets/v12/24px.svg" height="24" />Adipisicing elit
+        </mi-dropdown-item>
+        <mi-dropdown-item value="Labore vel">Labore vel</mi-dropdown-item>
+    </mi-dropdown>
+
+    <p>Select - with scrollbar </p>
+    <mi-dropdown class="overflow" label="Floors" items-order="asc">
+        <mi-dropdown-item value="0" text="Item #0"></mi-dropdown-item>
+        <mi-dropdown-item value="1" text="Item #1"></mi-dropdown-item>
+        <mi-dropdown-item value="2" text="Item #2"></mi-dropdown-item>
+        <mi-dropdown-item value="3" text="Item #3"></mi-dropdown-item>
+        <mi-dropdown-item value="4" text="Item #4"></mi-dropdown-item>
+        <mi-dropdown-item value="5" text="Item #5"></mi-dropdown-item>
+        <mi-dropdown-item value="6" text="Item #6"></mi-dropdown-item>
+        <mi-dropdown-item value="7" text="Item #7"></mi-dropdown-item>
+        <mi-dropdown-item value="8" text="Item #8"></mi-dropdown-item>
+        <mi-dropdown-item value="9" text="Item #9"></mi-dropdown-item>
+        <mi-dropdown-item value="10" text="Item #10"></mi-dropdown-item>
+        <mi-dropdown-item value="11" text="Item #11"></mi-dropdown-item>
+        <mi-dropdown-item value="12" text="Item #12"></mi-dropdown-item>
+        <mi-dropdown-item value="13" text="Item #13"></mi-dropdown-item>
+        <mi-dropdown-item value="14" text="Item #14"></mi-dropdown-item>
+        <mi-dropdown-item value="15" text="Item #15"></mi-dropdown-item>
+        <mi-dropdown-item value="16" text="Item #16"></mi-dropdown-item>
+        <mi-dropdown-item value="17" text="Item #17"></mi-dropdown-item>
+        <mi-dropdown-item value="18" text="Item #18"></mi-dropdown-item>
+        <mi-dropdown-item value="19" text="Item #19"></mi-dropdown-item>
+        <mi-dropdown-item value="20" text="Item #20"></mi-dropdown-item>
+        <mi-dropdown-item value="21" text="Item #21"></mi-dropdown-item>
+        <mi-dropdown-item value="22" text="Item #22"></mi-dropdown-item>
+        <mi-dropdown-item value="23" text="Item #23"></mi-dropdown-item>
+        <mi-dropdown-item value="24" text="Item #24"></mi-dropdown-item>
+        <mi-dropdown-item value="25" text="Item #25"></mi-dropdown-item>
+        <mi-dropdown-item value="26" text="Item #26"></mi-dropdown-item>
+        <mi-dropdown-item value="27" text="Item #27"></mi-dropdown-item>
+        <mi-dropdown-item value="28" text="Item #28"></mi-dropdown-item>
+        <mi-dropdown-item value="29" text="Item #29"></mi-dropdown-item>
+        <mi-dropdown-item value="30" text="Item #30"></mi-dropdown-item>
+        <mi-dropdown-item value="31" text="Item #31"></mi-dropdown-item>
+        <mi-dropdown-item value="32" text="Item #32"></mi-dropdown-item>
+        <mi-dropdown-item value="33" text="Item #33"></mi-dropdown-item>
+        <mi-dropdown-item value="34" text="Item #34"></mi-dropdown-item>
+        <mi-dropdown-item value="35" text="Item #35"></mi-dropdown-item>
+        <mi-dropdown-item value="36" text="Item #36"></mi-dropdown-item>
+        <mi-dropdown-item value="37" text="Item #37"></mi-dropdown-item>
+        <mi-dropdown-item value="38" text="Item #38"></mi-dropdown-item>
+        <mi-dropdown-item value="39" text="Item #39"></mi-dropdown-item>
+        <mi-dropdown-item value="40" text="Item #40"></mi-dropdown-item>
+    </mi-dropdown>
+    <script>
+        const miDropdownElement = document.getElementById('dropdown');
+
+        miDropdownElement.addEventListener('change', (event) => {
+            const selectedValues = event.detail.map((item) => item.value);
+            console.log(selectedValues);
+        })
+    </script>
+</body>
+
+</html>

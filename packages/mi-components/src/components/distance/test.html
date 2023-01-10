@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
+    <title>mi-distance test page</title>
+    <script type="module" src="/build/mi-components.esm.js"></script>
+    <script nomodule src="/build/mi-components.js"></script>
+
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <form onsubmit="render(event);">
+        <p>
+            <label>
+                Meters:
+                <input name="meters" value="123.45" />
+            </label>
+        </p>
+        <p>
+        <p>
+            <label>
+                Unit:
+                <input name="unit" placeholder="metric, imperial" />
+            </label>
+        </p>
+        <button type="submit">Re-render</button>
+    </form>
+    <p style="padding: 1rem; border: 1px dashed hotpink;">
+        <mi-distance></mi-distance>
+    </p>
+
+    <script>
+        function render(event) {
+            if (event) {
+                event.preventDefault();
+            }
+
+            const miDistanceElement = document.querySelector('mi-distance');
+            miDistanceElement.setAttribute('meters', document.querySelector('input[name="meters"]').value);
+
+            const unit = document.querySelector('input[name="unit"]').value;
+            if (unit) {
+                miDistanceElement.setAttribute('unit', unit);
+            }
+        }
+
+        render();
+    </script>
+</body>
+
+</html>

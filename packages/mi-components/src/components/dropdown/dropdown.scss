@@ -1,0 +1,264 @@
+@use "@mapsindoors/midt/background-color";
+@use "@mapsindoors/midt/border";
+@use "@mapsindoors/midt/color";
+@use "@mapsindoors/midt/elevation";
+@use "@mapsindoors/midt/font";
+@use "@mapsindoors/midt/icons";
+@use "@mapsindoors/midt/margin";
+@use "@mapsindoors/midt/opacity";
+@use "@mapsindoors/midt/padding";
+@use "@mapsindoors/midt/transitions";
+@use "@mapsindoors/midt/z-index";
+
+@use "@mapsindoors/midt/build/scss/variables";
+
+@import "../../../node_modules/@mapsindoors/css/input.css";
+@import "../../../node_modules/@mapsindoors/css/label.css";
+
+mi-dropdown-item {
+    display: none;
+}
+
+:host {
+    display: inline-block;
+    position: relative;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    @include font.family(sans-serif);
+}
+
+:host(.open) .button::after {
+    border-top-color: transparent;
+    border-bottom-color: variables.$color-gray-90;
+    margin-top: -8px;
+}
+
+:host(.open) {
+    section {
+        display: flex;
+
+    }
+
+    svg {
+        transform: rotate(180deg);
+    }
+}
+
+.button {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    height: 100%;
+    width: 100%;
+
+    font-family: inherit;
+    background: linear-gradient(
+        variables.$color-gray-10,
+        variables.$color-gray-20
+    );
+
+    padding: 0;
+    @include padding.horizontal(medium);
+    @include border.radius(medium);
+    @include border.width(medium);
+    @include border.style(solid);
+    @include border.gray(40);
+    @include color.black(base);
+    @include font.size(medium);
+    @include font.weight(large);
+    @include font.leading(medium);
+
+    &__left-icon {
+        height: 20px;
+        width: 20px;
+
+        @include margin.right(x-small);
+    }
+
+    svg {
+        margin-left: auto;
+    }
+
+    &__label {
+        @include padding.vertical(small);
+        @include margin.right(x-small);
+        display: block;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+
+        &--from-inner-html {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: variables.$spacing-x-small;
+        }
+    }
+
+    &:disabled {
+        @include opacity.opacity(x-large);
+        cursor: not-allowed;
+    }
+}
+
+.content {
+    @include padding.vertical(small);
+    @include margin.vertical(small);
+    @include border.radius(large);
+    @include color.black(base);
+    @include font.size(medium);
+    @include font.weight(large);
+    @include background-color.white(base);
+    @include elevation.elevation(medium);
+    min-width: 320px;
+    max-width: 480px;
+    max-height: 580px;
+    display: none;
+    flex-direction: column;
+    position: fixed;
+    z-index: 10000;
+
+    .filter {
+        @include margin.bottom(medium);
+        @include padding.horizontal(x-small);
+        display: flex;
+        position: relative;
+
+        &__input {
+            width: 100%;
+        }
+
+        &__clear {
+            width: 20px;
+            height: 20px;
+            padding: 0;
+            border-width: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            right: 14px; /* relates to input field height and button size: button should be placed with equal distance to top, right and bottom */
+            top: 50%;
+            transform: translateY(-50%);
+            @include background-color.gray(90);
+            @include border.radius(circle);
+
+            &:focus {
+                outline: 0;
+            }
+
+            &--hidden {
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            svg {
+                fill: variables.$color-white-base;
+                width: 10px;
+                height: 10px;
+            }
+        }
+    }
+
+    .options {
+        @include margin.bottom(medium);
+        @include padding.horizontal(medium);
+
+        &__item {
+            padding: 0;
+
+            @include color.blue(60);
+            @include font.size(x-small);
+            @include font.weight(large);
+
+            font-family: inherit;
+            background-color: transparent;
+            border: transparent;
+
+            &:hover {
+                text-decoration: underline;
+            }
+
+            &:first-child {
+                @include margin.right(medium);
+            }
+
+            &:disabled {
+                color: rgba(48, 113, 217, 0.72);
+                cursor: not-allowed;
+                text-decoration: none;
+            }
+        }
+    }
+
+    .list {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        overflow-y: auto;
+
+        &__item {
+            cursor: pointer;
+
+            &--highlighted {
+                @include background-color.gray(20);
+            }
+        }
+    }
+}
+
+.empty-page {
+    > * {
+        margin: 0;
+    }
+
+    display: flex;
+    align-items: left;
+    flex-direction: column;
+
+    @include margin.left(medium);
+    @include margin.bottom(small);
+
+    &__header {
+        @include font.size(medium);
+        @include font.weight(medium);
+        @include color.gray(80);
+    }
+}
+
+.label {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    @include padding.horizontal(medium);
+    @include padding.vertical(x-small);
+
+    &__item {
+        display: inline-block;
+        margin-top: 0;
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        &--from-inner-html {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: variables.$spacing-x-small;
+        }
+    }
+
+    &__checkbox {
+        @include margin.right(small);
+
+        &--hidden {
+            display: none;
+        }
+    }
+}

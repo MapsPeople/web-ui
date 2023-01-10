@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
+    <title>mi-data-table test page</title>
+    <script type="module" src="/build/mi-components.esm.js"></script>
+    <script nomodule src="/build/mi-components.js"></script>
+
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <button onclick="setCheckboxValues(true)" class="some">Check all in last column</button>
+    <button onclick="setCheckboxValues(false)" class="some">Uncheck all in last column</button>
+    <button onclick="logSelectedRows()" class="some">Log selected rows to console</button>
+    Clicked buttons and checkboxes will write to the console.
+
+    <hr />
+
+    <mi-data-table id="demo-table" max-rows="10" selectable>
+        <mi-column label="Name" binding="name" sortable fit-content width="33%"></mi-column>
+        <mi-column id="test-1" label="Button"><button class="mi-button mi-button--primary mi-button--full-width"
+                type="button">Click me! {name}</button></mi-column>
+        <mi-column align-content="center" width="350px"><input type="checkbox" onclick="inputChecked({id})" /><span class="color-red-base">Check me!</span>
+        </mi-column>
+        <mi-column label="Has funny name" sortable binding="hasFunnyName" sort="asc"><input class="mycheckbox"
+                type="checkbox" checked="{hasFunnyName}" />
+        </mi-column>
+    </mi-data-table>
+
+    <script>
+        // Listen for clicks via the clicked event on <mi-column>
+        document.getElementById('test-1').addEventListener('clicked', e => {
+            console.log(e.detail);
+        });
+
+        // Listen for clicks via mi-column content
+        function inputChecked(id) {
+            console.log('Checkbox clicked for row with ID:', id);
+        }
+
+        document
+            .getElementById('demo-table')
+            .rows = [
+                {
+                    id: 10,
+                    name: 'Elvis Presley',
+                    hasFunnyName: false,
+                },
+                {
+                    id: 11,
+                    name: 'Engelbert Humperdinck',
+                    hasFunnyName: true,
+                },
+                {
+                    id: 12,
+                    name: 'Conway Twitty',
+                    hasFunnyName: true,
+                    selected: false
+                },
+                {
+                    id: 13,
+                    name: 'James Dean',
+                    hasFunnyName: false,
+                },
+                {
+                    id: 13,
+                    name: 'James Dean',
+                    hasFunnyName: false,
+                }
+            ];
+
+        function setCheckboxValues(value) {
+            const checkboxes = document.querySelector('mi-data-table').shadowRoot.querySelectorAll('.mycheckbox');
+            for (const checkbox of checkboxes) {
+                checkbox.checked = !!value;
+            }
+        }
+        function logSelectedRows() {
+            console.log(document.querySelector('mi-data-table').selected)
+        }
+    </script>
+
+</body>
+
+</html>
