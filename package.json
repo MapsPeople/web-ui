@@ -23,5 +23,11 @@
   "bugs": {
     "url": "https://github.com/MapsPeople/MapTemplateWeb/issues"
   },
-  "homepage": "https://github.com/MapsPeople/MapTemplateWeb#readme"
+  "homepage": "https://github.com/MapsPeople/MapTemplateWeb#readme",
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "lerna": "^6.4.0"
+  }
 }
