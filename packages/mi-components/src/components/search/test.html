@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0"
+        />
+        <title>mi-search test page</title>
+        <script type="module" src="/build/mi-components.esm.js"></script>
+        <script nomodule src="/build/mi-components.js"></script>
+        <script src="https://app.mapsindoors.com/mapsindoors/js/sdk/4.13.0/mapsindoors-4.13.0.js.gz?apiKey=mapspeople"></script>
+
+        <style>
+            body {
+                font-family: sans-serif;
+            }
+        </style>
+    </head>
+
+    <body>
+        <mi-search
+            mapsindoors="true"
+            google="false"
+            placeholder="Search&hellip;"
+            style="max-width: 500px; height: 48px"
+        ></mi-search>
+        <div id="results" style="max-width: 500px; max-height:200px; overflow-y: scroll;"></div>
+
+        <script>
+            const miSearchComponent = document.querySelector('mi-search');
+            const resultsContainer = document.getElementById('results');
+
+            miSearchComponent.addEventListener('componentRendered', () => {
+                miSearchComponent.querySelector('input').focus();
+            });
+
+            miSearchComponent.addEventListener('shortInput', () => {
+                // Reacts when the shortInput event is fired.
+            });
+
+            miSearchComponent.addEventListener('results', e => {
+                resultsContainer.innerHTML = '';
+                for (const result of e.detail) {
+                    const resultNode = document.createElement('p');
+                    resultNode.innerHTML = `${result.properties.type} - ${result.properties.name}`;
+                    resultsContainer.appendChild(resultNode);
+                }
+            });
+            miSearchComponent.addEventListener('cleared', () => {
+                resultsContainer.innerHTML = '';
+            });
+        </script>
+    </body>
+</html>

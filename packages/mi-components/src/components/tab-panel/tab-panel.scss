@@ -1,0 +1,22 @@
+@use "~@mapsindoors/midt/background-color";
+@use "~@mapsindoors/midt/border";
+@use "~@mapsindoors/midt/color";
+@use "~@mapsindoors/midt/elevation";
+@use "~@mapsindoors/midt/font";
+@use "~@mapsindoors/midt/icons";
+@use "~@mapsindoors/midt/margin";
+@use "~@mapsindoors/midt/opacity";
+@use "~@mapsindoors/midt/padding";
+@use "~@mapsindoors/midt/transitions";
+@use "~@mapsindoors/midt/z-index";
+
+div {
+    display: none;
+
+    &.active {
+        @include font.family(sans-serif);
+        flex-shrink: 0;
+        flex-grow: 1;
+        display: block;
+    }
+}

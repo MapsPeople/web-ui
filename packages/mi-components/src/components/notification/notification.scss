@@ -1,0 +1,100 @@
+@use "~@mapsindoors/midt/font";
+@use "~@mapsindoors/midt/color";
+@use "~@mapsindoors/midt/background-color";
+@use "~@mapsindoors/midt/padding";
+@use "~@mapsindoors/midt/margin";
+@use "~@mapsindoors/midt/sizing";
+@use "~@mapsindoors/midt/elevation";
+@use "~@mapsindoors/midt/border";
+
+:host {
+    @include padding.all(medium);
+    @include font.family(sans-serif);
+    position: fixed;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+}
+
+:host(.top-left) {
+    top: 0;
+    left: 0;
+}
+:host(.top-center) {
+    top: 0;
+    align-items: center;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+:host(.top-right) {
+    top: 0;
+    right: 0;
+    align-items: flex-end;
+}
+:host(.bottom-left) {
+    bottom: 0;
+    left: 0;
+}
+:host(.bottom-center) {
+    bottom: 0;
+    align-items: center;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+:host(.bottom-right) {
+    bottom: 0;
+    right: 0;
+    align-items: flex-end;
+}
+
+.notification {
+    @include margin.top(medium);
+    display: flex;
+    flex-direction: row;
+    @include elevation.elevation(small);
+    @include border.radius(small);
+    @include background-color.white(base);
+    overflow: hidden;
+
+    .icon {
+        @include sizing.width(xxx-large);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &-type {
+            &--error {
+                @include background-color.red(base);
+            }
+            &--success {
+                @include background-color.green(base);
+            }
+            &--warning {
+                @include background-color.bronze(base);
+            }
+            &--info {
+                @include background-color.gray(base);
+            }
+        }
+    }
+
+    .label {
+        @include padding.left(medium);
+        flex: 1;
+        @include font.size(small);
+    }
+
+    .btn {
+        @include padding.left(large);
+        @include padding.right(medium);
+        display: flex;
+        align-items: center;
+        border: none;
+        @include background-color.white(base);
+        &:focus {
+            // A workaround to avoid the highlight showing up on the next element
+            outline: none;
+            box-shadow: none;
+        }
+    }
+}

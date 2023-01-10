@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>mi share sms test page</title>
+    <script type="module" src="/build/mi-components.esm.js"></script>
+    <script nomodule src="/build/mi-components.js"></script>
+    <script src="https://app.mapsindoors.com/mapsindoors/js/sdk/4.13.0/mapsindoors-4.13.0.js.gz"></script>
+
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bartest">
+        <mi-share-sms
+            venue="899cf628675f4b0695669529"
+            origin="55b732c2607d436594577bf6"
+            destination="8b4e9890e3d048be81dcb36d"
+            country-code="45"
+            input-placeholder="Enter phone number"
+            submit-button-label="Send SMS">
+        </mi-share-sms>
+        <mi-notification position="bottom-center" duration="6"></mi-notification>
+    </div>
+
+    <script>
+        const shareSMSComponent = document.querySelector('mi-share-sms');
+        const notificationComponent = document.querySelector('mi-notification');
+
+        shareSMSComponent.addEventListener('successfullySent', () => {
+            notificationElement.push('Success', 'success', false);
+        });
+
+        shareSMSComponent.addEventListener('unsuccessfullySent', event => {
+            notificationElement.push(event.detail, 'error', false);
+        });
+    </script>
+
+</body>
+
+</html>

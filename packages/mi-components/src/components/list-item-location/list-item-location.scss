@@ -1,0 +1,54 @@
+@use "~@mapsindoors/midt/font";
+@use "~@mapsindoors/midt/color";
+@use "~@mapsindoors/midt/background-color";
+@use "~@mapsindoors/midt/icons";
+@use "~@mapsindoors/midt/padding";
+@use "~@mapsindoors/midt/transitions";
+
+@import "../../global/global";
+
+:host {
+    @include padding.top(medium);
+    @include padding.right(medium);
+    @include padding.bottom(medium);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    @include color.black(base);
+    @include font.size(medium);
+    @include font.weight(large);
+    @include font.leading(large);
+    @include transitions.transition(quickly);
+    cursor: pointer;
+}
+
+:host(:hover) {
+    @include background-color.white(base);
+}
+
+.img-container {
+    width: 56px; // 16px left padding, 24px content, 16px right padding
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+img {
+    @include icons.size(medium); // will be overwritten if icon has a badge
+    object-fit: cover;
+}
+
+.details {
+    @include padding.right(medium);
+    flex: 1;
+
+    &-title {
+        margin: 0;
+        padding: 0;
+    }
+}
+
+.distance {
+    @include font.weight(medium);
+}

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<!--
+IMPORTANT!
+You can change the MapsIndoors apiKey in start of the script below
+-->
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
+    <title>mi-list-item-location test page</title>
+    <script type="module" src="/build/mi-components.esm.js"></script>
+    <script nomodule src="/build/mi-components.js"></script>
+    <script src="https://app.mapsindoors.com/mapsindoors/js/sdk/4.13.0/mapsindoors-4.13.0.js.gz"></script>
+
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <form onsubmit="load(event);">
+        <p>
+            <label>
+                Location ID:
+                <input type="text" name="locationId" placeholder="MapsIndoors location ID" />
+            </label>
+        </p>
+        <p>
+            <label>
+                Unit:
+                <input name="unit" placeholder="metric, imperial" />
+            </label>
+        </p>
+        <p>
+
+            Availability Badge
+            <label>
+                <input type="radio" name="badge" value="none" />None
+            </label>
+            <label>
+                <input type="radio" name="badge" value="true" />Available
+            </label>
+            <label>
+                <input type="radio" name="badge" value="false" />Unavailable
+            </label>
+        </p>
+        <p>
+            <button type="submit">Create</button>
+        </p>
+    </form>
+    <hr />
+
+    <script>
+        const apiKey = 'demo'; // <----- set MapsIndoors API key here
+        document.querySelector('input[name="locationId"]').setAttribute('value', '337006664e044df99916054c');
+
+        mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKey);
+
+        async function render(locationId, unit, badge) {
+            const location = await mapsindoors.services.LocationsService.getLocation(locationId);
+
+            const listItemLocationComponent = document.createElement('mi-list-item-location');
+            listItemLocationComponent.location = location;
+
+            if (unit) {
+                listItemLocationComponent.setAttribute('unit', unit);
+            }
+
+            if (badge !== 'none') {
+                listItemLocationComponent.setAttribute('icon-badge', 'availability');
+                listItemLocationComponent.setAttribute('icon-badge-value', badge);
+            }
+
+            // Hacks
+            if (!location.properties.imageURL) location.properties.imageURL = 'https://app.mapsindoors.com/mapsindoors/cms/assets/icons/building-icons/hall.png';
+
+            document.body.appendChild(listItemLocationComponent);
+        }
+
+        function load(e) {
+            e.preventDefault();
+            const locationId = document.querySelector('input[name="locationId"]').value;
+            const unit = document.querySelector('input[name="unit"]').value;
+            const badge = document.querySelector('input[name="badge"]:checked') ? document.querySelector('input[name="badge"]:checked').value : 'none';
+            render(locationId, unit, badge);
+        }
+    </script>
+
+</body>
+
+</html>

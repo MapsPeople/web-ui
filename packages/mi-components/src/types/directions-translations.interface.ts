@@ -1,0 +1,33 @@
+export interface DirectionsTranslations {
+    walk: string;
+    bike: string;
+    transit: string;
+    drive: string;
+    leave: string;
+    from: string;
+    park: string;
+    at: string;
+    building: string,
+    venue: string,
+    takeStaircaseToLevel: string;
+    takeLadderToLevel: string;
+    takeElevatorToLevel: string;
+    takeEscalatorToLevel: string;
+    takeWheelchairLiftToLevel: string;
+    takeWheelchairRampToLevel: string;
+    exit: string;
+    enter: string;
+    stops: string;
+    andContinue: string;
+    continueStraightAhead: string;
+    goLeft: string;
+    goSharpLeft: string;
+    goSlightLeft: string;
+    goRight: string;
+    goSharpRight: string;
+    goSlightRight: string;
+    turnAround: string;
+    days: string;
+    hours: string;
+    minutes: string;
+}

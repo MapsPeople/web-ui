@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<!--
+IMPORTANT!
+You can change the MapsIndoors apiKey in start of the script below
+-->
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
+    <title>mi-list-item-category test page</title>
+    <script type="module" src="/build/mi-components.esm.js"></script>
+    <script nomodule src="/build/mi-components.js"></script>
+    <script src="https://app.mapsindoors.com/mapsindoors/js/sdk/4.13.0/mapsindoors-4.13.0.js.gz"></script>
+
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <form onsubmit="load(event);">
+        <p>
+            <label>
+                Category:
+            </label>
+            <label>
+                <input checked type="radio" name="orientation" value="vertical" />Vertical
+                <input type="radio" name="orientation" value="horizontal" />Horizontal
+            </label>
+        </p>
+
+    </form>
+    <hr />
+
+    <script>
+        const apiKey = 'demo'; // <---- set MapsIndoors API key here
+
+        mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKey);
+
+        mapsindoors.services.AppConfigService.getConfig().then(config => {
+            const categories = config.menuInfo.mainmenu;
+
+            const selectElement = document.createElement('select');
+            const optionElement = document.createElement('option');
+
+            const blankOption = document.createElement('option');
+            blankOption.value = '';
+            blankOption.innerText = ' --- Choose ---';
+            selectElement.appendChild(blankOption);
+
+            categories.forEach((category, index) => {
+                const optionElement = document.createElement('option');
+                optionElement.value = index;
+                optionElement.innerText = category.name;
+                selectElement.appendChild(optionElement);
+            });
+
+            selectElement.addEventListener('change', () => {
+                if (categories[selectElement.value]) {
+                    render(categories[selectElement.value]);
+                }
+            })
+
+            document.querySelector('form label').appendChild(selectElement);
+        });
+
+        function render(category) {
+            const orientation = document.querySelector('input[name="orientation"]:checked').value;
+
+            const listItemCategoryElement = document.createElement('mi-list-item-category');
+            listItemCategoryElement.orientation = orientation;
+            listItemCategoryElement.category = category;
+
+            document.body.appendChild(listItemCategoryElement);
+        }
+    </script>
+
+</body>
+
+</html>

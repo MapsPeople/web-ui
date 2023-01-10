@@ -1,0 +1,65 @@
+@use "~@mapsindoors/midt/font";
+@use "~@mapsindoors/midt/color";
+@use "~@mapsindoors/midt/sizing";
+@use "~@mapsindoors/midt/background-color";
+@use "~@mapsindoors/midt/icons";
+@use "~@mapsindoors/midt/padding";
+@use "~@mapsindoors/midt/transitions";
+
+@import "../../global/global";
+
+:host {
+    @include color.black(base);
+    @include transitions.transition(quickly);
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    img {
+        object-fit: cover;
+    }
+}
+
+:host([orientation="horizontal"]) {
+    width: 100%;
+    height: 100%;
+    float: left;
+    flex-direction: column;
+    justify-content: center;
+
+    img {
+        @include sizing.width(xxx-large);
+        @include sizing.height(xxx-large);
+    }
+
+    p {
+        // Workaround for visual centering the content vertically when multiple lines text.
+        @include sizing.height(medium);
+        overflow: visible;
+        @include font.size(small);
+        @include font.weight(normal);
+        @include font.leading(medium);
+        text-align: center;
+    }
+}
+
+:host([orientation="vertical"]) {
+    @include padding.all(medium);
+    flex-direction: row;
+    @include font.size(medium);
+    @include font.weight(large);
+    @include font.leading(large);
+
+    img {
+        @include icons.size(medium);
+    }
+
+    p {
+        margin: 0;
+        @include padding.left(medium);
+    }
+}
+
+:host(:hover) {
+    @include background-color.white(base);
+}

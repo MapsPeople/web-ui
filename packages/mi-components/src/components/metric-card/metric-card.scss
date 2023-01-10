@@ -1,0 +1,100 @@
+@use "~@mapsindoors/midt/background-color";
+@use "~@mapsindoors/midt/border";
+@use "~@mapsindoors/midt/color";
+@use "~@mapsindoors/midt/elevation";
+@use "~@mapsindoors/midt/font";
+@use "~@mapsindoors/midt/icons";
+@use "~@mapsindoors/midt/margin";
+@use "~@mapsindoors/midt/opacity";
+@use "~@mapsindoors/midt/padding";
+@use "~@mapsindoors/midt/sizing";
+@use "~@mapsindoors/midt/transitions";
+@use "~@mapsindoors/midt/z-index";
+
+@use "~@mapsindoors/midt/build/scss/variables"as variables;
+
+:host {
+    @include font.family(sans-serif);
+    flex-shrink: 0;
+    flex-grow: 1;
+
+    mi-card {
+        position: relative;
+        overflow: hidden;
+        min-width: 312px;
+
+        .content {
+            h1 {
+                display: inline-flex;
+                cursor: default;
+                align-items: center;
+                text-transform: uppercase;
+                white-space: nowrap;
+                @include margin.all(none);
+                @include font.size(medium);
+                @include font.weight(x-large);
+                @include color.gray();
+                @include margin.bottom(x-small);
+
+                svg {
+                    fill: variables.$color-gray-50;
+                    @include sizing.width(medium);
+                    @include sizing.height(medium);
+                    @include margin.left(x-small);
+                }
+            }
+
+            section {
+                position: relative;
+
+                p {
+                    @include margin.all(none);
+                    @include font.size(xxx-large);
+                    @include font.leading(xxx-large);
+                    @include font.weight(large);
+                    @include color.black();
+
+                    &.error {
+                        @include font.size(medium);
+                        @include font.weight(large);
+                        @include color.gray(60);
+                    }
+
+                    &.hidden {
+                        visibility: hidden;
+                    }
+                }
+
+                p.tool-tip {
+                    box-sizing: border-box;
+                    visibility: hidden;
+                    overflow: hidden;
+                    position: absolute;
+                    top: 0px;
+                    right: 0px;
+                    bottom: 0px;
+                    left: 0px;
+                    opacity: 0;
+                    transition: all 100ms;
+                    @include z-index.z-index(overlay);
+                    @include background-color.white(white);
+                    @include font.size(small);
+                    @include font.weight(medium);
+                    @include font.leading(medium);
+                    @include margin.all(none);
+
+                    &.visible {
+                        opacity: 1;
+                        visibility: visible;
+                    }
+                }
+
+                mi-spinner {
+                    display: inline-block;
+                    vertical-align: middle;
+                    width: 100%;
+                }
+            }
+        }
+    }
+}

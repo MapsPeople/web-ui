@@ -1,0 +1,68 @@
+@use '~@mapsindoors/midt/build/scss/variables';
+@use "~@mapsindoors/midt/padding";
+@use "~@mapsindoors/midt/font";
+@use "~@mapsindoors/midt/color";
+@use "~@mapsindoors/midt/background-color";
+@use "~@mapsindoors/midt/icons";
+
+.directions {
+    border-bottom: 1px solid variables.$color-gray-40;
+    @include color.black();
+    @include font.size(medium);
+    @include font.weight(medium);
+    @include font.family(sans-serif);
+
+    &-way-points {
+        @include padding.vertical(large);
+        @include padding.horizontal(medium);
+        border-bottom: 1px solid variables.$color-gray-20;
+
+        span {
+            display: block;
+
+            &:first-child {
+                @include font.size(large);
+                @include font.weight(large);
+                @include font.leading(x-large);
+            }
+            &:last-child {
+                @include color.gray(60);
+                a {
+                    @include color.blue();
+                    text-decoration: none;
+                }
+            }
+        }
+    }
+    &-details {
+        @include padding.all(medium);
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        &-numbers {
+            mi-time {
+                @include font.weight(large);
+            }
+            &-distance {
+                @include color.gray(60);
+                @include font.size(small);
+                @include font.weight(medium);
+                text-transform: lowercase;
+            }
+        }
+
+        &-travel-mode-selector {
+            display: flex;
+            align-items: center;
+            @include color.blue();
+            text-decoration: none;
+
+            mi-icon {
+                @include icons.size(medium);
+                margin-left: variables.$spacing-x-small;
+                @include background-color.blue();
+            }
+        }
+    }
+}

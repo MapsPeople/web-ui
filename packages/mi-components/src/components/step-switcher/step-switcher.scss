@@ -1,0 +1,66 @@
+@use "~@mapsindoors/midt/font";
+@use "~@mapsindoors/midt/color";
+@use "~@mapsindoors/midt/padding";
+@use "~@mapsindoors/midt/margin";
+@use "~@mapsindoors/midt/sizing";
+@use "~@mapsindoors/midt/background-color";
+@use '~@mapsindoors/midt/build/scss/variables';
+
+:host {
+    display: flex;
+}
+
+button {
+    @include padding.all(medium);
+    background-color: transparent;
+    border: none;
+
+    &:disabled svg {
+        fill: variables.$color-gray-40;
+    }
+
+    svg {
+        fill: variables.$color-gray-90;
+    }
+}
+
+div.steps {
+    @include padding.vertical(small);
+    @include padding.horizontal(xx-small);
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    vertical-align: center;
+    justify-content: center;
+    p {
+        margin: 0;
+        @include padding.bottom(x-small);
+        @include color.black(base);
+        @include font.size(medium);
+        @include font.weight(large);
+        @include font.leading(large);
+        text-align: center;
+    }
+
+    &__dots {
+        display: flex;
+        justify-content: center;
+
+        span {
+            @include sizing.width(x-small);
+            @include sizing.height(x-small);
+            @include margin.right(x-small);
+            float: left;
+            @include background-color.gray(40);
+            border-radius: 50%;
+
+            &.active {
+                @include background-color.gray(90);
+            }
+
+            &:last-child {
+                margin-right: 0px;
+            }
+        }
+    }
+}

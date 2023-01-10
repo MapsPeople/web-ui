@@ -1,0 +1,8 @@
+@use "~@mapsindoors/midt/font";
+@use "~@mapsindoors/midt/color";
+
+:host {
+    display: block;
+    @include color.gray(90);
+    @include font.weight(medium);
+}

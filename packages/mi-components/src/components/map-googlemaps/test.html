@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>mi-map-googlemaps test page</title>
+    <script type="module" src="/build/mi-components.esm.js"></script>
+    <script nomodule src="/build/mi-components.js"></script>
+    <script src="https://app.mapsindoors.com/mapsindoors/js/sdk/4.21.0/mapsindoors-4.21.0.js.gz"></script>
+
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <mi-map-googlemaps
+        style="width: 600px; height: 600px;"
+        gm-api-key="AIzaSyBNhmxW2OntKAVs7hjxmAjFscioPcfWZSc"
+        mi-api-key="demo"
+        floor-selector-control-position="TOP_LEFT"
+        my-position-control-position="TOP_RIGHT">
+    </mi-map-googlemaps>
+
+    <button onclick="previousLeg()">Previous Leg</button>
+    <button onclick="nextLeg()">Next Leg</button>
+
+    <script>
+        let mapInstance;
+        let mapsIndoorsInstance;
+        let miDirectionsServiceInstance;
+        let miDirectionsRendererInstance;
+        const mapGoogleMaps = document.querySelector('mi-map-googlemaps');
+
+        mapGoogleMaps.addEventListener('mapsIndoorsReady', () => {
+            mapGoogleMaps.getDirectionsServiceInstance().then((directionsServiceInstance) => miDirectionsServiceInstance = directionsServiceInstance);
+            mapGoogleMaps.getDirectionsRendererInstance().then((directionsRendererInstance) => miDirectionsRendererInstance = directionsRendererInstance);
+
+            mapGoogleMaps.getMapInstance().then((instance) => {
+                mapInstance = instance;
+                mapInstance.setCenter({lat: 38.8974905, lng: -77.0362723}); // The White House
+            });
+            mapGoogleMaps.getMapsIndoorsInstance().then((instance) => {
+                mapsIndoorsInstance = instance;
+                mapsIndoorsInstance.addListener('click', (location) => this.setRoute(location));
+
+            });
+        })
+
+        function getAnchorCoordinates(location) {
+            return location.geometry.type.toLowerCase() === 'point' ?
+                {lat: location.geometry.coordinates[1], lng: location.geometry.coordinates[0]} :
+                {lat: location.properties.anchor.coordinates[1], lng: location.properties.anchor.coordinates[0]};
+        }
+
+        function setRoute(destination) {
+            const destCoordinates = this.getAnchorCoordinates(destination);
+            const routeParams = {
+                origin: {lat: 38.8956311, lng: -77.0395035, floor: 0},
+                destination: {lat: destCoordinates.lat, lng: destCoordinates.lng, floor: destination.properties.floor},
+                travelMode: 'WALKING',
+                fitBounds: true
+            };
+            miDirectionsServiceInstance.getRoute(routeParams)
+                .then(directionsResult => miDirectionsRendererInstance.setRoute(directionsResult));
+        }
+
+        function nextLeg() {
+            miDirectionsRendererInstance.nextStep();
+        };
+
+        function previousLeg() {
+            miDirectionsRendererInstance.previousStep();
+        };
+    </script>
+</body>
+</html>

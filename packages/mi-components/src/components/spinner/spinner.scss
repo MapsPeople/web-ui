@@ -1,0 +1,73 @@
+@use "~@mapsindoors/midt/background-color";
+@use "~@mapsindoors/midt/border";
+@use "~@mapsindoors/midt/color";
+@use "~@mapsindoors/midt/elevation";
+@use "~@mapsindoors/midt/font";
+@use "~@mapsindoors/midt/icons";
+@use "~@mapsindoors/midt/margin";
+@use "~@mapsindoors/midt/opacity";
+@use "~@mapsindoors/midt/padding";
+@use "~@mapsindoors/midt/transitions";
+@use "~@mapsindoors/midt/z-index";
+
+.spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &>div {
+        width: 16px;
+        height: 16px;
+        @include background-color.gray(60);
+        @include margin.all(xx-small);
+        border-radius: 100%;
+        display: inline-block;
+        -webkit-animation: bouncedelay 1.4s infinite ease-in-out both;
+        animation: bouncedelay 1.4s infinite ease-in-out both;
+
+    }
+
+    &.inverse {
+        &>div {
+            @include background-color.white(white);
+        }
+    }
+
+    .bounce1 {
+        -webkit-animation-delay: -0.32s;
+        animation-delay: -0.32s;
+    }
+
+    .bounce2 {
+        -webkit-animation-delay: -0.16s;
+        animation-delay: -0.16s;
+    }
+}
+
+@-webkit-keyframes bouncedelay {
+
+    0%,
+    80%,
+    100% {
+        -webkit-transform: scale(0)
+    }
+
+    40% {
+        -webkit-transform: scale(1.0)
+    }
+}
+
+@keyframes bouncedelay {
+
+    0%,
+    80%,
+    100% {
+        -webkit-transform: scale(0);
+        transform: scale(0);
+    }
+
+    40% {
+        -webkit-transform: scale(1.0);
+        transform: scale(1.0);
+    }
+}

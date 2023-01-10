@@ -1,0 +1,347 @@
+@use '../../../node_modules/normalize.css/normalize.css';
+@use '../../../node_modules/@mapsindoors/midt/background-color';
+@use '../../../node_modules/@mapsindoors/midt/border';
+@use '../../../node_modules/@mapsindoors/midt/color';
+@use '../../../node_modules/@mapsindoors/midt/elevation';
+@use '../../../node_modules/@mapsindoors/midt/font';
+@use '../../../node_modules/@mapsindoors/midt/icons';
+@use '../../../node_modules/@mapsindoors/midt/margin';
+@use '../../../node_modules/@mapsindoors/midt/opacity';
+@use '../../../node_modules/@mapsindoors/midt/padding';
+@use '../../../node_modules/@mapsindoors/midt/sizing';
+@use '../../../node_modules/@mapsindoors/midt/transitions';
+@use '../../../node_modules/@mapsindoors/midt/z-index';
+@use '../../../node_modules/@mapsindoors/midt/build/scss/variables' as *;
+@use '../../../node_modules/@mapsindoors/css/buttons.css';
+
+// * {
+//   border: 1px solid gold;
+// }
+
+body {
+    @include font.family(sans-serif);
+    @include font.size(medium);
+    @include font.weight(medium);
+    @include font.leading(x-large);
+    @include font.tracking(medium);
+    @include font.color(base);
+    @include background-color.white(base);
+}
+
+.wrap {
+    max-width: 1248px;
+    margin-left: auto;
+    margin-right: auto;
+    .container {
+        display: flex;
+        flex: 1 0;
+    }
+}
+
+main {
+    @include margin.top(medium);
+    p,
+    ul,
+    ol,
+    blockquote {
+        @include font.measure(large);
+    }
+}
+
+a {
+    text-decoration: none;
+    @include color.blue(60);
+
+    &:hover {
+        text-decoration: underline;
+        @include color.blue(70);
+    }
+
+    &:active {
+        @include color.magenta(60);
+    }
+}
+
+// Header
+
+header {
+    svg.mapspeople-logo path {
+        fill: white;
+    }
+    background-image: linear-gradient(
+        to bottom,
+        $color-green-90,
+        $color-green-100
+    );
+    .flex {
+        display: flex;
+    }
+    .left {
+        @include margin.vertical(medium);
+        flex: 1 1 auto;
+        min-width: 0;
+        min-height: 0;
+    }
+    .right {
+        @include margin.vertical(medium);
+        align-items: center;
+        display: inline-flex;
+        text-align: right;
+
+        a {
+            vertical-align: middle;
+            @include padding.left(medium);
+            display: inline-block;
+        }
+    }
+    a {
+        @include color.white(base);
+
+        &:hover {
+            text-decoration: underline;
+            @include color.gray(20);
+        }
+
+        &:active {
+            @include color.gray(30);
+        }
+
+        &:visited {
+            @include color.white(base);
+        }
+    }
+}
+
+// Front
+
+.front {
+    background-image: linear-gradient(to bottom right, #f4f0e8, #d8e8e0);
+    min-height: 100vh;
+    h1 {
+        @include padding.bottom(large);
+    }
+}
+
+.front-card {
+    @include elevation.elevation(small);
+    @include font.weight(large);
+    @include font.size(large);
+    @include border.radius(large);
+    @include margin.right(large);
+    @include margin.bottom(large);
+    @include padding.vertical(large);
+    @include padding.horizontal(x-large);
+    @include background-color.white(white);
+    text-align: center;
+    max-width: 20%;
+    float: left;
+}
+
+.beta {
+    @include font.size(xx-small);
+    text-transform: uppercase;
+    @include color.white(base);
+    @include background-color.bronze(60);
+    @include border.radius(medium);
+    @include padding.horizontal(small);
+    @include padding.vertical(xx-small);
+}
+
+// Text styles
+
+code {
+    @include font.family(monospace);
+}
+
+// Table
+
+table {
+    @include margin.top(small);
+    @include margin.bottom(medium);
+    display: inline-block;
+    text-align: left;
+    border: 1px solid $color-gray-40;
+    border-top: none;
+    border-collapse: collapse;
+    thead {
+        @include font.size(large);
+        @include background-color.gray(80);
+        th {
+            @include padding.all(small);
+            @include color.white(base);
+        }
+    }
+    tbody tr:nth-child(odd) {
+        @include background-color.gray(10);
+    }
+    td {
+        @include padding.horizontal(small);
+        @include padding.vertical(small);
+        min-width: 72px;
+        border-left: 1px solid $color-gray-30;
+        vertical-align: baseline;
+        word-break: break-word;
+        &:first-child {
+            border-left: none;
+        }
+    }
+}
+
+// Headline styles
+
+h1 {
+    @include font.size(xx-large);
+    @include font.weight(large);
+    @include font.leading(xx-large);
+    @include margin.bottom(large);
+    @include margin.top(x-large);
+}
+
+h2 {
+    @include font.size(x-large);
+    @include font.weight(large);
+    @include font.leading(x-large);
+    @include margin.bottom(large);
+    @include margin.top(x-large);
+}
+
+h3 {
+    @include font.size(large);
+    @include font.weight(x-large);
+    @include font.leading(large);
+    @include margin.bottom(large);
+    @include margin.top(x-large);
+}
+
+h4 {
+    @include font.size(medium);
+    @include font.weight(xx-large);
+    @include font.leading(medium);
+    @include margin.bottom(medium);
+    @include margin.top(large);
+}
+
+h5 {
+    @include font.size(small);
+    @include font.weight(xx-large);
+    @include font.leading(medium);
+    @include margin.bottom(small);
+    @include margin.top(medium);
+}
+
+h6 {
+    @include font.size(x-small);
+    @include font.weight(xx-large);
+    @include font.tracking(x-large);
+    @include margin.bottom(small);
+    @include margin.top(medium);
+    text-transform: uppercase;
+}
+
+// Code highlight styling. .hljs is a highlight.js-specific class.
+
+pre {
+    code.hljs {
+        @include border.gray(40);
+        @include border.style(solid);
+        @include border.width(medium);
+        @include border.radius(medium);
+        @include background-color.white(white);
+        @include font.family(monospace);
+        max-width: 560px;
+        overflow: auto;
+        width: $font-measure-large;
+        @include padding.all(large);
+    }
+}
+
+header {
+    svg.mapspeople-logo path {
+        fill: white;
+    }
+    background-image: linear-gradient(
+        to bottom,
+        $color-green-90,
+        $color-green-100
+    );
+    .flex {
+        display: flex;
+    }
+    .left {
+        @include margin.vertical(medium);
+        flex: 1 1 auto;
+        min-width: 0;
+        min-height: 0;
+    }
+    .right {
+        @include margin.vertical(medium);
+        align-items: center;
+        display: inline-flex;
+        text-align: right;
+
+        a {
+            vertical-align: middle;
+            @include padding.left(medium);
+            display: inline-block;
+        }
+    }
+    a {
+        @include color.white(base);
+
+        &:hover {
+            text-decoration: underline;
+            @include color.gray(20);
+        }
+
+        &:active {
+            @include color.gray(30);
+        }
+
+        &:visited {
+            @include color.white(base);
+        }
+    }
+}
+
+// Dark theme overrides. Should always be at the bottom.
+// @media (prefers-color-scheme: dark) {
+//     body {
+//         @include font.color(inverse);
+//         @include background-color.gray(100);
+//     }
+
+//     a {
+//         @include color.bronze(20);
+
+//         &:hover {
+//             text-decoration: underline;
+//             @include color.bronze(30);
+//         }
+
+//         &:active {
+//             @include color.bronze(40);
+//         }
+//     }
+//     pre code.hljs {
+//         @include border.style(none);
+//     }
+//     nav.sidebar {
+//         li.active {
+//             @include border.bronze(20);
+//             a {
+//                 @include color.bronze(30);
+//             }
+//             ul li a {
+//                 @include color.bronze(20);
+//             }
+//         }
+//     }
+//     header,
+//     footer {
+//         @include background-color.black(base);
+//         background-image: none;
+//     }
+//     p code {
+//         @include background-color.gray(80);
+//     }
+// }

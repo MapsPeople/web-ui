@@ -1,0 +1,82 @@
+@use "~@mapsindoors/midt/background-color";
+@use "~@mapsindoors/midt/border";
+@use "~@mapsindoors/midt/color";
+@use "~@mapsindoors/midt/elevation";
+@use "~@mapsindoors/midt/font";
+@use "~@mapsindoors/midt/icons";
+@use "~@mapsindoors/midt/margin";
+@use "~@mapsindoors/midt/opacity";
+@use "~@mapsindoors/midt/padding";
+@use "~@mapsindoors/midt/transitions";
+@use "~@mapsindoors/midt/z-index";
+@use "~@mapsindoors/midt/build/scss/variables";
+
+:host {
+    @include font.family(sans-serif);
+
+    flex-shrink: 0;
+    flex-grow: 1;
+
+    .nav {
+        @include border.all(none);
+        @include border.bottom(solid);
+        @include border.gray(40);
+        @include border.width(medium);
+
+        @include padding.left(large);
+
+        &--borderless-bottom {
+            border-bottom: 0;
+        }
+
+        ul {
+            display: flex;
+            flex-direction: row;
+
+            @include padding.all(none);
+            @include margin.all(none);
+
+            margin-bottom: -1px;
+
+            li {
+                list-style: none;
+                text-align: center;
+                cursor: pointer;
+
+                @include padding.all(medium);
+                @include border.width(medium);
+                @include border.style(solid);
+                border-color: rgba(0, 0, 0, 0);
+
+                &.active {
+                    @include background-color.gray(10);
+
+                    @include border.gray(40);
+                    @include border.width(medium);
+                    @include border.style(solid);
+                    @include border.bottom(none);
+                    border-top-left-radius: 4px;
+                    border-top-right-radius: 4px;
+
+                    @include font.weight(x-large);
+
+                }
+            }
+        }
+    }
+
+    .content {
+        display: block;
+
+        @include padding.all(medium);
+        @include background-color.gray(10);
+
+        &--bordered {
+            @include border.width('medium');
+            @include border.gray(40);
+            @include border.style('solid');
+            @include border.radius('medium');
+        }
+
+    }
+}

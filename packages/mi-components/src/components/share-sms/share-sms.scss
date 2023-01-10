@@ -1,0 +1,70 @@
+@use '~@mapsindoors/midt/build/scss/variables';
+@use "~@mapsindoors/midt/font";
+@use "~@mapsindoors/midt/color";
+@use "~@mapsindoors/midt/margin";
+@use "~@mapsindoors/midt/sizing";
+@use "~@mapsindoors/midt/background-color";
+@use "~@mapsindoors/midt/border";
+@use '~@mapsindoors/midt/padding';
+
+@import "../../../../../node_modules/@mapsindoors/css/buttons.css";
+@import "../../../../../node_modules/@mapsindoors/css/helpers.css";
+
+form {
+    .inputs {
+        margin: 0 auto;
+        width: 80%;
+        @include padding.vertical(x-large);
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        // Plus sign (+). Used in front of country code.
+        span.plus-sign {
+            position: absolute;
+            left: variables.$spacing-medium;
+            display: block;
+            @include font.size(medium);
+            @include font.family(sans-serif);
+            @include color.black();
+            // Internet Explorer workaround
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        input {
+            @include padding.horizontal(small);
+            @include background-color.white(white);
+            @include border.style(solid);
+            @include border.width(medium);
+            @include border.radius(large);
+            @include sizing.height(xxx-large);
+            @include font.size(large);
+            @include font.family(sans-serif);
+            @include color.black();
+            box-sizing: border-box;
+
+            &:focus {
+                @include border.blue(60);
+                box-shadow: 0 0 0 2px variables.$color-blue-20;
+            }
+
+            &.country-code {
+                width: 15%;
+                min-width: 88px;
+                @include margin.right(medium);
+                @include padding.left(x-large);
+            }
+
+            &.phone-number {
+                width: 85%;
+            }
+        }
+    }
+
+    button {
+        @include margin.top(x-large);
+        @include margin.bottom(large);
+    }
+}

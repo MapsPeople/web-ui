@@ -1,0 +1,49 @@
+@use "~@mapsindoors/midt/padding";
+@use "~@mapsindoors/midt/background-color";
+@use "~@mapsindoors/midt/icons";
+@use "~@mapsindoors/midt/font";
+@use "~@mapsindoors/midt/transitions";
+
+:host {
+    display: block;
+    @include background-color.white(base);
+    @include font.family(sans-serif);
+
+    mi-route-instructions-step {
+        &:hover {
+            cursor: pointer;
+            @include background-color.gray(10);
+            @include transitions.transition(quickly);
+        }
+
+        &.active {
+            @include background-color.gray(20);
+            transition: none;
+            cursor: default;
+        }
+    }
+
+    .instructions-destination {
+        display: flex;
+
+        &-icon {
+            width: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            mi-icon {
+                @include icons.size(medium);
+                @include background-color.black(base);
+            }
+        }
+
+        &-details {
+            flex: 1;
+            @include padding.all(small);
+            mi-location-info {
+                @include font.size(small);
+            }
+        }
+    }
+}

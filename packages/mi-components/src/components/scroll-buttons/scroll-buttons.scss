@@ -1,0 +1,34 @@
+@use "~@mapsindoors/midt/font";
+@use "~@mapsindoors/midt/color";
+@use "~@mapsindoors/midt/margin";
+@use "~@mapsindoors/midt/sizing";
+@use "~@mapsindoors/midt/background-color";
+@use "~@mapsindoors/midt/border";
+
+@import "../../global/global";
+@import "../../../../../node_modules/@mapsindoors/css/buttons.css";
+
+.scroll-buttons {
+    height: 100%;
+    @include sizing.width(xxxx-large);
+    @include background-color.gray(10);
+    @include border.left(solid);
+    @include border.gray(30);
+    @include border.width(medium);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .btn {
+        @include margin.all(x-small);
+
+        &-up::after {
+            content: "\2191";
+        }
+
+        &-down::after {
+            content: "\2193";
+        }
+    }
+}

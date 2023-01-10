@@ -1,0 +1,196 @@
+@use "~@mapsindoors/midt/background-color";
+@use "~@mapsindoors/midt/border";
+@use "~@mapsindoors/midt/color";
+@use "~@mapsindoors/midt/elevation";
+@use "~@mapsindoors/midt/font";
+@use "~@mapsindoors/midt/icons";
+@use "~@mapsindoors/midt/margin";
+@use "~@mapsindoors/midt/opacity";
+@use "~@mapsindoors/midt/padding";
+@use "~@mapsindoors/midt/transitions";
+@use "~@mapsindoors/midt/z-index";
+
+@use "~@mapsindoors/midt/build/scss/variables" as variables;
+
+// We need to expose MapsIndoors CSS and MIDT helper classes so they can be used in the table.
+/* For unknown reasons the '~' notation does not work */
+@import "../../../../../node_modules/@mapsindoors/css/buttons.css";
+@import "../../../../../node_modules/@mapsindoors/css/input.css";
+@import "../../../../../node_modules/@mapsindoors/css/select.css";
+@import "../../../../../node_modules/@mapsindoors/css/toggle.css";
+@import "../../../../../node_modules/@mapsindoors/css/helpers.css";
+@import "../../../../../node_modules/@mapsindoors/midt/midt.css";
+
+* {
+    box-sizing: border-box;
+}
+
+@mixin fitContent {
+    white-space: nowrap;
+    width: 1px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+
+    @include font.family(sans-serif);
+    @include background-color.white(white);
+
+    @include border.style(solid);
+    @include border.width(medium);
+    @include border.gray(40);
+    // Remove top border because it makes the header "jump" when scrolling
+    @include border.top("none");
+
+    &__header-cell {
+        position: relative;
+        text-align: left;
+        user-select: none;
+        min-width: variables.$spacing-xxx-large;
+
+        @include font.weight(large);
+        @include font.size(medium);
+        @include font.leading(large);
+
+        @include color.white(white);
+        @include background-color.gray(80);
+
+        @include padding.vertical();
+        @include padding.horizontal(x-small);
+
+        &::before,
+        &::after {
+            content: "";
+            display: block;
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            border: 7px solid transparent;
+        }
+
+        &::before {
+            border-bottom-color: variables.$color-gray-60;
+            margin-top: -15px;
+        }
+
+        &::after {
+            border-top-color: variables.$color-gray-60;
+            margin-top: 3px;
+        }
+
+        &.desc::after {
+            border-top-color: variables.$color-gray-10;
+        }
+
+        &.asc::before {
+            border-bottom-color: variables.$color-gray-10;
+        }
+
+        &--no-sort {
+            &::before,
+            &::after {
+                border: none;
+            }
+        }
+
+        &:not(&--no-sort) {
+            // The padding is added to make sure that the sort arrows do not overlap the header text.
+            // Why 46px? The width of the arrows is 14px and the padding of the cell is 16px. So 16 + 14 + 16 = 46 to get even spacing between the text and the arrows.
+            padding-right: 46px;
+            cursor: pointer;
+        }
+
+        &--fit-content {
+            @include fitContent();
+        }
+
+        &--align-left {
+            text-align: left;
+        }
+
+        &--align-center {
+            text-align: center;
+        }
+
+        &--align-right {
+            text-align: right;
+        }
+
+        &--sticky {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+    }
+
+    &__row {
+        &:nth-child(even) {
+            &:hover {
+                @include background-color.gray(20);
+            }
+        }
+
+        &:nth-child(odd) {
+            @include background-color.gray(10);
+
+            &:hover {
+                @include background-color.gray(20);
+            }
+        }
+    }
+
+    &__data {
+        @include font.size(medium);
+        @include padding.horizontal(x-small);
+        height: calc(variables.$spacing-xxx-large + variables.$spacing-x-small);
+        border-right: 1px solid variables.$color-gray-40;
+
+        &:last-child {
+            border-right: none;
+        }
+
+        &--fit-content {
+            @include fitContent();
+        }
+
+        &--align-left {
+            text-align: left;
+        }
+
+        &--align-center {
+            text-align: center;
+        }
+
+        &--align-right {
+            text-align: right;
+        }
+
+        &--monospace-font {
+            @include font.family('monospace');
+        }
+    }
+}
+
+.empty-page {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    // NOTE: Below pixel values are based on the design, which don't exist in midt.
+    margin-top: 72px;
+    height: 345px;
+
+    > * {
+        margin: 0;
+    }
+
+    &__header {
+        @include font.size(xx-large);
+    }
+
+    &__subheader {
+        @include margin.top(x-large);
+        @include font.size(x-large);
+    }
+}
