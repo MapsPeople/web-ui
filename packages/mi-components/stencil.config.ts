@@ -35,7 +35,7 @@ export const config: Config = {
     },
     namespace: 'mi-components',
     devServer: {
-        port: 3000,
+        port: 3001,
         openBrowser: true,
         initialLoadUrl: 'components/'
     },

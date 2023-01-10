@@ -1,12 +1,12 @@
-@use '@mapsindoors/midt/build/scss/variables';
-@use '@mapsindoors/midt/font';
-@use '@mapsindoors/midt/margin';
-@use '@mapsindoors/midt/sizing';
-@use '@mapsindoors/midt/opacity';
-@use '@mapsindoors/midt/color';
-@use '@mapsindoors/midt/border';
+@use '~@mapsindoors/midt/build/scss/variables';
+@use '~@mapsindoors/midt/font';
+@use '~@mapsindoors/midt/margin';
+@use '~@mapsindoors/midt/sizing';
+@use '~@mapsindoors/midt/opacity';
+@use '~@mapsindoors/midt/color';
+@use '~@mapsindoors/midt/border';
 
-@import "../../../node_modules/@mapsindoors/css/buttons.css";
+@import "../../../../../node_modules/@mapsindoors/css/buttons.css";
 
 :host {
     display: block;

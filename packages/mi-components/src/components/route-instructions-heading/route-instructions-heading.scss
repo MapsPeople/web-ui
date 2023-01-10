@@ -1,9 +1,9 @@
-@use '@mapsindoors/midt/build/scss/variables';
-@use "@mapsindoors/midt/padding";
-@use "@mapsindoors/midt/font";
-@use "@mapsindoors/midt/color";
-@use "@mapsindoors/midt/background-color";
-@use "@mapsindoors/midt/icons";
+@use '~@mapsindoors/midt/build/scss/variables';
+@use "~@mapsindoors/midt/padding";
+@use "~@mapsindoors/midt/font";
+@use "~@mapsindoors/midt/color";
+@use "~@mapsindoors/midt/background-color";
+@use "~@mapsindoors/midt/icons";
 
 .directions {
     border-bottom: 1px solid variables.$color-gray-40;

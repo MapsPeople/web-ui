@@ -1,9 +1,9 @@
-@use '@mapsindoors/midt/background-color';
-@use '@mapsindoors/midt/border';
-@use '@mapsindoors/midt/sizing';
-@use '@mapsindoors/midt/font';
-@use '@mapsindoors/midt/color';
-@use '@mapsindoors/midt/padding';
+@use '~@mapsindoors/midt/background-color';
+@use '~@mapsindoors/midt/border';
+@use '~@mapsindoors/midt/sizing';
+@use '~@mapsindoors/midt/font';
+@use '~@mapsindoors/midt/color';
+@use '~@mapsindoors/midt/padding';
 
 mi-search {
     display: block;

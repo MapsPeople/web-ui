@@ -1,25 +1,25 @@
-@use "@mapsindoors/midt/background-color";
-@use "@mapsindoors/midt/border";
-@use "@mapsindoors/midt/color";
-@use "@mapsindoors/midt/elevation";
-@use "@mapsindoors/midt/font";
-@use "@mapsindoors/midt/icons";
-@use "@mapsindoors/midt/margin";
-@use "@mapsindoors/midt/opacity";
-@use "@mapsindoors/midt/padding";
-@use "@mapsindoors/midt/transitions";
-@use "@mapsindoors/midt/z-index";
+@use "~@mapsindoors/midt/background-color";
+@use "~@mapsindoors/midt/border";
+@use "~@mapsindoors/midt/color";
+@use "~@mapsindoors/midt/elevation";
+@use "~@mapsindoors/midt/font";
+@use "~@mapsindoors/midt/icons";
+@use "~@mapsindoors/midt/margin";
+@use "~@mapsindoors/midt/opacity";
+@use "~@mapsindoors/midt/padding";
+@use "~@mapsindoors/midt/transitions";
+@use "~@mapsindoors/midt/z-index";
 
-@use "@mapsindoors/midt/build/scss/variables" as variables;
+@use "~@mapsindoors/midt/build/scss/variables" as variables;
 
 // We need to expose MapsIndoors CSS and MIDT helper classes so they can be used in the table.
 /* For unknown reasons the '~' notation does not work */
-@import "../../../node_modules/@mapsindoors/css/buttons.css";
-@import "../../../node_modules/@mapsindoors/css/input.css";
-@import "../../../node_modules/@mapsindoors/css/select.css";
-@import "../../../node_modules/@mapsindoors/css/toggle.css";
-@import "../../../node_modules/@mapsindoors/css/helpers.css";
-@import "../../../node_modules/@mapsindoors/midt/midt.css";
+@import "../../../../../node_modules/@mapsindoors/css/buttons.css";
+@import "../../../../../node_modules/@mapsindoors/css/input.css";
+@import "../../../../../node_modules/@mapsindoors/css/select.css";
+@import "../../../../../node_modules/@mapsindoors/css/toggle.css";
+@import "../../../../../node_modules/@mapsindoors/css/helpers.css";
+@import "../../../../../node_modules/@mapsindoors/midt/midt.css";
 
 * {
     box-sizing: border-box;

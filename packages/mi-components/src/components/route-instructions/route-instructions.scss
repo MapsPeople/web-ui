@@ -1,8 +1,8 @@
-@use "@mapsindoors/midt/padding";
-@use "@mapsindoors/midt/background-color";
-@use "@mapsindoors/midt/icons";
-@use "@mapsindoors/midt/font";
-@use "@mapsindoors/midt/transitions";
+@use "~@mapsindoors/midt/padding";
+@use "~@mapsindoors/midt/background-color";
+@use "~@mapsindoors/midt/icons";
+@use "~@mapsindoors/midt/font";
+@use "~@mapsindoors/midt/transitions";
 
 :host {
     display: block;

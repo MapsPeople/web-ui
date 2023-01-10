@@ -1,9 +1,9 @@
-@use '@mapsindoors/midt/build/scss/variables';
-@use "@mapsindoors/midt/icons";
-@use "@mapsindoors/midt/sizing";
-@use "@mapsindoors/midt/padding";
-@use "@mapsindoors/midt/border";
-@use "@mapsindoors/midt/font";
+@use '~@mapsindoors/midt/build/scss/variables';
+@use "~@mapsindoors/midt/icons";
+@use "~@mapsindoors/midt/sizing";
+@use "~@mapsindoors/midt/padding";
+@use "~@mapsindoors/midt/border";
+@use "~@mapsindoors/midt/font";
 
 :host {
     display: flex;

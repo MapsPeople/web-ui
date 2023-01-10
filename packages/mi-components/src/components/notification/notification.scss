@@ -1,11 +1,11 @@
-@use "@mapsindoors/midt/font";
-@use "@mapsindoors/midt/color";
-@use "@mapsindoors/midt/background-color";
-@use "@mapsindoors/midt/padding";
-@use "@mapsindoors/midt/margin";
-@use "@mapsindoors/midt/sizing";
-@use "@mapsindoors/midt/elevation";
-@use "@mapsindoors/midt/border";
+@use "~@mapsindoors/midt/font";
+@use "~@mapsindoors/midt/color";
+@use "~@mapsindoors/midt/background-color";
+@use "~@mapsindoors/midt/padding";
+@use "~@mapsindoors/midt/margin";
+@use "~@mapsindoors/midt/sizing";
+@use "~@mapsindoors/midt/elevation";
+@use "~@mapsindoors/midt/border";
 
 :host {
     @include padding.all(medium);
