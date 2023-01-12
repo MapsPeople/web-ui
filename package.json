@@ -29,5 +29,8 @@
   ],
   "devDependencies": {
     "lerna": "^6.4.0"
+  },
+  "dependencies": {
+    "mapbox-gl": "^2.12.0"
   }
 }
