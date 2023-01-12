@@ -1,5 +1,8 @@
+import { useEffect } from 'react';
 import { useState } from 'react';
 import Map from "../Map/Map";
+
+const mapsindoors = window.mapsindoors;
 
 /**
  *
@@ -11,13 +14,17 @@ import Map from "../Map/Map";
  */
 function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken }) {
 
+    useEffect(() => {
+        mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKey);
+    }, [apiKey]);
+
     const [isMapReady, setMapReady] = useState(false);
 
     function onMapReady() {
         setMapReady(true);
     }
 
-    return (<div>
+    return (<div className="full">
         {/* Splash screen, bottoms sheets, venue selector etc. can be here */}
         <Map apiKey={apiKey} gmApiKey={gmApiKey} mapboxAccessToken={mapboxAccessToken} onReady={onMapReady} />
     </div>)

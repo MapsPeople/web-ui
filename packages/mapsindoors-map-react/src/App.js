@@ -11,8 +11,9 @@ function App() {
 
                 {/* This is the Map Template component */}
                 <MapsIndoorsMap
-                    apiKey="mapspeople"
+                    apiKey="demo"
                     mapboxAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
+                    // gmApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
                 />
 
 
