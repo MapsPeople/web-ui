@@ -10,7 +10,6 @@ const mapsindoors = window.mapsindoors;
  * @param {string} props.apiKey - MapsIndoors API key or solution alias.
  * @param {string} [props.gmApiKey] - Google Maps API key if you want to show a Google Maps map.
  * @param {string} [props.mapboxAccessToken] - Mapbox Access Token if you want to show a Google Maps map.
- * @returns
  */
 function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken }) {
 
