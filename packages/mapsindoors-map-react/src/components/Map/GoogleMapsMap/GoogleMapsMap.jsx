@@ -17,7 +17,7 @@ function GoogleMapsMap({ gmApiKey, onMapView}) {
         const loader = new GoogleMapsApiLoader({
             apiKey: gmApiKey,
             version: 'quarterly',
-            libraryes: 'geometry'
+            libraries: ['geometry']
         });
 
         loader.load().then(google => {
