@@ -12,8 +12,11 @@ const mapsindoors = window.mapsindoors;
  * @param {string} [props.mapboxAccessToken] - Mapbox Access Token if you want to show a Google Maps map.
  * @param {string} [props.venue] - If you want the map to start at a specific Venue, provide the Venue name here.
  */
-function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue: venueName }) {
+function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue }) {
 
+    /*
+     * React on changes in the MapsIndoors API key.
+     */
     useEffect(() => {
         mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKey);
     }, [apiKey]);
@@ -26,7 +29,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue: venueName 
 
     return (<div className="full">
         {/* Splash screen, bottoms sheets, venue selector etc. can be here */}
-        <Map apiKey={apiKey} gmApiKey={gmApiKey} mapboxAccessToken={mapboxAccessToken} onReady={onMapReady} venueName={venueName} />
+        <Map apiKey={apiKey} gmApiKey={gmApiKey} mapboxAccessToken={mapboxAccessToken} onReady={onMapReady} venueName={venue} />
     </div>)
 }
 
