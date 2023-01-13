@@ -1,0 +1,24 @@
+@use '~@mapsindoors/midt/background-color';
+@use '~@mapsindoors/midt/border';
+@use '~@mapsindoors/midt/color';
+@use '~@mapsindoors/midt/sizing';
+
+.venue-selector {
+    position: absolute;
+    top: 60px;
+    left: 8px;
+    z-index: 1;
+
+    &__button {
+        border: none;
+        @include background-color.white();
+        @include sizing.width(xx-large);
+        @include sizing.height(xx-large);
+        @include border.radius(x-large);
+    }
+
+    &__list {
+        @include background-color.white();
+        @include color.black();
+    }
+}

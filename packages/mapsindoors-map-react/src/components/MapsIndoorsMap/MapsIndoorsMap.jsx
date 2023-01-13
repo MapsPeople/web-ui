@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useState } from 'react';
-import Map from "../Map/Map";
+import Map from '../Map/Map';
+import VenueSelector from '../VenueSelector/VenueSelector';
 
 const mapsindoors = window.mapsindoors;
 
@@ -29,6 +30,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue }) {
 
     return (<div className="full">
         {/* Splash screen, bottoms sheets, venue selector etc. can be here */}
+        <VenueSelector />
         <Map apiKey={apiKey} gmApiKey={gmApiKey} mapboxAccessToken={mapboxAccessToken} onReady={onMapReady} venueName={venue} />
     </div>)
 }
