@@ -18,7 +18,7 @@ const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
  * @param {string} [props.gmApiKey] - Google Maps API key if you want to show a Google Maps map.
  * @param {string} [props.mapboxAccessToken] - Mapbox Access Token if you want to show a Mapbox map.
  * @param {function} [props.onReady] - Function that will be run when the map is ready
- * @param {string} [props.preferredVenueName] - If you want the map to start at a specific Venue, provide the Venue ID here.
+ * @param {string} [props.venueName] - If you want the map to show a specific Venue, provide the Venue name here.
  * @returns
  */
 function Map({ gmApiKey, mapboxAccessToken, onReady, venueName }) {
