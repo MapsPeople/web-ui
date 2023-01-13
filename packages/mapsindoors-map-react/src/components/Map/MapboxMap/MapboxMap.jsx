@@ -19,9 +19,7 @@ function MapboxMap({ mapboxAccessToken, onMapView }) {
         window.mapboxgl = mapboxgl;
         const mapViewOptions = {
             accessToken: mapboxAccessToken,
-            element: document.getElementById('map'),
-            center: { lat: 38.8974905, lng: -77.0362723 }, // TODO: Not here
-            zoom: 17 // TODO: Not here
+            element: document.getElementById('map')
         };
 
         const mapViewInstance = new mapsindoors.mapView.MapboxView(mapViewOptions);
