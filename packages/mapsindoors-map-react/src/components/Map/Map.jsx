@@ -55,8 +55,9 @@ async function getVenueToShow(preferredVenueName) {
  * @param {string} [props.preferredVenueName] - If you want the map to start at a specific Venue, provide the Venue ID here.
  * @returns
  */
-function Map({ gmApiKey, mapboxAccessToken, onReady, preferredVenueName }) {
+function Map({ gmApiKey, mapboxAccessToken, onReady, venueName }) {
     const [mapType, setMapType] = useState();
+    const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState(null);
 
     useEffect(() => {
         if (mapboxAccessToken) {
@@ -66,6 +67,18 @@ function Map({ gmApiKey, mapboxAccessToken, onReady, preferredVenueName }) {
             setMapType(MAP_TYPES.GOOGLE);
         }
     }, [gmApiKey, mapboxAccessToken]);
+
+    /*
+     * React to changes in the venue prop.
+     */
+    useEffect(() => {
+        if (mapsIndoorsInstance) {
+            window.localStorage.clear(localStorageKeyForVenue);
+            getVenueToShow(venueName).then(venueToShow => {
+                setVenue(venueToShow, mapsIndoorsInstance);
+            });
+        }
+    }, [venueName]);
 
     /**
      * Set the venue to show on the map.
@@ -80,14 +93,16 @@ function Map({ gmApiKey, mapboxAccessToken, onReady, preferredVenueName }) {
 
     const onMapView = async (mapView) => {
         // Instantiate MapsIndoors instance
-        const mapsIndoorsInstance = new mapsindoors.MapsIndoors({
+        const miInstance = new mapsindoors.MapsIndoors({
             mapView
         });
 
-        mapsIndoorsInstance.on('ready', onReady);
+        miInstance.on('ready', onReady);
 
-        const venueToShow = await getVenueToShow(preferredVenueName);
-        setVenue(venueToShow, mapsIndoorsInstance);
+        setMapsIndoorsInstance(miInstance);
+
+        const venueToShow = await getVenueToShow(venueName);
+        setVenue(venueToShow, miInstance);
     };
 
     return (<div className="full">

@@ -26,7 +26,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue: venueName 
 
     return (<div className="full">
         {/* Splash screen, bottoms sheets, venue selector etc. can be here */}
-        <Map apiKey={apiKey} gmApiKey={gmApiKey} mapboxAccessToken={mapboxAccessToken} onReady={onMapReady} preferredVenueName={venueName} />
+        <Map apiKey={apiKey} gmApiKey={gmApiKey} mapboxAccessToken={mapboxAccessToken} onReady={onMapReady} venueName={venueName} />
     </div>)
 }
 
