@@ -71,10 +71,10 @@ function Map({ gmApiKey, mapboxAccessToken, onReady, venueName }) {
         setVenue(venueToShow, miInstance);
     };
 
-    return (<div className="full">
+    return (<>
         {mapType === MAP_TYPES.GOOGLE && <GoogleMapsMap gmApiKey={gmApiKey} onMapView={onMapView} />}
         {mapType === MAP_TYPES.MAPBOX && <MapboxMap mapboxAccessToken={mapboxAccessToken} onMapView={onMapView} />}
-    </div>)
+    </>)
 }
 
 export default Map;
