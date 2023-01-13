@@ -12,41 +12,7 @@ const MAP_TYPES = {
 const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
 
 /**
- * Get the venue to show initally on the map.
- *
- * @param {string} preferredVenueName
- * @returns {object} - venue
- */
-async function getVenueToShow(preferredVenueName) {
-    const venues = await mapsindoors.services.VenuesService.getVenues();
-
-    // If there's only one venue, early return with that.
-    if (venues.length === 1) {
-        return venues[0];
-    }
-
-    // If last selected venue is set in localStorage, use that.
-    const lastSetVenue = window.localStorage.getItem(localStorageKeyForVenue);
-    if (lastSetVenue) {
-        const venue = venues.find(v => v.name === lastSetVenue);
-        if (venue) {
-            return venue;
-        }
-    }
-
-    // If venue parameter is set on the component, use that.
-    if (preferredVenueName) {
-        const venue = venues.find(v => v.name === preferredVenueName);
-        if (venue) {
-            return venue;
-        }
-    }
-
-    // Else take first venue sorted alphabetically
-    return venues.sort(function(a,b) {return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);} )[0];
-}
-
-/**
+ * Shows a map.
  *
  * @param {Object} props
  * @param {string} [props.gmApiKey] - Google Maps API key if you want to show a Google Maps map.
@@ -112,3 +78,39 @@ function Map({ gmApiKey, mapboxAccessToken, onReady, venueName }) {
 }
 
 export default Map;
+
+
+/**
+ * Get the venue to show initally on the map.
+ *
+ * @param {string} preferredVenueName
+ * @returns {object} - venue
+ */
+ async function getVenueToShow(preferredVenueName) {
+    const venues = await mapsindoors.services.VenuesService.getVenues();
+
+    // If there's only one venue, early return with that.
+    if (venues.length === 1) {
+        return venues[0];
+    }
+
+    // If last selected venue is set in localStorage, use that.
+    const lastSetVenue = window.localStorage.getItem(localStorageKeyForVenue);
+    if (lastSetVenue) {
+        const venue = venues.find(v => v.name === lastSetVenue);
+        if (venue) {
+            return venue;
+        }
+    }
+
+    // If venue parameter is set on the component, use that.
+    if (preferredVenueName) {
+        const venue = venues.find(v => v.name === preferredVenueName);
+        if (venue) {
+            return venue;
+        }
+    }
+
+    // Else take first venue sorted alphabetically
+    return venues.sort(function(a,b) {return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);} )[0];
+}
