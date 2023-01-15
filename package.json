@@ -29,5 +29,8 @@
   ],
   "devDependencies": {
     "lerna": "^6.4.0"
+  },
+  "dependencies": {
+    "react-transition-group": "^4.4.5"
   }
 }
