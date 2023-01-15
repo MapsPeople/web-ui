@@ -26,7 +26,7 @@ function MapboxMap({ mapboxAccessToken, onMapView }) {
         onMapView(mapViewInstance);
     }, []);
 
-    return <div className="full" id="map"></div>
+    return <div className="map" id="map"></div>
 }
 
 export default MapboxMap;

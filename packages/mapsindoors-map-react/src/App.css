@@ -1,29 +1,14 @@
 .app {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
     width: 100vw;
     height: 100vh;
-    background-color: rgb(0, 86, 85);
-    color: white;
-}
-
-.app mi-icon {
-    background-color: white;
-    width: 3rem;
-    height: 3rem;
 }
 
 .app__map-container {
-    margin-top: 1rem;
-    width: 90vw;
-    height: 80vh;
-    border: 1px solid black;
+    width: 100vw;
+    height: 100vh;
 }
 
-.full {
+.map {
     width: 100%;
     height: 100%;
 }

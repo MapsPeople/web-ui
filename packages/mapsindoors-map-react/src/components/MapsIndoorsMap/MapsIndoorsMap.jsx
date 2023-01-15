@@ -23,12 +23,14 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue }) {
     }, [apiKey]);
 
     const [isMapReady, setMapReady] = useState(false);
-
+    
     function onMapReady() {
-        setMapReady(true);
+        setTimeout(() => {
+            setMapReady(true);
+        }, 4000);
     }
 
-    return (<div className="full">
+    return (<div className="map">
         {/* Splash screen, bottoms sheets, venue selector etc. can be here */}
 		{!isMapReady && <SplashScreen />}
         <Map apiKey={apiKey} gmApiKey={gmApiKey} mapboxAccessToken={mapboxAccessToken} onReady={onMapReady} venueName={venue} />
