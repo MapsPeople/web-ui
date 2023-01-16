@@ -10,8 +10,10 @@ import './Venue.scss';
  */
 function Venue({ venue, isCurrent, onVenueSelected }) {
     return <button className={`venue ${!venue.image ? 'venue--no-image' : ''}`} onClick={() => onVenueSelected()} style={ venue.image ? {backgroundImage: `url('${venue.image}')`} : {}}>
-        <div>{venue.venueInfo.name}</div>
-        {isCurrent && <div className="venue__current">Current</div>}
+        <div className="venue__content">
+            <div>{venue.venueInfo.name}</div>
+            {isCurrent && <div className="venue__current">Current</div>}
+        </div>
     </button>
 }
 
