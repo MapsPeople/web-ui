@@ -33,6 +33,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue }) {
      * Set the map to be in a ready state when the data has loaded.
      */
     useEffect(() => {
+        setMapReady(false);
         mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKey);
 
         // Fetch venue information when we know data is loaded and set the map to be in a ready state.
