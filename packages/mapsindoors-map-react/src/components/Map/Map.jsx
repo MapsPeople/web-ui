@@ -18,10 +18,11 @@ const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
  * @param {string} [props.gmApiKey] - Google Maps API key if you want to show a Google Maps map.
  * @param {string} [props.mapboxAccessToken] - Mapbox Access Token if you want to show a Mapbox map.
  * @param {function} [props.onReady] - Function that will be run when the map is ready
+ * @param {array} [props.venues] - Array of Venues in the current solution.
  * @param {string} [props.venueName] - If you want the map to show a specific Venue, provide the Venue name here.
  * @returns
  */
-function Map({ gmApiKey, mapboxAccessToken, onReady, venueName }) {
+function Map({ gmApiKey, mapboxAccessToken, onReady, venues, venueName }) {
     const [mapType, setMapType] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState(null);
 
@@ -40,11 +41,12 @@ function Map({ gmApiKey, mapboxAccessToken, onReady, venueName }) {
     useEffect(() => {
         if (mapsIndoorsInstance) {
             window.localStorage.clear(localStorageKeyForVenue);
-            getVenueToShow(venueName).then(venueToShow => {
+            const venueToShow = getVenueToShow(venueName, venues);
+            if (venueToShow) {
                 setVenue(venueToShow, mapsIndoorsInstance);
-            });
+            };
         }
-    }, [venueName]);
+    }, [venueName, venues]);
 
     /**
      * Set the venue to show on the map.
@@ -67,8 +69,10 @@ function Map({ gmApiKey, mapboxAccessToken, onReady, venueName }) {
 
         setMapsIndoorsInstance(miInstance);
 
-        const venueToShow = await getVenueToShow(venueName);
-        setVenue(venueToShow, miInstance);
+        const venueToShow = getVenueToShow(venueName, venues);
+        if (venueToShow) {
+            setVenue(venueToShow, miInstance);
+        }
     };
 
     return (<>
@@ -84,10 +88,11 @@ export default Map;
  * Get the venue to show initally on the map.
  *
  * @param {string} preferredVenueName
+ * @param {array} venues
  * @returns {object} - venue
  */
- async function getVenueToShow(preferredVenueName) {
-    const venues = await mapsindoors.services.VenuesService.getVenues();
+ function getVenueToShow(preferredVenueName, venues) {
+    if (venues.length === 0) return;
 
     // If there's only one venue, early return with that.
     if (venues.length === 1) {
