@@ -1,6 +1,7 @@
 @use '~@mapsindoors/midt/border';
 @use '~@mapsindoors/midt/color';
 @use '~@mapsindoors/midt/margin';
+@use '~@mapsindoors/midt/padding';
 @use '~@mapsindoors/midt/build/scss/variables';
 
 .venue {
@@ -8,16 +9,21 @@
     @include margin.all(x-small);
     @include border.radius(medium);
     @include color.white();
-    display: block;
+    @include padding.all(medium);
+    display: flex;
     width: calc(100% - variables.$spacing-medium);
     height: 145px; /* by spec */
     background: linear-gradient(#b8b8b8, #5e5e5e);
     position: relative;
     font-size: 14px;
+    text-align: left;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: variables.$spacing-medium;
 
-    &__name {
-        position: absolute;
-        bottom: variables.$spacing-medium;
-        left: variables.$spacing-medium;
+    &__current {
+        border: 1px solid white;
+        @include border.radius(large);
+        @include padding.all(x-small);
     }
 }

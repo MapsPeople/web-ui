@@ -8,9 +8,10 @@ import './Venue.scss';
  * @param {function} onVenueSelected
  * @returns
  */
-function Venue({ venue, onVenueSelected }) {
+function Venue({ venue, isCurrent, onVenueSelected }) {
     return <button className="venue" onClick={() => onVenueSelected()}>
-        <div className="venue__name">{venue.venueInfo.name}</div>
+        <div>{venue.venueInfo.name}</div>
+        {isCurrent && <div className="venue__current">Current</div>}
     </button>
 }
 

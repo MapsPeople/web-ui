@@ -7,10 +7,11 @@ import Venue from './Venue/Venue';
  *
  * @param {object} props
  * @param {array} props.venues
+ * @param {string} props.currentVenueName
  * @param {function} props.onVenueSelected
  * @returns
  */
-function VenueSelector({ venues, onVenueSelected }) {
+function VenueSelector({ venues, currentVenueName, onVenueSelected }) {
     const [active, setActive] = useState(false);
 
     /**
@@ -28,7 +29,7 @@ function VenueSelector({ venues, onVenueSelected }) {
             <BuildingLogo />
         </button>
         {active && <div className="venue-selector__list">
-            {venues.map(venue => (<Venue key={venue.id} venue={venue} onVenueSelected={() => selectVenue(venue)} />))}
+            {venues.map(venue => (<Venue key={venue.id} isCurrent={currentVenueName === venue.name} venue={venue} onVenueSelected={() => selectVenue(venue)} />))}
         </div>}
     </>
 }
