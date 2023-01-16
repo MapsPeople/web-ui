@@ -2,23 +2,31 @@
 @use '~@mapsindoors/midt/border';
 @use '~@mapsindoors/midt/color';
 @use '~@mapsindoors/midt/sizing';
+@use '~@mapsindoors/midt/build/scss/variables';
 
 .venue-selector {
-    position: absolute;
-    top: 60px;
-    left: 8px;
-    z-index: 1;
-
     &__button {
         border: none;
         @include background-color.white();
         @include sizing.width(xx-large);
         @include sizing.height(xx-large);
         @include border.radius(x-large);
+        position: absolute;
+        top: 60px;
+        left: variables.$spacing-x-small;
+        z-index: 1000; // Place on top of all map elements
     }
 
     &__list {
         @include background-color.white();
         @include color.black();
+        border-radius: variables.$spacing-x-small variables.$spacing-x-small 0 0;
+        position: absolute;
+        top: calc(60px + 40px + variables.$spacing-x-small); // The button offset + height of button + some margin
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000; // Place on top of all map elements
+        overflow-y: auto;
     }
 }
