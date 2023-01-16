@@ -1,5 +1,9 @@
-.mapsindoors-map * {
-    box-sizing: border-box;
+.mapsindoors-map {
+    overflow-y: hidden;
+
+    * {
+        box-sizing: border-box;
+    }
 }
 
 .map {

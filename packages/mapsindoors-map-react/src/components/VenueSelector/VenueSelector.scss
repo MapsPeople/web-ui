@@ -28,5 +28,13 @@
         right: 0;
         z-index: 1000; // Place on top of all map elements
         overflow-y: auto;
+
+        // Fixme: UX will come up with new transition
+        transform: translateY(calc(-100% - 108px));
+        transition: transform 0.4s ease;
+
+        &--active {
+            transform: translateY(0%);
+        }
     }
 }

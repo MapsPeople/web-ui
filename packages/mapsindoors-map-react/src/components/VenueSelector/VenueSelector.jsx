@@ -29,9 +29,9 @@ function VenueSelector({ venues, currentVenueName, onVenueSelected }) {
         <button className="venue-selector__button" onClick={() => setActive(current => !current)} aria-label="Venues">
             {active ? <CloseIcon /> : <BuildingIcon />}
         </button>
-        {active && <div className="venue-selector__list">
+        <div className={`venue-selector__list ${active ? 'venue-selector__list--active' : ''} `}>
             {venues.map(venue => (<Venue key={venue.id} isCurrent={currentVenueName === venue.name} venue={venue} onVenueSelected={() => selectVenue(venue)} />))}
-        </div>}
+        </div>
     </>
 }
 
