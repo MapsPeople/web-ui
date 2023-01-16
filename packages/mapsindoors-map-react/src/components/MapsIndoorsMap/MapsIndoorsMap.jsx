@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
 import { useState } from 'react';
-import Map from '../Map/Map';
-import VenueSelector from '../VenueSelector/VenueSelector';
 import './MapsIndoorsMap.scss';
+import Map from "../Map/Map";
+import SplashScreen from '../SplashScreen/SplashScreen';
+import VenueSelector from '../VenueSelector/VenueSelector';
 
 const mapsindoors = window.mapsindoors;
 
@@ -51,8 +52,9 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue }) {
         });
     }, [apiKey]);
 
-    return (<div className="full mapsindoors-map">
+    return (<div className="mapsindoors-map map">
         {/* Splash screen, bottoms sheets, venue selector etc. can be here */}
+        {!isMapReady && <SplashScreen />}
         {venues.length > 1 && <VenueSelector onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)} venues={venues} currentVenueName={currentVenueName} />}
         <Map apiKey={apiKey} gmApiKey={gmApiKey} mapboxAccessToken={mapboxAccessToken} venues={venues} venueName={currentVenueName} />
     </div>)

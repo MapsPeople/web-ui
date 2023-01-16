@@ -31,7 +31,7 @@ function GoogleMapsMap({ gmApiKey, onMapView}) {
         });
     }, []);
 
-    return <div className="full" id="map"></div>
+    return <div className="map" id="map"></div>
 }
 
 export default GoogleMapsMap;
