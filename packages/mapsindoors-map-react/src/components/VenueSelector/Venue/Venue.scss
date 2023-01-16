@@ -1,0 +1,23 @@
+@use '~@mapsindoors/midt/border';
+@use '~@mapsindoors/midt/color';
+@use '~@mapsindoors/midt/margin';
+@use '~@mapsindoors/midt/build/scss/variables';
+
+.venue {
+    border: none;
+    @include margin.all(x-small);
+    @include border.radius(medium);
+    @include color.white();
+    display: block;
+    width: calc(100% - variables.$spacing-medium);
+    height: 145px; /* by spec */
+    background: linear-gradient(#b8b8b8, #5e5e5e);
+    position: relative;
+    font-size: 14px;
+
+    &__name {
+        position: absolute;
+        bottom: variables.$spacing-medium;
+        left: variables.$spacing-medium;
+    }
+}
