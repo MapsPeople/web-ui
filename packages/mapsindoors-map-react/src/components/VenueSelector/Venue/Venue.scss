@@ -13,13 +13,17 @@
     display: flex;
     width: calc(100% - variables.$spacing-medium);
     height: 145px; /* by spec */
-    background: linear-gradient(#b8b8b8, #5e5e5e);
+    background-size: cover;
     position: relative;
     font-size: 14px;
     text-align: left;
     align-items: flex-end;
     justify-content: space-between;
     gap: variables.$spacing-medium;
+
+    &--no-image {
+        background: linear-gradient(#b8b8b8, #5e5e5e);
+    }
 
     &__current {
         border: 1px solid white;

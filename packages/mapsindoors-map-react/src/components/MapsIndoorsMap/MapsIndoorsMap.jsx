@@ -36,8 +36,16 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue }) {
 
         // Fetch venue information when we know data is loaded and set the map to be in a ready state.
         mapsindoors.services.LocationsService.once('update_completed', () => {
-            mapsindoors.services.VenuesService.getVenues().then(result => {
-                setVenues(result);
+
+            // Fixme: Venue Images are currently stored in the AppConfig object. So we will need to read the AppConfig as well as the list of Venues.
+            // This will be changed in the future.
+            Promise.all([mapsindoors.services.VenuesService.getVenues(),mapsindoors.services.AppConfigService.getConfig()]).then(([venuesResult, appConfigResult]) => {
+                venuesResult = venuesResult.map(venue => {
+                    venue.image = appConfigResult.venueImages[venue.name.toLowerCase()];
+                    return venue;
+                });
+
+                setVenues(venuesResult);
                 setMapReady(true);
             });
         });
