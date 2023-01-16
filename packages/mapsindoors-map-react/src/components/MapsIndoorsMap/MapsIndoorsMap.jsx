@@ -18,6 +18,14 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue }) {
 
     const [isMapReady, setMapReady] = useState(false);
     const [venues, setVenues] = useState([]);
+    const [currentVenueName, setCurrentVenueName] = useState();
+
+    /*
+     * React on changes in the venue prop.
+     */
+    useEffect(() => {
+        setCurrentVenueName(venue);
+    }, [venue]);
 
     /*
      * React on changes in the MapsIndoors API key.
@@ -39,8 +47,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue }) {
 
     return (<div className="full mapsindoors-map">
         {/* Splash screen, bottoms sheets, venue selector etc. can be here */}
-        {venues.length > 1 && <VenueSelector venues={venues} />}
-        <Map apiKey={apiKey} gmApiKey={gmApiKey} mapboxAccessToken={mapboxAccessToken} onReady={onMapReady} venues={venues} venueName={venue} />
+        {venues.length > 1 && <VenueSelector onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)} venues={venues} />}
+        <Map apiKey={apiKey} gmApiKey={gmApiKey} mapboxAccessToken={mapboxAccessToken} onReady={onMapReady} venues={venues} venueName={currentVenueName} />
     </div>)
 }
 
