@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import './VenueSelector.scss';
-import { ReactComponent as BuildingLogo } from './../../assets/building.svg';
+import { ReactComponent as BuildingIcon } from '../../assets/building.svg';
+import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import Venue from './Venue/Venue';
 
 /**
@@ -26,7 +27,7 @@ function VenueSelector({ venues, currentVenueName, onVenueSelected }) {
 
     return <>
         <button className="venue-selector__button" onClick={() => setActive(current => !current)} aria-label="Venues">
-            <BuildingLogo />
+            {active ? <CloseIcon /> : <BuildingIcon />}
         </button>
         {active && <div className="venue-selector__list">
             {venues.map(venue => (<Venue key={venue.id} isCurrent={currentVenueName === venue.name} venue={venue} onVenueSelected={() => selectVenue(venue)} />))}
