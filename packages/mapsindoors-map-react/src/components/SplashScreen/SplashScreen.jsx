@@ -1,23 +1,17 @@
-import { CSSTransition } from "react-transition-group";
-import { useState, useEffect } from 'react';
-import './SplashScreen.css';
 import React from "react";
+import { useState, useEffect } from 'react';
+import { CSSTransition } from "react-transition-group";
+import './SplashScreen.css';
 
 function SplashScreen() {
     const [isEnter, setIsEnter] = useState(true)
-    const [isExit, setIsExit] = useState(true)
-
     useEffect(() => {
         setTimeout(() => setIsEnter(false), 3000)
     }, [])
 
-    useEffect(() => {
-        setTimeout(() => setIsExit(false), 3000)
-    }, [])
-
     return (
         <CSSTransition
-            in={isExit}
+            in={isEnter}
             timeout={3000}
             appear={true}
             classNames="splash-screen">
