@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useState } from 'react';
 import Map from "../Map/Map";
+import SplashScreen from '../SplashScreen/SplashScreen';
 
 const mapsindoors = window.mapsindoors;
 
@@ -27,8 +28,9 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue }) {
         setMapReady(true);
     }
 
-    return (<div className="full">
+    return (<div className="map">
         {/* Splash screen, bottoms sheets, venue selector etc. can be here */}
+        {!isMapReady && <SplashScreen />}
         <Map apiKey={apiKey} gmApiKey={gmApiKey} mapboxAccessToken={mapboxAccessToken} onReady={onMapReady} venueName={venue} />
     </div>)
 }
