@@ -29,26 +29,24 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue }) {
 
     /*
      * React on changes in the MapsIndoors API key.
+     * Set the map to be in a ready state when the data has loaded.
      */
     useEffect(() => {
         mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKey);
 
-        // Fetch venue information when we know data is loaded.
+        // Fetch venue information when we know data is loaded and set the map to be in a ready state.
         mapsindoors.services.LocationsService.once('update_completed', () => {
             mapsindoors.services.VenuesService.getVenues().then(result => {
                 setVenues(result);
+                setMapReady(true);
             });
         });
     }, [apiKey]);
 
-    function onMapReady() {
-        setMapReady(true);
-    }
-
     return (<div className="full mapsindoors-map">
         {/* Splash screen, bottoms sheets, venue selector etc. can be here */}
         {venues.length > 1 && <VenueSelector onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)} venues={venues} currentVenueName={currentVenueName} />}
-        <Map apiKey={apiKey} gmApiKey={gmApiKey} mapboxAccessToken={mapboxAccessToken} onReady={onMapReady} venues={venues} venueName={currentVenueName} />
+        <Map apiKey={apiKey} gmApiKey={gmApiKey} mapboxAccessToken={mapboxAccessToken} venues={venues} venueName={currentVenueName} />
     </div>)
 }
 

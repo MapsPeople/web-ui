@@ -17,12 +17,11 @@ const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
  * @param {Object} props
  * @param {string} [props.gmApiKey] - Google Maps API key if you want to show a Google Maps map.
  * @param {string} [props.mapboxAccessToken] - Mapbox Access Token if you want to show a Mapbox map.
- * @param {function} [props.onReady] - Function that will be run when the map is ready
  * @param {array} [props.venues] - Array of Venues in the current solution.
  * @param {string} [props.venueName] - If you want the map to show a specific Venue, provide the Venue name here.
  * @returns
  */
-function Map({ gmApiKey, mapboxAccessToken, onReady, venues, venueName }) {
+function Map({ gmApiKey, mapboxAccessToken, venues, venueName }) {
     const [mapType, setMapType] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState(null);
 
@@ -64,8 +63,6 @@ function Map({ gmApiKey, mapboxAccessToken, onReady, venues, venueName }) {
         const miInstance = new mapsindoors.MapsIndoors({
             mapView
         });
-
-        miInstance.on('ready', onReady);
 
         setMapsIndoorsInstance(miInstance);
 
