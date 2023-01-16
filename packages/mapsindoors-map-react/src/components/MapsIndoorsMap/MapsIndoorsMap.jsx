@@ -15,14 +15,22 @@ const mapsindoors = window.mapsindoors;
  */
 function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue }) {
 
+    const [isMapReady, setMapReady] = useState(false);
+    const [venues, setVenues] = useState([]);
+
     /*
      * React on changes in the MapsIndoors API key.
      */
     useEffect(() => {
         mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKey);
-    }, [apiKey]);
 
-    const [isMapReady, setMapReady] = useState(false);
+        // Fetch venue information when we know data is loaded.
+        mapsindoors.services.LocationsService.once('update_completed', () => {
+            mapsindoors.services.VenuesService.getVenues().then(result => {
+                setVenues(result);
+            });
+        });
+    }, [apiKey]);
 
     function onMapReady() {
         setMapReady(true);
@@ -30,7 +38,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue }) {
 
     return (<div className="full">
         {/* Splash screen, bottoms sheets, venue selector etc. can be here */}
-        <VenueSelector />
+        {venues.length > 1 && <VenueSelector />}
         <Map apiKey={apiKey} gmApiKey={gmApiKey} mapboxAccessToken={mapboxAccessToken} onReady={onMapReady} venueName={venue} />
     </div>)
 }
