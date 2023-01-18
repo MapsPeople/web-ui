@@ -7,8 +7,8 @@
 .venue {
     all: unset;
     border: none;
-    @include margin.all(x-small);
-    @include border.radius(medium);
+    margin: 0 variables.$spacing-x-small variables.$spacing-x-small variables.$spacing-x-small;
+    @include border.radius(large);
     @include color.white();
 
     width: calc(100% - variables.$spacing-medium);
@@ -19,6 +19,7 @@
 
     &__content {
         @include padding.all(medium);
+        @include border.radius(large);
         background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.6));
         width: 100%;
         height: 50%;
