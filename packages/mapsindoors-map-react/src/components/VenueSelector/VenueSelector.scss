@@ -4,37 +4,65 @@
 @use '~@mapsindoors/midt/sizing';
 @use '~@mapsindoors/midt/build/scss/variables';
 
+$button-from-top: 60px;
+$button-width: variables.$spacing-xx-large;
+$button-height: $button-width;
+$list-from-top: $button-from-top + $button-height + variables.$spacing-x-small;
+
+$transition-speed: 400ms;
+$transition-timing-function: ease;
+
 .venue-selector {
     &__button {
-        border: none;
         @include background-color.white();
-        @include sizing.width(xx-large);
-        @include sizing.height(xx-large);
         @include border.radius(x-large);
+        border: none;
         position: absolute;
-        top: 60px;
+        width: $button-width;
+        height: $button-height;
+        top: $button-from-top;
         left: variables.$spacing-x-small;
         z-index: 1000; // Place on top of all map elements
     }
 
     &__list {
-        @include background-color.white();
-        @include color.black();
-        border-radius: variables.$spacing-x-small variables.$spacing-x-small 0 0;
         position: absolute;
-        top: calc(60px + 40px + variables.$spacing-x-small); // The button offset + height of button + some margin
-        bottom: 0;
-        left: 0;
-        right: 0;
+        background-color: white;
         z-index: 1000; // Place on top of all map elements
         overflow-y: auto;
 
-        // Fixme: UX will come up with new transition
-        transform: translateY(calc(-100% - 108px));
-        transition: transform 0.4s ease;
+        &-enter {
+            top: $button-from-top;
+            bottom: calc(100% - $list-from-top);
+            left: variables.$spacing-x-small;
+            @include sizing.width(xx-large);
+            transition: all $transition-speed $transition-timing-function;
+            opacity: 0;
+        }
 
-        &--active {
-            transform: translateY(0%);
+        &-enter-active, &-enter-done {
+            top: $list-from-top;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            opacity: 1;
+        }
+
+        &-exit {
+            top: $list-from-top;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            transition: all $transition-speed  $transition-timing-function;
+            opacity: 1;
+        }
+
+        &-exit-active {
+            top: $button-from-top;
+            bottom: calc(100% - $list-from-top);
+            left: variables.$spacing-x-small;
+            @include sizing.width(xx-large);
+            opacity: 0;
         }
     }
 }

@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import { CSSTransition } from 'react-transition-group';
 import './VenueSelector.scss';
 import { ReactComponent as BuildingIcon } from '../../assets/building.svg';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
@@ -14,6 +15,7 @@ import Venue from './Venue/Venue';
  */
 function VenueSelector({ venues, currentVenueName, onVenueSelected }) {
     const [active, setActive] = useState(false);
+    const venueSelectorContentRef = useRef(null);
 
     /**
      * Close list of Venues and make callback.
@@ -29,9 +31,11 @@ function VenueSelector({ venues, currentVenueName, onVenueSelected }) {
         <button className="venue-selector__button" onClick={() => setActive(current => !current)} aria-label="Venues">
             {active ? <CloseIcon /> : <BuildingIcon />}
         </button>
-        <div className={`venue-selector__list ${active ? 'venue-selector__list--active' : ''} `}>
-            {venues.map(venue => (<Venue key={venue.id} isCurrent={currentVenueName === venue.name} venue={venue} onVenueSelected={() => selectVenue(venue)} />))}
-        </div>
+        <CSSTransition unmountOnExit in={active} nodeRef={venueSelectorContentRef} timeout={400} classNames="venue-selector__list">
+            <div className="venue-selector__list" ref={venueSelectorContentRef}>
+                {venues.map(venue => (<Venue key={venue.id} isCurrent={currentVenueName === venue.name} venue={venue} onVenueSelected={() => selectVenue(venue)} />))}
+            </div>
+        </CSSTransition>
     </>
 }
 
