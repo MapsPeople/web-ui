@@ -1,5 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useState } from 'react';
+import useSize from '../../hooks/useSize';
 import './MapsIndoorsMap.scss';
 import Map from "../Map/Map";
 import SplashScreen from '../SplashScreen/SplashScreen';
@@ -20,6 +21,10 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue }) {
     const [isMapReady, setMapReady] = useState(false);
     const [venues, setVenues] = useState([]);
     const [currentVenueName, setCurrentVenueName] = useState();
+
+    const mapsIndoorsMapRef = useRef(null);
+
+    let { width } = useSize(mapsIndoorsMapRef);
 
     /*
      * React on changes in the venue prop.
@@ -53,10 +58,10 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue }) {
         });
     }, [apiKey]);
 
-    return (<div className="mapsindoors-map">
+    return (<div className="mapsindoors-map" ref={mapsIndoorsMapRef}>
         {/* Splash screen, bottoms sheets, venue selector etc. can be here */}
         {!isMapReady && <SplashScreen />}
-        {venues.length > 1 && <VenueSelector onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)} venues={venues} currentVenueName={currentVenueName} />}
+        {venues.length > 1 && <VenueSelector width={width} onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)} venues={venues} currentVenueName={currentVenueName} />}
         <Map apiKey={apiKey} gmApiKey={gmApiKey} mapboxAccessToken={mapboxAccessToken} venues={venues} venueName={currentVenueName} />
     </div>)
 }
