@@ -32,9 +32,12 @@ function VenueSelector({ venues, currentVenueName, onVenueSelected, width }) {
         <button className="venue-selector__button" onClick={() => setActive(current => !current)} aria-label="Venues">
             {active ? <CloseIcon /> : <BuildingIcon />}
         </button>
-        <CSSTransition unmountOnExit in={active} nodeRef={venueSelectorContentRef} timeout={400} classNames="venue-selector__list">
-            <div className="venue-selector__list" ref={venueSelectorContentRef}>
-                {venues.map(venue => (<Venue width={width} key={venue.id} isCurrent={currentVenueName === venue.name} venue={venue} onVenueSelected={() => selectVenue(venue)} />))}
+        <CSSTransition unmountOnExit in={active} nodeRef={venueSelectorContentRef} timeout={400} classNames="venue-selector__content">
+            <div className="venue-selector__content" ref={venueSelectorContentRef}>
+                <h1>Select venue</h1>
+                <div className="venue-selector__list">
+                    {venues.map(venue => (<Venue width={width} key={venue.id} isCurrent={currentVenueName === venue.name} venue={venue} onVenueSelected={() => selectVenue(venue)} />))}
+                </div>
             </div>
         </CSSTransition>
     </>
