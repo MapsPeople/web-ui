@@ -23,8 +23,9 @@ function GoogleMapsMap({ gmApiKey, onMapView}) {
         loader.load().then(google => {
             // Initialize Google Maps MapView
             const mapViewOptions = {
-                element: document.getElementById('map')
-            }
+                element: document.getElementById('map'),
+                disableDefaultUI: true // Disable Map Type control, Street view control and Zoom controls.
+            };
 
             const mapViewInstance = new mapsindoors.mapView.GoogleMapsView(mapViewOptions);
             onMapView(mapViewInstance)
