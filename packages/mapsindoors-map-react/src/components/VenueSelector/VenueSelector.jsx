@@ -11,10 +11,9 @@ import Venue from './Venue/Venue';
  * @param {array} props.venues
  * @param {string} props.currentVenueName
  * @param {function} props.onVenueSelected
- * @param {number} props.width - The width of the element the Venue Selector is shown within
  * @returns
  */
-function VenueSelector({ venues, currentVenueName, onVenueSelected, width }) {
+function VenueSelector({ venues, currentVenueName, onVenueSelected }) {
     const [active, setActive] = useState(false);
     const venueSelectorContentRef = useRef(null);
 
@@ -36,7 +35,7 @@ function VenueSelector({ venues, currentVenueName, onVenueSelected, width }) {
             <div className="venue-selector__content" ref={venueSelectorContentRef}>
                 <h1>Select venue</h1>
                 <div className="venue-selector__list">
-                    {venues.map(venue => (<Venue width={width} key={venue.id} isCurrent={currentVenueName === venue.name} venue={venue} onVenueSelected={() => selectVenue(venue)} />))}
+                    {venues.map(venue => (<Venue key={venue.id} isCurrent={currentVenueName === venue.name} venue={venue} onVenueSelected={() => selectVenue(venue)} />))}
                 </div>
             </div>
         </CSSTransition>

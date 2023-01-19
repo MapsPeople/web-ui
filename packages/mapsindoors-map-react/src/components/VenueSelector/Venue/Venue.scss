@@ -6,37 +6,37 @@
 
 .venue {
     all: unset;
-    border: none;
-    margin: 0 variables.$spacing-x-small variables.$spacing-x-small variables.$spacing-x-small;
-    @include border.radius(large);
-    @include color.white();
-
     width: calc(100% - variables.$spacing-medium);
-    height: 145px; /* by spec */
-    background-size: cover;
-    display: flex;
-    align-items: flex-end;
+    margin: 0 variables.$spacing-x-small variables.$spacing-x-small variables.$spacing-x-small;
+    @include border.radius(x-large);
+    @include color.white();
+    position: relative;
+    background: linear-gradient(#b8b8b8, #5e5e5e);
+
+    &__image {
+        position: relative;
+        width: 100%;
+        padding-top: 56.25%; // enforcing a 16:9 aspect ratio
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: 50% 50%;
+        overflow: hidden;
+        @include border.radius(x-large);
+    }
 
     &__content {
+        position: absolute;
+        bottom: 0;
+        top: 50%;
         @include padding.all(medium);
-        @include border.radius(large);
+        @include border.radius(x-large);
+        font-size: 14px;
         background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.6));
         width: 100%;
-        height: 50%;
         display: flex;
-        font-size: 14px;
-        text-align: left;
         align-items: flex-end;
         justify-content: space-between;
         gap: variables.$spacing-medium;
-    }
-
-    &--no-image {
-        background: linear-gradient(#b8b8b8, #5e5e5e);
-
-        .venue__content {
-            background: none;
-        }
     }
 
     &__current {

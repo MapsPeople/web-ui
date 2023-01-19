@@ -7,27 +7,24 @@ import './Venue.scss';
  * @param {object} props
  * @param {object} venue
  * @param {function} onVenueSelected
- * @param {number} width
  * @returns
  */
-function Venue({ venue, isCurrent, onVenueSelected, width }) {
+function Venue({ venue, isCurrent, onVenueSelected }) {
 
     const [style, setStyle] = useState({});
 
     useEffect(() => {
-        // We set the width with a hard pixel value since setting it to 100% will make the background image shift due to the width transition on the parent element.
-        const styleObject = {
-            width: `calc(${width}px - 16px)`
-        };
+        const styleObject = {};
 
         if (venue.image) {
             styleObject.backgroundImage = `url('${venue.image}')`;
         }
 
         setStyle(styleObject);
-    }, [venue, width]);
+    }, [venue]);
 
-    return <button className={`venue ${!venue.image ? 'venue--no-image' : ''}`} onClick={() => onVenueSelected()} style={style}>
+    return <button className="venue" onClick={() => onVenueSelected()}>
+        <div className="venue__image" style={style}></div>
         <div className="venue__content">
             <div>{venue.venueInfo.name}</div>
             {isCurrent && <div className="venue__current">Current</div>}
