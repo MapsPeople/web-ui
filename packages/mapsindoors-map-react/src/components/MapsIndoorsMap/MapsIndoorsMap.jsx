@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useState } from 'react';
 import './MapsIndoorsMap.scss';
 import Map from "../Map/Map";

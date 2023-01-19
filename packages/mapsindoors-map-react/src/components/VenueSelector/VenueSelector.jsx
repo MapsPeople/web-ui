@@ -6,11 +6,12 @@ import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import Venue from './Venue/Venue';
 
 /**
+ * Show a list of Venues. The user can click on a Venue to select it.
  *
  * @param {object} props
- * @param {array} props.venues
- * @param {string} props.currentVenueName
- * @param {function} props.onVenueSelected
+ * @param {array} props.venues - Venues to present.
+ * @param {string} props.currentVenueName - The name of the current venue.
+ * @param {function} props.onVenueSelected - Callback to execute when a Venue is selected.
  * @returns
  */
 function VenueSelector({ venues, currentVenueName, onVenueSelected }) {
@@ -18,7 +19,7 @@ function VenueSelector({ venues, currentVenueName, onVenueSelected }) {
     const venueSelectorContentRef = useRef(null);
 
     /**
-     * Close list of Venues and make callback.
+     * When a Venue is selected, close the list of Venues and do the callback.
      *
      * @param {object} venue
      */
@@ -35,7 +36,7 @@ function VenueSelector({ venues, currentVenueName, onVenueSelected }) {
             <div className="venue-selector__content" ref={venueSelectorContentRef}>
                 <h1>Select venue</h1>
                 <div className="venue-selector__list">
-                    {venues.map(venue => (<Venue key={venue.id} isCurrent={currentVenueName === venue.name} venue={venue} onVenueSelected={() => selectVenue(venue)} />))}
+                    {venues.map(venue => (<Venue key={venue.id} isCurrent={currentVenueName === venue.name} venue={venue} onVenueClicked={() => selectVenue(venue)} />))}
                 </div>
             </div>
         </CSSTransition>
