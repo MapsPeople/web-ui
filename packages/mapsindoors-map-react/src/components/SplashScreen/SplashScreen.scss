@@ -1,0 +1,86 @@
+@use '~@mapsindoors/midt/sizing';
+@use '~@mapsindoors/midt/build/scss/variables';
+
+.splash-screen {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    z-index: 10000;
+    background-color: white;
+
+    /*
+    * Transition classes.
+    * The transitions make the splash screen and the logo appear.
+    */
+
+    &-exit {
+        opacity: 1;
+    }
+
+    &-exit-active {
+        opacity: 0;
+        transition: opacity 2000ms;
+    }
+
+    &-exit-done {
+        opacity: 0;
+    }
+
+    &__logo-appear-active {
+        animation: slideIn 1s;
+    }
+
+    &__logo-appear-active {
+        animation: slideIn 1s;
+    }
+
+    &__logo-enter-active {
+        animation: slideIn 1s;
+    }
+
+    &__logo-exit {
+        opacity: 1;
+    }
+
+    &__logo-exit-active {
+        opacity: 0;
+        transition: opacity 3000ms;
+    }
+
+    &__logo-exit-done {
+        opacity: 0;
+    }
+
+    &__loader {
+        width: variables.$spacing-xxx-large;
+        height: variables.$spacing-xxx-large;
+        border-radius: 50%;
+        margin: 60px auto;
+        position: relative;
+        animation: loader 1s infinite linear;
+    }
+}
+
+@keyframes loader {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        margin-top: 100%;
+    }
+
+    to {
+        margin-top: 0%;
+    }
+}
