@@ -1,0 +1,46 @@
+@use '~@mapsindoors/midt/border';
+@use '~@mapsindoors/midt/color';
+@use '~@mapsindoors/midt/margin';
+@use '~@mapsindoors/midt/padding';
+@use '~@mapsindoors/midt/build/scss/variables';
+
+.venue {
+    all: unset;
+    width: calc(100% - variables.$spacing-medium);
+    margin: 0 variables.$spacing-x-small variables.$spacing-x-small variables.$spacing-x-small;
+    @include border.radius(x-large);
+    @include color.white();
+    position: relative;
+    background: linear-gradient(#b8b8b8, #5e5e5e);
+
+    &__image {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: 50% 50%;
+        @include border.radius(x-large);
+    }
+
+    &__content {
+        position: absolute;
+        bottom: 0;
+        top: 50%;
+        @include padding.all(medium);
+        @include border.radius(x-large);
+        font-size: 14px;
+        background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.6));
+        width: 100%;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: variables.$spacing-medium;
+    }
+
+    &__current {
+        border: 1px solid white;
+        @include border.radius(large);
+        @include padding.all(x-small);
+    }
+}

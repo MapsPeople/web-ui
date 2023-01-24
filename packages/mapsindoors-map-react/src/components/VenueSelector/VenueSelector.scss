@@ -1,0 +1,94 @@
+@use '~@mapsindoors/midt/background-color';
+@use '~@mapsindoors/midt/border';
+@use '~@mapsindoors/midt/color';
+@use '~@mapsindoors/midt/sizing';
+@use '~@mapsindoors/midt/build/scss/variables';
+
+$button-from-top: variables.$spacing-small;
+$button-width: variables.$spacing-xx-large;
+$button-height: $button-width;
+$list-from-top: $button-from-top + $button-height + variables.$spacing-x-small;
+
+$transition-speed: 400ms;
+$transition-timing-function: ease;
+
+.venue-selector {
+    &__content {
+        position: absolute;
+        background-color: white;
+        z-index: 1000; // Place on top of all map elements
+        overflow-y: hidden;
+        display: grid;
+        grid-template-rows: $list-from-top 1fr;
+
+        h1 {
+            @include color.gray(90);
+            font-size: 14px;
+            margin: 0;
+            height: calc($button-height + 2 * variables.$spacing-small);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /*
+         * Transition classes.
+         * The transitions make the Venue selector appear to be expanding from and disappearing into the toggle button.
+         */
+
+        &-enter {
+            top: $button-from-top;
+            bottom: calc(100% - $list-from-top);
+            left: variables.$spacing-x-small;
+            @include sizing.width(xx-large);
+            transition: all $transition-speed $transition-timing-function;
+            opacity: 0;
+        }
+
+        &-enter-active, &-enter-done {
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            opacity: 1;
+        }
+
+        &-exit {
+            top: $list-from-top;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            transition: all $transition-speed  $transition-timing-function;
+            opacity: 1;
+        }
+
+        &-exit-active {
+            top: $button-from-top;
+            bottom: calc(100% - $list-from-top);
+            left: variables.$spacing-x-small;
+            @include sizing.width(xx-large);
+            opacity: 0;
+        }
+    }
+
+    &__list {
+        overflow-y: auto;
+    }
+
+    &__button {
+        @include background-color.white();
+        @include border.radius(large);
+        border: 1px solid #E6E6E6;
+        position: absolute;
+        width: $button-width;
+        height: $button-height;
+        top: $button-from-top;
+        left: variables.$spacing-x-small;
+        z-index: 1001; // Place on top of all map elements and the venue selector content
+
+        svg {
+            display: block;
+            margin: 0 auto;
+        }
+    }
+}
