@@ -16,11 +16,10 @@
     &__image {
         position: relative;
         width: 100%;
-        padding-top: 56.25%; // enforcing a 16:9 aspect ratio
+        aspect-ratio: 16 / 9;
         background-repeat: no-repeat;
         background-size: cover;
         background-position: 50% 50%;
-        overflow: hidden;
         @include border.radius(x-large);
     }
 
