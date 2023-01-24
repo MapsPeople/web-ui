@@ -14,8 +14,13 @@ const mapsindoors = window.mapsindoors;
  * @param {string} [props.gmApiKey] - Google Maps API key if you want to show a Google Maps map.
  * @param {string} [props.mapboxAccessToken] - Mapbox Access Token if you want to show a Google Maps map.
  * @param {string} [props.venue] - If you want the map to show a specific Venue, provide the Venue name here.
+ * @param {string} [props.primaryColor] - The primary color of the application.
+ * @param {string} [props.logo] - The logo that appears on the splash screen.
+ * @param {string} [props.logoWidth] - The width of the logo on the splash screen.
+ * @param {string} [props.logoHeight] - The height of the logo on the splash screen.
+ * 
  */
-function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue }) {
+function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, primaryColor, logo, logoWidth, logoHeight }) {
 
     const [isMapReady, setMapReady] = useState(false);
     const [venues, setVenues] = useState([]);
@@ -41,7 +46,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue }) {
 
             // Fixme: Venue Images are currently stored in the AppConfig object. So we will need to read the AppConfig as well as the list of Venues.
             // This will be changed in the future.
-            Promise.all([mapsindoors.services.VenuesService.getVenues(),mapsindoors.services.AppConfigService.getConfig()]).then(([venuesResult, appConfigResult]) => {
+            Promise.all([mapsindoors.services.VenuesService.getVenues(), mapsindoors.services.AppConfigService.getConfig()]).then(([venuesResult, appConfigResult]) => {
                 venuesResult = venuesResult.map(venue => {
                     venue.image = appConfigResult.venueImages[venue.name.toLowerCase()];
                     return venue;
@@ -56,7 +61,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue }) {
     return (<div className="mapsindoors-map">
         {/* Splash screen, bottoms sheets, venue selector etc. can be here */}
         {/* {!isMapReady && <SplashScreen />} */}
-        <SplashScreen></SplashScreen>
+        <SplashScreen primaryColor={primaryColor} logo={logo} logoWidth={logoWidth} logoHeight={logoHeight}></SplashScreen>
         {venues.length > 1 && <VenueSelector onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)} venues={venues} currentVenueName={currentVenueName} />}
         <Map apiKey={apiKey} gmApiKey={gmApiKey} mapboxAccessToken={mapboxAccessToken} venues={venues} venueName={currentVenueName} />
     </div>)

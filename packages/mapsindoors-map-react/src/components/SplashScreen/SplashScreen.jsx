@@ -17,7 +17,7 @@ const defaultColor = "#005655";
  * @param {string} props.primaryColor - The primary color of the application.
  * @param {string} props.logo - The logo that appears on the splash screen.
  */
-function SplashScreen({ primaryColor = defaultColor, logo = defaultLogo, width, height }) {
+function SplashScreen({ primaryColor = defaultColor, logo = defaultLogo, logoWidth, logoHeight }) {
     const [isEnter, setIsEnter] = useState(true)
 
     useEffect(() => {
@@ -51,7 +51,7 @@ function SplashScreen({ primaryColor = defaultColor, logo = defaultLogo, width, 
                     <img className="splash-screen__logo"
                         src={logo}
                         alt="logo"
-                        style={{width: width, height: height}}
+                        style={{width: logoWidth, height: logoHeight}}
                     />
                 </CSSTransition>
                 <div className="splash-screen__loader"
