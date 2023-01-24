@@ -4,7 +4,7 @@
 @use '~@mapsindoors/midt/sizing';
 @use '~@mapsindoors/midt/build/scss/variables';
 
-$button-from-top: 12px;
+$button-from-top: variables.$spacing-small;
 $button-width: variables.$spacing-xx-large;
 $button-height: $button-width;
 $list-from-top: $button-from-top + $button-height + variables.$spacing-x-small;
