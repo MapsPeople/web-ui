@@ -1,3 +1,9 @@
+@import '~@mapsindoors/midt/variables';
+
+* {
+   font-family: var(--font-family-system);
+}
+
 .mapsindoors-map {
     position: relative;
     width: 100%;
