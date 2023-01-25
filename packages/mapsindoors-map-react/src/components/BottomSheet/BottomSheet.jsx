@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useState } from 'react';
 import Sheet from 'react-modal-sheet';
+import LocationDetails from './LocationDetails/LocationDetails';
 
 const BOTTOM_SHEETS = {
     LOCATION_DETAILS: 0
@@ -30,10 +31,7 @@ function BottomSheet({ currentLocation }) {
         >
                 <Sheet.Container>
                     <Sheet.Content>
-                        {/* FIXME: Actual Location details  */}
-                        <div style={{color: 'black'}}>
-                            {currentLocation?.properties.name}
-                        </div>
+                        <LocationDetails location={currentLocation} />
                     </Sheet.Content>
                 </Sheet.Container>
         </Sheet>
