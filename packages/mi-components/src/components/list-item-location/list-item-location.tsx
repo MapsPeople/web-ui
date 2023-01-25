@@ -1,5 +1,5 @@
 import midtIcon from '@mapsindoors/midt/tokens/icon.json';
-import { Component, Event, EventEmitter, h, Host, JSX, Prop, State, Watch } from '@stencil/core';
+import { Component, Event, EventEmitter, h, Host, JSX, Prop, Watch } from '@stencil/core';
 import { appendMapsIndoorsImageQueryParameters } from '../../utils/utils';
 import { UnitSystem } from './../../enums/unit-system.enum';
 
@@ -58,15 +58,7 @@ export class ListItemLocation {
     @Event() listItemDidRender: EventEmitter;
 
     private imageElement: HTMLImageElement;
-
-
-    /**
-     * @description Reference to info element.
-     * The ref needs to be state since it will otherwise not be recalculated
-     * when changing eg. location.
-     */
-    @State() infoElement: HTMLMiLocationInfoElement;
-
+    private infoElement: HTMLMiLocationInfoElement;
     private iconAttributes: {};
     private iconDisplaySize = parseInt(midtIcon.icon.size.medium.value);
 
