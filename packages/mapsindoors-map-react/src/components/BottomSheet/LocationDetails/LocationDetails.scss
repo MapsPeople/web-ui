@@ -1,7 +1,11 @@
 @use '~@mapsindoors/midt/border';
+@use '~@mapsindoors/midt/color';
+@use '~@mapsindoors/midt/font';
+@use '~@mapsindoors/midt/margin';
 @use '~@mapsindoors/midt/padding';
 
 .location-details {
+    @include color.black();
     @include padding.all(medium);
 
     &__image {
@@ -9,5 +13,16 @@
         @include border.radius(x-large);
         aspect-ratio: 16 / 9;
         object-fit: cover;
+    }
+}
+
+.location-info {
+    display: flex;
+    align-items: center;
+    @include margin.bottom(medium);
+    @include font.size(small);
+
+    &__icon {
+        @include margin.right(medium);
     }
 }
