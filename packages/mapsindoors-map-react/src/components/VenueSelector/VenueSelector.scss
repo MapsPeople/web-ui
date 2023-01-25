@@ -1,13 +1,7 @@
-@use '~@mapsindoors/midt/background-color';
-@use '~@mapsindoors/midt/border';
-@use '~@mapsindoors/midt/color';
-@use '~@mapsindoors/midt/sizing';
-@use '~@mapsindoors/midt/build/scss/variables';
-
-$button-from-top: variables.$spacing-small;
-$button-width: variables.$spacing-xx-large;
+$button-from-top: var(--spacing-small);
+$button-width: var(--spacing-xx-large);
 $button-height: $button-width;
-$list-from-top: $button-from-top + $button-height + variables.$spacing-x-small;
+$list-from-top: $button-from-top + $button-height +  var(--spacing-x-smalll);
 
 $transition-speed: 400ms;
 $transition-timing-function: ease;
@@ -22,10 +16,10 @@ $transition-timing-function: ease;
         grid-template-rows: $list-from-top 1fr;
 
         h1 {
-            @include color.gray(90);
-            font-size: 14px;
+            color: var(--color-gray-90);
+            font-size: var(--font-size-small);
             margin: 0;
-            height: calc($button-height + 2 * variables.$spacing-small);
+            height: calc($button-height + 2 * var(--spacing-small));
             display: flex;
             align-items: center;
             justify-content: center;
@@ -39,8 +33,8 @@ $transition-timing-function: ease;
         &-enter {
             top: $button-from-top;
             bottom: calc(100% - $list-from-top);
-            left: variables.$spacing-x-small;
-            @include sizing.width(xx-large);
+            left: var(--spacing-x-small);
+            width: var(--spacing-xx-large);
             transition: all $transition-speed $transition-timing-function;
             opacity: 0;
         }
@@ -58,15 +52,15 @@ $transition-timing-function: ease;
             bottom: 0;
             left: 0;
             width: 100%;
-            transition: all $transition-speed  $transition-timing-function;
+            transition: all $transition-speed $transition-timing-function;
             opacity: 1;
         }
 
         &-exit-active {
             top: $button-from-top;
             bottom: calc(100% - $list-from-top);
-            left: variables.$spacing-x-small;
-            @include sizing.width(xx-large);
+            left: var(--spacing-x-small);
+            width: var(--spacing-xx-large);
             opacity: 0;
         }
     }
@@ -76,14 +70,14 @@ $transition-timing-function: ease;
     }
 
     &__button {
-        @include background-color.white();
-        @include border.radius(large);
+        background-color: var(--color-white-base);
+        border-radius:var(--rounding-large);
         border: 1px solid #E6E6E6;
         position: absolute;
         width: $button-width;
         height: $button-height;
         top: $button-from-top;
-        left: variables.$spacing-x-small;
+        left: var(--spacing-x-small);
         z-index: 1001; // Place on top of all map elements and the venue selector content
 
         svg {
