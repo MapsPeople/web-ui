@@ -1,22 +1,29 @@
-import { useEffect, useRef } from 'react';
+import { useContext, useEffect, useState, useRef } from 'react';
 import './LocationDetails.scss';
 import { ReactComponent as CloseIcon } from '../../../assets/close.svg';
+import { MapsIndoorsContext } from '../../../MapsIndoorsContext';
 
 function LocationDetails({ location, onClose }) {
 
     const locationInfoElement = useRef(null);
 
+    // Holds the MapsIndoors DisplayRule for the location
+    const [locationDisplayRyle, setLocationDisplayRule] = useState(null);
+
+    const mapsIndoorsInstance = useContext(MapsIndoorsContext);
+
     useEffect(() => {
         if (location) {
             locationInfoElement.current.location = location;
+            setLocationDisplayRule(mapsIndoorsInstance.getDisplayRule(location));
         }
-    }, [location]);
+    }, [location, mapsIndoorsInstance]);
 
     return <div className="location-details">
             {location && <>
                 <div className="location-details__info location-info">
                     <div className="location-info__icon">
-                        [i] {/* FIXME: Location icon from Display Rule */}
+                        {locationDisplayRyle && <img alt="" src={locationDisplayRyle.icon} />}
                     </div>
                     <div className="location-info__content">
                         {location?.properties.name}<br />

@@ -25,6 +25,11 @@
 
     &__icon {
         @include margin.right(medium);
+
+         img {
+            height: 40px;
+            display: block; /* to avoid spacing below */
+         }
     }
 
     &__close {
