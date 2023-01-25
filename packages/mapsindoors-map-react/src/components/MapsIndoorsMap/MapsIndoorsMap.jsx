@@ -5,6 +5,7 @@ import Map from "../Map/Map";
 import SplashScreen from '../SplashScreen/SplashScreen';
 import VenueSelector from '../VenueSelector/VenueSelector';
 import BottomSheet from '../BottomSheet/BottomSheet';
+import { useRef } from 'react';
 
 const mapsindoors = window.mapsindoors;
 
@@ -22,6 +23,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue }) {
     const [venues, setVenues] = useState([]);
     const [currentVenueName, setCurrentVenueName] = useState();
     const [currentLocation, setCurrentLocation] = useState();
+
+    const mapsIndoorsMapRef = useRef(null);
 
     /*
      * React on changes in the venue prop.
@@ -55,10 +58,10 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue }) {
         });
     }, [apiKey]);
 
-    return (<div className="mapsindoors-map">
+    return (<div ref={mapsIndoorsMapRef} className="mapsindoors-map">
         {!isMapReady && <SplashScreen />}
         {venues.length > 1 && <VenueSelector onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)} venues={venues} currentVenueName={currentVenueName} />}
-        {isMapReady && <BottomSheet currentLocation={currentLocation} onClose={() => setCurrentLocation(null)} />}
+        {isMapReady && <BottomSheet mountPoint={mapsIndoorsMapRef} currentLocation={currentLocation} onClose={() => setCurrentLocation(null)} />}
         <Map apiKey={apiKey} gmApiKey={gmApiKey} mapboxAccessToken={mapboxAccessToken} venues={venues} venueName={currentVenueName} onLocationClick={(location) => setCurrentLocation(location)} />
     </div>)
 }

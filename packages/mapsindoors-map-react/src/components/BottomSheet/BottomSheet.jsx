@@ -7,7 +7,7 @@ const BOTTOM_SHEETS = {
     LOCATION_DETAILS: 0
 };
 
-function BottomSheet({ currentLocation, onClose }) {
+function BottomSheet({ mountPoint, currentLocation, onClose }) {
 
     const [activeBottomSheet, setActiveBottomSheet] = useState(null);
 
@@ -27,7 +27,7 @@ function BottomSheet({ currentLocation, onClose }) {
             isOpen={activeBottomSheet === BOTTOM_SHEETS.LOCATION_DETAILS}
             detent={'content-height'}
             onClose={() => onClose()}
-            mountPoint={document.querySelector('.mapsindoors-map')} // FIXME: Ref
+            mountPoint={mountPoint.current}
         >
                 <Sheet.Container>
                     <Sheet.Content>
