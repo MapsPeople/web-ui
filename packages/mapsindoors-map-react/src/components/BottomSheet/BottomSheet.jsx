@@ -22,9 +22,10 @@ function BottomSheet({ currentLocation }) {
     const bottomSheets = [
         // Location details sheet
         <Sheet
+            style={{ position: 'absolute', zIndex: 10000000 }}
             isOpen={activeBottomSheet === BOTTOM_SHEETS.LOCATION_DETAILS}
-            snapPoints={snapPoints}
-            initialSnap={2}
+            detent={'content-height'}
+            onClose={() => { /* FIXME: unset currentLocation */ }}
             mountPoint={document.querySelector('.mapsindoors-map')} // FIXME: Ref
         >
                 <Sheet.Container>
