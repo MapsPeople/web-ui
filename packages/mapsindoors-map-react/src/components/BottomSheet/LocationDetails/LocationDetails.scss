@@ -8,6 +8,7 @@
     @include color.black();
     @include padding.all(medium);
 
+
     &__image {
         width: 100%;
         @include border.radius(x-large);
@@ -24,5 +25,11 @@
 
     &__icon {
         @include margin.right(medium);
+    }
+
+    &__close {
+        background: none;
+        border: none;
+        margin-left: auto;
     }
 }

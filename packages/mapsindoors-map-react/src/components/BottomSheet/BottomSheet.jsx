@@ -31,7 +31,7 @@ function BottomSheet({ currentLocation, onClose }) {
         >
                 <Sheet.Container>
                     <Sheet.Content>
-                        <LocationDetails location={currentLocation} />
+                        <LocationDetails location={currentLocation} onClose={() => setActiveBottomSheet(null)} />
                     </Sheet.Content>
                 </Sheet.Container>
         </Sheet>

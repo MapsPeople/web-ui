@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react';
 import './LocationDetails.scss';
+import { ReactComponent as CloseIcon } from '../../../assets/close.svg';
 
-function LocationDetails({ location }) {
+function LocationDetails({ location, onClose }) {
 
     const locationInfoElement = useRef(null);
 
@@ -21,6 +22,9 @@ function LocationDetails({ location }) {
                         {location?.properties.name}<br />
                         <mi-location-info ref={locationInfoElement} />
                     </div>
+                    <button className="location-info__close" onClick={() => onClose()}>
+                        <CloseIcon />
+                    </button>
                 </div>
                 {location.properties.imageURL && <img alt="" src={location.properties.imageURL} className="location-details__image" />}
             </>}
