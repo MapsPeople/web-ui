@@ -6,6 +6,7 @@ import SplashScreen from '../SplashScreen/SplashScreen';
 import VenueSelector from '../VenueSelector/VenueSelector';
 import BottomSheet from '../BottomSheet/BottomSheet';
 import { useRef } from 'react';
+import { MapsIndoorsContext } from '../../MapsIndoorsContext';
 
 const mapsindoors = window.mapsindoors;
 
@@ -23,6 +24,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue }) {
     const [venues, setVenues] = useState([]);
     const [currentVenueName, setCurrentVenueName] = useState();
     const [currentLocation, setCurrentLocation] = useState();
+    const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
 
     const mapsIndoorsMapRef = useRef(null);
 
@@ -58,12 +60,14 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue }) {
         });
     }, [apiKey]);
 
-    return (<div ref={mapsIndoorsMapRef} className="mapsindoors-map">
-        {!isMapReady && <SplashScreen />}
-        {venues.length > 1 && <VenueSelector onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)} venues={venues} currentVenueName={currentVenueName} />}
-        {isMapReady && <BottomSheet mountPoint={mapsIndoorsMapRef} currentLocation={currentLocation} onClose={() => setCurrentLocation(null)} />}
-        <Map apiKey={apiKey} gmApiKey={gmApiKey} mapboxAccessToken={mapboxAccessToken} venues={venues} venueName={currentVenueName} onLocationClick={(location) => setCurrentLocation(location)} />
-    </div>)
+    return (<MapsIndoorsContext.Provider value={mapsIndoorsInstance}>
+        <div ref={mapsIndoorsMapRef} className="mapsindoors-map">
+            {!isMapReady && <SplashScreen />}
+            {venues.length > 1 && <VenueSelector onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)} venues={venues} currentVenueName={currentVenueName} />}
+            {isMapReady && <BottomSheet mountPoint={mapsIndoorsMapRef} currentLocation={currentLocation} onClose={() => setCurrentLocation(null)} />}
+            <Map apiKey={apiKey} gmApiKey={gmApiKey} mapboxAccessToken={mapboxAccessToken} venues={venues} venueName={currentVenueName} onMapsIndoorsInstance={(instance) => setMapsIndoorsInstance(instance)} onLocationClick={(location) => setCurrentLocation(location)} />
+        </div>
+    </MapsIndoorsContext.Provider>)
 }
 
 export default MapsIndoorsMap;
