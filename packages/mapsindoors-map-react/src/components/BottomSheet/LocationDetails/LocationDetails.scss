@@ -1,0 +1,13 @@
+@use '~@mapsindoors/midt/border';
+@use '~@mapsindoors/midt/padding';
+
+.location-details {
+    @include padding.all(medium);
+
+    &__image {
+        width: 100%;
+        @include border.radius(x-large);
+        aspect-ratio: 16 / 9;
+        object-fit: cover;
+    }
+}
