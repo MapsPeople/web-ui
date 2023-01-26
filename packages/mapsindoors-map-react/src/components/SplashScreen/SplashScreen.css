@@ -55,5 +55,5 @@
 }
 
 mi-spinner {
-    margin-top: 40px;
+    margin-top: var(--spacing-xx-large);
 }

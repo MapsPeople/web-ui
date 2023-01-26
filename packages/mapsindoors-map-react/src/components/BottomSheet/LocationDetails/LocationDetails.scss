@@ -1,17 +1,10 @@
-@use '~@mapsindoors/midt/border';
-@use '~@mapsindoors/midt/color';
-@use '~@mapsindoors/midt/font';
-@use '~@mapsindoors/midt/margin';
-@use '~@mapsindoors/midt/padding';
-
 .location-details {
-    @include color.black();
-    @include padding.all(medium);
-
+    padding: var(--spacing-medium);
+    color: var(--color-black-base);
 
     &__image {
         width: 100%;
-        @include border.radius(x-large);
+        border-radius: var(--rounding-x-large);
         aspect-ratio: 16 / 9;
         object-fit: cover;
     }
@@ -25,11 +18,11 @@
 .location-info {
     display: flex;
     align-items: center;
-    @include margin.bottom(medium);
-    @include font.size(small);
+    margin-bottom: var(--spacing-medium);
+    font-size: var(--font-size-small);
 
     &__icon {
-        @include margin.right(medium);
+        margin-right: var(--spacing-medium);
 
          img {
             height: 40px;
