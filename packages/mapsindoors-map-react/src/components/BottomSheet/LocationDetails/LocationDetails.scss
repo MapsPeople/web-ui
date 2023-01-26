@@ -15,6 +15,11 @@
         aspect-ratio: 16 / 9;
         object-fit: cover;
     }
+
+    &__description {
+        white-space: pre-wrap;
+        overflow-wrap: break-word;
+    }
 }
 
 .location-info {

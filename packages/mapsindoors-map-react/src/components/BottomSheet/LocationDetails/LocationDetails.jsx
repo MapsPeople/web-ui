@@ -26,14 +26,21 @@ function LocationDetails({ location, onClose }) {
                         {locationDisplayRyle && <img alt="" src={locationDisplayRyle.icon} />}
                     </div>
                     <div className="location-info__content">
-                        {location?.properties.name}<br />
+                        {location.properties.name}<br />
                         <mi-location-info ref={locationInfoElement} />
                     </div>
                     <button className="location-info__close" onClick={() => onClose()}>
                         <CloseIcon />
                     </button>
                 </div>
+                {/* FIXME: Show categories */}
                 {location.properties.imageURL && <img alt="" src={location.properties.imageURL} className="location-details__image" />}
+                {location.properties.description && <div className="location-details__description">
+                    <h4>Description</h4>
+                    <p>
+                        {location.properties.description}
+                    </p>
+                </div>}
             </>}
     </div>
 }
