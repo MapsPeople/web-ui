@@ -13,7 +13,8 @@
         white-space: pre-wrap; /* make sure line breaks in the description text are shown as such */
         overflow-wrap: break-word;
 
-        h4, p {
+
+        h4, div {
             font-size: var(--font-size-small);
         }
 
@@ -22,9 +23,23 @@
             margin: var(--spacing-medium) 0;
         }
 
-        p {
+        div {
             color: var(--color-gray-70);
             line-height: 1.5;
+            overflow-y: hidden;
+            max-height: 64px; /* corresponding to approx. 3 lines of description text */
+        }
+
+        button {
+            all: unset;
+            font-size: var(--font-size-small);
+            color: var(--color-blue-base);
+        }
+
+        &--full {
+            div {
+                max-height: none; /* FIXME: Make only the div scrollable, not the entire sheet. */
+            }
         }
     }
 }
@@ -38,10 +53,10 @@
     &__icon {
         margin-right: var(--spacing-medium);
 
-         img {
+        img {
             height: 40px;
             display: block; /* to avoid spacing below */
-         }
+        }
     }
 
     &__close {
