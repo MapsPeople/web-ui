@@ -12,7 +12,7 @@
     &__description {
         white-space: pre-wrap; /* make sure line breaks in the description text are shown as such */
         overflow-wrap: break-word;
-
+        margin-bottom: var(--spacing-medium);
 
         h4, div {
             font-size: var(--font-size-small);
@@ -40,6 +40,25 @@
             div {
                 max-height: none; /* FIXME: Make only the div scrollable, not the entire sheet. */
             }
+        }
+    }
+
+    &__wayfinding {
+        background-color: var(--color-teal-90);
+        color: var(--color-white-white);
+        border-radius: var(--rounding-large);
+        border: none;
+        font-size: var(--font-size-small);
+        width: 100%;
+        height: var(--spacing-xx-large);
+        position: relative;
+
+        svg {
+            position: absolute;
+            left: var(--spacing-small);
+            top: 50%;
+            transform: translateY(-50%);
+            fill: white;
         }
     }
 }
