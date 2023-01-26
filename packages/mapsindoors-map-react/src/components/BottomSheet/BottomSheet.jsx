@@ -18,8 +18,6 @@ function BottomSheet({ mountPoint, currentLocation, onClose }) {
         setActiveBottomSheet(currentLocation ? BOTTOM_SHEETS.LOCATION_DETAILS : undefined);
     }, [currentLocation]);
 
-    const snapPoints = [-10, 0.5, 0.2];
-
     const bottomSheets = [
         // Location details sheet
         <Sheet
