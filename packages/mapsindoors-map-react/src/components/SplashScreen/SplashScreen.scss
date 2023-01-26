@@ -1,13 +1,18 @@
 .splash-screen {
     width: 100%;
     height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
     position: absolute;
     z-index: 10000;
     background-color: white;
+    display: grid;
+    grid-auto-flow: row;
+    grid-auto-rows: 200px min-content;
+    align-content: center;
+    grid-template-columns: 200px;
+    justify-items: center;
+    align-items: center;
+    gap: var(--spacing-xxx-large);
 
     /*
     * Transition classes.
@@ -53,11 +58,15 @@
         opacity: 0;
     }
 
+    &__logo {
+        width:100%;
+        max-height: 100%;
+    }
+
     &__loader {
         width: var(--spacing-xxx-large);
         height: var(--spacing-xxx-large);
         border-radius: 50%;
-        margin: 60px auto;
         position: relative;
         animation: loader 1s infinite linear;
     }

@@ -16,11 +16,9 @@ const mapsindoors = window.mapsindoors;
  * @param {string} [props.venue] - If you want the map to show a specific Venue, provide the Venue name here.
  * @param {string} [props.primaryColor] - The primary color of the application.
  * @param {string} [props.logo] - The logo that appears on the splash screen.
- * @param {string} [props.logoWidth] - The width of the logo on the splash screen.
- * @param {string} [props.logoHeight] - The height of the logo on the splash screen.
  * 
  */
-function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, primaryColor, logo, logoWidth, logoHeight }) {
+function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, primaryColor, logo}) {
 
     const [isMapReady, setMapReady] = useState(false);
     const [venues, setVenues] = useState([]);
@@ -61,7 +59,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, primaryCol
     return (<div className="mapsindoors-map">
         {/* Splash screen, bottoms sheets, venue selector etc. can be here */}
         {/* {!isMapReady && <SplashScreen />} */}
-        <SplashScreen primaryColor={primaryColor} logo={logo} logoWidth={logoWidth} logoHeight={logoHeight}></SplashScreen>
+        <SplashScreen primaryColor={primaryColor} logo={logo}></SplashScreen>
         {venues.length > 1 && <VenueSelector onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)} venues={venues} currentVenueName={currentVenueName} />}
         <Map apiKey={apiKey} gmApiKey={gmApiKey} mapboxAccessToken={mapboxAccessToken} venues={venues} venueName={currentVenueName} />
     </div>)
