@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useState } from 'react';
 import Sheet from 'react-modal-sheet';
+import './BottomSheet.scss';
 import LocationDetails from './LocationDetails/LocationDetails';
 
 const BOTTOM_SHEETS = {
@@ -21,7 +22,8 @@ function BottomSheet({ mountPoint, currentLocation, onClose }) {
     const bottomSheets = [
         // Location details sheet
         <Sheet
-            style={{ position: 'absolute', zIndex: 10000000 }}
+            className="bottom-sheet"
+            style={{ position: 'absolute' }}
             isOpen={activeBottomSheet === BOTTOM_SHEETS.LOCATION_DETAILS}
             detent={'content-height'}
             onClose={() => onClose()}
