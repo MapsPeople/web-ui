@@ -4,7 +4,6 @@ import './MapsIndoorsMap.scss';
 import Map from "../Map/Map";
 import SplashScreen from '../SplashScreen/SplashScreen';
 import VenueSelector from '../VenueSelector/VenueSelector';
-import useMediaQuery from '../../utils/useMediaQuery';
 
 const mapsindoors = window.mapsindoors;
 
@@ -21,7 +20,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue }) {
     const [isMapReady, setMapReady] = useState(false);
     const [venues, setVenues] = useState([]);
     const [currentVenueName, setCurrentVenueName] = useState();
-    const isDesktop = useMediaQuery('(min-width: 1200px)');
 
     /*
      * React on changes in the venue prop.
@@ -58,7 +56,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue }) {
     return (<div className="mapsindoors-map">
         {/* Splash screen, bottoms sheets, venue selector etc. can be here */}
         {!isMapReady && <SplashScreen />}
-        {isDesktop ? <h1>Desktop</h1> : <h1>Mobile</h1>}
         {venues.length > 1 && <VenueSelector onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)} venues={venues} currentVenueName={currentVenueName} />}
         <Map apiKey={apiKey} gmApiKey={gmApiKey} mapboxAccessToken={mapboxAccessToken} venues={venues} venueName={currentVenueName} />
     </div>)
