@@ -1,0 +1,59 @@
+.splash-screen {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #005655;
+    position: absolute;
+    z-index: 100;
+}
+
+.splash-screen-exit {
+    opacity: 1;
+}
+
+.splash-screen-exit-active {
+    opacity: 0;
+    transition: opacity 2000ms;
+}
+
+.splash-screen-exit-done {
+    opacity: 0;
+}
+
+.logo-appear-active {
+    animation: slideIn 1s;
+}
+
+.logo-enter-active {
+    animation: slideIn 1s;
+}
+
+.logo-exit {
+    opacity: 1;
+}
+
+.logo-exit-active {
+    opacity: 0;
+    transition: opacity 3000ms;
+}
+
+.logo-exit-done {
+    opacity: 0;
+}
+
+@keyframes slideIn {
+    from {
+        margin-top: 100%;
+    }
+
+    to {
+        margin-top: 0%;
+    }
+}
+
+mi-spinner {
+    margin-top: var(--spacing-xx-large);
+}
