@@ -10,8 +10,22 @@
     }
 
     &__description {
-        white-space: pre-wrap;
+        white-space: pre-wrap; /* make sure line breaks in the description text are shown as such */
         overflow-wrap: break-word;
+
+        h4, p {
+            font-size: var(--font-size-small);
+        }
+
+        h4 {
+            font-weight: var(--font-weight-medium);
+            margin: var(--spacing-medium) 0;
+        }
+
+        p {
+            color: var(--color-gray-70);
+            line-height: 1.5;
+        }
     }
 }
 
