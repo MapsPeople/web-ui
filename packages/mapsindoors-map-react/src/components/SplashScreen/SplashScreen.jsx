@@ -21,7 +21,7 @@ function SplashScreen({ primaryColor = defaultColor, logo = defaultLogo }) {
     const [isEnter, setIsEnter] = useState(true)
 
     useEffect(() => {
-        setTimeout(() => setIsEnter(true), 3000)
+        setTimeout(() => setIsEnter(false), 3000)
     }, [])
 
     /**
@@ -47,20 +47,20 @@ function SplashScreen({ primaryColor = defaultColor, logo = defaultLogo }) {
                     in={isEnter}
                     timeout={3000}
                     appear={true}
-                    classNames="splash-screen__logo">
-                    {/* <div className="splash-screen__container"> */}
+                    classNames="splash-screen__container">
+                    <div className="splash-screen__container">
                         <img className="splash-screen__logo"
                             src={logo}
                             alt="logo"
                         />
-                    {/* </div> */}
+                        <div className="splash-screen__loader"
+                            style={{
+                                border: `8px solid rgba(${convertHexToRgb(primaryColor)}, 0.3)`,
+                                borderLeft: `8px solid ${primaryColor}`
+                            }}>
+                        </div>
+                    </div>
                 </CSSTransition>
-                <div className="splash-screen__loader"
-                    style={{
-                        border: `8px solid rgba(${convertHexToRgb(primaryColor)}, 0.3)`,
-                        borderLeft: `8px solid ${primaryColor}`
-                    }}>
-                </div>
             </div>
         </CSSTransition>)
 }
