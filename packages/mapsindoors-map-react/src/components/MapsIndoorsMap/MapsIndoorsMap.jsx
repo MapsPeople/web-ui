@@ -17,8 +17,9 @@ const mapsindoors = window.mapsindoors;
  * @param {string} [props.gmApiKey] - Google Maps API key if you want to show a Google Maps map.
  * @param {string} [props.mapboxAccessToken] - Mapbox Access Token if you want to show a Google Maps map.
  * @param {string} [props.venue] - If you want the map to show a specific Venue, provide the Venue name here.
+ * @param {string} [props.locationId] - If you want the map to show a specific Location, provide the Location ID here.
  */
-function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue }) {
+function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId }) {
 
     const [isMapReady, setMapReady] = useState(false);
     const [venues, setVenues] = useState([]);
@@ -34,6 +35,19 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue }) {
     useEffect(() => {
         setCurrentVenueName(venue);
     }, [venue]);
+
+    /**
+     * React on changes to the locationId prop: Set as current location and make the map center on it.
+     */
+    useEffect(() => {
+        if (locationId) {
+            mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
+                if (location) {
+                    setCurrentLocation(location);
+                }
+            });
+        }
+    }, [locationId]);
 
     /*
      * React on changes in the MapsIndoors API key.
