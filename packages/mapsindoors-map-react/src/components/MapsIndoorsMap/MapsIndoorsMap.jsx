@@ -4,6 +4,8 @@ import './MapsIndoorsMap.scss';
 import Map from "../Map/Map";
 import SplashScreen from '../SplashScreen/SplashScreen';
 import VenueSelector from '../VenueSelector/VenueSelector';
+import useMediaQuery from '../../utils/useMediaQuery';
+import Modal from '../Modal/Modal';
 
 const mapsindoors = window.mapsindoors;
 
@@ -20,6 +22,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue }) {
     const [isMapReady, setMapReady] = useState(false);
     const [venues, setVenues] = useState([]);
     const [currentVenueName, setCurrentVenueName] = useState();
+    const isDesktop = useMediaQuery('(min-width: 1200px)');
+    const isTablet = useMediaQuery('(min-width: 768px)');
 
     /*
      * React on changes in the venue prop.
@@ -41,7 +45,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue }) {
 
             // Fixme: Venue Images are currently stored in the AppConfig object. So we will need to read the AppConfig as well as the list of Venues.
             // This will be changed in the future.
-            Promise.all([mapsindoors.services.VenuesService.getVenues(),mapsindoors.services.AppConfigService.getConfig()]).then(([venuesResult, appConfigResult]) => {
+            Promise.all([mapsindoors.services.VenuesService.getVenues(), mapsindoors.services.AppConfigService.getConfig()]).then(([venuesResult, appConfigResult]) => {
                 venuesResult = venuesResult.map(venue => {
                     venue.image = appConfigResult.venueImages[venue.name.toLowerCase()];
                     return venue;
@@ -53,9 +57,17 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue }) {
         });
     }, [apiKey]);
 
+
     return (<div className="mapsindoors-map">
         {/* Splash screen, bottoms sheets, venue selector etc. can be here */}
         {!isMapReady && <SplashScreen />}
+        {isDesktop
+            ?
+            <>
+                <Modal/>
+            </>
+            :
+            <h1>Mobile</h1>}
         {venues.length > 1 && <VenueSelector onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)} venues={venues} currentVenueName={currentVenueName} />}
         <Map apiKey={apiKey} gmApiKey={gmApiKey} mapboxAccessToken={mapboxAccessToken} venues={venues} venueName={currentVenueName} />
     </div>)
