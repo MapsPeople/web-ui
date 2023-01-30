@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { useState } from 'react';
-import Sheet from 'react-modal-sheet';
 import './BottomSheet.scss';
 import LocationDetails from './LocationDetails/LocationDetails';
 
@@ -8,9 +7,17 @@ const BOTTOM_SHEETS = {
     LOCATION_DETAILS: 0
 };
 
-function BottomSheet({ mountPoint, currentLocation, onClose }) {
+function BottomSheet({ currentLocation, onClose }) {
 
     const [activeBottomSheet, setActiveBottomSheet] = useState(null);
+
+    /**
+     * When a sheet is closed.
+     */
+    function close() {
+        setActiveBottomSheet(null);
+        onClose();
+    }
 
     /*
      * React on changes on the current location.
@@ -20,24 +27,13 @@ function BottomSheet({ mountPoint, currentLocation, onClose }) {
     }, [currentLocation]);
 
     const bottomSheets = [
-        // Location details sheet
-        <Sheet
-            className="bottom-sheet"
-            style={{ position: 'absolute' }}
-            isOpen={activeBottomSheet === BOTTOM_SHEETS.LOCATION_DETAILS}
-            detent={'content-height'}
-            onClose={() => onClose()}
-            mountPoint={mountPoint.current}
-        >
-                <Sheet.Container>
-                    <Sheet.Content>
-                        <LocationDetails location={currentLocation} onClose={() => setActiveBottomSheet(null)} />
-                    </Sheet.Content>
-                </Sheet.Container>
-        </Sheet>
+        // Location details
+        <div className={`bottom-sheet`}>
+            <LocationDetails location={currentLocation} onClose={() => close()} />
+        </div>
     ]
 
-    return <div>{bottomSheets[activeBottomSheet]}</div>
+    return <div className='bottom-sheets'>{bottomSheets[activeBottomSheet]}</div>
 }
 
 export default BottomSheet;
