@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState, useRef } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import './LocationDetails.scss';
 import { ReactComponent as CloseIcon } from '../../../assets/close.svg';
 import { ReactComponent as PinIcon } from '../../../assets/pin.svg';
@@ -41,8 +41,15 @@ function LocationDetails({ location, onClose }) {
                         <CloseIcon />
                     </button>
                 </div>
-                {/* FIXME: Show categories */}
+
                 {location.properties.imageURL && <img alt="" src={location.properties.imageURL} className="location-details__image" />}
+
+                {Object.keys(location.properties.categories).length > 0 && <p className="location-details__categories">
+                    {Object.values(location.properties.categories).map((category, index, array) => {
+                        return <React.Fragment key={category}>{category}{index < array.length-1 && <>・</>}</React.Fragment>
+                    })}
+                </p>}
+
                 {location.properties.description && <section className={`location-details__description ${showFullDescription ? 'location-details__description--full' : ''}`}>
                     <h4>Description</h4>
                     <div ref={locationDetailsElement}>

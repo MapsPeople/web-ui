@@ -9,6 +9,10 @@
         object-fit: cover;
     }
 
+    &__categories {
+        font-size: var(--font-size-small);
+    }
+
     &__description {
         white-space: pre-wrap; /* make sure line breaks in the description text are shown as such */
         overflow-wrap: break-word;
