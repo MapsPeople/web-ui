@@ -29,7 +29,7 @@ function LocationDetails({ location, onClose }) {
 
     return <div className="location-details">
             {location && <>
-                <div className="location-details__info location-info">
+                <div className="location-info">
                     <div className="location-info__icon">
                         {locationDisplayRyle && <img alt="" src={locationDisplayRyle.icon} />}
                     </div>
