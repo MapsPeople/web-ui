@@ -1,6 +1,8 @@
 .location-details {
     padding: var(--spacing-medium);
     color: var(--color-black-base);
+    display: grid;
+    gap: var(--spacing-medium);
 
     &__image {
         width: 100%;
@@ -11,12 +13,12 @@
 
     &__categories {
         font-size: var(--font-size-small);
+        margin: 0;
     }
 
     &__description {
         white-space: pre-wrap; /* make sure line breaks in the description text are shown as such */
         overflow-wrap: break-word;
-        margin-bottom: var(--spacing-medium);
 
         p, div {
             font-size: var(--font-size-small);
@@ -24,14 +26,14 @@
 
         p {
             font-weight: var(--font-weight-medium);
-            margin: var(--spacing-medium) 0;
+            margin:  0 0 var(--spacing-x-small) 0;
         }
 
         div {
             color: var(--color-gray-70);
             line-height: 1.5;
             overflow-y: hidden;
-            max-height: 64px; /* corresponding to approx. 3 lines of description text */
+            max-height: var(--spacing-xxxx-large); /* corresponding to approx. 3 lines of description text */
         }
 
         button {
@@ -70,14 +72,13 @@
 .location-info {
     display: flex;
     align-items: center;
-    margin-bottom: var(--spacing-medium);
     font-size: var(--font-size-small);
 
     &__icon {
         margin-right: var(--spacing-medium);
 
         img {
-            height: 40px;
+            height: var(--spacing-xx-large);
             display: block; /* to avoid spacing below */
         }
     }
