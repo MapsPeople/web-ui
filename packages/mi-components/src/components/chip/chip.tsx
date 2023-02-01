@@ -33,7 +33,7 @@ export class Chip implements ComponentInterface {
 
   render(): JSX.Element {
       return (
-          <div class={`chip ${this.active ? 'active' : ''}`}>
+          <div class={`chip ${this.active ? 'chip--active' : ''}`}>
               {this.icon && <img class="chip__icon" src={this.icon}></img>}
               <div class="chip__content">{this.content}</div>
           </div>

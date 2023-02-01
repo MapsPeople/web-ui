@@ -13,7 +13,7 @@
   font-size: var(--font-size-medium);
   height: var(--spacing-xxx-large);
 
-  &.active {
+  &--active {
     background-color: var(--brand-colors-dark-pine-100);
     color: var(--brand-colors-white-100);
   }
