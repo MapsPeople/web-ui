@@ -1,0 +1,20 @@
+.bottom-sheets {
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    z-index: 100000000;
+    overflow: hidden;
+}
+
+.bottom-sheet {
+    pointer-events: all;
+    display: block;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    max-height: 100%;
+    overflow: auto;
+    background-color: var(--color-white-white);
+    border-top-left-radius: var(--rounding-x-large);
+    border-top-right-radius: var(--rounding-x-large);
+}
