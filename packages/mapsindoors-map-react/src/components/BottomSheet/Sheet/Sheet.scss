@@ -1,0 +1,38 @@
+.sheet {
+    pointer-events: none;
+    opacity: 0;
+    transition: all .4s;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    max-height: 100%;
+    overflow: auto;
+    transform: translateY(100%);
+    background-color: var(--color-white-white);
+    border-top-left-radius: var(--rounding-x-large);
+    border-top-right-radius: var(--rounding-x-large);
+
+    &--active {
+        pointer-events: all;
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    &__drag {
+        user-select: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 12px;
+        position: absolute;
+        top: 0;
+        width: 100%;
+    }
+
+    &__drag-icon {
+        width: 28px;
+        height: 4px;
+        border-radius: 4px;
+        background-color: var(--color-gray-20);
+    }
+}

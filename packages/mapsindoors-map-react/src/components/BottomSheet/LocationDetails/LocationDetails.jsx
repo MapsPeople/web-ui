@@ -5,7 +5,7 @@ import { ReactComponent as PinIcon } from '../../../assets/pin.svg';
 import { MapsIndoorsContext } from '../../../MapsIndoorsContext';
 import { useIsVerticalOverflow } from '../../../hooks/useIsVerticalOverflow';
 
-function LocationDetails({ location, onClose }) {
+function LocationDetails({ location, onClose, onStartWayfinding }) {
 
     const locationInfoElement = useRef(null);
     const locationDetailsElement = useRef(null);
@@ -57,7 +57,7 @@ function LocationDetails({ location, onClose }) {
                 </div>
                 {(isOverflowing || showFullDescription) && <button onClick={() => setShowFullDescription(!showFullDescription)}>{!showFullDescription ? 'Read full description' : 'Close' }</button>}
             </section>}
-            <button className="location-details__wayfinding">
+            <button onClick={() => onStartWayfinding()} className="location-details__wayfinding">
                 <PinIcon />
                 Start wayfinding
                 {/* FIXME: Implement */}

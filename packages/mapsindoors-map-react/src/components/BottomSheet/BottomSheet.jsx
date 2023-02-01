@@ -1,10 +1,12 @@
 import { useEffect } from 'react';
 import { useState } from 'react';
+import Sheet from './Sheet/Sheet';
 import './BottomSheet.scss';
 import LocationDetails from './LocationDetails/LocationDetails';
 
 const BOTTOM_SHEETS = {
-    LOCATION_DETAILS: 0
+    LOCATION_DETAILS: 0,
+    WAYFINDING: 1
 };
 
 function BottomSheet({ currentLocation, onClose }) {
@@ -28,12 +30,16 @@ function BottomSheet({ currentLocation, onClose }) {
 
     const bottomSheets = [
         // Location details
-        <div className={`bottom-sheet`}>
-            <LocationDetails location={currentLocation} onClose={() => close()} />
-        </div>
+        <Sheet isOpen={activeBottomSheet === BOTTOM_SHEETS.LOCATION_DETAILS} key="A">
+            <LocationDetails onStartWayfinding={() => setActiveBottomSheet(BOTTOM_SHEETS.WAYFINDING)} location={currentLocation} onClose={() => close()} />
+        </Sheet>,
+        <Sheet isOpen={activeBottomSheet === BOTTOM_SHEETS.WAYFINDING} key="B">
+            {/* FIXME: Implement actual components for wayfinding */}
+            <div style={{ color: 'black', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>FIXME</div>
+        </Sheet>
     ]
 
-    return <div className='bottom-sheets'>{bottomSheets[activeBottomSheet]}</div>
+    return <div className='bottom-sheets'>{bottomSheets}</div>
 }
 
 export default BottomSheet;
