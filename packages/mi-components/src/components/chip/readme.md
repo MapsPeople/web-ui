@@ -1,6 +1,6 @@
 # mi-chip
 
-The `<mi-chip>` element can be used to display a chip. The chip has an active state, which adds an additional class to the component and it applies extra styling to the chip. The chip can have an icon, however that is optional.
+The `<mi-chip>` element can be used to display a chip. The chip can have an active state, as well as an icon, which is an optional attribute. 
 
 Example usage:
 
