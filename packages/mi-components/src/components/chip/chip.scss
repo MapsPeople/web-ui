@@ -4,11 +4,11 @@
   display: flex;
   width: fit-content;
   background-color: var(--tailwind-colors-zinc-50);
-  outline: 1px solid #E6E6E6;
+  outline: 1px solid var(--tailwind-colors-slate-200);
   padding: 0 var(--spacing-xx-small);
   border-radius: 70px;
   align-items: center;
-  color: #707070;
+  color: var(--tailwind-colors-zinc-500);
   font-family: var(--font-family-system);
   font-size: var(--font-size-medium);
   height: var(--spacing-xxx-large);
