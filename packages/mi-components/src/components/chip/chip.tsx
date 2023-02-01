@@ -39,5 +39,4 @@ export class Chip implements ComponentInterface {
           </div>
       );
   }
-
 }
