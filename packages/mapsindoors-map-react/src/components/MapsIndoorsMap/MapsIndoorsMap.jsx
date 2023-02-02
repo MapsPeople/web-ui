@@ -73,7 +73,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
 
     return (<MapsIndoorsContext.Provider value={mapsIndoorsInstance}>
         <div className="mapsindoors-map">
-            {!isMapReady && <SplashScreen />}
+            {!isMapReady && <SplashScreen logo={logo} primaryColor={primaryColor}/>}
             {venues.length > 1 && <VenueSelector onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)} venues={venues} currentVenueName={currentVenueName} />}
             {isMapReady && <BottomSheet currentLocation={currentLocation} onClose={() => setCurrentLocation(null)} />}
             <Map apiKey={apiKey} gmApiKey={gmApiKey} mapboxAccessToken={mapboxAccessToken} venues={venues} venueName={currentVenueName} onMapsIndoorsInstance={(instance) => setMapsIndoorsInstance(instance)} onLocationClick={(location) => setCurrentLocation(location)} />
