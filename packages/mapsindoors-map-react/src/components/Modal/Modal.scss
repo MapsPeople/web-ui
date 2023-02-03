@@ -1,13 +1,13 @@
 .modal {
     position: absolute;
-    background: white;
     z-index: 1000;
     color: black;
     width: 30%;
-    top: 40px;
-    left: 40px;
-    bottom: 40px;
-    border-radius: 16px;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-    padding: 20px;
+    height: fit-content;
+    left: var(--spacing-large);
+    bottom: var(--spacing-large);
+    border-radius: var(--spacing-x-small);
+    border: 1px solid var(--tailwind-colors-neutral-200);
+    padding: var(--spacing-medium);
+    background: var(--tailwind-colors-white);
 }
