@@ -89,10 +89,17 @@ $transition-timing-function: ease;
     @media (min-width: 1200px) {
         &__content {
             width: 420px;
-            top: 68px;
-            left: 12px;
+            left: 24px;
+            bottom: 24px;
+            top: 24px;
             border-radius: 8px;
-            max-height: 550px;
+
+        }
+
+        &__button {
+            top: 40px;
+            left: 40px;
+            
         }
     }
 }

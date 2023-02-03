@@ -37,4 +37,9 @@
         border-radius: var(--rounding-large);
         padding: var(--spacing-x-small);
     }
+
+    @media (min-width: 1200px) {
+        margin: 0 16px 16px 16px;
+        width: calc(100% - var(--spacing-x-large));
+    }
 }
