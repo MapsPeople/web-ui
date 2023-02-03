@@ -4,6 +4,8 @@ import './MapsIndoorsMap.scss';
 import Map from "../Map/Map";
 import SplashScreen from '../SplashScreen/SplashScreen';
 import VenueSelector from '../VenueSelector/VenueSelector';
+import BottomSheet from '../BottomSheet/BottomSheet';
+import { MapsIndoorsContext } from '../../MapsIndoorsContext';
 import useMediaQuery from '../../utils/useMediaQuery';
 import Modal from '../Modal/Modal';
 
@@ -16,13 +18,16 @@ const mapsindoors = window.mapsindoors;
  * @param {string} [props.gmApiKey] - Google Maps API key if you want to show a Google Maps map.
  * @param {string} [props.mapboxAccessToken] - Mapbox Access Token if you want to show a Google Maps map.
  * @param {string} [props.venue] - If you want the map to show a specific Venue, provide the Venue name here.
+ * @param {string} [props.locationId] - If you want the map to show a specific Location, provide the Location ID here.
  */
-function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue }) {
+function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId }) {
 
     const [isMapReady, setMapReady] = useState(false);
     const [venues, setVenues] = useState([]);
     const [currentVenueName, setCurrentVenueName] = useState();
-    const isDesktop = useMediaQuery('(min-width: 1200px)');
+    const [currentLocation, setCurrentLocation] = useState();
+    const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
+const isDesktop = useMediaQuery('(min-width: 1200px)');
     const isTablet = useMediaQuery('(min-width: 768px)');
 
     /*
@@ -31,6 +36,19 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue }) {
     useEffect(() => {
         setCurrentVenueName(venue);
     }, [venue]);
+
+    /**
+     * React on changes to the locationId prop: Set as current location and make the map center on it.
+     */
+    useEffect(() => {
+        if (locationId) {
+            mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
+                if (location) {
+                    setCurrentLocation(location);
+                }
+            });
+        }
+    }, [locationId]);
 
     /*
      * React on changes in the MapsIndoors API key.
@@ -57,20 +75,21 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue }) {
         });
     }, [apiKey]);
 
-
-    return (<div className="mapsindoors-map">
-        {/* Splash screen, bottoms sheets, venue selector etc. can be here */}
-        {!isMapReady && <SplashScreen />}
-        {isDesktop
+    return (<MapsIndoorsContext.Provider value={mapsIndoorsInstance}>
+        <div className="mapsindoors-map">
+            {!isMapReady && <SplashScreen />}
+ {isDesktop
             ?
             <>
                 <Modal/>
             </>
             :
             <h1>Mobile</h1>}
-        {venues.length > 1 && <VenueSelector onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)} venues={venues} currentVenueName={currentVenueName} />}
-        <Map apiKey={apiKey} gmApiKey={gmApiKey} mapboxAccessToken={mapboxAccessToken} venues={venues} venueName={currentVenueName} />
-    </div>)
+            {venues.length > 1 && <VenueSelector onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)} venues={venues} currentVenueName={currentVenueName} />}
+            {isMapReady && <BottomSheet currentLocation={currentLocation} onClose={() => setCurrentLocation(null)} />}
+            <Map apiKey={apiKey} gmApiKey={gmApiKey} mapboxAccessToken={mapboxAccessToken} venues={venues} venueName={currentVenueName} onMapsIndoorsInstance={(instance) => setMapsIndoorsInstance(instance)} onLocationClick={(location) => setCurrentLocation(location)} />
+        </div>
+    </MapsIndoorsContext.Provider>)
 }
 
 export default MapsIndoorsMap;

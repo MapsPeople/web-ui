@@ -4,28 +4,30 @@
 @use '~@mapsindoors/midt/font';
 @use '~@mapsindoors/midt/color';
 @use '~@mapsindoors/midt/padding';
+@use "~@mapsindoors/midt/build/scss/variables";
 
 mi-search {
     display: block;
     position: relative;
 
     input[type="search"] {
-        appearance: none;
-        height: 100%;
-        width: 100%;
-        @include background-color.white(white);
-        @include border.style(solid);
+        @include border.radius(x-large);
         @include border.width(medium);
-        @include border.radius(large);
-        @include font.size(large);
-        @include font.family(sans-serif);
-        @include color.black();
+        @include border.style(solid);
+        @include background-color.white(white);
+        @include padding.left(xx-large);
+        @include color.gray(50);
+        @include sizing.height(xxx-large);
+        @include font.size(medium);
         @include padding.right(xx-large);
-        @include padding.left(x-large);
+        @include font.family(system);
+        appearance: none;
+        width: 100%;
         position: relative;
         background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xMS43MSAxMUgxMi41TDE3LjQ5IDE2TDE2IDE3LjQ5TDExIDEyLjVWMTEuNzFMMTAuNzMgMTEuNDNDOS41OSAxMi40MSA4LjExIDEzIDYuNSAxM0MyLjkxIDEzIDAgMTAuMDkgMCA2LjVDMCAyLjkxIDIuOTEgMCA2LjUgMEMxMC4wOSAwIDEzIDIuOTEgMTMgNi41QzEzIDguMTEgMTIuNDEgOS41OSAxMS40MyAxMC43M0wxMS43MSAxMVpNMiA2LjVDMiA4Ljk5IDQuMDEgMTEgNi41IDExQzguOTkgMTEgMTEgOC45OSAxMSA2LjVDMTEgNC4wMSA4Ljk5IDIgNi41IDJDNC4wMSAyIDIgNC4wMSAyIDYuNVoiIGZpbGw9IiM4RDk4QUEiLz4KPC9zdmc+Cg==");
         background-repeat: no-repeat;
-        background-position: 8px center;
+        background-position: variables.$spacing-medium center;
+        border-color: #E6E6E6;
 
         &:focus {
             @include border.blue(60);
