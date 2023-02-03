@@ -19,7 +19,6 @@
 @import "../../../../../node_modules/@mapsindoors/css/select.css";
 @import "../../../../../node_modules/@mapsindoors/css/toggle.css";
 @import "../../../../../node_modules/@mapsindoors/css/helpers.css";
-@import "../../../../../node_modules/@mapsindoors/midt/midt.css";
 
 * {
     box-sizing: border-box;
@@ -167,7 +166,7 @@
         }
 
         &--monospace-font {
-            @include font.family('monospace');
+            @include font.family("monospace");
         }
     }
 }
