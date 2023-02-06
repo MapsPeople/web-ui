@@ -17,6 +17,8 @@ const mapsindoors = window.mapsindoors;
  * @param {string} [props.mapboxAccessToken] - Mapbox Access Token if you want to show a Google Maps map.
  * @param {string} [props.venue] - If you want the map to show a specific Venue, provide the Venue name here.
  * @param {string} [props.locationId] - If you want the map to show a specific Location, provide the Location ID here.
+ * @param {string} [props.primaryColor] - If you want the splash screen to have a custom primary color, provide the value here.
+ * @param {string} [props.logo] - If you want the splash screen to have a custom logo, provide the image path or address here.
  */
 function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo }) {
 
