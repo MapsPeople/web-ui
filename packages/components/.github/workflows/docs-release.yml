@@ -1,0 +1,31 @@
+name: K8S Release
+
+on:
+    push:
+        branches:
+            - main
+        paths-ignore:
+            - "package.json"
+
+jobs:
+    build-image:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+            - name: Generate build ID
+              id: prep
+              run: |
+                  branch=${GITHUB_REF##*/}
+                  sha=${GITHUB_SHA::8}
+                  ts=$(date +'%Y.%m.%d.%H.%M')
+                  echo "BUILD_ID=${ts}_${sha}-${branch}" >> $GITHUB_OUTPUT
+            - name: Build and push Docker images
+              uses: docker/build-push-action@v1.1.0
+              with:
+                  username: _json_key
+                  password: ${{ secrets.DOCKER_PASSWORD }}
+                  registry: eu.gcr.io
+                  repository: mapsindoors-services/docs
+                  tags: ${{ steps.prep.outputs.BUILD_ID }}
