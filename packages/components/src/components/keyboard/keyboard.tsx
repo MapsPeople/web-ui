@@ -1,8 +1,8 @@
 import { Component, ComponentInterface, h } from '@stencil/core';
 import { JSX, Prop, Watch } from '@stencil/core/internal';
 import SimpleKeyboard from 'simple-keyboard';
+import { danishAlphabetic, defaultAlphabetic, frenchAlphabetic, germanAlphabetic, unitedStatesAlphabetic } from './keyboard-alphabetic-layouts';
 import { KeyboardLayout } from './keyboard-layout.enum';
-import { defaultAlphabetic, danishAlphabetic, unitedStatesAlphabetic } from './keyboard-alphabetic-layouts';
 import { defaultNumeric } from './keyboard-numeric-layouts';
 
 @Component({
@@ -61,7 +61,7 @@ export class Keyboard implements ComponentInterface {
     }
 
     private simpleKeyboard: SimpleKeyboard;
-    private inputElements = new Set<HTMLInputElement>()
+    private inputElements = new Set<HTMLInputElement>();
 
     componentDidLoad(): void {
         this.simpleKeyboard = new SimpleKeyboard({
@@ -95,7 +95,7 @@ export class Keyboard implements ComponentInterface {
     /**
      * Get keyboard layout. Defaults to alphabetic.
      *
-     * @param {KeyboardLayout} keyboardLayout Accepts values of KeyboardLayout enum, eg. 'numeric' or 'alphabetic'
+     * @param {KeyboardLayout} keyboardLayout - Accepts values of KeyboardLayout enum, eg. 'numeric' or 'alphabetic'.
      * @returns {{ [key: string]: string[]; }}
      */
     getKeyboardLayout(keyboardLayout: KeyboardLayout): { [key: string]: string[]; } {
@@ -115,7 +115,9 @@ export class Keyboard implements ComponentInterface {
         if (!browserLanguage) return defaultAlphabetic; // Return defaultAlphabetic if navigator language isn't available.
         const supportedAlphabeticLayouts: Array<{ layout: { default: string[] }, languages: string[] }> = [ // Mapping multiple languages to a single keyboard layout
             { layout: unitedStatesAlphabetic, languages: ['en', 'en-us'] },
-            { layout: danishAlphabetic, languages: ['da', 'da-dk'] }
+            { layout: danishAlphabetic, languages: ['da', 'da-dk'] },
+            { layout: frenchAlphabetic, languages: ['fr', 'fr-fr'] },
+            { layout: germanAlphabetic, languages: ['de', 'de-de'] }
         ];
         const supportedLayout = supportedAlphabeticLayouts.find((layout): boolean => {
             return layout.languages.find((language): boolean => language === browserLanguage.toLowerCase()) ? true : false;
