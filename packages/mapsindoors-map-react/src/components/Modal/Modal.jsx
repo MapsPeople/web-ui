@@ -2,9 +2,9 @@ import React from "react";
 import { useEffect } from 'react';
 import { useState } from 'react';
 import './Modal.scss'
-import LocationDetails from "../BottomSheet/LocationDetails/LocationDetails";
+import LocationDetails from "../LocationDetails/LocationDetails";
 
-const PAGES = {
+const VIEWS = {
     LOCATION_DETAILS: 0
 };
 
@@ -24,7 +24,7 @@ function Modal({ currentLocation, onClose }) {
     * React on changes on the current location.
     */
     useEffect(() => {
-        setActivePage(currentLocation ? PAGES.LOCATION_DETAILS : undefined);
+        setActivePage(currentLocation ? VIEWS.LOCATION_DETAILS : undefined);
     }, [currentLocation]);
 
     const pages = [
@@ -35,8 +35,8 @@ function Modal({ currentLocation, onClose }) {
     ]
 
     return (
-        <div>
-            <div className='modals'>{pages[activePage]}</div>
+        <div className='modals'>
+            {pages[activePage]}
         </div>
     )
 }
