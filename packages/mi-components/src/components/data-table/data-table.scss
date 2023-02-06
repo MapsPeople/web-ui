@@ -10,7 +10,7 @@
 @use "~@mapsindoors/midt/transitions";
 @use "~@mapsindoors/midt/z-index";
 
-@use "~@mapsindoors/midt/build/css/variables";
+@use "~@mapsindoors/midt/build/scss/variables" as variables;
 
 // We need to expose MapsIndoors CSS and MIDT helper classes so they can be used in the table.
 /* For unknown reasons the '~' notation does not work */
@@ -46,7 +46,7 @@
         position: relative;
         text-align: left;
         user-select: none;
-        min-width: var(--spacing-xxx-large);
+        min-width: variables.$spacing-xxx-large;
         @include font.weight(large);
         @include font.size(medium);
         @include font.leading(large);
@@ -68,21 +68,21 @@
         }
 
         &::before {
-            border-bottom-color: var(--color-gray-60);
+            border-bottom-color: variables.$color-gray-60;
             margin-top: -15px;
         }
 
         &::after {
-            border-top-color: var(--color-gray-60);
+            border-top-color: variables.$color-gray-60;
             margin-top: 3px;
         }
 
         &.desc::after {
-            border-top-color: var(--color-gray-10);
+            border-top-color: variables.$color-gray-10;
         }
 
         &.asc::before {
-            border-bottom-color: var(--color-gray-10);
+            border-bottom-color: variables.$color-gray-10;
         }
 
         &--no-sort {
@@ -141,8 +141,8 @@
     &__data {
         @include font.size(medium);
         @include padding.horizontal(x-small);
-        height: calc(var(--spacing-xxx-large) + var(--spacing-x-small));
-        border-right: 1px solid var(--color-gray-40);
+        height: calc(variables.$spacing-xxx-large + variables.$spacing-x-small);
+        border-right: 1px solid variables.$color-gray-40;
 
         &:last-child {
             border-right: none;

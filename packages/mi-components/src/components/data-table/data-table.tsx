@@ -5,7 +5,7 @@ import { isNullOrUndefined, isNumber } from '../../utils/utils';
 @Component({
     tag: 'mi-data-table',
     styleUrl: 'data-table.scss',
-    shadow: false
+    shadow: true
 })
 export class DataTable {
     @Element() el: HTMLMiDataTableElement;
