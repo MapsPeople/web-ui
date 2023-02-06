@@ -24,18 +24,6 @@ function SplashScreen({ primaryColor = defaultColor, logo = defaultLogo }) {
         setTimeout(() => setIsEnter(false), 3000)
     }, [])
 
-    /**
-     * Converts an HEX value to an RGB value.
-     * It accepts three or six digits HEX values.
-     *
-     * @param {string} hex
-     */
-    const convertHexToRgb = hex =>
-        hex.replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i
-            , (m, r, g, b) => '#' + r + r + g + g + b + b)
-            .substring(1).match(/.{2}/g)
-            .map(x => parseInt(x, 16))
-
     return (
         <CSSTransition
             in={isEnter}
@@ -53,9 +41,11 @@ function SplashScreen({ primaryColor = defaultColor, logo = defaultLogo }) {
                             src={logo}
                             alt="logo"
                         />
+                        {/* The border value is set based on the #rrggbbaa and includes an 
+                        opacity level of around 20%, which translates to the value of 20. */}
                         <div className="splash-screen__loader"
                             style={{
-                                border: `8px solid rgba(${convertHexToRgb(primaryColor)}, 0.3)`,
+                                border: `8px solid ${primaryColor}50`,
                                 borderLeft: `8px solid ${primaryColor}`
                             }}>
                         </div>
