@@ -1,6 +1,6 @@
 {
-    "name": "mi-components",
-    "version": "12.0.0",
+    "name": "@mapsindoors/components",
+    "version": "12.1.2",
     "description": "Web components for MapsIndoors",
     "main": "dist/index.js",
     "module": "dist/index.mjs",
@@ -17,7 +17,7 @@
     "scripts": {
         "build": "stencil build --docs",
         "build.watch": "stencil build --watch",
-        "docs.build": "eleventy && rpm run sass",
+        "docs.build": "eleventy && npm run docs.sass",
         "docs.clean": "rm -rf docs",
         "docs.eleventy": "eleventy",
         "docs.sass": "sass src/docs/_sass:docs --no-source-map",
@@ -54,7 +54,7 @@
         "jest-cli": "^29.3.1",
         "normalize.css": "^8.0.1",
         "postcss": "^8.4.19",
-        "puppeteer": "^19.3.0",
+        "puppeteer": "^19.6.3",
         "sass": "^1.56.1",
         "simple-keyboard": "^3.4.197", 
         "@googlemaps/js-api-loader": "^1.15.1",

@@ -165,7 +165,7 @@
         }
 
         &--monospace-font {
-            @include font.family('monospace');
+            @include font.family("monospace");
         }
     }
 }
