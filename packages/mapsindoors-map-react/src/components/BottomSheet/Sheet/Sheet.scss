@@ -18,6 +18,10 @@
         transform: translateY(0);
     }
 
+    &--dragging {
+        transition: none; // Remove transitions while dragging to reduce perceived lag
+    }
+
     &__drag {
         user-select: none;
         display: flex;
