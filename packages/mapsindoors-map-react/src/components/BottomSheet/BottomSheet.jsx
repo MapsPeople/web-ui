@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useState } from 'react';
 import './BottomSheet.scss';
-import LocationDetails from './LocationDetails/LocationDetails';
+import LocationDetails from '../LocationDetails/LocationDetails';
 
 const BOTTOM_SHEETS = {
     LOCATION_DETAILS: 0
