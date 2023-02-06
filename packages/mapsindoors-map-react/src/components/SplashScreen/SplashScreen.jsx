@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from 'react';
 import { CSSTransition } from "react-transition-group";
-import logo from "../../assets/logo.svg"
+import logo from "../../assets/logo.svg";
 import './SplashScreen.scss';
 
 const defaultLogo = logo;
@@ -42,7 +42,7 @@ function SplashScreen({ primaryColor = defaultColor, logo = defaultLogo }) {
                             alt="logo"
                         />
                         {/* The border value is set based on the #rrggbbaa and includes an 
-                        opacity level of around 20%, which translates to the value of 20. */}
+                        opacity level of around 20%, which translates to the value of 50. */}
                         <div className="splash-screen__loader"
                             style={{
                                 border: `8px solid ${primaryColor}50`,
