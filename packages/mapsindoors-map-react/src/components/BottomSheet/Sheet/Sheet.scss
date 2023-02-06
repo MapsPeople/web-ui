@@ -24,16 +24,15 @@
 
     &__drag {
         user-select: none;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 12px;
+        padding-top: var(--spacing-xx-small);
+        height: var(--spacing-large);
         position: absolute;
         top: 0;
         width: 100%;
     }
 
     &__drag-icon {
+        margin: 0 auto;
         width: 28px;
         height: 4px;
         border-radius: 4px;
