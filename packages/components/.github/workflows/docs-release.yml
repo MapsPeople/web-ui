@@ -27,5 +27,5 @@ jobs:
                   username: _json_key
                   password: ${{ secrets.DOCKER_PASSWORD }}
                   registry: eu.gcr.io
-                  repository: mapsindoors-services/docs
+                  repository: mapsindoors-services/components
                   tags: ${{ steps.prep.outputs.BUILD_ID }}
