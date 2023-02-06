@@ -1,4 +1,4 @@
-import { defineCustomElements } from '@mapsindoors/components';
+import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
