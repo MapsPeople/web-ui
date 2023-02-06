@@ -1,0 +1,24 @@
+# This workflow will publish the release as an NPM package
+
+name: Publish NPM package
+
+on:
+    release:
+        types: [released]
+
+jobs:
+    publish-npm:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - uses: actions/setup-node@v2
+              with:
+                  node-version: 14
+                  registry-url: https://registry.npmjs.org/
+                  scope: "@mapsindoors"
+            - run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+            - run: npm ci
+            - run: npm version --no-git-tag-version --allow-same-version ${{ env.TAG }}
+            - run: npm publish --access public
+              env:
+                  NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
