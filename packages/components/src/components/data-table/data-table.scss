@@ -47,7 +47,6 @@
         text-align: left;
         user-select: none;
         min-width: variables.$spacing-xxx-large;
-
         @include font.weight(large);
         @include font.size(medium);
         @include font.leading(large);

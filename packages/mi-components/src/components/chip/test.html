@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
+    <title>mi-chip test page</title>
+    <script type="module" src="/build/mi-components.esm.js"></script>
+    <script nomodule src="/build/mi-components.js"></script>
+
+    <style>
+        .chips {
+            display: grid;
+            grid-auto-flow: column;
+            gap: 20px;
+            width: fit-content;
+            align-items: center;
+        }
+
+        .content {
+            display: grid;
+            justify-items: center;
+            gap: 20px;
+        }
+    </style>
+    
+</head>
+
+<body>
+    <div class="chips">
+        <div class="content">
+            <mi-chip content="Work desk"
+                icon="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/LinkedIn_icon_circle.svg/800px-LinkedIn_icon_circle.svg.png">
+            </mi-chip>
+            <div class="info">Chip with icon</div>
+        </div>
+        <div class="content">
+            <mi-chip content="Work desk"></mi-chip>
+            <div class="info">Chip without icon</div>
+        </div>
+        <div class="content">
+            <mi-chip content="Work desk"
+                icon="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/LinkedIn_icon_circle.svg/800px-LinkedIn_icon_circle.svg.png"
+                active=true>
+            </mi-chip>
+            <div class="info">Chip with icon (active)</div>
+        </div>
+        <div class="content">
+            <mi-chip content="Work desk" active=true></mi-chip>
+            <div class="info">Chip without icon (active)</div>
+        </div>
+    </div>
+</body>
+
+</html>
