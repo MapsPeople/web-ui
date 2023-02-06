@@ -1,0 +1,29 @@
+@use "~@mapsindoors/midt/build/css/variables";
+
+.chip {
+  display: flex;
+  background-color: var(--tailwind-colors-zinc-50);
+  outline: 1px solid var(--tailwind-colors-slate-200);
+  padding: 0 var(--spacing-xx-small);
+  border-radius: 70px;
+  align-items: center;
+  color: var(--tailwind-colors-zinc-500);
+  font-family: var(--font-family-system);
+  font-size: var(--font-size-medium);
+  height: var(--spacing-xxx-large);
+
+  &--active {
+    background-color: var(--brand-colors-dark-pine-100);
+    color: var(--brand-colors-white-100);
+  }
+
+  &__content {
+    padding: 0 var(--spacing-x-small);
+    white-space: nowrap;
+  }
+
+  &__icon {
+    width: var(--spacing-xx-large);
+    height: var(--spacing-xx-large);
+  }
+}

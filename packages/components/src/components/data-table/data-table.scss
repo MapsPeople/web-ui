@@ -19,7 +19,6 @@
 @import "../../../../../node_modules/@mapsindoors/css/select.css";
 @import "../../../../../node_modules/@mapsindoors/css/toggle.css";
 @import "../../../../../node_modules/@mapsindoors/css/helpers.css";
-@import "../../../../../node_modules/@mapsindoors/midt/midt.css";
 
 * {
     box-sizing: border-box;
@@ -48,7 +47,6 @@
         text-align: left;
         user-select: none;
         min-width: variables.$spacing-xxx-large;
-
         @include font.weight(large);
         @include font.size(medium);
         @include font.leading(large);
@@ -167,7 +165,7 @@
         }
 
         &--monospace-font {
-            @include font.family('monospace');
+            @include font.family("monospace");
         }
     }
 }

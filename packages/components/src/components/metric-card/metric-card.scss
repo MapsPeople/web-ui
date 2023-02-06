@@ -11,7 +11,7 @@
 @use "~@mapsindoors/midt/transitions";
 @use "~@mapsindoors/midt/z-index";
 
-@use "~@mapsindoors/midt/build/scss/variables"as variables;
+@use "~@mapsindoors/midt/build/scss/variables" as variables;
 
 :host {
     @include font.family(sans-serif);

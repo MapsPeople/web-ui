@@ -1,6 +1,6 @@
 {
-    "name": "mi-components",
-    "version": "12.0.0",
+    "name": "@mapsindoors/components",
+    "version": "12.1.2",
     "description": "Web components for MapsIndoors",
     "main": "dist/index.js",
     "module": "dist/index.mjs",
@@ -17,7 +17,7 @@
     "scripts": {
         "build": "stencil build --docs",
         "build.watch": "stencil build --watch",
-        "docs.build": "eleventy && rpm run sass",
+        "docs.build": "eleventy && npm run docs.sass",
         "docs.clean": "rm -rf docs",
         "docs.eleventy": "eleventy",
         "docs.sass": "sass src/docs/_sass:docs --no-source-map",
@@ -30,12 +30,12 @@
         "test.watch": "stencil test --spec --e2e --watchAll",
         "test": "stencil test --spec --e2e"
     },
-    "devDependencies": {
+    "dependencies": {
         "@11ty/eleventy": "^1.0.2",
         "@mapsindoors/css": "^2.1.0",
         "@mapsindoors/eslint-config": "^1.5.0",
         "@mapsindoors/eslint-config-typescript": "^1.4.0",
-        "@mapsindoors/midt": "^17.0.0",
+        "@mapsindoors/midt": "^18.1.1",
         "@mapsindoors/typescript-interfaces": "^2.1.2",
         "@stencil/core": "^2.20.0",
         "@stencil/postcss": "^2.1.0",
@@ -54,16 +54,14 @@
         "jest-cli": "^29.3.1",
         "normalize.css": "^8.0.1",
         "postcss": "^8.4.19",
-        "puppeteer": "^19.3.0",
+        "puppeteer": "^19.6.3",
         "sass": "^1.56.1",
-        "simple-keyboard": "^3.4.197"
+        "simple-keyboard": "^3.4.197", 
+        "@googlemaps/js-api-loader": "^1.15.1",
+        "fuzzysort": "^2.0.4"
     },
     "license": "MIT",
     "optionalDependencies": {
         "fsevents": "^2.3.2"
-    },
-    "dependencies": {
-        "@googlemaps/js-api-loader": "^1.15.1",
-        "fuzzysort": "^2.0.4"
     }
 }

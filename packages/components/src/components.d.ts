@@ -18,6 +18,23 @@ import { DirectionsTranslations } from "./types/directions-translations.interfac
 export namespace Components {
     interface MiCard {
     }
+    interface MiChip {
+        /**
+          * Checks if the chip is active and applies different styling to the component.
+          * @type {boolean}
+         */
+        "active": boolean;
+        /**
+          * The chip content that is displayed in the component.
+          * @type {string}
+         */
+        "content": string;
+        /**
+          * The icon source.
+          * @type {string}
+         */
+        "icon"?: string;
+    }
     interface MiColumn {
         /**
           * The alignContent property sets the alignment of the column's content.
@@ -877,6 +894,12 @@ declare global {
         prototype: HTMLMiCardElement;
         new (): HTMLMiCardElement;
     };
+    interface HTMLMiChipElement extends Components.MiChip, HTMLStencilElement {
+    }
+    var HTMLMiChipElement: {
+        prototype: HTMLMiChipElement;
+        new (): HTMLMiChipElement;
+    };
     interface HTMLMiColumnElement extends Components.MiColumn, HTMLStencilElement {
     }
     var HTMLMiColumnElement: {
@@ -1053,6 +1076,7 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "mi-card": HTMLMiCardElement;
+        "mi-chip": HTMLMiChipElement;
         "mi-column": HTMLMiColumnElement;
         "mi-data-table": HTMLMiDataTableElement;
         "mi-distance": HTMLMiDistanceElement;
@@ -1086,6 +1110,23 @@ declare global {
 }
 declare namespace LocalJSX {
     interface MiCard {
+    }
+    interface MiChip {
+        /**
+          * Checks if the chip is active and applies different styling to the component.
+          * @type {boolean}
+         */
+        "active"?: boolean;
+        /**
+          * The chip content that is displayed in the component.
+          * @type {string}
+         */
+        "content"?: string;
+        /**
+          * The icon source.
+          * @type {string}
+         */
+        "icon"?: string;
     }
     interface MiColumn {
         /**
@@ -1920,6 +1961,7 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "mi-card": MiCard;
+        "mi-chip": MiChip;
         "mi-column": MiColumn;
         "mi-data-table": MiDataTable;
         "mi-distance": MiDistance;
@@ -1956,6 +1998,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "mi-card": LocalJSX.MiCard & JSXBase.HTMLAttributes<HTMLMiCardElement>;
+            "mi-chip": LocalJSX.MiChip & JSXBase.HTMLAttributes<HTMLMiChipElement>;
             "mi-column": LocalJSX.MiColumn & JSXBase.HTMLAttributes<HTMLMiColumnElement>;
             "mi-data-table": LocalJSX.MiDataTable & JSXBase.HTMLAttributes<HTMLMiDataTableElement>;
             "mi-distance": LocalJSX.MiDistance & JSXBase.HTMLAttributes<HTMLMiDistanceElement>;
