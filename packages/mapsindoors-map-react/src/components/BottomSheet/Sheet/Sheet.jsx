@@ -22,7 +22,7 @@ function Sheet({ children, isOpen, minHeight = 0 }) {
     /*
      * Dragging functionality: Make it possible to drag the sheet to another size.
      */
-    function startDragging(event) {
+    function startDragging() {
         setIsDragging(true);
 
         // While dragging, prevent default touch move since it will otherwise take over the interaction.
@@ -52,7 +52,7 @@ function Sheet({ children, isOpen, minHeight = 0 }) {
     }
 
     return <div style={style} className={`sheet ${isOpen ? 'sheet--active' : ''} ${isDragging ? 'sheet--dragging' : ''}`}>
-        <div onPointerDown={(e) => startDragging(e)} ref={draggerRef} className="sheet__drag">
+        <div onPointerDown={startDragging} ref={draggerRef} className="sheet__drag">
             <div className="sheet__drag-icon"></div>
         </div>
         {children}
