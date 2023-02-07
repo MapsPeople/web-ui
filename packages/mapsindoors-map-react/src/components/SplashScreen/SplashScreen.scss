@@ -1,0 +1,97 @@
+.splash-screen {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 10000;
+    background-color: var(--brand-colors-white-100);
+
+    &__logo {
+        width: 100%;
+        max-height: 100%;
+    }
+
+    &__loader {
+        width: var(--spacing-xxx-large);
+        height: var(--spacing-xxx-large);
+        border-radius: 50%;
+        position: relative;
+        animation: loader 1s infinite linear;
+    }
+
+    &__container {
+        display: grid;
+        justify-self: center;
+        grid-auto-flow: row;
+        grid-auto-rows: 300px min-content;
+        align-content: center;
+        grid-template-columns: 300px;
+        justify-items: center;
+        align-items: center;
+        gap: var(--spacing-xxx-large);
+    }
+
+    /*
+    * Transition classes.
+    * The transitions make the splash screen and the logo appear.
+    */
+
+    &-exit {
+        opacity: 1;
+    }
+
+    &-exit-active {
+        opacity: 0;
+        transition: opacity 2000ms;
+    }
+
+    &-exit-done {
+        opacity: 0;
+        display: none;
+    }
+
+    &__container-appear-active {
+        animation: slideIn 1s;
+    }
+
+    &__container-appear-active {
+        animation: slideIn 1s;
+    }
+
+    &__container-enter-active {
+        animation: slideIn 1s;
+    }
+
+    &__container-exit {
+        opacity: 1;
+    }
+
+    &__container-exit-active {
+        opacity: 0;
+        transition: opacity 200ms;
+    }
+
+    &__container-exit-done {
+        opacity: 0;
+    }
+}
+
+@keyframes loader {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        margin-top: 100%;
+    }
+
+    to {
+        margin-top: 0%;
+    }
+}
