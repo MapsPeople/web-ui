@@ -1,10 +1,13 @@
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { useRef, useState } from 'react';
+import { ContainerContext } from '../ContainerContext';
 import './Sheet.scss';
 
 function Sheet({ children, isOpen, minHeight = 0 }) {
 
     const draggerRef = useRef();
+
+    const container = useContext(ContainerContext);
 
     const [style, setStyle] = useState({});
     const [isDragging, setIsDragging] = useState(false);
@@ -30,10 +33,11 @@ function Sheet({ children, isOpen, minHeight = 0 }) {
         const mouseMoveHandler = event => {
             const rect = draggerRef.current.parentNode.getBoundingClientRect();
             const bottomOffset = window.innerHeight - rect.bottom;
-            const newHeight = window.innerHeight - event.clientY - bottomOffset;
+            const draggedHeight = window.innerHeight - event.clientY - bottomOffset;
+            const maxHeight = container.current.clientHeight;
 
-            // FIXME: also restrict to a max height
-            setStyle({ height: `${Math.max(minHeight, newHeight)}px`});
+            const sheetHeight = Math.min(Math.max(minHeight, draggedHeight), maxHeight);
+            setStyle({ height: `${sheetHeight}px`});
         };
 
         document.addEventListener('touchmove', preventTouchMoveHandler, { passive: false });

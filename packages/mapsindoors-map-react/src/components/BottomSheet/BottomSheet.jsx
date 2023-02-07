@@ -1,5 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useState } from 'react';
+import { ContainerContext } from './ContainerContext';
 import Sheet from './Sheet/Sheet';
 import './BottomSheet.scss';
 import LocationDetails from './LocationDetails/LocationDetails';
@@ -11,6 +12,7 @@ const BOTTOM_SHEETS = {
 
 function BottomSheet({ currentLocation, onClose }) {
 
+    const bottomSheetRef = useRef();
     const [activeBottomSheet, setActiveBottomSheet] = useState(null);
 
     /**
@@ -39,7 +41,11 @@ function BottomSheet({ currentLocation, onClose }) {
         </Sheet>
     ]
 
-    return <div className='bottom-sheets'>{bottomSheets}</div>
+    return <div ref={bottomSheetRef} className='bottom-sheets'>
+        <ContainerContext.Provider value={bottomSheetRef}>
+            {bottomSheets}
+        </ContainerContext.Provider>
+    </div>
 }
 
 export default BottomSheet;
