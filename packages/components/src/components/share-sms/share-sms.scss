@@ -1,14 +1,14 @@
-@use '~@mapsindoors/midt/build/scss/variables';
+@use "~@mapsindoors/midt/build/scss/variables";
 @use "~@mapsindoors/midt/font";
 @use "~@mapsindoors/midt/color";
 @use "~@mapsindoors/midt/margin";
 @use "~@mapsindoors/midt/sizing";
 @use "~@mapsindoors/midt/background-color";
 @use "~@mapsindoors/midt/border";
-@use '~@mapsindoors/midt/padding';
+@use "~@mapsindoors/midt/padding";
 
-@import "../../../../../node_modules/@mapsindoors/css/buttons.css";
-@import "../../../../../node_modules/@mapsindoors/css/helpers.css";
+@import "~@mapsindoors/css/buttons.css";
+@import "~@mapsindoors/css/helpers.css";
 
 form {
     .inputs {

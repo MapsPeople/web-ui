@@ -6,7 +6,7 @@
 @use "~@mapsindoors/midt/border";
 
 @import "../../global/global";
-@import "../../../../../node_modules/@mapsindoors/css/buttons.css";
+@import "~@mapsindoors/css/buttons.css";
 
 .scroll-buttons {
     height: 100%;
