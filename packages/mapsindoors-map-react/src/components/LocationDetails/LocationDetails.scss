@@ -5,6 +5,7 @@
     gap: var(--spacing-medium);
 
     &__image {
+        max-width: 400px;
         width: 100%;
         border-radius: var(--rounding-x-large);
         aspect-ratio: 16 / 9;
