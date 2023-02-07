@@ -19,6 +19,7 @@
     }
 
     &--dragging {
+        user-select: none;
         transition: none; // Remove transitions while dragging to reduce perceived lag
     }
 
@@ -37,5 +38,10 @@
         height: 4px;
         border-radius: 4px;
         background-color: var(--color-gray-20);
+    }
+
+    &__content {
+        height: 100%;
+        overflow-y: auto;
     }
 }

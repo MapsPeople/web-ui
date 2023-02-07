@@ -89,7 +89,7 @@ function Sheet({ children, isOpen, minHeight = 0, snapPoints = [], addSnapPointF
         <div onPointerDown={startDragging} ref={draggerRef} className="sheet__drag">
             <div className="sheet__drag-icon"></div>
         </div>
-        <div ref={contentRef}>
+        <div className="sheet__content" ref={contentRef}>
             {children}
         </div>
     </div>
