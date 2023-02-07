@@ -3,9 +3,17 @@ import { useRef, useState } from 'react';
 import { ContainerContext } from '../ContainerContext';
 import './Sheet.scss';
 
-function Sheet({ children, isOpen, minHeight = 0 }) {
+/**
+ * @param {Object} props
+ * @param {boolean} props.isOpen - If the sheet is open (visible) or not.
+ * @param {number} [props.minheight=0] - The minimum height of the sheet. It cannot be resized to below this height.
+ * @param {number[]} [props.snapPoints=[]] - Snap points that help the user resize to preset heights. Values are percentages of container height.
+ * @param {boolean} [props.addSnapPointForContent=true] - Will add a snap point that fits with the content height.
+ */
+function Sheet({ children, isOpen, minHeight = 0, snapPoints = [], addSnapPointForContent = false }) {
 
     const draggerRef = useRef();
+    const contentRef = useRef();
 
     const container = useContext(ContainerContext);
 
@@ -33,7 +41,26 @@ function Sheet({ children, isOpen, minHeight = 0 }) {
         const mouseMoveHandler = event => {
             const rect = draggerRef.current.parentNode.getBoundingClientRect();
             const bottomOffset = window.innerHeight - rect.bottom;
-            const draggedHeight = window.innerHeight - event.clientY - bottomOffset;
+            let draggedHeight = window.innerHeight - event.clientY - bottomOffset;
+
+            const allSnapPoints = snapPoints;
+            if (addSnapPointForContent === true) {
+                // Add snapshot for content height as a percentage value
+                allSnapPoints.push(contentRef.current.clientHeight / container.current.clientHeight * 100);
+            }
+
+            // Snap to snap points if close enough
+            for (const snapPointPercentage of allSnapPoints) {
+                const snapPoint = Math.max(container.current.clientHeight * snapPointPercentage / 100, minHeight);
+
+                const upperBound = Math.min(snapPoint + 40, container.current.clientHeight);
+                const lowerBound = Math.max(snapPoint - 40, 0);
+
+                if (draggedHeight >= lowerBound && draggedHeight <= upperBound) {
+                    draggedHeight = snapPoint;
+                }
+            }
+
             const maxHeight = container.current.clientHeight;
 
             const sheetHeight = Math.min(Math.max(minHeight, draggedHeight), maxHeight);
@@ -55,7 +82,9 @@ function Sheet({ children, isOpen, minHeight = 0 }) {
         <div onPointerDown={startDragging} ref={draggerRef} className="sheet__drag">
             <div className="sheet__drag-icon"></div>
         </div>
-        {children}
+        <div ref={contentRef}>
+            {children}
+        </div>
     </div>
 }
 
