@@ -3,11 +3,13 @@ import { useRef, useState } from 'react';
 import { ContainerContext } from '../ContainerContext';
 import './Sheet.scss';
 
+const snapPointTrap = 40; // the number of pixels below and above a snappoint that traps the sheet to the snap point.
+
 /**
  * @param {Object} props
  * @param {boolean} props.isOpen - If the sheet is open (visible) or not.
  * @param {number} [props.minheight=0] - The minimum height of the sheet. It cannot be resized to below this height.
- * @param {number[]} [props.snapPoints=[]] - Snap points that help the user resize to preset heights. Values are percentages of container height.
+ * @param {number[]} [props.snapPoints=[]] - Snap points that help the user resize to preset heights. Values can be given as numbers (eg. 70) representing percentage of height or as strings (eg '80px') representing absolute heights.
  * @param {boolean} [props.addSnapPointForContent=true] - Will add a snap point that fits with the content height.
  */
 function Sheet({ children, isOpen, minHeight = 0, snapPoints = [], addSnapPointForContent = false }) {
@@ -50,14 +52,19 @@ function Sheet({ children, isOpen, minHeight = 0, snapPoints = [], addSnapPointF
             }
 
             // Snap to snap points if close enough
-            for (const snapPointPercentage of allSnapPoints) {
-                const snapPoint = Math.max(container.current.clientHeight * snapPointPercentage / 100, minHeight);
+            for (const snapPoint of allSnapPoints) {
+                let snapPointInPixels;
+                if (typeof snapPoint === 'string') {
+                    snapPointInPixels = parseInt(snapPoint, 10);
+                } else {
+                    snapPointInPixels = Math.max(container.current.clientHeight * snapPoint / 100, minHeight);
+                }
 
-                const upperBound = Math.min(snapPoint + 40, container.current.clientHeight);
-                const lowerBound = Math.max(snapPoint - 40, 0);
+                const upperBound = Math.min(snapPointInPixels + snapPointTrap, container.current.clientHeight);
+                const lowerBound = Math.max(snapPointInPixels - snapPointTrap, 0);
 
                 if (draggedHeight >= lowerBound && draggedHeight <= upperBound) {
-                    draggedHeight = snapPoint;
+                    draggedHeight = snapPointInPixels;
                 }
             }
 
