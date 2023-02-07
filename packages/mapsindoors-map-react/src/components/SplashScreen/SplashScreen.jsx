@@ -5,6 +5,7 @@ import logo from "../../assets/logo.svg";
 import './SplashScreen.scss';
 
 const defaultLogo = logo;
+// The HEX value refers to the --brand-colors-dark-pine-100 from MIDT
 const defaultColor = "#005655";
 
 /**
