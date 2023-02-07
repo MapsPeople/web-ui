@@ -30,7 +30,7 @@ function BottomSheet({ currentLocation, onClose }) {
 
     const bottomSheets = [
         // Location details
-        <Sheet isOpen={activeBottomSheet === BOTTOM_SHEETS.LOCATION_DETAILS} key="A">
+        <Sheet minHeight="72" isOpen={activeBottomSheet === BOTTOM_SHEETS.LOCATION_DETAILS} key="A">
             <LocationDetails onStartWayfinding={() => setActiveBottomSheet(BOTTOM_SHEETS.WAYFINDING)} location={currentLocation} onClose={() => close()} />
         </Sheet>,
         <Sheet isOpen={activeBottomSheet === BOTTOM_SHEETS.WAYFINDING} key="B">

@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useRef, useState } from 'react';
 import './Sheet.scss';
 
-function Sheet({ children, isOpen }) {
+function Sheet({ children, isOpen, minHeight = 0 }) {
 
     const draggerRef = useRef();
 
@@ -32,9 +32,8 @@ function Sheet({ children, isOpen }) {
             const bottomOffset = window.innerHeight - rect.bottom;
             const newHeight = window.innerHeight - event.clientY - bottomOffset;
 
-            if (newHeight >= 0) { // FIXME: also restrict to a max height
-                setStyle({ height: `${newHeight}px`});
-            }
+            // FIXME: also restrict to a max height
+            setStyle({ height: `${Math.max(minHeight, newHeight)}px`});
         };
 
         document.addEventListener('touchmove', preventTouchMoveHandler, { passive: false });
