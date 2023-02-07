@@ -14,7 +14,7 @@ The projects is setup with [Lerna](https://lerna.js.org/).
 
 ### Develop on the Stencil components
 
-1. `cd` into the `packages/mi-components` folder.
+1. `cd` into the `packages/components` folder.
 2. Run `npm start`
 
 To have any Stencil component changes be reflected in the React project, you need to run  `npx lerna run build` from the  root folder. There are no watch scripts yet.
