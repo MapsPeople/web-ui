@@ -39,5 +39,5 @@ FROM nginx:stable-alpine as deploy
 VOLUME /var/cache/nginx
 WORKDIR /home/node/app
 # Copy what we've installed/built from production
-COPY --chown=node:node --from=production /home/node/app/docs /home/node/usr/share/nginx/html
+COPY --chown=node:node --from=production /home/node/app/docs /usr/share/nginx/html
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
