@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { ContainerContext } from './ContainerContext';
 import Sheet from './Sheet/Sheet';
 import './BottomSheet.scss';
-import LocationDetails from './LocationDetails/LocationDetails';
+import LocationDetails from '../LocationDetails/LocationDetails';
 
 const BOTTOM_SHEETS = {
     LOCATION_DETAILS: 0,
