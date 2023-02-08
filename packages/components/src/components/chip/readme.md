@@ -25,8 +25,8 @@ Example usage:
 | Property  | Attribute | Description                                                                  | Type      | Default     |
 | --------- | --------- | ---------------------------------------------------------------------------- | --------- | ----------- |
 | `active`  | `active`  | Checks if the chip is active and applies different styling to the component. | `boolean` | `false`     |
-| `content` | `content` | The chip content that is displayed in the component.                         | `string`  | `''` |
-| `icon`    | `icon`    | The icon source.                                                             | `string`  | `''` |
+| `content` | `content` | The chip content that is displayed in the component.                         | `string`  | `undefined` |
+| `icon`    | `icon`    | The icon source.                                                             | `string`  | `undefined` |
 
 
 ----------------------------------------------

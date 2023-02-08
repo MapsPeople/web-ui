@@ -86,12 +86,12 @@ miSearch.dataAttributes = dataAttributes;
 
 ## `miFields` attribute
 
-A `miFields` attribute is available on the `<mi-search>` element, which can be used to specify what fields on MapsIndoors locations to search in. The attribute value must be a comma separated string of fields. Default (if not set) is `name,description,aliases,categories,externalid`.
+A `miFields` attribute is available on the `<mi-search>` element, which can be used to specify what fields on MapsIndoors locations to search in. The attribute value must be a comma separated string of fields. Default (if not set) is `name,description,aliases,categories,externalId`.
 
 ```html
 <!-- HTML -->
 
-<mi-search mapsindoors="true" mi-fields="aliases,externalid"></mi-search>
+<mi-search mapsindoors="true" mi-fields="aliases,externalId"></mi-search>
 ```
 
 ## `miTake` attribute
