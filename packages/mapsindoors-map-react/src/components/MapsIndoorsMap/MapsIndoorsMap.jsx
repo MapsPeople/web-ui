@@ -67,7 +67,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             // Fixme: Venue Images are currently stored in the AppConfig object. So we will need to read the AppConfig as well as the list of Venues.
             // This will be changed in the future.
 
-            Promise.all([mapsindoors.services.VenuesService.getVenues(), mapsindoors.services.AppConfigService.getConfig()]).then(([venuesResult, appConfigResult, _]) => {
+            Promise.all([mapsindoors.services.VenuesService.getVenues(), mapsindoors.services.AppConfigService.getConfig()]).then(([venuesResult, appConfigResult]) => {
                 venuesResult = venuesResult.map(venue => {
                     venue.image = appConfigResult.venueImages[venue.name.toLowerCase()];
                     return venue;
