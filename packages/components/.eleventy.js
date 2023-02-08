@@ -31,7 +31,6 @@ module.exports = function (eleventyConfig) {
             input: "src",
             includes: "docs/_includes",
             output: "docs",
-            pathPrefix: `/`,
         },
     };
 };
