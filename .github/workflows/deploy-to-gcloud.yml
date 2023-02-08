@@ -3,8 +3,6 @@ on:
     push:
         branches:
             - "*"
-        paths:
-            - packages/components/**
 jobs:
     build-deploy-components-docs:
         name: Build & Deploy
