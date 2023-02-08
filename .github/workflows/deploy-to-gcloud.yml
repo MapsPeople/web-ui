@@ -2,7 +2,7 @@ name: Deploy Component Docs to GCloud Bucket
 on:
     push:
         branches:
-            - feature/*
+            - "*"
         paths:
             - packages/components/**
 jobs:
