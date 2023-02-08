@@ -1,5 +1,3 @@
-const isProduction = process.env.NODE_ENV === `production`;
-
 const { EleventyHtmlBasePlugin } = require("@11ty/eleventy");
 
 module.exports = function (eleventyConfig) {
@@ -33,7 +31,7 @@ module.exports = function (eleventyConfig) {
             input: "src",
             includes: "docs/_includes",
             output: "docs",
-            pathPrefix: isProduction ? `https://storage.googleapis.com/mi-components-docs/` : `/`,
+            pathPrefix: `/`,
         },
     };
 };

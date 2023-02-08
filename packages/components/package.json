@@ -18,7 +18,6 @@
         "build": "stencil build --docs",
         "build.watch": "stencil build --watch",
         "docs.build": "eleventy && npm run docs.sass",
-        "docs.build:prod": "NODE_ENV=production eleventy && npm run docs.sass",
         "docs.clean": "rm -rf docs",
         "docs.eleventy": "eleventy",
         "docs.sass": "sass src/docs/_sass:docs --no-source-map",
