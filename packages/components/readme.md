@@ -12,10 +12,12 @@ Read more about Stencil here: [Getting started](https://stenciljs.com/docs/getti
 In a terminal:
 
 ```bash
-git clone git@git.rtx.mapspeople.com:MapsIndoors/mi-components.git
-cd mi-components
+git clone git@github.com:MapsPeople/web-ui.git
+cd web-ui
+npx lerna run build
 npm ci
-npm start
+cd packages/components
+npm run start
 ```
 
 When the server is up and running, open the project demo page in your browser:
