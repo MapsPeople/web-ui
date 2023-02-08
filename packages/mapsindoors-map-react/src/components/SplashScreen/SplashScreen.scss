@@ -3,7 +3,7 @@
     width: 100%;
     height: 100%;
     position: absolute;
-    z-index: 10000002;
+    z-index: 10000002; // Place on top of all map elements.
     background-color: var(--brand-colors-white-100);
 
     &__logo {
