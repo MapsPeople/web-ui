@@ -29,8 +29,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [currentVenueName, setCurrentVenueName] = useState();
     const [currentLocation, setCurrentLocation] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
-    const isDesktop = useMediaQuery('(min-width: 1200px)');
-    const isTablet = useMediaQuery('(min-width: 768px)');
+    const isDesktop = useMediaQuery('(min-width: 1440px)');
 
     /*
      * React on changes in the venue prop.

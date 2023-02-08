@@ -90,3 +90,10 @@
         margin-left: auto;
     }
 }
+
+@media (min-width: 1440px) {
+    .location-details {
+        padding: var(--spacing-large) var(--spacing-x-large) var(--spacing-medium) var(--spacing-x-large);
+    }
+}
+
