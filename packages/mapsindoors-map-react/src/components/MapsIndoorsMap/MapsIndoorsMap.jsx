@@ -6,6 +6,8 @@ import SplashScreen from '../SplashScreen/SplashScreen';
 import VenueSelector from '../VenueSelector/VenueSelector';
 import BottomSheet from '../BottomSheet/BottomSheet';
 import { MapsIndoorsContext } from '../../MapsIndoorsContext';
+import useMediaQuery from '../../hooks/useMediaQuery';
+import Modal from '../Modal/Modal';
 
 const mapsindoors = window.mapsindoors;
 
@@ -17,14 +19,17 @@ const mapsindoors = window.mapsindoors;
  * @param {string} [props.mapboxAccessToken] - Mapbox Access Token if you want to show a Google Maps map.
  * @param {string} [props.venue] - If you want the map to show a specific Venue, provide the Venue name here.
  * @param {string} [props.locationId] - If you want the map to show a specific Location, provide the Location ID here.
+ * @param {string} [props.primaryColor] - If you want the splash screen to have a custom primary color, provide the value here.
+ * @param {string} [props.logo] - If you want the splash screen to have a custom logo, provide the image path or address here.
  */
-function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId }) {
+function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo }) {
 
     const [isMapReady, setMapReady] = useState(false);
     const [venues, setVenues] = useState([]);
     const [currentVenueName, setCurrentVenueName] = useState();
     const [currentLocation, setCurrentLocation] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
+    const isDesktop = useMediaQuery('(min-width: 1440px)');
 
     /*
      * React on changes in the venue prop.
@@ -59,7 +64,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
 
             // Fixme: Venue Images are currently stored in the AppConfig object. So we will need to read the AppConfig as well as the list of Venues.
             // This will be changed in the future.
-            Promise.all([mapsindoors.services.VenuesService.getVenues(),mapsindoors.services.AppConfigService.getConfig()]).then(([venuesResult, appConfigResult]) => {
+            Promise.all([mapsindoors.services.VenuesService.getVenues(), mapsindoors.services.AppConfigService.getConfig()]).then(([venuesResult, appConfigResult]) => {
                 venuesResult = venuesResult.map(venue => {
                     venue.image = appConfigResult.venueImages[venue.name.toLowerCase()];
                     return venue;
@@ -73,9 +78,14 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
 
     return (<MapsIndoorsContext.Provider value={mapsIndoorsInstance}>
         <div className="mapsindoors-map">
-            {!isMapReady && <SplashScreen />}
+            {!isMapReady && <SplashScreen logo={logo} primaryColor={primaryColor}/>}
             {venues.length > 1 && <VenueSelector onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)} venues={venues} currentVenueName={currentVenueName} />}
-            {isMapReady && <BottomSheet currentLocation={currentLocation} onClose={() => setCurrentLocation(null)} />}
+            {isMapReady && isDesktop
+                ?
+                <Modal currentLocation={currentLocation} onClose={() => setCurrentLocation(null)} />
+                :
+                <BottomSheet currentLocation={currentLocation} onClose={() => setCurrentLocation(null)} />
+            }
             <Map apiKey={apiKey} gmApiKey={gmApiKey} mapboxAccessToken={mapboxAccessToken} venues={venues} venueName={currentVenueName} onMapsIndoorsInstance={(instance) => setMapsIndoorsInstance(instance)} onLocationClick={(location) => setCurrentLocation(location)} />
         </div>
     </MapsIndoorsContext.Provider>)

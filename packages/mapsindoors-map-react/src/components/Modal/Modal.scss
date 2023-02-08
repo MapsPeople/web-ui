@@ -1,0 +1,10 @@
+.modal {
+    position: absolute;
+    z-index: 1000;
+    width: 568px;
+    left: var(--spacing-large);
+    bottom: var(--spacing-large);
+    border-radius: var(--spacing-x-small);
+    border: 1px solid var(--color-gray-30);
+    background: var(--color-white-white);
+}
