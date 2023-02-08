@@ -23,7 +23,7 @@ npm run start
 When the server is up and running, open the project demo page in your browser:
 <http://localhost:3000/>
 
-For "manually" controlling the components, open the inspector to change attribute(s) in the HTML or call methods via the developer console.
+For "manually" controlling the components, open the Inspector to change attribute(s) in the HTML, or call methods via the developer console.
 
 ## Getting started
 
