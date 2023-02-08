@@ -31,7 +31,7 @@
         "test": "stencil test --spec --e2e"
     },
     "dependencies": {
-        "@11ty/eleventy": "^1.0.2",
+        "@11ty/eleventy": "^2.0.0",
         "@csstools/normalize.css": "^12.0.0",
         "@googlemaps/js-api-loader": "^1.15.1",
         "@mapsindoors/css": "^2.1.0",

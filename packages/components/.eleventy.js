@@ -1,4 +1,7 @@
+const { EleventyHtmlBasePlugin } = require("@11ty/eleventy");
+
 module.exports = function (eleventyConfig) {
+    eleventyConfig.addPlugin(EleventyHtmlBasePlugin);
     eleventyConfig.addPassthroughCopy({ "www/build": "_js" });
     eleventyConfig.addPassthroughCopy({ "src/docs/assets": "/" });
 
@@ -21,6 +24,7 @@ module.exports = function (eleventyConfig) {
         port: 8000,
         ui: false,
     });
+
 
     return {
         dir: {
