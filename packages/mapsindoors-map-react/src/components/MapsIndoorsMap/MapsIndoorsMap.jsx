@@ -6,7 +6,7 @@ import SplashScreen from '../SplashScreen/SplashScreen';
 import VenueSelector from '../VenueSelector/VenueSelector';
 import BottomSheet from '../BottomSheet/BottomSheet';
 import { MapsIndoorsContext } from '../../MapsIndoorsContext';
-import useMediaQuery from '../../utils/useMediaQuery';
+import useMediaQuery from '../../hooks/useMediaQuery';
 import Modal from '../Modal/Modal';
 
 const mapsindoors = window.mapsindoors;
