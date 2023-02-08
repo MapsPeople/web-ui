@@ -3,6 +3,8 @@ on:
     push:
         branches:
             - main
+        paths:
+            - packages/components/**
 jobs:
     build:
         name: Build & Deploy
