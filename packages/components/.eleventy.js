@@ -8,7 +8,7 @@ module.exports = function (eleventyConfig) {
     eleventyConfig.addCollection("components", function (collection) {
         return collection
             .getFilteredByGlob("src/**/*.md")
-        // This sort function has stopped working. TODO: Fix!
+        // This sort function has stopped working... TODO: Fix!
         // .sort(function (a, b) {
         //     let nameA = a.data.title.toUpperCase();
         //     let nameB = b.data.title.toUpperCase();
