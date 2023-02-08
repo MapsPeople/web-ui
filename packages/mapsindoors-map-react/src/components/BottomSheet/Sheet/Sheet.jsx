@@ -1,95 +1,85 @@
 import { useContext, useEffect } from 'react';
 import { useRef, useState } from 'react';
 import { ContainerContext } from '../ContainerContext';
+import { useSwipeable } from 'react-swipeable';
 import './Sheet.scss';
 
-const snapPointTrap = 40; // the number of pixels below and above a snappoint that traps the sheet to the snap point.
+const sizes = {
+    MIN: 1, // Sheet height is the minimum height
+    FIT: 2, // Sheet height fits to the content
+    MAX: 3  // Sheet height is of maximum height (height of container element)
+};
 
 /**
  * @param {Object} props
  * @param {boolean} props.isOpen - If the sheet is open (visible) or not.
- * @param {number} [props.minheight=0] - The minimum height of the sheet. It cannot be resized to below this height.
- * @param {number[]} [props.snapPoints=[]] - Snap points that help the user resize to preset heights. Values can be given as numbers (eg. 70) representing percentage of height or as strings (eg '80px') representing absolute heights.
- * @param {boolean} [props.addSnapPointForContent=true] - Will add a snap point that fits with the content height.
+ * @param {number} props.minheight - The minimum height of the sheet. It cannot be resized to below this height.
  */
-function Sheet({ children, isOpen, minHeight = 0, snapPoints = [], addSnapPointForContent = false }) {
+function Sheet({ children, isOpen, minHeight }) {
 
-    const draggerRef = useRef();
+    const sheetRef = useRef();
     const contentRef = useRef();
+    const [size, setSize] = useState(sizes.FIT);
 
     const container = useContext(ContainerContext);
 
     const [style, setStyle] = useState({});
-    const [isDragging, setIsDragging] = useState(false);
+    const [contentHeight, setContentHeight] = useState();
 
-    /*
-     * Reset hardcoded height when children or isOpen change.
+    /**
+     * Change the height of the sheet to one of the preset sizes (min, fit, max).
+     *
+     * @param {number} targetSize - Which of the sizes to change to.
      */
-    useEffect(() => {
-        setStyle({});
-    }, [children, isOpen]);
-
-    /*
-     * Dragging functionality: Make it possible to drag the sheet to another size.
-     */
-    function startDragging() {
-        setIsDragging(true);
-
-        // While dragging, prevent default touch move since it will otherwise take over the interaction.
-        const preventTouchMoveHandler = event => {
-            event.preventDefault();
+    function changeSheetHeight(targetSize) {
+        if (size === sizes.FIT) {
+            sheetRef.current.style.height = `${contentHeight}px`;
         }
 
-        const mouseMoveHandler = event => {
-            const rect = draggerRef.current.parentNode.getBoundingClientRect();
-            const bottomOffset = window.innerHeight - rect.bottom;
-            let draggedHeight = window.innerHeight - event.clientY - bottomOffset;
-
-            const allSnapPoints = snapPoints;
-            if (addSnapPointForContent === true) {
-                // Add snapshot for content height as a percentage value
-                allSnapPoints.push(contentRef.current.clientHeight / container.current.clientHeight * 100);
-            }
-
-            // Snap to snap points if close enough
-            for (const snapPoint of allSnapPoints) {
-                let snapPointInPixels;
-                if (typeof snapPoint === 'string') {
-                    snapPointInPixels = parseInt(snapPoint, 10);
-                } else {
-                    snapPointInPixels = Math.max(container.current.clientHeight * snapPoint / 100, minHeight);
-                }
-
-                const upperBound = Math.min(snapPointInPixels + snapPointTrap, container.current.clientHeight);
-                const lowerBound = Math.max(snapPointInPixels - snapPointTrap, 0);
-
-                if (draggedHeight >= lowerBound && draggedHeight <= upperBound) {
-                    draggedHeight = snapPointInPixels;
-                }
-            }
-
-            const maxHeight = container.current.clientHeight;
-
-            const sheetHeight = Math.min(Math.max(minHeight, draggedHeight), maxHeight);
-            setStyle({ height: `${sheetHeight}px`});
-        };
-
-        document.addEventListener('touchmove', preventTouchMoveHandler, { passive: false });
-        document.addEventListener('pointermove', mouseMoveHandler);
-
-        window.addEventListener('pointerup', function mouseUpHandler() {
-            document.removeEventListener('pointermove', mouseMoveHandler);
-            window.removeEventListener('pointerup', mouseUpHandler);
-            document.removeEventListener('touchmove', preventTouchMoveHandler);
-            setIsDragging(false);
-        });
+        switch (targetSize) {
+            case sizes.MAX:
+                setStyle({ height: `${container.current.clientHeight}px`});
+                break;
+            case sizes.FIT:
+                setStyle({ height: `${contentHeight}px`});
+                break;
+            case sizes.MIN:
+                setStyle({ height: `${minHeight}px` });
+                break;
+            default:
+                break;
+        }
+        setSize(targetSize);
     }
 
-    return <div style={style} className={`sheet ${isOpen ? 'sheet--active' : ''} ${isDragging ? 'sheet--dragging' : ''}`}>
-        <div onPointerDown={startDragging} ref={draggerRef} className="sheet__drag">
-            <div className="sheet__drag-icon"></div>
+    /**
+     * Handler for swipe gestures.
+     */
+    const swipeHandler = useSwipeable({
+        onSwipedUp: () => changeSheetHeight(Math.min(size+1, Object.keys(sizes).length)),
+        onSwipedDown: () => changeSheetHeight(Math.max(0, size-1)),
+        trackMouse: true
+    });
+
+    /*
+     * Handle sheet height when children or isOpen change.
+     */
+    useEffect(() => {
+
+        if (isOpen === false) {
+            setContentHeight();
+            sheetRef.current.style.height = '';
+        } else {
+            setContentHeight(contentRef.current.clientHeight);
+        }
+    }, [children, isOpen]);
+
+
+    return <div ref={sheetRef} style={style} className={`sheet ${isOpen ? 'sheet--active' : ''}`}>
+        <div {...swipeHandler} className="sheet__swipeable" style={{ touchAction: 'none' }}>
+            <div className="sheet__swipeable-icon"></div>
         </div>
-        <div className="sheet__content" ref={contentRef}>
+        <div ref={contentRef} className="sheet__content">
             {children}
         </div>
     </div>

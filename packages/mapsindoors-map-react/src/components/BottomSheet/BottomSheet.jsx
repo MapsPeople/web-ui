@@ -37,10 +37,10 @@ function BottomSheet({ currentLocation, onClose }) {
 
     const bottomSheets = [
         // Location details
-        <Sheet minHeight="72" addSnapPointForContent={true} snapPoints={[0, 100]} isOpen={activeBottomSheet === BOTTOM_SHEETS.LOCATION_DETAILS} key="A">
+        <Sheet minHeight="72" isOpen={activeBottomSheet === BOTTOM_SHEETS.LOCATION_DETAILS} key="A">
             <LocationDetails onStartWayfinding={() => setActiveBottomSheet(BOTTOM_SHEETS.WAYFINDING)} location={currentLocation} onClose={() => close()} />
         </Sheet>,
-        <Sheet addSnapPointForContent={true} isOpen={activeBottomSheet === BOTTOM_SHEETS.WAYFINDING} key="B">
+        <Sheet minHeight="40" isOpen={activeBottomSheet === BOTTOM_SHEETS.WAYFINDING} key="B">
             {/* FIXME: Implement actual components for wayfinding */}
             <div style={{ color: 'black', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>FIXME</div>
         </Sheet>
