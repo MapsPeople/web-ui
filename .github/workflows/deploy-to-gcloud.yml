@@ -19,7 +19,7 @@ jobs:
                   node-version: 16.x
             - run: npm ci
             - run: CI= npx lerna run build
-            - run: cd packages/components && npm run build && npm run docs.build
+            - run: cd packages/components && npm run build && eleventy --pathprefix=https://storage.googleapis.com/mi-components-docs/ && npm run docs.sass
             - name: Authenticate on Google Cloud Storage
               uses: google-github-actions/auth@v1
               with:
