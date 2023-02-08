@@ -29,50 +29,11 @@
         justify-items: center;
         align-items: center;
         gap: var(--spacing-xxx-large);
+        animation: slideIn 1s;
     }
 
-    /*
-    * Transition classes.
-    * The transitions make the splash screen and the logo appear.
-    */
-
-    &-exit {
-        opacity: 1;
-    }
-
-    &-exit-active {
-        opacity: 0;
-        transition: opacity 2000ms;
-    }
-
-    &-exit-done {
-        opacity: 0;
+    &.ready {
         display: none;
-    }
-
-    &__container-appear-active {
-        animation: slideIn 1s;
-    }
-
-    &__container-appear-active {
-        animation: slideIn 1s;
-    }
-
-    &__container-enter-active {
-        animation: slideIn 1s;
-    }
-
-    &__container-exit {
-        opacity: 1;
-    }
-
-    &__container-exit-active {
-        opacity: 0;
-        transition: opacity 200ms;
-    }
-
-    &__container-exit-done {
-        opacity: 0;
     }
 }
 

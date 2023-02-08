@@ -8,6 +8,9 @@ import BottomSheet from '../BottomSheet/BottomSheet';
 import { MapsIndoorsContext } from '../../MapsIndoorsContext';
 
 const mapsindoors = window.mapsindoors;
+let startTime = new Date();
+let timeAfterDataIsLoaded;
+let timeToLoadData;
 
 /**
  *
@@ -59,23 +62,44 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
         // Fetch venue information when we know data is loaded and set the map to be in a ready state.
         mapsindoors.services.LocationsService.once('update_completed', () => {
 
+            const fakePromise = new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve();
+                }, 6000);
+            })
+
             // Fixme: Venue Images are currently stored in the AppConfig object. So we will need to read the AppConfig as well as the list of Venues.
             // This will be changed in the future.
-            Promise.all([mapsindoors.services.VenuesService.getVenues(), mapsindoors.services.AppConfigService.getConfig()]).then(([venuesResult, appConfigResult]) => {
+
+            Promise.all([mapsindoors.services.VenuesService.getVenues(), mapsindoors.services.AppConfigService.getConfig(), fakePromise]).then(([venuesResult, appConfigResult, _]) => {
                 venuesResult = venuesResult.map(venue => {
                     venue.image = appConfigResult.venueImages[venue.name.toLowerCase()];
                     return venue;
                 });
 
                 setVenues(venuesResult);
-                setMapReady(true);
+
+                timeAfterDataIsLoaded = new Date();
+                timeToLoadData = (timeAfterDataIsLoaded - startTime) / 1000;
+
+                console.log('current time', startTime)
+                console.log('time after data is loaded', timeAfterDataIsLoaded)
+                console.log('time to load data', timeToLoadData);
+
+                if (timeToLoadData >= 3) {
+                    setMapReady(true);
+                } else {
+                    setTimeout(() => {
+                        setMapReady(true);
+                    }, 3000);
+                }
             });
         });
     }, [apiKey]);
 
     return (<MapsIndoorsContext.Provider value={mapsIndoorsInstance}>
         <div className="mapsindoors-map">
-            {!isMapReady && <SplashScreen logo={logo} primaryColor={primaryColor}/>}
+            {!isMapReady && <SplashScreen logo={logo} primaryColor={primaryColor} className={isMapReady ? 'ready' : ''} />}
             {venues.length > 1 && <VenueSelector onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)} venues={venues} currentVenueName={currentVenueName} />}
             {isMapReady && <BottomSheet currentLocation={currentLocation} onClose={() => setCurrentLocation(null)} />}
             <Map apiKey={apiKey} gmApiKey={gmApiKey} mapboxAccessToken={mapboxAccessToken} venues={venues} venueName={currentVenueName} onMapsIndoorsInstance={(instance) => setMapsIndoorsInstance(instance)} onLocationClick={(location) => setCurrentLocation(location)} />
