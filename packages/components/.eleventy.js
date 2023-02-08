@@ -5,13 +5,14 @@ module.exports = function (eleventyConfig) {
     eleventyConfig.addCollection("components", function (collection) {
         return collection
             .getFilteredByGlob("src/**/*.md")
-            .sort(function (a, b) {
-                let nameA = a.data.title.toUpperCase();
-                let nameB = b.data.title.toUpperCase();
-                if (nameA < nameB) return -1;
-                else if (nameA > nameB) return 1;
-                else return 0;
-            });
+        // This sort function has stopped working. TODO: Fix.
+        // .sort(function (a, b) {
+        //     let nameA = a.data.title.toUpperCase();
+        //     let nameB = b.data.title.toUpperCase();
+        //     if (nameA < nameB) return -1;
+        //     else if (nameA > nameB) return 1;
+        //     else return 0;
+        // });
     });
 
     eleventyConfig.setUseGitIgnore(false);
