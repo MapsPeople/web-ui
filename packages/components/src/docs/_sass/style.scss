@@ -1,18 +1,18 @@
-@use '../../../node_modules/normalize.css/normalize.css';
-@use '../../../node_modules/@mapsindoors/midt/background-color';
-@use '../../../node_modules/@mapsindoors/midt/border';
-@use '../../../node_modules/@mapsindoors/midt/color';
-@use '../../../node_modules/@mapsindoors/midt/elevation';
-@use '../../../node_modules/@mapsindoors/midt/font';
-@use '../../../node_modules/@mapsindoors/midt/icons';
-@use '../../../node_modules/@mapsindoors/midt/margin';
-@use '../../../node_modules/@mapsindoors/midt/opacity';
-@use '../../../node_modules/@mapsindoors/midt/padding';
-@use '../../../node_modules/@mapsindoors/midt/sizing';
-@use '../../../node_modules/@mapsindoors/midt/transitions';
-@use '../../../node_modules/@mapsindoors/midt/z-index';
-@use '../../../node_modules/@mapsindoors/midt/build/scss/variables' as *;
-@use '../../../node_modules/@mapsindoors/css/buttons.css';
+@use "../../../../../node_modules/@csstools/normalize.css/normalize.css";
+@use "../../../../../node_modules/@mapsindoors/midt/background-color";
+@use "../../../../../node_modules/@mapsindoors/midt/border";
+@use "../../../../../node_modules/@mapsindoors/midt/color";
+@use "../../../../../node_modules/@mapsindoors/midt/elevation";
+@use "../../../../../node_modules/@mapsindoors/midt/font";
+@use "../../../../../node_modules/@mapsindoors/midt/icons";
+@use "../../../../../node_modules/@mapsindoors/midt/margin";
+@use "../../../../../node_modules/@mapsindoors/midt/opacity";
+@use "../../../../../node_modules/@mapsindoors/midt/padding";
+@use "../../../../../node_modules/@mapsindoors/midt/sizing";
+@use "../../../../../node_modules/@mapsindoors/midt/transitions";
+@use "../../../../../node_modules/@mapsindoors/midt/z-index";
+@use "../../../../../node_modules/@mapsindoors/midt/build/scss/variables" as *;
+@use "../../../../../node_modules/@mapsindoors/css/buttons.css";
 
 // * {
 //   border: 1px solid gold;
@@ -68,11 +68,7 @@ header {
     svg.mapspeople-logo path {
         fill: white;
     }
-    background-image: linear-gradient(
-        to bottom,
-        $color-green-90,
-        $color-green-100
-    );
+    background-image: linear-gradient(to bottom, $color-green-90, $color-green-100);
     .flex {
         display: flex;
     }
@@ -259,11 +255,7 @@ header {
     svg.mapspeople-logo path {
         fill: white;
     }
-    background-image: linear-gradient(
-        to bottom,
-        $color-green-90,
-        $color-green-100
-    );
+    background-image: linear-gradient(to bottom, $color-green-90, $color-green-100);
     .flex {
         display: flex;
     }
