@@ -76,6 +76,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                 setVenues(venuesResult);
 
                 timeAfterDataIsLoaded = new Date();
+                // Divide the number by 1000 in order to get the value in seconds.
                 timeToLoadData = (timeAfterDataIsLoaded - startTime) / 1000;
 
                 if (timeToLoadData >= 3) {
