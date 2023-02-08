@@ -64,6 +64,8 @@ A table showing which alphabetical layouts and languages are supported and mappe
 | ---------------------- | ---------------- |
 | unitedStatesAlphabetic | en, en-us        |
 | danishAlphabetic       | da, da-dk        |
+| frenchAlphabetic       | fr, fr-fr        |
+| germanAlphabetic       | de, de-de        |
 
 <!-- markdownlint-disable -->
 <!-- Auto Generated Below -->
