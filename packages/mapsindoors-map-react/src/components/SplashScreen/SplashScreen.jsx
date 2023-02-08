@@ -15,11 +15,10 @@ const defaultColor = "#005655";
  * @param {object} props
  * @param {string} props.primaryColor - The primary color of the application.
  * @param {string} props.logo - The logo that appears on the splash screen.
- * @param {string} props.className - The className added to the splash screen by parent components.
  */
-function SplashScreen({ primaryColor = defaultColor, logo = defaultLogo, className }) {
+function SplashScreen({ primaryColor = defaultColor, logo = defaultLogo }) {
     return (
-        <div className={`splash-screen ${className}`}>
+        <div className="splash-screen">
             <div className="splash-screen__container">
                 <img className="splash-screen__logo"
                     src={logo}
