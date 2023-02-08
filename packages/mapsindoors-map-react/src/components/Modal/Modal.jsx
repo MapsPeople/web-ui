@@ -9,7 +9,6 @@ const VIEWS = {
 };
 
 function Modal({ currentLocation, onClose }) {
-
     const [activePage, setActivePage] = useState(null);
 
     /**
@@ -29,7 +28,7 @@ function Modal({ currentLocation, onClose }) {
 
     const pages = [
         // Location details
-        <div className={`modal`}>
+        <div className='modal'>
             <LocationDetails location={currentLocation} onClose={() => close()} />
         </div>
     ]
