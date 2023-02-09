@@ -38,8 +38,8 @@
         padding: var(--spacing-x-small);
     }
 
-    @media (min-width: 1200px) {
-        margin: 0 70px 16px 70px;
+    @media (min-width: 1440px) {
+        margin: 0 70px var(--spacing-medium) 70px;
         width: calc(100% - 140px);
     }
 }
