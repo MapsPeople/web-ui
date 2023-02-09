@@ -10,7 +10,7 @@ import useMediaQuery from '../../hooks/useMediaQuery';
 import Modal from '../Modal/Modal';
 
 const mapsindoors = window.mapsindoors;
-let startTime = new Date();
+let startTime;
 let timeAfterDataIsLoaded;
 let timeToLoadData;
 let timeDifference;
@@ -60,6 +60,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
      * Set the map to be in a ready state when the data has loaded.
      */
     useEffect(() => {
+        startTime = new Date();
         setMapReady(false);
         mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKey);
 
