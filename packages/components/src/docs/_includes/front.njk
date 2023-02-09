@@ -5,19 +5,19 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-        <link rel="stylesheet" type="text/css" href="{{ '/style.css' | htmlBaseUrl }}">
+        <link rel="stylesheet" type="text/css" href="{{ '/style.css' }}">
 
-        <script type="module" src="{{ '/_js/mi-components.esm.js' | htmlBaseUrl }}"></script>
-        <script nomodule src="{{ '/_js/mi-components.js' | htmlBaseUrl }}"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js"></script>
+        <script type="module" src="{{ '/_js/mi-components.esm.js' }}"></script>
+        <script nomodule src="{{ '/_js/mi-components.js' }}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js"></script>
         <script>
             hljs.initHighlightingOnLoad();
         </script>
         <script>
             if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                document.write('<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/dracula.min.css">');
+                document.write('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/dracula.min.css">');
             } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-                document.write('<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github-gist.min.css">');
+                document.write('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github-gist.min.css">');
             }
         </script>
 
