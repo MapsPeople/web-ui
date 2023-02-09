@@ -24,8 +24,6 @@ module.exports = function (eleventyConfig) {
         port: 8000,
         ui: false,
     });
-    pathPrefix: "/mi-components-docs/";
-
 
     return {
         dir: {
@@ -33,5 +31,6 @@ module.exports = function (eleventyConfig) {
             includes: "docs/_includes",
             output: "docs",
         },
+        pathPrefix: "/mi-components-docs/"
     };
 };
