@@ -3,8 +3,6 @@ on:
     push:
         branches:
             - feature/deploy-to-google-cloud-storage
-        paths:
-            - packages/components/**
 jobs:
     build-deploy-components-docs:
         name: Build & Deploy
@@ -27,9 +25,7 @@ jobs:
                   credentials_json: ${{ secrets.GCP_SA_KEY }}
             - name: "Set up Cloud SDK"
               uses: "google-github-actions/setup-gcloud@v1"
-              with:
-                  version: ">= 416.0.0"
-            - run: gsutil -m rsync -d -c -r packages/components/docs gs://mi-components-documentation
+            - run: gsutil -m rsync -d -c -r packages/components/docs gs://mi-components-docs
             - run: gsutil -m setmeta -h "Cache-Control:public, max-age=0"
                   gs://mi-components-docs/**/*.html
             - run: gsutil -m setmeta -h "Cache-Control:public, max-age=0"
