@@ -2,7 +2,21 @@
     padding: var(--spacing-medium);
     color: var(--color-black-base);
     display: grid;
-    gap: var(--spacing-medium);
+    height: 100%;
+    overflow-y: hidden;
+    grid-template-rows: 40px 1fr 56px;
+
+
+    &__details {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-medium);
+        overflow-y: auto;
+
+        > *:first-child {
+            margin-top: var(--spacing-medium);
+        }
+    }
 
     &__image {
         max-width: 400px;
@@ -51,6 +65,7 @@
     }
 
     &__wayfinding {
+        margin-top: var(--spacing-medium);
         background-color: var(--color-teal-90);
         color: var(--color-white-white);
         border-radius: var(--rounding-large);

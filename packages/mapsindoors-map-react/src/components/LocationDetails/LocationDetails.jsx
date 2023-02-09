@@ -42,21 +42,24 @@ function LocationDetails({ location, onClose, onStartWayfinding }) {
                 </button>
             </div>
 
-            {location.properties.imageURL && <img alt="" src={location.properties.imageURL} className="location-details__image" />}
+            <div className="location-details__details">
+                {location.properties.imageURL && <img alt="" src={location.properties.imageURL} className="location-details__image" />}
 
-            {Object.keys(location.properties.categories).length > 0 && <p className="location-details__categories">
-                {Object.values(location.properties.categories).map((category, index, array) => {
-                    return <React.Fragment key={category}>{category}{index < array.length-1 && <>・</>}</React.Fragment>
-                })}
-            </p>}
+                {Object.keys(location.properties.categories).length > 0 && <p className="location-details__categories">
+                    {Object.values(location.properties.categories).map((category, index, array) => {
+                        return <React.Fragment key={category}>{category}{index < array.length-1 && <>・</>}</React.Fragment>
+                    })}
+                </p>}
 
-            {location.properties.description && <section className={`location-details__description ${showFullDescription ? 'location-details__description--full' : ''}`}>
-                <p>Description</p>
-                <div ref={locationDetailsElement}>
-                    {location.properties.description}
-                </div>
-                {(isOverflowing || showFullDescription) && <button onClick={() => setShowFullDescription(!showFullDescription)}>{!showFullDescription ? 'Read full description' : 'Close' }</button>}
-            </section>}
+                {location.properties.description && <section className={`location-details__description ${showFullDescription ? 'location-details__description--full' : ''}`}>
+                    <p>Description</p>
+                    <div ref={locationDetailsElement}>
+                        {location.properties.description}
+                    </div>
+                    {(isOverflowing || showFullDescription) && <button onClick={() => setShowFullDescription(!showFullDescription)}>{!showFullDescription ? 'Read full description' : 'Close' }</button>}
+                </section>}
+            </div>
+
             <button onClick={() => onStartWayfinding()} className="location-details__wayfinding">
                 <PinIcon />
                 Start wayfinding
