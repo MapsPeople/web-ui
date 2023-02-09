@@ -52,7 +52,6 @@ function LocationDetails({ location, onClose, onStartWayfinding }) {
                 </p>}
 
                 {location.properties.description && <section className={`location-details__description ${showFullDescription ? 'location-details__description--full' : ''}`}>
-                    <p>Description</p>
                     <div ref={locationDetailsElement}>
                         {location.properties.description}
                     </div>

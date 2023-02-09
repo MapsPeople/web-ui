@@ -35,16 +35,8 @@
         white-space: pre-wrap; /* make sure line breaks in the description text are shown as such */
         overflow-wrap: break-word;
 
-        p, div {
-            font-size: var(--font-size-small);
-        }
-
-        p {
-            font-weight: var(--font-weight-medium);
-            margin:  0 0 var(--spacing-x-small) 0;
-        }
-
         div {
+            font-size: var(--font-size-small);
             color: var(--color-gray-70);
             line-height: 1.5;
             overflow-y: hidden;
