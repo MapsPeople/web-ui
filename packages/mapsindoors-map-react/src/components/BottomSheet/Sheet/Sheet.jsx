@@ -32,6 +32,11 @@ function Sheet({ children, isOpen, minHeight }) {
      * @param {number} targetSize - Which of the sizes to change to.
      */
     function changeSheetHeight(targetSize) {
+        // Prevent going to minimum size state if the content size is the same in order to prevent the need for double swipes to change height.
+        if (targetSize === sizes.MIN && contentHeight <= minHeight) {
+            return;
+        }
+
         if (size === sizes.FIT) {
             sheetRef.current.style.height = `${contentHeight}px`;
         }
