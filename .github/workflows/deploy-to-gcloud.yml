@@ -2,7 +2,7 @@ name: Deploy Component Docs to GCloud Bucket
 on:
     push:
         branches:
-            - feature/deploy-to-google-cloud-storage
+            - feature/gcs-styles
         paths:
             - packages/components/**
 jobs:
@@ -12,7 +12,7 @@ jobs:
         steps:
             - uses: actions/checkout@v3
               with:
-                  ref: refs/heads/feature/deploy-to-google-cloud-storage
+                  ref: refs/heads/feature/gcs-styles
                   fetch-depth: 1
             - uses: actions/setup-node@v3
               with:
