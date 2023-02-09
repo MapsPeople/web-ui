@@ -1,6 +1,6 @@
 ---
 title: "Home"
 layout: "front"
-permalink: "/index.html"
+permalink: "/"
 eleventyExcludeFromCollections: "true"
 ---
