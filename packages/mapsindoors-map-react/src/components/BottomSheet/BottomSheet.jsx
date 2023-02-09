@@ -4,6 +4,7 @@ import { ContainerContext } from './ContainerContext';
 import Sheet from './Sheet/Sheet';
 import './BottomSheet.scss';
 import LocationDetails from '../LocationDetails/LocationDetails';
+import Wayfinding from '../Wayfinding/Wayfinding';
 
 const BOTTOM_SHEETS = {
     LOCATION_DETAILS: 0,
@@ -37,12 +38,11 @@ function BottomSheet({ currentLocation, onClose }) {
 
     const bottomSheets = [
         // Location details
-        <Sheet minHeight="72" isOpen={activeBottomSheet === BOTTOM_SHEETS.LOCATION_DETAILS} key="A">
+        <Sheet minHeight="128" isOpen={activeBottomSheet === BOTTOM_SHEETS.LOCATION_DETAILS} key="A">
             <LocationDetails onStartWayfinding={() => setActiveBottomSheet(BOTTOM_SHEETS.WAYFINDING)} location={currentLocation} onClose={() => close()} />
         </Sheet>,
-        <Sheet minHeight="40" isOpen={activeBottomSheet === BOTTOM_SHEETS.WAYFINDING} key="B">
-            {/* FIXME: Implement actual components for wayfinding */}
-            <div style={{ color: 'black', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>FIXME</div>
+        <Sheet minHeight="60" isOpen={activeBottomSheet === BOTTOM_SHEETS.WAYFINDING} key="B">
+            <Wayfinding onClose={close} onBack={() => setActiveBottomSheet(BOTTOM_SHEETS.LOCATION_DETAILS)} />
         </Sheet>
     ]
 
