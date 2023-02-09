@@ -2,7 +2,7 @@ name: Deploy Component Docs to GCloud Bucket
 on:
     push:
         branches:
-            - main
+            - feature/**
         paths:
             - packages/components/**
 jobs:
@@ -12,7 +12,7 @@ jobs:
         steps:
             - uses: actions/checkout@v3
               with:
-                  ref: refs/heads/main
+                  ref: refs/heads/feature/**
                   fetch-depth: 1
             - uses: actions/setup-node@v3
               with:
