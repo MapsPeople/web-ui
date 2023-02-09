@@ -28,8 +28,8 @@ function VenueSelector({ venues, currentVenueName, onVenueSelected }) {
         onVenueSelected(venue);
     };
 
-    return <div className={active ? 'active' : ''}>
-        <button className={`venue-selector__button ${active ? 'active' : ''}`} onClick={() => setActive(current => !current)} aria-label="Venues">
+    return <>
+        <button className="venue-selector__button" onClick={() => setActive(current => !current)} aria-label="Venues">
             {active ? <CloseIcon /> : <BuildingIcon />}
         </button>
         <CSSTransition unmountOnExit in={active} nodeRef={venueSelectorContentRef} timeout={400} classNames="venue-selector__content">
@@ -40,7 +40,7 @@ function VenueSelector({ venues, currentVenueName, onVenueSelected }) {
                 </div>
             </div>
         </CSSTransition>
-    </div>
+    </>
 }
 
 export default VenueSelector;
