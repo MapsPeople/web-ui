@@ -24,6 +24,7 @@ module.exports = function (eleventyConfig) {
         port: 8000,
         ui: false,
     });
+    pathPrefix: "/mi-components-docs/";
 
 
     return {
