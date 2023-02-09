@@ -10,10 +10,6 @@ import useMediaQuery from '../../hooks/useMediaQuery';
 import Modal from '../Modal/Modal';
 
 const mapsindoors = window.mapsindoors;
-let startTime;
-let timeAfterDataIsLoaded;
-let timeToLoadData;
-let timeDifference;
 
 /**
  *
@@ -60,7 +56,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
      * Set the map to be in a ready state when the data has loaded.
      */
     useEffect(() => {
-        startTime = new Date();
+        const startTime = new Date();
         setMapReady(false);
         mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKey);
 
@@ -77,13 +73,13 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
 
                 setVenues(venuesResult);
 
-                timeAfterDataIsLoaded = new Date();
+                const timeAfterDataIsLoaded = new Date();
                 // Divide the number by 1000 in order to get the value in seconds.
-                timeToLoadData = (timeAfterDataIsLoaded - startTime) / 1000;
+                const timeToLoadData = (timeAfterDataIsLoaded - startTime) / 1000;
 
                 // Subtract the time that took to load the data in order to get the differece. 
                 // The minimum loading time for the splash screen is 3 seconds.
-                timeDifference = (3 - timeToLoadData) * 1000
+                const timeDifference = (3 - timeToLoadData) * 1000
 
                 if (timeToLoadData >= 3) {
                     setMapReady(true);
