@@ -1,7 +1,7 @@
-const { EleventyHtmlBasePlugin } = require("@11ty/eleventy");
+// const { EleventyHtmlBasePlugin } = require("@11ty/eleventy");
 
 module.exports = function (eleventyConfig) {
-    eleventyConfig.addPlugin(EleventyHtmlBasePlugin);
+    // eleventyConfig.addPlugin(EleventyHtmlBasePlugin);
     eleventyConfig.addPassthroughCopy({ "www/build": "_js" });
     eleventyConfig.addPassthroughCopy({ "src/docs/assets": "/" });
 

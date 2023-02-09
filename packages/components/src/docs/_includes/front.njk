@@ -5,10 +5,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-        <link rel="stylesheet" type="text/css" href="/style.css">
+        <link rel="stylesheet" type="text/css" href="{{ '/style.css' | url }}">
 
-        <script type="module" src="/_js/mi-components.esm.js"></script>
-        <script nomodule src="/_js/mi-components.js"></script>
+      <script type="module" src="{{ '/_js/mi-components.esm.js' | url }}"></script>
+        <script nomodule src="{{ '/_js/mi-components.js' | url }}"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js"></script>
         <script>
             hljs.initHighlightingOnLoad();
