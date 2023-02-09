@@ -36,20 +36,24 @@ function Sheet({ children, isOpen, minHeight }) {
             sheetRef.current.style.height = `${contentHeight}px`;
         }
 
-        switch (targetSize) {
-            case sizes.MAX:
-                setStyle({ height: `${container.current.clientHeight}px`});
-                break;
-            case sizes.FIT:
-                setStyle({ height: `${contentHeight}px`});
-                break;
-            case sizes.MIN:
-                setStyle({ height: `${minHeight}px` });
-                break;
-            default:
-                break;
-        }
-        setSize(targetSize);
+        // RequestAnimationFrame needed in order to the above height to kick in thus enabling the transition of height.
+        // Inspired by https://css-tricks.com/using-css-transitions-auto-dimensions/#aa-technique-3-javascript
+        requestAnimationFrame(() => {
+            switch (targetSize) {
+                case sizes.MAX:
+                    setStyle({ height: `${container.current.clientHeight}px`});
+                    break;
+                case sizes.FIT:
+                    setStyle({ height: `${contentHeight}px`});
+                    break;
+                case sizes.MIN:
+                    setStyle({ height: `${minHeight}px` });
+                    break;
+                default:
+                    break;
+            }
+            setSize(targetSize);
+        });
     }
 
     /**
