@@ -30,9 +30,9 @@ jobs:
               with:
                   version: ">= 416.0.0"
             - run: gsutil -m rsync -d -c -r packages/components/docs gs://mi-components-docs
-            - run: gsutil -m setmeta -h "Cache-Control:public, max-age=3600"
+            - run: gsutil -m setmeta -h "Cache-Control:public, max-age=0"
                   gs://mi-components-docs/**/*.html
-            - run: gsutil -m setmeta -h "Cache-Control:public, max-age=31536000"
+            - run: gsutil -m setmeta -h "Cache-Control:public, max-age=0"
                   gs://mi-components-docs/**/*.js
-            - run: gsutil -m setmeta -h "Cache-Control:public, max-age=31536000"
+            - run: gsutil -m setmeta -h "Cache-Control:public, max-age=0"
                   gs://mi-components-docs/**/*.css
