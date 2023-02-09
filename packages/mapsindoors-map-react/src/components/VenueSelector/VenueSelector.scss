@@ -9,7 +9,7 @@ $transition-timing-function: ease;
     &__content {
         position: absolute;
         background-color: white;
-        z-index: 10000000; // Place on top of all map elements and bottom sheet
+        z-index: var(--z-index-popup);
         overflow-y: hidden;
         display: grid;
         grid-template-rows: var(--spacing-xxxx-large) 1fr;
@@ -77,7 +77,11 @@ $transition-timing-function: ease;
         height: $button-height;
         top: $button-from-top;
         left: var(--spacing-x-small);
-        z-index: 10000001; // Place on top of all map elements, bottom sheet and the venue selector content
+        z-index: var(--z-index-sticky);
+
+        &--open {
+            z-index: calc(var(--z-index-popup) + 1);
+        }
 
         svg {
             display: block;
