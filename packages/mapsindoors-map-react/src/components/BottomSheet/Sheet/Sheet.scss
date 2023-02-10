@@ -12,27 +12,22 @@
     border-top-left-radius: var(--rounding-x-large);
     border-top-right-radius: var(--rounding-x-large);
 
+    &::before {
+        position: absolute;
+        content: ' ';
+        top: var(--spacing-xx-small);
+        left: 50%;
+        transform: translateX(-50%);
+        width: 28px;
+        height: var(--spacing-xx-small);;
+        border-radius: var(--spacing-xx-small);
+        background-color: var(--color-gray-20);
+    }
+
     &--active {
         pointer-events: all;
         opacity: 1;
         transform: translateY(0);
-    }
-
-    &__swipeable {
-        user-select: none;
-        padding-top: var(--spacing-xx-small);
-        height: var(--spacing-large);
-        position: absolute;
-        top: 0;
-        width: 100%;
-    }
-
-    &__swipeable-icon {
-        margin: 0 auto;
-        width: 28px;
-        height: 4px;
-        border-radius: 4px;
-        background-color: var(--color-gray-20);
     }
 
     &__content {

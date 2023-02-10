@@ -93,9 +93,6 @@ function Sheet({ children, isOpen, minHeight }) {
     };
 
     return <div {...swipeHandler} ref={refPassthrough} style={style} className={`sheet ${isOpen ? 'sheet--active' : ''}`}>
-        <div className="sheet__swipeable">
-            <div className="sheet__swipeable-icon"></div>
-        </div>
         <div ref={contentRef} className="sheet__content">
             {children}
         </div>
