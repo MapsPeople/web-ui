@@ -19,7 +19,7 @@ jobs:
           node-version: 16.x
       - run: npm ci
       - run: CI= npx lerna run build
-      - run: cd packages/components && npm run build && npm run docs.build:prod && npm run docs.sass
+      - run: cd packages/components && npm run build && npm run docs.build && npm run docs.sass
       - name: Authenticate on Google Cloud Storage
         uses: google-github-actions/auth@v1
         with:

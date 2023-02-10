@@ -38,7 +38,8 @@ $transition-timing-function: ease;
             opacity: 0;
         }
 
-        &-enter-active, &-enter-done {
+        &-enter-active,
+        &-enter-done {
             top: 0;
             bottom: 0;
             left: 0;
@@ -70,7 +71,7 @@ $transition-timing-function: ease;
 
     &__button {
         background-color: var(--color-white-base);
-        border-radius:var(--rounding-large);
+        border-radius: var(--rounding-large);
         border: 1px solid #E6E6E6;
         position: absolute;
         width: $button-width;
@@ -82,6 +83,21 @@ $transition-timing-function: ease;
         svg {
             display: block;
             margin: 0 auto;
+        }
+    }
+
+    @media (min-width: 1440px) {
+        &__content {
+            width: 568px;
+            left: var(--spacing-large);
+            bottom: var(--spacing-large);
+            top: var(--spacing-large);
+            border-radius: var(--rounding-large);
+        }
+
+        &__button {
+            top: var(--spacing-xx-large);
+            left:  var(--spacing-xx-large);
         }
     }
 }
