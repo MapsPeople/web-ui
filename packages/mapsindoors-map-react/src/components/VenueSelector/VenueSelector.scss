@@ -86,7 +86,7 @@ $transition-timing-function: ease;
         }
     }
 
-    @media (min-width: 1440px) {
+    @media (min-width: 992px) {
         &__content {
             width: 568px;
             left: var(--spacing-large);
