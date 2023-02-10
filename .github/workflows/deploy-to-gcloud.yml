@@ -1,34 +1,36 @@
 name: Deploy Component Docs to GCloud Bucket
 on:
-    push:
-        branches:
-            - feature/deploy-to-google-cloud-storage
+  push:
+    branches:
+      - main
+    paths:
+      - packages/components/**
 jobs:
-    build-deploy-components-docs:
-        name: Build & Deploy
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v3
-              with:
-                  ref: refs/heads/feature/deploy-to-google-cloud-storage
-                  fetch-depth: 1
-            - uses: actions/setup-node@v3
-              with:
-                  node-version: 16.x
-            - run: npm ci
-            - run: CI= npx lerna run build
-            - run: cd packages/components && npm run build && npm run docs.build:prod && npm run docs.sass
-            - name: Authenticate on Google Cloud Storage
-              uses: google-github-actions/auth@v1
-              with:
-                  service_account: ${{ secrets.GCP_SA_EMAIL }}
-                  credentials_json: ${{ secrets.GCP_SA_KEY }}
-            - name: "Set up Cloud SDK"
-              uses: "google-github-actions/setup-gcloud@v1"
-            - run: gsutil -m rsync -d -c -r packages/components/docs gs://mi-components-docs
-            - run: gsutil -m setmeta -h "Cache-Control:public, max-age=0"
-                  gs://mi-components-docs/**/*.html
-            - run: gsutil -m setmeta -h "Cache-Control:public, max-age=0"
-                  gs://mi-components-docs/**/*.js
-            - run: gsutil -m setmeta -h "Cache-Control:public, max-age=0"
-                  gs://mi-components-docs/**/*.css
+  build-deploy-components-docs:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: refs/heads/main
+          fetch-depth: 1
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+      - run: npm ci
+      - run: CI= npx lerna run build
+      - run: cd packages/components && npm run build && npm run docs.build:prod && npm run docs.sass
+      - name: Authenticate on Google Cloud Storage
+        uses: google-github-actions/auth@v1
+        with:
+          service_account: ${{ secrets.GCP_SA_EMAIL }}
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+      - name: "Set up Cloud SDK"
+        uses: "google-github-actions/setup-gcloud@v1"
+      - run: gsutil -m rsync -d -c -r packages/components/docs gs://mi-components-docs
+      - run: gsutil -m setmeta -h "Cache-Control:public, max-age=0"
+          gs://mi-components-docs/**/*.html
+      - run: gsutil -m setmeta -h "Cache-Control:public, max-age=0"
+          gs://mi-components-docs/**/*.js
+      - run: gsutil -m setmeta -h "Cache-Control:public, max-age=0"
+          gs://mi-components-docs/**/*.css
