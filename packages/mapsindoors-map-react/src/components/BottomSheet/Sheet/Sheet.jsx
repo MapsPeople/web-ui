@@ -67,14 +67,14 @@ function Sheet({ children, isOpen, minHeight }) {
     const swipeHandler = useSwipeable({
         onSwipedUp: () => changeSheetHeight(Math.min(size+1, Object.keys(sizes).length)),
         onSwipedDown: () => changeSheetHeight(Math.max(0, size-1)),
-        trackMouse: true
+        trackMouse: true,
+        preventScrollOnSwipe: true
     });
 
     /*
      * Handle sheet height when children or isOpen change.
      */
     useEffect(() => {
-
         if (isOpen === false) {
             setContentHeight();
             sheetRef.current.style.height = '';
@@ -84,8 +84,16 @@ function Sheet({ children, isOpen, minHeight }) {
     }, [children, isOpen]);
 
 
-    return <div ref={sheetRef} style={style} className={`sheet ${isOpen ? 'sheet--active' : ''}`}>
-        <div {...swipeHandler} className="sheet__swipeable" style={{ touchAction: 'none' }}>
+    /*
+     * Pass through ref to share the ref between component and useSwipeable.
+     */
+    const refPassthrough = el => {
+        swipeHandler.ref(el);
+        sheetRef.current = el;
+    };
+
+    return <div {...swipeHandler} ref={refPassthrough} style={style} className={`sheet ${isOpen ? 'sheet--active' : ''}`}>
+        <div className="sheet__swipeable">
             <div className="sheet__swipeable-icon"></div>
         </div>
         <div ref={contentRef} className="sheet__content">

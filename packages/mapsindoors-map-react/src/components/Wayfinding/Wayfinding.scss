@@ -11,6 +11,22 @@
         justify-content: space-between;
     }
 
+    // For demonstrating scrollable content within a bottom sheet
+    // FIXME: Remove when making actual implementation.
+    &__scrollable-demo {
+        height: 300px;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: none; // iOS fix
+
+        > div {
+            text-align: left;
+            margin-bottom: var(--spacing-small);
+            background-color: var(--color-gray-20);
+            padding: var(--spacing-small);
+        }
+    }
+
     button {
         all: unset;
         font-size: var(--font-size-small);
