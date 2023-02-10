@@ -56,6 +56,10 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
      * Set the map to be in a ready state when the data has loaded.
      */
     useEffect(() => {
+        // Keep track of the time when the process starts and the time when the data has been loaded. 
+        // Calculate the time taken for the data to load, and determine the time that the splash screen should be shown.
+        // The splash screen should be shown for minimum 3 seconds, and if the data takes longer to load, the splash screen should not disappear.
+        const startTime = new Date();
         setMapReady(false);
         mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKey);
 
@@ -69,16 +73,32 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                     venue.image = appConfigResult.venueImages[venue.name.toLowerCase()];
                     return venue;
                 });
-
                 setVenues(venuesResult);
-                setMapReady(true);
+                
+                // Determine the time when the data has finished loading. 
+                const timeAfterDataIsLoaded = new Date();
+
+                // Divide the number by 1000 in order to get the value in seconds.
+                const timeToLoadData = (timeAfterDataIsLoaded - startTime) / 1000;
+
+                // Subtract the time that took to load the data in order to get the differece. 
+                const timeDifference = (3 - timeToLoadData) * 1000
+
+                // Determine whether to set the map ready or not based on the loading time. 
+                if (timeToLoadData >= 3) {
+                    setMapReady(true);
+                } else {
+                    setTimeout(() => {
+                        setMapReady(true);
+                    }, (timeDifference));
+                }
             });
         });
     }, [apiKey]);
 
     return (<MapsIndoorsContext.Provider value={mapsIndoorsInstance}>
         <div className="mapsindoors-map">
-            {!isMapReady && <SplashScreen logo={logo} primaryColor={primaryColor}/>}
+            {!isMapReady && <SplashScreen logo={logo} primaryColor={primaryColor} />}
             {venues.length > 1 && <VenueSelector onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)} venues={venues} currentVenueName={currentVenueName} />}
             {isMapReady && isDesktop
                 ?
