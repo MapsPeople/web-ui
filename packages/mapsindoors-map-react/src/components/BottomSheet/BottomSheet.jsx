@@ -2,9 +2,11 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import './BottomSheet.scss';
 import LocationDetails from '../LocationDetails/LocationDetails';
+import Wayfinding from '../Wayfinding/Wayfinding';
 
 const BOTTOM_SHEETS = {
-    LOCATION_DETAILS: 0
+    LOCATION_DETAILS: 0,
+    WAYFINDING: 1,
 };
 
 function BottomSheet({ currentLocation, onClose }) {
@@ -19,6 +21,10 @@ function BottomSheet({ currentLocation, onClose }) {
         onClose();
     }
 
+    function startWayfinding() {
+        setActiveBottomSheet(BOTTOM_SHEETS.WAYFINDING);
+    }
+
     /*
      * React on changes on the current location.
      */
@@ -29,7 +35,10 @@ function BottomSheet({ currentLocation, onClose }) {
     const bottomSheets = [
         // Location details
         <div className={`bottom-sheet`}>
-            <LocationDetails location={currentLocation} onClose={() => close()} />
+            <LocationDetails location={currentLocation} onClose={() => close()} onStartWayfinding={() => startWayfinding()} />
+        </div>,
+        <div className={`bottom-sheet`}>
+            <Wayfinding onClose={() => close()}/>
         </div>
     ]
 
