@@ -3,9 +3,11 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import './Modal.scss'
 import LocationDetails from "../LocationDetails/LocationDetails";
+import Wayfinding from '../Wayfinding/Wayfinding';
 
 const VIEWS = {
-    LOCATION_DETAILS: 0
+    LOCATION_DETAILS: 0,
+    WAYFINDING: 1,
 };
 
 function Modal({ currentLocation, onClose }) {
@@ -19,6 +21,10 @@ function Modal({ currentLocation, onClose }) {
         onClose();
     }
 
+    function startWayfinding() {
+        setActivePage(VIEWS.WAYFINDING);
+    }
+
     /*
     * React on changes on the current location.
     */
@@ -29,7 +35,10 @@ function Modal({ currentLocation, onClose }) {
     const pages = [
         // Location details
         <div className='modal'>
-            <LocationDetails location={currentLocation} onClose={() => close()} />
+            <LocationDetails location={currentLocation} onClose={() => close()} onStartWayfinding={() => startWayfinding()} />
+        </div>,
+        <div className='modal'>
+            <Wayfinding onClose={() => close()} />
         </div>
     ]
 
