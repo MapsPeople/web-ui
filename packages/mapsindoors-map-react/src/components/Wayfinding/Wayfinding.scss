@@ -12,6 +12,7 @@
         font-size: 14px;
         text-align: center;
         font-weight: 500;
+        color: #3D3D3D;
     }
 
     &__close {
@@ -36,6 +37,8 @@
 
     &__label {
         font-size: 14px;
+        color: #636971;
+        font-weight: 500;
     }
 
     &__details {
@@ -148,6 +151,7 @@
         grid-auto-flow: column;
         gap: 4px;
         align-items: center;
+        color:#636971;
     }
 
     &__minutes, 
@@ -157,6 +161,9 @@
 
     hr {
         margin:16px 0;
+        background-color: lightgray;
+        border: none;
+        height: 1px;
     }
 
     &__button {
@@ -171,5 +178,6 @@
         border-radius: 8px;
         margin-top: 32px;
         height: 48px;
+        border:none;
     }
 }
