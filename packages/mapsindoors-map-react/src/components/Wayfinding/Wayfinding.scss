@@ -1,5 +1,5 @@
 .wayfinding {
-    color: black;
+    color: var(--brand-colors-black-100);
 
     &__directions {
         background-color: var(--color-gray-20);
@@ -27,13 +27,21 @@
     &__locations {
         display: grid;
         gap: var(--spacing-medium);
+        position: relative;
     }
 
     &__to,
     &__from {
         display: grid;
         gap: var(--spacing-x-small);
+    }
 
+    &__switch {
+        background-color: unset;
+        border: none;
+        position: absolute;
+        right: 10px;
+        top: 80px;
     }
 
     &__label {

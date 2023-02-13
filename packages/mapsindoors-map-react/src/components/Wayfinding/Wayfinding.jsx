@@ -1,12 +1,22 @@
 import React from "react";
+import { useState } from 'react';
 import './Wayfinding.scss';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import { ReactComponent as CheckIcon } from '../../assets/check.svg';
 import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
 import { ReactComponent as WalkingIcon } from '../../assets/walking.svg';
 import { ReactComponent as QuestionIcon } from '../../assets/question.svg';
+import { ReactComponent as SwitchIcon } from '../../assets/arrows.svg';
 
 function Wayfinding({ onClose }) {
+    const [firstUserInput, setFirstUserInput] = useState('first');
+    const [secondUserInput, setSecondUserInput] = useState('second');
+
+    function switchValues() {
+        setFirstUserInput(secondUserInput);
+        setSecondUserInput(firstUserInput);
+    }
+
     return (
         <div className="wayfinding">
             <div className="wayfinding__directions">
@@ -19,14 +29,17 @@ function Wayfinding({ onClose }) {
                         <div className="wayfinding__label">
                             TO
                         </div>
-                        <mi-search placeholder="Search by name, category, building..."></mi-search>
+                        <mi-search placeholder="Search by name, category, building..." value={firstUserInput} id="first"></mi-search>
                     </div>
                     <div className="wayfinding__from">
                         <div className="wayfinding__label">
                             FROM
                         </div>
-                        <mi-search placeholder="Search by name, category, building..."></mi-search>
+                        <mi-search placeholder="Search by name, category, building..." value={secondUserInput} id="second"></mi-search>
                     </div>
+                    <button className="wayfinding__switch">
+                        <SwitchIcon onClick={() => switchValues()} />
+                    </button>
                 </div>
             </div>
 
