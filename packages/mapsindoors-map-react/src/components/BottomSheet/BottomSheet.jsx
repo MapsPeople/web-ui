@@ -4,7 +4,7 @@ import './BottomSheet.scss';
 import LocationDetails from '../LocationDetails/LocationDetails';
 import Wayfinding from '../Wayfinding/Wayfinding';
 
-const BOTTOM_SHEETS = {
+const VIEWS = {
     LOCATION_DETAILS: 0,
     WAYFINDING: 1,
 };
@@ -22,22 +22,22 @@ function BottomSheet({ currentLocation, onClose }) {
     }
 
     function startWayfinding() {
-        setActiveBottomSheet(BOTTOM_SHEETS.WAYFINDING);
+        setActiveBottomSheet(VIEWS.WAYFINDING);
     }
 
     /*
      * React on changes on the current location.
      */
     useEffect(() => {
-        setActiveBottomSheet(currentLocation ? BOTTOM_SHEETS.LOCATION_DETAILS : undefined);
+        setActiveBottomSheet(currentLocation ? VIEWS.LOCATION_DETAILS : undefined);
     }, [currentLocation]);
 
     const bottomSheets = [
         // Location details
-        <div className={`bottom-sheet`}>
+        <div className='bottom-sheet'>
             <LocationDetails location={currentLocation} onClose={() => close()} onStartWayfinding={() => startWayfinding()} />
         </div>,
-        <div className={`bottom-sheet`}>
+        <div className='bottom-sheet'>
             <Wayfinding onClose={() => close()}/>
         </div>
     ]
