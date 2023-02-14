@@ -4,10 +4,12 @@ import { useState } from 'react';
 import './Modal.scss'
 import LocationDetails from "../LocationDetails/LocationDetails";
 import Wayfinding from '../Wayfinding/Wayfinding';
+import Directions from '../Directions/Directions';
 
 const VIEWS = {
     LOCATION_DETAILS: 0,
     WAYFINDING: 1,
+    DIRECTIONS: 2
 };
 
 function Modal({ currentLocation, onClose }) {
@@ -25,6 +27,10 @@ function Modal({ currentLocation, onClose }) {
         setActivePage(VIEWS.WAYFINDING);
     }
 
+    function startDirections() {
+        setActivePage(VIEWS.DIRECTIONS);
+    }
+
     /*
     * React on changes on the current location.
     */
@@ -38,7 +44,10 @@ function Modal({ currentLocation, onClose }) {
             <LocationDetails location={currentLocation} onClose={() => close()} onStartWayfinding={() => startWayfinding()} />
         </div>,
         <div className='modal'>
-            <Wayfinding onClose={() => close()} />
+            <Wayfinding onClose={() => close()} onStartDirections={() => startDirections()} />
+        </div>,
+        <div className='modal'>
+            <Directions onClose={() => close()} />
         </div>
     ]
 

@@ -9,7 +9,6 @@ const VIEWS = {
     LOCATION_DETAILS: 0,
     WAYFINDING: 1,
     DIRECTIONS: 2
-
 };
 
 function BottomSheet({ currentLocation, onClose }) {
