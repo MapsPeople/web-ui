@@ -1,0 +1,70 @@
+.directions {
+    color: var(--brand-colors-black-100);
+
+    &__details {
+        background-color: var(--color-gray-20);
+        border-bottom: 1px solid var(--color-gray-30);
+        padding: var(--spacing-medium);
+        position: relative;
+        border-radius: var(--rounding-large) var(--rounding-large) 0 0;
+    }
+
+    &__close {
+        position: absolute;
+        top: var(--spacing-x-small);
+        right: var(--spacing-x-small);
+        background: none;
+        border: none;
+    }
+
+    &__locations {
+        display: grid;
+        gap: var(--spacing-medium);
+        position: relative;
+    }
+
+    &__to,
+    &__from {
+        display: grid;
+        gap: var(--spacing-x-small);
+    }
+
+
+    &__label {
+        font-size: 14px;
+        color: var(--color-gray-70);
+        font-weight: var(--font-weight-large);
+    }
+
+    &__guide {
+        padding: var(--spacing-medium);
+    }
+
+    &__info {
+        display: grid;
+        grid-auto-flow: column;
+        justify-content: space-between;
+    }
+
+    &__distance,
+    &__time {
+        display: grid;
+        grid-auto-flow: column;
+        gap: var(--spacing-xx-small);
+        align-items: center;
+        color: var(--color-gray-70);;
+    }
+
+    &__minutes,
+    &__meters {
+        font-weight: var(--font-weight-large);
+    }
+
+    hr {
+        margin: var(--spacing-medium) 0;
+        background-color: var(--color-gray-30);;
+        border: none;
+        height: 1px;
+    }
+
+}

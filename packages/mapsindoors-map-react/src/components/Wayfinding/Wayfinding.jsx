@@ -8,7 +8,7 @@ import { ReactComponent as WalkingIcon } from '../../assets/walking.svg';
 import { ReactComponent as QuestionIcon } from '../../assets/question.svg';
 import { ReactComponent as SwitchIcon } from '../../assets/arrows.svg';
 
-function Wayfinding({ onClose }) {
+function Wayfinding({ onClose, onStartDirections }) {
     const [firstUserInput, setFirstUserInput] = useState('first');
     const [secondUserInput, setSecondUserInput] = useState('second');
 
@@ -66,7 +66,7 @@ function Wayfinding({ onClose }) {
                         <div className="wayfinding__minutes">2m</div>
                     </div>
                 </div>
-                <button className="wayfinding__button">
+                <button className="wayfinding__button" onClick={() => onStartDirections()}>
                     <CheckIcon />
                     Go!
                 </button>
