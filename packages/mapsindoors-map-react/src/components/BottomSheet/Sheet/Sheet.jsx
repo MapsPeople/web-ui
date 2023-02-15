@@ -21,16 +21,28 @@ let dragStartHeight;
  */
 function Sheet({ children, isOpen, minHeight }) {
 
+    /** Referencing the sheet DOM element */
     const sheetRef = useRef();
-    const contentRef = useRef();
-    const [size, setSize] = useState(sizes.FIT);
-    const [isDragging, setIsDragging] = useState(false);
-    const [dragDirection, setDragDirection] = useState();
 
+    /** Referencing the DOM element of the sheet content div. */
+    const contentRef = useRef();
+
+    /** The current size preset ("snap point") */
+    const [size, setSize] = useState(sizes.FIT);
+
+    /** True if the sheet is currently being dragged with pointer (mouse, finger) */
+    const [isDragging, setIsDragging] = useState(false);
+
+    /** If user is swiping up or down */
+    const [swipeGestureDirection, setSwipeGestureDirection] = useState();
+
+    /** Reference to the DOM element of the container element of all bottom sheets. */
     const container = useContext(ContainerContext);
 
-    const [style, setStyle] = useState({});
+    /** The current height of the content in pixels */
     const [contentHeight, setContentHeight] = useState();
+
+    const [style, setStyle] = useState({});
 
     /**
      * Change the height of the sheet to one of the preset sizes (min, fit, max).
@@ -74,7 +86,7 @@ function Sheet({ children, isOpen, minHeight }) {
     const swipeHandler = useSwipeable({
         onSwipeStart: (e) => {
             setIsDragging(true);
-            setDragDirection(e.dir);
+            setSwipeGestureDirection(e.dir);
             dragStartHeight = sheetRef.current.clientHeight;
         },
         onSwiping: (e) => {
@@ -91,7 +103,7 @@ function Sheet({ children, isOpen, minHeight }) {
             const newHeight = Math.max(dragStartHeight - e.deltaY, minHeight);
 
             let minThreshold, maxThreshold;
-            if (dragDirection.toUpperCase() === 'DOWN') {
+            if (swipeGestureDirection.toUpperCase() === 'DOWN') {
                 minThreshold = contentHeight - 60;
                 maxThreshold = container.current.clientHeight - 60;
             } else {
