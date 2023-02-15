@@ -33,6 +33,15 @@
           }
         }
       ]
+    },
+    "json/nested": {
+      "buildPath": "build/json/",
+      "files": [
+        {
+          "destination": "variables.json",
+          "format": "json/nested"
+        }
+      ]
     }
   }
 }
