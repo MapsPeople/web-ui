@@ -9,6 +9,7 @@ const sizes = {
     FIT: 2, // Sheet height fits to the content
     MAX: 3  // Sheet height is of maximum height (height of container element)
 };
+let dragStartHeight;
 
 /**
  * @param {Object} props
@@ -17,9 +18,12 @@ const sizes = {
  */
 function Sheet({ children, isOpen, minHeight }) {
 
+
     const sheetRef = useRef();
     const contentRef = useRef();
     const [size, setSize] = useState(sizes.FIT);
+    const [isDragging, setIsDragging] = useState(false);
+    const [dragDirection, setDragDirection] = useState();
 
     const container = useContext(ContainerContext);
 
@@ -65,8 +69,45 @@ function Sheet({ children, isOpen, minHeight }) {
      * Handler for swipe gestures.
      */
     const swipeHandler = useSwipeable({
-        onSwipedUp: () => changeSheetHeight(Math.min(size+1, Object.keys(sizes).length)),
-        onSwipedDown: () => changeSheetHeight(Math.max(0, size-1)),
+        onSwipeStart: (e) => {
+            setIsDragging(true);
+            setDragDirection(e.dir);
+            dragStartHeight = sheetRef.current.clientHeight;
+        },
+        onSwiping: (e) => {
+            const newHeight = Math.max(dragStartHeight - e.deltaY, minHeight);
+            setStyle({ height: `${newHeight}px` });
+        },
+        onSwiped: (e) => {
+            const newHeight = Math.max(dragStartHeight - e.deltaY, minHeight);
+            setIsDragging(false);
+
+            // Find closest snap point (min, fit or max) and snap to that
+            let minThreshold, maxThreshold;
+
+            // FIXME: Choose an approach:
+
+            // Naïve approach: 50% of difference between snap points
+            // minThreshold = (contentHeight - parseInt(minHeight)) / 2 + parseInt(minHeight);
+            // maxThreshold = (container.current.clientHeight - contentHeight) / 2 + contentHeight;
+
+            // Another approach: 60px going in the direction of the swipe
+            if (dragDirection.toUpperCase() === 'DOWN') {
+                minThreshold = contentHeight - 60;
+                maxThreshold = container.current.clientHeight - 60;
+            } else {
+                minThreshold = parseInt(minHeight) + 60;
+                maxThreshold = contentHeight + 60;
+            }
+
+            if (newHeight <= minThreshold) {
+                changeSheetHeight(sizes.MIN);
+            } else if (newHeight <= maxThreshold) {
+                changeSheetHeight(sizes.FIT);
+            } else {
+                changeSheetHeight(sizes.MAX);
+            }
+        },
         trackMouse: true,
         preventScrollOnSwipe: true
     });
@@ -83,7 +124,6 @@ function Sheet({ children, isOpen, minHeight }) {
         }
     }, [children, isOpen]);
 
-
     /*
      * Pass through ref to share the ref between component and useSwipeable.
      */
@@ -92,7 +132,7 @@ function Sheet({ children, isOpen, minHeight }) {
         sheetRef.current = el;
     };
 
-    return <div {...swipeHandler} ref={refPassthrough} style={style} className={`sheet ${isOpen ? 'sheet--active' : ''}`}>
+    return <div {...swipeHandler} ref={refPassthrough} style={style} className={`sheet ${isOpen ? 'sheet--active' : ''} ${isDragging ? 'sheet--dragging': ''}`}>
         <div ref={contentRef} className="sheet__content">
             {children}
         </div>

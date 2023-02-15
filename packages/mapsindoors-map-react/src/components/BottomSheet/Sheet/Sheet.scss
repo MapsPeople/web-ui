@@ -1,7 +1,7 @@
 .sheet {
     pointer-events: none;
     opacity: 0;
-    transition: all .4s;
+    transition: all .25s;
     position: absolute;
     bottom: 0;
     width: 100%;
@@ -28,6 +28,13 @@
         pointer-events: all;
         opacity: 1;
         transform: translateY(0);
+    }
+
+    &--dragging {
+        transition: none;
+        * {
+            user-select: none;
+        }
     }
 
     &__content {
