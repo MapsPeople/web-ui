@@ -15,53 +15,42 @@
 
 .step {
     display: grid;
-    gap:8px;
-    justify-items: center;
-    // grid-template-columns: 40px 1fr 40px; /* TODO: MIAJS-1303, make the grid work in IE11 */
-    // grid-template-areas: 'actionicon heading heading'
-    //                      'modeicon description toggle'
-    //                      'modeicon substeps substeps';
-
-    &__info {
-        display: grid;
-        grid-auto-flow: column;
-        width: fit-content;
-        gap:8px;
-    }
+    grid-template-columns: 40px 1fr 40px; /* TODO: MIAJS-1303, make the grid work in IE11 */
+    grid-template-areas: 'actionicon heading heading'
+                         'modeicon description toggle'
+                         'modeicon substeps substeps';
 
     &__action-icon {
-        // display: flex;
-        // justify-content: center;
-        // align-items: center;
-        // grid-area: actionicon;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        grid-area: actionicon;
 
         &--circled {
             position: relative;
-            // &::before {
-            //     position: absolute;
-            //     @include icons.size(medium);
-            //     border: 1px solid variables.$color-black-base;
-            //     content: "";
-            //     @include border.radius(circle);
-            // }
+            &::before {
+                position: absolute;
+                @include icons.size(medium);
+                border: 1px solid variables.$color-black-base;
+                content: "";
+                @include border.radius(circle);
+            }
         }
 
         mi-icon {
             display: block;
-            width: 40px;
-            height: 40px;
-            // @include sizing.width(small);
-            // @include sizing.height(small);
+            @include sizing.width(small);
+            @include sizing.height(small);
         }
     }
 
     &__heading {
-        // grid-area: heading;
+        grid-area: heading;
         @include font.weight(normal);
         @include font.size(medium);
         @include margin.all(none);
-        // border-bottom: 1px solid #DCDCDF;
-        // border-top: 1px solid #DCDCDF;
+        border-bottom: 1px solid #DCDCDF;
+        border-top: 1px solid #DCDCDF;
         @include padding.all(small);
 
         > span {
@@ -118,7 +107,7 @@
     }
 
     &__description {
-        // grid-area: description;
+        grid-area: description;
         @include padding.all(small);
     }
 
