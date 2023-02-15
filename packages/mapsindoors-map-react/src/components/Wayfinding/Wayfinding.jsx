@@ -4,7 +4,7 @@ import { useSwipeable } from 'react-swipeable';
 
 function Wayfinding({ onClose, onBack }) {
 
-    // FIXME: Implement properly. This is just a placeholder and a demo
+    // FIXME: Implement properly. This is just a placeholder and a demo of scrollable content.
 
     // Prevent swipe gestures to take over when scrolling in a scrollable element.
     const scrollableContentSwipePrevent = useSwipeable({

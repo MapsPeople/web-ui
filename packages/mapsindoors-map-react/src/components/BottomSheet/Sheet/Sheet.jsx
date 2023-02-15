@@ -12,12 +12,14 @@ const sizes = {
 let dragStartHeight;
 
 /**
+ * A Sheet for showing content in the bottom of the screen.
+ * The sheet height can be changed with swipe gestures.
+ *
  * @param {Object} props
  * @param {boolean} props.isOpen - If the sheet is open (visible) or not.
  * @param {number} props.minheight - The minimum height of the sheet. It cannot be resized to below this height.
  */
 function Sheet({ children, isOpen, minHeight }) {
-
 
     const sheetRef = useRef();
     const contentRef = useRef();
@@ -45,7 +47,8 @@ function Sheet({ children, isOpen, minHeight }) {
             sheetRef.current.style.height = `${contentHeight}px`;
         }
 
-        // RequestAnimationFrame needed in order to the above height to kick in thus enabling the transition of height.
+        // Set the actual pixel height of the sheet.
+        // RequestAnimationFrame is needed in order to the height style change to kick in thus enabling the transition of height.
         // Inspired by https://css-tricks.com/using-css-transitions-auto-dimensions/#aa-technique-3-javascript
         requestAnimationFrame(() => {
             switch (targetSize) {
@@ -66,7 +69,7 @@ function Sheet({ children, isOpen, minHeight }) {
     }
 
     /**
-     * Handler for swipe gestures.
+     * Handler for swipe gestures on the sheet.
      */
     const swipeHandler = useSwipeable({
         onSwipeStart: (e) => {
@@ -75,23 +78,19 @@ function Sheet({ children, isOpen, minHeight }) {
             dragStartHeight = sheetRef.current.clientHeight;
         },
         onSwiping: (e) => {
-            const newHeight = Math.max(dragStartHeight - e.deltaY, minHeight);
-            setStyle({ height: `${newHeight}px` });
+            // Constantly update the sheet height corresponding to the pointer position.
+            const height = Math.max(dragStartHeight - e.deltaY, minHeight);
+            setStyle({ height: `${height}px` });
         },
         onSwiped: (e) => {
-            const newHeight = Math.max(dragStartHeight - e.deltaY, minHeight);
+            // When swiping stopped, snap to a snap point.
+            // The snap point is the next one in the swipe direction if the swiped distance was more than 60px.
+            // Otherwise it will bounce back to the current snap point.
+
             setIsDragging(false);
+            const newHeight = Math.max(dragStartHeight - e.deltaY, minHeight);
 
-            // Find closest snap point (min, fit or max) and snap to that
             let minThreshold, maxThreshold;
-
-            // FIXME: Choose an approach:
-
-            // Naïve approach: 50% of difference between snap points
-            // minThreshold = (contentHeight - parseInt(minHeight)) / 2 + parseInt(minHeight);
-            // maxThreshold = (container.current.clientHeight - contentHeight) / 2 + contentHeight;
-
-            // Another approach: 60px going in the direction of the swipe
             if (dragDirection.toUpperCase() === 'DOWN') {
                 minThreshold = contentHeight - 60;
                 maxThreshold = container.current.clientHeight - 60;
