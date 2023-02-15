@@ -14,7 +14,7 @@ function Wayfinding({ onClose, onBack }) {
     return <div className="wayfinding">
         <div className="wayfinding__header">
             <button onClick={() => onBack()}>
-                ‹
+                <span style={{ fontSize: '28px', color: '#666' }}>‹</span>
             </button>
             <button onClick={() => onClose()}>
                 <CloseIcon />
