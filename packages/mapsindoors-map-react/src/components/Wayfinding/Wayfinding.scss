@@ -36,14 +36,6 @@
         gap: var(--spacing-x-small);
     }
 
-    &__switch {
-        background-color: unset;
-        border: none;
-        position: absolute;
-        right: 10px;
-        top: 80px;
-    }
-
     &__label {
         font-size: 14px;
         color: var(--color-gray-70);
@@ -52,88 +44,6 @@
 
     &__details {
         padding: var(--spacing-medium);
-
-        .toggle {
-            position: relative;
-            display: inline-block;
-            width: var(--spacing-xxx-large);
-            height: var(--spacing-large);
-            border-radius:var(--spacing-large);
-            cursor: pointer;
-        }
-
-        .toggle input {
-            display: none;
-        }
-
-        .toggle .slider {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border-radius: var(--spacing-large);
-            background-color: var(--color-gray-50);
-            transition: all 0.4s ease-in-out;
-        }
-
-        .toggle .slider::before {
-            content: '';
-            position: absolute;
-            top: var(--spacing-xxx-small);;
-            left: var(--spacing-xxx-small);;
-            width: 20px;
-            height: 20px;
-            border-radius: calc(var(--spacing-large) / 2);
-            background-color: var(--color-white-white);
-            transition: all 0.4s ease-in-out;
-        }
-
-        .toggle input:checked+.slider {
-            background-color: var(--brand-colors-dark-pine-100);
-        }
-
-        .toggle input:checked+.slider::before {
-            transform: translateX(calc(var(--spacing-xxx-large) - var(--spacing-large)));
-        }
-
-        .toggle .labels {
-            position: absolute;
-            top: var(--spacing-xx-small);;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            font-size: 12px;
-            transition: all 0.4s ease-in-out;
-        }
-
-        .toggle .labels::after {
-            content: attr(data-off);
-            position: absolute;
-            right: 5px;
-            color: white;
-            opacity: 1;
-            transition: all 0.4s ease-in-out;
-            margin-right: var(--spacing-xxx-small);;
-        }
-
-        .toggle .labels::before {
-            content: attr(data-on);
-            position: absolute;
-            left: 5px;
-            color: var(--color-white-white);
-            opacity: 0;
-            transition: all 0.4s ease-in-out;
-            margin-left: var(--spacing-xxx-small);;
-        }
-
-        .toggle input:checked~.labels::after {
-            opacity: 0;
-        }
-
-        .toggle input:checked~.labels::before {
-            opacity: 1;
-        }
     }
 
     &__accessibility {
@@ -142,6 +52,10 @@
         gap: var(--spacing-x-small);
         align-items: center;
         width: fit-content;
+
+        .mi-toggle:checked {
+            background-color: var(--color-teal-90);
+        }
     }
 
     &__info {
@@ -172,17 +86,22 @@
     }
 
     &__button {
-        background-color: var(--brand-colors-dark-pine-100);
+        background-color: var(--color-teal-90);
         color: var(--color-white-white);
-        display: grid;
-        grid-auto-flow: column;
-        gap: var(--spacing-x-small);
-        align-items: center;
-        width: 100%;
-        justify-content: center;
         border-radius: var(--rounding-large);
-        margin-top: var(--spacing-x-large);
-        height: var(--spacing-xxx-large);
         border: none;
+        font-size: var(--font-size-small);
+        width: 100%;
+        height: var(--spacing-xx-large);
+        position: relative;
+        margin-top: var(--spacing-x-large);
+        font-weight: 600;
+
+        svg {
+            position: absolute;
+            left: var(--spacing-small);
+            top: 50%;
+            transform: translateY(-50%);
+        }
     }
 }

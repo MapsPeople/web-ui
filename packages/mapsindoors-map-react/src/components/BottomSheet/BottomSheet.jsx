@@ -11,24 +11,43 @@ const VIEWS = {
     DIRECTIONS: 2
 };
 
-function BottomSheet({ currentLocation, onClose }) {
-
+function BottomSheet({ currentLocation, onClose}) {
     const [activeBottomSheet, setActiveBottomSheet] = useState(null);
 
     /**
-     * When a sheet is closed.
+     * When the user closes the location details.
      */
     function close() {
         setActiveBottomSheet(null);
         onClose();
     }
 
+    /**
+   * When the user starts the wayfinding.
+   */
     function startWayfinding() {
         setActiveBottomSheet(VIEWS.WAYFINDING);
     }
 
+    /**
+   * When the user closes the wayfinding.
+   */
+    function closeWayfinding() {
+        setActiveBottomSheet(VIEWS.LOCATION_DETAILS);
+    }
+
+    /**
+   * When the user starts the directions.
+   */
     function startDirections() {
         setActiveBottomSheet(VIEWS.DIRECTIONS);
+    }
+
+    /**
+   * When the user closes the directions. 
+   */
+    function closeDirections() {
+        setActiveBottomSheet(VIEWS.WAYFINDING);
     }
 
     /*
@@ -44,10 +63,10 @@ function BottomSheet({ currentLocation, onClose }) {
             <LocationDetails location={currentLocation} onClose={() => close()} onStartWayfinding={() => startWayfinding()} />
         </div>,
         <div className='bottom-sheet'>
-            <Wayfinding onClose={() => close()} onStartDirections={() => startDirections()} />
+            <Wayfinding onClose={() => closeWayfinding()} onStartDirections={() => startDirections()} />
         </div>,
         <div className='bottom-sheet'>
-            <Directions onClose={() => close()} />
+            <Directions onClose={() => closeDirections()} />
         </div>
     ]
 
