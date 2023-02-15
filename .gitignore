@@ -1,9 +1,6 @@
+node_modules
+dist
+.idea
 .cache
 .env
-.idea
-.vscode
-*.map
 **/.DS_Store
-**/.sass-cache
-**/dist
-**/node_modules
