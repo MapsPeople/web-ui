@@ -84,7 +84,7 @@ These are all of the available mixins, and how you can reference them after inst
 
 <details><summary><b>Build</b></summary>
 
-1. Clone this repository `git clone git@github:mapspeople/midt.git && cd midt`
+1. Clone this repository `git clone git@github:mapspeople/web-ui.git && cd web-ui/packages/midt`
 2. Build the Design Tokens using `style-dictionary`:
 
 ```bash
