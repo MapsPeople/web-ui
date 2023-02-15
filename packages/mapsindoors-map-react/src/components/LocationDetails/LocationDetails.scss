@@ -1,3 +1,5 @@
+@import '../../variables.scss';
+
 .location-details {
     padding: var(--spacing-medium);
     color: var(--color-black-base);
@@ -98,7 +100,7 @@
     }
 }
 
-@media (min-width: 1440px) {
+@media (min-width: $desktop-breakpoint) {
     .location-details {
         padding: var(--spacing-large) var(--spacing-x-large) var(--spacing-medium) var(--spacing-x-large);
     }
