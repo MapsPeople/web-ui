@@ -1,17 +1,26 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useState } from 'react';
+import { ContainerContext } from './ContainerContext';
+import Sheet from './Sheet/Sheet';
 import './BottomSheet.scss';
 import LocationDetails from '../LocationDetails/LocationDetails';
 import Wayfinding from '../Wayfinding/Wayfinding';
 import Directions from '../Directions/Directions';
 
-const VIEWS = {
+const BOTTOM_SHEETS = {
     LOCATION_DETAILS: 0,
-    WAYFINDING: 1,
-    DIRECTIONS: 2
+    WAYFINDING: 1, 
+	DIRECTIONS: 2
 };
 
-function BottomSheet({ currentLocation, onClose}) {
+/**
+ * @param {Object} props
+ * @param {Object} props.currentLocation - The currently selected MapsIndoors Location.
+ * @param {function} props.onClose - Callback that fires when all bottom sheets are closed.
+ */
+function BottomSheet({ currentLocation, onClose }) {
+
+    const bottomSheetRef = useRef();
     const [activeBottomSheet, setActiveBottomSheet] = useState(null);
 
     /**
@@ -22,55 +31,30 @@ function BottomSheet({ currentLocation, onClose}) {
         onClose();
     }
 
-    /**
-   * When the user starts the wayfinding.
-   */
-    function startWayfinding() {
-        setActiveBottomSheet(VIEWS.WAYFINDING);
-    }
-
-    /**
-   * When the user closes the wayfinding.
-   */
-    function closeWayfinding() {
-        setActiveBottomSheet(VIEWS.LOCATION_DETAILS);
-    }
-
-    /**
-   * When the user starts the directions.
-   */
-    function startDirections() {
-        setActiveBottomSheet(VIEWS.DIRECTIONS);
-    }
-
-    /**
-   * When the user closes the directions. 
-   */
-    function closeDirections() {
-        setActiveBottomSheet(VIEWS.WAYFINDING);
-    }
-
     /*
      * React on changes on the current location.
      */
     useEffect(() => {
-        setActiveBottomSheet(currentLocation ? VIEWS.LOCATION_DETAILS : undefined);
+        setActiveBottomSheet(currentLocation ? BOTTOM_SHEETS.LOCATION_DETAILS : undefined);
     }, [currentLocation]);
 
     const bottomSheets = [
-        // Location details
-        <div className='bottom-sheet'>
-            <LocationDetails location={currentLocation} onClose={() => close()} onStartWayfinding={() => startWayfinding()} />
-        </div>,
-        <div className='bottom-sheet'>
-            <Wayfinding onClose={() => closeWayfinding()} onStartDirections={() => startDirections()} />
-        </div>,
-        <div className='bottom-sheet'>
-            <Directions onClose={() => closeDirections()} />
-        </div>
+        <Sheet minHeight="128" isOpen={activeBottomSheet === BOTTOM_SHEETS.LOCATION_DETAILS} key="A">
+            <LocationDetails onStartWayfinding={() => setActiveBottomSheet(BOTTOM_SHEETS.WAYFINDING)} location={currentLocation} onClose={() => close()} />
+        </Sheet>,
+        <Sheet minHeight="60" isOpen={activeBottomSheet === BOTTOM_SHEETS.WAYFINDING} key="B">
+            <Wayfinding onStartDirections={() => setActiveBottomSheet(BOTTOM_SHEETS.DIRECTIONS)} onBack={() => setActiveBottomSheet(BOTTOM_SHEETS.LOCATION_DETAILS)} />
+        </Sheet>,
+		 <Sheet minHeight="60" isOpen={activeBottomSheet === BOTTOM_SHEETS.DIRECTIONS} key="C">
+            <Directions onBack={() => setActiveBottomSheet(BOTTOM_SHEETS.WAYFINDING)} />
+        </Sheet>
     ]
 
-    return <div className='bottom-sheets'>{bottomSheets[activeBottomSheet]}</div>
+    return <div ref={bottomSheetRef} className='bottom-sheets'>
+        <ContainerContext.Provider value={bottomSheetRef}>
+            {bottomSheets}
+        </ContainerContext.Provider>
+    </div>
 }
 
 export default BottomSheet;

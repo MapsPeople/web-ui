@@ -12,45 +12,21 @@ const VIEWS = {
     DIRECTIONS: 2
 };
 
+/**
+ * @param {Object} props
+ * @param {Object} props.currentLocation - The currently selected MapsIndoors Location.
+ * @param {function} props.onClose - Callback that fires when all modals are closed.
+ */
 function Modal({ currentLocation, onClose }) {
     const [activePage, setActivePage] = useState(null);
 
     /**
-        * When the user closes the location details.
-        */
+    * When the user closes the location details.
+    */
     function close() {
         setActivePage(null);
         onClose();
     }
-
-    /**
-   * When the user starts the wayfinding.
-   */
-    function startWayfinding() {
-        setActivePage(VIEWS.WAYFINDING);
-    }
-
-    /**
-   * When the user closes the wayfinding.
-   */
-    function closeWayfinding() {
-        setActivePage(VIEWS.LOCATION_DETAILS);
-    }
-
-    /**
-   * When the user starts the directions.
-   */
-    function startDirections() {
-        setActivePage(VIEWS.DIRECTIONS);
-    }
-
-    /**
-   * When the user closes the directions. 
-   */
-    function closeDirections() {
-        setActivePage(VIEWS.WAYFINDING);
-    }
-
 
     /*
     * React on changes on the current location.
@@ -60,20 +36,19 @@ function Modal({ currentLocation, onClose }) {
     }, [currentLocation]);
 
     const pages = [
-        // Location details
-        <div className='modal'>
-            <LocationDetails location={currentLocation} onClose={() => close()} onStartWayfinding={() => startWayfinding()} />
+        <div className="modal">
+            <LocationDetails onStartWayfinding={() => setActivePage(VIEWS.WAYFINDING)} location={currentLocation} onClose={() => close()} />
         </div>,
-        <div className='modal'>
-            <Wayfinding onClose={() => closeWayfinding()} onStartDirections={() => startDirections()} />
+        <div className="modal">
+            <Wayfinding onStartDirections={() => setActivePage(VIEWS.DIRECTIONS)} onBack={() => setActivePage(VIEWS.LOCATION_DETAILS)} />
         </div>,
-        <div className='modal'>
-            <Directions onClose={() => closeDirections()} />
+        <div className="modal">
+            <Directions onBack={() => setActivePage(VIEWS.WAYFINDING)} />
         </div>
     ]
 
     return (
-        <div className='modals'>
+        <div className="modals">
             {pages[activePage]}
         </div>
     )

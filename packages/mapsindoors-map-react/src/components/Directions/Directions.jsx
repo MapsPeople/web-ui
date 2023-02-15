@@ -4,11 +4,11 @@ import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
 import { ReactComponent as WalkingIcon } from '../../assets/walking.svg';
 
-function Directions({ onClose }) {
+function Directions({ onBack }) {
     return (
         <div className="directions">
             <div className="directions__details">
-                <button className="directions__close" onClick={() => onClose()}>
+                <button className="directions__close" onClick={() => onBack()}>
                     <CloseIcon />
                 </button>
                 <div className="directions__locations">
