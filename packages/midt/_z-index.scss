@@ -1,0 +1,56 @@
+@use 'build/scss/variables';
+
+@mixin z-index($z-index: 'default') {
+  
+  @if $z-index == default {
+    z-index: variables.$z-index-default;
+  }
+  
+  @else if $z-index == deep {
+    z-index: variables.$z-index-deep;
+  }
+  
+  @else if $z-index == masked {
+    z-index: variables.$z-index-masked;
+  }
+  
+  @else if $z-index == mask {
+    z-index: variables.$z-index-mask;
+  }
+  
+  @else if $z-index == sticky {
+    z-index: variables.$z-index-sticky;
+  }
+  
+  @else if $z-index == header {
+    z-index: variables.$z-index-header;
+  }
+  
+  @else if $z-index == toast {
+    z-index: variables.$z-index-toast;
+  }
+  
+  @else if $z-index == dropdown {
+    z-index: variables.$z-index-dropdown;
+  }
+  
+  @else if $z-index == overlay {
+    z-index: variables.$z-index-overlay;
+  }
+  
+  @else if $z-index == spinner {
+    z-index: variables.$z-index-spinner;
+  }
+  
+  @else if $z-index == modal {
+    z-index: variables.$z-index-modal;
+  }
+  
+  @else if $z-index == popup {
+    z-index: variables.$z-index-popup;
+  }
+  
+  @else if $z-index == top {
+    z-index: variables.$z-index-top;
+  }
+}

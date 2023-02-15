@@ -1,0 +1,34 @@
+{
+	"spacing": {
+		"xxxSmall": {
+			"value": "2px"
+		},
+		"xxSmall": {
+			"value": "4px"
+		},
+		"xSmall": {
+			"value": "8px"
+		},
+		"small": {
+			"value": "12px"
+		},
+		"medium": {
+			"value": "16px"
+		},
+		"large": {
+			"value": "24px"
+		},
+		"xLarge": {
+			"value": "32px"
+		},
+		"xxLarge": {
+			"value": "40px"
+		},
+		"xxxLarge": {
+			"value": "48px"
+		},
+		"xxxxLarge": {
+			"value": "64px"
+		}
+	}
+}

@@ -1,0 +1,29 @@
+@use 'build/scss/variables';
+
+@mixin size($size: 'medium') {
+  
+  @if $size == medium {
+    width: variables.$icon-size-medium;
+    height: variables.$icon-size-medium;
+  }
+  
+  @else if $size == small {
+    width: variables.$icon-size-small;
+    height: variables.$icon-size-small;
+  }
+  
+  @else if $size == large {
+    width: variables.$icon-size-large;
+    height: variables.$icon-size-large;
+  }
+  
+  @else if $size == x-large {
+    width: variables.$icon-size-x-large;
+    height: variables.$icon-size-x-large;
+  }
+  
+  @else if $size == xx-large {
+    width: variables.$icon-size-xx-large;
+    height: variables.$icon-size-xx-large;
+  }
+}

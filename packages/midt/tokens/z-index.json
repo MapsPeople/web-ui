@@ -1,0 +1,43 @@
+{
+	"z-index": {
+		"deep": {
+			"value": "-999999"
+		},
+		"default": {
+			"value": "1"
+		},
+		"masked": {
+			"value": "100"
+		},
+		"mask": {
+			"value": "200"
+		},
+		"sticky": {
+			"value": "300"
+		},
+		"header": {
+			"value": "400"
+		},
+		"toast": {
+			"value": "500"
+		},
+		"dropdown": {
+			"value": "600"
+		},
+		"overlay": {
+			"value": "700"
+		},
+		"spinner": {
+			"value": "800"
+		},
+		"modal": {
+			"value": "900"
+		},
+		"popup": {
+			"value": "950"
+		},
+		"top": {
+			"value": "999999"
+		}
+	}
+}

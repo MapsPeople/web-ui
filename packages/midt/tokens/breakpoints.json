@@ -1,0 +1,32 @@
+{
+	"breakpoints": {
+		"xxSmall": {
+			"value": "only screen and (max-width: 360px)",
+			"comment": "Targets devices between 0-360px"
+		},
+		"xSmall": {
+			"value": "only screen and (max-width: 575px)",
+			"comment": "Targets devices between 0-575px"
+		},
+		"small": {
+			"value": "only screen and (min-width: 576px)",
+			"comment": "Targets devices between 576px and up"
+		},
+		"medium": {
+			"value": "only screen and (min-width: 768px)",
+			"comment": "Targets portrait tablets from 768px and up"
+		},
+		"large": {
+			"value": "only screen and (min-width: 992px)",
+			"comment": "Targets landscape tablets from 992px and up"
+		},
+		"xLarge": {
+			"value": "only screen and (min-width: 1025px)",
+			"comment": "Targets desktop devices from 1025px and up"
+		},
+		"xxLarge": {
+			"value": "only screen and (min-width: 1220px)",
+			"comment": "Targets desktop devices from 1220px and up"
+		}
+	}
+}

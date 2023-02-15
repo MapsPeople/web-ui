@@ -1,0 +1,12 @@
+@use 'build/scss/variables';
+
+@mixin transition($transition: 'quickly') {
+  
+  @if $transition == quickly {
+    transition: variables.$transition-quickly;
+  }
+  
+  @else if $transition == slowly {
+    transition: variables.$transition-slowly;
+  }
+}
