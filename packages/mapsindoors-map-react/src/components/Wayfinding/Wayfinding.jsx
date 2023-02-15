@@ -29,7 +29,7 @@ function Wayfinding({ onClose, onBack }) {
         <p>
             Example scrollable element
         </p>
-        <div {...scrollableContentSwipePrevent} className="wayfinding__scrollable-demo" data-prevent-swipe>
+        <div {...scrollableContentSwipePrevent} className="wayfinding__scrollable-demo">
             {Array(30).fill().map((e, i) => {
                 return <div key={i}>Number {i+1}<br /><small>Demo list item</small></div>
             })}
