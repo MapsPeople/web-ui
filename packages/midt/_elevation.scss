@@ -1,0 +1,28 @@
+@use 'build/scss/variables';
+
+@mixin elevation($elevation: 'medium') {
+  
+  @if $elevation == none {
+    box-shadow: none;
+  }
+
+  @else if $elevation == x-small {
+    box-shadow: variables.$elevation-x-small;
+  }
+  
+  @else if $elevation == small {
+    box-shadow: variables.$elevation-small;
+  }
+  
+  @else if $elevation == medium {
+    box-shadow: variables.$elevation-medium;
+  }
+  
+  @else if $elevation == large {
+    box-shadow: variables.$elevation-large;
+  }
+  
+  @else if $elevation == x-large {
+    box-shadow: variables.$elevation-x-large;
+  }
+}
