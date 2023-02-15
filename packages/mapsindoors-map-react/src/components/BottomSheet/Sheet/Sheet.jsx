@@ -4,7 +4,7 @@ import { ContainerContext } from '../ContainerContext';
 import { useSwipeable } from 'react-swipeable';
 import './Sheet.scss';
 
-const sizes = {
+const snapPoints = {
     MIN: 1, // Sheet height is the minimum height
     FIT: 2, // Sheet height fits to the content
     MAX: 3  // Sheet height is of maximum height (height of container element)
@@ -21,16 +21,28 @@ let dragStartHeight;
  */
 function Sheet({ children, isOpen, minHeight }) {
 
+    /** Referencing the sheet DOM element */
     const sheetRef = useRef();
-    const contentRef = useRef();
-    const [size, setSize] = useState(sizes.FIT);
-    const [isDragging, setIsDragging] = useState(false);
-    const [dragDirection, setDragDirection] = useState();
 
+    /** Referencing the DOM element of the sheet content div. */
+    const contentRef = useRef();
+
+    /** The current size preset ("snap point") */
+    const [currentSnapPoint, setCurrentSnapPoint] = useState(snapPoints.FIT);
+
+    /** True if the sheet is currently being dragged with pointer (mouse, finger) */
+    const [isDragging, setIsDragging] = useState(false);
+
+    /** If user is swiping up or down */
+    const [swipeGestureDirection, setSwipeGestureDirection] = useState();
+
+    /** Reference to the DOM element of the container element of all bottom sheets. */
     const container = useContext(ContainerContext);
 
-    const [style, setStyle] = useState({});
+    /** The current height of the content in pixels */
     const [contentHeight, setContentHeight] = useState();
+
+    const [style, setStyle] = useState({});
 
     /**
      * Change the height of the sheet to one of the preset sizes (min, fit, max).
@@ -39,11 +51,11 @@ function Sheet({ children, isOpen, minHeight }) {
      */
     function changeSheetHeight(targetSize) {
         // Prevent going to minimum size state if the content size is the same in order to prevent the need for double swipes to change height.
-        if (targetSize === sizes.MIN && contentHeight <= minHeight) {
+        if (targetSize === snapPoints.MIN && contentHeight <= minHeight) {
             return;
         }
 
-        if (size === sizes.FIT) {
+        if (currentSnapPoint === snapPoints.FIT) {
             sheetRef.current.style.height = `${contentHeight}px`;
         }
 
@@ -52,19 +64,19 @@ function Sheet({ children, isOpen, minHeight }) {
         // Inspired by https://css-tricks.com/using-css-transitions-auto-dimensions/#aa-technique-3-javascript
         requestAnimationFrame(() => {
             switch (targetSize) {
-                case sizes.MAX:
+                case snapPoints.MAX:
                     setStyle({ height: `${container.current.clientHeight}px`});
                     break;
-                case sizes.FIT:
+                case snapPoints.FIT:
                     setStyle({ height: `${contentHeight}px`});
                     break;
-                case sizes.MIN:
+                case snapPoints.MIN:
                     setStyle({ height: `${minHeight}px` });
                     break;
                 default:
                     break;
             }
-            setSize(targetSize);
+            setCurrentSnapPoint(targetSize);
         });
     }
 
@@ -74,7 +86,7 @@ function Sheet({ children, isOpen, minHeight }) {
     const swipeHandler = useSwipeable({
         onSwipeStart: (e) => {
             setIsDragging(true);
-            setDragDirection(e.dir);
+            setSwipeGestureDirection(e.dir);
             dragStartHeight = sheetRef.current.clientHeight;
         },
         onSwiping: (e) => {
@@ -91,7 +103,7 @@ function Sheet({ children, isOpen, minHeight }) {
             const newHeight = Math.max(dragStartHeight - e.deltaY, minHeight);
 
             let minThreshold, maxThreshold;
-            if (dragDirection.toUpperCase() === 'DOWN') {
+            if (swipeGestureDirection.toUpperCase() === 'DOWN') {
                 minThreshold = contentHeight - 60;
                 maxThreshold = container.current.clientHeight - 60;
             } else {
@@ -100,11 +112,11 @@ function Sheet({ children, isOpen, minHeight }) {
             }
 
             if (newHeight <= minThreshold) {
-                changeSheetHeight(sizes.MIN);
+                changeSheetHeight(snapPoints.MIN);
             } else if (newHeight <= maxThreshold) {
-                changeSheetHeight(sizes.FIT);
+                changeSheetHeight(snapPoints.FIT);
             } else {
-                changeSheetHeight(sizes.MAX);
+                changeSheetHeight(snapPoints.MAX);
             }
         },
         trackMouse: true,
