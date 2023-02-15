@@ -4,7 +4,7 @@
 
 The tokes are compiled from JSON to SCSS mixins using [Amazon's Style Dictionary](https://github.com/amzn/style-dictionary), but you can use them as JSON objects or CSS classes too.
 
-Install from `npm` using `npm i -D midt@latest`.
+Install from `npm` using `npm i -D @mapsindoors/midt@latest`.
 
 This repository uses `main` as the primary branch.
 
