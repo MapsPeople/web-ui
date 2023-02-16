@@ -46,7 +46,7 @@
         padding: var(--spacing-medium);
 
         &.hide {
-            display: none;
+           display: none;
         }
     }
 
@@ -80,7 +80,8 @@
         grid-auto-flow: column;
         gap: var(--spacing-xx-small);
         align-items: center;
-        color: var(--color-gray-70);;
+        color: var(--color-gray-70);
+        ;
     }
 
     &__minutes,
@@ -90,7 +91,8 @@
 
     hr {
         margin: var(--spacing-medium) 0;
-        background-color: var(--color-gray-30);;
+        background-color: var(--color-gray-30);
+        ;
         border: none;
         height: 1px;
     }
@@ -113,5 +115,15 @@
             top: 50%;
             transform: translateY(-50%);
         }
+    }
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
     }
 }

@@ -1,5 +1,6 @@
 import React from "react";
 import './Wayfinding.scss';
+import { useState } from 'react';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import { ReactComponent as CheckIcon } from '../../assets/check.svg';
 import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
@@ -7,39 +8,54 @@ import { ReactComponent as WalkingIcon } from '../../assets/walking.svg';
 import { ReactComponent as QuestionIcon } from '../../assets/question.svg';
 
 function Wayfinding({ onStartDirections, onBack }) {
-    const toSearch = document.getElementById('to');
-    const fromSearch = document.getElementById('from');
-    const details = document.getElementById('details')
+    const [startLocationValue, setStartLocationValue] = useState();
+    const [endLocationValue, setEndLocationValue] = useState();
+
+    const searchStartLocation = document.getElementById('from');
+    const searchEndLocation = document.getElementById('to');
+    const details = document.getElementById('details');
 
     const resultsContainer = document.getElementById('results');
 
-    if (fromSearch && toSearch) {
-        fromSearch.addEventListener('results', e => {
-            resultsContainer.innerHTML = '';
-            for (const result of e.detail) {
-                const listItem = document.createElement('mi-list-item-location');
-                listItem.location = result;
-                resultsContainer.appendChild(listItem);
-            }
-        });
-        fromSearch.addEventListener('cleared', () => {
-            resultsContainer.innerHTML = '';
-        });
+    if (searchEndLocation && searchStartLocation) {
 
-        toSearch.addEventListener('results', e => {
+        // Search start location logic
+        searchStartLocation.addEventListener('results', e => {
             resultsContainer.innerHTML = '';
             for (const result of e.detail) {
                 const listItem = document.createElement('mi-list-item-location');
                 listItem.location = result;
                 resultsContainer.appendChild(listItem);
-                listItem.addEventListener('locationClicked', console.log('clicked'))
+                listItem.addEventListener('locationClicked', () => {
+                    setStartLocationValue(result.properties.name);
+                });
             }
         });
-        toSearch.addEventListener('cleared', () => {
+        searchStartLocation.addEventListener('cleared', () => {
             resultsContainer.innerHTML = '';
         })
 
-        toSearch.addEventListener('click', () => {
+        searchStartLocation.addEventListener('click', () => {
+            details.classList.add('hide');
+        });
+
+        // Search end location logic
+        searchEndLocation.addEventListener('results', e => {
+            resultsContainer.innerHTML = '';
+            for (const result of e.detail) {
+                const listItem = document.createElement('mi-list-item-location');
+                listItem.location = result;
+                resultsContainer.appendChild(listItem);
+                listItem.addEventListener('locationClicked', () => {
+                    setEndLocationValue(result.properties.name);
+                });
+            }
+        });
+        searchEndLocation.addEventListener('cleared', () => {
+            resultsContainer.innerHTML = '';
+        });
+
+        searchEndLocation.addEventListener('click', () => {
             details.classList.add('hide');
         });
     }
@@ -56,13 +72,13 @@ function Wayfinding({ onStartDirections, onBack }) {
                         <div className="wayfinding__label">
                             TO
                         </div>
-                        <mi-search placeholder="Search by name, category, building..." id="to" mapsindoors="true"></mi-search>
+                        <mi-search placeholder="Search by name, category, building..." id="to" mapsindoors="true" value={endLocationValue}></mi-search>
                     </div>
                     <div className="wayfinding__from">
                         <div className="wayfinding__label">
                             FROM
                         </div>
-                        <mi-search placeholder="Search by name, category, building..." id="from" mapsindoors="true"></mi-search>
+                        <mi-search placeholder="Search by name, category, building..." id="from" mapsindoors="true" value={startLocationValue}></mi-search>
                     </div>
                 </div>
             </div>
