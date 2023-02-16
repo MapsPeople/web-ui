@@ -92,7 +92,6 @@
     hr {
         margin: var(--spacing-medium) 0;
         background-color: var(--color-gray-30);
-        ;
         border: none;
         height: 1px;
     }
@@ -115,15 +114,5 @@
             top: 50%;
             transform: translateY(-50%);
         }
-    }
-}
-
-@keyframes fadeOut {
-    0% {
-        opacity: 1;
-    }
-
-    100% {
-        opacity: 0;
     }
 }

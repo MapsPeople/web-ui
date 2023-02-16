@@ -7,17 +7,16 @@ import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
 import { ReactComponent as WalkingIcon } from '../../assets/walking.svg';
 import { ReactComponent as QuestionIcon } from '../../assets/question.svg';
 
-function Wayfinding({ onStartDirections, onBack }) {
+function Wayfinding({ onStartDirections, onBack, onInputFocus }) {
     const [startLocationValue, setStartLocationValue] = useState();
     const [endLocationValue, setEndLocationValue] = useState();
 
     const searchStartLocation = document.getElementById('from');
     const searchEndLocation = document.getElementById('to');
     const details = document.getElementById('details');
-
     const resultsContainer = document.getElementById('results');
 
-    if (searchEndLocation && searchStartLocation) {
+    if (searchStartLocation && searchEndLocation) {
 
         // Search start location logic
         searchStartLocation.addEventListener('results', e => {
@@ -37,6 +36,7 @@ function Wayfinding({ onStartDirections, onBack }) {
 
         searchStartLocation.addEventListener('click', () => {
             details.classList.add('hide');
+            onInputFocus();
         });
 
         // Search end location logic
@@ -57,7 +57,14 @@ function Wayfinding({ onStartDirections, onBack }) {
 
         searchEndLocation.addEventListener('click', () => {
             details.classList.add('hide');
+            onInputFocus();
         });
+
+        if(endLocationValue && startLocationValue) {
+            console.log('test');
+            resultsContainer.innerHTML = '';
+            details.classList.remove('hide');
+        }
     }
 
     return (
@@ -82,10 +89,7 @@ function Wayfinding({ onStartDirections, onBack }) {
                     </div>
                 </div>
             </div>
-            <div className="wayfinding__results" id="results">
-
-            </div>
-
+            <div className="wayfinding__results" id="results"></div>
             <div className="wayfinding__details" id="details">
                 <div className="wayfinding__accessibility">
                     <input className="mi-toggle" type="checkbox" />

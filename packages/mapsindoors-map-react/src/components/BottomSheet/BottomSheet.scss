@@ -5,3 +5,7 @@
     z-index: var(--z-index-overlay);
     overflow: hidden;
 }
+
+.full-screen {
+    height:100vh !important;
+}
