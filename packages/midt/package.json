@@ -1,0 +1,31 @@
+{
+  "name": "@mapsindoors/midt",
+  "version": "18.2.0",
+  "description": "Design Tokens for MapsIndoors",
+  "author": "MapsPeople A/S",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mapspeople/midt.git"
+  },
+  "keywords": [
+    "mapsindoors",
+    "design",
+    "tokens",
+    "system"
+  ],
+  "sass": "mixins/_index.scss",
+  "style": "midt.css",
+  "unpkg": "build/css/variables.css",
+  "scripts": {
+    "build": "npm run clean && style-dictionary build",
+    "clean": "style-dictionary clean",
+    "watch": "npm run build && chokidar \"properties/**/*.json\" -c \"npm run build\"",
+    "test": "echo \"no tests lol\" && exit 1"
+  },
+  "devDependencies": {
+    "chokidar-cli": "^3.0.0",
+    "np": "^7.6.3",
+    "style-dictionary": "^3.7.2"
+  }
+}

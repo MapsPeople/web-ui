@@ -1,0 +1,97 @@
+@use "build/scss/variables";
+
+@mixin family($family: "sans-serif") {
+  @if $family == sans-serif {
+    font-family: variables.$font-family-sans-serif;
+  } @else if $family == system {
+    font-family: variables.$font-family-system;
+  } @else if $family == monospace {
+    font-family: variables.$font-family-monospace;
+  } @else if $family == serif {
+    font-family: variables.$font-family-serif;
+  }
+}
+
+@mixin size($size: "medium") {
+  @if $size == medium {
+    font-size: variables.$font-size-medium;
+  } @else if $size == x-small {
+    font-size: variables.$font-size-x-small;
+  } @else if $size == small {
+    font-size: variables.$font-size-small;
+  } @else if $size == large {
+    font-size: variables.$font-size-large;
+  } @else if $size == x-large {
+    font-size: variables.$font-size-x-large;
+  } @else if $size == xx-large {
+    font-size: variables.$font-size-xx-large;
+  } @else if $size == xxx-large {
+    font-size: variables.$font-size-xxx-large;
+  } @else if $size == xxxx-large {
+    font-size: variables.$font-size-xxxx-large;
+  }
+}
+
+@mixin weight($weight: "medium") {
+  @if $weight == medium {
+    font-weight: variables.$font-weight-medium;
+  } @else if $weight == small {
+    font-weight: variables.$font-weight-small;
+  } @else if $weight == large {
+    font-weight: variables.$font-weight-large;
+  } @else if $weight == x-large {
+    font-weight: variables.$font-weight-x-large;
+  } @else if $weight == xx-large {
+    font-weight: variables.$font-weight-xx-large;
+  }
+}
+
+@mixin leading($leading: "x-large") {
+  @if $leading == x-large {
+    line-height: variables.$font-size-x-large;
+  } @else if $leading == x-small {
+    line-height: variables.$font-size-x-small;
+  } @else if $leading == small {
+    line-height: variables.$font-size-small;
+  } @else if $leading == medium {
+    line-height: variables.$font-size-medium;
+  } @else if $leading == large {
+    line-height: variables.$font-size-large;
+  } @else if $leading == xx-large {
+    line-height: variables.$font-size-xx-large;
+  } @else if $leading == xxx-large {
+    line-height: variables.$font-size-xxx-large;
+  } @else if $leading == xxxx-large {
+    line-height: variables.$font-size-xxxx-large;
+  }
+}
+
+@mixin tracking($tracking: "medium") {
+  @if $tracking == medium {
+    letter-spacing: variables.$font-tracking-medium;
+  } @else if $tracking == small {
+    letter-spacing: variables.$font-tracking-small;
+  } @else if $tracking == large {
+    letter-spacing: variables.$font-tracking-medium;
+  } @else if $tracking == x-large {
+    letter-spacing: variables.$font-tracking-large;
+  }
+}
+
+@mixin measure($measure: "medium") {
+  @if $measure == medium {
+    max-width: variables.$font-measure-medium;
+  } @else if $measure == small {
+    max-width: variables.$font-measure-small;
+  } @else if $measure == large {
+    max-width: variables.$font-measure-large;
+  }
+}
+
+@mixin color($color: "base") {
+  @if $color == "base" {
+    color: variables.$color-black-base;
+  } @else if $color == "inverse" {
+    color: variables.$color-white-base;
+  }
+}

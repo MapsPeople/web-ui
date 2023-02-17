@@ -1,0 +1,283 @@
+@use 'build/scss/variables';
+
+@mixin width($sizing: 'medium') {
+  
+  @if $sizing == 'medium' {
+    width: variables.$spacing-medium;
+  }
+
+  @else if $sizing == 'none' {
+    width: 0;
+  }
+    
+  @else if $sizing == 'xxx-small' {
+    width: variables.$spacing-xxx-small;
+  }
+  
+  @else if $sizing == 'xx-small' {
+    width: variables.$spacing-xx-small;
+  }
+  
+  @else if $sizing == 'x-small' {
+    width: variables.$spacing-x-small;
+  }
+  
+  @else if $sizing == 'small' {
+    width: variables.$spacing-small;
+  }
+  
+  @else if $sizing == 'large' {
+    width: variables.$spacing-large;
+  }
+  
+  @else if $sizing == 'x-large' {
+    width: variables.$spacing-x-large;
+  }
+  
+  @else if $sizing == 'xx-large' {
+    width: variables.$spacing-xx-large;
+  }
+  
+  @else if $sizing == 'xxx-large' {
+    width: variables.$spacing-xxx-large;
+  }
+  
+  @else if $sizing == 'xxxx-large' {
+    width: variables.$spacing-xxxx-large;
+  }  
+}
+
+@mixin min-width($sizing: 'medium') {
+  
+  @if $sizing == 'medium' {
+    min-width: variables.$spacing-medium;
+  }
+
+  @else if $sizing == 'none' {
+    min-width: 0;
+  }
+    
+  @else if $sizing == 'xxx-small' {
+    min-width: variables.$spacing-xxx-small;
+  }
+  
+  @else if $sizing == 'xx-small' {
+    min-width: variables.$spacing-xx-small;
+  }
+  
+  @else if $sizing == 'x-small' {
+    min-width: variables.$spacing-x-small;
+  }
+  
+  @else if $sizing == 'small' {
+    min-width: variables.$spacing-small;
+  }
+  
+  @else if $sizing == 'large' {
+    min-width: variables.$spacing-large;
+  }
+  
+  @else if $sizing == 'x-large' {
+    min-width: variables.$spacing-x-large;
+  }
+  
+  @else if $sizing == 'xx-large' {
+    min-width: variables.$spacing-xx-large;
+  }
+  
+  @else if $sizing == 'xxx-large' {
+    min-width: variables.$spacing-xxx-large;
+  }
+  
+  @else if $sizing == 'xxxx-large' {
+    min-width: variables.$spacing-xxxx-large;
+  }  
+}
+
+@mixin max-width($sizing: 'medium') {
+  
+  @if $sizing == 'medium' {
+    max-width: variables.$spacing-medium;
+  }
+
+  @else if $sizing == 'none' {
+    max-width: 0;
+  }
+    
+  @else if $sizing == 'xxx-small' {
+    max-width: variables.$spacing-xxx-small;
+  }
+  
+  @else if $sizing == 'xx-small' {
+    max-width: variables.$spacing-xx-small;
+  }
+  
+  @else if $sizing == 'x-small' {
+    max-width: variables.$spacing-x-small;
+  }
+  
+  @else if $sizing == 'small' {
+    max-width: variables.$spacing-small;
+  }
+  
+  @else if $sizing == 'large' {
+    max-width: variables.$spacing-large;
+  }
+  
+  @else if $sizing == 'x-large' {
+    max-width: variables.$spacing-x-large;
+  }
+  
+  @else if $sizing == 'xx-large' {
+    max-width: variables.$spacing-xx-large;
+  }
+  
+  @else if $sizing == 'xxx-large' {
+    max-width: variables.$spacing-xxx-large;
+  }
+  
+  @else if $sizing == 'xxxx-large' {
+    max-width: variables.$spacing-xxxx-large;
+  }  
+}
+
+@mixin height($sizing: 'medium') {
+  
+  @if $sizing == 'medium' {
+    height: variables.$spacing-medium;
+  }
+
+  @else if $sizing == 'none' {
+    height: 0;
+  }
+    
+  @else if $sizing == 'xxx-small' {
+    height: variables.$spacing-xxx-small;
+  }
+  
+  @else if $sizing == 'xx-small' {
+    height: variables.$spacing-xx-small;
+  }
+  
+  @else if $sizing == 'x-small' {
+    height: variables.$spacing-x-small;
+  }
+  
+  @else if $sizing == 'small' {
+    height: variables.$spacing-small;
+  }
+  
+  @else if $sizing == 'large' {
+    height: variables.$spacing-large;
+  }
+  
+  @else if $sizing == 'x-large' {
+    height: variables.$spacing-x-large;
+  }
+  
+  @else if $sizing == 'xx-large' {
+    height: variables.$spacing-xx-large;
+  }
+  
+  @else if $sizing == 'xxx-large' {
+    height: variables.$spacing-xxx-large;
+  }
+  
+  @else if $sizing == 'xxxx-large' {
+    height: variables.$spacing-xxxx-large;
+  }  
+}
+
+@mixin min-height($sizing: 'medium') {
+  
+  @if $sizing == 'medium' {
+    min-height: variables.$spacing-medium;
+  }
+
+  @else if $sizing == 'none' {
+    min-height: 0;
+  }
+    
+  @else if $sizing == 'xxx-small' {
+    min-height: variables.$spacing-xxx-small;
+  }
+  
+  @else if $sizing == 'xx-small' {
+    min-height: variables.$spacing-xx-small;
+  }
+  
+  @else if $sizing == 'x-small' {
+    min-height: variables.$spacing-x-small;
+  }
+  
+  @else if $sizing == 'small' {
+    min-height: variables.$spacing-small;
+  }
+  
+  @else if $sizing == 'large' {
+    min-height: variables.$spacing-large;
+  }
+  
+  @else if $sizing == 'x-large' {
+    min-height: variables.$spacing-x-large;
+  }
+  
+  @else if $sizing == 'xx-large' {
+    min-height: variables.$spacing-xx-large;
+  }
+  
+  @else if $sizing == 'xxx-large' {
+    min-height: variables.$spacing-xxx-large;
+  }
+  
+  @else if $sizing == 'xxxx-large' {
+    min-height: variables.$spacing-xxxx-large;
+  }  
+}
+
+@mixin max-height($sizing: 'medium') {
+  
+  @if $sizing == 'medium' {
+    max-height: variables.$spacing-medium;
+  }
+
+  @else if $sizing == 'none' {
+    max-height: 0;
+  }
+    
+  @else if $sizing == 'xxx-small' {
+    max-height: variables.$spacing-xxx-small;
+  }
+  
+  @else if $sizing == 'xx-small' {
+    max-height: variables.$spacing-xx-small;
+  }
+  
+  @else if $sizing == 'x-small' {
+    max-height: variables.$spacing-x-small;
+  }
+  
+  @else if $sizing == 'small' {
+    max-height: variables.$spacing-small;
+  }
+  
+  @else if $sizing == 'large' {
+    max-height: variables.$spacing-large;
+  }
+  
+  @else if $sizing == 'x-large' {
+    max-height: variables.$spacing-x-large;
+  }
+  
+  @else if $sizing == 'xx-large' {
+    max-height: variables.$spacing-xx-large;
+  }
+  
+  @else if $sizing == 'xxx-large' {
+    max-height: variables.$spacing-xxx-large;
+  }
+  
+  @else if $sizing == 'xxxx-large' {
+    max-height: variables.$spacing-xxxx-large;
+  }  
+}

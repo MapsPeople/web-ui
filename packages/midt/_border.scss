@@ -1,0 +1,487 @@
+@use "build/scss/variables";
+
+@mixin width($width: "medium") {
+  @if $width == medium {
+    border-width: variables.$rounding-x-small;
+  } @else if $width == large {
+    border-width: variables.$rounding-small;
+  } @else if $width == x-large {
+    border-width: variables.$rounding-medium;
+  }
+}
+
+@mixin style($style: "solid") {
+  @if $style == solid {
+    border-style: solid;
+  } @else if $style == none {
+    border-style: none;
+  }
+}
+
+@mixin radius($radius: "medium") {
+  @if $radius == "medium" {
+    border-radius: variables.$rounding-medium;
+  } @else if $radius == "xx-small" {
+    border-radius: variables.$rounding-xx-small;
+  } @else if $radius == "x-small" {
+    border-radius: variables.$rounding-x-small;
+  } @else if $radius == "small" {
+    border-radius: variables.$rounding-small;
+  } @else if $radius == "large" {
+    border-radius: variables.$rounding-large;
+  } @else if $radius == "x-large" {
+    border-radius: variables.$rounding-x-large;
+  } @else if $radius == "pill" {
+    border-radius: variables.$rounding-pill;
+  } @else if $radius == "circle" {
+    border-radius: variables.$rounding-circle;
+  }
+}
+
+@mixin black($border-black: "base") {
+  @if $border-black == base {
+    border-color: variables.$color-black-base;
+  } @else if $border-black == black {
+    border-color: variables.$color-black-black;
+  }
+}
+
+@mixin white($border-white: "base") {
+  @if $border-white == base {
+    border-color: variables.$color-white-base;
+  } @else if $border-white == white {
+    border-color: variables.$color-white-white;
+  }
+}
+
+@mixin transparent($border-transparent: "base") {
+  @if $border-transparent == base {
+    border-color: variables.$color-transparent-base;
+  }
+}
+
+@mixin gray($border-gray: "base") {
+  @if $border-gray == base {
+    border-color: variables.$color-gray-base;
+  } @else if $border-gray == 10 {
+    border-color: variables.$color-gray-10;
+  } @else if $border-gray == 20 {
+    border-color: variables.$color-gray-20;
+  } @else if $border-gray == 30 {
+    border-color: variables.$color-gray-30;
+  } @else if $border-gray == 40 {
+    border-color: variables.$color-gray-40;
+  } @else if $border-gray == 50 {
+    border-color: variables.$color-gray-50;
+  } @else if $border-gray == 60 {
+    border-color: variables.$color-gray-60;
+  } @else if $border-gray == 70 {
+    border-color: variables.$color-gray-70;
+  } @else if $border-gray == 80 {
+    border-color: variables.$color-gray-80;
+  } @else if $border-gray == 90 {
+    border-color: variables.$color-gray-90;
+  } @else if $border-gray == 100 {
+    border-color: variables.$color-gray-100;
+  }
+}
+
+@mixin red($border-red: "base") {
+  @if $border-red == base {
+    border-color: variables.$color-red-base;
+  } @else if $border-red == 10 {
+    border-color: variables.$color-red-10;
+  } @else if $border-red == 20 {
+    border-color: variables.$color-red-20;
+  } @else if $border-red == 30 {
+    border-color: variables.$color-red-30;
+  } @else if $border-red == 40 {
+    border-color: variables.$color-red-40;
+  } @else if $border-red == 50 {
+    border-color: variables.$color-red-50;
+  } @else if $border-red == 60 {
+    border-color: variables.$color-red-60;
+  } @else if $border-red == 70 {
+    border-color: variables.$color-red-70;
+  } @else if $border-red == 80 {
+    border-color: variables.$color-red-80;
+  } @else if $border-red == 90 {
+    border-color: variables.$color-red-90;
+  } @else if $border-red == 100 {
+    border-color: variables.$color-red-100;
+  }
+}
+
+@mixin green($border-green: "base") {
+  @if $border-green == base {
+    border-color: variables.$color-green-base;
+  } @else if $border-green == 10 {
+    border-color: variables.$color-green-10;
+  } @else if $border-green == 20 {
+    border-color: variables.$color-green-20;
+  } @else if $border-green == 30 {
+    border-color: variables.$color-green-30;
+  } @else if $border-green == 40 {
+    border-color: variables.$color-green-40;
+  } @else if $border-green == 50 {
+    border-color: variables.$color-green-50;
+  } @else if $border-green == 60 {
+    border-color: variables.$color-green-60;
+  } @else if $border-green == 70 {
+    border-color: variables.$color-green-70;
+  } @else if $border-green == 80 {
+    border-color: variables.$color-green-80;
+  } @else if $border-green == 90 {
+    border-color: variables.$color-green-90;
+  } @else if $border-green == 100 {
+    border-color: variables.$color-green-100;
+  }
+}
+
+@mixin blue($border-blue: "base") {
+  @if $border-blue == base {
+    border-color: variables.$color-blue-base;
+  } @else if $border-blue == 10 {
+    border-color: variables.$color-blue-10;
+  } @else if $border-blue == 20 {
+    border-color: variables.$color-blue-20;
+  } @else if $border-blue == 30 {
+    border-color: variables.$color-blue-30;
+  } @else if $border-blue == 40 {
+    border-color: variables.$color-blue-40;
+  } @else if $border-blue == 50 {
+    border-color: variables.$color-blue-50;
+  } @else if $border-blue == 60 {
+    border-color: variables.$color-blue-60;
+  } @else if $border-blue == 70 {
+    border-color: variables.$color-blue-70;
+  } @else if $border-blue == 80 {
+    border-color: variables.$color-blue-80;
+  } @else if $border-blue == 90 {
+    border-color: variables.$color-blue-90;
+  } @else if $border-blue == 100 {
+    border-color: variables.$color-blue-100;
+  }
+}
+
+@mixin bronze($border-bronze: "base") {
+  @if $border-bronze == base {
+    border-color: variables.$color-bronze-base;
+  } @else if $border-bronze == 10 {
+    border-color: variables.$color-bronze-10;
+  } @else if $border-bronze == 20 {
+    border-color: variables.$color-bronze-20;
+  } @else if $border-bronze == 30 {
+    border-color: variables.$color-bronze-30;
+  } @else if $border-bronze == 40 {
+    border-color: variables.$color-bronze-40;
+  } @else if $border-bronze == 50 {
+    border-color: variables.$color-bronze-50;
+  } @else if $border-bronze == 60 {
+    border-color: variables.$color-bronze-60;
+  } @else if $border-bronze == 70 {
+    border-color: variables.$color-bronze-70;
+  } @else if $border-bronze == 80 {
+    border-color: variables.$color-bronze-80;
+  } @else if $border-bronze == 90 {
+    border-color: variables.$color-bronze-90;
+  } @else if $border-bronze == 100 {
+    border-color: variables.$color-bronze-100;
+  }
+}
+
+@mixin purple($border-purple: "base") {
+  @if $border-purple == base {
+    border-color: variables.$color-purple-base;
+  } @else if $border-purple == 10 {
+    border-color: variables.$color-purple-10;
+  } @else if $border-purple == 20 {
+    border-color: variables.$color-purple-20;
+  } @else if $border-purple == 30 {
+    border-color: variables.$color-purple-30;
+  } @else if $border-purple == 40 {
+    border-color: variables.$color-purple-40;
+  } @else if $border-purple == 50 {
+    border-color: variables.$color-purple-50;
+  } @else if $border-purple == 60 {
+    border-color: variables.$color-purple-60;
+  } @else if $border-purple == 70 {
+    border-color: variables.$color-purple-70;
+  } @else if $border-purple == 80 {
+    border-color: variables.$color-purple-80;
+  } @else if $border-purple == 90 {
+    border-color: variables.$color-purple-90;
+  } @else if $border-purple == 100 {
+    border-color: variables.$color-purple-100;
+  }
+}
+
+@mixin magenta($border-magenta: "base") {
+  @if $border-magenta == base {
+    border-color: variables.$color-magenta-base;
+  } @else if $border-magenta == 10 {
+    border-color: variables.$color-magenta-10;
+  } @else if $border-magenta == 20 {
+    border-color: variables.$color-magenta-20;
+  } @else if $border-magenta == 30 {
+    border-color: variables.$color-magenta-30;
+  } @else if $border-magenta == 40 {
+    border-color: variables.$color-magenta-40;
+  } @else if $border-magenta == 50 {
+    border-color: variables.$color-magenta-50;
+  } @else if $border-magenta == 60 {
+    border-color: variables.$color-magenta-60;
+  } @else if $border-magenta == 70 {
+    border-color: variables.$color-magenta-70;
+  } @else if $border-magenta == 80 {
+    border-color: variables.$color-magenta-80;
+  } @else if $border-magenta == 90 {
+    border-color: variables.$color-magenta-90;
+  } @else if $border-magenta == 100 {
+    border-color: variables.$color-magenta-100;
+  }
+}
+
+@mixin indigo($border-indigo: "base") {
+  @if $border-indigo == base {
+    border-color: variables.$color-indigo-base;
+  } @else if $border-indigo == 10 {
+    border-color: variables.$color-indigo-10;
+  } @else if $border-indigo == 20 {
+    border-color: variables.$color-indigo-20;
+  } @else if $border-indigo == 30 {
+    border-color: variables.$color-indigo-30;
+  } @else if $border-indigo == 40 {
+    border-color: variables.$color-indigo-40;
+  } @else if $border-indigo == 50 {
+    border-color: variables.$color-indigo-50;
+  } @else if $border-indigo == 60 {
+    border-color: variables.$color-indigo-60;
+  } @else if $border-indigo == 70 {
+    border-color: variables.$color-indigo-70;
+  } @else if $border-indigo == 80 {
+    border-color: variables.$color-indigo-80;
+  } @else if $border-indigo == 90 {
+    border-color: variables.$color-indigo-90;
+  } @else if $border-indigo == 100 {
+    border-color: variables.$color-indigo-100;
+  }
+}
+
+@mixin sky($border-sky: "base") {
+  @if $border-sky == base {
+    border-color: variables.$color-sky-base;
+  } @else if $border-sky == 10 {
+    border-color: variables.$color-sky-10;
+  } @else if $border-sky == 20 {
+    border-color: variables.$color-sky-20;
+  } @else if $border-sky == 30 {
+    border-color: variables.$color-sky-30;
+  } @else if $border-sky == 40 {
+    border-color: variables.$color-sky-40;
+  } @else if $border-sky == 50 {
+    border-color: variables.$color-sky-50;
+  } @else if $border-sky == 60 {
+    border-color: variables.$color-sky-60;
+  } @else if $border-sky == 70 {
+    border-color: variables.$color-sky-70;
+  } @else if $border-sky == 80 {
+    border-color: variables.$color-sky-80;
+  } @else if $border-sky == 90 {
+    border-color: variables.$color-sky-90;
+  } @else if $border-sky == 100 {
+    border-color: variables.$color-sky-100;
+  }
+}
+
+@mixin teal($border-teal: "base") {
+  @if $border-teal == base {
+    border-color: variables.$color-teal-base;
+  } @else if $border-teal == 10 {
+    border-color: variables.$color-teal-10;
+  } @else if $border-teal == 20 {
+    border-color: variables.$color-teal-20;
+  } @else if $border-teal == 30 {
+    border-color: variables.$color-teal-30;
+  } @else if $border-teal == 40 {
+    border-color: variables.$color-teal-40;
+  } @else if $border-teal == 50 {
+    border-color: variables.$color-teal-50;
+  } @else if $border-teal == 60 {
+    border-color: variables.$color-teal-60;
+  } @else if $border-teal == 70 {
+    border-color: variables.$color-teal-70;
+  } @else if $border-teal == 80 {
+    border-color: variables.$color-teal-80;
+  } @else if $border-teal == 90 {
+    border-color: variables.$color-teal-90;
+  } @else if $border-teal == 100 {
+    border-color: variables.$color-teal-100;
+  }
+}
+
+@mixin slate($border-slate: "base") {
+  @if $border-slate == base {
+    border-color: variables.$color-slate-base;
+  } @else if $border-slate == 10 {
+    border-color: variables.$color-slate-10;
+  } @else if $border-slate == 20 {
+    border-color: variables.$color-slate-20;
+  } @else if $border-slate == 30 {
+    border-color: variables.$color-slate-30;
+  } @else if $border-slate == 40 {
+    border-color: variables.$color-slate-40;
+  } @else if $border-slate == 50 {
+    border-color: variables.$color-slate-50;
+  } @else if $border-slate == 60 {
+    border-color: variables.$color-slate-60;
+  } @else if $border-slate == 70 {
+    border-color: variables.$color-slate-70;
+  } @else if $border-slate == 80 {
+    border-color: variables.$color-slate-80;
+  } @else if $border-slate == 90 {
+    border-color: variables.$color-slate-90;
+  } @else if $border-slate == 100 {
+    border-color: variables.$color-slate-100;
+  }
+}
+
+@mixin dusk($border-dusk: "base") {
+  @if $border-dusk == base {
+    border-color: variables.$color-dusk-base;
+  } @else if $border-dusk == 10 {
+    border-color: variables.$color-dusk-10;
+  } @else if $border-dusk == 20 {
+    border-color: variables.$color-dusk-20;
+  } @else if $border-dusk == 30 {
+    border-color: variables.$color-dusk-30;
+  } @else if $border-dusk == 40 {
+    border-color: variables.$color-dusk-40;
+  } @else if $border-dusk == 50 {
+    border-color: variables.$color-dusk-50;
+  } @else if $border-dusk == 60 {
+    border-color: variables.$color-dusk-60;
+  } @else if $border-dusk == 70 {
+    border-color: variables.$color-dusk-70;
+  } @else if $border-dusk == 80 {
+    border-color: variables.$color-dusk-80;
+  } @else if $border-dusk == 90 {
+    border-color: variables.$color-dusk-90;
+  } @else if $border-dusk == 100 {
+    border-color: variables.$color-dusk-100;
+  }
+}
+
+@mixin electric-purple($border-electric-purple: "base") {
+  @if $border-electric-purple == base {
+    border-color: variables.$brand-colors-electric-purple-100;
+  } @else if $border-electric-purple == 20 {
+    border-color: variables.$brand-colors-electric-purple-20;
+  } @else if $border-electric-purple == 40 {
+    border-color: variables.$brand-colors-electric-purple-40;
+  } @else if $border-electric-purple == 60 {
+    border-color: variables.$brand-colors-electric-purple-60;
+  } @else if $border-electric-purple == 80 {
+    border-color: variables.$brand-colors-electric-purple-80;
+  } @else if $border-electric-purple == 100 {
+    border-color: variables.$brand-colors-electric-purple-100;
+  }
+}
+
+@mixin brand-lime($border-brand-lime: "base") {
+  @if $border-brand-lime == base {
+    border-color: variables.$brand-colors-brand-lime-100;
+  } @else if $border-brand-lime == 20 {
+    border-color: variables.$brand-colors-brand-lime-20;
+  } @else if $border-brand-lime == 40 {
+    border-color: variables.$brand-colors-brand-lime-40;
+  } @else if $border-brand-lime == 60 {
+    border-color: variables.$brand-colors-brand-lime-60;
+  } @else if $border-brand-lime == 80 {
+    border-color: variables.$brand-colors-brand-lime-80;
+  } @else if $border-brand-lime == 100 {
+    border-color: variables.$brand-colors-brand-lime-100;
+  }
+}
+
+@mixin sand($border-sand: "base") {
+  @if $border-sand == base {
+    border-color: variables.$brand-colors-sand-100;
+  } @else if $border-sand == 60 {
+    border-color: variables.$brand-colors-sand-60;
+  } @else if $border-sand == 80 {
+    border-color: variables.$brand-colors-sand-80;
+  } @else if $border-sand == 100 {
+    border-color: variables.$brand-colors-sand-100;
+  }
+}
+
+@mixin sky-blue($border-sky-blue: "base") {
+  @if $border-sky-blue == base {
+    border-color: variables.$brand-colors-sky-blue-100;
+  } @else if $border-sky-blue == 20 {
+    border-color: variables.$brand-colors-sky-blue-20;
+  } @else if $border-sky-blue == 40 {
+    border-color: variables.$brand-colors-sky-blue-40;
+  } @else if $border-sky-blue == 60 {
+    border-color: variables.$brand-colors-sky-blue-60;
+  } @else if $border-sky-blue == 80 {
+    border-color: variables.$brand-colors-sky-blue-80;
+  } @else if $border-sky-blue == 100 {
+    border-color: variables.$brand-colors-sky-blue-100;
+  }
+}
+
+@mixin dark-pine($border-dark-pine: "base") {
+  @if $border-dark-pine == base {
+    border-color: variables.$brand-colors-dark-pine-100;
+  } @else if $border-dark-pine == 20 {
+    border-color: variables.$brand-colors-dark-pine-20;
+  } @else if $border-dark-pine == 40 {
+    border-color: variables.$brand-colors-dark-pine-40;
+  } @else if $border-dark-pine == 60 {
+    border-color: variables.$brand-colors-dark-pine-60;
+  } @else if $border-dark-pine == 80 {
+    border-color: variables.$brand-colors-dark-pine-80;
+  } @else if $border-dark-pine == 100 {
+    border-color: variables.$brand-colors-dark-pine-100;
+  }
+}
+
+@mixin all($all: "none") {
+  @if $all == none {
+    border: none;
+  }
+}
+
+@mixin top($top: "solid") {
+  @if $top == solid {
+    border-top: solid;
+  } @else if $top == none {
+    border-top: none;
+  }
+}
+
+@mixin right($right: "solid") {
+  @if $right == solid {
+    border-right: solid;
+  } @else if $right == none {
+    border-right: none;
+  }
+}
+
+@mixin bottom($bottom: "solid") {
+  @if $bottom == solid {
+    border-bottom: solid;
+  } @else if $bottom == none {
+    border-bottom: none;
+  }
+}
+
+@mixin left($left: "solid") {
+  @if $left == solid {
+    border-left: solid;
+  } @else if $left == none {
+    border-left: none;
+  }
+}
