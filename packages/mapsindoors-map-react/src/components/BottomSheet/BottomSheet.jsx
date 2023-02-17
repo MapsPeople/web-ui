@@ -9,8 +9,8 @@ import Directions from '../Directions/Directions';
 
 const BOTTOM_SHEETS = {
     LOCATION_DETAILS: 0,
-    WAYFINDING: 1, 
-	DIRECTIONS: 2
+    WAYFINDING: 1,
+    DIRECTIONS: 2
 };
 
 /**
@@ -45,7 +45,7 @@ function BottomSheet({ currentLocation, onClose }) {
         <Sheet minHeight="220" isOpen={activeBottomSheet === BOTTOM_SHEETS.WAYFINDING} key="B">
             <Wayfinding onStartDirections={() => setActiveBottomSheet(BOTTOM_SHEETS.DIRECTIONS)} onBack={() => setActiveBottomSheet(BOTTOM_SHEETS.LOCATION_DETAILS)}/>
         </Sheet>,
-		 <Sheet minHeight="220" isOpen={activeBottomSheet === BOTTOM_SHEETS.DIRECTIONS} key="C">
+        <Sheet minHeight="220" isOpen={activeBottomSheet === BOTTOM_SHEETS.DIRECTIONS} key="C">
             <Directions onBack={() => setActiveBottomSheet(BOTTOM_SHEETS.WAYFINDING)} />
         </Sheet>
     ]
