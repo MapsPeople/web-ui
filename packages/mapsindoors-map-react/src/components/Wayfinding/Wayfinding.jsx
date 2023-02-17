@@ -1,6 +1,6 @@
 import React from "react";
 import './Wayfinding.scss';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import { ReactComponent as CheckIcon } from '../../assets/check.svg';
 import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
@@ -27,8 +27,7 @@ function Wayfinding({ onStartDirections, onBack }) {
     /** The current value of the end location field */
     const [endLocationValue, setEndLocationValue] = useState();
 
-    if (startLocationRef.current && endLocationRef.current) {
-
+    useEffect(() => {
         // Add start location results list.
         addResultList(startLocationRef, setStartLocationValue);
 
@@ -67,7 +66,7 @@ function Wayfinding({ onStartDirections, onBack }) {
                 resultsRef.current.innerHTML = '';
             });
         }
-    }
+    }, []);
 
     return (
         <div className="wayfinding">
