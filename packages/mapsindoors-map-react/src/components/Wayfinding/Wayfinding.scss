@@ -48,8 +48,8 @@
 
     &__results {
         display: grid;
-        gap: 8px;
-        padding: 8px;
+        gap: var(--spacing-x-small);
+        padding:  var(--spacing-x-small);
     }
 
     &__accessibility {

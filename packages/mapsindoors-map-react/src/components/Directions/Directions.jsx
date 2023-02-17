@@ -4,6 +4,8 @@ import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
 import { ReactComponent as WalkingIcon } from '../../assets/walking.svg';
 
+// Fixme: Implement the functionality of the page
+
 function Directions({ onBack }) {
     return (
         <div className="directions">
