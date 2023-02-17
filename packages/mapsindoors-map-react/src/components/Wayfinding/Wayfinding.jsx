@@ -1,69 +1,71 @@
 import React from "react";
 import './Wayfinding.scss';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import { ReactComponent as CheckIcon } from '../../assets/check.svg';
 import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
 import { ReactComponent as WalkingIcon } from '../../assets/walking.svg';
 import { ReactComponent as QuestionIcon } from '../../assets/question.svg';
 
-function Wayfinding({ onStartDirections, onBack, onInputFocus }) {
+function Wayfinding({ onStartDirections, onBack }) {
+
+    /** Referencing the start location DOM element */
+    const startLocationRef = useRef();
+
+    /** Referencing the end location DOM element */
+    const endLocationRef = useRef();
+
+    /** Referencing the accessibility details DOM element */
+    const detailsRef = useRef();
+
+    /** Referencing the results container DOM element */
+    const resultsContainerRef = useRef();
+
+    /** The current value of the start location field */
     const [startLocationValue, setStartLocationValue] = useState();
+
+    /** The current value of the end location field */
     const [endLocationValue, setEndLocationValue] = useState();
 
-    const searchStartLocation = document.getElementById('from');
-    const searchEndLocation = document.getElementById('to');
-    const details = document.getElementById('details');
-    const resultsContainer = document.getElementById('results');
+    if (startLocationRef.current && endLocationRef.current) {
 
-    if (searchStartLocation && searchEndLocation) {
+        // Add start location results list.
+        addResultList(startLocationRef, setStartLocationValue);
 
-        // Search start location logic
-        searchStartLocation.addEventListener('results', e => {
-            resultsContainer.innerHTML = '';
-            for (const result of e.detail) {
-                const listItem = document.createElement('mi-list-item-location');
-                listItem.location = result;
-                resultsContainer.appendChild(listItem);
-                listItem.addEventListener('locationClicked', () => {
-                    setStartLocationValue(result.properties.name);
-                });
-            }
-        });
-        searchStartLocation.addEventListener('cleared', () => {
-            resultsContainer.innerHTML = '';
-        })
+        // Clear start location results list.
+        clearResultList(startLocationRef, resultsContainerRef);
 
-        searchStartLocation.addEventListener('click', () => {
-            details.classList.add('hide');
-            onInputFocus();
-        });
+        // Add end location results list.
+        addResultList(endLocationRef, setEndLocationValue);
 
-        // Search end location logic
-        searchEndLocation.addEventListener('results', e => {
-            resultsContainer.innerHTML = '';
-            for (const result of e.detail) {
-                const listItem = document.createElement('mi-list-item-location');
-                listItem.location = result;
-                resultsContainer.appendChild(listItem);
-                listItem.addEventListener('locationClicked', () => {
-                    setEndLocationValue(result.properties.name);
-                });
-            }
-        });
-        searchEndLocation.addEventListener('cleared', () => {
-            resultsContainer.innerHTML = '';
-        });
+        // Clear end location results list.
+        clearResultList(endLocationRef, resultsContainerRef);
 
-        searchEndLocation.addEventListener('click', () => {
-            details.classList.add('hide');
-            onInputFocus();
-        });
+        // Search location and add results list implementation.
+        // Listen to the 'results' event provided by the 'mi-search' component.
+        // For each search result create a 'mi-list-item-location' component for displaying the content.
+        // Append all the results to the results container
+        // Listen to the events when the item is clicked, and set the location value to be the selected one.
+        function addResultList(locationRef, searchLocationValue) {
+            locationRef.current.addEventListener('results', e => {
+                resultsContainerRef.current.innerHTML = '';
+                for (const result of e.detail) {
+                    const listItem = document.createElement('mi-list-item-location');
+                    listItem.location = result;
+                    resultsContainerRef.current.appendChild(listItem);
+                    listItem.addEventListener('locationClicked', () => {
+                        searchLocationValue(result.properties.name);
+                    });
+                }
+            });
+        }
 
-        if(endLocationValue && startLocationValue) {
-            console.log('test');
-            resultsContainer.innerHTML = '';
-            details.classList.remove('hide');
+        // Listen to the 'cleared' event provided by the 'mi-search' component.
+        // Clear the results list. 
+        function clearResultList(locationRef, resultsRef) {
+            locationRef.current.addEventListener('cleared', () => {
+                resultsRef.current.innerHTML = '';
+            });
         }
     }
 
@@ -79,18 +81,18 @@ function Wayfinding({ onStartDirections, onBack, onInputFocus }) {
                         <div className="wayfinding__label">
                             TO
                         </div>
-                        <mi-search placeholder="Search by name, category, building..." id="to" mapsindoors="true" value={endLocationValue}></mi-search>
+                        <mi-search ref={endLocationRef} placeholder="Search by name, category, building..." mapsindoors="true" value={endLocationValue}></mi-search>
                     </div>
                     <div className="wayfinding__from">
                         <div className="wayfinding__label">
                             FROM
                         </div>
-                        <mi-search placeholder="Search by name, category, building..." id="from" mapsindoors="true" value={startLocationValue}></mi-search>
+                        <mi-search ref={startLocationRef} placeholder="Search by name, category, building..." mapsindoors="true" value={startLocationValue}></mi-search>
                     </div>
                 </div>
             </div>
-            <div className="wayfinding__results" id="results"></div>
-            <div className="wayfinding__details" id="details">
+            <div className="wayfinding__results" ref={resultsContainerRef}></div>
+            <div className="wayfinding__details" ref={detailsRef}>
                 <div className="wayfinding__accessibility">
                     <input className="mi-toggle" type="checkbox" />
                     <div>Accessibility</div>
@@ -98,6 +100,7 @@ function Wayfinding({ onStartDirections, onBack, onInputFocus }) {
                 </div>
                 <hr></hr>
                 <div className="wayfinding__info">
+                    {/* Fixme: Implement dynamic value rendering. */}
                     <div className="wayfinding__distance">
                         <WalkingIcon />
                         <div>Distance:</div>

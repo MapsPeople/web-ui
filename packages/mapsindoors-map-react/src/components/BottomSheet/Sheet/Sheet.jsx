@@ -18,9 +18,8 @@ let dragStartHeight;
  * @param {Object} props
  * @param {boolean} props.isOpen - If the sheet is open (visible) or not.
  * @param {number} props.minheight - The minimum height of the sheet. It cannot be resized to below this height.
- * @param {number} props.className - Additional class name for the sheet component. 
  */
-function Sheet({ children, isOpen, minHeight, className = '' }) {
+function Sheet({ children, isOpen, minHeight }) {
 
     /** Referencing the sheet DOM element */
     const sheetRef = useRef();
@@ -144,7 +143,7 @@ function Sheet({ children, isOpen, minHeight, className = '' }) {
         sheetRef.current = el;
     };
 
-    return <div {...swipeHandler} ref={refPassthrough} style={style} className={`sheet ${className} ${isOpen ? 'sheet--active' : ''} ${isDragging ? 'sheet--dragging': ''}`}>
+    return <div {...swipeHandler} ref={refPassthrough} style={style} className={`sheet ${isOpen ? 'sheet--active' : ''} ${isDragging ? 'sheet--dragging': ''}`}>
         <div ref={contentRef} className="sheet__content">
             {children}
         </div>
