@@ -9,6 +9,8 @@ import { MapsIndoorsContext } from '../../MapsIndoorsContext';
 import useMediaQuery from '../../hooks/useMediaQuery';
 import Modal from '../Modal/Modal';
 
+import { useAppState } from '../../hooks/useAppState';
+
 const mapsindoors = window.mapsindoors;
 
 /**
@@ -30,6 +32,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [currentLocation, setCurrentLocation] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const isDesktop = useMediaQuery('(min-width: 992px)');
+    const [pushToHistory, goBackInHistory, appState, appStates] = useAppState();
 
     /*
      * React on changes in the venue prop.
@@ -56,7 +59,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
      * Set the map to be in a ready state when the data has loaded.
      */
     useEffect(() => {
-        // Keep track of the time when the process starts and the time when the data has been loaded. 
+        // Keep track of the time when the process starts and the time when the data has been loaded.
         // Calculate the time taken for the data to load, and determine the time that the splash screen should be shown.
         // The splash screen should be shown for minimum 3 seconds, and if the data takes longer to load, the splash screen should not disappear.
         const startTime = new Date();
@@ -74,17 +77,17 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                     return venue;
                 });
                 setVenues(venuesResult);
-                
-                // Determine the time when the data has finished loading. 
+
+                // Determine the time when the data has finished loading.
                 const timeAfterDataIsLoaded = new Date();
 
                 // Divide the number by 1000 in order to get the value in seconds.
                 const timeToLoadData = (timeAfterDataIsLoaded - startTime) / 1000;
 
-                // Subtract the time that took to load the data in order to get the differece. 
+                // Subtract the time that took to load the data in order to get the differece.
                 const timeDifference = (3 - timeToLoadData) * 1000
 
-                // Determine whether to set the map ready or not based on the loading time. 
+                // Determine whether to set the map ready or not based on the loading time.
                 if (timeToLoadData >= 3) {
                     setMapReady(true);
                 } else {
@@ -99,7 +102,14 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     return (<MapsIndoorsContext.Provider value={mapsIndoorsInstance}>
         <div className="mapsindoors-map">
             {!isMapReady && <SplashScreen logo={logo} primaryColor={primaryColor} />}
-            {venues.length > 1 && <VenueSelector onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)} venues={venues} currentVenueName={currentVenueName} />}
+            {venues.length > 1 && <VenueSelector
+                onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)}
+                venues={venues}
+                currentVenueName={currentVenueName}
+                onOpen={() => pushToHistory(appStates.VENUE_SELECTOR)}
+                onClose={() => goBackInHistory()}
+                active={appState === appStates.VENUE_SELECTOR}
+            />}
             {isMapReady && isDesktop
                 ?
                 <Modal currentLocation={currentLocation} onClose={() => setCurrentLocation(null)} />
