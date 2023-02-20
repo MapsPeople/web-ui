@@ -28,16 +28,16 @@ function Wayfinding({ onStartDirections, onBack }) {
     const [endLocationValue, setEndLocationValue] = useState();
 
     useEffect(() => {
-        // Add start location results list.
+        /** Add start location results list. */
         setupSearchResultsHandler(startLocationRef, setStartLocationValue);
-
-        // Clear start location results list.
+        
+        /** Clear start location results list. */
         clearResultList(startLocationRef, resultsContainerRef);
 
-        // Add end location results list.
+        /** Add end location results list. */
         setupSearchResultsHandler(endLocationRef, setEndLocationValue);
 
-        // Clear end location results list.
+        /** Clear end location results list. */
         clearResultList(endLocationRef, resultsContainerRef);
 
         // Search location and add results list implementation.
@@ -91,7 +91,7 @@ function Wayfinding({ onStartDirections, onBack }) {
                 </div>
             </div>
             <div className="wayfinding__results" ref={resultsContainerRef}></div>
-              {/* Fixme: Add functionality to the accessibility feature. */}
+            {/* Fixme: Add functionality to the accessibility feature. */}
             <div className="wayfinding__details" ref={detailsRef}>
                 <div className="wayfinding__accessibility">
                     <input className="mi-toggle" type="checkbox" />
