@@ -91,6 +91,7 @@ function Wayfinding({ onStartDirections, onBack }) {
                 </div>
             </div>
             <div className="wayfinding__results" ref={resultsContainerRef}></div>
+              {/* Fixme: Add functionality to the accessibility feature. */}
             <div className="wayfinding__details" ref={detailsRef}>
                 <div className="wayfinding__accessibility">
                     <input className="mi-toggle" type="checkbox" />
