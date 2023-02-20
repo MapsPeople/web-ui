@@ -29,13 +29,13 @@ function Wayfinding({ onStartDirections, onBack }) {
 
     useEffect(() => {
         // Add start location results list.
-        addResultList(startLocationRef, setStartLocationValue);
+        setupSearchResultsHandler(startLocationRef, setStartLocationValue);
 
         // Clear start location results list.
         clearResultList(startLocationRef, resultsContainerRef);
 
         // Add end location results list.
-        addResultList(endLocationRef, setEndLocationValue);
+        setupSearchResultsHandler(endLocationRef, setEndLocationValue);
 
         // Clear end location results list.
         clearResultList(endLocationRef, resultsContainerRef);
@@ -45,7 +45,7 @@ function Wayfinding({ onStartDirections, onBack }) {
         // For each search result create a 'mi-list-item-location' component for displaying the content.
         // Append all the results to the results container
         // Listen to the events when the item is clicked, and set the location value to be the selected one.
-        function addResultList(locationRef, searchLocationValue) {
+        function setupSearchResultsHandler(locationRef, searchLocationValue) {
             locationRef.current.addEventListener('results', e => {
                 resultsContainerRef.current.innerHTML = '';
                 for (const result of e.detail) {
