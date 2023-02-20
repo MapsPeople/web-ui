@@ -16,13 +16,13 @@ function Directions({ onBack }) {
                 <div className="directions__locations">
                     <div className="directions__container">
                         <label className="directions__label">
-                            TO
+                            To
                         </label>
                         <div>Meeting room</div>
                     </div>
                     <div className="directions__container">
                         <label className="directions__label">
-                            FROM
+                            From
                         </label>
                         <div>Main office</div>
                     </div>
