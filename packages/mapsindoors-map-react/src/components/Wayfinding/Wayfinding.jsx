@@ -78,13 +78,13 @@ function Wayfinding({ onStartDirections, onBack }) {
                     <div className="wayfinding__container">
                         <label className="wayfinding__label">
                             TO
-                        </div>
+                        </label>
                         <mi-search ref={endSearchFieldRef} placeholder="Search by name, category, building..." mapsindoors="true"></mi-search>
                     </div>
                     <div className="wayfinding__container">
                         <label className="wayfinding__label">
                             FROM
-                        </div>
+                        </label>
                         <mi-search ref={startSearchFieldRef} placeholder="Search by name, category, building..." mapsindoors="true"></mi-search>
                     </div>
                 </div>
