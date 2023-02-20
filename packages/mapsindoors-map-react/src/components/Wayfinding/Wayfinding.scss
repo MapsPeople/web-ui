@@ -10,7 +10,7 @@
     }
 
     &__title {
-        font-size: 14px;
+        font-size: var(--font-size-small);
         text-align: center;
         font-weight: var(--font-weight-large);
         color: var(--color-gray-70);
@@ -37,7 +37,7 @@
     }
 
     &__label {
-        font-size: 14px;
+        font-size: var(--font-size-small);
         color: var(--color-gray-70);
         font-weight: var(--font-weight-large);
     }
@@ -102,7 +102,7 @@
         height: var(--spacing-xx-large);
         position: relative;
         margin-top: var(--spacing-x-large);
-        font-weight: 600;
+        font-weight: var(--font-weight-x-large);
 
         svg {
             position: absolute;

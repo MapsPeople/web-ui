@@ -10,10 +10,10 @@ import { ReactComponent as QuestionIcon } from '../../assets/question.svg';
 function Wayfinding({ onStartDirections, onBack }) {
 
     /** Referencing the start location DOM element */
-    const startLocationRef = useRef();
+    const startSearchFieldRef = useRef();
 
     /** Referencing the end location DOM element */
-    const endLocationRef = useRef();
+    const endSearchFieldRef = useRef();
 
     /** Referencing the accessibility details DOM element */
     const detailsRef = useRef();
@@ -28,24 +28,24 @@ function Wayfinding({ onStartDirections, onBack }) {
     const [endLocationValue, setEndLocationValue] = useState();
 
     useEffect(() => {
-        // Add start location results list.
-        addResultList(startLocationRef, setStartLocationValue);
+        /** Add start location results list. */
+        setupSearchResultsHandler(startSearchFieldRef, setStartLocationValue);
 
-        // Clear start location results list.
-        clearResultList(startLocationRef, resultsContainerRef);
+        /** Clear start location results list. */
+        clearResultList(startSearchFieldRef, resultsContainerRef);
 
-        // Add end location results list.
-        addResultList(endLocationRef, setEndLocationValue);
+        /** Add end location results list. */
+        setupSearchResultsHandler(endSearchFieldRef, setEndLocationValue);
 
-        // Clear end location results list.
-        clearResultList(endLocationRef, resultsContainerRef);
+        /** Clear end location results list. */
+        clearResultList(endSearchFieldRef, resultsContainerRef);
 
         // Search location and add results list implementation.
         // Listen to the 'results' event provided by the 'mi-search' component.
         // For each search result create a 'mi-list-item-location' component for displaying the content.
         // Append all the results to the results container
         // Listen to the events when the item is clicked, and set the location value to be the selected one.
-        function addResultList(locationRef, searchLocationValue) {
+        function setupSearchResultsHandler(locationRef, searchLocationValue) {
             locationRef.current.addEventListener('results', e => {
                 resultsContainerRef.current.innerHTML = '';
                 for (const result of e.detail) {
@@ -80,17 +80,18 @@ function Wayfinding({ onStartDirections, onBack }) {
                         <div className="wayfinding__label">
                             TO
                         </div>
-                        <mi-search ref={endLocationRef} placeholder="Search by name, category, building..." mapsindoors="true" value={endLocationValue}></mi-search>
+                        <mi-search ref={endSearchFieldRef} placeholder="Search by name, category, building..." mapsindoors="true" value={endLocationValue}></mi-search>
                     </div>
                     <div className="wayfinding__from">
                         <div className="wayfinding__label">
                             FROM
                         </div>
-                        <mi-search ref={startLocationRef} placeholder="Search by name, category, building..." mapsindoors="true" value={startLocationValue}></mi-search>
+                        <mi-search ref={startSearchFieldRef} placeholder="Search by name, category, building..." mapsindoors="true" value={startLocationValue}></mi-search>
                     </div>
                 </div>
             </div>
             <div className="wayfinding__results" ref={resultsContainerRef}></div>
+            {/* Fixme: Add functionality to the accessibility feature. */}
             <div className="wayfinding__details" ref={detailsRef}>
                 <div className="wayfinding__accessibility">
                     <input className="mi-toggle" type="checkbox" />

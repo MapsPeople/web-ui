@@ -24,7 +24,7 @@ function BottomSheet({ currentLocation, onClose }) {
     const [activeBottomSheet, setActiveBottomSheet] = useState(null);
 
     /**
-     * When the user closes the location details.
+     * When a sheet is closed.
      */
     function close() {
         setActiveBottomSheet(null);
