@@ -14,16 +14,16 @@ function Directions({ onBack }) {
                     <CloseIcon />
                 </button>
                 <div className="directions__locations">
-                    <div className="directions__to">
-                        <div className="directions__label">
+                    <div className="directions__container">
+                        <label className="directions__label">
                             TO
-                        </div>
+                        </label>
                         <div>Meeting room</div>
                     </div>
-                    <div className="directions__from">
-                        <div className="directions__label">
+                    <div className="directions__container">
+                        <label className="directions__label">
                             FROM
-                        </div>
+                        </label>
                         <div>Main office</div>
                     </div>
                 </div>

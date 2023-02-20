@@ -23,8 +23,7 @@
         position: relative;
     }
 
-    &__to,
-    &__from {
+    &__container {
         display: grid;
         gap: var(--spacing-x-small);
     }
