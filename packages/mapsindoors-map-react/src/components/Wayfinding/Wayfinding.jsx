@@ -80,16 +80,16 @@ function Wayfinding({ onStartDirections, onBack }) {
                     <CloseIcon />
                 </button>
                 <div className="wayfinding__locations">
-                    <div className="wayfinding__to">
-                        <div className="wayfinding__label">
+                    <div className="wayfinding__container">
+                        <label className="wayfinding__label">
                             TO
-                        </div>
+                        </label>
                         <mi-search ref={endSearchFieldRef} placeholder="Search by name, category, building..." mapsindoors="true" value={endLocationValue}></mi-search>
                     </div>
-                    <div className="wayfinding__from">
-                        <div className="wayfinding__label">
+                    <div className="wayfinding__container">
+                        <label className="wayfinding__label">
                             FROM
-                        </div>
+                        </label>
                         <mi-search ref={startSearchFieldRef} placeholder="Search by name, category, building..." mapsindoors="true" value={startLocationValue}></mi-search>
                     </div>
                 </div>
