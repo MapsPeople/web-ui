@@ -10,10 +10,10 @@ import { ReactComponent as QuestionIcon } from '../../assets/question.svg';
 function Wayfinding({ onStartDirections, onBack }) {
 
     /** Referencing the start location DOM element */
-    const startLocationRef = useRef();
+    const startSearchFieldRef = useRef();
 
     /** Referencing the end location DOM element */
-    const endLocationRef = useRef();
+    const endSearchFieldRef = useRef();
 
     /** Referencing the accessibility details DOM element */
     const detailsRef = useRef();
@@ -29,16 +29,16 @@ function Wayfinding({ onStartDirections, onBack }) {
 
     useEffect(() => {
         /** Add start location results list. */
-        setupSearchResultsHandler(startLocationRef, setStartLocationValue);
-        
+        setupSearchResultsHandler(startSearchFieldRef, setStartLocationValue);
+
         /** Clear start location results list. */
-        clearResultList(startLocationRef, resultsContainerRef);
+        clearResultList(startSearchFieldRef, resultsContainerRef);
 
         /** Add end location results list. */
-        setupSearchResultsHandler(endLocationRef, setEndLocationValue);
+        setupSearchResultsHandler(endSearchFieldRef, setEndLocationValue);
 
         /** Clear end location results list. */
-        clearResultList(endLocationRef, resultsContainerRef);
+        clearResultList(endSearchFieldRef, resultsContainerRef);
 
         // Search location and add results list implementation.
         // Listen to the 'results' event provided by the 'mi-search' component.
@@ -80,13 +80,13 @@ function Wayfinding({ onStartDirections, onBack }) {
                         <div className="wayfinding__label">
                             TO
                         </div>
-                        <mi-search ref={endLocationRef} placeholder="Search by name, category, building..." mapsindoors="true" value={endLocationValue}></mi-search>
+                        <mi-search ref={endSearchFieldRef} placeholder="Search by name, category, building..." mapsindoors="true" value={endLocationValue}></mi-search>
                     </div>
                     <div className="wayfinding__from">
                         <div className="wayfinding__label">
                             FROM
                         </div>
-                        <mi-search ref={startLocationRef} placeholder="Search by name, category, building..." mapsindoors="true" value={startLocationValue}></mi-search>
+                        <mi-search ref={startSearchFieldRef} placeholder="Search by name, category, building..." mapsindoors="true" value={startLocationValue}></mi-search>
                     </div>
                 </div>
             </div>
