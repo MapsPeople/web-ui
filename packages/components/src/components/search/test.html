@@ -40,12 +40,6 @@
                 const resultNode = document.createElement('p');
                 resultNode.innerHTML = `${result.properties.type} - ${result.properties.name}`;
                 resultsContainer.appendChild(resultNode);
-
-                let newValue = result.properties.name;
-                resultNode.addEventListener('click', () => {
-                    miSearchComponent.setDisplayName(newValue);
-                    resultsContainer.innerHTML = '';
-                })
             }
         });
         miSearchComponent.addEventListener('cleared', () => {
