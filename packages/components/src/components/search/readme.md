@@ -210,6 +210,7 @@ miSearch.clear();
 | `miTake`         | `mi-take`         | Restrict how many Mapsindoors results to request.                                                                                                                                                                                                                     | `number`                     | `undefined`                                        |
 | `miVenue`        | `mi-venue`        | Restrict search results to a speficic venue (id or name)                                                                                                                                                                                                              | `string`                     | `undefined`                                        |
 | `placeholder`    | `placeholder`     | Placeholder for the input field.                                                                                                                                                                                                                                      | `string`                     | `''`                                               |
+| `preventSearch`  | `prevent-search`  |                                                                                                                                                                                                                                                                       | `boolean`                    | `false`                                            |
 | `value`          | `value`           | Get or set the entered value                                                                                                                                                                                                                                          | `string`                     | `undefined`                                        |
 
 
@@ -228,6 +229,16 @@ miSearch.clear();
 ### `clear() => Promise<void>`
 
 Clear the input field.
+
+#### Returns
+
+Type: `Promise<void>`
+
+
+
+### `setDisplayName(selectedValue: any) => Promise<void>`
+
+Sets a display name of the selected value.
 
 #### Returns
 

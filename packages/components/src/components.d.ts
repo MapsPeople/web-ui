@@ -748,6 +748,11 @@ export namespace Components {
           * Placeholder for the input field.
          */
         "placeholder": string;
+        "preventSearch": boolean;
+        /**
+          * Sets a display name of the selected value.
+         */
+        "setDisplayName": (selectedValue: any) => Promise<void>;
         /**
           * Get or set the entered value
          */
@@ -1859,6 +1864,7 @@ declare namespace LocalJSX {
           * Placeholder for the input field.
          */
         "placeholder"?: string;
+        "preventSearch"?: boolean;
         /**
           * Get or set the entered value
          */
