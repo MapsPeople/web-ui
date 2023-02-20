@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import './Wayfinding.scss';
 import { useRef, useEffect } from 'react';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
@@ -20,6 +20,8 @@ function Wayfinding({ onStartDirections, onBack }) {
 
     /** Referencing the results container DOM element */
     const resultsContainerRef = useRef();
+
+    const [hasAccessibility, setHasAccessibility] = useState(false);
 
     useEffect(() => {
         /** Add start location results list. */
@@ -51,6 +53,7 @@ function Wayfinding({ onStartDirections, onBack }) {
                     listItem.addEventListener('click', () => {
                         locationRef.current.setDisplayName(result.properties.name);
                         resultsContainerRef.current.innerHTML = '';
+                        setHasAccessibility(true);
                     });
                 }
             });
@@ -68,7 +71,7 @@ function Wayfinding({ onStartDirections, onBack }) {
     }, []);
 
     return (
-        <div className="wayfinding">
+        <div className={`wayfinding ${hasAccessibility ? 'fit' : 'full'}`}>
             <div className="wayfinding__directions">
                 <div className="wayfinding__title">Start wayfinding</div>
                 <button className="wayfinding__close" onClick={() => onBack()}>
@@ -91,7 +94,7 @@ function Wayfinding({ onStartDirections, onBack }) {
             </div>
             <div className="wayfinding__results" ref={resultsContainerRef}></div>
             {/* Fixme: Add functionality to the accessibility feature. */}
-            <div className="wayfinding__details" ref={detailsRef}>
+            <div className={`wayfinding__details ${hasAccessibility ? 'show' : 'hide'}`} ref={detailsRef}>
                 <div className="wayfinding__accessibility">
                     <input className="mi-toggle" type="checkbox" />
                     <div>Accessibility</div>
