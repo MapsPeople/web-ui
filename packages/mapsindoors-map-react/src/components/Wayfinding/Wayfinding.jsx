@@ -34,11 +34,13 @@ function Wayfinding({ onStartDirections, onBack }) {
         /** Clear end location results list. */
         clearResultList(endSearchFieldRef, resultsContainerRef);
 
-        // Search location and add results list implementation.
-        // Listen to the 'results' event provided by the 'mi-search' component.
-        // For each search result create a 'mi-list-item-location' component for displaying the content.
-        // Append all the results to the results container
-        // Listen to the events when the item is clicked, and set the location value to be the selected one.
+         /**
+         * Search location and add results list implementation.
+         * Listen to the 'results' event provided by the 'mi-search' component.
+         * For each search result create a 'mi-list-item-location' component for displaying the content.
+         * Append all the results to the results container.
+         * Listen to the events when the item is clicked, and set the location value to be the selected one.
+         */
         function setupSearchResultsHandler(locationRef) {
             locationRef.current.addEventListener('results', e => {
                 resultsContainerRef.current.innerHTML = '';
@@ -54,8 +56,10 @@ function Wayfinding({ onStartDirections, onBack }) {
             });
         }
 
-        // Listen to the 'cleared' event provided by the 'mi-search' component.
-        // Clear the results list. 
+         /**
+          * Listen to the 'cleared' event provided by the 'mi-search' component.
+          * Clear the results list. 
+         */
         function clearResultList(locationRef, resultsRef) {
             locationRef.current.addEventListener('cleared', () => {
                 resultsRef.current.innerHTML = '';
@@ -71,14 +75,14 @@ function Wayfinding({ onStartDirections, onBack }) {
                     <CloseIcon />
                 </button>
                 <div className="wayfinding__locations">
-                    <div className="wayfinding__to">
-                        <div className="wayfinding__label">
+                    <div className="wayfinding__container">
+                        <label className="wayfinding__label">
                             TO
                         </div>
                         <mi-search ref={endSearchFieldRef} placeholder="Search by name, category, building..." mapsindoors="true"></mi-search>
                     </div>
-                    <div className="wayfinding__from">
-                        <div className="wayfinding__label">
+                    <div className="wayfinding__container">
+                        <label className="wayfinding__label">
                             FROM
                         </div>
                         <mi-search ref={startSearchFieldRef} placeholder="Search by name, category, building..." mapsindoors="true"></mi-search>
