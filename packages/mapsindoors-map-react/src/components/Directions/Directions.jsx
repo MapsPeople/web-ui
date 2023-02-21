@@ -10,7 +10,7 @@ function Directions({ onBack }) {
     return (
         <div className="directions">
             <div className="directions__details">
-                <button className="directions__close" onClick={() => onBack()}>
+                <button className="directions__close" onClick={() => onBack()} aria-label="Close">
                     <CloseIcon />
                 </button>
                 <div className="directions__locations">
