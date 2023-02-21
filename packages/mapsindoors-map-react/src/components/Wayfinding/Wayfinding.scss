@@ -1,5 +1,9 @@
+@import '../../variables.scss';
+
 .wayfinding {
     color: var(--brand-colors-black-100);
+    display: grid;
+    grid-template-rows: 220px 1fr;
 
     &__directions {
         background-color: var(--color-gray-20);
@@ -53,7 +57,8 @@
     &__results {
         display: grid;
         gap: var(--spacing-x-small);
-        padding:  var(--spacing-x-small);
+        padding: var(--spacing-x-small);
+        overflow: scroll;
     }
 
     &__accessibility {
@@ -121,5 +126,15 @@
 
     &.full {
         height: 100vh;
+    }
+
+    @media (min-width: $desktop-breakpoint) {
+        &.fit {
+            height: fit-content;
+        }
+
+        &.full {
+            height: 600px;
+        }
     }
 }
