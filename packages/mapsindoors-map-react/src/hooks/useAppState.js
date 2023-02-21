@@ -30,14 +30,14 @@ export const useAppHistory = () => {
 
     const [appState, setAppState] = useState();
 
-    const pushToHistory = value => {
+    const pushState = value => {
         window.history.pushState(value, '');
         setAppState(value);
     }
 
-    const goBackInHistory = () => {
+    const goBack = () => {
         window.history.back();
     };
 
-    return [pushToHistory, goBackInHistory, appState, appStates]
+    return [pushState, goBack, appState, appStates]
 }

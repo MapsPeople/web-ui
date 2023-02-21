@@ -32,7 +32,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [currentLocation, setCurrentLocation] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const isDesktop = useMediaQuery('(min-width: 992px)');
-    const [pushToHistory, goBackInHistory, appState, appStates] = useAppHistory();
+    const [pushState, goBack, appState, appStates] = useAppHistory();
 
     /*
      * React on changes in the venue prop.
@@ -106,8 +106,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                 onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)}
                 venues={venues}
                 currentVenueName={currentVenueName}
-                onOpen={() => pushToHistory(appStates.VENUE_SELECTOR)}
-                onClose={() => goBackInHistory()}
+                onOpen={() => pushState(appStates.VENUE_SELECTOR)}
+                onClose={() => goBack()}
                 active={appState === appStates.VENUE_SELECTOR}
             />}
             {isMapReady && isDesktop
@@ -115,8 +115,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                 <Modal
                     currentLocation={currentLocation}
                     onClose={() => setCurrentLocation(null)}
-                    pushToHistory={pushToHistory}
-                    goBackInHistory={goBackInHistory}
+                    pushState={pushState}
+                    goBack={goBack}
                     appState={appState}
                     appStates={appStates}
                 />
@@ -124,8 +124,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                 <BottomSheet
                     currentLocation={currentLocation}
                     onClose={() => setCurrentLocation(null)}
-                    pushToHistory={pushToHistory}
-                    goBackInHistory={goBackInHistory}
+                    pushState={pushState}
+                    goBack={goBack}
                     appState={appState}
                     appStates={appStates}
                 />
