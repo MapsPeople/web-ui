@@ -24,7 +24,8 @@ function MapboxMap({ mapboxAccessToken, onMapView }) {
 
         const mapViewInstance = new mapsindoors.mapView.MapboxView(mapViewOptions);
         onMapView(mapViewInstance);
-    }, []);
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    // We ignore eslint warnings about missing dependencies because onMapView should never change runtime and changing Mapbox Access Token runtime will give other problems.
 
     return <div className="map-container" id="map"></div>
 }
