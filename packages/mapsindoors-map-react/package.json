@@ -5,7 +5,7 @@
   "dependencies": {
     "@googlemaps/js-api-loader": "^1.15.1",
     "@mapsindoors/components": "*",
-	"@mapsindoors/css": "^3.0.0",
+    "@mapsindoors/css": "^3.0.0",
     "@mapsindoors/midt": "*",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
