@@ -114,7 +114,14 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                 ?
                 <Modal currentLocation={currentLocation} onClose={() => setCurrentLocation(null)} />
                 :
-                <BottomSheet currentLocation={currentLocation} onClose={() => setCurrentLocation(null)} />
+                <BottomSheet
+                    currentLocation={currentLocation}
+                    onClose={() => setCurrentLocation(null)}
+                    pushToHistory={pushToHistory}
+                    goBackInHistory={goBackInHistory}
+                    appState={appState}
+                    appStates={appStates}
+                />
             }
             <Map apiKey={apiKey} gmApiKey={gmApiKey} mapboxAccessToken={mapboxAccessToken} venues={venues} venueName={currentVenueName} onMapsIndoorsInstance={(instance) => setMapsIndoorsInstance(instance)} onLocationClick={(location) => setCurrentLocation(location)} />
         </div>

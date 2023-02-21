@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 
 const appStates = {
-    MAIN: 'MAIN',
-    VENUE_SELECTOR: 'VENUE_SELECTOR'
+    SEARCH: 'SEARCH',
+    VENUE_SELECTOR: 'VENUE_SELECTOR',
+    LOCATION_DETAILS: 'LOCATION_DETAILS',
+    WAYFINDING: 'WAYFINDING'
 };
 
 /**
