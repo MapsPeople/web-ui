@@ -30,12 +30,9 @@
         position: relative;
     }
 
-    &__container {
+    &__label {
         display: grid;
         gap: var(--spacing-x-small);
-    }
-
-    &__label {
         font-size: var(--font-size-small);
         color: var(--color-gray-70);
         font-weight: var(--font-weight-large);

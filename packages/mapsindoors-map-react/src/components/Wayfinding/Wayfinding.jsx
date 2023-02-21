@@ -61,10 +61,10 @@ function Wayfinding({ onStartDirections, onBack }) {
             });
         }
 
-         /**
-          * Listen to the 'cleared' event provided by the 'mi-search' component.
-          * Clear the results list. 
-         */
+        /**
+         * Listen to the 'cleared' event provided by the 'mi-search' component.
+         * Clear the results list. 
+        */
         function clearResultList(locationRef, resultsRef) {
             locationRef.current.addEventListener('cleared', () => {
                 resultsRef.current.innerHTML = '';
@@ -80,18 +80,14 @@ function Wayfinding({ onStartDirections, onBack }) {
                     <CloseIcon />
                 </button>
                 <div className="wayfinding__locations">
-                    <div className="wayfinding__container">
-                        <label className="wayfinding__label">
-                            TO
-                        </label>
+                    <label className="wayfinding__label">
+                        TO
                         <mi-search ref={endSearchFieldRef} placeholder="Search by name, category, building..." mapsindoors="true" value={endLocationValue}></mi-search>
-                    </div>
-                    <div className="wayfinding__container">
-                        <label className="wayfinding__label">
-                            FROM
-                        </label>
+                    </label>
+                    <label className="wayfinding__label">
+                        FROM
                         <mi-search ref={startSearchFieldRef} placeholder="Search by name, category, building..." mapsindoors="true" value={startLocationValue}></mi-search>
-                    </div>
+                    </label>
                 </div>
             </div>
             <div className="wayfinding__results" ref={resultsContainerRef}></div>
