@@ -14,8 +14,6 @@ const appStates = {
  */
 export const useAppState = () => {
 
-    const [previousState, setPreviousState] = useState('MAIN');
-
     useEffect(() => {
         function popstateHandler(event) {
             setAppState(event.state);
@@ -31,13 +29,12 @@ export const useAppState = () => {
     const [appState, setAppState] = useState();
 
     const pushToHistory = value => {
-        setPreviousState(appState);
         window.history.pushState(value, '');
         setAppState(value);
     }
 
     const goBackInHistory = () => {
-        pushToHistory(previousState);
+        window.history.back();
     };
 
     return [pushToHistory, goBackInHistory, appState, appStates]
