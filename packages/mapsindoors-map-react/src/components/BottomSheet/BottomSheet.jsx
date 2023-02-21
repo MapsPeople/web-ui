@@ -35,13 +35,13 @@ function BottomSheet({ currentLocation, onClose, pushToHistory, goBackInHistory,
 
     return <div ref={bottomSheetRef} className='bottom-sheets'>
         <ContainerContext.Provider value={bottomSheetRef}>
-            <Sheet minHeight="128" isOpen={appState === appStates.LOCATION_DETAILS} key="A">
+            <Sheet minHeight="128" isOpen={appState === appStates.LOCATION_DETAILS}>
                 <LocationDetails onStartWayfinding={() => pushToHistory(appStates.WAYFINDING)} location={currentLocation} onClose={() => close()} />
             </Sheet>,
-            <Sheet minHeight="220" isOpen={appState === appStates.WAYFINDING} key="B">
+            <Sheet minHeight="220" isOpen={appState === appStates.WAYFINDING}>
                 <Wayfinding onStartDirections={() => pushToHistory(appStates.DIRECTIONS)} onBack={() => goBackInHistory()} />
             </Sheet>
-            <Sheet minHeight="220" isOpen={appState === appStates.DIRECTIONS} key="C">
+            <Sheet minHeight="220" isOpen={appState === appStates.DIRECTIONS}>
                 <Directions onBack={() => goBackInHistory()} />
             </Sheet>
         </ContainerContext.Provider>
