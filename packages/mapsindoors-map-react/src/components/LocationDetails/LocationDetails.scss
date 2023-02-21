@@ -68,6 +68,7 @@
         width: 100%;
         height: var(--spacing-xx-large);
         position: relative;
+        font-weight: var(--font-weight-x-large);
 
         svg {
             position: absolute;
@@ -99,10 +100,3 @@
         margin-left: auto;
     }
 }
-
-@media (min-width: $desktop-breakpoint) {
-    .location-details {
-        padding: var(--spacing-large) var(--spacing-x-large) var(--spacing-medium) var(--spacing-x-large);
-    }
-}
-

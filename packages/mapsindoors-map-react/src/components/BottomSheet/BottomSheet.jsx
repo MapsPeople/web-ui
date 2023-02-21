@@ -5,10 +5,12 @@ import Sheet from './Sheet/Sheet';
 import './BottomSheet.scss';
 import LocationDetails from '../LocationDetails/LocationDetails';
 import Wayfinding from '../Wayfinding/Wayfinding';
+import Directions from '../Directions/Directions';
 
 const BOTTOM_SHEETS = {
     LOCATION_DETAILS: 0,
-    WAYFINDING: 1
+    WAYFINDING: 1,
+    DIRECTIONS: 2
 };
 
 /**
@@ -40,8 +42,11 @@ function BottomSheet({ currentLocation, onClose }) {
         <Sheet minHeight="128" isOpen={activeBottomSheet === BOTTOM_SHEETS.LOCATION_DETAILS} key="A">
             <LocationDetails onStartWayfinding={() => setActiveBottomSheet(BOTTOM_SHEETS.WAYFINDING)} location={currentLocation} onClose={() => close()} />
         </Sheet>,
-        <Sheet minHeight="60" isOpen={activeBottomSheet === BOTTOM_SHEETS.WAYFINDING} key="B">
-            <Wayfinding onClose={close} onBack={() => setActiveBottomSheet(BOTTOM_SHEETS.LOCATION_DETAILS)} />
+        <Sheet minHeight="220" isOpen={activeBottomSheet === BOTTOM_SHEETS.WAYFINDING} key="B">
+            <Wayfinding onStartDirections={() => setActiveBottomSheet(BOTTOM_SHEETS.DIRECTIONS)} onBack={() => setActiveBottomSheet(BOTTOM_SHEETS.LOCATION_DETAILS)}/>
+        </Sheet>,
+        <Sheet minHeight="220" isOpen={activeBottomSheet === BOTTOM_SHEETS.DIRECTIONS} key="C">
+            <Directions onBack={() => setActiveBottomSheet(BOTTOM_SHEETS.WAYFINDING)} />
         </Sheet>
     ]
 

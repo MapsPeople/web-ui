@@ -1,20 +1,26 @@
 import React from "react";
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './Modal.scss'
 import LocationDetails from "../LocationDetails/LocationDetails";
 import Wayfinding from '../Wayfinding/Wayfinding';
+import Directions from '../Directions/Directions';
 
 const VIEWS = {
     LOCATION_DETAILS: 0,
-    WAYFINDING: 1
+    WAYFINDING: 1,
+    DIRECTIONS: 2
 };
 
+/**
+ * @param {Object} props
+ * @param {Object} props.currentLocation - The currently selected MapsIndoors Location.
+ * @param {function} props.onClose - Callback that fires when all modals are closed.
+ */
 function Modal({ currentLocation, onClose }) {
     const [activePage, setActivePage] = useState(null);
 
     /**
-    * When a page is closed.
+    * When the user closes the location details.
     */
     function close() {
         setActivePage(null);
@@ -33,7 +39,10 @@ function Modal({ currentLocation, onClose }) {
             <LocationDetails onStartWayfinding={() => setActivePage(VIEWS.WAYFINDING)} location={currentLocation} onClose={() => close()} />
         </div>,
         <div className="modal">
-            <Wayfinding onClose={() => close()} onBack={() => setActivePage(VIEWS.LOCATION_DETAILS)} />
+            <Wayfinding onStartDirections={() => setActivePage(VIEWS.DIRECTIONS)} onBack={() => setActivePage(VIEWS.LOCATION_DETAILS)} />
+        </div>,
+        <div className="modal">
+            <Directions onBack={() => setActivePage(VIEWS.WAYFINDING)} />
         </div>
     ]
 
