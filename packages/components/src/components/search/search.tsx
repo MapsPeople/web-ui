@@ -109,7 +109,15 @@ export class Search implements ComponentInterface {
      */
     @Prop({ mutable: true, reflect: true }) value: string;
 
+    /**
+     * Sets the prevention of the search.
+     */
     @Prop({ mutable: true, reflect: true }) preventSearch: boolean = false;
+
+    /**
+    * If the search field is in focus.
+    */
+    @Prop() hasFocus: boolean = false;
 
     @Watch('value')
     valueChange(newValue): void {
@@ -143,7 +151,6 @@ export class Search implements ComponentInterface {
     setDisplayName(selectedValue): void {
         this.preventSearch = true;
         this.value = selectedValue;
-
         setTimeout(() => {
             this.preventSearch = false;
         }, 1000);
@@ -302,6 +309,7 @@ export class Search implements ComponentInterface {
                     ref={(el) => this.inputElement = el as HTMLInputElement}
                     onInput={(): void => this.inputChanged()}
                     placeholder={this.placeholder}
+                    autofocus={this.hasFocus}
                     autocomplete="off"
                 />
                 <button type="button" onClick={() => this.clear()} aria-label="Clear">

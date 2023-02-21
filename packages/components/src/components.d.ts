@@ -709,6 +709,10 @@ export namespace Components {
          */
         "google": boolean;
         /**
+          * If the search field is in focus.
+         */
+        "hasFocus": boolean;
+        /**
           * Id for the input field.
          */
         "idAttribute": string;
@@ -748,6 +752,9 @@ export namespace Components {
           * Placeholder for the input field.
          */
         "placeholder": string;
+        /**
+          * Sets the prevention of the search.
+         */
         "preventSearch": boolean;
         /**
           * Sets a display name of the selected value.
@@ -1809,6 +1816,10 @@ declare namespace LocalJSX {
          */
         "google"?: boolean;
         /**
+          * If the search field is in focus.
+         */
+        "hasFocus"?: boolean;
+        /**
           * Id for the input field.
          */
         "idAttribute"?: string;
@@ -1864,6 +1875,9 @@ declare namespace LocalJSX {
           * Placeholder for the input field.
          */
         "placeholder"?: string;
+        /**
+          * Sets the prevention of the search.
+         */
         "preventSearch"?: boolean;
         /**
           * Get or set the entered value
