@@ -18,7 +18,7 @@ export const useAppHistory = () => {
 
     useEffect(() => {
         function popstateHandler(event) {
-            setAppState(event.state);
+            setCurrentAppState(event.state);
         }
 
         window.addEventListener('popstate', popstateHandler);
@@ -28,16 +28,16 @@ export const useAppHistory = () => {
         }
     }, []);
 
-    const [appState, setAppState] = useState();
+    const [currentAppState, setCurrentAppState] = useState();
 
     const pushState = value => {
         window.history.pushState(value, '');
-        setAppState(value);
+        setCurrentAppState(value);
     }
 
     const goBack = () => {
         window.history.back();
     };
 
-    return [pushState, goBack, appState, appStates]
+    return [pushState, goBack, currentAppState, appStates]
 }

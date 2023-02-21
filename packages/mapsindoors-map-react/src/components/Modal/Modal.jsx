@@ -11,11 +11,11 @@ import Directions from '../Directions/Directions';
  * @param {function} props.onClose - Callback that fires when all bottom sheets are closed.
  * @param {function} props.pushState - function to push entry to app state and browser history
  * @param {function} props.goBack - function to go back in app state and browser history
- * @param {string} props.appState - current app state
+ * @param {string} props.currentAppState - current app state
  * @param {object} props.appStates - all app states
  * @returns
  */
-function Modal({ currentLocation, onClose, pushState, goBack, appState, appStates }) {
+function Modal({ currentLocation, onClose, pushState, goBack, currentAppState, appStates }) {
 
     /**
     * When the user closes the location details.
@@ -37,13 +37,13 @@ function Modal({ currentLocation, onClose, pushState, goBack, appState, appState
 
     return (
         <div className="modals">
-            {appState === appStates.LOCATION_DETAILS && <div className="modal">
+            {currentAppState === appStates.LOCATION_DETAILS && <div className="modal">
                 <LocationDetails onStartWayfinding={() => pushState(appStates.WAYFINDING)} location={currentLocation} onClose={() => close()} />
             </div>}
-            {appState === appStates.WAYFINDING && <div className="modal">
+            {currentAppState === appStates.WAYFINDING && <div className="modal">
                 <Wayfinding onStartDirections={() => pushState(appStates.DIRECTIONS)} onBack={() => goBack()} />
             </div>}
-            {appState === appStates.DIRECTIONS && <div className="modal">
+            {currentAppState === appStates.DIRECTIONS && <div className="modal">
                 <Directions onBack={() => goBack()} />
             </div>}
         </div>

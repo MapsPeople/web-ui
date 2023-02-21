@@ -32,7 +32,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [currentLocation, setCurrentLocation] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const isDesktop = useMediaQuery('(min-width: 992px)');
-    const [pushState, goBack, appState, appStates] = useAppHistory();
+    const [pushState, goBack, currentAppState, appStates] = useAppHistory();
 
     /*
      * React on changes in the venue prop.
@@ -90,7 +90,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                 currentVenueName={currentVenueName}
                 onOpen={() => pushState(appStates.VENUE_SELECTOR)}
                 onClose={() => goBack()}
-                active={appState === appStates.VENUE_SELECTOR}
+                active={currentAppState === appStates.VENUE_SELECTOR}
             />}
             {isMapReady && isDesktop
                 ?
@@ -99,7 +99,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                     onClose={() => setCurrentLocation(null)}
                     pushState={pushState}
                     goBack={goBack}
-                    appState={appState}
+                    currentAppState={currentAppState}
                     appStates={appStates}
                 />
                 :
@@ -108,7 +108,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                     onClose={() => setCurrentLocation(null)}
                     pushState={pushState}
                     goBack={goBack}
-                    appState={appState}
+                    currentAppState={currentAppState}
                     appStates={appStates}
                 />
             }
