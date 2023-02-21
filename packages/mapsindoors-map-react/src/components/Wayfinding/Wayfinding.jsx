@@ -7,7 +7,7 @@ import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
 import { ReactComponent as WalkingIcon } from '../../assets/walking.svg';
 import { ReactComponent as QuestionIcon } from '../../assets/question.svg';
 
-function Wayfinding({ onStartDirections, onBack }) {
+function Wayfinding({ onStartDirections, onBack, location }) {
 
     /** Referencing the start location DOM element */
     const startSearchFieldRef = useRef();
@@ -37,13 +37,13 @@ function Wayfinding({ onStartDirections, onBack }) {
         /** Clear end location results list. */
         clearResultList(endSearchFieldRef, resultsContainerRef);
 
-         /**
-         * Search location and add results list implementation.
-         * Listen to the 'results' event provided by the 'mi-search' component.
-         * For each search result create a 'mi-list-item-location' component for displaying the content.
-         * Append all the results to the results container.
-         * Listen to the events when the item is clicked, and set the location value to be the selected one.
-         */
+        /**
+        * Search location and add results list implementation.
+        * Listen to the 'results' event provided by the 'mi-search' component.
+        * For each search result create a 'mi-list-item-location' component for displaying the content.
+        * Append all the results to the results container.
+        * Listen to the events when the item is clicked, and set the location value to be the selected one.
+        */
         function setupSearchResultsHandler(locationRef) {
             locationRef.current.addEventListener('results', e => {
                 resultsContainerRef.current.innerHTML = '';
@@ -58,6 +58,7 @@ function Wayfinding({ onStartDirections, onBack }) {
                     });
                 }
             });
+
         }
 
         /**
@@ -82,8 +83,15 @@ function Wayfinding({ onStartDirections, onBack }) {
 
     }, []);
 
+    useEffect(() => {
+        if (location) {
+            endSearchFieldRef.current.value = location.properties.name;
+        }
+    }, [location]);
+
     return (
         <div className={`wayfinding ${hasInputFocus ? 'full' : 'fit'}`}>
+
             <div className="wayfinding__directions">
                 <div className="wayfinding__title">Start wayfinding</div>
                 <button className="wayfinding__close" onClick={() => onBack()} aria-label="Close">
