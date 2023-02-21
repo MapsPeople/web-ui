@@ -59,10 +59,10 @@ function Wayfinding({ onStartDirections, onBack }) {
             });
         }
 
-         /**
-          * Listen to the 'cleared' event provided by the 'mi-search' component.
-          * Clear the results list. 
-         */
+        /**
+         * Listen to the 'cleared' event provided by the 'mi-search' component.
+         * Clear the results list. 
+        */
         function clearResultList(locationRef, resultsRef) {
             locationRef.current.addEventListener('cleared', () => {
                 resultsRef.current.innerHTML = '';
@@ -74,22 +74,18 @@ function Wayfinding({ onStartDirections, onBack }) {
         <div className={`wayfinding ${hasAccessibility ? 'fit' : 'full'}`}>
             <div className="wayfinding__directions">
                 <div className="wayfinding__title">Start wayfinding</div>
-                <button className="wayfinding__close" onClick={() => onBack()}>
+                <button className="wayfinding__close" onClick={() => onBack()} aria-label="Close">
                     <CloseIcon />
                 </button>
                 <div className="wayfinding__locations">
-                    <div className="wayfinding__container">
-                        <label className="wayfinding__label">
-                            TO
-                        </label>
+                    <label className="wayfinding__label">
+                        TO
                         <mi-search ref={endSearchFieldRef} placeholder="Search by name, category, building..." mapsindoors="true"></mi-search>
-                    </div>
-                    <div className="wayfinding__container">
-                        <label className="wayfinding__label">
-                            FROM
-                        </label>
+                    </label>
+                    <label className="wayfinding__label">
+                        FROM
                         <mi-search ref={startSearchFieldRef} placeholder="Search by name, category, building..." mapsindoors="true"></mi-search>
-                    </div>
+                    </label>
                 </div>
             </div>
             <div className="wayfinding__results" ref={resultsContainerRef}></div>
