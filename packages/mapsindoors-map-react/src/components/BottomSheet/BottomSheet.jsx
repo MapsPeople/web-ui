@@ -4,6 +4,7 @@ import Sheet from './Sheet/Sheet';
 import './BottomSheet.scss';
 import LocationDetails from '../LocationDetails/LocationDetails';
 import Wayfinding from '../Wayfinding/Wayfinding';
+import Directions from '../Directions/Directions';
 
 /**
  * @param {Object} props
@@ -37,8 +38,11 @@ function BottomSheet({ currentLocation, onClose, pushToHistory, goBackInHistory,
             <Sheet minHeight="128" isOpen={appState === appStates.LOCATION_DETAILS} key="A">
                 <LocationDetails onStartWayfinding={() => pushToHistory(appStates.WAYFINDING)} location={currentLocation} onClose={() => close()} />
             </Sheet>,
-            <Sheet minHeight="60" isOpen={appState === appStates.WAYFINDING} key="B">
-                <Wayfinding onClose={close} onBack={() => goBackInHistory()} />
+            <Sheet minHeight="220" isOpen={appState === appStates.WAYFINDING} key="B">
+                <Wayfinding onStartDirections={() => pushToHistory(appStates.DIRECTIONS)} onBack={() => goBackInHistory()} />
+            </Sheet>
+            <Sheet minHeight="220" isOpen={appState === appStates.DIRECTIONS} key="C">
+                <Directions onBack={() => goBackInHistory()} />
             </Sheet>
         </ContainerContext.Provider>
     </div>

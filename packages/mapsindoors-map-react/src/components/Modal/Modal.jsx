@@ -3,11 +3,12 @@ import { useEffect } from 'react';
 import './Modal.scss'
 import LocationDetails from "../LocationDetails/LocationDetails";
 import Wayfinding from '../Wayfinding/Wayfinding';
+import Directions from '../Directions/Directions';
 
 function Modal({ currentLocation, onClose, pushToHistory, goBackInHistory, appState, appStates }) {
 
     /**
-    * When a page is closed.
+    * When the user closes the location details.
     */
     function close() {
         pushToHistory(appStates.SEARCH);
@@ -30,7 +31,10 @@ function Modal({ currentLocation, onClose, pushToHistory, goBackInHistory, appSt
                 <LocationDetails onStartWayfinding={() => pushToHistory(appStates.WAYFINDING)} location={currentLocation} onClose={() => close()} />
             </div>}
             {appState === appStates.WAYFINDING && <div className="modal">
-                <Wayfinding onClose={() => close()} onBack={() => goBackInHistory()} />
+                <Wayfinding onStartDirections={() => pushToHistory(appStates.DIRECTIONS)} onBack={() => goBackInHistory()} />
+            </div>}
+            {appState === appStates.DIRECTIONS && <div className="modal">
+                <Directions onBack={() => goBackInHistory()} />
             </div>}
         </div>
     )
