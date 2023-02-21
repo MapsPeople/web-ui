@@ -76,7 +76,7 @@ function Wayfinding({ onStartDirections, onBack }) {
         <div className="wayfinding">
             <div className="wayfinding__directions">
                 <div className="wayfinding__title">Start wayfinding</div>
-                <button className="wayfinding__close" onClick={() => onBack()}>
+                <button className="wayfinding__close" onClick={() => onBack()} aria-label="Close">
                     <CloseIcon />
                 </button>
                 <div className="wayfinding__locations">
