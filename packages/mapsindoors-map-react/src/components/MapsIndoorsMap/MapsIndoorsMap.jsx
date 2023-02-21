@@ -9,7 +9,7 @@ import { MapsIndoorsContext } from '../../MapsIndoorsContext';
 import useMediaQuery from '../../hooks/useMediaQuery';
 import Modal from '../Modal/Modal';
 
-import { useAppState } from '../../hooks/useAppState';
+import { useAppHistory } from '../../hooks/useAppState';
 
 const mapsindoors = window.mapsindoors;
 
@@ -32,7 +32,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [currentLocation, setCurrentLocation] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const isDesktop = useMediaQuery('(min-width: 992px)');
-    const [pushToHistory, goBackInHistory, appState, appStates] = useAppState();
+    const [pushToHistory, goBackInHistory, appState, appStates] = useAppHistory();
 
     /*
      * React on changes in the venue prop.

@@ -13,9 +13,8 @@ const appStates = {
  * an actual router that modifies the URL.
  *
  * It maintains a "app state", ideally corresponding to the current view in focus.
- *
  */
-export const useAppState = () => {
+export const useAppHistory = () => {
 
     useEffect(() => {
         function popstateHandler(event) {
