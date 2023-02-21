@@ -112,7 +112,14 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             />}
             {isMapReady && isDesktop
                 ?
-                <Modal currentLocation={currentLocation} onClose={() => setCurrentLocation(null)} />
+                <Modal
+                    currentLocation={currentLocation}
+                    onClose={() => setCurrentLocation(null)}
+                    pushToHistory={pushToHistory}
+                    goBackInHistory={goBackInHistory}
+                    appState={appState}
+                    appStates={appStates}
+                />
                 :
                 <BottomSheet
                     currentLocation={currentLocation}

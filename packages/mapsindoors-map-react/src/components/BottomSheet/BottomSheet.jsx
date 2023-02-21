@@ -29,20 +29,17 @@ function BottomSheet({ currentLocation, onClose, pushToHistory, goBackInHistory,
         if (currentLocation) {
             pushToHistory(appStates.LOCATION_DETAILS);
         }
-    }, [currentLocation, appStates, pushToHistory]);
-
-    const bottomSheets = [
-        <Sheet minHeight="128" isOpen={appState === appStates.LOCATION_DETAILS} key="A">
-            <LocationDetails onStartWayfinding={() => pushToHistory(appStates.WAYFINDING)} location={currentLocation} onClose={() => close()} />
-        </Sheet>,
-        <Sheet minHeight="60" isOpen={appState === appStates.WAYFINDING} key="B">
-            <Wayfinding onClose={close} onBack={() => goBackInHistory()} />
-        </Sheet>
-    ];
+    }, [currentLocation, appStates]); // eslint-disable-line react-hooks/exhaustive-deps
+    // We ignore eslint warnings about missing pushToHistory dependency to avoid running the useEffect when that is executed
 
     return <div ref={bottomSheetRef} className='bottom-sheets'>
         <ContainerContext.Provider value={bottomSheetRef}>
-            {bottomSheets}
+            <Sheet minHeight="128" isOpen={appState === appStates.LOCATION_DETAILS} key="A">
+                <LocationDetails onStartWayfinding={() => pushToHistory(appStates.WAYFINDING)} location={currentLocation} onClose={() => close()} />
+            </Sheet>,
+            <Sheet minHeight="60" isOpen={appState === appStates.WAYFINDING} key="B">
+                <Wayfinding onClose={close} onBack={() => goBackInHistory()} />
+            </Sheet>
         </ContainerContext.Provider>
     </div>
 }
