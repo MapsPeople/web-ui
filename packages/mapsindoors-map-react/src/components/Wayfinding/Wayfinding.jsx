@@ -21,9 +21,10 @@ function Wayfinding({ onStartDirections, onBack }) {
     /** Referencing the results container DOM element */
     const resultsContainerRef = useRef();
 
-    const [hasAccessibility, setHasAccessibility] = useState(false);
+    const [hasInputFocus, setHasInputFocus] = useState(true);
 
     useEffect(() => {
+
         /** Add start location results list. */
         setupSearchResultsHandler(startSearchFieldRef);
 
@@ -53,7 +54,7 @@ function Wayfinding({ onStartDirections, onBack }) {
                     listItem.addEventListener('click', () => {
                         locationRef.current.setDisplayName(result.properties.name);
                         resultsContainerRef.current.innerHTML = '';
-                        setHasAccessibility(true);
+                        setHasInputFocus(true);
                     });
                 }
             });
@@ -61,17 +62,28 @@ function Wayfinding({ onStartDirections, onBack }) {
 
         /**
          * Listen to the 'cleared' event provided by the 'mi-search' component.
-         * Clear the results list. 
+         * Clear the results list.
         */
         function clearResultList(locationRef, resultsRef) {
             locationRef.current.addEventListener('cleared', () => {
                 resultsRef.current.innerHTML = '';
             });
         }
+
+        startSearchFieldRef.current.addEventListener('click', () => {
+            setHasInputFocus(true);
+        });
+
+        endSearchFieldRef.current.addEventListener('click', () => {
+            setHasInputFocus(true);
+        });
+
+        // startSearchFieldRef.current.setAttribute("has-focus", true);
+
     }, []);
 
     return (
-        <div className={`wayfinding ${hasAccessibility ? 'fit' : 'full'}`}>
+        <div className={`wayfinding ${hasInputFocus ? 'full' : 'fit'}`}>
             <div className="wayfinding__directions">
                 <div className="wayfinding__title">Start wayfinding</div>
                 <button className="wayfinding__close" onClick={() => onBack()} aria-label="Close">
@@ -90,7 +102,7 @@ function Wayfinding({ onStartDirections, onBack }) {
             </div>
             <div className="wayfinding__results" ref={resultsContainerRef}></div>
             {/* Fixme: Add functionality to the accessibility feature. */}
-            <div className={`wayfinding__details ${hasAccessibility ? 'show' : 'hide'}`} ref={detailsRef}>
+            <div className={`wayfinding__details ${hasInputFocus ? 'hide' : 'show'}`} ref={detailsRef}>
                 <div className="wayfinding__accessibility">
                     <input className="mi-toggle" type="checkbox" />
                     <div>Accessibility</div>
