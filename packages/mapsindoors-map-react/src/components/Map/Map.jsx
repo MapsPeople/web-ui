@@ -47,7 +47,8 @@ function Map({ gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, 
                 setVenue(venueToShow, mapsIndoorsInstance);
             };
         }
-    }, [venueName, venues]);
+    }, [venueName, venues]); // eslint-disable-line react-hooks/exhaustive-deps
+    // We ignore eslint warnings about missing dependencies because mapsIndoorsInstance should never change runtime anyway.
 
     /**
      * Set the venue to show on the map.
