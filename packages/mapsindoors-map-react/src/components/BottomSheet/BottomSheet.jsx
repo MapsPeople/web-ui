@@ -23,7 +23,7 @@ function BottomSheet({ currentLocation, onClose, pushState, goBack, appState, ap
      * When a sheet is closed.
      */
     function close() {
-        pushState(appStates.SEARCH);
+        goBack();
         onClose();
     }
 

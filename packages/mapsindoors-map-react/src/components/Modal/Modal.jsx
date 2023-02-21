@@ -21,7 +21,7 @@ function Modal({ currentLocation, onClose, pushState, goBack, appState, appState
     * When the user closes the location details.
     */
     function close() {
-        pushState(appStates.SEARCH);
+        goBack();
         onClose();
     }
 
