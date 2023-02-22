@@ -34,6 +34,15 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const isDesktop = useMediaQuery('(min-width: 992px)');
     const [pushState, goBack, currentAppState, appStates] = useAppHistory();
 
+    /**
+     * When venue is fitted while initializing the data, set map to be ready.
+     */
+    function venueChangedOnMap() {
+        if (isMapReady === false) {
+            setMapReady(true);
+        }
+    }
+
     /*
      * React on changes in the venue prop.
      */
@@ -55,8 +64,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     }, [locationId]);
 
     /*
-     * React on changes in the MapsIndoors API key: fetch required data.
-     * Set the map to be in a ready state when the data has loaded.
+     * React on changes in the MapsIndoors API key by fetching the required data.
      */
     useEffect(() => {
         setMapReady(false);
@@ -67,8 +75,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             mapsindoors.services.VenuesService.getVenues(),
             // Fixme: Venue Images are currently stored in the AppConfig object. So we will need to fetch the AppConfig as well.
             mapsindoors.services.AppConfigService.getConfig(),
-            // Wait until the first update_completed event so we know the map is ready
-            new Promise((resolve) => mapsindoors.services.LocationsService.once('update_completed', resolve)),
             // Ensure a minimum waiting time of 3 seconds
             new Promise(resolve => setTimeout(resolve, 3000))
         ]).then(([venuesResult, appConfigResult]) => {
@@ -77,7 +83,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                 return venue;
             });
             setVenues(venuesResult);
-            setMapReady(true);
         });
     }, [apiKey]);
 
@@ -112,7 +117,15 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                     appStates={appStates}
                 />
             }
-            <Map apiKey={apiKey} gmApiKey={gmApiKey} mapboxAccessToken={mapboxAccessToken} venues={venues} venueName={currentVenueName} onMapsIndoorsInstance={(instance) => setMapsIndoorsInstance(instance)} onLocationClick={(location) => setCurrentLocation(location)} />
+            <Map
+                apiKey={apiKey}
+                gmApiKey={gmApiKey}
+                mapboxAccessToken={mapboxAccessToken}
+                venues={venues}
+                venueName={currentVenueName}
+                onVenueChangedOnMap={() => venueChangedOnMap()}
+                onMapsIndoorsInstance={(instance) => setMapsIndoorsInstance(instance)}
+                onLocationClick={(location) => setCurrentLocation(location)} />
         </div>
     </MapsIndoorsContext.Provider>)
 }
