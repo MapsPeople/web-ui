@@ -1,6 +1,6 @@
 {
   "brand-colors": {
-    "electric purple": {
+    "electric-purple": {
       "20": {
         "description": "",
         "type": "color",
@@ -162,7 +162,7 @@
         }
       }
     },
-    "sky blue": {
+    "sky-blue": {
       "20": {
         "description": "",
         "type": "color",
@@ -224,7 +224,7 @@
         }
       }
     },
-    "dark pine": {
+    "dark-pine": {
       "20": {
         "description": "",
         "type": "color",

@@ -21,9 +21,10 @@ const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
  * @param {string} [props.venueName] - If you want the map to show a specific Venue, provide the Venue name here.
  * @param {function [props.onLocationClick]} - Function that is run when a MapsIndoors Location is clicked. the Location will be sent along as first argument.
  * @param {function} props.onMapsIndoorsInstance - Function that is run when a MapsIndoors instance is created. The instance will be sent along as first argument.
+ * @param {function} props.onVenueChangedOnMap - Function that is run when the map bounds was changed due to fitting to a venue.
  * @returns
  */
-function Map({ gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onMapsIndoorsInstance }) {
+function Map({ gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onMapsIndoorsInstance, onVenueChangedOnMap }) {
     const [mapType, setMapType] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState(null);
 
@@ -44,10 +45,13 @@ function Map({ gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, 
             window.localStorage.clear(localStorageKeyForVenue);
             const venueToShow = getVenueToShow(venueName, venues);
             if (venueToShow) {
-                setVenue(venueToShow, mapsIndoorsInstance);
+                setVenue(venueToShow, mapsIndoorsInstance).then(() => {
+                    onVenueChangedOnMap();
+                });
             };
         }
-    }, [venueName, venues]);
+    }, [venueName, venues]); // eslint-disable-line react-hooks/exhaustive-deps
+    // We ignore eslint warnings about missing dependencies because mapsIndoorsInstance should never change runtime anyway.
 
     /**
      * Set the venue to show on the map.
@@ -57,7 +61,7 @@ function Map({ gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, 
      */
     const setVenue = (venue, mapsIndoorsInstance) => {
         window.localStorage.setItem(localStorageKeyForVenue, venue.name);
-        mapsIndoorsInstance.fitVenue(venue);
+        return mapsIndoorsInstance.fitVenue(venue);
     }
 
     const onMapView = async (mapView) => {
