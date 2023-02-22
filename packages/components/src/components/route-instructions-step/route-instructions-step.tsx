@@ -241,22 +241,11 @@ export class RouteInstructionsStep implements ComponentInterface {
     }
 
     /**
-     * Render time and distance part.
+     * Render distance part.
      *
      * @returns {JSX.Element}
      */
-    renderTimeAndDistance(): JSX.Element {
-        // return <span part="step-info" class="step__distance-duration">
-        //     <mi-time
-        //         seconds={this.stepData.duration.value}
-        //         translations={`{"days":"${this.translationsData.days}","hours":"${this.translationsData.hours}","minutes":"${this.translationsData.minutes}"}`}>
-        //     </mi-time>
-        //     &nbsp;&middot;&nbsp;
-        //     <mi-distance
-        //         meters={this.stepData.distance.value}
-        //         unit={this.unit}>
-        //     </mi-distance><br />
-        // </span>;
+    renderDistance(): JSX.Element {
         return <span part="step-info" class="step__distance-duration">
             <mi-distance
                 meters={this.stepData.distance.value}
@@ -281,7 +270,7 @@ export class RouteInstructionsStep implements ComponentInterface {
             {this.renderTravelMode()}
             <div part="step-description" class="step__description">
                 {this.translationsData.drive}<br />
-                {this.renderTimeAndDistance()}
+                {this.renderDistance()}
             </div>
             {this.renderToggleButton()}
             {this.renderSubsteps()}
@@ -372,8 +361,7 @@ export class RouteInstructionsStep implements ComponentInterface {
 
         return <div class="step" onClick={e => this.stepClickHandler(e)}>
             <div part="step-description" class="step__description">
-                {/* {this.translationsData.walk}<br /> */}
-                {this.renderTimeAndDistance()}
+                {this.renderDistance()}
             </div>
             <div class="step__info">
                 {this.isInternetExplorer ? null :
@@ -383,9 +371,6 @@ export class RouteInstructionsStep implements ComponentInterface {
                 }
                 <div part="step-heading" class="step__heading">{heading}</div>
             </div>
-            {/* {this.renderTravelMode()}
-            {this.renderToggleButton()}
-            {this.renderSubsteps()} */}
         </div>;
     }
 
@@ -422,7 +407,7 @@ export class RouteInstructionsStep implements ComponentInterface {
             {this.renderTravelMode()}
             <div part="step-description" class="step__description">
                 {this.translationsData.bike}<br />
-                {this.renderTimeAndDistance()}
+                {this.renderDistance()}
             </div>
             {this.renderToggleButton()}
             {this.renderSubsteps()}
@@ -436,13 +421,13 @@ export class RouteInstructionsStep implements ComponentInterface {
      */
     renderTransitStep(): JSX.Element {
         return <div class="step" onClick={e => this.stepClickHandler(e)}>
-            {/* {this.isInternetExplorer ? null :
+            {this.isInternetExplorer ? null :
                 <span class="step__action-icon step__action-icon--circled">
                     <mi-icon icon-name="transit-stop"></mi-icon>
                 </span>
-            } */}
-            {/* <h3 part="step-heading" class="step__heading">{this.stepData.instructions}</h3>
-            {this.renderTravelMode()} */}
+            }
+            <h3 part="step-heading" class="step__heading">{this.stepData.instructions}</h3>
+            {this.renderTravelMode()}
             <div part="step-description" class="step__description">
                 {this.stepData.transit_information.line.short_name ?
                     <span class="step__short-name" style={{
@@ -463,8 +448,8 @@ export class RouteInstructionsStep implements ComponentInterface {
                     {this.stepData.transit_information.num_stops ? this.stepData.transit_information.num_stops : null} {this.translationsData.stops ? this.translationsData.stops : null}
                 </span>
             </div>
-            {/* {this.renderToggleButton()}
-            {this.renderSubsteps()} */}
+            {this.renderToggleButton()}
+            {this.renderSubsteps()}
         </div>;
     }
 }

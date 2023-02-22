@@ -15,56 +15,36 @@
 
 .step {
     display: grid;
-    gap:8px;
+    gap: variables.$spacing-x-small;
     justify-items: center;
-    // grid-template-columns: 40px 1fr 40px; /* TODO: MIAJS-1303, make the grid work in IE11 */
-    // grid-template-areas: 'actionicon heading heading'
-    //                      'modeicon description toggle'
-    //                      'modeicon substeps substeps';
 
     &__info {
         display: grid;
         grid-auto-flow: column;
         width: fit-content;
-        gap:8px;
+        gap: variables.$spacing-x-small;
+        align-items: center;
     }
 
     &__action-icon {
-        // display: flex;
-        // justify-content: center;
-        // align-items: center;
-        // grid-area: actionicon;
 
         &--circled {
             position: relative;
-            // &::before {
-            //     position: absolute;
-            //     @include icons.size(medium);
-            //     border: 1px solid variables.$color-black-base;
-            //     content: "";
-            //     @include border.radius(circle);
-            // }
         }
 
         mi-icon {
             display: block;
-            width: 40px;
-            height: 40px;
-            // @include sizing.width(small);
-            // @include sizing.height(small);
+            width: variables.$spacing-xx-large;
+            height: variables.$spacing-xx-large;
         }
     }
 
     &__heading {
-        // grid-area: heading;
         @include font.weight(normal);
-        @include font.size(medium);
+        @include font.size(large);
         @include margin.all(none);
-        // border-bottom: 1px solid #DCDCDF;
-        // border-top: 1px solid #DCDCDF;
-        @include padding.all(small);
 
-        > span {
+        >span {
             @include font.size(small);
             @include color.gray(60);
         }
@@ -88,26 +68,28 @@
 
         &--dotted {
             &::before {
-                border-right: 4px dotted variables.$color-blue-30;
+                border-right: variables.$spacing-xx-small dotted variables.$color-blue-30;
             }
         }
 
         &--solid {
             &::before {
-                border-right: 4px solid variables.$color-blue-30;
+                border-right: variables.$spacing-xx-small solid variables.$color-blue-30;
             }
         }
 
         &-icon {
-            position: absolute; /* To ensure it is placed above dots */
+            position: absolute;
+            /* To ensure it is placed above dots */
             left: 50%;
-            top: 24px; /* Halfway down uncollapsed (72px) */
+            top: variables.$spacing-large;
+            /* Halfway down uncollapsed (72px) */
             transform: translateX(-50%);
 
             /* solid background and padding to hide the dots */
             @include background-color.white(base);
             padding: 3px;
-            border-radius: 4px;
+            border-radius: variables.$spacing-xx-small;
 
             mi-icon {
                 @include icons.size(small);
@@ -117,14 +99,9 @@
         }
     }
 
-    &__description {
-        // grid-area: description;
-        // @include padding.all(small);
-    }
-
     &__short-name {
-        margin-right: 4px;
-        padding: 2px 4px;
+        margin-right: variables.$spacing-xx-small;
+        padding: variables.$spacing-xxx-small variables.$spacing-xx-small;
         @include font.size(small);
         @include color.white();
         @include background-color.gray(60);
