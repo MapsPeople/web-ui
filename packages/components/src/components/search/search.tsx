@@ -7,7 +7,7 @@ declare const mapsindoors;
 
 @Component({
     tag: 'mi-search',
-    styleUrl: 'search.scss',
+    styleUrl: 'search.scss'
 })
 /**
  * The MapsIndoors SDK must be available as a global variable.
@@ -123,7 +123,6 @@ export class Search implements ComponentInterface {
         if (newValue !== this.inputElement.value) {
             // If newValue is different from what is in the input element, we know it's set from outside the component.
             this.inputElement.value = newValue;
-
             this.inputChanged();
         }
     }
@@ -295,7 +294,6 @@ export class Search implements ComponentInterface {
     }
 
     render(): JSX.Element {
-
         return (
             <Host>
                 <input

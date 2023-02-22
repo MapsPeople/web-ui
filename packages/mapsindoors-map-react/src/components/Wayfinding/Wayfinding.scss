@@ -130,10 +130,6 @@
     }
 
     @media (min-width: $desktop-breakpoint) {
-        &.fit {
-            height: fit-content;
-        }
-
         &.full {
             height: 600px;
         }

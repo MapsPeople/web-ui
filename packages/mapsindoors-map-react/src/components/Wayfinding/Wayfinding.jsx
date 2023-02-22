@@ -24,7 +24,6 @@ function Wayfinding({ onStartDirections, onBack, location }) {
     const [hasInputFocus, setHasInputFocus] = useState(true);
 
     useEffect(() => {
-
         /** Add start location results list. */
         setupSearchResultsHandler(startSearchFieldRef);
 
@@ -71,16 +70,17 @@ function Wayfinding({ onStartDirections, onBack, location }) {
             });
         }
 
+        /** Listen to click events on the input and set the input focus to true. */
         startSearchFieldRef.current.addEventListener('click', () => {
             setHasInputFocus(true);
         });
-
         endSearchFieldRef.current.addEventListener('click', () => {
             setHasInputFocus(true);
         });
     }, []);
 
     useEffect(() => {
+        /** If there is a location selected, pre-fill the value of the `to` field with the location name. */
         if (location) {
             endSearchFieldRef.current.value = location.properties.name;
         }
