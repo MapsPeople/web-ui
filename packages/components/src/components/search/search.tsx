@@ -7,7 +7,7 @@ declare const mapsindoors;
 
 @Component({
     tag: 'mi-search',
-    styleUrl: 'search.scss'
+    styleUrl: 'search.scss',
 })
 /**
  * The MapsIndoors SDK must be available as a global variable.
@@ -296,11 +296,13 @@ export class Search implements ComponentInterface {
                 this.inputElement.setAttribute(key, this.dataAttributes[key]);
             }
         }
-
         this.componentRendered.emit();
+
+        // this.hasFocus = true;
     }
 
     render(): JSX.Element {
+
         return (
             <Host>
                 <input
@@ -308,8 +310,9 @@ export class Search implements ComponentInterface {
                     type="search"
                     ref={(el) => this.inputElement = el as HTMLInputElement}
                     onInput={(): void => this.inputChanged()}
+                    onFocus={() => console.log('focused')}
                     placeholder={this.placeholder}
-                    autofocus={this.hasFocus}
+                    // autofocus={this.hasFocus}
                     autocomplete="off"
                 />
                 <button type="button" onClick={() => this.clear()} aria-label="Clear">

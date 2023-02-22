@@ -79,7 +79,11 @@ function Wayfinding({ onStartDirections, onBack, location }) {
             setHasInputFocus(true);
         });
 
-        // startSearchFieldRef.current.setAttribute("has-focus", true);
+        startSearchFieldRef.current.addEventListener('componentRendered', () => {
+            setTimeout(() => {
+                startSearchFieldRef.current.querySelector('input').focus();
+            }, 250);
+        });
 
     }, []);
 
