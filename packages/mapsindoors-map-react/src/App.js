@@ -13,7 +13,7 @@ function App() {
                 {/* This is the Map Template component */}
                 <MapsIndoorsMap
                     apiKey="mapspeople"
-                    venue="INDUSTRIAL_TERRACE"
+                    venue="Stigsborgvej"
                     mapboxAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
                 // gmApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
                 />
