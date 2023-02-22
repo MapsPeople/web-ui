@@ -1,0 +1,11 @@
+.search {
+    padding: 24px 8px 8px 8px;
+    display: grid;
+    gap: 8px;
+    color: var(--brand-colors-black-100);
+
+    &__results {
+        display: grid;
+        gap: 8px;
+    }
+}

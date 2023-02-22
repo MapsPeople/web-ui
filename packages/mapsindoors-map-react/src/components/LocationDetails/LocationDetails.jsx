@@ -5,7 +5,7 @@ import { ReactComponent as PinIcon } from '../../assets/pin.svg';
 import { MapsIndoorsContext } from '../../MapsIndoorsContext';
 import { useIsVerticalOverflow } from '../../hooks/useIsVerticalOverflow';
 
-function LocationDetails({ location, onClose, onStartWayfinding }) {
+function LocationDetails({ location, onBack, onStartWayfinding }) {
 
     const locationInfoElement = useRef(null);
     const locationDetailsElement = useRef(null);
@@ -37,7 +37,7 @@ function LocationDetails({ location, onClose, onStartWayfinding }) {
                     {location.properties.name}<br />
                     <mi-location-info ref={locationInfoElement} />
                 </div>
-                <button className="location-info__close" onClick={() => onClose()}>
+                <button className="location-info__close" onClick={() => onBack()}>
                     <CloseIcon />
                 </button>
             </div>
