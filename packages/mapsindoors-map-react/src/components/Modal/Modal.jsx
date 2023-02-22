@@ -17,7 +17,7 @@ const VIEWS = {
  * @param {Object} props
  * @param {Object} props.currentLocation - The currently selected MapsIndoors Location.
  */
-function Modal({ currentLocation, onClose }) {
+function Modal({ currentLocation }) {
     const [activePage, setActivePage] = useState(null);
 
     /*
@@ -30,7 +30,6 @@ function Modal({ currentLocation, onClose }) {
     useEffect(() => {
         setActivePage(VIEWS.SEARCH);
     }, [])
-
 
     const pages = [
         <div className="modal">
