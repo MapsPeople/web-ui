@@ -78,13 +78,6 @@ function Wayfinding({ onStartDirections, onBack, location }) {
         endSearchFieldRef.current.addEventListener('click', () => {
             setHasInputFocus(true);
         });
-
-        startSearchFieldRef.current.addEventListener('componentRendered', () => {
-            setTimeout(() => {
-                startSearchFieldRef.current.querySelector('input').focus();
-            }, 250);
-        });
-
     }, []);
 
     useEffect(() => {
@@ -95,7 +88,6 @@ function Wayfinding({ onStartDirections, onBack, location }) {
 
     return (
         <div className={`wayfinding ${hasInputFocus ? 'full' : 'fit'}`}>
-
             <div className="wayfinding__directions">
                 <div className="wayfinding__title">Start wayfinding</div>
                 <button className="wayfinding__close" onClick={() => onBack()} aria-label="Close">

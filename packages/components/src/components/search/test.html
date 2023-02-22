@@ -27,9 +27,7 @@
         const resultsContainer = document.getElementById('results');
 
         miSearchComponent.addEventListener('componentRendered', () => {
-            setTimeout(() => {
-                miSearchComponent.querySelector('input').focus();
-            }, 250);
+            miSearchComponent.querySelector('input').focus();
         });
 
         miSearchComponent.addEventListener('shortInput', () => {

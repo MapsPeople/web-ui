@@ -709,10 +709,6 @@ export namespace Components {
          */
         "google": boolean;
         /**
-          * If the search field is in focus.
-         */
-        "hasFocus": boolean;
-        /**
           * Id for the input field.
          */
         "idAttribute": string;
@@ -1815,10 +1811,6 @@ declare namespace LocalJSX {
           * If searching should include Google Places autocomplete suggestions.  Remember to comply to Google's policy by showing a "Power By Google" badge somewhere on your page if not already showing a Google map: https://developers.google.com/places/web-service/policies
          */
         "google"?: boolean;
-        /**
-          * If the search field is in focus.
-         */
-        "hasFocus"?: boolean;
         /**
           * Id for the input field.
          */

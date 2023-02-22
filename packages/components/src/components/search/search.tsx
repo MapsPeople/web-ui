@@ -114,11 +114,6 @@ export class Search implements ComponentInterface {
      */
     @Prop({ mutable: true, reflect: true }) preventSearch: boolean = false;
 
-    /**
-    * If the search field is in focus.
-    */
-    @Prop() hasFocus: boolean = false;
-
     @Watch('value')
     valueChange(newValue): void {
         if (!newValue || !this.inputElement) {
@@ -297,8 +292,6 @@ export class Search implements ComponentInterface {
             }
         }
         this.componentRendered.emit();
-
-        // this.hasFocus = true;
     }
 
     render(): JSX.Element {
@@ -310,9 +303,7 @@ export class Search implements ComponentInterface {
                     type="search"
                     ref={(el) => this.inputElement = el as HTMLInputElement}
                     onInput={(): void => this.inputChanged()}
-                    onFocus={() => console.log('focused')}
                     placeholder={this.placeholder}
-                    // autofocus={this.hasFocus}
                     autocomplete="off"
                 />
                 <button type="button" onClick={() => this.clear()} aria-label="Clear">
