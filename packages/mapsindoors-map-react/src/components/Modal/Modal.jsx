@@ -29,23 +29,23 @@ function Modal({ currentLocation, setCurrentLocation }) {
     }, [currentLocation]);
 
     const pages = [
-        <div className="modal">
+ 		<div className={`modal ${activePage === VIEWS.SEARCH ? 'modal--open' : ''}`} key="A">
             <Search onLocationClick={(location) => setCurrentLocation(location)} />
         </div>,
-        <div className="modal">
-            <LocationDetails onStartWayfinding={() => setActivePage(VIEWS.WAYFINDING)} location={currentLocation} onBack={() => setActivePage(VIEWS.SEARCH)} />
+        <div className={`modal ${activePage === VIEWS.LOCATION_DETAILS ? 'modal--open' : ''}`} key="B">
+            <LocationDetails onStartWayfinding={() => setActivePage(VIEWS.WAYFINDING)} location={currentLocation} onClose={() => close()} />
         </div>,
-        <div className="modal">
+         <div className={`modal ${activePage === VIEWS.WAYFINDING ? 'modal--open' : ''}`} key="C">
             <Wayfinding onStartDirections={() => setActivePage(VIEWS.DIRECTIONS)} location={currentLocation} onBack={() => setActivePage(VIEWS.LOCATION_DETAILS)} />
         </div>,
-        <div className="modal">
+         <div className={`modal ${activePage === VIEWS.DIRECTIONS ? 'modal--open' : ''}`} key="D">
             <Directions onBack={() => setActivePage(VIEWS.WAYFINDING)} />
         </div>
     ]
 
     return (
         <div className="modals">
-            {pages[activePage]}
+            {pages}
         </div>
     )
 }
