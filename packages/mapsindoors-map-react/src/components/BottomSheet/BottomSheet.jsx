@@ -19,7 +19,7 @@ const BOTTOM_SHEETS = {
  * @param {Object} props
  * @param {Object} props.currentLocation - The currently selected MapsIndoors Location.
  */
-function BottomSheet({ currentLocation }) {
+function BottomSheet({ currentLocation, setCurrentLocation }) {
 
     const bottomSheetRef = useRef();
     const [activeBottomSheet, setActiveBottomSheet] = useState(null);
@@ -28,21 +28,12 @@ function BottomSheet({ currentLocation }) {
      * React on changes on the current location.
      */
     useEffect(() => {
-        setActiveBottomSheet(currentLocation ? BOTTOM_SHEETS.LOCATION_DETAILS : undefined);
+        setActiveBottomSheet(currentLocation ? BOTTOM_SHEETS.LOCATION_DETAILS : BOTTOM_SHEETS.SEARCH);
     }, [currentLocation]);
-
-    useEffect(() => {
-        setActiveBottomSheet(BOTTOM_SHEETS.SEARCH);
-    }, [])
-
-    function setCurrentLocation(location) {
-        currentLocation = location;
-        setActiveBottomSheet(BOTTOM_SHEETS.LOCATION_DETAILS);
-    }
 
     const bottomSheets = [
         <Sheet minHeight="128" isOpen={activeBottomSheet === BOTTOM_SHEETS.SEARCH} key="A">
-            <Search onLocationClicked={(location) => setCurrentLocation(location)} />
+            <Search onLocationClick={(location) => setCurrentLocation(location)} />
         </Sheet>,
         <Sheet minHeight="128" isOpen={activeBottomSheet === BOTTOM_SHEETS.LOCATION_DETAILS} key="B">
             <LocationDetails onStartWayfinding={() => setActiveBottomSheet(BOTTOM_SHEETS.WAYFINDING)} location={currentLocation} onBack={() => setActiveBottomSheet(BOTTOM_SHEETS.SEARCH)} />
