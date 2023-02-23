@@ -50,8 +50,9 @@ function Wayfinding({ onStartDirections, onBack, location }) {
                     const listItem = document.createElement('mi-list-item-location');
                     listItem.location = result;
                     resultsContainerRef.current.appendChild(listItem);
-                    listItem.addEventListener('click', () => {
+                    listItem.addEventListener('click', clickHandler => {
                         locationRef.current.setDisplayName(result.properties.name);
+                        listItem.removeEventListener('click', clickHandler);
                         resultsContainerRef.current.innerHTML = '';
                         setHasInputFocus(true);
                     });
