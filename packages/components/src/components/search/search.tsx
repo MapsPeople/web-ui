@@ -112,7 +112,7 @@ export class Search implements ComponentInterface {
     /**
      * Sets the prevention of the search.
      */
-    @Prop({ mutable: true, reflect: true }) preventSearch: boolean = false;
+    private preventSearch: boolean = false;
 
     @Watch('value')
     valueChange(newValue): void {

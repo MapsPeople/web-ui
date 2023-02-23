@@ -749,10 +749,6 @@ export namespace Components {
          */
         "placeholder": string;
         /**
-          * Sets the prevention of the search.
-         */
-        "preventSearch": boolean;
-        /**
           * Sets text to be shown in the search field. Setting it will not perform a search.
          */
         "setDisplayText": (displayText: string) => Promise<void>;
@@ -1867,10 +1863,6 @@ declare namespace LocalJSX {
           * Placeholder for the input field.
          */
         "placeholder"?: string;
-        /**
-          * Sets the prevention of the search.
-         */
-        "preventSearch"?: boolean;
         /**
           * Get or set the entered value
          */
