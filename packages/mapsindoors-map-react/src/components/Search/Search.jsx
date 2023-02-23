@@ -2,7 +2,14 @@ import React from "react";
 import './Search.scss';
 import { useRef, useEffect } from 'react';
 
-function Search() {
+/**
+ * Show the search results.
+ *
+ * @param {Object} props
+ * @param {function} props.locationClicked - Function that is run when a MapsIndoors Location is clicked. the Location will be sent along as first argument.
+ * @returns
+ */
+function Search({onLocationClicked}) {
 
     const searchFieldRef = useRef();
     const searchResultsRef = useRef();
@@ -20,9 +27,10 @@ function Search() {
                     const listItem = document.createElement('mi-list-item-location');
                     listItem.location = result;
                     searchResultsRef.current.appendChild(listItem);
-                    listItem.addEventListener('click', () => {
-                        locationRef.current.setDisplayName(result.properties.name);
-                        searchResultsRef.current.innerHTML = '';
+                    listItem.addEventListener('locationClicked', (location) => {
+                        onLocationClicked(location.detail);
+                        // locationRef.current.setDisplayName(result.properties.name);
+                        // searchResultsRef.current.innerHTML = '';
                     });
                 }
             });

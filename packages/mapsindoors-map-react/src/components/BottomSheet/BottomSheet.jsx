@@ -35,9 +35,14 @@ function BottomSheet({ currentLocation }) {
         setActiveBottomSheet(BOTTOM_SHEETS.SEARCH);
     }, [])
 
+    function setCurrentLocation(location) {
+        currentLocation = location;
+        setActiveBottomSheet(BOTTOM_SHEETS.LOCATION_DETAILS);
+    }
+
     const bottomSheets = [
         <Sheet minHeight="128" isOpen={activeBottomSheet === BOTTOM_SHEETS.SEARCH} key="A">
-            <Search />
+            <Search onLocationClicked={(location) => setCurrentLocation(location)} />
         </Sheet>,
         <Sheet minHeight="128" isOpen={activeBottomSheet === BOTTOM_SHEETS.LOCATION_DETAILS} key="B">
             <LocationDetails onStartWayfinding={() => setActiveBottomSheet(BOTTOM_SHEETS.WAYFINDING)} location={currentLocation} onBack={() => setActiveBottomSheet(BOTTOM_SHEETS.SEARCH)} />
