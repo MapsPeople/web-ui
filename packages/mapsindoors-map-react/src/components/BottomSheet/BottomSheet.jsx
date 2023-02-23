@@ -18,6 +18,7 @@ const BOTTOM_SHEETS = {
 /**
  * @param {Object} props
  * @param {Object} props.currentLocation - The currently selected MapsIndoors Location.
+ * @param {Object} props.setCurrentLocation - The setter for the currently selected MapsIndoors Location.
  */
 function BottomSheet({ currentLocation, setCurrentLocation }) {
 
@@ -26,6 +27,7 @@ function BottomSheet({ currentLocation, setCurrentLocation }) {
 
     /*
      * React on changes on the current location.
+     * Set the search bottom sheet to be active if there is no location selected.
      */
     useEffect(() => {
         setActiveBottomSheet(currentLocation ? BOTTOM_SHEETS.LOCATION_DETAILS : BOTTOM_SHEETS.SEARCH);

@@ -16,32 +16,24 @@ function Search({ onLocationClick }) {
 
     useEffect(() => {
 
-        setupSearchResultsHandler(searchFieldRef);
+        searchFieldRef.current.addEventListener('results', e => {
+            searchResultsRef.current.innerHTML = '';
+            for (const result of e.detail) {
+                const listItem = document.createElement('mi-list-item-location');
+                listItem.location = result;
+                searchResultsRef.current.appendChild(listItem);
+                listItem.addEventListener('locationClicked', (location) => {
+                    onLocationClick(location.detail);
+                    listItem.removeEventListener('locationClicked', location);
+                    // locationRef.current.setDisplayName(result.properties.name);
+                    // searchResultsRef.current.innerHTML = '';
+                });
+            }
+        });
 
-        clearResultList(searchFieldRef, searchResultsRef);
-
-        function setupSearchResultsHandler(locationRef) {
-            locationRef.current.addEventListener('results', e => {
-                searchResultsRef.current.innerHTML = '';
-                for (const result of e.detail) {
-                    const listItem = document.createElement('mi-list-item-location');
-                    listItem.location = result;
-                    searchResultsRef.current.appendChild(listItem);
-                    listItem.addEventListener('locationClicked', (location) => {
-                        onLocationClick(location.detail);
-                        listItem.removeEventListener('locationClicked', location);
-                        // locationRef.current.setDisplayName(result.properties.name);
-                        // searchResultsRef.current.innerHTML = '';
-                    });
-                }
-            });
-        }
-
-        function clearResultList(locationRef, resultsRef) {
-            locationRef.current.addEventListener('cleared', () => {
-                resultsRef.current.innerHTML = '';
-            });
-        }
+        searchFieldRef.current.addEventListener('cleared', () => {
+            searchResultsRef.current.innerHTML = '';
+        });
     })
 
     return (
