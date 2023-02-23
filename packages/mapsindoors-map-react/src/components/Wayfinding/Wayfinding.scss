@@ -45,11 +45,11 @@
     &__details {
         padding: var(--spacing-medium);
 
-        &.show {
+        &--show {
             display: block;
         }
 
-        &.hide {
+        &--hide {
             display: none;
         }
     }
@@ -121,16 +121,16 @@
         }
     }
 
-    &.fit {
+    &--fit {
         height: fit-content;
     }
 
-    &.full {
+    &--full {
         height: 100vh;
     }
 
     @media (min-width: $desktop-breakpoint) {
-        &.full {
+        &--full {
             height: 600px;
         }
     }

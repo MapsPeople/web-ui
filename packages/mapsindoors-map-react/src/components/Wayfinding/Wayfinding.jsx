@@ -87,7 +87,7 @@ function Wayfinding({ onStartDirections, onBack, location }) {
     }, [location]);
 
     return (
-        <div className={`wayfinding ${hasInputFocus ? 'full' : 'fit'}`}>
+        <div className={`wayfinding ${hasInputFocus ? 'wayfinding--full' : 'wayfinding--fit'}`}>
             <div className="wayfinding__directions">
                 <div className="wayfinding__title">Start wayfinding</div>
                 <button className="wayfinding__close" onClick={() => onBack()} aria-label="Close">
@@ -106,7 +106,7 @@ function Wayfinding({ onStartDirections, onBack, location }) {
             </div>
             <div className="wayfinding__results" ref={resultsContainerRef}></div>
             {/* Fixme: Add functionality to the accessibility feature. */}
-            <div className={`wayfinding__details ${hasInputFocus ? 'hide' : 'show'}`} ref={detailsRef}>
+            <div className={`wayfinding__details ${hasInputFocus ? 'wayfinding__details--hide' : 'wayfinding__details--show'}`} ref={detailsRef}>
                 <div className="wayfinding__accessibility">
                     <input className="mi-toggle" type="checkbox" />
                     <div>Accessibility</div>
