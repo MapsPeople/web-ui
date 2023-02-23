@@ -749,6 +749,10 @@ export namespace Components {
          */
         "placeholder": string;
         /**
+          * Sets text to be shown in the search field. Setting it will not perform a search.
+         */
+        "setDisplayText": (displayText: string) => Promise<void>;
+        /**
           * Get or set the entered value
          */
         "value": string;

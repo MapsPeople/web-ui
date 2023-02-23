@@ -36,7 +36,7 @@ function Modal({ currentLocation, setCurrentLocation }) {
             <LocationDetails onStartWayfinding={() => setActivePage(VIEWS.WAYFINDING)} location={currentLocation} onBack={() => setActivePage(VIEWS.SEARCH)} />
         </div>,
         <div className="modal">
-            <Wayfinding onStartDirections={() => setActivePage(VIEWS.DIRECTIONS)} onBack={() => setActivePage(VIEWS.LOCATION_DETAILS)} />
+            <Wayfinding onStartDirections={() => setActivePage(VIEWS.DIRECTIONS)} location={currentLocation} onBack={() => setActivePage(VIEWS.LOCATION_DETAILS)} />
         </div>,
         <div className="modal">
             <Directions onBack={() => setActivePage(VIEWS.WAYFINDING)} />
