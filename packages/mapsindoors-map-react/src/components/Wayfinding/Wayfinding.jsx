@@ -51,7 +51,7 @@ function Wayfinding({ onStartDirections, onBack, location }) {
                     listItem.location = result;
                     resultsContainerRef.current.appendChild(listItem);
                     listItem.addEventListener('click', clickHandler => {
-                        locationRef.current.setDisplayName(result.properties.name);
+                        locationRef.current.setDisplayText(result.properties.name);
                         listItem.removeEventListener('click', clickHandler);
                         resultsContainerRef.current.innerHTML = '';
                         setHasInputFocus(true);

@@ -123,7 +123,10 @@ export class Search implements ComponentInterface {
         if (newValue !== this.inputElement.value) {
             // If newValue is different from what is in the input element, we know it's set from outside the component.
             this.inputElement.value = newValue;
-            this.inputChanged();
+
+            if (!this.preventSearch) {
+                this.inputChanged();
+            }
         }
     }
 
@@ -139,15 +142,14 @@ export class Search implements ComponentInterface {
     }
 
     /**
-     * Sets a display name of the selected value.
+     * Sets text to be shown in the search field.
+     * Setting it will not perform a search.
      */
     @Method()
-    setDisplayName(selectedValue): void {
+    setDisplayText(displayText: string): void {
         this.preventSearch = true;
-        this.value = selectedValue;
-        setTimeout(() => {
-            this.preventSearch = false;
-        }, 1000);
+        this.value = displayText;
+        this.preventSearch = false;
     }
 
     /**

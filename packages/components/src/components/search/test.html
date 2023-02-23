@@ -22,6 +22,11 @@
     </mi-search>
     <div id="results" style="max-width: 500px; max-height:200px; overflow-y: scroll;"></div>
 
+    <p>
+        <input id="display-text" name="display-text" placeholder="Display name..." />
+        <button type="button" onclick="setDisplayText()">Set display text</button>
+    </p>
+
     <script>
         const miSearchComponent = document.querySelector('mi-search');
         const resultsContainer = document.getElementById('results');
@@ -45,6 +50,11 @@
         miSearchComponent.addEventListener('cleared', () => {
             resultsContainer.innerHTML = '';
         });
+
+        function setDisplayText() {
+            const displayText = document.getElementById('display-text').value;
+            miSearchComponent.setDisplayText(displayText);
+        }
     </script>
 </body>
 
