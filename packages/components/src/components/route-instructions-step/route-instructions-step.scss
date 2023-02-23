@@ -21,7 +21,6 @@
     &__info {
         display: grid;
         grid-auto-flow: column;
-        width: fit-content;
         gap: variables.$spacing-x-small;
         align-items: center;
     }

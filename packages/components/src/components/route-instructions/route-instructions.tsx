@@ -224,7 +224,7 @@ export class RouteInstructions implements ComponentInterface {
                     this.lastStepTravelMode = currentStep.travel_mode;
                     this.lastStepTransitStop = currentStep.transit_information?.arrival_stop?.name ? currentStep.transit_information?.arrival_stop.name : null;
 
-                    return <mi-route-instructions-step
+                    return <mi-route-instructions-step-legacy
                         ref={(el) => this.miStepElements.push(el as HTMLMiRouteInstructionsStepElement)}
                         from-travel-mode={lastTravelMode}
                         from-route-context={lastStepRouteContext}
