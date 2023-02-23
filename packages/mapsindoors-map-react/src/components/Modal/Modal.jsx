@@ -16,24 +16,21 @@ const VIEWS = {
 /**
  * @param {Object} props
  * @param {Object} props.currentLocation - The currently selected MapsIndoors Location.
+ * @param {Object} props.setCurrentLocation - The setter for the currently selected MapsIndoors Location.
  */
-function Modal({ currentLocation }) {
+function Modal({ currentLocation, setCurrentLocation }) {
     const [activePage, setActivePage] = useState(null);
 
     /*
     * React on changes on the current location.
     */
     useEffect(() => {
-        setActivePage(currentLocation ? VIEWS.LOCATION_DETAILS : undefined);
+        setActivePage(currentLocation ? VIEWS.LOCATION_DETAILS : VIEWS.SEARCH);
     }, [currentLocation]);
-
-    useEffect(() => {
-        setActivePage(VIEWS.SEARCH);
-    }, [])
 
     const pages = [
         <div className="modal">
-            <Search />
+            <Search onLocationClick={(location) => setCurrentLocation(location)} />
         </div>,
         <div className="modal">
             <LocationDetails onStartWayfinding={() => setActivePage(VIEWS.WAYFINDING)} location={currentLocation} onBack={() => setActivePage(VIEWS.SEARCH)} />
