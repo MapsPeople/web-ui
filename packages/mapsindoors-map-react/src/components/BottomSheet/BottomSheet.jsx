@@ -34,7 +34,7 @@ function BottomSheet({ currentLocation, setCurrentLocation }) {
     }, [currentLocation]);
 
     const bottomSheets = [
-        <Sheet minHeight="128" isOpen={activeBottomSheet === BOTTOM_SHEETS.SEARCH} key="A">
+        <Sheet minHeight="100" isOpen={activeBottomSheet === BOTTOM_SHEETS.SEARCH} key="A">
             <Search onLocationClick={(location) => setCurrentLocation(location)} />
         </Sheet>,
         <Sheet minHeight="128" isOpen={activeBottomSheet === BOTTOM_SHEETS.LOCATION_DETAILS} key="B">

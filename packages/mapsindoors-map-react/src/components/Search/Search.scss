@@ -1,11 +1,32 @@
+@import '../../variables.scss';
+
 .search {
     padding: 24px 8px 8px 8px;
     display: grid;
     gap: 8px;
     color: var(--brand-colors-black-100);
+    grid-template-rows: 48px 1fr;
+
 
     &__results {
         display: grid;
         gap: 8px;
+        overflow: scroll;
+        grid-auto-rows: min-content;
+    }
+
+    &--fit {
+        height: fit-content;
+    }
+
+    &--full {
+        height: 100vh;
+    }
+
+    @media (min-width: $desktop-breakpoint) {
+        &--full {
+            height: fit-content;
+            max-height: 50vh;
+        }
     }
 }
