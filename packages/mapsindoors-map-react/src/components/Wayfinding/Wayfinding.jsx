@@ -44,18 +44,34 @@ function Wayfinding({ onStartDirections, onBack, location }) {
          * Listen to the events when the item is clicked, and set the location value to be the selected one.
          */
         function setupSearchResultsHandler(locationRef) {
+
+            /**
+             * Click event handler function that sets the display text of the input field,
+             * and clears out the results list.
+             */
+            function clickHandler(clickEvent) {
+                const name = clickEvent.target.location.properties.name;
+                locationRef.current.setDisplayText(name);
+                resultsContainerRef.current.innerHTML = '';
+                setHasInputFocus(true);
+            }
+
             locationRef.current.addEventListener('results', e => {
+                /**
+                * Get all the mi-list-item-location component.
+                * Loop through them and remove the event listener.
+                */
+                const listItemLocations = document.querySelectorAll('mi-list-item-location');
+                listItemLocations.forEach(element => {
+                    element.removeEventListener('click', clickHandler);
+                });
+
                 resultsContainerRef.current.innerHTML = '';
                 for (const result of e.detail) {
                     const listItem = document.createElement('mi-list-item-location');
                     listItem.location = result;
                     resultsContainerRef.current.appendChild(listItem);
-                    listItem.addEventListener('click', clickHandler => {
-                        locationRef.current.setDisplayText(result.properties.name);
-                        listItem.removeEventListener('click', clickHandler);
-                        resultsContainerRef.current.innerHTML = '';
-                        setHasInputFocus(true);
-                    });
+                    listItem.addEventListener('click', clickHandler);
                 }
             });
 
