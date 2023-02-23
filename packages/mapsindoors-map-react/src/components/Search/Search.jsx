@@ -36,8 +36,7 @@ function Search({ onLocationClick }) {
                 searchResultsRef.current.appendChild(listItem);
                 listItem.addEventListener('locationClicked', (location) => {
                     onLocationClick(location.detail);
-                    listItem.removeEventListener('locationClicked', location);
-                    // searchFieldRef.current.value('');
+                    searchFieldRef.current.setDisplayText('');
                     searchResultsRef.current.innerHTML = '';
                 });
             }

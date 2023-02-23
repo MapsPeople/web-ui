@@ -33,7 +33,7 @@ function Modal({ currentLocation, setCurrentLocation }) {
             <Search onLocationClick={(location) => setCurrentLocation(location)} />
         </div>,
         <div className={`modal ${activePage === VIEWS.LOCATION_DETAILS ? 'modal--open' : ''}`} key="B">
-            <LocationDetails onStartWayfinding={() => setActivePage(VIEWS.WAYFINDING)} location={currentLocation} />
+            <LocationDetails onStartWayfinding={() => setActivePage(VIEWS.WAYFINDING)} location={currentLocation} onBack={() => setActivePage(VIEWS.SEARCH)} />
         </div>,
          <div className={`modal ${activePage === VIEWS.WAYFINDING ? 'modal--open' : ''}`} key="C">
             <Wayfinding onStartDirections={() => setActivePage(VIEWS.DIRECTIONS)} location={currentLocation} onBack={() => setActivePage(VIEWS.LOCATION_DETAILS)} />
