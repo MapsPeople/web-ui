@@ -18,7 +18,7 @@ function LocationDetails({ location, onClose, onStartWayfinding }) {
     const mapsIndoorsInstance = useContext(MapsIndoorsContext);
 
     // Check if the content of the Location details is overflowing
-    const isOverflowing = useIsVerticalOverflow(locationDetailsElement);
+    const isOverflowing = useIsVerticalOverflow(location, locationDetailsElement);
 
     useEffect(() => {
         if (location) {
