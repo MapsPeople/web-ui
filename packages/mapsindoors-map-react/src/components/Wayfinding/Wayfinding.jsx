@@ -50,6 +50,17 @@ function Wayfinding({ onStartDirections, onBack, location }) {
             setHasInputFocus(true);
         }
 
+        /*
+        * Get all the mi-list-item-location component.
+        * Loop through them and remove the event listener.
+        */
+        function clearEventListeners() {
+            const listItemLocations = document.querySelectorAll('mi-list-item-location');
+            listItemLocations.forEach(element => {
+                element.removeEventListener('click', clickHandler);
+            });
+        }
+
         /**
          * Search location and add results list implementation.
          * Listen to the 'results' event provided by the 'mi-search' component.
@@ -59,15 +70,7 @@ function Wayfinding({ onStartDirections, onBack, location }) {
          */
         function setupSearchResultsHandler(locationRef) {
             locationRef.current.addEventListener('results', e => {
-                /*
-                * Get all the mi-list-item-location component.
-                * Loop through them and remove the event listener.
-                */
-                const listItemLocations = document.querySelectorAll('mi-list-item-location');
-                listItemLocations.forEach(element => {
-                    element.removeEventListener('click', clickHandler);
-                });
-
+                clearEventListeners();
                 resultsContainerRef.current.innerHTML = '';
                 for (const result of e.detail) {
                     const listItem = document.createElement('mi-list-item-location');
@@ -84,17 +87,11 @@ function Wayfinding({ onStartDirections, onBack, location }) {
          * Clear the results list.
         */
         function clearResultList(locationRef, resultsRef) {
+            clearEventListeners();
 
-            function clearResultsHandler() {
+            locationRef.current.addEventListener('cleared', () => {
                 resultsRef.current.innerHTML = '';
-            }
-
-            const listItemLocations = document.querySelectorAll('mi-list-item-location');
-            listItemLocations.forEach(element => {
-                element.removeEventListener('click', clickHandler);
             });
-
-            locationRef.current.addEventListener('cleared', clearResultsHandler);
         }
 
         // Listen to click events on the input and set the input focus to true.
