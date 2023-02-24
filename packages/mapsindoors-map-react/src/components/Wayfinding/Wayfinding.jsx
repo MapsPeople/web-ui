@@ -48,6 +48,7 @@ function Wayfinding({ onStartDirections, onBack, location }) {
             /**
              * Click event handler function that sets the display text of the input field,
              * and clears out the results list.
+             * @param {object} clickEvent
              */
             function clickHandler(clickEvent) {
                 const name = clickEvent.target.location.properties.name;
