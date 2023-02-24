@@ -7,15 +7,18 @@ import { useRef, useEffect, useState } from 'react';
  *
  * @param {Object} props
  * @param {function} props.onLocationClick - Function that is run when a location from the search results is clicked.
+ * @param {Object} props.categories
  * @returns
  */
-function Search({ onLocationClick }) {
+function Search({ onLocationClick, categories }) {
 
     /** Referencing the search DOM element. */
     const searchFieldRef = useRef();
 
     /** Referencing the search results container DOM element */
     const searchResultsRef = useRef();
+
+    const categoriesListRef = useRef();
 
     /** Determines if the input has focus */
     const [hasInputFocus, setHasInputFocus] = useState(false);
@@ -61,7 +64,7 @@ function Search({ onLocationClick }) {
             }
         });
 
-       clearEventListeners();
+        clearEventListeners();
 
         /**
          * Listen to the 'cleared' event provided by the 'mi-search' component.
@@ -75,11 +78,21 @@ function Search({ onLocationClick }) {
         searchFieldRef.current.addEventListener('click', () => {
             setHasInputFocus(true);
         });
+
+        for (const category of categories) {
+            const chip = document.createElement('mi-chip');
+            chip.content = category;
+            categoriesListRef.current.appendChild(chip);
+            chip.addEventListener('click', () => {
+                chip.active = true;
+            })
+        }
     })
 
     return (
         <div className={`search ${hasInputFocus ? 'search--full' : 'search--fit'}`}>
             <mi-search ref={searchFieldRef} placeholder="Search by name, category, building..." mapsindoors="true"></mi-search>
+            <div ref={categoriesListRef} className="search__categories"></div>
             <div ref={searchResultsRef} className="search__results"></div>
         </div>
     )

@@ -7,6 +7,14 @@
     color: var(--brand-colors-black-100);
     grid-template-rows: var(--spacing-xxx-large) 1fr;
 
+    &__categories {
+        display: grid;
+        grid-auto-flow: column;
+        gap: var(--spacing-x-small);
+        height: fit-content;
+        overflow: scroll;
+        white-space: nowrap;
+    }
 
     &__results {
         display: grid;

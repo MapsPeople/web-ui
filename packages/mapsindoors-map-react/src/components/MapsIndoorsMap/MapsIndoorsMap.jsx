@@ -28,6 +28,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [venues, setVenues] = useState([]);
     const [currentVenueName, setCurrentVenueName] = useState();
     const [currentLocation, setCurrentLocation] = useState();
+    const [currentCategories, setCurrentCategories] = useState(new Set());
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
@@ -61,8 +62,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     }, [locationId]);
 
     /*
-     * React on changes in the MapsIndoors API key by fetching the required data.
-     */
+    * React on changes in the MapsIndoors API key by fetching the required data.
+    */
     useEffect(() => {
         setMapReady(false);
         mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKey);
@@ -72,9 +73,26 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             mapsindoors.services.VenuesService.getVenues(),
             // Fixme: Venue Images are currently stored in the AppConfig object. So we will need to fetch the AppConfig as well.
             mapsindoors.services.AppConfigService.getConfig(),
+            // Fetch all Locations
+            mapsindoors.services.LocationsService.getLocations({}),
             // Ensure a minimum waiting time of 3 seconds
             new Promise(resolve => setTimeout(resolve, 3000))
-        ]).then(([venuesResult, appConfigResult]) => {
+        ]).then(([venuesResult, appConfigResult, locationsResult]) => {
+            let locationCategories = [];
+            let uniqueCategories = new Set();
+
+            locationsResult.forEach(l => {
+                if (Object.keys(l.properties.categories).length > 0) {
+                    locationCategories.push(l.properties.categories)
+                }
+            });
+
+            locationCategories.forEach(item => {
+                Object.keys(item).forEach(value => uniqueCategories.add(value));
+            });
+
+            setCurrentCategories(uniqueCategories);
+
             venuesResult = venuesResult.map(venue => {
                 venue.image = appConfigResult.venueImages[venue.name.toLowerCase()];
                 return venue;
@@ -83,15 +101,26 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
         });
     }, [apiKey]);
 
+
     return (<MapsIndoorsContext.Provider value={mapsIndoorsInstance}>
         <div className="mapsindoors-map">
             {!isMapReady && <SplashScreen logo={logo} primaryColor={primaryColor} />}
             {venues.length > 1 && <VenueSelector onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)} venues={venues} currentVenueName={currentVenueName} />}
             {isMapReady && isDesktop
                 ?
-                <Modal setCurrentLocation={setCurrentLocation} currentLocation={currentLocation} onClose={() => setCurrentLocation(null)} />
+                <Modal
+                    currentLocation={currentLocation}
+                    setCurrentLocation={setCurrentLocation}
+                    currentCategories={currentCategories}
+                    setCurrentCategories={setCurrentCategories}
+                    onClose={() => setCurrentLocation(null)} />
                 :
-                <BottomSheet setCurrentLocation={setCurrentLocation} currentLocation={currentLocation} onClose={() => setCurrentLocation(null)} />
+                <BottomSheet
+                    currentLocation={currentLocation}
+                    setCurrentLocation={setCurrentLocation}
+                    currentCategories={currentCategories}
+                    setCurrentCategories={setCurrentCategories}
+                    onClose={() => setCurrentLocation(null)} />
             }
             <Map
                 apiKey={apiKey}
