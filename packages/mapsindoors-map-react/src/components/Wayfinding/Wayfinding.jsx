@@ -58,7 +58,7 @@ function Wayfinding({ onStartDirections, onBack, location }) {
             }
 
             locationRef.current.addEventListener('results', e => {
-                /**
+                /*
                 * Get all the mi-list-item-location component.
                 * Loop through them and remove the event listener.
                 */
