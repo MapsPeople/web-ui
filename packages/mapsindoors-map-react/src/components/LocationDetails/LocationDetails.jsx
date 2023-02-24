@@ -4,6 +4,7 @@ import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import { ReactComponent as PinIcon } from '../../assets/pin.svg';
 import { MapsIndoorsContext } from '../../MapsIndoorsContext';
 import { useIsVerticalOverflow } from '../../hooks/useIsVerticalOverflow';
+import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 
 function LocationDetails({ location, onClose, onStartWayfinding }) {
 
@@ -19,6 +20,8 @@ function LocationDetails({ location, onClose, onStartWayfinding }) {
 
     // Check if the content of the Location details is overflowing
     const isOverflowing = useIsVerticalOverflow(location, locationDetailsElement);
+
+    const scrollableContentSwipePrevent = usePreventSwipe();
 
     useEffect(() => {
         if (location) {
@@ -51,7 +54,7 @@ function LocationDetails({ location, onClose, onStartWayfinding }) {
                     })}
                 </p>}
 
-                {location.properties.description && <section className={`location-details__description ${showFullDescription ? 'location-details__description--full' : ''}`}>
+                {location.properties.description && <section {...scrollableContentSwipePrevent} className={`location-details__description prevent-scroll ${showFullDescription ? 'location-details__description--full' : ''}`}>
                     <div ref={locationDetailsElement}>
                         {location.properties.description}
                     </div>
