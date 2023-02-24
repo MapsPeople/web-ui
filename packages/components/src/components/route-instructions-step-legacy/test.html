@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
+    <title>mi-route-instructions-step-legacy test page</title>
+    <script type="module" src="/build/mi-components.esm.js"></script>
+    <script nomodule src="/build/mi-components.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v1.10.1/mapbox-gl.js"></script>
+    <script type="text/javascript"
+        src="//maps.googleapis.com/maps/api/js?v=3&key=AIzaSyBNhmxW2OntKAVs7hjxmAjFscioPcfWZSc&libraries=geometry,places">
+        </script>
+    <script src="https://app.mapsindoors.com/mapsindoors/js/sdk/4.5.1/mapsindoors-4.5.1.js.gz"></script>
+
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <mi-route-instructions-step-legacy></mi-route-instructions-step-legacy>
+
+    <script>
+        const stepElement = document.querySelector('mi-route-instructions-step-legacy');
+        const step = {
+            distance: {
+                text: '',
+                value: 24
+            },
+            duration: {
+                text: '',
+                value: 37
+            },
+            start_location: {
+                floor_name: '0',
+                lat: 57.0581246,
+                lng: 9.9506587,
+                zLevel: 0
+            },
+            end_location: {
+                floor_name: '0',
+                lat: 57.0580794,
+                lng: 9.9504232,
+                zLevel: 0
+            },
+            geometry: null,
+            highway: 'footway',
+            end_context: {
+                building: {
+                    buildingInfo: {
+                        name: "The White House"
+                    }
+                },
+                venue: {
+                    venueInfo: {
+                        name: "The White House"
+                    }
+                }
+            },
+            route_context: 'InsideBuilding',
+            html_instructions: null,
+            maneuver: null,
+            travel_mode: 'WALKING',
+            name: 'The White House',
+            originalLegIndex: 0,
+            originalStepIndex: 0,
+            steps: [
+                {
+                    distance: { text: '9 m', value: 9 },
+                    duration: { text: '0 mins', value: 6 },
+                    end_location: { zLevel: 0, floor_name: '0', lat: 57.0581288, lng: 9.9505383 },
+                    geometry: { type: 'LineString', coordinates: Array(15) },
+                    highway: 'footway',
+                    html_instructions: null,
+                    maneuver: 'straight',
+                    route_context: 'InsideBuilding',
+                    start_location: { zLevel: 0, floor_name: '0', lat: 57.0580794, lng: 9.9504232 },
+                    travel_mode: 'WALKING'
+                },
+                {
+                    distance: { text: '3 m', value: 3 },
+                    duration: { text: '0 mins', value: 2 },
+                    end_location: { zLevel: 0, floor_name: '0', lat: 57.0581098, lng: 9.9505663 },
+                    geometry: { type: 'LineString', coordinates: Array(2) },
+                    highway: 'footway',
+                    html_instructions: null,
+                    maneuver: 'turn-right',
+                    route_context: 'InsideBuilding',
+                    start_location: { zLevel: 0, floor_name: '0', lat: 57.0581288, lng: 9.9505383 },
+                    travel_mode: 'WALKING'
+                }
+            ]
+        }
+        const translations = {
+            walk: 'Walk',
+            bike: 'Bike',
+            transit: 'Transit',
+            drive: 'Drive',
+            leave: 'Leave',
+            from: 'From',
+            park: 'Park',
+            at: 'at',
+            building: 'Building',
+            venue: 'Venue',
+            takeStaircaseToLevel: 'Take staircase to level',
+            takeElevatorToLevel: 'Take elevator to level',
+            exit: 'Exit',
+            enter: 'Enter',
+            stops: 'stops',
+            andContinue: 'and continue',
+            continueStraightAhead: 'Continue straight ahead',
+            goLeft: 'Go left',
+            goSharpLeft: 'Go sharp left',
+            goSlightLeft: 'Go slight left',
+            goRight: 'Go right',
+            goSharpRight: 'Go sharp right',
+            goSlightRight: 'Go slight right',
+            turnAround: 'Turn around',
+            days: 'd',
+            hours: 'h',
+            minutes: 'min'
+        }
+
+        stepElement.step = JSON.stringify(step);
+        stepElement.fromRouteContext = 'Outside';
+        stepElement.translations = JSON.stringify(translations);
+        stepElement.hideIndoorSubsteps = false;
+    </script>
+
+</body>
+
+</html>
