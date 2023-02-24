@@ -88,7 +88,7 @@ function Wayfinding({ onStartDirections, onBack, location }) {
             });
         }
 
-        /** Listen to click events on the input and set the input focus to true. */
+        // Listen to click events on the input and set the input focus to true.
         startSearchFieldRef.current.addEventListener('click', () => {
             setHasInputFocus(true);
         });
