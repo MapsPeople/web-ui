@@ -98,7 +98,7 @@ function Wayfinding({ onStartDirections, onBack, location }) {
     }, []);
 
     useEffect(() => {
-        /** If there is a location selected, pre-fill the value of the `to` field with the location name. */
+        // If there is a location selected, pre-fill the value of the `to` field with the location name.
         if (location) {
             endSearchFieldRef.current.value = location.properties.name;
         }
