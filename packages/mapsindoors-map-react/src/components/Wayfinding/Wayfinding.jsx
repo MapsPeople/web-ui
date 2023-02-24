@@ -24,7 +24,7 @@ function Wayfinding({ onStartDirections, onBack, location }) {
     const [hasInputFocus, setHasInputFocus] = useState(true);
 
     useEffect(() => {
-         /** Variable for determining the active search field */
+        /** Variable for determining the active search field */
         let activeSearchField;
 
         /** Add start location results list. */
@@ -59,7 +59,7 @@ function Wayfinding({ onStartDirections, onBack, location }) {
          */
         function setupSearchResultsHandler(locationRef) {
             locationRef.current.addEventListener('results', e => {
-                /**
+                /*
                 * Get all the mi-list-item-location component.
                 * Loop through them and remove the event listener.
                 */
@@ -97,11 +97,12 @@ function Wayfinding({ onStartDirections, onBack, location }) {
             locationRef.current.addEventListener('cleared', clearResultsHandler);
         }
 
-        /** Listen to click events on the input and set the input focus to true. */
+        // Listen to click events on the input and set the input focus to true.
         startSearchFieldRef.current.addEventListener('click', () => {
             activeSearchField = startSearchFieldRef.current;
             setHasInputFocus(true);
         });
+
         endSearchFieldRef.current.addEventListener('click', () => {
             activeSearchField = endSearchFieldRef.current;
             setHasInputFocus(true);
@@ -109,7 +110,7 @@ function Wayfinding({ onStartDirections, onBack, location }) {
     }, []);
 
     useEffect(() => {
-        /** If there is a location selected, pre-fill the value of the `to` field with the location name. */
+        // If there is a location selected, pre-fill the value of the `to` field with the location name.
         if (location) {
             endSearchFieldRef.current.value = location.properties.name;
         }
