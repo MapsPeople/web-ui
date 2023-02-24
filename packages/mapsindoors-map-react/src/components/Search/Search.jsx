@@ -26,11 +26,10 @@ function Search({ onLocationClick }) {
         * Click event handler function that sets the display text of the input field,
         * and clears out the results list.
         */
-        function clickHandler(clickEvent) {
-            const name = clickEvent.target.location.properties.name;
-            searchFieldRef.current.setDisplayText(name);
+        function clickHandler(location) {
+            onLocationClick(location.detail);
+            searchFieldRef.current.setDisplayText('');
             searchResultsRef.current.innerHTML = '';
-            setHasInputFocus(true);
         }
 
         /*
