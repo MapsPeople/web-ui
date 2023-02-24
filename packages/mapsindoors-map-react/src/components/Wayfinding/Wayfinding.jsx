@@ -24,6 +24,9 @@ function Wayfinding({ onStartDirections, onBack, location }) {
     const [hasInputFocus, setHasInputFocus] = useState(true);
 
     useEffect(() => {
+        /** Variable for determining the active search field */
+        let activeSearchField;
+
         /** Add start location results list. */
         setupSearchResultsHandler(startSearchFieldRef);
 
@@ -37,6 +40,17 @@ function Wayfinding({ onStartDirections, onBack, location }) {
         clearResultList(endSearchFieldRef, resultsContainerRef);
 
         /**
+         * Click event handler function that sets the display text of the input field,
+         * and clears out the results list.
+         */
+        function clickHandler(clickEvent) {
+            const name = clickEvent.target.location.properties.name;
+            activeSearchField.setDisplayText(name);
+            resultsContainerRef.current.innerHTML = '';
+            setHasInputFocus(true);
+        }
+
+        /**
          * Search location and add results list implementation.
          * Listen to the 'results' event provided by the 'mi-search' component.
          * For each search result create a 'mi-list-item-location' component for displaying the content.
@@ -44,20 +58,8 @@ function Wayfinding({ onStartDirections, onBack, location }) {
          * Listen to the events when the item is clicked, and set the location value to be the selected one.
          */
         function setupSearchResultsHandler(locationRef) {
-
-            /**
-             * Click event handler function that sets the display text of the input field,
-             * and clears out the results list.
-             */
-            function clickHandler(clickEvent) {
-                const name = clickEvent.target.location.properties.name;
-                locationRef.current.setDisplayText(name);
-                resultsContainerRef.current.innerHTML = '';
-                setHasInputFocus(true);
-            }
-
             locationRef.current.addEventListener('results', e => {
-                /**
+                /*
                 * Get all the mi-list-item-location component.
                 * Loop through them and remove the event listener.
                 */
@@ -82,22 +84,33 @@ function Wayfinding({ onStartDirections, onBack, location }) {
          * Clear the results list.
         */
         function clearResultList(locationRef, resultsRef) {
-            locationRef.current.addEventListener('cleared', () => {
+
+            function clearResultsHandler() {
                 resultsRef.current.innerHTML = '';
+            }
+
+            const listItemLocations = document.querySelectorAll('mi-list-item-location');
+            listItemLocations.forEach(element => {
+                element.removeEventListener('click', clickHandler);
             });
+
+            locationRef.current.addEventListener('cleared', clearResultsHandler);
         }
 
-        /** Listen to click events on the input and set the input focus to true. */
+        // Listen to click events on the input and set the input focus to true.
         startSearchFieldRef.current.addEventListener('click', () => {
+            activeSearchField = startSearchFieldRef.current;
             setHasInputFocus(true);
         });
+
         endSearchFieldRef.current.addEventListener('click', () => {
+            activeSearchField = endSearchFieldRef.current;
             setHasInputFocus(true);
         });
     }, []);
 
     useEffect(() => {
-        /** If there is a location selected, pre-fill the value of the `to` field with the location name. */
+        // If there is a location selected, pre-fill the value of the `to` field with the location name.
         if (location) {
             endSearchFieldRef.current.value = location.properties.name;
         }
