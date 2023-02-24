@@ -21,6 +21,29 @@ function Search({ onLocationClick }) {
     const [hasInputFocus, setHasInputFocus] = useState(false);
 
     useEffect(() => {
+
+        /**
+        * Click event handler function that sets the display text of the input field,
+        * and clears out the results list.
+        */
+        function clickHandler(clickEvent) {
+            const name = clickEvent.target.location.properties.name;
+            searchFieldRef.current.setDisplayText(name);
+            searchResultsRef.current.innerHTML = '';
+            setHasInputFocus(true);
+        }
+
+        /*
+        * Get all the mi-list-item-location component.
+        * Loop through them and remove the event listener.
+        */
+        function clearEventListeners() {
+            const listItemLocations = document.querySelectorAll('mi-list-item-location');
+            listItemLocations.forEach(element => {
+                element.removeEventListener('click', clickHandler);
+            });
+        }
+
         /**
          * Search location and add results list implementation.
          * Listen to the 'results' event provided by the 'mi-search' component.
@@ -29,18 +52,17 @@ function Search({ onLocationClick }) {
          * Listen to the events when the item is clicked, and set the location value to be the selected one.
          */
         searchFieldRef.current.addEventListener('results', e => {
+            clearEventListeners();
             searchResultsRef.current.innerHTML = '';
             for (const result of e.detail) {
                 const listItem = document.createElement('mi-list-item-location');
                 listItem.location = result;
                 searchResultsRef.current.appendChild(listItem);
-                listItem.addEventListener('locationClicked', (location) => {
-                    onLocationClick(location.detail);
-                    searchFieldRef.current.setDisplayText('');
-                    searchResultsRef.current.innerHTML = '';
-                });
+                listItem.addEventListener('locationClicked', clickHandler);
             }
         });
+
+       clearEventListeners();
 
         /**
          * Listen to the 'cleared' event provided by the 'mi-search' component.
