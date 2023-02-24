@@ -674,6 +674,41 @@ export namespace Components {
          */
         "unit": UnitSystem;
     }
+    interface MiRouteInstructionsStepLegacy {
+        /**
+          * The route context of previous step, if any.
+          * @type {string}
+         */
+        "fromRouteContext": string;
+        /**
+          * The transit stop of previous step if any.
+          * @type {string}
+         */
+        "fromTransitStop": string;
+        /**
+          * The travel mode of previous step, if any.
+          * @type {string}
+         */
+        "fromTravelMode": string;
+        /**
+          * If indoor substeps/maneuvers should be hidden.
+          * @type {boolean}
+         */
+        "hideIndoorSubsteps": boolean;
+        /**
+          * The step data object to render from. Must be passed as stringified JSON.
+         */
+        "step": string;
+        /**
+          * Object with translation strings as stringified JSON.
+         */
+        "translations": string;
+        /**
+          * Set imperial or metric as default unit system.
+          * @type {UnitSystem} 'imperial' or 'metric'
+         */
+        "unit": UnitSystem;
+    }
     interface MiScrollButtons {
         /**
           * Reference to the element with scroll on parent element.
@@ -879,6 +914,10 @@ export interface MiRouteInstructionsStepCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLMiRouteInstructionsStepElement;
 }
+export interface MiRouteInstructionsStepLegacyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLMiRouteInstructionsStepLegacyElement;
+}
 export interface MiSearchCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLMiSearchElement;
@@ -1024,6 +1063,12 @@ declare global {
         prototype: HTMLMiRouteInstructionsStepElement;
         new (): HTMLMiRouteInstructionsStepElement;
     };
+    interface HTMLMiRouteInstructionsStepLegacyElement extends Components.MiRouteInstructionsStepLegacy, HTMLStencilElement {
+    }
+    var HTMLMiRouteInstructionsStepLegacyElement: {
+        prototype: HTMLMiRouteInstructionsStepLegacyElement;
+        new (): HTMLMiRouteInstructionsStepLegacyElement;
+    };
     interface HTMLMiScrollButtonsElement extends Components.MiScrollButtons, HTMLStencilElement {
     }
     var HTMLMiScrollButtonsElement: {
@@ -1101,6 +1146,7 @@ declare global {
         "mi-route-instructions-heading": HTMLMiRouteInstructionsHeadingElement;
         "mi-route-instructions-maneuver": HTMLMiRouteInstructionsManeuverElement;
         "mi-route-instructions-step": HTMLMiRouteInstructionsStepElement;
+        "mi-route-instructions-step-legacy": HTMLMiRouteInstructionsStepLegacyElement;
         "mi-scroll-buttons": HTMLMiScrollButtonsElement;
         "mi-search": HTMLMiSearchElement;
         "mi-share-sms": HTMLMiShareSmsElement;
@@ -1782,6 +1828,48 @@ declare namespace LocalJSX {
          */
         "unit"?: UnitSystem;
     }
+    interface MiRouteInstructionsStepLegacy {
+        /**
+          * The route context of previous step, if any.
+          * @type {string}
+         */
+        "fromRouteContext"?: string;
+        /**
+          * The transit stop of previous step if any.
+          * @type {string}
+         */
+        "fromTransitStop"?: string;
+        /**
+          * The travel mode of previous step, if any.
+          * @type {string}
+         */
+        "fromTravelMode"?: string;
+        /**
+          * If indoor substeps/maneuvers should be hidden.
+          * @type {boolean}
+         */
+        "hideIndoorSubsteps"?: boolean;
+        /**
+          * Event emitted when clicking on a step (not sub step).
+          * @event stepClicked
+          * @type {object}
+          * @properties Object
+         */
+        "onStepClicked"?: (event: MiRouteInstructionsStepLegacyCustomEvent<object>) => void;
+        /**
+          * The step data object to render from. Must be passed as stringified JSON.
+         */
+        "step"?: string;
+        /**
+          * Object with translation strings as stringified JSON.
+         */
+        "translations"?: string;
+        /**
+          * Set imperial or metric as default unit system.
+          * @type {UnitSystem} 'imperial' or 'metric'
+         */
+        "unit"?: UnitSystem;
+    }
     interface MiScrollButtons {
         /**
           * Reference to the element with scroll on parent element.
@@ -1986,6 +2074,7 @@ declare namespace LocalJSX {
         "mi-route-instructions-heading": MiRouteInstructionsHeading;
         "mi-route-instructions-maneuver": MiRouteInstructionsManeuver;
         "mi-route-instructions-step": MiRouteInstructionsStep;
+        "mi-route-instructions-step-legacy": MiRouteInstructionsStepLegacy;
         "mi-scroll-buttons": MiScrollButtons;
         "mi-search": MiSearch;
         "mi-share-sms": MiShareSms;
@@ -2023,6 +2112,7 @@ declare module "@stencil/core" {
             "mi-route-instructions-heading": LocalJSX.MiRouteInstructionsHeading & JSXBase.HTMLAttributes<HTMLMiRouteInstructionsHeadingElement>;
             "mi-route-instructions-maneuver": LocalJSX.MiRouteInstructionsManeuver & JSXBase.HTMLAttributes<HTMLMiRouteInstructionsManeuverElement>;
             "mi-route-instructions-step": LocalJSX.MiRouteInstructionsStep & JSXBase.HTMLAttributes<HTMLMiRouteInstructionsStepElement>;
+            "mi-route-instructions-step-legacy": LocalJSX.MiRouteInstructionsStepLegacy & JSXBase.HTMLAttributes<HTMLMiRouteInstructionsStepLegacyElement>;
             "mi-scroll-buttons": LocalJSX.MiScrollButtons & JSXBase.HTMLAttributes<HTMLMiScrollButtonsElement>;
             "mi-search": LocalJSX.MiSearch & JSXBase.HTMLAttributes<HTMLMiSearchElement>;
             "mi-share-sms": LocalJSX.MiShareSms & JSXBase.HTMLAttributes<HTMLMiShareSmsElement>;

@@ -6,8 +6,8 @@ import { Step, StepContext } from '../../types/step.interface';
 import { isInternetExplorer } from '../../utils/utils';
 
 @Component({
-    tag: 'mi-route-instructions-step',
-    styleUrl: 'route-instructions-step.scss',
+    tag: 'mi-route-instructions-step-legacy',
+    styleUrl: 'route-instructions-step-legacy.scss',
     shadow: true
 })
 export class RouteInstructionsStep implements ComponentInterface {
@@ -241,12 +241,17 @@ export class RouteInstructionsStep implements ComponentInterface {
     }
 
     /**
-     * Render distance part.
+     * Render time and distance part.
      *
      * @returns {JSX.Element}
      */
-    renderDistance(): JSX.Element {
+    renderTimeAndDistance(): JSX.Element {
         return <span part="step-info" class="step__distance-duration">
+            <mi-time
+                seconds={this.stepData.duration.value}
+                translations={`{"days":"${this.translationsData.days}","hours":"${this.translationsData.hours}","minutes":"${this.translationsData.minutes}"}`}>
+            </mi-time>
+            &nbsp;&middot;&nbsp;
             <mi-distance
                 meters={this.stepData.distance.value}
                 unit={this.unit}>
@@ -270,7 +275,7 @@ export class RouteInstructionsStep implements ComponentInterface {
             {this.renderTravelMode()}
             <div part="step-description" class="step__description">
                 {this.translationsData.drive}<br />
-                {this.renderDistance()}
+                {this.renderTimeAndDistance()}
             </div>
             {this.renderToggleButton()}
             {this.renderSubsteps()}
@@ -360,17 +365,19 @@ export class RouteInstructionsStep implements ComponentInterface {
         }
 
         return <div class="step" onClick={e => this.stepClickHandler(e)}>
+            {this.isInternetExplorer ? null :
+                <span class={`step__action-icon ${actionIconName !== 'circle' ? 'step__action-icon--circled' : ''}`}>
+                    <mi-icon icon-name={actionIconName}></mi-icon>
+                </span>
+            }
+            <h3 part="step-heading" class="step__heading">{heading}</h3>
+            {this.renderTravelMode()}
             <div part="step-description" class="step__description">
-                {this.renderDistance()}
+                {this.translationsData.walk}<br />
+                {this.renderTimeAndDistance()}
             </div>
-            <div class="step__info">
-                {this.isInternetExplorer ? null :
-                    <span class={`step__action-icon ${actionIconName !== 'circle' ? 'step__action-icon--circled' : ''}`}>
-                        <mi-icon icon-name={actionIconName}></mi-icon>
-                    </span>
-                }
-                <div part="step-heading" class="step__heading">{heading}</div>
-            </div>
+            {this.renderToggleButton()}
+            {this.renderSubsteps()}
         </div>;
     }
 
@@ -407,7 +414,7 @@ export class RouteInstructionsStep implements ComponentInterface {
             {this.renderTravelMode()}
             <div part="step-description" class="step__description">
                 {this.translationsData.bike}<br />
-                {this.renderDistance()}
+                {this.renderTimeAndDistance()}
             </div>
             {this.renderToggleButton()}
             {this.renderSubsteps()}
