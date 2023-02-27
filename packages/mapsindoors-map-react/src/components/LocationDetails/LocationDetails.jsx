@@ -20,7 +20,7 @@ function LocationDetails({ location, onClose, onStartWayfinding, onSetSize, snap
     const mapsIndoorsInstance = useContext(MapsIndoorsContext);
 
     // Check if the content of the Location details is overflowing
-    const isOverflowing = useIsVerticalOverflow(location, locationDetailsElement);
+    const [isOverflowing, initialOverflow] = useIsVerticalOverflow(location, locationDetailsElement);
 
     const scrollableContentSwipePrevent = usePreventSwipe();
 
@@ -85,7 +85,7 @@ function LocationDetails({ location, onClose, onStartWayfinding, onSetSize, snap
                     <div ref={locationDetailsElement}>
                         {location.properties.description}
                     </div>
-                    {(isOverflowing || showFullDescription) && (
+                    {(isOverflowing || (initialOverflow && showFullDescription)) && (
                         <button onClick={() => toggleDescription()}>
                             {!showFullDescription ? 'Read full description' : 'Close' }
                         </button>
