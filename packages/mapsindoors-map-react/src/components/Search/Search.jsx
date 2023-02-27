@@ -61,13 +61,14 @@ function Search({ onLocationClick }) {
             }
         });
 
-       clearEventListeners();
+        clearEventListeners();
 
         /**
          * Listen to the 'cleared' event provided by the 'mi-search' component.
          * Clear the results list.
          */
         searchFieldRef.current.addEventListener('cleared', () => {
+            clearEventListeners();
             searchResultsRef.current.innerHTML = '';
         });
 
