@@ -63,7 +63,7 @@ function Wayfinding({ onStartDirections, onBack }) {
 
         /**
          * Listen to the 'cleared' event provided by the 'mi-search' component.
-         * Clear the results list. 
+         * Clear the results list.
         */
         function clearResultList(locationRef, resultsRef) {
             locationRef.current.addEventListener('cleared', () => {
@@ -96,7 +96,13 @@ function Wayfinding({ onStartDirections, onBack }) {
                 <div className="wayfinding__accessibility">
                     <input className="mi-toggle" type="checkbox" />
                     <div>Accessibility</div>
-                    <QuestionIcon />
+                    <div class="wayfinding__tooltip">
+                        <QuestionIcon />
+                        <div class="wayfinding__text">
+                            <p>This is the description for the accessibility.</p>
+                            <i></i>
+                        </div>
+                    </div>
                 </div>
                 <hr></hr>
                 <div className="wayfinding__info">
