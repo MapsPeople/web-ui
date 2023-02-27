@@ -23,9 +23,9 @@ function Search({ onLocationClick }) {
     useEffect(() => {
 
         /**
-        * Click event handler function that sets the display text of the input field,
-        * and clears out the results list.
-        */
+         * Click event handler function that sets the display text of the input field,
+         * and clears out the results list.
+         */
         function clickHandler(location) {
             onLocationClick(location.detail);
             searchFieldRef.current.setDisplayText('');
