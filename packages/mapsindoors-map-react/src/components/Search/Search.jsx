@@ -86,7 +86,6 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
         });
     });
 
-
     /**
      * Handler for the click event on the category chips.
      * Set a selected category and only allow one category to be selected at once.
@@ -113,6 +112,12 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
                 listItem.addEventListener('locationClicked', clickHandler);
             }
         });
+
+        if(selectedCategory === category) {
+            console.log('same location has been clicked');
+            setSelectedCategory(null);
+            searchResultsRef.current.innerHTML = '';
+        }
     }
 
     return (
