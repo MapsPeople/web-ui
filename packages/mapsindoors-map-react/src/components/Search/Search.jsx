@@ -23,9 +23,9 @@ function Search({ onLocationClick }) {
     useEffect(() => {
 
         /**
-        * Click event handler function that sets the display text of the input field,
-        * and clears out the results list.
-        */
+         * Click event handler function that sets the display text of the input field,
+         * and clears out the results list.
+         */
         function clickHandler(location) {
             onLocationClick(location.detail);
             searchFieldRef.current.setDisplayText('');
@@ -33,9 +33,9 @@ function Search({ onLocationClick }) {
         }
 
         /*
-        * Get all the mi-list-item-location component.
-        * Loop through them and remove the event listener.
-        */
+         * Get all the mi-list-item-location component.
+         * Loop through them and remove the event listener.
+         */
         function clearEventListeners() {
             const listItemLocations = document.querySelectorAll('mi-list-item-location');
             listItemLocations.forEach(element => {
