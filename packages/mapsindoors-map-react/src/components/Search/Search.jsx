@@ -93,6 +93,9 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
      * @param {object} category
      */
     function categoryClicked(category) {
+         /** Check if the category that is clicked is already selected. */
+         /** If yes, set the selected category to null and empty the results list. */
+         /** If no, filter the locations based on the selected category and show them in the results list. */
         if (selectedCategory === category) {
             searchResultsRef.current.innerHTML = '';
             setSelectedCategory(null);
@@ -116,7 +119,6 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
                 }
             });
         }
-
     }
 
     return (
