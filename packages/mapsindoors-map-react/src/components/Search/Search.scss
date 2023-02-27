@@ -14,6 +14,7 @@
         height: fit-content;
         overflow: scroll;
         white-space: nowrap;
+        padding-bottom: var(--spacing-small);
     }
 
     &__results {
@@ -21,6 +22,7 @@
         gap: var(--spacing-x-small);
         overflow: scroll;
         grid-auto-rows: min-content;
+        padding-top: var(--spacing-x-small);
     }
 
     &--fit {
@@ -35,6 +37,7 @@
         &--fit {
             max-height: 50vh;
         }
+
         &--full {
             height: fit-content;
             max-height: 50vh;

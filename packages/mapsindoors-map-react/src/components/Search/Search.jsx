@@ -93,31 +93,30 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
      * @param {object} category
      */
     function categoryClicked(category) {
-
-        searchResultsRef.current.innerHTML = '';
-        setSelectedCategory(category);
-
-        /** Get the locations and filter through them based on categories selected. */
-        mapsindoors.services.LocationsService.getLocations({
-            categories: category,
-        }).then(locations => {
-            /** Function that takes the locations and passes them to the parent component. */
-            onLocationsFiltered(locations);
-
-            /** Loop through the filtered locations and add them to the search results list. */
-            for (const location of locations) {
-                const listItem = document.createElement('mi-list-item-location');
-                listItem.location = location;
-                searchResultsRef.current.appendChild(listItem);
-                listItem.addEventListener('locationClicked', clickHandler);
-            }
-        });
-
-        if(selectedCategory === category) {
-            console.log('same location has been clicked');
-            setSelectedCategory(null);
+        if (selectedCategory === category) {
             searchResultsRef.current.innerHTML = '';
+            setSelectedCategory(null);
+        } else {
+            searchResultsRef.current.innerHTML = '';
+            setSelectedCategory(category);
+
+            /** Get the locations and filter through them based on categories selected. */
+            mapsindoors.services.LocationsService.getLocations({
+                categories: category,
+            }).then(locations => {
+                /** Function that takes the locations and passes them to the parent component. */
+                onLocationsFiltered(locations);
+
+                /** Loop through the filtered locations and add them to the search results list. */
+                for (const location of locations) {
+                    const listItem = document.createElement('mi-list-item-location');
+                    listItem.location = location;
+                    searchResultsRef.current.appendChild(listItem);
+                    listItem.addEventListener('locationClicked', clickHandler);
+                }
+            });
         }
+
     }
 
     return (
