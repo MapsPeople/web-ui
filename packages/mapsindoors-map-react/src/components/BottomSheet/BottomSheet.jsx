@@ -23,6 +23,8 @@ function BottomSheet({ currentLocation, onClose }) {
     const bottomSheetRef = useRef();
     const [activeBottomSheet, setActiveBottomSheet] = useState(null);
 
+    const [locationDetailsSheetSize, setLocationDetailsSheetSize] = useState();
+
     /**
      * When a sheet is closed.
      */
@@ -39,8 +41,13 @@ function BottomSheet({ currentLocation, onClose }) {
     }, [currentLocation]);
 
     const bottomSheets = [
-        <Sheet minHeight="128" isOpen={activeBottomSheet === BOTTOM_SHEETS.LOCATION_DETAILS} key="A">
-            <LocationDetails onStartWayfinding={() => setActiveBottomSheet(BOTTOM_SHEETS.WAYFINDING)} location={currentLocation} onClose={() => close()} />
+        <Sheet
+            minHeight="128"
+            preferredSizeSnapPoint={locationDetailsSheetSize}
+            isOpen={activeBottomSheet === BOTTOM_SHEETS.LOCATION_DETAILS}
+            key="A"
+        >
+            <LocationDetails onSetSize={size => setLocationDetailsSheetSize(size)} onStartWayfinding={() => setActiveBottomSheet(BOTTOM_SHEETS.WAYFINDING)} location={currentLocation} onClose={() => close()} />
         </Sheet>,
         <Sheet minHeight="220" isOpen={activeBottomSheet === BOTTOM_SHEETS.WAYFINDING} key="B">
             <Wayfinding onStartDirections={() => setActiveBottomSheet(BOTTOM_SHEETS.DIRECTIONS)} onBack={() => setActiveBottomSheet(BOTTOM_SHEETS.LOCATION_DETAILS)}/>

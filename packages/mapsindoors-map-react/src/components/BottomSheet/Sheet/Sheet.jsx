@@ -4,7 +4,7 @@ import { ContainerContext } from '../ContainerContext';
 import { useSwipeable } from 'react-swipeable';
 import './Sheet.scss';
 
-const snapPoints = {
+export const snapPoints = {
     MIN: 1, // Sheet height is the minimum height
     FIT: 2, // Sheet height fits to the content
     MAX: 3  // Sheet height is of maximum height (height of container element)
@@ -18,8 +18,9 @@ let dragStartHeight;
  * @param {Object} props
  * @param {boolean} props.isOpen - If the sheet is open (visible) or not.
  * @param {number} props.minheight - The minimum height of the sheet. It cannot be resized to below this height.
+ * @param {number} props.preferredSizeSnapPoint - Change this to programatically change sheet height to a snap point.
  */
-function Sheet({ children, isOpen, minHeight }) {
+function Sheet({ children, isOpen, minHeight, preferredSizeSnapPoint }) {
 
     /** Referencing the sheet DOM element */
     const sheetRef = useRef();
@@ -81,6 +82,18 @@ function Sheet({ children, isOpen, minHeight }) {
     }
 
     /**
+     * React to changes in the size prop, meaning something requests
+     * the sheet to be set to a certain snap point.
+     */
+    useEffect(() => {
+        sheetRef.current.style.height = `${sheetRef.current.clientHeight}px`;
+
+        requestAnimationFrame(() => {
+            changeSheetHeight(preferredSizeSnapPoint);
+        });
+    }, [preferredSizeSnapPoint]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    /**
      * Handler for swipe gestures on the sheet.
      */
     const swipeHandler = useSwipeable({
@@ -133,7 +146,7 @@ function Sheet({ children, isOpen, minHeight }) {
         } else {
             setContentHeight(contentRef.current.clientHeight);
         }
-    }, [children, isOpen]);
+    }, [children.length, isOpen]);
 
     /*
      * Pass through ref to share the ref between component and useSwipeable.

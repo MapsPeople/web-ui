@@ -5,8 +5,9 @@ import { ReactComponent as PinIcon } from '../../assets/pin.svg';
 import { MapsIndoorsContext } from '../../MapsIndoorsContext';
 import { useIsVerticalOverflow } from '../../hooks/useIsVerticalOverflow';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
+import { snapPoints } from '../BottomSheet/Sheet/Sheet';
 
-function LocationDetails({ location, onClose, onStartWayfinding }) {
+function LocationDetails({ location, onClose, onStartWayfinding, onSetSize }) {
 
     const locationInfoElement = useRef(null);
     const locationDetailsElement = useRef(null);
@@ -29,6 +30,15 @@ function LocationDetails({ location, onClose, onStartWayfinding }) {
             setLocationDisplayRule(mapsIndoorsInstance.getDisplayRule(location));
         }
     }, [location, mapsIndoorsInstance]);
+
+    /**
+     * Proof of concept of a way to programatically change sheet size.
+     * FIXME: Replace this with actual use case for changing sheet height programatically.
+     * @param {number} snapPoint
+     */
+    function changeSize(snapPoint) {
+        onSetSize(snapPoint);
+    }
 
     return <div className="location-details">
         {location && <>
@@ -58,6 +68,7 @@ function LocationDetails({ location, onClose, onStartWayfinding }) {
                     <div ref={locationDetailsElement}>
                         {location.properties.description}
                     </div>
+                    <button onClick={() => changeSize(snapPoints.MAX)}>Set to full</button> | <button onClick={() => changeSize(snapPoints.FIT)}>Set to fit</button> | <button onClick={() => changeSize(snapPoints.MIN)}>Set to min</button>
                     {(isOverflowing || showFullDescription) && <button onClick={() => setShowFullDescription(!showFullDescription)}>{!showFullDescription ? 'Read full description' : 'Close' }</button>}
                 </section>}
             </div>
