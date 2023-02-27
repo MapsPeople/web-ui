@@ -7,7 +7,7 @@ import { useIsVerticalOverflow } from '../../hooks/useIsVerticalOverflow';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import { snapPoints } from '../BottomSheet/Sheet/Sheet';
 
-function LocationDetails({ location, onClose, onStartWayfinding, onSetSize }) {
+function LocationDetails({ location, onClose, onStartWayfinding, onSetSize, snapPointSwiped }) {
 
     const locationInfoElement = useRef(null);
     const locationDetailsElement = useRef(null);
@@ -30,6 +30,17 @@ function LocationDetails({ location, onClose, onStartWayfinding, onSetSize }) {
             setLocationDisplayRule(mapsIndoorsInstance.getDisplayRule(location));
         }
     }, [location, mapsIndoorsInstance]);
+
+    /*
+     * When user swipes the bottom sheet to a new snap point.
+     */
+    useEffect(() => {
+        if (snapPointSwiped === undefined) return;
+
+        // If swiping to max height, expand location details.
+        // If swiping to smaller height, collapse location details.
+        setShowFullDescription(snapPointSwiped === snapPoints.MAX);
+    }, [snapPointSwiped]);
 
     /**
      * Toggle the description.

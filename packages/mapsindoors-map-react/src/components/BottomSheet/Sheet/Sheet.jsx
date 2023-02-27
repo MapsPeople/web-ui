@@ -19,8 +19,9 @@ let dragStartHeight;
  * @param {boolean} props.isOpen - If the sheet is open (visible) or not.
  * @param {number} props.minheight - The minimum height of the sheet. It cannot be resized to below this height.
  * @param {number} props.preferredSizeSnapPoint - Change this to programatically change sheet height to a snap point.
+ * @param {function} [props.onSwipedToSnapPoint] - Callback function is run when user swiped to a snap points. Has the snap point as parameter.
  */
-function Sheet({ children, isOpen, minHeight, preferredSizeSnapPoint }) {
+function Sheet({ children, isOpen, minHeight, preferredSizeSnapPoint, onSwipedToSnapPoint }) {
 
     /** Referencing the sheet DOM element */
     const sheetRef = useRef();
@@ -124,12 +125,18 @@ function Sheet({ children, isOpen, minHeight, preferredSizeSnapPoint }) {
                 maxThreshold = contentHeight + 60;
             }
 
+            let targetSnapPoint;
             if (newHeight <= minThreshold) {
-                changeSheetHeight(snapPoints.MIN);
+                targetSnapPoint = snapPoints.MIN;
             } else if (newHeight <= maxThreshold) {
-                changeSheetHeight(snapPoints.FIT);
+                targetSnapPoint = snapPoints.FIT;
             } else {
-                changeSheetHeight(snapPoints.MAX);
+                targetSnapPoint = snapPoints.MAX;
+            }
+
+            changeSheetHeight(targetSnapPoint);
+            if (typeof onSwipedToSnapPoint === 'function') {
+                onSwipedToSnapPoint(targetSnapPoint);
             }
         },
         trackMouse: true,
