@@ -54,8 +54,11 @@ function Map({ gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, 
     }, [venueName, venues]); // eslint-disable-line react-hooks/exhaustive-deps
     // We ignore eslint warnings about missing dependencies because mapsIndoorsInstance should never change runtime anyway.
 
+    /*
+     * Show the filtered locations on the map based on their IDs.
+     */
     useEffect(() => {
-        if(filteredLocationIds) {
+        if (filteredLocationIds) {
             mapsIndoorsInstance.filter(filteredLocationIds);
         }
     }, [filteredLocationIds, mapsIndoorsInstance]);
@@ -104,7 +107,7 @@ export default Map;
  * @param {array} venues
  * @returns {object} - venue
  */
- function getVenueToShow(preferredVenueName, venues) {
+function getVenueToShow(preferredVenueName, venues) {
     if (venues.length === 0) return;
 
     // If there's only one venue, early return with that.
@@ -130,5 +133,5 @@ export default Map;
     }
 
     // Else take first venue sorted alphabetically
-    return venues.sort(function(a,b) {return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);} )[0];
+    return venues.sort(function (a, b) { return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0); })[0];
 }

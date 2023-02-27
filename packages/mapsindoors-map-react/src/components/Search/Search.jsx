@@ -13,7 +13,7 @@ const mapsindoors = window.mapsindoors;
  * @param {function} props.onLocationsFiltered - Function that is run when the user performs a filter through any category.
  * @returns
  */
-function Search({ onLocationClick, categories, onLocationsFiltered  }) {
+function Search({ onLocationClick, categories, onLocationsFiltered }) {
 
     /** Referencing the search DOM element */
     const searchFieldRef = useRef();
@@ -30,17 +30,17 @@ function Search({ onLocationClick, categories, onLocationsFiltered  }) {
     /** Determines which category has been selected */
     const [selectedCategory, setSelectedCategory] = useState();
 
-    useEffect(() => {
-        /**
-        * Click event handler function that sets the display text of the input field,
-        * and clears out the results list.
-        */
-        function clickHandler(location) {
-            onLocationClick(location.detail);
-            searchFieldRef.current.setDisplayText('');
-            searchResultsRef.current.innerHTML = '';
-        }
+    /**
+    * Click event handler function that sets the display text of the input field,
+    * and clears out the results list.
+    */
+    function clickHandler(location) {
+        onLocationClick(location.detail);
+        searchFieldRef.current.setDisplayText('');
+        searchResultsRef.current.innerHTML = '';
+    }
 
+    useEffect(() => {
         /*
         * Get all the mi-list-item-location component.
         * Loop through them and remove the event listener.
@@ -84,22 +84,33 @@ function Search({ onLocationClick, categories, onLocationsFiltered  }) {
         searchFieldRef.current.addEventListener('click', () => {
             setHasInputFocus(true);
         });
-    })
+    });
 
+
+    /**
+     * Handler for the click event on the category chips.
+     * Set a selected category and only allow one category to be selected at once.
+     *
+     * @param {object} category
+     */
     function categoryClicked(category) {
+
         searchResultsRef.current.innerHTML = '';
         setSelectedCategory(category);
 
+        /** Get the locations and filter through them based on categories selected. */
         mapsindoors.services.LocationsService.getLocations({
             categories: category,
         }).then(locations => {
-
+            /** Function that takes the locations and passes them to the parent component. */
             onLocationsFiltered(locations);
 
+            /** Loop through the filtered locations and add them to the search results list. */
             for (const location of locations) {
                 const listItem = document.createElement('mi-list-item-location');
                 listItem.location = location;
                 searchResultsRef.current.appendChild(listItem);
+                listItem.addEventListener('locationClicked', clickHandler);
             }
         });
     }
