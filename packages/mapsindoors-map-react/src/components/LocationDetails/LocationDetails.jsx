@@ -32,12 +32,18 @@ function LocationDetails({ location, onClose, onStartWayfinding, onSetSize }) {
     }, [location, mapsIndoorsInstance]);
 
     /**
-     * Proof of concept of a way to programatically change sheet size.
-     * FIXME: Replace this with actual use case for changing sheet height programatically.
-     * @param {number} snapPoint
+     * Toggle the description.
      */
-    function changeSize(snapPoint) {
-        onSetSize(snapPoint);
+    function toggleDescription() {
+        if (showFullDescription === false) {
+            onSetSize(snapPoints.MAX);
+            requestAnimationFrame(() => { // Necessary to preserve transition
+                setShowFullDescription(true);
+            });
+        } else {
+            onSetSize(snapPoints.FIT);
+            setShowFullDescription(false);
+        }
     }
 
     return <div className="location-details">
@@ -68,8 +74,11 @@ function LocationDetails({ location, onClose, onStartWayfinding, onSetSize }) {
                     <div ref={locationDetailsElement}>
                         {location.properties.description}
                     </div>
-                    <button onClick={() => changeSize(snapPoints.MAX)}>Set to full</button> | <button onClick={() => changeSize(snapPoints.FIT)}>Set to fit</button> | <button onClick={() => changeSize(snapPoints.MIN)}>Set to min</button>
-                    {(isOverflowing || showFullDescription) && <button onClick={() => setShowFullDescription(!showFullDescription)}>{!showFullDescription ? 'Read full description' : 'Close' }</button>}
+                    {(isOverflowing || showFullDescription) && (
+                        <button onClick={() => toggleDescription()}>
+                            {!showFullDescription ? 'Read full description' : 'Close' }
+                        </button>
+                    )}
                 </section>}
             </div>
 
