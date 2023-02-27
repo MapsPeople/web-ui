@@ -2,6 +2,8 @@ import React from "react";
 import './Search.scss';
 import { useRef, useEffect, useState } from 'react';
 
+const mapsindoors = window.mapsindoors;
+
 /**
  * Show the search results.
  *
@@ -80,12 +82,30 @@ function Search({ onLocationClick, categories }) {
         });
 
         for (const category of categories) {
+            let isCategoryActive = false;
             const chip = document.createElement('mi-chip');
             chip.content = category;
             categoriesListRef.current.appendChild(chip);
+
             chip.addEventListener('click', () => {
-                chip.active = true;
+                isCategoryActive = !isCategoryActive;
+                chip.active = isCategoryActive;
+
+                if (isCategoryActive) {
+                    mapsindoors.services.LocationsService.getLocations({
+                        categories: category,
+                    }).then(locations => {
+                        for (const location of locations) {
+                            const listItem = document.createElement('mi-list-item-location');
+                            listItem.location = location;
+                            searchResultsRef.current.appendChild(listItem);
+                        }
+                    });
+                } else {
+                    searchResultsRef.current.innerHTML = '';
+                }
             })
+
         }
     })
 

@@ -5,7 +5,7 @@
     display: grid;
     gap: var(--spacing-x-small);
     color: var(--brand-colors-black-100);
-    grid-template-rows: var(--spacing-xxx-large) 1fr;
+    grid-template-rows: var(--spacing-xxx-large) var(--spacing-xxx-large) 1fr;
 
     &__categories {
         display: grid;
@@ -32,6 +32,9 @@
     }
 
     @media (min-width: $desktop-breakpoint) {
+        &--fit {
+            max-height: 50vh;
+        }
         &--full {
             height: fit-content;
             max-height: 50vh;
