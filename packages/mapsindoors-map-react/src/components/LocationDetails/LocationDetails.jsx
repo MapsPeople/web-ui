@@ -15,7 +15,7 @@ function LocationDetails({ location, onClose, onStartWayfinding, onSetSize, snap
     const [showFullDescription, setShowFullDescription] = useState(false);
 
     // Holds the MapsIndoors DisplayRule for the location
-    const [locationDisplayRyle, setLocationDisplayRule] = useState(null);
+    const [locationDisplayRule, setLocationDisplayRule] = useState(null);
 
     const mapsIndoorsInstance = useContext(MapsIndoorsContext);
 
@@ -61,7 +61,7 @@ function LocationDetails({ location, onClose, onStartWayfinding, onSetSize, snap
         {location && <>
             <div className="location-info">
                 <div className="location-info__icon">
-                    {locationDisplayRyle && <img alt="" src={locationDisplayRyle.icon} />}
+                    {locationDisplayRule && <img alt="" src={locationDisplayRule.icon} />}
                 </div>
                 <div className="location-info__content">
                     {location.properties.name}<br />

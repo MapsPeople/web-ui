@@ -235,6 +235,17 @@ Type: `Promise<void>`
 
 
 
+### `setDisplayText(displayText: string) => Promise<void>`
+
+Sets text to be shown in the search field.
+Setting it will not perform a search.
+
+#### Returns
+
+Type: `Promise<void>`
+
+
+
 
 ----------------------------------------------
 
