@@ -33,9 +33,9 @@ function Search({ onLocationClick }) {
         }
 
         /*
-        * Get all the mi-list-item-location component.
-        * Loop through them and remove the event listener.
-        */
+         * Get all the mi-list-item-location component.
+         * Loop through them and remove the event listener.
+         */
         function clearEventListeners() {
             const listItemLocations = document.querySelectorAll('mi-list-item-location');
             listItemLocations.forEach(element => {
