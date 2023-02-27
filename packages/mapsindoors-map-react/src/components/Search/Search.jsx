@@ -9,24 +9,28 @@ const mapsindoors = window.mapsindoors;
  *
  * @param {Object} props
  * @param {function} props.onLocationClick - Function that is run when a location from the search results is clicked.
- * @param {Object} props.categories
+ * @param {set} props.categories - All the unique categories that users can filter through.
+ * @param {function} props.onLocationsFiltered - Function that is run when the user performs a filter through any category.
  * @returns
  */
-function Search({ onLocationClick, categories }) {
+function Search({ onLocationClick, categories, onLocationsFiltered  }) {
 
-    /** Referencing the search DOM element. */
+    /** Referencing the search DOM element */
     const searchFieldRef = useRef();
 
     /** Referencing the search results container DOM element */
     const searchResultsRef = useRef();
 
+    /** Referencing the categories results container DOM element */
     const categoriesListRef = useRef();
 
     /** Determines if the input has focus */
     const [hasInputFocus, setHasInputFocus] = useState(false);
 
-    useEffect(() => {
+    /** Determines which category has been selected */
+    const [selectedCategory, setSelectedCategory] = useState();
 
+    useEffect(() => {
         /**
         * Click event handler function that sets the display text of the input field,
         * and clears out the results list.
@@ -80,39 +84,38 @@ function Search({ onLocationClick, categories }) {
         searchFieldRef.current.addEventListener('click', () => {
             setHasInputFocus(true);
         });
-
-        for (const category of categories) {
-            let isCategoryActive = false;
-            const chip = document.createElement('mi-chip');
-            chip.content = category;
-            categoriesListRef.current.appendChild(chip);
-
-            chip.addEventListener('click', () => {
-                isCategoryActive = !isCategoryActive;
-                chip.active = isCategoryActive;
-
-                if (isCategoryActive) {
-                    mapsindoors.services.LocationsService.getLocations({
-                        categories: category,
-                    }).then(locations => {
-                        for (const location of locations) {
-                            const listItem = document.createElement('mi-list-item-location');
-                            listItem.location = location;
-                            searchResultsRef.current.appendChild(listItem);
-                        }
-                    });
-                } else {
-                    searchResultsRef.current.innerHTML = '';
-                }
-            })
-
-        }
     })
+
+    function categoryClicked(category) {
+        searchResultsRef.current.innerHTML = '';
+        setSelectedCategory(category);
+
+        mapsindoors.services.LocationsService.getLocations({
+            categories: category,
+        }).then(locations => {
+
+            onLocationsFiltered(locations);
+
+            for (const location of locations) {
+                const listItem = document.createElement('mi-list-item-location');
+                listItem.location = location;
+                searchResultsRef.current.appendChild(listItem);
+            }
+        });
+    }
 
     return (
         <div className={`search ${hasInputFocus ? 'search--full' : 'search--fit'}`}>
             <mi-search ref={searchFieldRef} placeholder="Search by name, category, building..." mapsindoors="true"></mi-search>
-            <div ref={categoriesListRef} className="search__categories"></div>
+            <div ref={categoriesListRef} className="search__categories">
+                {categories && Array.from(categories).map(category =>
+                    <mi-chip content={category}
+                        active={selectedCategory === category}
+                        onClick={() => categoryClicked(category)}
+                        key={category}>
+                    </mi-chip>)
+                }
+            </div>
             <div ref={searchResultsRef} className="search__results"></div>
         </div>
     )

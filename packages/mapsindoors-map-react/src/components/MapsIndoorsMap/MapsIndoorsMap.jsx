@@ -29,6 +29,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [currentVenueName, setCurrentVenueName] = useState();
     const [currentLocation, setCurrentLocation] = useState();
     const [currentCategories, setCurrentCategories] = useState(new Set());
+    const [filteredLocations, setFilteredLocations] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
@@ -112,15 +113,15 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                     currentLocation={currentLocation}
                     setCurrentLocation={setCurrentLocation}
                     currentCategories={currentCategories}
-                    setCurrentCategories={setCurrentCategories}
-                    onClose={() => setCurrentLocation(null)} />
+                    onLocationsFiltered={(locations) => setFilteredLocations(locations)}
+                />
                 :
                 <BottomSheet
                     currentLocation={currentLocation}
                     setCurrentLocation={setCurrentLocation}
                     currentCategories={currentCategories}
-                    setCurrentCategories={setCurrentCategories}
-                    onClose={() => setCurrentLocation(null)} />
+                    onLocationsFiltered={(locations) => setFilteredLocations(locations)}
+                />
             }
             <Map
                 apiKey={apiKey}
@@ -130,7 +131,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                 venueName={currentVenueName}
                 onVenueChangedOnMap={() => venueChangedOnMap()}
                 onMapsIndoorsInstance={(instance) => setMapsIndoorsInstance(instance)}
-                onLocationClick={(location) => setCurrentLocation(location)} />
+                onLocationClick={(location) => setCurrentLocation(location)}
+                filteredLocationIds={filteredLocations?.map(location => location.id)} />
         </div>
     </MapsIndoorsContext.Provider>)
 }

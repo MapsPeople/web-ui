@@ -22,9 +22,10 @@ const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
  * @param {function} [props.onLocationClick] - Function that is run when a MapsIndoors Location is clicked. the Location will be sent along as first argument.
  * @param {function} props.onMapsIndoorsInstance - Function that is run when a MapsIndoors instance is created. The instance will be sent along as first argument.
  * @param {function} props.onVenueChangedOnMap - Function that is run when the map bounds was changed due to fitting to a venue.
+ * @param {array} props.filteredLocationIds - Array of IDs of the filtered locations.
  * @returns
  */
-function Map({ gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onMapsIndoorsInstance, onVenueChangedOnMap }) {
+function Map({ gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onMapsIndoorsInstance, onVenueChangedOnMap, filteredLocationIds }) {
     const [mapType, setMapType] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState(null);
 
@@ -52,6 +53,12 @@ function Map({ gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, 
         }
     }, [venueName, venues]); // eslint-disable-line react-hooks/exhaustive-deps
     // We ignore eslint warnings about missing dependencies because mapsIndoorsInstance should never change runtime anyway.
+
+    useEffect(() => {
+        if(filteredLocationIds) {
+            mapsIndoorsInstance.filter(filteredLocationIds);
+        }
+    }, [filteredLocationIds, mapsIndoorsInstance]);
 
     /**
      * Set the venue to show on the map.
