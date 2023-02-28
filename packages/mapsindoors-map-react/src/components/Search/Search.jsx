@@ -31,15 +31,12 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
     /** Determines which category has been selected */
     const [selectedCategory, setSelectedCategory] = useState();
 
-
     /**
     * Click event handler function that sets the display text of the input field,
     * and clears out the results list.
     */
     function clickHandler(location) {
         onLocationClick(location.detail);
-        searchFieldRef.current.setDisplayText('');
-        searchResultsRef.current.innerHTML = '';
     }
 
     /**
@@ -62,7 +59,6 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
             searchFieldRef.current.triggerSearch();
             setSelectedCategory(category);
             privateSelectedCategory = category;
-
         } else {
             searchResultsRef.current.innerHTML = '';
             setSelectedCategory(category);
@@ -98,6 +94,13 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
             });
         }
 
+        function addSearchResults(result) {
+            const listItem = document.createElement('mi-list-item-location');
+            listItem.location = result;
+            searchResultsRef.current.appendChild(listItem);
+            listItem.addEventListener('locationClicked', clickHandler);
+        }
+
         /**
          * Search location and add results list implementation.
          * Listen to the 'results' event provided by the 'mi-search' component.
@@ -108,11 +111,12 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
         searchFieldRef.current.addEventListener('results', e => {
             clearEventListeners();
             searchResultsRef.current.innerHTML = '';
-            for (const result of e.detail) {
-                const listItem = document.createElement('mi-list-item-location');
-                listItem.location = result;
-                searchResultsRef.current.appendChild(listItem);
-                listItem.addEventListener('locationClicked', clickHandler);
+            if (e.detail === []) {
+                console.log('no results');
+            } else {
+                for (const result of e.detail) {
+                    addSearchResults(result);
+                }
             }
 
         });
@@ -135,10 +139,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
 
                     /** Loop through the filtered locations and add them to the search results list. */
                     for (const location of locations) {
-                        const listItem = document.createElement('mi-list-item-location');
-                        listItem.location = location;
-                        searchResultsRef.current.appendChild(listItem);
-                        listItem.addEventListener('locationClicked', clickHandler);
+                        addSearchResults(location);
                     }
                 });
             }
