@@ -28,6 +28,9 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
     /** Determines if the input has focus */
     const [hasInputFocus, setHasInputFocus] = useState(false);
 
+    /** Determines if any search results have been found */
+    const [hasSearchResults, setHasSearchResults] = useState(true);
+
     /** Determines which category has been selected */
     const [selectedCategory, setSelectedCategory] = useState();
 
@@ -124,8 +127,9 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
         searchFieldRef.current.addEventListener('results', e => {
             clearEventListeners();
             searchResultsRef.current.innerHTML = '';
-            if (e.detail === []) {
-                console.log('no results');
+
+            if (e.detail.length === 0) {
+                setHasSearchResults(false);
             } else {
                 for (const result of e.detail) {
                     addSearchResults(result);
@@ -175,7 +179,10 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
                     </mi-chip>)
                 }
             </div>
-            <div ref={searchResultsRef} className="search__results"></div>
+            <div ref={searchResultsRef} className="search__results">
+                {!hasSearchResults &&
+                    <p className="search__results--not-found">Nothing was found</p>}
+            </div>
         </div>
     )
 }

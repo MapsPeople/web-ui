@@ -23,6 +23,10 @@
         overflow: scroll;
         grid-auto-rows: min-content;
         padding-top: var(--spacing-x-small);
+
+        &--not-found {
+            text-align: center;
+        }
     }
 
     &--fit {
