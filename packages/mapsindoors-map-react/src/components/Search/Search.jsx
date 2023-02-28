@@ -55,6 +55,10 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
             searchResultsRef.current.innerHTML = '';
             setSelectedCategory(null);
             privateSelectedCategory = null;
+            if (searchFieldRef.current.value) {
+                console.log('here')
+                searchFieldRef.current.triggerSearch();
+            }
         } else if (searchFieldRef.current.value) {
             searchFieldRef.current.triggerSearch();
             setSelectedCategory(category);
