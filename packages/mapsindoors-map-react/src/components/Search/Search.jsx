@@ -3,6 +3,7 @@ import './Search.scss';
 import { useRef, useEffect, useState } from 'react';
 
 const mapsindoors = window.mapsindoors;
+let privateSelectedCategory;
 
 /**
  * Show the search results.
@@ -30,6 +31,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
     /** Determines which category has been selected */
     const [selectedCategory, setSelectedCategory] = useState();
 
+
     /**
     * Click event handler function that sets the display text of the input field,
     * and clears out the results list.
@@ -38,6 +40,50 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
         onLocationClick(location.detail);
         searchFieldRef.current.setDisplayText('');
         searchResultsRef.current.innerHTML = '';
+    }
+
+    /**
+    * Handler for the click event on the category chips.
+    * Set a selected category and only allow one category to be selected at once.
+    *
+    * @param {string} category
+    */
+    function categoryClicked(category) {
+        /** Check if the category that is clicked is already selected. */
+        /** If yes, set the selected category to null and empty the results list. */
+        /** If no, filter the locations based on the selected category and show them in the results list. */
+        searchFieldRef.current.setAttribute('mi-categories', category);
+
+        if (selectedCategory === category) {
+            searchResultsRef.current.innerHTML = '';
+            setSelectedCategory(null);
+            privateSelectedCategory = null;
+        } else if (searchFieldRef.current.value) {
+            searchFieldRef.current.triggerSearch();
+            setSelectedCategory(category);
+            privateSelectedCategory = category;
+
+        } else {
+            searchResultsRef.current.innerHTML = '';
+            setSelectedCategory(category);
+            privateSelectedCategory = category;
+
+            /** Get the locations and filter through them based on categories selected. */
+            mapsindoors.services.LocationsService.getLocations({
+                categories: category,
+            }).then(locations => {
+                /** Function that takes the locations and passes them to the parent component. */
+                onLocationsFiltered(locations);
+
+                /** Loop through the filtered locations and add them to the search results list. */
+                for (const location of locations) {
+                    const listItem = document.createElement('mi-list-item-location');
+                    listItem.location = location;
+                    searchResultsRef.current.appendChild(listItem);
+                    listItem.addEventListener('locationClicked', clickHandler);
+                }
+            });
+        }
     }
 
     useEffect(() => {
@@ -68,6 +114,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
                 searchResultsRef.current.appendChild(listItem);
                 listItem.addEventListener('locationClicked', clickHandler);
             }
+
         });
 
         clearEventListeners();
@@ -78,48 +125,30 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
          */
         searchFieldRef.current.addEventListener('cleared', () => {
             searchResultsRef.current.innerHTML = '';
+            if (privateSelectedCategory) {
+                /** Get the locations and filter through them based on categories selected. */
+                mapsindoors.services.LocationsService.getLocations({
+                    categories: privateSelectedCategory,
+                }).then(locations => {
+                    /** Function that takes the locations and passes them to the parent component. */
+                    onLocationsFiltered(locations);
+
+                    /** Loop through the filtered locations and add them to the search results list. */
+                    for (const location of locations) {
+                        const listItem = document.createElement('mi-list-item-location');
+                        listItem.location = location;
+                        searchResultsRef.current.appendChild(listItem);
+                        listItem.addEventListener('locationClicked', clickHandler);
+                    }
+                });
+            }
         });
 
         /** Listen to click events on the input and set the input focus to true. */
         searchFieldRef.current.addEventListener('click', () => {
             setHasInputFocus(true);
         });
-    });
-
-    /**
-     * Handler for the click event on the category chips.
-     * Set a selected category and only allow one category to be selected at once.
-     *
-     * @param {object} category
-     */
-    function categoryClicked(category) {
-         /** Check if the category that is clicked is already selected. */
-         /** If yes, set the selected category to null and empty the results list. */
-         /** If no, filter the locations based on the selected category and show them in the results list. */
-        if (selectedCategory === category) {
-            searchResultsRef.current.innerHTML = '';
-            setSelectedCategory(null);
-        } else {
-            searchResultsRef.current.innerHTML = '';
-            setSelectedCategory(category);
-
-            /** Get the locations and filter through them based on categories selected. */
-            mapsindoors.services.LocationsService.getLocations({
-                categories: category,
-            }).then(locations => {
-                /** Function that takes the locations and passes them to the parent component. */
-                onLocationsFiltered(locations);
-
-                /** Loop through the filtered locations and add them to the search results list. */
-                for (const location of locations) {
-                    const listItem = document.createElement('mi-list-item-location');
-                    listItem.location = location;
-                    searchResultsRef.current.appendChild(listItem);
-                    listItem.addEventListener('locationClicked', clickHandler);
-                }
-            });
-        }
-    }
+    }, []);
 
     return (
         <div className={`search ${hasInputFocus ? 'search--full' : 'search--fit'}`}>
