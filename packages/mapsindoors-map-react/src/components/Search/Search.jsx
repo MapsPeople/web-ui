@@ -32,37 +32,70 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
     const [selectedCategory, setSelectedCategory] = useState();
 
     /**
-    * Click event handler function that sets the display text of the input field,
-    * and clears out the results list.
+    * Click event handler that takes the selected location as an argument.
     */
-    function clickHandler(location) {
+    function resultClickedHandler(location) {
         onLocationClick(location.detail);
     }
 
+    /*
+    * Get all the mi-list-item-location component.
+    * Loop through them and remove the event listener.
+    */
+    function clearEventListeners() {
+        const listItemLocations = document.querySelectorAll('mi-list-item-location');
+        listItemLocations.forEach(element => {
+            element.removeEventListener('click', resultClickedHandler);
+        });
+    }
+
+    /*
+    * Add search results by creating a 'mi-list-item-location' component for displaying the content of each result.
+    * Append all the results to the results container and listen to the events when a result item is clicked.
+    */
+    function addSearchResults(result) {
+        const listItem = document.createElement('mi-list-item-location');
+        listItem.location = result;
+        searchResultsRef.current.appendChild(listItem);
+        listItem.addEventListener('locationClicked', resultClickedHandler);
+    }
+
     /**
-    * Handler for the click event on the category chips.
+    * Handles the click events on the categories list.
     * Set a selected category and only allow one category to be selected at once.
     *
     * @param {string} category
     */
     function categoryClicked(category) {
-        /** Check if the category that is clicked is already selected. */
-        /** If yes, set the selected category to null and empty the results list. */
-        /** If no, filter the locations based on the selected category and show them in the results list. */
+        /** Perform a search when a category is clicked and filter the results through the category. */
         searchFieldRef.current.setAttribute('mi-categories', category);
-
+        /*
+        * Check if the clicked category is the same as the active one.
+        * Clear out the results list and set the selected category to null.
+        */
         if (selectedCategory === category) {
             searchResultsRef.current.innerHTML = '';
             setSelectedCategory(null);
             privateSelectedCategory = null;
+
+            /** Check if the search field has a value and trigger the search again. */
             if (searchFieldRef.current.value) {
                 console.log('here')
                 searchFieldRef.current.triggerSearch();
+                console.log('search triggered');
             }
+            /*
+            * Check if the search field has a value while a category is selected.
+            * Trigger the search again and set the current selected category.
+            */
         } else if (searchFieldRef.current.value) {
             searchFieldRef.current.triggerSearch();
             setSelectedCategory(category);
             privateSelectedCategory = category;
+            /*
+            * Check if a category is selected and filter through the locations within that category.
+            * Clear out the search results after each category is selected.
+            */
         } else {
             searchResultsRef.current.innerHTML = '';
             setSelectedCategory(category);
@@ -77,40 +110,16 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
 
                 /** Loop through the filtered locations and add them to the search results list. */
                 for (const location of locations) {
-                    const listItem = document.createElement('mi-list-item-location');
-                    listItem.location = location;
-                    searchResultsRef.current.appendChild(listItem);
-                    listItem.addEventListener('locationClicked', clickHandler);
+                    addSearchResults(location);
                 }
             });
         }
     }
 
     useEffect(() => {
-        /*
-        * Get all the mi-list-item-location component.
-        * Loop through them and remove the event listener.
-        */
-        function clearEventListeners() {
-            const listItemLocations = document.querySelectorAll('mi-list-item-location');
-            listItemLocations.forEach(element => {
-                element.removeEventListener('click', clickHandler);
-            });
-        }
-
-        function addSearchResults(result) {
-            const listItem = document.createElement('mi-list-item-location');
-            listItem.location = result;
-            searchResultsRef.current.appendChild(listItem);
-            listItem.addEventListener('locationClicked', clickHandler);
-        }
-
         /**
          * Search location and add results list implementation.
          * Listen to the 'results' event provided by the 'mi-search' component.
-         * For each search result create a 'mi-list-item-location' component for displaying the content.
-         * Append all the results to the results container.
-         * Listen to the events when the item is clicked, and set the location value to be the selected one.
          */
         searchFieldRef.current.addEventListener('results', e => {
             clearEventListeners();
@@ -122,7 +131,6 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
                     addSearchResults(result);
                 }
             }
-
         });
 
         clearEventListeners();
