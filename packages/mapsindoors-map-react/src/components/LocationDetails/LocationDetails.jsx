@@ -10,9 +10,12 @@ import { snapPoints } from '../BottomSheet/Sheet/Sheet';
 function LocationDetails({ location, onClose, onStartWayfinding, onSetSize, snapPointSwiped }) {
 
     const locationInfoElement = useRef(null);
+    const locationDetailsContainer = useRef(null);
     const locationDetailsElement = useRef(null);
 
     const [showFullDescription, setShowFullDescription] = useState(false);
+    const [descriptionHasContentAbove, setDescriptionHasContentAbove] = useState(false);
+    const [descriptionHasContentBelow, setDescriptionHasContentBelow] = useState(false);
 
     // Holds the MapsIndoors DisplayRule for the location
     const [locationDisplayRule, setLocationDisplayRule] = useState(null);
@@ -40,6 +43,11 @@ function LocationDetails({ location, onClose, onStartWayfinding, onSetSize, snap
         // If swiping to max height, expand location details.
         // If swiping to smaller height, collapse location details.
         setShowFullDescription(snapPointSwiped === snapPoints.MAX);
+        if (snapPointSwiped === snapPoints.MAX) {
+            expandLocationDescription();
+        } else {
+            collapseLocationDescription();
+        }
     }, [snapPointSwiped]);
 
     /**
@@ -48,16 +56,51 @@ function LocationDetails({ location, onClose, onStartWayfinding, onSetSize, snap
     function toggleDescription() {
         if (showFullDescription === false) {
             onSetSize(snapPoints.MAX);
-            requestAnimationFrame(() => { // Necessary to preserve transition
-                setShowFullDescription(true);
-            });
+            expandLocationDescription();
         } else {
             onSetSize(snapPoints.FIT);
-            setShowFullDescription(false);
+            collapseLocationDescription();
         }
     }
 
-    return <div className="location-details">
+    /**
+     * Expand the location description to be fully shown.
+     */
+    function expandLocationDescription() {
+        requestAnimationFrame(() => { // Necessary to preserve transition
+            setShowFullDescription(true);
+            setScrollIndicators();
+        });
+    }
+
+    /**
+     * Collapse the location description to be truncated.
+     */
+    function collapseLocationDescription() {
+        setShowFullDescription(false);
+        unsetScrollIndicators();
+    }
+
+    /**
+     * Scroll indicators adds a gradient to either the top or the bottom,
+     * indicating if there is more content above or below what is visible.
+     */
+    function setScrollIndicators() {
+        requestAnimationFrame(() => {
+            setDescriptionHasContentAbove(locationDetailsContainer.current.scrollTop > 0);
+            setDescriptionHasContentBelow(locationDetailsContainer.current.scrollTop < (locationDetailsContainer.current.scrollHeight - locationDetailsContainer.current.offsetHeight - 1));
+        });
+    }
+
+    /**
+     * Remove scroll indicators.
+     */
+    function unsetScrollIndicators() {
+        setDescriptionHasContentAbove(false);
+        setDescriptionHasContentBelow(false);
+    }
+
+    return <div className={`location-details ${descriptionHasContentAbove ? 'location-details--content-above' : ''} ${descriptionHasContentBelow ? 'location-details--content-below' : ''}`}>
         {location && <>
             <div className="location-info">
                 <div className="location-info__icon">
@@ -72,7 +115,7 @@ function LocationDetails({ location, onClose, onStartWayfinding, onSetSize, snap
                 </button>
             </div>
 
-            <div className="location-details__details">
+            <div ref={locationDetailsContainer} onScroll={e => setScrollIndicators(e)} className="location-details__details">
                 {location.properties.imageURL && <img alt="" src={location.properties.imageURL} className="location-details__image" />}
 
                 {Object.keys(location.properties.categories).length > 0 && <p className="location-details__categories">

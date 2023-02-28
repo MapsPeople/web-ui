@@ -80,6 +80,13 @@ function Sheet({ children, isOpen, minHeight, preferredSizeSnapPoint, onSwipedTo
             }
             setCurrentSnapPoint(targetSize);
         });
+
+        if (typeof onSwipedToSnapPoint === 'function') {
+            // When snap transition has ended, call the callback
+            sheetRef.current.addEventListener('transitionend', () => {
+                onSwipedToSnapPoint(targetSize);
+            }, { once: true });
+        }
     }
 
     /**
@@ -135,9 +142,6 @@ function Sheet({ children, isOpen, minHeight, preferredSizeSnapPoint, onSwipedTo
             }
 
             changeSheetHeight(targetSnapPoint);
-            if (typeof onSwipedToSnapPoint === 'function') {
-                onSwipedToSnapPoint(targetSnapPoint);
-            }
         },
         trackMouse: true,
         preventScrollOnSwipe: true

@@ -8,6 +8,31 @@
     overflow-y: hidden;
     grid-template-rows: 40px 1fr 56px;
 
+    &--content-below {
+        position: relative;
+        &::before {
+            content: '';
+            position: absolute;
+            bottom: calc(56px + var(--spacing-medium));
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: linear-gradient(transparent, white);
+        }
+    }
+
+    &--content-above {
+        position: relative;
+        &::after {
+            content: '';
+            position: absolute;
+            top: calc(56px);
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: linear-gradient(white, transparent);
+        }
+    }
 
     &__details {
         display: flex;
