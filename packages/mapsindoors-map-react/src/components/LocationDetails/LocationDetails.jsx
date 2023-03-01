@@ -7,6 +7,16 @@ import { useIsVerticalOverflow } from '../../hooks/useIsVerticalOverflow';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import { snapPoints } from '../BottomSheet/Sheet/Sheet';
 
+/**
+ * Shows details for a MapsIndoors Location.
+ *
+ * @param {object} props
+ * @param {object} props.location - The Location to show details for.
+ * @param {function} props.onClose - Callback that fires when Location Details are closed by the user.
+ * @param {function} props.onStartWayfinding - Callback that fires when user clicks the Start Wayfinding button.
+ * @param {function} props.onSetSize - Callback that is fired when the toggle full description button is clicked and the Sheet size changes.
+ * @param {function} props.snapPointSwiped - Changes value when user has swiped a Bottom sheet to a new snap point.
+ */
 function LocationDetails({ location, onClose, onStartWayfinding, onSetSize, snapPointSwiped }) {
 
     const locationInfoElement = useRef(null);
