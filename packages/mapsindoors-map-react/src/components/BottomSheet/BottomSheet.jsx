@@ -6,46 +6,44 @@ import './BottomSheet.scss';
 import LocationDetails from '../LocationDetails/LocationDetails';
 import Wayfinding from '../Wayfinding/Wayfinding';
 import Directions from '../Directions/Directions';
+import Search from '../Search/Search';
 
 const BOTTOM_SHEETS = {
-    LOCATION_DETAILS: 0,
-    WAYFINDING: 1,
-    DIRECTIONS: 2
+    SEARCH: 0,
+    LOCATION_DETAILS: 1,
+    WAYFINDING: 2,
+    DIRECTIONS: 3
 };
 
 /**
  * @param {Object} props
  * @param {Object} props.currentLocation - The currently selected MapsIndoors Location.
- * @param {function} props.onClose - Callback that fires when all bottom sheets are closed.
+ * @param {Object} props.setCurrentLocation - The setter for the currently selected MapsIndoors Location.
  */
-function BottomSheet({ currentLocation, onClose }) {
+function BottomSheet({ currentLocation, setCurrentLocation }) {
 
     const bottomSheetRef = useRef();
     const [activeBottomSheet, setActiveBottomSheet] = useState(null);
 
-    /**
-     * When a sheet is closed.
-     */
-    function close() {
-        setActiveBottomSheet(null);
-        onClose();
-    }
-
     /*
      * React on changes on the current location.
+     * Set the search bottom sheet to be active if there is no location selected.
      */
     useEffect(() => {
-        setActiveBottomSheet(currentLocation ? BOTTOM_SHEETS.LOCATION_DETAILS : undefined);
+        setActiveBottomSheet(currentLocation ? BOTTOM_SHEETS.LOCATION_DETAILS : BOTTOM_SHEETS.SEARCH);
     }, [currentLocation]);
 
     const bottomSheets = [
-        <Sheet minHeight="128" isOpen={activeBottomSheet === BOTTOM_SHEETS.LOCATION_DETAILS} key="A">
-            <LocationDetails onStartWayfinding={() => setActiveBottomSheet(BOTTOM_SHEETS.WAYFINDING)} location={currentLocation} onClose={() => close()} />
+        <Sheet minHeight="100" isOpen={activeBottomSheet === BOTTOM_SHEETS.SEARCH} key="A">
+            <Search onLocationClick={(location) => setCurrentLocation(location)} />
         </Sheet>,
-        <Sheet minHeight="220" isOpen={activeBottomSheet === BOTTOM_SHEETS.WAYFINDING} key="B">
-            <Wayfinding onStartDirections={() => setActiveBottomSheet(BOTTOM_SHEETS.DIRECTIONS)} location={currentLocation} onBack={() => setActiveBottomSheet(BOTTOM_SHEETS.LOCATION_DETAILS)}/>
+        <Sheet minHeight="128" isOpen={activeBottomSheet === BOTTOM_SHEETS.LOCATION_DETAILS} key="B">
+            <LocationDetails onStartWayfinding={() => setActiveBottomSheet(BOTTOM_SHEETS.WAYFINDING)} location={currentLocation} onBack={() => setActiveBottomSheet(BOTTOM_SHEETS.SEARCH)} />
         </Sheet>,
-        <Sheet minHeight="220" isOpen={activeBottomSheet === BOTTOM_SHEETS.DIRECTIONS} key="C">
+        <Sheet minHeight="220" isOpen={activeBottomSheet === BOTTOM_SHEETS.WAYFINDING} key="C">
+            <Wayfinding onStartDirections={() => setActiveBottomSheet(BOTTOM_SHEETS.DIRECTIONS)} location={currentLocation} onBack={() => setActiveBottomSheet(BOTTOM_SHEETS.LOCATION_DETAILS)} />
+        </Sheet>,
+        <Sheet minHeight="220" isOpen={activeBottomSheet === BOTTOM_SHEETS.DIRECTIONS} key="D">
             <Directions onBack={() => setActiveBottomSheet(BOTTOM_SHEETS.WAYFINDING)} />
         </Sheet>
     ]

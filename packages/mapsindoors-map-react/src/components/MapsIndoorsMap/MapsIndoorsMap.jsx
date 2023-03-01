@@ -89,9 +89,9 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             {venues.length > 1 && <VenueSelector onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)} venues={venues} currentVenueName={currentVenueName} />}
             {isMapReady && isDesktop
                 ?
-                <Modal currentLocation={currentLocation} onClose={() => setCurrentLocation(null)} />
+                <Modal setCurrentLocation={setCurrentLocation} currentLocation={currentLocation} onClose={() => setCurrentLocation(null)} />
                 :
-                <BottomSheet currentLocation={currentLocation} onClose={() => setCurrentLocation(null)} />
+                <BottomSheet setCurrentLocation={setCurrentLocation} currentLocation={currentLocation} onClose={() => setCurrentLocation(null)} />
             }
             <Map
                 apiKey={apiKey}

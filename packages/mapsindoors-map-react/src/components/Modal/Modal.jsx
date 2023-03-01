@@ -4,44 +4,41 @@ import './Modal.scss'
 import LocationDetails from "../LocationDetails/LocationDetails";
 import Wayfinding from '../Wayfinding/Wayfinding';
 import Directions from '../Directions/Directions';
+import Search from '../Search/Search';
 
 const VIEWS = {
-    LOCATION_DETAILS: 0,
-    WAYFINDING: 1,
-    DIRECTIONS: 2
+    SEARCH: 0,
+    LOCATION_DETAILS: 1,
+    WAYFINDING: 2,
+    DIRECTIONS: 3
 };
 
 /**
  * @param {Object} props
  * @param {Object} props.currentLocation - The currently selected MapsIndoors Location.
- * @param {function} props.onClose - Callback that fires when all modals are closed.
+ * @param {Object} props.setCurrentLocation - The setter for the currently selected MapsIndoors Location.
  */
-function Modal({ currentLocation, onClose }) {
+function Modal({ currentLocation, setCurrentLocation }) {
     const [activePage, setActivePage] = useState(null);
-
-    /**
-    * When the user closes the location details.
-    */
-    function close() {
-        setActivePage(null);
-        onClose();
-    }
 
     /*
     * React on changes on the current location.
     */
     useEffect(() => {
-        setActivePage(currentLocation ? VIEWS.LOCATION_DETAILS : undefined);
+        setActivePage(currentLocation ? VIEWS.LOCATION_DETAILS : VIEWS.SEARCH);
     }, [currentLocation]);
 
     const pages = [
-        <div className={`modal ${activePage === VIEWS.LOCATION_DETAILS ? 'modal--open' : ''}`} key="A">
-            <LocationDetails onStartWayfinding={() => setActivePage(VIEWS.WAYFINDING)} location={currentLocation} onClose={() => close()} />
+ 		<div className={`modal ${activePage === VIEWS.SEARCH ? 'modal--open' : ''}`} key="A">
+            <Search onLocationClick={(location) => setCurrentLocation(location)} />
         </div>,
-         <div className={`modal ${activePage === VIEWS.WAYFINDING ? 'modal--open' : ''}`} key="B">
+        <div className={`modal ${activePage === VIEWS.LOCATION_DETAILS ? 'modal--open' : ''}`} key="B">
+            <LocationDetails onStartWayfinding={() => setActivePage(VIEWS.WAYFINDING)} location={currentLocation} onBack={() => setActivePage(VIEWS.SEARCH)} />
+        </div>,
+         <div className={`modal ${activePage === VIEWS.WAYFINDING ? 'modal--open' : ''}`} key="C">
             <Wayfinding onStartDirections={() => setActivePage(VIEWS.DIRECTIONS)} location={currentLocation} onBack={() => setActivePage(VIEWS.LOCATION_DETAILS)} />
         </div>,
-         <div className={`modal ${activePage === VIEWS.DIRECTIONS ? 'modal--open' : ''}`} key="C">
+         <div className={`modal ${activePage === VIEWS.DIRECTIONS ? 'modal--open' : ''}`} key="D">
             <Directions onBack={() => setActivePage(VIEWS.WAYFINDING)} />
         </div>
     ]

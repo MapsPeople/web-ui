@@ -1,0 +1,32 @@
+@import '../../variables.scss';
+
+.search {
+    padding: var(--spacing-large) var(--spacing-x-small) var(--spacing-x-small) var(--spacing-x-small);
+    display: grid;
+    gap: var(--spacing-x-small);
+    color: var(--brand-colors-black-100);
+    grid-template-rows: var(--spacing-xxx-large) 1fr;
+
+
+    &__results {
+        display: grid;
+        gap: var(--spacing-x-small);
+        overflow: auto;
+        grid-auto-rows: min-content;
+    }
+
+    &--fit {
+        height: fit-content;
+    }
+
+    &--full {
+        height: 100vh;
+    }
+
+    @media (min-width: $desktop-breakpoint) {
+        &--full {
+            height: fit-content;
+            max-height: 50vh;
+        }
+    }
+}
