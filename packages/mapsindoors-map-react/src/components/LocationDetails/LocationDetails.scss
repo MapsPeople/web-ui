@@ -74,6 +74,8 @@
             all: unset;
             font-size: var(--font-size-small);
             color: var(--color-blue-base);
+            margin-top: var(--spacing-x-small);
+            cursor: pointer;
         }
 
         &--full {
