@@ -11,7 +11,7 @@
     &__results {
         display: grid;
         gap: var(--spacing-x-small);
-        overflow: scroll;
+        overflow: auto;
         grid-auto-rows: min-content;
     }
 
