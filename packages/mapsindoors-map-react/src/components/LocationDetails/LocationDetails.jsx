@@ -64,7 +64,7 @@ function LocationDetails({ location, onClose, onStartWayfinding, onSetSize, snap
         } else {
             collapseLocationDescription();
         }
-    }, [snapPointSwiped]);
+    }, [snapPointSwiped]); // eslint-disable-line react-hooks/exhaustive-deps
 
     /**
      * Toggle the description.
@@ -132,23 +132,32 @@ function LocationDetails({ location, onClose, onStartWayfinding, onSetSize, snap
             </div>
 
             <div ref={locationDetailsContainer} onScroll={e => setScrollIndicators(e)} className="location-details__details">
+                {/* Location image */}
                 {location.properties.imageURL && <img alt="" src={location.properties.imageURL} className="location-details__image" />}
 
+                {/* Location categories */}
                 {Object.keys(location.properties.categories).length > 0 && <p className="location-details__categories">
                     {Object.values(location.properties.categories).map((category, index, array) => {
                         return <React.Fragment key={category}>{category}{index < array.length-1 && <>・</>}</React.Fragment>
                     })}
                 </p>}
 
-                {location.properties.description && <section {...scrollableContentSwipePrevent} className={`location-details__description prevent-scroll ${showFullDescription ? 'location-details__description--full' : ''}`}>
+                {/* Location description */}
+                {location.properties.description && !showFullDescription && <section className="location-details__description">
                     <div ref={locationDetailsElement}>
                         {location.properties.description}
                     </div>
-                    {(isOverflowing || (initialOverflow && showFullDescription)) && (
-                        <button onClick={() => toggleDescription()}>
-                            {!showFullDescription ? 'Read full description' : 'Close' }
-                        </button>
-                    )}
+                    {(isOverflowing || initialOverflow) && <button onClick={() => toggleDescription()}>
+                        Read full description
+                    </button>}
+                </section>}
+                {location.properties.description && showFullDescription && <section className="location-details__description location-details__description--full prevent-scroll" {...scrollableContentSwipePrevent}>
+                    <div>
+                        {location.properties.description}
+                    </div>
+                    {initialOverflow && <button onClick={() => toggleDescription()}>
+                        Close
+                    </button>}
                 </section>}
             </div>
 
