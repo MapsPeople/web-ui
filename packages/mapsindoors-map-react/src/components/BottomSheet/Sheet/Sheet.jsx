@@ -2,13 +2,10 @@ import { useContext, useEffect } from 'react';
 import { useRef, useState } from 'react';
 import { ContainerContext } from '../ContainerContext';
 import { useSwipeable } from 'react-swipeable';
+import { snapPoints } from '../../../constants/snapPoints';
 import './Sheet.scss';
 
-export const snapPoints = {
-    MIN: 1, // Sheet height is the minimum height
-    FIT: 2, // Sheet height fits to the content
-    MAX: 3  // Sheet height is of maximum height (height of container element)
-};
+
 let dragStartHeight;
 
 /**

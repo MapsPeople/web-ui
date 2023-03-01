@@ -5,7 +5,7 @@ import { ReactComponent as PinIcon } from '../../assets/pin.svg';
 import { MapsIndoorsContext } from '../../MapsIndoorsContext';
 import { useIsVerticalOverflow } from '../../hooks/useIsVerticalOverflow';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
-import { snapPoints } from '../BottomSheet/Sheet/Sheet';
+import { snapPoints } from '../../constants/snapPoints';
 
 /**
  * Shows details for a MapsIndoors Location.
