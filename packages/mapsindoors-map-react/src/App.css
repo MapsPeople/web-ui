@@ -25,4 +25,5 @@
 .app__map-container {
     width: 90vw;
     height: calc(100vh - 180px);
+    color: initial;
 }

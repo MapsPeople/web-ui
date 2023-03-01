@@ -92,8 +92,8 @@ function Map({ gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, 
     };
 
     return (<>
-        {mapType === MAP_TYPES.GOOGLE && <GoogleMapsMap gmApiKey={gmApiKey} onMapView={onMapView} />}
-        {mapType === MAP_TYPES.MAPBOX && <MapboxMap mapboxAccessToken={mapboxAccessToken} onMapView={onMapView} />}
+        {mapType === MAP_TYPES.GOOGLE && <GoogleMapsMap gmApiKey={gmApiKey} onMapView={onMapView} mapsIndoorsInstance={mapsIndoorsInstance} />}
+        {mapType === MAP_TYPES.MAPBOX && <MapboxMap mapboxAccessToken={mapboxAccessToken} onMapView={onMapView} mapsIndoorsInstance={mapsIndoorsInstance} />}
     </>)
 }
 
