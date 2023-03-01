@@ -149,6 +149,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
          * Clear the results list.
          */
         searchFieldRef.current.addEventListener('cleared', () => {
+            clearEventListeners();
             searchResultsRef.current.innerHTML = '';
             if (privateSelectedCategory) {
 
