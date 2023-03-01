@@ -17,7 +17,7 @@ import { snapPoints } from '../BottomSheet/Sheet/Sheet';
  * @param {function} props.onSetSize - Callback that is fired when the toggle full description button is clicked and the Sheet size changes.
  * @param {function} props.snapPointSwiped - Changes value when user has swiped a Bottom sheet to a new snap point.
  */
-function LocationDetails({ location, onClose, onStartWayfinding, onSetSize, snapPointSwiped }) {
+function LocationDetails({ location, onBack, onStartWayfinding, onSetSize, snapPointSwiped }) {
 
     const locationInfoElement = useRef(null);
     const locationDetailsContainer = useRef(null);
@@ -126,7 +126,7 @@ function LocationDetails({ location, onClose, onStartWayfinding, onSetSize, snap
                     {location.properties.name}<br />
                     <mi-location-info ref={locationInfoElement} />
                 </div>
-                <button className="location-info__close" onClick={() => onClose()}>
+                <button className="location-info__close" onClick={() => onBack()}>
                     <CloseIcon />
                 </button>
             </div>
