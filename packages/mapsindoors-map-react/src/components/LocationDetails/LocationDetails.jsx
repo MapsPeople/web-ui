@@ -38,6 +38,12 @@ function LocationDetails({ location, onClose, onStartWayfinding, onSetSize, snap
     const scrollableContentSwipePrevent = usePreventSwipe();
 
     useEffect(() => {
+        // Reset state
+        setShowFullDescription(false);
+        setDescriptionHasContentAbove(false);
+        setDescriptionHasContentBelow(false);
+        setLocationDisplayRule(null);
+
         if (location) {
             locationInfoElement.current.location = location;
             setLocationDisplayRule(mapsIndoorsInstance.getDisplayRule(location));
