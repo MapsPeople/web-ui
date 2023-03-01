@@ -116,6 +116,27 @@ function LocationDetails({ location, onBack, onStartWayfinding, onSetSize, snapP
         setDescriptionHasContentBelow(false);
     }
 
+    /*
+     * Start wayfinding, making some cleanup first.
+     */
+    function startWayfinding() {
+        setShowFullDescription(false);
+        setDescriptionHasContentAbove(false);
+        setDescriptionHasContentBelow(false);
+        onSetSize(snapPoints.FIT);
+
+        onStartWayfinding();
+    }
+
+    function back() {
+        setShowFullDescription(false);
+        setDescriptionHasContentAbove(false);
+        setDescriptionHasContentBelow(false);
+        onSetSize(snapPoints.FIT);
+
+        onBack();
+    }
+
     return <div className={`location-details ${descriptionHasContentAbove ? 'location-details--content-above' : ''} ${descriptionHasContentBelow ? 'location-details--content-below' : ''}`}>
         {location && <>
             <div className="location-info">
@@ -126,7 +147,7 @@ function LocationDetails({ location, onBack, onStartWayfinding, onSetSize, snapP
                     {location.properties.name}<br />
                     <mi-location-info ref={locationInfoElement} />
                 </div>
-                <button className="location-info__close" onClick={() => onBack()}>
+                <button className="location-info__close" onClick={() => back()}>
                     <CloseIcon />
                 </button>
             </div>
@@ -161,7 +182,7 @@ function LocationDetails({ location, onBack, onStartWayfinding, onSetSize, snapP
                 </section>}
             </div>
 
-            <button onClick={() => onStartWayfinding()} className="location-details__wayfinding">
+            <button onClick={() => startWayfinding()} className="location-details__wayfinding">
                 <PinIcon />
                 Start wayfinding
                 {/* FIXME: Implement */}
