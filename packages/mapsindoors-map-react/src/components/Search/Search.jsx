@@ -70,23 +70,26 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
     * @param {string} category
     */
     function categoryClicked(category) {
+
         /** Perform a search when a category is clicked and filter the results through the category. */
         searchFieldRef.current.setAttribute('mi-categories', category);
+
         /*
         * Check if the clicked category is the same as the active one.
         * Clear out the results list and set the selected category to null.
         */
         if (selectedCategory === category) {
+
             searchResultsRef.current.innerHTML = '';
             setSelectedCategory(null);
             privateSelectedCategory = null;
 
             /** Check if the search field has a value and trigger the search again. */
             if (searchFieldRef.current.value) {
-                console.log('here')
+                searchFieldRef.current.removeAttribute('mi-categories');
                 searchFieldRef.current.triggerSearch();
-                console.log('search triggered');
             }
+
             /*
             * Check if the search field has a value while a category is selected.
             * Trigger the search again and set the current selected category.
@@ -95,6 +98,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
             searchFieldRef.current.triggerSearch();
             setSelectedCategory(category);
             privateSelectedCategory = category;
+
             /*
             * Check if a category is selected and filter through the locations within that category.
             * Clear out the search results after each category is selected.
@@ -108,6 +112,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
             mapsindoors.services.LocationsService.getLocations({
                 categories: category,
             }).then(locations => {
+
                 /** Function that takes the locations and passes them to the parent component. */
                 onLocationsFiltered(locations);
 
@@ -146,10 +151,12 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
         searchFieldRef.current.addEventListener('cleared', () => {
             searchResultsRef.current.innerHTML = '';
             if (privateSelectedCategory) {
+
                 /** Get the locations and filter through them based on categories selected. */
                 mapsindoors.services.LocationsService.getLocations({
                     categories: privateSelectedCategory,
                 }).then(locations => {
+
                     /** Function that takes the locations and passes them to the parent component. */
                     onLocationsFiltered(locations);
 
