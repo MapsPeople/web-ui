@@ -38,15 +38,15 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
     const [selectedCategory, setSelectedCategory] = useState();
 
     /**
-    * Click event handler that takes the selected location as an argument.
-    */
+     * Click event handler that takes the selected location as an argument.
+     *
+     * @param {string} category
+     */
     function resultClickedHandler(location) {
         onLocationClick(location.detail);
     }
 
-    /*
-    * Remove click event listeners on all mi-list-item-location components.
-    */
+    /** Remove click event listeners on all mi-list-item-location components. */
     function clearEventListeners() {
         const listItemLocations = document.querySelectorAll('mi-list-item-location');
         listItemLocations.forEach(element => {
@@ -54,9 +54,11 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
         });
     }
 
-    /*
+    /**
     * Add search results by creating a 'mi-list-item-location' component for displaying the content of each result.
     * Append all the results to the results container and listen to the events when a result item is clicked.
+    *
+    * @param {string} result
     */
     function addSearchResults(result) {
         const listItem = document.createElement('mi-list-item-location');
@@ -65,21 +67,42 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
         listItem.addEventListener('locationClicked', resultClickedHandler);
     }
 
+
     /**
-    * Handles the click events on the categories list.
-    * Set a selected category and only allow one category to be selected at once.
-    *
-    * @param {string} category
-    */
+     * Get the locations and filter through them based on categories selected.
+     *
+     * @param {string} category
+     */
+    function getFilteredLocations(category) {
+        mapsindoors.services.LocationsService.getLocations({
+            categories: category,
+        }).then(locations => {
+
+            /** Function that takes the locations and passes them to the parent component. */
+            onLocationsFiltered(locations);
+
+            /** Loop through the filtered locations and add them to the search results list. */
+            for (const location of locations) {
+                addSearchResults(location);
+            }
+        });
+    }
+
+    /**
+     * Handles the click events on the categories list.
+     * Set a selected category and only allow one category to be selected at once.
+     *
+     * @param {string} category
+     */
     function categoryClicked(category) {
 
         /** Perform a search when a category is clicked and filter the results through the category. */
         searchFieldRef.current.setAttribute('mi-categories', category);
 
-        /*
-        * Check if the clicked category is the same as the active one.
-        * Clear out the results list and set the selected category to null.
-        */
+        /**
+         * Check if the clicked category is the same as the active one.
+         * Clear out the results list and set the selected category to null.
+         */
         if (selectedCategory === category) {
 
             searchResultsRef.current.innerHTML = '';
@@ -92,37 +115,24 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
                 searchFieldRef.current.triggerSearch();
             }
 
-            /*
-            * Check if the search field has a value while a category is selected.
-            * Trigger the search again and set the current selected category.
-            */
+            /**
+             * Check if the search field has a value while a category is selected.
+             * Trigger the search again and set the current selected category.
+             */
         } else if (searchFieldRef.current.value) {
             searchFieldRef.current.triggerSearch();
             setSelectedCategory(category);
             _selectedCategory = category;
 
-            /*
-            * Check if a category is selected and filter through the locations within that category.
-            * Clear out the search results after each category is selected.
-            */
+            /**
+             * Check if a category is selected and filter through the locations within that category.
+             * Clear out the search results after each category is selected.
+             */
         } else {
             searchResultsRef.current.innerHTML = '';
             setSelectedCategory(category);
             _selectedCategory = category;
-
-            /** Get the locations and filter through them based on categories selected. */
-            mapsindoors.services.LocationsService.getLocations({
-                categories: category,
-            }).then(locations => {
-
-                /** Function that takes the locations and passes them to the parent component. */
-                onLocationsFiltered(locations);
-
-                /** Loop through the filtered locations and add them to the search results list. */
-                for (const location of locations) {
-                    addSearchResults(location);
-                }
-            });
+            getFilteredLocations(category);
         }
     }
 
@@ -154,20 +164,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
             clearEventListeners();
             searchResultsRef.current.innerHTML = '';
             if (_selectedCategory) {
-
-                /** Get the locations and filter through them based on categories selected. */
-                mapsindoors.services.LocationsService.getLocations({
-                    categories: _selectedCategory,
-                }).then(locations => {
-
-                    /** Function that takes the locations and passes them to the parent component. */
-                    onLocationsFiltered(locations);
-
-                    /** Loop through the filtered locations and add them to the search results list. */
-                    for (const location of locations) {
-                        addSearchResults(location);
-                    }
-                });
+                getFilteredLocations(_selectedCategory);
             }
         });
 
