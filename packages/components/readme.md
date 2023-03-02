@@ -41,7 +41,7 @@ For "manually" controlling the components, open the Inspector to change attribut
 
 ### Setting the element type
 
-When getting a reference to a MI Component element in the view, the type can be set like below:
+When getting a reference to a MI Component element in the view, the type can be set like so:
 
 ```html
 <mi-search #search mapsindoors="true" [placeholder]="Start typing to search..."></mi-search>
