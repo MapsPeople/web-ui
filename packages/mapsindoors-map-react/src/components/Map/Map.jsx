@@ -59,7 +59,7 @@ function Map({ gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, 
      * Show the filtered locations on the map based on their IDs.
      */
     useEffect(() => {
-        if (filteredLocationIds) {
+        if (filteredLocationIds && mapsIndoorsInstance) {
             mapsIndoorsInstance.filter(filteredLocationIds);
         }
     }, [filteredLocationIds, mapsIndoorsInstance]);

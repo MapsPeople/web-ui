@@ -40,9 +40,7 @@ function Modal({ currentLocation, setCurrentLocation, currentCategories, onLocat
             />
         </div>,
         <div className={`modal ${activePage === VIEWS.LOCATION_DETAILS ? 'modal--open' : ''}`} key="B">
-            <LocationDetails onStartWayfinding={() => setActivePage(VIEWS.WAYFINDING)}
-                location={currentLocation}
-                onBack={() => setActivePage(VIEWS.SEARCH)} />
+            <LocationDetails onSetSize={() => void 0 /* FIXME: react on size change */} onStartWayfinding={() => setActivePage(VIEWS.WAYFINDING)} location={currentLocation} onBack={() => setActivePage(VIEWS.SEARCH)} />
         </div>,
         <div className={`modal ${activePage === VIEWS.WAYFINDING ? 'modal--open' : ''}`} key="C">
             <Wayfinding onStartDirections={() => setActivePage(VIEWS.DIRECTIONS)}

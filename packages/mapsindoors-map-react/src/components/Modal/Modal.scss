@@ -1,5 +1,4 @@
 .modal {
-    display: none;
     position: absolute;
     z-index: var(--z-index-modal);
     width: 568px;
@@ -8,8 +7,9 @@
     border-radius: var(--spacing-x-small);
     border: 1px solid var(--color-gray-30);
     background: var(--color-white-white);
+    transform: translateY(calc(100% + var(--spacing-large)));
 
     &--open {
-        display: initial;
+        transform: translateY(0);
     }
 }

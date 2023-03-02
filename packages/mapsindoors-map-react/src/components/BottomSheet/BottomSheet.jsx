@@ -28,6 +28,8 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
     const bottomSheetRef = useRef();
     const [activeBottomSheet, setActiveBottomSheet] = useState(null);
 
+    const [locationDetailsSheetSize, setLocationDetailsSheetSize] = useState();
+    const [locationDetailsSheetSwiped, setLocationDetailsSheetSwiped] = useState();
     /*
      * React on changes on the current location.
      * Set the search bottom sheet to be active if there is no location selected.
@@ -44,10 +46,20 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
                 onLocationsSearched={(locations) => onLocationsSearched(locations)}
                 />
         </Sheet>,
-        <Sheet minHeight="128" isOpen={activeBottomSheet === BOTTOM_SHEETS.LOCATION_DETAILS} key="B">
-            <LocationDetails onStartWayfinding={() => setActiveBottomSheet(BOTTOM_SHEETS.WAYFINDING)}
+        <Sheet
+            minHeight="128"
+            preferredSizeSnapPoint={locationDetailsSheetSize}
+            isOpen={activeBottomSheet === BOTTOM_SHEETS.LOCATION_DETAILS}
+            key="B"
+            onSwipedToSnapPoint={snapPoint => setLocationDetailsSheetSwiped(snapPoint)}
+        >
+            <LocationDetails
+                onSetSize={size => setLocationDetailsSheetSize(size)}
+                onStartWayfinding={() => setActiveBottomSheet(BOTTOM_SHEETS.WAYFINDING)}
                 location={currentLocation}
-                onBack={() => setActiveBottomSheet(BOTTOM_SHEETS.SEARCH)} />
+                onBack={() => setActiveBottomSheet(BOTTOM_SHEETS.SEARCH)}
+                snapPointSwiped={locationDetailsSheetSwiped}
+            />
         </Sheet>,
         <Sheet minHeight="220" isOpen={activeBottomSheet === BOTTOM_SHEETS.WAYFINDING} key="C">
             <Wayfinding onStartDirections={() => setActiveBottomSheet(BOTTOM_SHEETS.DIRECTIONS)}

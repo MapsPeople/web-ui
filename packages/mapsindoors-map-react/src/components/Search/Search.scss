@@ -5,16 +5,13 @@
     display: grid;
     gap: var(--spacing-x-small);
     color: var(--brand-colors-black-100);
-    grid-template-rows: var(--spacing-xxx-large) var(--spacing-xxx-large) 1fr;
+    grid-template-rows: var(--spacing-xxx-large) 60px 1fr;
 
     &__categories {
         display: grid;
         grid-auto-flow: column;
         gap: var(--spacing-x-small);
-        height: fit-content;
         overflow: scroll;
-        white-space: nowrap;
-        padding-bottom: var(--spacing-small);
     }
 
     &__results {
@@ -22,7 +19,6 @@
         gap: var(--spacing-x-small);
         overflow: auto;
         grid-auto-rows: min-content;
-        padding-top: var(--spacing-x-small);
 
         &--not-found {
             text-align: center;
