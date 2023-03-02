@@ -3,7 +3,7 @@ import './Search.scss';
 import { useRef, useEffect, useState } from 'react';
 
 const mapsindoors = window.mapsindoors;
-let privateSelectedCategory;
+let _selectedCategory;
 
 /**
  * Show the search results.
@@ -82,7 +82,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
 
             searchResultsRef.current.innerHTML = '';
             setSelectedCategory(null);
-            privateSelectedCategory = null;
+            _selectedCategory = null;
 
             /** Check if the search field has a value and trigger the search again. */
             if (searchFieldRef.current.value) {
@@ -97,7 +97,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
         } else if (searchFieldRef.current.value) {
             searchFieldRef.current.triggerSearch();
             setSelectedCategory(category);
-            privateSelectedCategory = category;
+            _selectedCategory = category;
 
             /*
             * Check if a category is selected and filter through the locations within that category.
@@ -106,7 +106,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
         } else {
             searchResultsRef.current.innerHTML = '';
             setSelectedCategory(category);
-            privateSelectedCategory = category;
+            _selectedCategory = category;
 
             /** Get the locations and filter through them based on categories selected. */
             mapsindoors.services.LocationsService.getLocations({
@@ -151,11 +151,11 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
         searchFieldRef.current.addEventListener('cleared', () => {
             clearEventListeners();
             searchResultsRef.current.innerHTML = '';
-            if (privateSelectedCategory) {
+            if (_selectedCategory) {
 
                 /** Get the locations and filter through them based on categories selected. */
                 mapsindoors.services.LocationsService.getLocations({
-                    categories: privateSelectedCategory,
+                    categories: _selectedCategory,
                 }).then(locations => {
 
                     /** Function that takes the locations and passes them to the parent component. */
