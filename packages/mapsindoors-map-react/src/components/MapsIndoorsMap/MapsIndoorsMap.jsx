@@ -42,6 +42,33 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
         }
     }
 
+    /**
+     * Set the locations that have categories and find the unique categories.
+     *
+     * @param {array} locationsResult
+     */
+    function setLocations(locationsResult) {
+        // All the locations that have categories.
+        let locationCategories = [];
+
+        //The unique categories for all the locations.
+        let uniqueCategories = new Set();
+
+        // Loop through all the locations and only select the ones that have categories.
+        locationsResult.forEach(l => {
+            if (Object.keys(l.properties.categories).length > 0) {
+                locationCategories.push(l.properties.categories)
+            }
+        });
+
+        // Loop through the locations which have categories and create a set of unique categories.
+        locationCategories.forEach(item => {
+            Object.keys(item).forEach(value => uniqueCategories.add(value));
+        });
+
+        setCurrentCategories(uniqueCategories);
+    }
+
     /*
      * React on changes in the venue prop.
      */
@@ -79,25 +106,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             // Ensure a minimum waiting time of 3 seconds
             new Promise(resolve => setTimeout(resolve, 3000))
         ]).then(([venuesResult, appConfigResult, locationsResult]) => {
-            // All the locations that have categories.
-            let locationCategories = [];
-            //The unique categories for all the locations.
-            let uniqueCategories = new Set();
-
-            // Loop through all the locations and only select the ones that have categories.
-            locationsResult.forEach(l => {
-                if (Object.keys(l.properties.categories).length > 0) {
-                    locationCategories.push(l.properties.categories)
-                }
-            });
-
-            // Loop through the locations which have categories and create a set of unique categories.
-            locationCategories.forEach(item => {
-                Object.keys(item).forEach(value => uniqueCategories.add(value));
-            });
-
-            setCurrentCategories(uniqueCategories);
-
+            setLocations(locationsResult);
             venuesResult = venuesResult.map(venue => {
                 venue.image = appConfigResult.venueImages[venue.name.toLowerCase()];
                 return venue;
