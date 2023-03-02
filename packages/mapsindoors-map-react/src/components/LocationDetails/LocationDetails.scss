@@ -16,8 +16,8 @@
             bottom: calc(56px + var(--spacing-medium));
             left: 0;
             right: 0;
-            height: 40px;
-            background: linear-gradient(transparent, white);
+            height: var(--spacing-xx-large);
+            background: linear-gradient(rgba(255, 255, 255, 0), white);
         }
     }
 
@@ -26,11 +26,11 @@
         &::after {
             content: '';
             position: absolute;
-            top: calc(56px);
+            top: 56px;
             left: 0;
             right: 0;
-            height: 40px;
-            background: linear-gradient(white, transparent);
+            height: var(--spacing-xx-large);
+            background: linear-gradient(white, rgba(255, 255, 255, 0));
         }
     }
 
