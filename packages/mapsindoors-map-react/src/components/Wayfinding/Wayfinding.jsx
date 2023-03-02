@@ -96,9 +96,9 @@ function Wayfinding({ onStartDirections, onBack }) {
                 <div className="wayfinding__accessibility">
                     <input className="mi-toggle" type="checkbox" />
                     <div>Accessibility</div>
-                    <div class="wayfinding__tooltip">
+                    <div className="wayfinding__tooltip">
                         <QuestionIcon />
-                        <div class="wayfinding__text">
+                        <div className="wayfinding__text">
                             <p>This is the description for the accessibility.</p>
                             <i></i>
                         </div>
