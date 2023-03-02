@@ -25,6 +25,8 @@ function BottomSheet({ currentLocation, setCurrentLocation }) {
     const bottomSheetRef = useRef();
     const [activeBottomSheet, setActiveBottomSheet] = useState(null);
 
+    const [locationDetailsSheetSize, setLocationDetailsSheetSize] = useState();
+    const [locationDetailsSheetSwiped, setLocationDetailsSheetSwiped] = useState();
     /*
      * React on changes on the current location.
      * Set the search bottom sheet to be active if there is no location selected.
@@ -37,8 +39,20 @@ function BottomSheet({ currentLocation, setCurrentLocation }) {
         <Sheet minHeight="100" isOpen={activeBottomSheet === BOTTOM_SHEETS.SEARCH} key="A">
             <Search onLocationClick={(location) => setCurrentLocation(location)} />
         </Sheet>,
-        <Sheet minHeight="128" isOpen={activeBottomSheet === BOTTOM_SHEETS.LOCATION_DETAILS} key="B">
-            <LocationDetails onStartWayfinding={() => setActiveBottomSheet(BOTTOM_SHEETS.WAYFINDING)} location={currentLocation} onBack={() => setActiveBottomSheet(BOTTOM_SHEETS.SEARCH)} />
+        <Sheet
+            minHeight="128"
+            preferredSizeSnapPoint={locationDetailsSheetSize}
+            isOpen={activeBottomSheet === BOTTOM_SHEETS.LOCATION_DETAILS}
+            key="B"
+            onSwipedToSnapPoint={snapPoint => setLocationDetailsSheetSwiped(snapPoint)}
+        >
+            <LocationDetails
+                onSetSize={size => setLocationDetailsSheetSize(size)}
+                onStartWayfinding={() => setActiveBottomSheet(BOTTOM_SHEETS.WAYFINDING)}
+                location={currentLocation}
+                onBack={() => setActiveBottomSheet(BOTTOM_SHEETS.SEARCH)}
+                snapPointSwiped={locationDetailsSheetSwiped}
+            />
         </Sheet>,
         <Sheet minHeight="220" isOpen={activeBottomSheet === BOTTOM_SHEETS.WAYFINDING} key="C">
             <Wayfinding onStartDirections={() => setActiveBottomSheet(BOTTOM_SHEETS.DIRECTIONS)} location={currentLocation} onBack={() => setActiveBottomSheet(BOTTOM_SHEETS.LOCATION_DETAILS)} />

@@ -18,3 +18,11 @@
     height: 100%;
     position: relative;
 }
+
+/*
+ * Utility class to prevent global scrolling for an element.
+ */
+.prevent-scroll {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: none; // iOS fix
+}

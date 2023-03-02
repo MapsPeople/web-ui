@@ -2,13 +2,10 @@ import { useContext, useEffect } from 'react';
 import { useRef, useState } from 'react';
 import { ContainerContext } from '../ContainerContext';
 import { useSwipeable } from 'react-swipeable';
+import { snapPoints } from '../../../constants/snapPoints';
 import './Sheet.scss';
 
-const snapPoints = {
-    MIN: 1, // Sheet height is the minimum height
-    FIT: 2, // Sheet height fits to the content
-    MAX: 3  // Sheet height is of maximum height (height of container element)
-};
+
 let dragStartHeight;
 
 /**
@@ -18,8 +15,10 @@ let dragStartHeight;
  * @param {Object} props
  * @param {boolean} props.isOpen - If the sheet is open (visible) or not.
  * @param {number} props.minheight - The minimum height of the sheet. It cannot be resized to below this height.
+ * @param {number} props.preferredSizeSnapPoint - Change this to programatically change sheet height to a snap point.
+ * @param {function} [props.onSwipedToSnapPoint] - Callback function is run when user swiped to a snap points. Has the snap point as parameter.
  */
-function Sheet({ children, isOpen, minHeight }) {
+function Sheet({ children, isOpen, minHeight, preferredSizeSnapPoint, onSwipedToSnapPoint }) {
 
     /** Referencing the sheet DOM element */
     const sheetRef = useRef();
@@ -78,7 +77,26 @@ function Sheet({ children, isOpen, minHeight }) {
             }
             setCurrentSnapPoint(targetSize);
         });
+
+        if (typeof onSwipedToSnapPoint === 'function') {
+            // When snap transition has ended, call the callback
+            sheetRef.current.addEventListener('transitionend', () => {
+                onSwipedToSnapPoint(targetSize);
+            }, { once: true });
+        }
     }
+
+    /**
+     * React to changes in the size prop, meaning something requests
+     * the sheet to be set to a certain snap point.
+     */
+    useEffect(() => {
+        sheetRef.current.style.height = `${sheetRef.current.clientHeight}px`;
+
+        requestAnimationFrame(() => {
+            changeSheetHeight(preferredSizeSnapPoint);
+        });
+    }, [preferredSizeSnapPoint]); // eslint-disable-line react-hooks/exhaustive-deps
 
     /**
      * Handler for swipe gestures on the sheet.
@@ -111,13 +129,16 @@ function Sheet({ children, isOpen, minHeight }) {
                 maxThreshold = contentHeight + 60;
             }
 
+            let targetSnapPoint;
             if (newHeight <= minThreshold) {
-                changeSheetHeight(snapPoints.MIN);
+                targetSnapPoint = snapPoints.MIN;
             } else if (newHeight <= maxThreshold) {
-                changeSheetHeight(snapPoints.FIT);
+                targetSnapPoint = snapPoints.FIT;
             } else {
-                changeSheetHeight(snapPoints.MAX);
+                targetSnapPoint = snapPoints.MAX;
             }
+
+            changeSheetHeight(targetSnapPoint);
         },
         trackMouse: true,
         preventScrollOnSwipe: true
@@ -133,7 +154,7 @@ function Sheet({ children, isOpen, minHeight }) {
         } else {
             setContentHeight(contentRef.current.clientHeight);
         }
-    }, [children, isOpen]);
+    }, [children.length, isOpen]);
 
     /*
      * Pass through ref to share the ref between component and useSwipeable.
