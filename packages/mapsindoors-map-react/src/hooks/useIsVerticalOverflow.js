@@ -1,31 +1,32 @@
-import { useLayoutEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 /**
- * A React Hook to check if an element has vertical overflow.
+ * A React Hook to check if an element has vertical overflow. It will also
+ * expose if the element had vertical overflow at first.
  *
  * Based on https://www.robinwieruch.de/react-custom-hook-check-if-overflow/
  */
-export const useIsVerticalOverflow = (ref, callback) => {
+export const useIsVerticalOverflow = (stateTrigger, ref) => {
     const [isOverflow, setIsOverflow] = useState(undefined);
+    const [initialOverflow, setInitialOverflow] = useState(undefined);
 
-    useLayoutEffect(() => {
-        const { current } = ref;
+    useEffect(() => {
 
-        const trigger = () => {
-            const hasOverflow = current.scrollHeight > current.clientHeight;
-
+        const check = (initial = false) => {
+            const hasOverflow = ref.current?.scrollHeight > ref.current?.clientHeight;
             setIsOverflow(hasOverflow);
 
-            if (callback) callback(hasOverflow);
+            if (initial === true) {
+                setInitialOverflow(hasOverflow);
+            }
         };
 
-        if (current) {
-            if ('ResizeObserver' in window) {
-                new ResizeObserver(trigger).observe(current);
-            }
-            trigger();
-        }
-    }, [callback, ref]);
+        check(true);
 
-    return isOverflow;
+        if (ref.current) {
+            new ResizeObserver(check).observe(ref.current);
+        }
+    }, [stateTrigger, ref]);
+
+    return [isOverflow, initialOverflow];
 }
