@@ -143,7 +143,7 @@ export class Search implements ComponentInterface {
 
 
     /**
-     * Trigger the search.
+     * Programmatically trigger the search.
      */
     @Method()
     triggerSearch(): void {
