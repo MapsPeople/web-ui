@@ -2,7 +2,10 @@ import React from "react";
 import './Search.scss';
 import { useRef, useEffect, useState } from 'react';
 
+/** Initialize the MapsIndoors instance. */
 const mapsindoors = window.mapsindoors;
+
+/** Private variable for the selected category which is assigned whenever the category is changed. */
 let _selectedCategory;
 
 /**
