@@ -32,7 +32,7 @@ function Sidebar({ currentLocation, setCurrentLocation }) {
             <Search onLocationClick={(location) => setCurrentLocation(location)} />
         </Modal>,
         <Modal isOpen={activePage === VIEWS.LOCATION_DETAILS} key="B">
-            <LocationDetails onSetSize={() => {}} onStartWayfinding={() => setActivePage(VIEWS.WAYFINDING)} location={currentLocation} onBack={() => setActivePage(VIEWS.SEARCH)} />
+            <LocationDetails onStartWayfinding={() => setActivePage(VIEWS.WAYFINDING)} location={currentLocation} onBack={() => setActivePage(VIEWS.SEARCH)} />
         </Modal>,
         <Modal isOpen={activePage === VIEWS.WAYFINDING} key="C">
             <Wayfinding onStartDirections={() => setActivePage(VIEWS.DIRECTIONS)} location={currentLocation} onBack={() => setActivePage(VIEWS.LOCATION_DETAILS)} />
