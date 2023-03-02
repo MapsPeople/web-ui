@@ -163,7 +163,7 @@ export class Search implements ComponentInterface {
     }
 
     /**
-     * Function that performs the search.
+     * Perform the search.
      */
     private search(inputValue): void {
         Promise.all([
