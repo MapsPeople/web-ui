@@ -185,7 +185,6 @@ function LocationDetails({ location, onBack, onStartWayfinding, onSetSize, snapP
             <button onClick={() => startWayfinding()} className="location-details__wayfinding">
                 <PinIcon />
                 Start wayfinding
-                {/* FIXME: Implement */}
             </button>
         </>}
     </div>
