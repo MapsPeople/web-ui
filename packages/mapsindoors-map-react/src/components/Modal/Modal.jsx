@@ -19,8 +19,9 @@ const VIEWS = {
  * @param {Object} props.setCurrentLocation - The setter for the currently selected MapsIndoors Location.
  * @param {Object} props.currentCategories - The unique categories displayed based on the existing locations.
  * @param {function} props.onLocationsFiltered - The list of locations after filtering through the categories.
+ * @param {function} props.onLocationsSearched - The list of locations after search is performed.
 */
-function Modal({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered }) {
+function Modal({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onLocationsSearched }) {
     const [activePage, setActivePage] = useState(null);
 
     /*
@@ -34,7 +35,9 @@ function Modal({ currentLocation, setCurrentLocation, currentCategories, onLocat
         <div className={`modal ${activePage === VIEWS.SEARCH ? 'modal--open' : ''}`} key="A">
             <Search onLocationClick={(location) => setCurrentLocation(location)}
                 categories={currentCategories}
-                 onLocationsFiltered={(locations) => onLocationsFiltered(locations)} />
+                onLocationsFiltered={(locations) => onLocationsFiltered(locations)}
+                onLocationsSearched={(locations) => onLocationsSearched(locations)}
+            />
         </div>,
         <div className={`modal ${activePage === VIEWS.LOCATION_DETAILS ? 'modal--open' : ''}`} key="B">
             <LocationDetails onStartWayfinding={() => setActivePage(VIEWS.WAYFINDING)}

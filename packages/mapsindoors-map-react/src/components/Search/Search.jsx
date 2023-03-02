@@ -12,9 +12,10 @@ let _selectedCategory;
  * @param {function} props.onLocationClick - Function that is run when a location from the search results is clicked.
  * @param {set} props.categories - All the unique categories that users can filter through.
  * @param {function} props.onLocationsFiltered - Function that is run when the user performs a filter through any category.
+ * @param {function} props.onLocationsSearched - Function that is run when the user performs a search.
  * @returns
  */
-function Search({ onLocationClick, categories, onLocationsFiltered }) {
+function Search({ onLocationClick, categories, onLocationsFiltered, onLocationsSearched }) {
 
     /** Referencing the search DOM element */
     const searchFieldRef = useRef();
@@ -132,6 +133,8 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
         searchFieldRef.current.addEventListener('results', e => {
             clearEventListeners();
             searchResultsRef.current.innerHTML = '';
+
+            onLocationsSearched(e.detail);
 
             if (e.detail.length === 0) {
                 setHasSearchResults(false);

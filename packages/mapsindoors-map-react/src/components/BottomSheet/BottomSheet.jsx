@@ -21,8 +21,9 @@ const BOTTOM_SHEETS = {
  * @param {Object} props.setCurrentLocation - The setter for the currently selected MapsIndoors Location.
  * @param {Object} props.currentCategories - The unique categories displayed based on the existing locations.
  * @param {function} props.onLocationsFiltered - The list of locations after filtering through the categories.
+ * @param {function} props.onLocationsSearched - The list of locations after search is performed.
  */
-function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered }) {
+function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onLocationsSearched }) {
 
     const bottomSheetRef = useRef();
     const [activeBottomSheet, setActiveBottomSheet] = useState(null);
@@ -39,7 +40,9 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
         <Sheet minHeight="350" isOpen={activeBottomSheet === BOTTOM_SHEETS.SEARCH} key="A">
             <Search onLocationClick={(location) => setCurrentLocation(location)}
                 categories={currentCategories}
-                onLocationsFiltered={(locations) => onLocationsFiltered(locations)} />
+                onLocationsFiltered={(locations) => onLocationsFiltered(locations)}
+                onLocationsSearched={(locations) => onLocationsSearched(locations)}
+                />
         </Sheet>,
         <Sheet minHeight="128" isOpen={activeBottomSheet === BOTTOM_SHEETS.LOCATION_DETAILS} key="B">
             <LocationDetails onStartWayfinding={() => setActiveBottomSheet(BOTTOM_SHEETS.WAYFINDING)}

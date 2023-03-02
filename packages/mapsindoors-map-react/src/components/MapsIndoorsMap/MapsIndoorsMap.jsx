@@ -30,6 +30,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [currentLocation, setCurrentLocation] = useState();
     const [currentCategories, setCurrentCategories] = useState(new Set());
     const [filteredLocations, setFilteredLocations] = useState();
+    const [searchedLocations, setSearchedLocations] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
@@ -81,6 +82,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
         ]).then(([venuesResult, appConfigResult, locationsResult]) => {
             // All the locations that have categories.
             let locationCategories = [];
+
             //The unique categories for all the locations.
             let uniqueCategories = new Set();
 
@@ -118,6 +120,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                     setCurrentLocation={setCurrentLocation}
                     currentCategories={currentCategories}
                     onLocationsFiltered={(locations) => setFilteredLocations(locations)}
+                    onLocationsSearched={(locations) => setSearchedLocations(locations)}
                 />
                 :
                 <BottomSheet
@@ -125,6 +128,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                     setCurrentLocation={setCurrentLocation}
                     currentCategories={currentCategories}
                     onLocationsFiltered={(locations) => setFilteredLocations(locations)}
+                    onLocationsSearched={(locations) => setSearchedLocations(locations)}
                 />
             }
             <Map
@@ -136,7 +140,9 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                 onVenueChangedOnMap={() => venueChangedOnMap()}
                 onMapsIndoorsInstance={(instance) => setMapsIndoorsInstance(instance)}
                 onLocationClick={(location) => setCurrentLocation(location)}
-                filteredLocationIds={filteredLocations?.map(location => location.id)} />
+                filteredLocationIds={filteredLocations?.map(location => location.id)}
+                searchedLocationIds={searchedLocations?.map(location => location.id)}
+                />
         </div>
     </MapsIndoorsContext.Provider>)
 }
