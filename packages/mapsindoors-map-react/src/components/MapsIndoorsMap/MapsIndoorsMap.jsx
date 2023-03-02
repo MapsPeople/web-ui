@@ -63,8 +63,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     }, [locationId]);
 
     /*
-    * React on changes in the MapsIndoors API key by fetching the required data.
-    */
+     * React on changes in the MapsIndoors API key by fetching the required data.
+     */
     useEffect(() => {
         setMapReady(false);
         mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKey);
