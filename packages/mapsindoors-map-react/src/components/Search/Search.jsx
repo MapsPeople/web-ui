@@ -21,6 +21,10 @@ function Search({ onLocationClick }) {
     /** Control to clear the search field */
     const [clearSearchField, setClearSearchField] = useState();
 
+    /**
+     * React to click on search results by cleaning up and invoking callback prop.
+     * @param {object} location
+     */
     function locationClickHandler(location) {
         onLocationClick(location);
         setSearchResults([]);
