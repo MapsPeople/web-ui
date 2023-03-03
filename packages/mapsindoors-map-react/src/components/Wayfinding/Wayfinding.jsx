@@ -99,7 +99,7 @@ function Wayfinding({ onStartDirections, onBack }) {
                     <div className="wayfinding__tooltip">
                         <QuestionIcon />
                         <div className="wayfinding__text">
-                            <p>This is the description for the accessibility.</p>
+                            <p>Turn on Accessibility to get directions that avoids stairs and escalators.</p>
                             <i></i>
                         </div>
                     </div>
