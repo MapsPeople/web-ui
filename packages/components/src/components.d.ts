@@ -788,7 +788,7 @@ export namespace Components {
          */
         "setDisplayText": (displayText: string) => Promise<void>;
         /**
-          * Trigger the search.
+          * Programmatically trigger the search.
          */
         "triggerSearch": () => Promise<void>;
         /**

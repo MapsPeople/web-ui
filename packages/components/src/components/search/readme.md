@@ -248,7 +248,7 @@ Type: `Promise<void>`
 
 ### `triggerSearch() => Promise<void>`
 
-Trigger the search.
+Programmatically trigger the search.
 
 #### Returns
 
