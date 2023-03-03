@@ -121,14 +121,6 @@
         }
     }
 
-    &--fit {
-        height: fit-content;
-    }
-
-    &--full {
-        height: 100vh;
-    }
-
     &__tooltip {
         display: grid;
         position: relative;
@@ -174,11 +166,20 @@
         background-color: var(--brand-colors-white-100);
         box-shadow: 0 1px var(--spacing-x-small) rgba(0, 0, 0, 0.2);
 
-        @media (min-width: $desktop-breakpoint) {
-            &--full {
-                height: fit-content;
-                max-height: 50vh;
-            }
+    }
+
+    &--fit {
+        height: fit-content;
+    }
+
+    &--full {
+        height: 100vh;
+    }
+
+    @media (min-width: $desktop-breakpoint) {
+        &--full {
+            height: fit-content;
+            max-height: 50vh;
         }
     }
 }
