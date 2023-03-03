@@ -5,7 +5,10 @@ import { useRef, useEffect, useState } from 'react';
 /** Initialize the MapsIndoors instance. */
 const mapsindoors = window.mapsindoors;
 
-/** Private variable for the selected category which is assigned whenever the category is changed. */
+/**
+ * Private variable used inside an event listener for a custom event from a web componenent.
+ * Implemented due to the impossibility to use the React useState hook.
+ */
 let _selectedCategory;
 
 /**
@@ -32,9 +35,6 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onLocationsS
     /** Determines if the input has focus */
     const [hasInputFocus, setHasInputFocus] = useState(false);
 
-    /** Determines if any search results have been found */
-    const [hasSearchResults, setHasSearchResults] = useState(true);
-
     /** Determines which category has been selected */
     const [selectedCategory, setSelectedCategory] = useState();
 
@@ -56,11 +56,11 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onLocationsS
     }
 
     /**
-    * Add search results by creating a 'mi-list-item-location' component for displaying the content of each result.
-    * Append all the results to the results container and listen to the events when a result item is clicked.
-    *
-    * @param {string} result
-    */
+     * Add search results by creating a 'mi-list-item-location' component for displaying the content of each result.
+     * Append all the results to the results container and listen to the events when a result item is clicked.
+     *
+     * @param {string} result
+     */
     function addSearchResults(result) {
         const listItem = document.createElement('mi-list-item-location');
         listItem.location = result;
@@ -68,6 +68,12 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onLocationsS
         listItem.addEventListener('locationClicked', resultClickedHandler);
     }
 
+    /** Display message when no results have been found. */
+    function showNotFoundMessage() {
+        const notFoundMessage = document.createElement('p');
+        notFoundMessage.innerHTML = "Nothing was found";
+        searchResultsRef.current.appendChild(notFoundMessage);
+    }
 
     /**
      * Get the locations and filter through them based on categories selected.
@@ -105,7 +111,6 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onLocationsS
          * Clear out the results list and set the selected category to null.
          */
         if (selectedCategory === category) {
-
             searchResultsRef.current.innerHTML = '';
             setSelectedCategory(null);
             _selectedCategory = null;
@@ -149,7 +154,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onLocationsS
             onLocationsSearched(e.detail);
 
             if (e.detail.length === 0) {
-                setHasSearchResults(false);
+                showNotFoundMessage();
             } else {
                 for (const result of e.detail) {
                     addSearchResults(result);
@@ -189,10 +194,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onLocationsS
                     </mi-chip>)
                 }
             </div>
-            <div ref={searchResultsRef} className="search__results">
-                {!hasSearchResults &&
-                    <p className="search__results--not-found">Nothing was found</p>}
-            </div>
+            <div ref={searchResultsRef} className="search__results"></div>
         </div>
     )
 }
