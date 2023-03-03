@@ -34,9 +34,6 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
     /** Determines if the input has focus */
     const [hasInputFocus, setHasInputFocus] = useState(false);
 
-    /** Determines if any search results have been found */
-    const [hasSearchResults, setHasSearchResults] = useState(true);
-
     /** Determines which category has been selected */
     const [selectedCategory, setSelectedCategory] = useState();
 
@@ -58,11 +55,11 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
     }
 
     /**
-    * Add search results by creating a 'mi-list-item-location' component for displaying the content of each result.
-    * Append all the results to the results container and listen to the events when a result item is clicked.
-    *
-    * @param {string} result
-    */
+     * Add search results by creating a 'mi-list-item-location' component for displaying the content of each result.
+     * Append all the results to the results container and listen to the events when a result item is clicked.
+     *
+     * @param {string} result
+     */
     function addSearchResults(result) {
         const listItem = document.createElement('mi-list-item-location');
         listItem.location = result;
@@ -70,6 +67,12 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
         listItem.addEventListener('locationClicked', resultClickedHandler);
     }
 
+    /** Display message when no results have been found. */
+    function showNotFoundMessage() {
+        const notFoundMessage = document.createElement('p');
+        notFoundMessage.innerHTML = "Nothing was found";
+        searchResultsRef.current.appendChild(notFoundMessage);
+    }
 
     /**
      * Get the locations and filter through them based on categories selected.
@@ -107,7 +110,6 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
          * Clear out the results list and set the selected category to null.
          */
         if (selectedCategory === category) {
-
             searchResultsRef.current.innerHTML = '';
             setSelectedCategory(null);
             _selectedCategory = null;
@@ -149,7 +151,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
             searchResultsRef.current.innerHTML = '';
 
             if (e.detail.length === 0) {
-                setHasSearchResults(false);
+                showNotFoundMessage();
             } else {
                 for (const result of e.detail) {
                     addSearchResults(result);
@@ -189,10 +191,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
                     </mi-chip>)
                 }
             </div>
-            <div ref={searchResultsRef} className="search__results">
-                {!hasSearchResults &&
-                    <p className="search__results--not-found">Nothing was found</p>}
-            </div>
+            <div ref={searchResultsRef} className="search__results"></div>
         </div>
     )
 }
