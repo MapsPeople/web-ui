@@ -5,8 +5,8 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { UnitSystem } from "./enums/unit-system.enum";
 import { SortOrder } from "./enums/sort-order.enum";
+import { UnitSystem } from "./enums/unit-system.enum";
 import { Location } from "@mapsindoors/typescript-interfaces";
 import { LocationBookingDuration } from "./enums/location-booking-duration.enum";
 import { NotificationPosition } from "./enums/notification-position.enum";
@@ -16,6 +16,11 @@ import { Route } from "./types/route.interface";
 import { RouteTravelMode } from "./enums/route-travel-mode.enum";
 import { DirectionsTranslations } from "./types/directions-translations.interface";
 export namespace Components {
+    interface ComboBoxItem {
+        "selected": boolean;
+        "text": string;
+        "value": string;
+    }
     interface MiCard {
     }
     interface MiChip {
@@ -88,6 +93,42 @@ export namespace Components {
           * @memberof Column
          */
         "width": string;
+    }
+    interface MiComboBox {
+        /**
+          * Sets the disabled state for the dropdown.
+         */
+        "disabled": boolean;
+        /**
+          * This attribute indicates that the items can be filtered using the input field present at the top. If it is not specified, the input field will not be visible, and filtering is not possible.
+          * @type {boolean}
+         */
+        "filterable": boolean;
+        /**
+          * Gets or sets the list items.
+          * @type {Array<HTMLMiDropdownItemElement>}
+          * @returns
+         */
+        "items": Array<HTMLMiDropdownItemElement>;
+        /**
+          * Sort order of items.
+          * @type {SortOrder}
+         */
+        "itemsOrder": SortOrder;
+        /**
+          * Guiding message when presented with a content window that has no rows. Default language is English.
+         */
+        "noResultsMessage": string;
+        /**
+          * Gets or sets the state of the dropdown. If the attribute is set to true then the dropdown will be expanded.
+          * @type {boolean}
+         */
+        "open": boolean;
+        /**
+          * Gets the selected items.
+          * @type {Array<HTMLMiDropdownItemElement>}
+         */
+        "selected": Array<HTMLMiDropdownItemElement>;
     }
     interface MiDataTable {
         /**
@@ -878,6 +919,10 @@ export interface MiColumnCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLMiColumnElement;
 }
+export interface MiComboBoxCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLMiComboBoxElement;
+}
 export interface MiDataTableCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLMiDataTableElement;
@@ -931,6 +976,12 @@ export interface MiStepSwitcherCustomEvent<T> extends CustomEvent<T> {
     target: HTMLMiStepSwitcherElement;
 }
 declare global {
+    interface HTMLComboBoxItemElement extends Components.ComboBoxItem, HTMLStencilElement {
+    }
+    var HTMLComboBoxItemElement: {
+        prototype: HTMLComboBoxItemElement;
+        new (): HTMLComboBoxItemElement;
+    };
     interface HTMLMiCardElement extends Components.MiCard, HTMLStencilElement {
     }
     var HTMLMiCardElement: {
@@ -948,6 +999,12 @@ declare global {
     var HTMLMiColumnElement: {
         prototype: HTMLMiColumnElement;
         new (): HTMLMiColumnElement;
+    };
+    interface HTMLMiComboBoxElement extends Components.MiComboBox, HTMLStencilElement {
+    }
+    var HTMLMiComboBoxElement: {
+        prototype: HTMLMiComboBoxElement;
+        new (): HTMLMiComboBoxElement;
     };
     interface HTMLMiDataTableElement extends Components.MiDataTable, HTMLStencilElement {
     }
@@ -1124,9 +1181,11 @@ declare global {
         new (): HTMLMiTimeElement;
     };
     interface HTMLElementTagNameMap {
+        "combo-box-item": HTMLComboBoxItemElement;
         "mi-card": HTMLMiCardElement;
         "mi-chip": HTMLMiChipElement;
         "mi-column": HTMLMiColumnElement;
+        "mi-combo-box": HTMLMiComboBoxElement;
         "mi-data-table": HTMLMiDataTableElement;
         "mi-distance": HTMLMiDistanceElement;
         "mi-dropdown": HTMLMiDropdownElement;
@@ -1159,6 +1218,11 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    interface ComboBoxItem {
+        "selected"?: boolean;
+        "text"?: string;
+        "value"?: string;
+    }
     interface MiCard {
     }
     interface MiChip {
@@ -1237,6 +1301,47 @@ declare namespace LocalJSX {
           * @memberof Column
          */
         "width"?: string;
+    }
+    interface MiComboBox {
+        /**
+          * Sets the disabled state for the dropdown.
+         */
+        "disabled"?: boolean;
+        /**
+          * This attribute indicates that the items can be filtered using the input field present at the top. If it is not specified, the input field will not be visible, and filtering is not possible.
+          * @type {boolean}
+         */
+        "filterable"?: boolean;
+        /**
+          * Gets or sets the list items.
+          * @type {Array<HTMLMiDropdownItemElement>}
+          * @returns
+         */
+        "items"?: Array<HTMLMiDropdownItemElement>;
+        /**
+          * Sort order of items.
+          * @type {SortOrder}
+         */
+        "itemsOrder"?: SortOrder;
+        /**
+          * Guiding message when presented with a content window that has no rows. Default language is English.
+         */
+        "noResultsMessage"?: string;
+        /**
+          * Triggers an event when the selection is changed.
+          * @type {EventEmitter}
+         */
+        "onChange"?: (event: MiComboBoxCustomEvent<any>) => void;
+        /**
+          * Gets or sets the state of the dropdown. If the attribute is set to true then the dropdown will be expanded.
+          * @type {boolean}
+         */
+        "open"?: boolean;
+        /**
+          * Gets the selected items.
+          * @type {Array<HTMLMiDropdownItemElement>}
+         */
+        "selected"?: Array<HTMLMiDropdownItemElement>;
     }
     interface MiDataTable {
         /**
@@ -2052,9 +2157,11 @@ declare namespace LocalJSX {
         "translations"?: string;
     }
     interface IntrinsicElements {
+        "combo-box-item": ComboBoxItem;
         "mi-card": MiCard;
         "mi-chip": MiChip;
         "mi-column": MiColumn;
+        "mi-combo-box": MiComboBox;
         "mi-data-table": MiDataTable;
         "mi-distance": MiDistance;
         "mi-dropdown": MiDropdown;
@@ -2090,9 +2197,11 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "combo-box-item": LocalJSX.ComboBoxItem & JSXBase.HTMLAttributes<HTMLComboBoxItemElement>;
             "mi-card": LocalJSX.MiCard & JSXBase.HTMLAttributes<HTMLMiCardElement>;
             "mi-chip": LocalJSX.MiChip & JSXBase.HTMLAttributes<HTMLMiChipElement>;
             "mi-column": LocalJSX.MiColumn & JSXBase.HTMLAttributes<HTMLMiColumnElement>;
+            "mi-combo-box": LocalJSX.MiComboBox & JSXBase.HTMLAttributes<HTMLMiComboBoxElement>;
             "mi-data-table": LocalJSX.MiDataTable & JSXBase.HTMLAttributes<HTMLMiDataTableElement>;
             "mi-distance": LocalJSX.MiDistance & JSXBase.HTMLAttributes<HTMLMiDistanceElement>;
             "mi-dropdown": LocalJSX.MiDropdown & JSXBase.HTMLAttributes<HTMLMiDropdownElement>;
