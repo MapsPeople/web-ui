@@ -43,11 +43,12 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     }
 
     /**
-     * Set the locations that have categories and find the unique categories.
+     * Get all the categories that are in use.
+     * Filter through them to get the unique categories.
      *
      * @param {array} locationsResult
      */
-    function setLocations(locationsResult) {
+    function getCategories(locationsResult) {
         // All the locations that have categories.
         let locationCategories = [];
 
@@ -106,7 +107,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             // Ensure a minimum waiting time of 3 seconds
             new Promise(resolve => setTimeout(resolve, 3000))
         ]).then(([venuesResult, appConfigResult, locationsResult]) => {
-            setLocations(locationsResult);
+            getCategories(locationsResult);
             venuesResult = venuesResult.map(venue => {
                 venue.image = appConfigResult.venueImages[venue.name.toLowerCase()];
                 return venue;
