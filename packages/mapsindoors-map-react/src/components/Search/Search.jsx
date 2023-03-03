@@ -18,19 +18,24 @@ function Search({ onLocationClick }) {
     /** Holds search results given from the search field. */
     const [searchResults, setSearchResults] = useState([]);
 
+    /** Control to clear the search field */
+    const [clearSearchField, setClearSearchField] = useState();
+
     function locationClickHandler(location) {
         onLocationClick(location);
         setSearchResults([]);
+        setClearSearchField(true);
     }
 
     return (
         <div className={`search ${hasInputFocus ? 'search--full' : 'search--fit'}`}>
             <SearchField
                 placeholder="Search by name, category, building..."
-                cleared={() => setSearchResults([])}
+                cleared={() => { setSearchResults([]); setClearSearchField(false) }}
                 clicked={() => setHasInputFocus(true)}
                 results={results => setSearchResults(results)}
                 mapsindoors={true}
+                clear={clearSearchField}
             />
             <div className="search__results">
                 {searchResults.map(location => <ListItemLocation key={location.id} location={location} locationClicked={e => locationClickHandler(e)} />)}

@@ -7,10 +7,11 @@ import { useEffect, useRef } from 'react';
  * @param {string} props.placeholder - Placeholder in search field.
  * @param {boolean} props.mapsindoors - Set to true to search in MapsIndoors Locations.
  * @param {function} props.results - Function that is called when search results are received.
- * @param {function} props.clicked - Function
- * @param {function} props.cleared
+ * @param {function} props.clicked - Function that is called when search field is clicked.
+ * @param {function} props.cleared - Function that is called when search field is cleared.
+ * @param {boolean} props.clear - Programatically clear the search field.
  */
-function SearchField({ placeholder, mapsindoors, results, clicked, cleared }) {
+function SearchField({ placeholder, mapsindoors, results, clicked, cleared, clear }) {
     const elementRef = useRef();
 
     useEffect(() => {
@@ -20,6 +21,10 @@ function SearchField({ placeholder, mapsindoors, results, clicked, cleared }) {
 
         if (mapsindoors === true) {
             current.mapsindoors = 'true';
+        }
+
+        if (clear === true) {
+            current.clear();
         }
 
         current.addEventListener('results', searchResultsHandler);
