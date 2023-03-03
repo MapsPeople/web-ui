@@ -1,5 +1,9 @@
+@import '../../variables.scss';
+
 .wayfinding {
     color: var(--brand-colors-black-100);
+    display: grid;
+    grid-template-rows: 220px 1fr;
 
     &__directions {
         background-color: var(--color-gray-20);
@@ -40,12 +44,22 @@
 
     &__details {
         padding: var(--spacing-medium);
+
+        &--show {
+            display: block;
+        }
+
+        &--hide {
+            display: none;
+        }
     }
 
     &__results {
         display: grid;
         gap: var(--spacing-x-small);
         padding: var(--spacing-x-small);
+        overflow: scroll;
+        grid-auto-rows: min-content;
     }
 
     &__accessibility {
@@ -73,7 +87,6 @@
         gap: var(--spacing-xx-small);
         align-items: center;
         color: var(--color-gray-70);
-        ;
     }
 
     &__minutes,
@@ -108,53 +121,18 @@
         }
     }
 
-    &__tooltip {
-        display: grid;
-        position: relative;
+    &--fit {
+        height: fit-content;
+    }
 
-        &:hover .wayfinding__text {
-            display: block;
+    &--full {
+        height: 100vh;
+    }
+
+    @media (min-width: $desktop-breakpoint) {
+        &--full {
+            height: fit-content;
+            max-height: 50vh;
         }
     }
-
-    &__text {
-        min-width: 200px;
-        top: -20px;
-        left: 50%;
-        transform: translate(-50%, -100%);
-        padding: var(--spacing-x-small) var(--spacing-medium);
-        color: var(--color-gray-70);
-        background-color: var( --brand-colors-white-100);
-        font-size: var(--font-size-small);
-        border-radius: var(--rounding-large);
-        position: absolute;
-        z-index: 10000;
-        box-shadow: 0 1px var(--spacing-x-small) rgba(0, 0, 0, 0.2);
-        display: none;
-    }
-
-
-    &__text i {
-        position: absolute;
-        top: 100%;
-        left: 50%;
-        margin-left: -12px;
-        width: var(--spacing-large);
-        height: var(--spacing-small);
-        overflow: hidden;
-    }
-
-    &__text i::after {
-        content: '';
-        position: absolute;
-        width: var(--spacing-small);
-        height: var(--spacing-small);
-        left: 50%;
-        transform: translate(-50%, -50%) rotate(45deg);
-        background-color: var( --brand-colors-white-100);
-        box-shadow: 0 1px var(--spacing-x-small) rgba(0, 0, 0, 0.2);
-    }
 }
-
-
-

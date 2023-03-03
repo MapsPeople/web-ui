@@ -7,4 +7,9 @@
     border-radius: var(--spacing-x-small);
     border: 1px solid var(--color-gray-30);
     background: var(--color-white-white);
+    transform: translateY(calc(100% + var(--spacing-large)));
+
+    &--open {
+        transform: translateY(0);
+    }
 }

@@ -27,10 +27,10 @@ jobs:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
       - name: "Set up Cloud SDK"
         uses: "google-github-actions/setup-gcloud@v1"
-      - run: gsutil -m rsync -d -c -r packages/components/docs gs://mi-components-docs
+      - run: gsutil -m rsync -d -c -r packages/components/docs gs://mi-components-documentation
       - run: gsutil -m setmeta -h "Cache-Control:public, max-age=0"
-          gs://mi-components-docs/**/*.html
+          gs://mi-components-documentation/**/*.html
       - run: gsutil -m setmeta -h "Cache-Control:public, max-age=0"
-          gs://mi-components-docs/**/*.js
+          gs://mi-components-documentation/**/*.js
       - run: gsutil -m setmeta -h "Cache-Control:public, max-age=0"
-          gs://mi-components-docs/**/*.css
+          gs://mi-components-documentation/**/*.css

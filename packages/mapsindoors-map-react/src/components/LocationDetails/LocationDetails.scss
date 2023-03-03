@@ -8,6 +8,31 @@
     overflow-y: hidden;
     grid-template-rows: 40px 1fr 56px;
 
+    &--content-below {
+        position: relative;
+        &::before {
+            content: '';
+            position: absolute;
+            bottom: calc(56px + var(--spacing-medium));
+            left: 0;
+            right: 0;
+            height: var(--spacing-xx-large);
+            background: linear-gradient(rgba(255, 255, 255, 0), white);
+        }
+    }
+
+    &--content-above {
+        position: relative;
+        &::after {
+            content: '';
+            position: absolute;
+            top: 56px;
+            left: 0;
+            right: 0;
+            height: var(--spacing-xx-large);
+            background: linear-gradient(white, rgba(255, 255, 255, 0));
+        }
+    }
 
     &__details {
         display: flex;
@@ -49,11 +74,13 @@
             all: unset;
             font-size: var(--font-size-small);
             color: var(--color-blue-base);
+            margin-top: var(--spacing-x-small);
+            cursor: pointer;
         }
 
         &--full {
             div {
-                max-height: none; /* FIXME: Make only the div scrollable, not the entire sheet. */
+                max-height: none;
             }
         }
     }

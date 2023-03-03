@@ -109,6 +109,11 @@ export class Search implements ComponentInterface {
      */
     @Prop({ mutable: true, reflect: true }) value: string;
 
+    /**
+     * Sets the prevention of the search.
+     */
+    private preventSearch: boolean = false;
+
     @Watch('value')
     valueChange(newValue): void {
         if (!newValue || !this.inputElement) {
@@ -118,7 +123,10 @@ export class Search implements ComponentInterface {
         if (newValue !== this.inputElement.value) {
             // If newValue is different from what is in the input element, we know it's set from outside the component.
             this.inputElement.value = newValue;
-            this.inputChanged();
+
+            if (!this.preventSearch) {
+                this.inputChanged();
+            }
         }
     }
 
@@ -131,6 +139,17 @@ export class Search implements ComponentInterface {
         this.value = '';
         this.lastRequested = null;
         this.cleared.emit();
+    }
+
+    /**
+     * Sets text to be shown in the search field.
+     * Setting it will not perform a search.
+     */
+    @Method()
+    setDisplayText(displayText: string): void {
+        this.preventSearch = true;
+        this.value = displayText;
+        this.preventSearch = false;
     }
 
     /**
@@ -158,27 +177,29 @@ export class Search implements ComponentInterface {
         const inputValue = this.inputElement.value;
         this.value = inputValue; // reflect on value attribute
 
-        if (inputValue.length < 2) {
-            this.lastRequested = null;
+        if (!this.preventSearch) {
+            if (inputValue.length < 2) {
+                this.lastRequested = null;
 
-            if (inputValue.length === 1) {
-                this.shortInput.emit();
-            } else {
-                this.clear();
+                if (inputValue.length === 1) {
+                    this.shortInput.emit();
+                } else {
+                    this.clear();
+                }
+
+                return;
             }
 
-            return;
-        }
-
-        if (inputValue.length > 1 && inputValue !== this.lastRequested) {
-            Promise.all([
-                this.makeMapsIndoorsQuery(inputValue),
-                this.makeGooglePlacesQuery(inputValue)
-            ])
-                .then(results => {
-                    this.lastRequested = inputValue;
-                    this.pushResults(results[0].concat(results[1]));
-                });
+            if (inputValue.length > 1 && inputValue !== this.lastRequested) {
+                Promise.all([
+                    this.makeMapsIndoorsQuery(inputValue),
+                    this.makeGooglePlacesQuery(inputValue)
+                ])
+                    .then(results => {
+                        this.lastRequested = inputValue;
+                        this.pushResults(results[0].concat(results[1]));
+                    });
+            }
         }
     }
 
@@ -266,17 +287,11 @@ export class Search implements ComponentInterface {
     }
 
     componentDidRender(): void {
-        if (this.value) {
-            this.inputElement.value = this.value;
-            this.inputChanged();
-        }
-
         if (this.dataAttributes) {
             for (const key in this.dataAttributes) {
                 this.inputElement.setAttribute(key, this.dataAttributes[key]);
             }
         }
-
         this.componentRendered.emit();
     }
 

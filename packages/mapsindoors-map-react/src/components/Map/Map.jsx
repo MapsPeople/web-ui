@@ -19,7 +19,7 @@ const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
  * @param {string} [props.mapboxAccessToken] - Mapbox Access Token if you want to show a Mapbox map.
  * @param {array} [props.venues] - Array of Venues in the current solution.
  * @param {string} [props.venueName] - If you want the map to show a specific Venue, provide the Venue name here.
- * @param {function [props.onLocationClick]} - Function that is run when a MapsIndoors Location is clicked. the Location will be sent along as first argument.
+ * @param {function} [props.onLocationClick] - Function that is run when a MapsIndoors Location is clicked. the Location will be sent along as first argument.
  * @param {function} props.onMapsIndoorsInstance - Function that is run when a MapsIndoors instance is created. The instance will be sent along as first argument.
  * @param {function} props.onVenueChangedOnMap - Function that is run when the map bounds was changed due to fitting to a venue.
  * @returns
@@ -82,8 +82,8 @@ function Map({ gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, 
     };
 
     return (<>
-        {mapType === MAP_TYPES.GOOGLE && <GoogleMapsMap gmApiKey={gmApiKey} onMapView={onMapView} />}
-        {mapType === MAP_TYPES.MAPBOX && <MapboxMap mapboxAccessToken={mapboxAccessToken} onMapView={onMapView} />}
+        {mapType === MAP_TYPES.GOOGLE && <GoogleMapsMap gmApiKey={gmApiKey} onMapView={onMapView} mapsIndoorsInstance={mapsIndoorsInstance} />}
+        {mapType === MAP_TYPES.MAPBOX && <MapboxMap mapboxAccessToken={mapboxAccessToken} onMapView={onMapView} mapsIndoorsInstance={mapsIndoorsInstance} />}
     </>)
 }
 
