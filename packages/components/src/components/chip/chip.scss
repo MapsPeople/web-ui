@@ -3,7 +3,7 @@
 .chip {
   display: flex;
   background-color: var(--tailwind-colors-zinc-50);
-  outline: 1px solid var(--tailwind-colors-slate-200);
+  border: 1px solid var(--tailwind-colors-slate-200);
   padding: 0 var(--spacing-xx-small);
   border-radius: 70px;
   align-items: center;
@@ -11,6 +11,7 @@
   font-family: var(--font-family-system);
   font-size: var(--font-size-medium);
   height: var(--spacing-xxx-large);
+  width: fit-content;
 
   &--active {
     background-color: var(--brand-colors-dark-pine-100);

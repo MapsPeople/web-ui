@@ -16,8 +16,10 @@ const VIEWS = {
  * @param {Object} props
  * @param {Object} props.currentLocation - The currently selected MapsIndoors Location.
  * @param {Object} props.setCurrentLocation - The setter for the currently selected MapsIndoors Location.
+ * @param {Object} props.currentCategories - The unique categories displayed based on the existing locations.
+ * @param {function} props.onLocationsFiltered - The list of locations after filtering through the categories.
  */
-function Sidebar({ currentLocation, setCurrentLocation }) {
+function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered }) {
     const [activePage, setActivePage] = useState(null);
 
     /*
@@ -29,10 +31,18 @@ function Sidebar({ currentLocation, setCurrentLocation }) {
 
     const pages = [
         <Modal isOpen={activePage === VIEWS.SEARCH} key="A">
-            <Search onLocationClick={(location) => setCurrentLocation(location)} />
+            <Search
+                onLocationClick={(location) => setCurrentLocation(location)}
+                categories={currentCategories}
+                onLocationsFiltered={(locations) => onLocationsFiltered(locations)}
+            />
         </Modal>,
         <Modal isOpen={activePage === VIEWS.LOCATION_DETAILS} key="B">
-            <LocationDetails onStartWayfinding={() => setActivePage(VIEWS.WAYFINDING)} location={currentLocation} onBack={() => setActivePage(VIEWS.SEARCH)} />
+            <LocationDetails
+                onStartWayfinding={() => setActivePage(VIEWS.WAYFINDING)}
+                location={currentLocation}
+                onBack={() => setActivePage(VIEWS.SEARCH)}
+            />
         </Modal>,
         <Modal isOpen={activePage === VIEWS.WAYFINDING} key="C">
             <Wayfinding onStartDirections={() => setActivePage(VIEWS.DIRECTIONS)} location={currentLocation} onBack={() => setActivePage(VIEWS.LOCATION_DETAILS)} />

@@ -23,7 +23,7 @@
     align-items: center;
     cursor: pointer;
     gap: variables.$spacing-medium;
-    outline: 1px solid variables.$color-gray-30;
+    border: 1px solid variables.$color-gray-30;
 }
 
 :host(:hover) {
