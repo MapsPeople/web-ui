@@ -32,16 +32,23 @@ function Modal({ currentLocation, setCurrentLocation, currentCategories, onLocat
 
     const pages = [
         <div className={`modal ${activePage === VIEWS.SEARCH ? 'modal--open' : ''}`} key="A">
-            <Search onLocationClick={(location) => setCurrentLocation(location)}
+            <Search
+                onLocationClick={(location) => setCurrentLocation(location)}
                 categories={currentCategories}
-                 onLocationsFiltered={(locations) => onLocationsFiltered(locations)} />
+                onLocationsFiltered={(locations) => onLocationsFiltered(locations)} />
         </div>,
         <div className={`modal ${activePage === VIEWS.LOCATION_DETAILS ? 'modal--open' : ''}`} key="B">
-            <LocationDetails onSetSize={() => void 0 /* FIXME: react on size change */} onStartWayfinding={() => setActivePage(VIEWS.WAYFINDING)} location={currentLocation} onBack={() => setActivePage(VIEWS.SEARCH)} />
+            <LocationDetails
+                onSetSize={() => void 0 /* FIXME: react on size change */}
+                onStartWayfinding={() => setActivePage(VIEWS.WAYFINDING)}
+                location={currentLocation}
+                onBack={() => setActivePage(VIEWS.SEARCH)} />
         </div>,
         <div className={`modal ${activePage === VIEWS.WAYFINDING ? 'modal--open' : ''}`} key="C">
-            <Wayfinding onStartDirections={() => setActivePage(VIEWS.DIRECTIONS)}
+            <Wayfinding
+                onStartDirections={() => setActivePage(VIEWS.DIRECTIONS)}
                 location={currentLocation}
+                isActive={activePage === VIEWS.WAYFINDING}
                 onBack={() => setActivePage(VIEWS.LOCATION_DETAILS)} />
         </div>,
         <div className={`modal ${activePage === VIEWS.DIRECTIONS ? 'modal--open' : ''}`} key="D">

@@ -235,6 +235,16 @@ Type: `Promise<void>`
 
 
 
+### `focusInput() => Promise<void>`
+
+Set focus on the input field.
+
+#### Returns
+
+Type: `Promise<void>`
+
+
+
 ### `setDisplayText(displayText: string) => Promise<void>`
 
 Sets text to be shown in the search field.

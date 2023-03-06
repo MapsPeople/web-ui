@@ -7,7 +7,7 @@ import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
 import { ReactComponent as WalkingIcon } from '../../assets/walking.svg';
 import { ReactComponent as QuestionIcon } from '../../assets/question.svg';
 
-function Wayfinding({ onStartDirections, onBack, location }) {
+function Wayfinding({ onStartDirections, onBack, location, isActive }) {
 
     /** Referencing the start location DOM element */
     const startSearchFieldRef = useRef();
@@ -112,6 +112,13 @@ function Wayfinding({ onStartDirections, onBack, location }) {
             endSearchFieldRef.current.value = location.properties.name;
         }
     }, [location]);
+
+    useEffect(() => {
+        // If the active view is the Wayfinding, then focus the input field.
+        if (isActive) {
+            startSearchFieldRef.current.focusInput();
+        }
+    }, [isActive]);
 
     return (
         <div className={`wayfinding ${hasInputFocus ? 'wayfinding--full' : 'wayfinding--fit'}`}>

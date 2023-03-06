@@ -163,6 +163,14 @@ export class Search implements ComponentInterface {
     }
 
     /**
+     * Set focus on the input field.
+     */
+    @Method()
+    focusInput(): void {
+        this.inputElement.focus();
+    }
+
+    /**
      * Perform the search.
      */
     private search(inputValue): void {
