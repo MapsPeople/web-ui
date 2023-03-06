@@ -50,6 +50,16 @@ function LocationDetails({ location, onBack, onStartWayfinding, onSetSize, snapP
         }
     }, [location, mapsIndoorsInstance]);
 
+    /**
+     * Communicate size change to parent component.
+     * @param {number} size
+     */
+    function setSize(size) {
+        if (typeof onSetSize === 'function') {
+            onSetSize(size);
+        }
+    }
+
     /*
      * When user swipes the bottom sheet to a new snap point.
      */
@@ -71,10 +81,10 @@ function LocationDetails({ location, onBack, onStartWayfinding, onSetSize, snapP
      */
     function toggleDescription() {
         if (showFullDescription === false) {
-            onSetSize(snapPoints.MAX);
+            setSize(snapPoints.MAX);
             expandLocationDescription();
         } else {
-            onSetSize(snapPoints.FIT);
+            setSize(snapPoints.FIT);
             collapseLocationDescription();
         }
     }
@@ -123,7 +133,7 @@ function LocationDetails({ location, onBack, onStartWayfinding, onSetSize, snapP
         setShowFullDescription(false);
         setDescriptionHasContentAbove(false);
         setDescriptionHasContentBelow(false);
-        onSetSize(snapPoints.FIT);
+        setSize(snapPoints.FIT);
 
         onStartWayfinding();
     }
@@ -132,7 +142,7 @@ function LocationDetails({ location, onBack, onStartWayfinding, onSetSize, snapP
         setShowFullDescription(false);
         setDescriptionHasContentAbove(false);
         setDescriptionHasContentBelow(false);
-        onSetSize(snapPoints.FIT);
+        setSize(snapPoints.FIT);
 
         onBack();
     }
@@ -185,7 +195,6 @@ function LocationDetails({ location, onBack, onStartWayfinding, onSetSize, snapP
             <button onClick={() => startWayfinding()} className="location-details__wayfinding">
                 <PinIcon />
                 Start wayfinding
-                {/* FIXME: Implement */}
             </button>
         </>}
     </div>
