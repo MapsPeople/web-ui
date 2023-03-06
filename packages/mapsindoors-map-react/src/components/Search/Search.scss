@@ -5,14 +5,24 @@
     display: grid;
     gap: var(--spacing-x-small);
     color: var(--brand-colors-black-100);
-    grid-template-rows: var(--spacing-xxx-large) 1fr;
+    grid-template-rows: var(--spacing-xxx-large) 60px 1fr;
 
+    &__categories {
+        display: grid;
+        grid-auto-flow: column;
+        gap: var(--spacing-x-small);
+        overflow: scroll;
+    }
 
     &__results {
         display: grid;
         gap: var(--spacing-x-small);
         overflow: auto;
         grid-auto-rows: min-content;
+
+        p {
+            text-align: center;
+        }
     }
 
     &--fit {
@@ -24,6 +34,10 @@
     }
 
     @media (min-width: $desktop-breakpoint) {
+        &--fit {
+            max-height: 50vh;
+        }
+
         &--full {
             height: fit-content;
             max-height: 50vh;

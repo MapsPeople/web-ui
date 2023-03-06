@@ -1,0 +1,182 @@
+@use "~@mapsindoors/midt/background-color";
+@use "~@mapsindoors/midt/border";
+@use "~@mapsindoors/midt/color";
+@use "~@mapsindoors/midt/elevation";
+@use "~@mapsindoors/midt/font";
+@use "~@mapsindoors/midt/icons";
+@use "~@mapsindoors/midt/margin";
+@use "~@mapsindoors/midt/opacity";
+@use "~@mapsindoors/midt/padding";
+@use "~@mapsindoors/midt/transitions";
+@use "~@mapsindoors/midt/z-index";
+
+@use "~@mapsindoors/midt/build/scss/variables";
+
+@import "../../../../../node_modules/@mapsindoors/css/input.css";
+@import "../../../../../node_modules/@mapsindoors/css/label.css";
+
+combo-box-item {
+    display: none;
+}
+
+:host {
+    display: inline-block;
+    position: relative;
+    @include font.family(sans-serif);
+}
+
+:host(.open) .button::after {
+    border-top-color: transparent;
+    border-bottom-color: variables.$color-gray-90;
+    margin-top: -8px;
+}
+
+:host(.open) {
+    section {
+        display: flex;
+    }
+
+    svg {
+        transform: rotate(180deg);
+    }
+}
+
+.input {
+    position: relative;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    height: 100%;
+    width: 100%;
+
+    font-family: inherit;
+    background: linear-gradient(variables.$color-gray-10, variables.$color-gray-20);
+
+    @include border.radius(medium);
+    @include border.width(medium);
+    @include border.style(solid);
+    @include border.gray(40);
+    @include color.black(base);
+    @include font.size(medium);
+    @include font.weight(large);
+    @include font.leading(medium);
+    @include padding.right(xx-large);
+    @include padding.left(medium);
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &__svg {
+        margin-left: auto;
+        position: absolute;
+        top: 50%;
+        right: -42px;
+    }
+
+    &__label {
+        @include padding.vertical(small);
+        @include margin.right(x-small);
+        display: block;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+
+        &--from-inner-html {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: variables.$spacing-x-small;
+        }
+    }
+
+    &:disabled {
+        @include opacity.opacity(x-large);
+        cursor: not-allowed;
+    }
+}
+
+.content {
+    @include padding.vertical(small);
+    @include margin.vertical(small);
+    @include border.radius(large);
+    @include color.black(base);
+    @include font.size(medium);
+    @include font.weight(large);
+    @include background-color.white(base);
+    @include elevation.elevation(medium);
+    min-width: 320px;
+    max-width: 480px;
+    max-height: 580px;
+    display: none;
+    flex-direction: column;
+    position: fixed;
+    z-index: 10000;
+
+    .list {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        overflow-y: auto;
+
+        &__item {
+            cursor: pointer;
+
+            &--highlighted {
+                @include background-color.gray(20);
+            }
+        }
+    }
+}
+
+.empty-page {
+    > * {
+        margin: 0;
+    }
+
+    display: flex;
+    align-items: left;
+    flex-direction: column;
+
+    @include margin.left(medium);
+    @include margin.bottom(small);
+
+    &__header {
+        @include font.size(medium);
+        @include font.weight(medium);
+        @include color.gray(80);
+    }
+}
+
+.label {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    @include padding.horizontal(medium);
+    @include padding.vertical(x-small);
+
+    &__item {
+        display: inline-block;
+        margin-top: 0;
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        &--from-inner-html {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: variables.$spacing-x-small;
+        }
+    }
+
+    &__checkbox {
+        @include margin.right(small);
+
+        &--hidden {
+            display: none;
+        }
+    }
+}
