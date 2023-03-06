@@ -7,7 +7,7 @@ import VenueSelector from '../VenueSelector/VenueSelector';
 import BottomSheet from '../BottomSheet/BottomSheet';
 import { MapsIndoorsContext } from '../../MapsIndoorsContext';
 import useMediaQuery from '../../hooks/useMediaQuery';
-import Modal from '../Modal/Modal';
+import Sidebar from '../Sidebar/Sidebar';
 
 const mapsindoors = window.mapsindoors;
 
@@ -124,10 +124,11 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             {venues.length > 1 && <VenueSelector onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)} venues={venues} currentVenueName={currentVenueName} />}
             {isMapReady && isDesktop
                 ?
-                <Modal
+                <Sidebar
                     currentLocation={currentLocation}
                     setCurrentLocation={setCurrentLocation}
                     currentCategories={currentCategories}
+                    onClose={() => setCurrentLocation(null)}
                     onLocationsFiltered={(locations) => setFilteredLocations(locations)}
                     onLocationsSearched={(locations) => setSearchedLocations(locations)}
                 />

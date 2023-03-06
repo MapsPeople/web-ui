@@ -1,6 +1,5 @@
-import React from "react";
 import { useEffect, useState } from 'react';
-import './Modal.scss'
+import Modal from './Modal/Modal';
 import LocationDetails from "../LocationDetails/LocationDetails";
 import Wayfinding from '../Wayfinding/Wayfinding';
 import Directions from '../Directions/Directions';
@@ -21,7 +20,7 @@ const VIEWS = {
  * @param {function} props.onLocationsFiltered - The list of locations after filtering through the categories.
  * @param {function} props.onLocationsSearched - The list of locations after search is performed.
 */
-function Modal({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onLocationsSearched }) {
+function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onLocationsSearched }) {
     const [activePage, setActivePage] = useState(null);
 
     /*
@@ -32,31 +31,38 @@ function Modal({ currentLocation, setCurrentLocation, currentCategories, onLocat
     }, [currentLocation]);
 
     const pages = [
-        <div className={`modal ${activePage === VIEWS.SEARCH ? 'modal--open' : ''}`} key="A">
-            <Search onLocationClick={(location) => setCurrentLocation(location)}
+        <Modal isOpen={activePage === VIEWS.SEARCH} key="A">
+            <Search
+                onLocationClick={(location) => setCurrentLocation(location)}
                 categories={currentCategories}
                 onLocationsFiltered={(locations) => onLocationsFiltered(locations)}
                 onLocationsSearched={(locations) => onLocationsSearched(locations)}
             />
-        </div>,
-        <div className={`modal ${activePage === VIEWS.LOCATION_DETAILS ? 'modal--open' : ''}`} key="B">
-            <LocationDetails onSetSize={() => void 0 /* FIXME: react on size change */} onStartWayfinding={() => setActivePage(VIEWS.WAYFINDING)} location={currentLocation} onBack={() => setActivePage(VIEWS.SEARCH)} />
-        </div>,
-        <div className={`modal ${activePage === VIEWS.WAYFINDING ? 'modal--open' : ''}`} key="C">
-            <Wayfinding onStartDirections={() => setActivePage(VIEWS.DIRECTIONS)}
+        </Modal>,
+        <Modal isOpen={activePage === VIEWS.LOCATION_DETAILS} key="B">
+            <LocationDetails
+                onStartWayfinding={() => setActivePage(VIEWS.WAYFINDING)}
                 location={currentLocation}
-                onBack={() => setActivePage(VIEWS.LOCATION_DETAILS)} />
-        </div>,
-        <div className={`modal ${activePage === VIEWS.DIRECTIONS ? 'modal--open' : ''}`} key="D">
+                onBack={() => setActivePage(VIEWS.SEARCH)}
+            />
+        </Modal>,
+        <Modal isOpen={activePage === VIEWS.WAYFINDING} key="C">
+            <Wayfinding
+                onStartDirections={() => setActivePage(VIEWS.DIRECTIONS)}
+                location={currentLocation}
+                onBack={() => setActivePage(VIEWS.LOCATION_DETAILS)}
+            />
+        </Modal>,
+        <Modal isOpen={activePage === VIEWS.DIRECTIONS} key="D">
             <Directions onBack={() => setActivePage(VIEWS.WAYFINDING)} />
-        </div>
+        </Modal>
     ]
 
     return (
-        <div className="modals">
+        <div>
             {pages}
         </div>
     )
 }
 
-export default Modal;
+export default Sidebar;
