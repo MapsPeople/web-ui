@@ -64,7 +64,8 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
         </Sheet>,
         <Sheet
             minHeight="220"
-            isOpen={activeBottomSheet === BOTTOM_SHEETS.WAYFINDING} key="C">
+            isOpen={activeBottomSheet === BOTTOM_SHEETS.WAYFINDING} key="C"
+            preferredSizeSnapPoint={3}>
             <Wayfinding
                 isActive={activeBottomSheet === BOTTOM_SHEETS.WAYFINDING}
                 onStartDirections={() => setActiveBottomSheet(BOTTOM_SHEETS.DIRECTIONS)}

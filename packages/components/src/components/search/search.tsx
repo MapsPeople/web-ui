@@ -167,7 +167,7 @@ export class Search implements ComponentInterface {
      */
     @Method()
     focusInput(): void {
-        this.inputElement.focus();
+        this.inputElement.focus({ preventScroll: true });
     }
 
     /**
