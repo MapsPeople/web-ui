@@ -15,6 +15,8 @@ function Wayfinding({ onStartDirections, onBack, location, isActive }) {
     /** Referencing the end location DOM element */
     const endSearchFieldRef = useRef();
 
+    const wayfindingRef = useRef();
+
     /** Referencing the accessibility details DOM element */
     const detailsRef = useRef();
 
@@ -116,12 +118,18 @@ function Wayfinding({ onStartDirections, onBack, location, isActive }) {
     useEffect(() => {
         // If the active view is the Wayfinding, then focus the input field.
         if (isActive) {
-            startSearchFieldRef.current.focusInput();
+            // Target the sheet that contains the wayfinding.
+            const sheet = wayfindingRef.current.closest('.sheet');
+
+            // Listen to the transition end event and then focus the input field.
+            sheet.addEventListener('transitionend', () => {
+                startSearchFieldRef.current.focusInput();
+            });
         }
     }, [isActive]);
 
     return (
-        <div className={`wayfinding ${hasInputFocus ? 'wayfinding--full' : 'wayfinding--fit'}`}>
+        <div ref={wayfindingRef} className={`wayfinding ${hasInputFocus ? 'wayfinding--full' : 'wayfinding--fit'}`}>
             <div className="wayfinding__directions">
                 <div className="wayfinding__title">Start wayfinding</div>
                 <button className="wayfinding__close" onClick={() => onBack()} aria-label="Close">
