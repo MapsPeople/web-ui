@@ -28,6 +28,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [venues, setVenues] = useState([]);
     const [currentVenueName, setCurrentVenueName] = useState();
     const [currentLocation, setCurrentLocation] = useState();
+    const [currentCategories, setCurrentCategories] = useState(new Set());
+    const [filteredLocations, setFilteredLocations] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
@@ -38,6 +40,34 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
         if (isMapReady === false) {
             setMapReady(true);
         }
+    }
+
+    /**
+     * Get all the categories that are in use.
+     * Filter through them to get the unique categories.
+     *
+     * @param {array} locationsResult
+     */
+    function getCategories(locationsResult) {
+        // All the locations that have categories.
+        let locationCategories = [];
+
+        //The unique categories for all the locations.
+        let uniqueCategories = new Set();
+
+        // Loop through all the locations and only select the ones that have categories.
+        locationsResult.forEach(l => {
+            if (Object.keys(l.properties.categories).length > 0) {
+                locationCategories.push(l.properties.categories)
+            }
+        });
+
+        // Loop through the locations which have categories and create a set of unique categories.
+        locationCategories.forEach(item => {
+            Object.keys(item).forEach(value => uniqueCategories.add(value));
+        });
+
+        setCurrentCategories(uniqueCategories);
     }
 
     /*
@@ -72,9 +102,12 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             mapsindoors.services.VenuesService.getVenues(),
             // Fixme: Venue Images are currently stored in the AppConfig object. So we will need to fetch the AppConfig as well.
             mapsindoors.services.AppConfigService.getConfig(),
+            // Fetch all Locations
+            mapsindoors.services.LocationsService.getLocations({}),
             // Ensure a minimum waiting time of 3 seconds
             new Promise(resolve => setTimeout(resolve, 3000))
-        ]).then(([venuesResult, appConfigResult]) => {
+        ]).then(([venuesResult, appConfigResult, locationsResult]) => {
+            getCategories(locationsResult);
             venuesResult = venuesResult.map(venue => {
                 venue.image = appConfigResult.venueImages[venue.name.toLowerCase()];
                 return venue;
@@ -83,15 +116,26 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
         });
     }, [apiKey]);
 
+
     return (<MapsIndoorsContext.Provider value={mapsIndoorsInstance}>
         <div className="mapsindoors-map">
             {!isMapReady && <SplashScreen logo={logo} primaryColor={primaryColor} />}
             {venues.length > 1 && <VenueSelector onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)} venues={venues} currentVenueName={currentVenueName} />}
             {isMapReady && isDesktop
                 ?
-                <Modal setCurrentLocation={setCurrentLocation} currentLocation={currentLocation} onClose={() => setCurrentLocation(null)} />
+                <Modal
+                    currentLocation={currentLocation}
+                    setCurrentLocation={setCurrentLocation}
+                    currentCategories={currentCategories}
+                    onLocationsFiltered={(locations) => setFilteredLocations(locations)}
+                />
                 :
-                <BottomSheet setCurrentLocation={setCurrentLocation} currentLocation={currentLocation} onClose={() => setCurrentLocation(null)} />
+                <BottomSheet
+                    currentLocation={currentLocation}
+                    setCurrentLocation={setCurrentLocation}
+                    currentCategories={currentCategories}
+                    onLocationsFiltered={(locations) => setFilteredLocations(locations)}
+                />
             }
             <Map
                 apiKey={apiKey}
@@ -101,7 +145,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                 venueName={currentVenueName}
                 onVenueChangedOnMap={() => venueChangedOnMap()}
                 onMapsIndoorsInstance={(instance) => setMapsIndoorsInstance(instance)}
-                onLocationClick={(location) => setCurrentLocation(location)} />
+                onLocationClick={(location) => setCurrentLocation(location)}
+                filteredLocationIds={filteredLocations?.map(location => location.id)} />
         </div>
     </MapsIndoorsContext.Provider>)
 }

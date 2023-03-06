@@ -141,6 +141,16 @@ export class Search implements ComponentInterface {
         this.cleared.emit();
     }
 
+
+    /**
+     * Programmatically trigger the search.
+     */
+    @Method()
+    triggerSearch(): void {
+        const inputValue = this.inputElement.value;
+        this.search(inputValue);
+    }
+
     /**
      * Sets text to be shown in the search field.
      * Setting it will not perform a search.
@@ -150,6 +160,20 @@ export class Search implements ComponentInterface {
         this.preventSearch = true;
         this.value = displayText;
         this.preventSearch = false;
+    }
+
+    /**
+     * Perform the search.
+     */
+    private search(inputValue): void {
+        Promise.all([
+            this.makeMapsIndoorsQuery(inputValue),
+            this.makeGooglePlacesQuery(inputValue)
+        ])
+            .then(results => {
+                this.lastRequested = inputValue;
+                this.pushResults(results[0].concat(results[1]));
+            });
     }
 
     /**
@@ -191,14 +215,7 @@ export class Search implements ComponentInterface {
             }
 
             if (inputValue.length > 1 && inputValue !== this.lastRequested) {
-                Promise.all([
-                    this.makeMapsIndoorsQuery(inputValue),
-                    this.makeGooglePlacesQuery(inputValue)
-                ])
-                    .then(results => {
-                        this.lastRequested = inputValue;
-                        this.pushResults(results[0].concat(results[1]));
-                    });
+                this.search(inputValue);
             }
         }
     }

@@ -246,6 +246,16 @@ Type: `Promise<void>`
 
 
 
+### `triggerSearch() => Promise<void>`
+
+Programmatically trigger the search.
+
+#### Returns
+
+Type: `Promise<void>`
+
+
+
 
 ----------------------------------------------
 
