@@ -15,8 +15,6 @@ function Wayfinding({ onStartDirections, onBack, location, isActive }) {
     /** Referencing the end location DOM element */
     const endSearchFieldRef = useRef();
 
-    const wayfindingRef = useRef();
-
     /** Referencing the accessibility details DOM element */
     const detailsRef = useRef();
 

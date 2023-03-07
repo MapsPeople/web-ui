@@ -777,7 +777,7 @@ export namespace Components {
          */
         "dataAttributes": { [key: string]: string };
         /**
-          * Set focus on the input field.
+          * Set focus on the input field. Pass the preventScroll boolean as an option to determine whether the browser should scroll the document to bring the newly-focused element into view.
          */
         "focusInput": () => Promise<void>;
         /**
