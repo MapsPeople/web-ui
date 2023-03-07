@@ -45,7 +45,8 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
             <Search
                 onLocationClick={(location) => setCurrentLocation(location)}
                 categories={currentCategories}
-                onLocationsFiltered={(locations) => onLocationsFiltered(locations)} />
+                onLocationsFiltered={(locations) => onLocationsFiltered(locations)}
+                />
         </Sheet>,
         <Sheet
             minHeight="128"

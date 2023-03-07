@@ -11,7 +11,8 @@
         display: grid;
         grid-auto-flow: column;
         gap: var(--spacing-x-small);
-        overflow: scroll;
+        overflow: auto hidden;
+        grid-auto-columns: min-content;
     }
 
     &__results {
