@@ -23,7 +23,7 @@ const searchFieldItentifiers = {
  * @param {function} props.onStartDirections - Function that is run when the user navigates to the directions page.
  * @param {function} props.onBack - Function that is run when the user navigates to the previous page.
  * @param {string} props.location - The location that the user selected before starting the wayfinding.
- * @param {function} props.onSetSize - Callback that is fired when the search field takes focus.
+ * @param {function} props.onSetSize - Callback that is fired when the component has loaded.
  * @returns
  */
 function Wayfinding({ onStartDirections, onBack, location, onSetSize }) {
