@@ -7,14 +7,14 @@ import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
 import { ReactComponent as WalkingIcon } from '../../assets/walking.svg';
 import { ReactComponent as QuestionIcon } from '../../assets/question.svg';
 import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
+import SearchField from '../WebComponentWrappers/Search/Search';
+
+const searchFieldItentifiers = {
+    TO: 'TO',
+    FROM: 'FROM'
+};
 
 function Wayfinding({ onStartDirections, onBack, location }) {
-
-    /** Referencing the start location DOM element */
-    const startSearchFieldRef = useRef();
-
-    /** Referencing the end location DOM element */
-    const endSearchFieldRef = useRef();
 
     /** Referencing the accessibility details DOM element */
     const detailsRef = useRef();
@@ -27,69 +27,39 @@ function Wayfinding({ onStartDirections, onBack, location }) {
     /** Variable for determining the active search field */
     const [activeSearchField, setActiveSearchField] = useState();
 
+    const [toFieldDisplayText, setToFieldDisplayText] = useState();
+    const [fromFieldDisplayText, setFromFieldDisplayText] = useState();
+
     /**
      * Click event handler function that sets the display text of the input field,
      * and clears out the results list.
      */
     function locationClickHandler(location) {
-        activeSearchField.setDisplayText(location.properties.name);
+        if (activeSearchField === searchFieldItentifiers.TO) {
+             setToFieldDisplayText(location.properties.name);
+        } else if (activeSearchField === searchFieldItentifiers.FROM) {
+            setFromFieldDisplayText(location.properties.name);
+        }
+
         setSearchResults([]);
         setHasInputFocus(true);
     }
 
-    useEffect(() => {
-        /** Add start location results list. */
-        setupSearchResultsHandler(startSearchFieldRef);
-
-        /** Clear start location results list. */
-        clearResultList(startSearchFieldRef);
-
-        /** Add end location results list. */
-        setupSearchResultsHandler(endSearchFieldRef);
-
-        /** Clear end location results list. */
-        clearResultList(endSearchFieldRef);
-
-        /**
-         * Search location and add results list implementation.
-         * Listen to the 'results' event provided by the 'mi-search' component.
-         * For each search result create a 'mi-list-item-location' component for displaying the content.
-         * Append all the results to the results container.
-         * Listen to the events when the item is clicked, and set the location value to be the selected one.
-         */
-        function setupSearchResultsHandler(locationRef) {
-            locationRef.current.addEventListener('results', e => {
-                setSearchResults(e.detail);
-            });
-
-        }
-
-        /**
-         * Listen to the 'cleared' event provided by the 'mi-search' component.
-         * Clear the results list.
-        */
-        function clearResultList(locationRef) {
-            locationRef.current.addEventListener('cleared', () => {
-                setSearchResults([]);
-            });
-        }
-
-        // Listen to click events on the input and set the input focus to true.
-        startSearchFieldRef.current.addEventListener('click', () => {
-            setActiveSearchField(startSearchFieldRef.current);
-            setHasInputFocus(true);
-        });
-
-        endSearchFieldRef.current.addEventListener('click', () => {
-            setActiveSearchField(endSearchFieldRef.current);
-            setHasInputFocus(true);
-        });
-    }, []);
+    /**
+     * Handle incoming search results from one of the search fields.
+     *
+     * @param {array} results
+     * @param {string} searchFieldIdentifier
+     */
+    function searchResultsReceived(results, searchFieldIdentifier) {
+        setActiveSearchField(searchFieldIdentifier);
+        setSearchResults(results);
+    }
 
     useEffect(() => {
         // If there is a location selected, pre-fill the value of the `to` field with the location name.
         if (location) {
-            endSearchFieldRef.current.value = location.properties.name;
+            setToFieldDisplayText(location.properties.name);
         }
     }, [location]);
 
@@ -103,11 +73,21 @@ function Wayfinding({ onStartDirections, onBack, location }) {
                 <div className="wayfinding__locations">
                     <label className="wayfinding__label">
                         TO
-                        <mi-search ref={endSearchFieldRef} placeholder="Search by name, category, building..." mapsindoors="true"></mi-search>
+                        <SearchField
+                            mapsindoors={true}
+                            placeholder="Search by name, category, building..."
+                            results={locations => searchResultsReceived(locations, searchFieldItentifiers.TO)}
+                            displayText={toFieldDisplayText}
+                         />
                     </label>
                     <label className="wayfinding__label">
                         FROM
-                        <mi-search ref={startSearchFieldRef} placeholder="Search by name, category, building..." mapsindoors="true"></mi-search>
+                        <SearchField
+                            mapsindoors={true}
+                            placeholder="Search by name, category, buildings..."
+                            results={locations => searchResultsReceived(locations, searchFieldItentifiers.FROM)}
+                            displayText={fromFieldDisplayText}
+                        />
                     </label>
                 </div>
             </div>
