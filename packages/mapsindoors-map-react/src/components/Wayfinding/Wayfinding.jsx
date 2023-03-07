@@ -5,7 +5,7 @@ import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import { ReactComponent as CheckIcon } from '../../assets/check.svg';
 import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
 import { ReactComponent as WalkingIcon } from '../../assets/walking.svg';
-import { ReactComponent as QuestionIcon } from '../../assets/question.svg';
+import Tooltip from '../Tooltip/Tooltip';
 import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
 import SearchField from '../WebComponentWrappers/Search/Search';
 
@@ -99,7 +99,7 @@ function Wayfinding({ onStartDirections, onBack, location }) {
                 <div className="wayfinding__accessibility">
                     <input className="mi-toggle" type="checkbox" />
                     <div>Accessibility</div>
-                    <QuestionIcon />
+                    <Tooltip text="Turn on Accessibility to get directions that avoids stairs and escalators."></Tooltip>
                 </div>
                 <hr></hr>
                 <div className="wayfinding__info">
