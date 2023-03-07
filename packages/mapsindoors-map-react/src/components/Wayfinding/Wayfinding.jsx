@@ -5,111 +5,61 @@ import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import { ReactComponent as CheckIcon } from '../../assets/check.svg';
 import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
 import { ReactComponent as WalkingIcon } from '../../assets/walking.svg';
-import { ReactComponent as QuestionIcon } from '../../assets/question.svg';
+import Tooltip from '../Tooltip/Tooltip';
+import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
+import SearchField from '../WebComponentWrappers/Search/Search';
+
+const searchFieldItentifiers = {
+    TO: 'TO',
+    FROM: 'FROM'
+};
 
 function Wayfinding({ onStartDirections, onBack, location }) {
-
-    /** Referencing the start location DOM element */
-    const startSearchFieldRef = useRef();
-
-    /** Referencing the end location DOM element */
-    const endSearchFieldRef = useRef();
 
     /** Referencing the accessibility details DOM element */
     const detailsRef = useRef();
 
-    /** Referencing the results container DOM element */
-    const resultsContainerRef = useRef();
-
     const [hasInputFocus, setHasInputFocus] = useState(true);
 
-    useEffect(() => {
-        /** Variable for determining the active search field */
-        let activeSearchField;
+    /** Holds search results given from a search field. */
+    const [searchResults, setSearchResults] = useState([]);
 
-        /** Add start location results list. */
-        setupSearchResultsHandler(startSearchFieldRef);
+    /** Variable for determining the active search field */
+    const [activeSearchField, setActiveSearchField] = useState();
 
-        /** Clear start location results list. */
-        clearResultList(startSearchFieldRef, resultsContainerRef);
+    const [toFieldDisplayText, setToFieldDisplayText] = useState();
+    const [fromFieldDisplayText, setFromFieldDisplayText] = useState();
 
-        /** Add end location results list. */
-        setupSearchResultsHandler(endSearchFieldRef);
-
-        /** Clear end location results list. */
-        clearResultList(endSearchFieldRef, resultsContainerRef);
-
-        /**
-         * Click event handler function that sets the display text of the input field,
-         * and clears out the results list.
-         */
-        function clickHandler(clickEvent) {
-            const name = clickEvent.target.location.properties.name;
-            activeSearchField.setDisplayText(name);
-            resultsContainerRef.current.innerHTML = '';
-            setHasInputFocus(true);
+    /**
+     * Click event handler function that sets the display text of the input field,
+     * and clears out the results list.
+     */
+    function locationClickHandler(location) {
+        if (activeSearchField === searchFieldItentifiers.TO) {
+             setToFieldDisplayText(location.properties.name);
+        } else if (activeSearchField === searchFieldItentifiers.FROM) {
+            setFromFieldDisplayText(location.properties.name);
         }
 
-        /*
-        * Get all the mi-list-item-location component.
-        * Loop through them and remove the event listener.
-        */
-        function clearEventListeners() {
-            const listItemLocations = document.querySelectorAll('mi-list-item-location');
-            listItemLocations.forEach(element => {
-                element.removeEventListener('click', clickHandler);
-            });
-        }
+        setSearchResults([]);
+        setHasInputFocus(true);
+    }
 
-        /**
-         * Search location and add results list implementation.
-         * Listen to the 'results' event provided by the 'mi-search' component.
-         * For each search result create a 'mi-list-item-location' component for displaying the content.
-         * Append all the results to the results container.
-         * Listen to the events when the item is clicked, and set the location value to be the selected one.
-         */
-        function setupSearchResultsHandler(locationRef) {
-            locationRef.current.addEventListener('results', e => {
-                clearEventListeners();
-                resultsContainerRef.current.innerHTML = '';
-                for (const result of e.detail) {
-                    const listItem = document.createElement('mi-list-item-location');
-                    listItem.location = result;
-                    resultsContainerRef.current.appendChild(listItem);
-                    listItem.addEventListener('click', clickHandler);
-                }
-            });
-
-        }
-
-        /**
-         * Listen to the 'cleared' event provided by the 'mi-search' component.
-         * Clear the results list.
-        */
-        function clearResultList(locationRef, resultsRef) {
-            clearEventListeners();
-
-            locationRef.current.addEventListener('cleared', () => {
-                resultsRef.current.innerHTML = '';
-            });
-        }
-
-        // Listen to click events on the input and set the input focus to true.
-        startSearchFieldRef.current.addEventListener('click', () => {
-            activeSearchField = startSearchFieldRef.current;
-            setHasInputFocus(true);
-        });
-
-        endSearchFieldRef.current.addEventListener('click', () => {
-            activeSearchField = endSearchFieldRef.current;
-            setHasInputFocus(true);
-        });
-    }, []);
+    /**
+     * Handle incoming search results from one of the search fields.
+     *
+     * @param {array} results
+     * @param {string} searchFieldIdentifier
+     */
+    function searchResultsReceived(results, searchFieldIdentifier) {
+        setActiveSearchField(searchFieldIdentifier);
+        setSearchResults(results);
+    }
 
     useEffect(() => {
         // If there is a location selected, pre-fill the value of the `to` field with the location name.
         if (location) {
-            endSearchFieldRef.current.value = location.properties.name;
+            setToFieldDisplayText(location.properties.name);
         }
     }, [location]);
 
@@ -123,21 +73,33 @@ function Wayfinding({ onStartDirections, onBack, location }) {
                 <div className="wayfinding__locations">
                     <label className="wayfinding__label">
                         TO
-                        <mi-search ref={endSearchFieldRef} placeholder="Search by name, category, building..." mapsindoors="true"></mi-search>
+                        <SearchField
+                            mapsindoors={true}
+                            placeholder="Search by name, category, building..."
+                            results={locations => searchResultsReceived(locations, searchFieldItentifiers.TO)}
+                            displayText={toFieldDisplayText}
+                         />
                     </label>
                     <label className="wayfinding__label">
                         FROM
-                        <mi-search ref={startSearchFieldRef} placeholder="Search by name, category, building..." mapsindoors="true"></mi-search>
+                        <SearchField
+                            mapsindoors={true}
+                            placeholder="Search by name, category, buildings..."
+                            results={locations => searchResultsReceived(locations, searchFieldItentifiers.FROM)}
+                            displayText={fromFieldDisplayText}
+                        />
                     </label>
                 </div>
             </div>
-            <div className="wayfinding__results" ref={resultsContainerRef}></div>
+            <div className="wayfinding__results">
+                {searchResults.map(location => <ListItemLocation key={location.id} location={location} locationClicked={e => locationClickHandler(e)} />)}
+            </div>
             {/* Fixme: Add functionality to the accessibility feature. */}
             <div className={`wayfinding__details ${hasInputFocus ? 'wayfinding__details--hide' : 'wayfinding__details--show'}`} ref={detailsRef}>
                 <div className="wayfinding__accessibility">
                     <input className="mi-toggle" type="checkbox" />
                     <div>Accessibility</div>
-                    <QuestionIcon />
+                    <Tooltip text="Turn on Accessibility to get directions that avoids stairs and escalators."></Tooltip>
                 </div>
                 <hr></hr>
                 <div className="wayfinding__info">
