@@ -114,6 +114,9 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
             setSelectedCategory(null);
             _selectedCategory = null;
 
+            // Pass an empty array to the filtered locations in order to reset the locations.
+            onLocationsFiltered([]);
+
             /** Check if the search field has a value and trigger the search again. */
             if (searchFieldRef.current.value) {
                 searchFieldRef.current.removeAttribute('mi-categories');
@@ -173,6 +176,9 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
             if (_selectedCategory) {
                 getFilteredLocations(_selectedCategory);
             }
+
+            // Pass an empty array to the filtered locations in order to reset the locations.
+            onLocationsFiltered([]);
         });
 
         /** Listen to click events on the input and set the input focus to true. */
