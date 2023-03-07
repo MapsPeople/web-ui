@@ -6,6 +6,7 @@ import { ReactComponent as CheckIcon } from '../../assets/check.svg';
 import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
 import { ReactComponent as WalkingIcon } from '../../assets/walking.svg';
 import { ReactComponent as QuestionIcon } from '../../assets/question.svg';
+import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
 
 function Wayfinding({ onStartDirections, onBack, location }) {
 
@@ -18,48 +19,36 @@ function Wayfinding({ onStartDirections, onBack, location }) {
     /** Referencing the accessibility details DOM element */
     const detailsRef = useRef();
 
-    /** Referencing the results container DOM element */
-    const resultsContainerRef = useRef();
-
     const [hasInputFocus, setHasInputFocus] = useState(true);
 
-    useEffect(() => {
-        /** Variable for determining the active search field */
-        let activeSearchField;
+    /** Holds search results given from a search field. */
+    const [searchResults, setSearchResults] = useState([]);
 
+    /** Variable for determining the active search field */
+    const [activeSearchField, setActiveSearchField] = useState();
+
+    /**
+     * Click event handler function that sets the display text of the input field,
+     * and clears out the results list.
+     */
+    function locationClickHandler(location) {
+        activeSearchField.setDisplayText(location.properties.name);
+        setSearchResults([]);
+        setHasInputFocus(true);
+    }
+
+    useEffect(() => {
         /** Add start location results list. */
         setupSearchResultsHandler(startSearchFieldRef);
 
         /** Clear start location results list. */
-        clearResultList(startSearchFieldRef, resultsContainerRef);
+        clearResultList(startSearchFieldRef);
 
         /** Add end location results list. */
         setupSearchResultsHandler(endSearchFieldRef);
 
         /** Clear end location results list. */
-        clearResultList(endSearchFieldRef, resultsContainerRef);
-
-        /**
-         * Click event handler function that sets the display text of the input field,
-         * and clears out the results list.
-         */
-        function clickHandler(clickEvent) {
-            const name = clickEvent.target.location.properties.name;
-            activeSearchField.setDisplayText(name);
-            resultsContainerRef.current.innerHTML = '';
-            setHasInputFocus(true);
-        }
-
-        /*
-        * Get all the mi-list-item-location component.
-        * Loop through them and remove the event listener.
-        */
-        function clearEventListeners() {
-            const listItemLocations = document.querySelectorAll('mi-list-item-location');
-            listItemLocations.forEach(element => {
-                element.removeEventListener('click', clickHandler);
-            });
-        }
+        clearResultList(endSearchFieldRef);
 
         /**
          * Search location and add results list implementation.
@@ -70,14 +59,7 @@ function Wayfinding({ onStartDirections, onBack, location }) {
          */
         function setupSearchResultsHandler(locationRef) {
             locationRef.current.addEventListener('results', e => {
-                clearEventListeners();
-                resultsContainerRef.current.innerHTML = '';
-                for (const result of e.detail) {
-                    const listItem = document.createElement('mi-list-item-location');
-                    listItem.location = result;
-                    resultsContainerRef.current.appendChild(listItem);
-                    listItem.addEventListener('click', clickHandler);
-                }
+                setSearchResults(e.detail);
             });
 
         }
@@ -86,22 +68,20 @@ function Wayfinding({ onStartDirections, onBack, location }) {
          * Listen to the 'cleared' event provided by the 'mi-search' component.
          * Clear the results list.
         */
-        function clearResultList(locationRef, resultsRef) {
-            clearEventListeners();
-
+        function clearResultList(locationRef) {
             locationRef.current.addEventListener('cleared', () => {
-                resultsRef.current.innerHTML = '';
+                setSearchResults([]);
             });
         }
 
         // Listen to click events on the input and set the input focus to true.
         startSearchFieldRef.current.addEventListener('click', () => {
-            activeSearchField = startSearchFieldRef.current;
+            setActiveSearchField(startSearchFieldRef.current);
             setHasInputFocus(true);
         });
 
         endSearchFieldRef.current.addEventListener('click', () => {
-            activeSearchField = endSearchFieldRef.current;
+            setActiveSearchField(endSearchFieldRef.current);
             setHasInputFocus(true);
         });
     }, []);
@@ -131,7 +111,9 @@ function Wayfinding({ onStartDirections, onBack, location }) {
                     </label>
                 </div>
             </div>
-            <div className="wayfinding__results" ref={resultsContainerRef}></div>
+            <div className="wayfinding__results">
+                {searchResults.map(location => <ListItemLocation key={location.id} location={location} locationClicked={e => locationClickHandler(e)} />)}
+            </div>
             {/* Fixme: Add functionality to the accessibility feature. */}
             <div className={`wayfinding__details ${hasInputFocus ? 'wayfinding__details--hide' : 'wayfinding__details--show'}`} ref={detailsRef}>
                 <div className="wayfinding__accessibility">
