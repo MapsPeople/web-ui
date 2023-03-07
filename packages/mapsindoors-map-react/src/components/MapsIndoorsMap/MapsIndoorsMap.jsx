@@ -30,7 +30,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [currentLocation, setCurrentLocation] = useState();
     const [currentCategories, setCurrentCategories] = useState(new Set());
     const [filteredLocations, setFilteredLocations] = useState();
-    const [searchedLocations, setSearchedLocations] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
@@ -130,7 +129,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                     currentCategories={currentCategories}
                     onClose={() => setCurrentLocation(null)}
                     onLocationsFiltered={(locations) => setFilteredLocations(locations)}
-                    onLocationsSearched={(locations) => setSearchedLocations(locations)}
                 />
                 :
                 <BottomSheet
@@ -138,7 +136,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                     setCurrentLocation={setCurrentLocation}
                     currentCategories={currentCategories}
                     onLocationsFiltered={(locations) => setFilteredLocations(locations)}
-                    onLocationsSearched={(locations) => setSearchedLocations(locations)}
                 />
             }
             <Map
@@ -151,7 +148,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                 onMapsIndoorsInstance={(instance) => setMapsIndoorsInstance(instance)}
                 onLocationClick={(location) => setCurrentLocation(location)}
                 filteredLocationIds={filteredLocations?.map(location => location.id)}
-                searchedLocationIds={searchedLocations?.map(location => location.id)}
                 />
         </div>
     </MapsIndoorsContext.Provider>)

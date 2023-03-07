@@ -18,9 +18,8 @@ const VIEWS = {
  * @param {Object} props.setCurrentLocation - The setter for the currently selected MapsIndoors Location.
  * @param {Object} props.currentCategories - The unique categories displayed based on the existing locations.
  * @param {function} props.onLocationsFiltered - The list of locations after filtering through the categories.
- * @param {function} props.onLocationsSearched - The list of locations after search is performed.
 */
-function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onLocationsSearched }) {
+function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered }) {
     const [activePage, setActivePage] = useState(null);
 
     /*
@@ -36,7 +35,6 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
                 onLocationClick={(location) => setCurrentLocation(location)}
                 categories={currentCategories}
                 onLocationsFiltered={(locations) => onLocationsFiltered(locations)}
-                onLocationsSearched={(locations) => onLocationsSearched(locations)}
             />
         </Modal>,
         <Modal isOpen={activePage === VIEWS.LOCATION_DETAILS} key="B">

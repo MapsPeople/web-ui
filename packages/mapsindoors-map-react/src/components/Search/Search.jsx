@@ -21,7 +21,7 @@ let _selectedCategory;
  * @param {function} props.onLocationsSearched - Function that is run when the user performs a search.
  * @returns
  */
-function Search({ onLocationClick, categories, onLocationsFiltered, onLocationsSearched }) {
+function Search({ onLocationClick, categories, onLocationsFiltered }) {
 
     /** Referencing the search DOM element */
     const searchFieldRef = useRef();
@@ -151,7 +151,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onLocationsS
             clearEventListeners();
             searchResultsRef.current.innerHTML = '';
 
-            onLocationsSearched(e.detail);
+            onLocationsFiltered(e.detail);
 
             if (e.detail.length === 0) {
                 showNotFoundMessage();
