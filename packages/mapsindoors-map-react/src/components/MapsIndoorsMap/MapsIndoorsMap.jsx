@@ -147,7 +147,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                 onVenueChangedOnMap={() => venueChangedOnMap()}
                 onMapsIndoorsInstance={(instance) => setMapsIndoorsInstance(instance)}
                 onLocationClick={(location) => setCurrentLocation(location)}
-                filteredLocationIds={filteredLocations?.map(location => location.id)} />
+                filteredLocationIds={filteredLocations?.map(location => location.id)}
+                />
         </div>
     </MapsIndoorsContext.Provider>)
 }

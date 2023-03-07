@@ -41,7 +41,8 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
         <Sheet minHeight="350" isOpen={activeBottomSheet === BOTTOM_SHEETS.SEARCH} key="A">
             <Search onLocationClick={(location) => setCurrentLocation(location)}
                 categories={currentCategories}
-                onLocationsFiltered={(locations) => onLocationsFiltered(locations)} />
+                onLocationsFiltered={(locations) => onLocationsFiltered(locations)}
+                />
         </Sheet>,
         <Sheet
             minHeight="128"
