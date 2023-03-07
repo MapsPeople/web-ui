@@ -8,13 +8,25 @@ import { ReactComponent as WalkingIcon } from '../../assets/walking.svg';
 import Tooltip from '../Tooltip/Tooltip';
 import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
 import SearchField from '../WebComponentWrappers/Search/Search';
+import { snapPoints } from '../../constants/snapPoints';
+import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 
 const searchFieldItentifiers = {
     TO: 'TO',
     FROM: 'FROM'
 };
 
-function Wayfinding({ onStartDirections, onBack, location }) {
+/**
+ * Show the wayfinding view.
+ *
+ * @param {Object} props
+ * @param {function} props.onStartDirections - Function that is run when the user navigates to the directions page.
+ * @param {function} props.onBack - Function that is run when the user navigates to the previous page.
+ * @param {string} props.location - The location that the user selected before starting the wayfinding.
+ * @param {function} props.onSetSize - Callback that is fired when the search field takes focus.
+ * @returns
+ */
+function Wayfinding({ onStartDirections, onBack, location, onSetSize }) {
 
     /** Referencing the accessibility details DOM element */
     const detailsRef = useRef();
@@ -30,13 +42,15 @@ function Wayfinding({ onStartDirections, onBack, location }) {
     const [toFieldDisplayText, setToFieldDisplayText] = useState();
     const [fromFieldDisplayText, setFromFieldDisplayText] = useState();
 
+    const scrollableContentSwipePrevent = usePreventSwipe();
+
     /**
      * Click event handler function that sets the display text of the input field,
      * and clears out the results list.
      */
     function locationClickHandler(location) {
         if (activeSearchField === searchFieldItentifiers.TO) {
-             setToFieldDisplayText(location.properties.name);
+            setToFieldDisplayText(location.properties.name);
         } else if (activeSearchField === searchFieldItentifiers.FROM) {
             setFromFieldDisplayText(location.properties.name);
         }
@@ -56,7 +70,18 @@ function Wayfinding({ onStartDirections, onBack, location }) {
         setSearchResults(results);
     }
 
+    /**
+     * Communicate size change to parent component.
+     * @param {number} size
+     */
+    function setSize(size) {
+        if (typeof onSetSize === 'function') {
+            onSetSize(size);
+        }
+    }
+
     useEffect(() => {
+        setSize(snapPoints.MAX);
         // If there is a location selected, pre-fill the value of the `to` field with the location name.
         if (location) {
             setToFieldDisplayText(location.properties.name);
@@ -64,7 +89,7 @@ function Wayfinding({ onStartDirections, onBack, location }) {
     }, [location]);
 
     return (
-        <div className={`wayfinding ${hasInputFocus ? 'wayfinding--full' : 'wayfinding--fit'}`}>
+        <div className="wayfinding">
             <div className="wayfinding__directions">
                 <div className="wayfinding__title">Start wayfinding</div>
                 <button className="wayfinding__close" onClick={() => onBack()} aria-label="Close">
@@ -78,7 +103,7 @@ function Wayfinding({ onStartDirections, onBack, location }) {
                             placeholder="Search by name, category, building..."
                             results={locations => searchResultsReceived(locations, searchFieldItentifiers.TO)}
                             displayText={toFieldDisplayText}
-                         />
+                        />
                     </label>
                     <label className="wayfinding__label">
                         FROM
@@ -91,8 +116,11 @@ function Wayfinding({ onStartDirections, onBack, location }) {
                     </label>
                 </div>
             </div>
-            <div className="wayfinding__results">
-                {searchResults.map(location => <ListItemLocation key={location.id} location={location} locationClicked={e => locationClickHandler(e)} />)}
+
+            <div className="wayfinding__scrollable" {...scrollableContentSwipePrevent}>
+                <div className="wayfinding__results">
+                    {searchResults.map(location => <ListItemLocation key={location.id} location={location} locationClicked={e => locationClickHandler(e)} />)}
+                </div>
             </div>
             {/* Fixme: Add functionality to the accessibility feature. */}
             <div className={`wayfinding__details ${hasInputFocus ? 'wayfinding__details--hide' : 'wayfinding__details--show'}`} ref={detailsRef}>
