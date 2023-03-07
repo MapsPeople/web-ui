@@ -202,14 +202,16 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
     return (
         <div className="search">
             <mi-search ref={searchFieldRef} placeholder="Search by name, category, building..." mapsindoors="true"></mi-search>
-            <div ref={categoriesListRef} className="search__categories">
-                {categories && Array.from(categories).map(category =>
-                    <mi-chip content={category}
-                        active={selectedCategory === category}
-                        onClick={() => categoryClicked(category)}
-                        key={category}>
-                    </mi-chip>)
-                }
+            <div className="search__scrollable" {...scrollableContentSwipePrevent}>
+                <div ref={categoriesListRef} className="search__categories">
+                    {categories && Array.from(categories).map(category =>
+                        <mi-chip content={category}
+                            active={selectedCategory === category}
+                            onClick={() => categoryClicked(category)}
+                            key={category}>
+                        </mi-chip>)
+                    }
+                </div>
             </div>
             <div className="search__scrollable" {...scrollableContentSwipePrevent}>
                 <div ref={searchResultsRef} className="search__results"></div>
