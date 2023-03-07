@@ -137,7 +137,7 @@ function Wayfinding({ onStartDirections, onBack, location }) {
                 <div className="wayfinding__accessibility">
                     <input className="mi-toggle" type="checkbox" />
                     <div>Accessibility</div>
-                    <Tooltip></Tooltip>
+                    <Tooltip text="Turn on Accessibility to get directions that avoids stairs and escalators."></Tooltip>
                 </div>
                 <hr></hr>
                 <div className="wayfinding__info">
