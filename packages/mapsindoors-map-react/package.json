@@ -17,6 +17,7 @@
     "react-swipeable": "^7.0.0",
     "react-transition-group": "^4.4.5",
     "sass": "^1.57.1",
+    "styled-components": "^5.3.8",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

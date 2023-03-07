@@ -1,6 +1,7 @@
 import React from "react";
 import './Search.scss';
 import { useRef, useEffect, useState } from 'react';
+import Test from "../Test/Test";
 
 /** Initialize the MapsIndoors instance. */
 const mapsindoors = window.mapsindoors;
@@ -199,6 +200,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
                     </mi-chip>)
                 }
             </div>
+            <Test/>
             <div ref={searchResultsRef} className="search__results"></div>
         </div>
     )
