@@ -21,7 +21,7 @@ function Directions({ isOpen, onBack, directions }) {
 
             const directionsRenderer = new mapsindoors.directions.DirectionsRenderer({
                 mapsIndoors: mapsIndoorsInstance,
-                fitBoundsPadding: 60 // FIXME: Route should not be covered by bottom sheet or modal
+                fitBoundsPadding: { top: 60, bottom: 360, left: 60, right: 60 } // FIXME: Remove hardcoded values, while ensuring route is not be covered by bottom sheet or modal.
             });
 
             directionsRenderer.setRoute(directions.directionsResult);
