@@ -16,7 +16,7 @@ const StepContainer = styled.div`
   :before {
     content: '';
     position: absolute;
-    background: #f3e7f3;
+    background: lightgray;
     height: 4px;
     width: 100%;
     top: 50%;
@@ -26,7 +26,7 @@ const StepContainer = styled.div`
   :after {
     content: '';
     position: absolute;
-    background: #4a154b;
+    background: #005655;
     height: 4px;
     width: ${({ width }) => width};
     top: 50%;
@@ -47,7 +47,7 @@ const StepStyle = styled.div`
   border-radius: 50%;
   background-color: #ffffff;
   border: 3px solid ${({ step }) =>
-      step === 'completed' ? '#4A154B' : '#F3E7F3'};
+      step === 'completed' ? '#005655' : 'lightgray'};
   transition: 0.4s ease;
   display: flex;
   justify-content: center;
@@ -71,7 +71,7 @@ const StepsLabelContainer = styled.div`
 
 const StepLabel = styled.span`
   font-size: 19px;
-  color: #4a154b;
+  color: #005655;
   @media (max-width: 600px) {
     font-size: 16px;
   }
@@ -87,7 +87,7 @@ const ButtonsContainer = styled.div`
 const ButtonStyle = styled.button`
   border-radius: 4px;
   border: 0;
-  background: #4a154b;
+  background: #005655;
   color: #ffffff;
   cursor: pointer;
   padding: 8px;
@@ -96,7 +96,7 @@ const ButtonStyle = styled.button`
     transform: scale(0.98);
   }
   :disabled {
-    background: #f3e7f3;
+    background: lightgray;
     color: #000000;
     cursor: not-allowed;
   }
@@ -105,7 +105,7 @@ const ButtonStyle = styled.button`
 const CheckMark = styled.div`
   font-size: 26px;
   font-weight: 600;
-  color: #4a154b;
+  color: #005655;
   -ms-transform: scaleX(-1) rotate(-46deg); /* IE 9 */
   -webkit-transform: scaleX(-1) rotate(-46deg); /* Chrome, Safari, Opera */
   transform: scaleX(-1) rotate(-46deg);
