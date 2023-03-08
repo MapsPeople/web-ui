@@ -2,6 +2,7 @@ import React from "react";
 import './Search.scss';
 import { useRef, useEffect, useState } from 'react';
 import Test from "../Test/Test";
+import ProgressSteps from "../RouteInstructions/RouteInstructions";
 
 /** Initialize the MapsIndoors instance. */
 const mapsindoors = window.mapsindoors;
@@ -201,6 +202,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
                 }
             </div>
             <Test/>
+      <ProgressSteps/>
             <div ref={searchResultsRef} className="search__results"></div>
         </div>
     )
