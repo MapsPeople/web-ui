@@ -6,6 +6,7 @@ import SplashScreen from '../SplashScreen/SplashScreen';
 import VenueSelector from '../VenueSelector/VenueSelector';
 import BottomSheet from '../BottomSheet/BottomSheet';
 import { MapsIndoorsContext } from '../../MapsIndoorsContext';
+import { DirectionsServiceContext } from '../../DirectionsServiceContext';
 import useMediaQuery from '../../hooks/useMediaQuery';
 import Sidebar from '../Sidebar/Sidebar';
 
@@ -31,6 +32,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [currentCategories, setCurrentCategories] = useState(new Set());
     const [filteredLocations, setFilteredLocations] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
+    const [directionsService, setDirectionsService] = useState();
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
     /**
@@ -118,37 +120,40 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
 
 
     return (<MapsIndoorsContext.Provider value={mapsIndoorsInstance}>
-        <div className="mapsindoors-map">
-            {!isMapReady && <SplashScreen logo={logo} primaryColor={primaryColor} />}
-            {venues.length > 1 && <VenueSelector onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)} venues={venues} currentVenueName={currentVenueName} />}
-            {isMapReady && isDesktop
-                ?
-                <Sidebar
-                    currentLocation={currentLocation}
-                    setCurrentLocation={setCurrentLocation}
-                    currentCategories={currentCategories}
-                    onClose={() => setCurrentLocation(null)}
-                    onLocationsFiltered={(locations) => setFilteredLocations(locations)}
-                />
-                :
-                <BottomSheet
-                    currentLocation={currentLocation}
-                    setCurrentLocation={setCurrentLocation}
-                    currentCategories={currentCategories}
-                    onLocationsFiltered={(locations) => setFilteredLocations(locations)}
-                />
-            }
-            <Map
-                apiKey={apiKey}
-                gmApiKey={gmApiKey}
-                mapboxAccessToken={mapboxAccessToken}
-                venues={venues}
-                venueName={currentVenueName}
-                onVenueChangedOnMap={() => venueChangedOnMap()}
-                onMapsIndoorsInstance={(instance) => setMapsIndoorsInstance(instance)}
-                onLocationClick={(location) => setCurrentLocation(location)}
-                filteredLocationIds={filteredLocations?.map(location => location.id)} />
-        </div>
+        <DirectionsServiceContext.Provider value={directionsService}>
+            <div className="mapsindoors-map">
+                {!isMapReady && <SplashScreen logo={logo} primaryColor={primaryColor} />}
+                {venues.length > 1 && <VenueSelector onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)} venues={venues} currentVenueName={currentVenueName} />}
+                {isMapReady && isDesktop
+                    ?
+                    <Sidebar
+                        currentLocation={currentLocation}
+                        setCurrentLocation={setCurrentLocation}
+                        currentCategories={currentCategories}
+                        onClose={() => setCurrentLocation(null)}
+                        onLocationsFiltered={(locations) => setFilteredLocations(locations)}
+                    />
+                    :
+                    <BottomSheet
+                        currentLocation={currentLocation}
+                        setCurrentLocation={setCurrentLocation}
+                        currentCategories={currentCategories}
+                        onLocationsFiltered={(locations) => setFilteredLocations(locations)}
+                    />
+                }
+                <Map
+                    apiKey={apiKey}
+                    gmApiKey={gmApiKey}
+                    mapboxAccessToken={mapboxAccessToken}
+                    venues={venues}
+                    venueName={currentVenueName}
+                    onVenueChangedOnMap={() => venueChangedOnMap()}
+                    onMapsIndoorsInstance={(instance) => setMapsIndoorsInstance(instance)}
+                    onDirectionsService={(instance) => setDirectionsService(instance)}
+                    onLocationClick={(location) => setCurrentLocation(location)}
+                    filteredLocationIds={filteredLocations?.map(location => location.id)} />
+            </div>
+        </DirectionsServiceContext.Provider>
     </MapsIndoorsContext.Provider>)
 }
 

@@ -9,7 +9,7 @@ const mapsindoors = window.mapsindoors;
  *
  * @param {object} props
  * @param {string} props.gmApiKey - A Google Maps JS API key required for loading the Google Maps JS API.
- * @param {function} props.onMapView - A function that is called when the MapView is constructed.
+ * @param {function} props.onMapView - A function that is called when the MapView is constructed. Sends the MapView instance and External Directions Provider as payload.
  * @param {object} props.mapsIndoorsInstance - Instance of the mapsindoors.MapsIndoors
  */
 function GoogleMapsMap({ gmApiKey, onMapView, mapsIndoorsInstance }) {
@@ -36,7 +36,12 @@ function GoogleMapsMap({ gmApiKey, onMapView, mapsIndoorsInstance }) {
 
             const mapViewInstance = new mapsindoors.mapView.GoogleMapsView(mapViewOptions);
             setMapView(mapViewInstance);
-            onMapView(mapViewInstance);
+
+            // Setup an external directions provider that will be used to calculate directions
+            // outside MapsIndoors venues.
+            const externalDirectionsProvider = new mapsindoors.directions.GoogleMapsProvider();
+
+            onMapView(mapViewInstance, externalDirectionsProvider);
         });
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
     // We ignore eslint warnings about missing dependencies because onMapView should never change runtime and changing Google Maps API key runtime will give other problems.

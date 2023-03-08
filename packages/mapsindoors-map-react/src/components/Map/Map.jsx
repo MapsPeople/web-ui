@@ -21,11 +21,12 @@ const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
  * @param {string} [props.venueName] - If you want the map to show a specific Venue, provide the Venue name here.
  * @param {function} [props.onLocationClick] - Function that is run when a MapsIndoors Location is clicked. the Location will be sent along as first argument.
  * @param {function} props.onMapsIndoorsInstance - Function that is run when a MapsIndoors instance is created. The instance will be sent along as first argument.
+ * @param {function} props.onDirectionsService - Function that is run when a DirectionsService instance is created. The instance will be sent along as first argument.
  * @param {function} props.onVenueChangedOnMap - Function that is run when the map bounds was changed due to fitting to a venue.
  * @param {array} props.filteredLocationIds - Array of IDs of the filtered locations.
  * @returns
  */
-function Map({ gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onMapsIndoorsInstance, onVenueChangedOnMap, filteredLocationIds }) {
+function Map({ gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onMapsIndoorsInstance, onDirectionsService, onVenueChangedOnMap, filteredLocationIds }) {
     const [mapType, setMapType] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState(null);
 
@@ -74,7 +75,7 @@ function Map({ gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, 
         return mapsIndoorsInstance.fitVenue(venue);
     }
 
-    const onMapView = async (mapView) => {
+    const onMapView = async (mapView, externalDirectionsProvider) => {
         // Instantiate MapsIndoors instance
         const miInstance = new mapsindoors.MapsIndoors({
             mapView
@@ -84,6 +85,10 @@ function Map({ gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, 
 
         setMapsIndoorsInstance(miInstance);
         onMapsIndoorsInstance(miInstance);
+
+        // Initialize a Directions Service
+        const directionsService = new mapsindoors.services.DirectionsService(externalDirectionsProvider);
+        onDirectionsService(directionsService);
 
         const venueToShow = getVenueToShow(venueName, venues);
         if (venueToShow) {

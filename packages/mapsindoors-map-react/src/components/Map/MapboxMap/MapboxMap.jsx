@@ -10,7 +10,7 @@ const mapsindoors = window.mapsindoors;
  *
  * @param {object} props
  * @param {string} props.mapboxAccessToken - A Mapbox Access Token required for showing the map.
- * @param {function} props.onMapView - A function that is called when the MapView is constructed.
+ * @param {function} props.onMapView - A function that is called when the MapView is constructed. Sends the MapView instance and External Directions Provider as payload.
  * @param {object} props.mapsIndoorsInstance - Instance of the mapsindoors.MapsIndoors
  */
 function MapboxMap({ mapboxAccessToken, onMapView, mapsIndoorsInstance }) {
@@ -28,7 +28,12 @@ function MapboxMap({ mapboxAccessToken, onMapView, mapsIndoorsInstance }) {
 
         const mapViewInstance = new mapsindoors.mapView.MapboxView(mapViewOptions);
         setMapView(mapViewInstance);
-        onMapView(mapViewInstance);
+
+        // Setup an external directions provider that will be used to calculate directions
+        // outside MapsIndoors venues.
+        const externalDirectionsProvider = new mapsindoors.directions.MapboxProvider(mapboxAccessToken);
+
+        onMapView(mapViewInstance, externalDirectionsProvider);
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
     // We ignore eslint warnings about missing dependencies because onMapView should never change runtime and changing Mapbox Access Token runtime will give other problems.
 
