@@ -15,7 +15,7 @@ const searchFieldItentifiers = {
     FROM: 'FROM'
 };
 
-function Wayfinding({ onStartDirections, onBack, location }) {
+function Wayfinding({ onStartDirections, onBack, location, onDirections }) {
 
     /** Referencing the accessibility details DOM element */
     const detailsRef = useRef();
@@ -99,8 +99,19 @@ function Wayfinding({ onStartDirections, onBack, location }) {
             }).then(directionsResult => {
                 // Calculate total distance and time
                 // FIXME: Can we get a "faulty" response with no legs? If so, this will probably crash.
-                setTotalDistance(directionsResult.legs.reduce((accumulator, current) => accumulator + current.distance.value, 0));
-                setTotalTime(directionsResult.legs.reduce((accumulator, current) => accumulator + current.duration.value, 0));
+                const totalDistance = directionsResult.legs.reduce((accumulator, current) => accumulator + current.distance.value, 0);
+                const totalTime = directionsResult.legs.reduce((accumulator, current) => accumulator + current.duration.value, 0);
+
+                setTotalDistance(totalDistance);
+                setTotalTime(totalTime);
+
+                onDirections( {
+                    originLocation,
+                    destinationLocation,
+                    totalDistance,
+                    totalTime,
+                    directionsResult
+                });
             }, () => {
                 // FIXME: No route found or other request errors.
             });

@@ -1,12 +1,33 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import './Directions.scss';
+import { MapsIndoorsContext } from '../../MapsIndoorsContext';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
 import { ReactComponent as WalkingIcon } from '../../assets/walking.svg';
 
-// Fixme: Implement the functionality of the page
+const mapsindoors = window.mapsindoors;
 
-function Directions({ onBack }) {
+function Directions({ isOpen, onBack, directions }) {
+
+    const [totalDistance, setTotalDistance] = useState();
+    const [totalTime, setTotalTime] = useState();
+
+    const mapsIndoorsInstance = useContext(MapsIndoorsContext);
+
+    useEffect(() => {
+        if (isOpen && directions) {
+            setTotalDistance(directions.totalDistance);
+            setTotalTime(directions.totalTime);
+
+            const directionsRenderer = new mapsindoors.directions.DirectionsRenderer({
+                mapsIndoors: mapsIndoorsInstance,
+                fitBoundsPadding: 60 // FIXME: Route should not be covered by bottom sheet or modal
+            });
+
+            directionsRenderer.setRoute(directions.directionsResult);
+        }
+    }, [isOpen, directions, mapsIndoorsInstance]);
+
     return (
         <div className="directions">
             <div className="directions__details">
@@ -18,13 +39,13 @@ function Directions({ onBack }) {
                         <label className="directions__label">
                             To
                         </label>
-                        <div>Meeting room</div>
+                        {directions?.destinationLocation && <div>{directions.destinationLocation.properties.name}</div>}
                     </div>
                     <div className="directions__container">
                         <label className="directions__label">
                             From
                         </label>
-                        <div>Main office</div>
+                        {directions?.originLocation && <div>{directions.originLocation.properties.name}</div>}
                     </div>
                 </div>
             </div>
@@ -33,12 +54,12 @@ function Directions({ onBack }) {
                     <div className="directions__distance">
                         <WalkingIcon />
                         <div>Distance:</div>
-                        <div className="directions__meters">545m</div>
+                        <div className="directions__meters">{totalDistance && <mi-distance meters={totalDistance} />}</div>
                     </div>
                     <div className="directions__time">
                         <ClockIcon />
                         <div>Estimated time:</div>
-                        <div className="directions__minutes">2m</div>
+                        <div className="directions__minutes">{totalTime && <mi-time seconds={totalTime} />}</div>
                     </div>
                 </div>
                 <hr></hr>

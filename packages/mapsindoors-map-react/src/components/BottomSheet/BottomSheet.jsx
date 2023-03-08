@@ -29,6 +29,9 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
 
     const [locationDetailsSheetSize, setLocationDetailsSheetSize] = useState();
     const [locationDetailsSheetSwiped, setLocationDetailsSheetSwiped] = useState();
+
+    const [directions, setDirections] = useState();
+
     /*
      * React on changes on the current location.
      * Set the search bottom sheet to be active if there is no location selected.
@@ -59,12 +62,19 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
             />
         </Sheet>,
         <Sheet minHeight="220" isOpen={activeBottomSheet === BOTTOM_SHEETS.WAYFINDING} key="C">
-            <Wayfinding onStartDirections={() => setActiveBottomSheet(BOTTOM_SHEETS.DIRECTIONS)}
+            <Wayfinding
+                onStartDirections={() => setActiveBottomSheet(BOTTOM_SHEETS.DIRECTIONS)}
                 location={currentLocation}
-                onBack={() => setActiveBottomSheet(BOTTOM_SHEETS.LOCATION_DETAILS)} />
+                onBack={() => setActiveBottomSheet(BOTTOM_SHEETS.LOCATION_DETAILS)}
+                onDirections={result => setDirections(result)}
+            />
         </Sheet>,
         <Sheet minHeight="220" isOpen={activeBottomSheet === BOTTOM_SHEETS.DIRECTIONS} key="D">
-            <Directions onBack={() => setActiveBottomSheet(BOTTOM_SHEETS.WAYFINDING)} />
+            <Directions
+                isOpen={activeBottomSheet === BOTTOM_SHEETS.DIRECTIONS}
+                directions={directions}
+                onBack={() => setActiveBottomSheet(BOTTOM_SHEETS.WAYFINDING)}
+            />
         </Sheet>
     ]
 
