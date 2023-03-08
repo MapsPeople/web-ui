@@ -201,8 +201,8 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
                     </mi-chip>)
                 }
             </div>
-            <Test />
-            {/* <ProgressSteps /> */}
+            {/* <Test /> */}
+            <ProgressSteps />
             <div ref={searchResultsRef} className="search__results"></div>
         </div>
     )

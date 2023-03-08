@@ -128,6 +128,10 @@ const steps = [
     label: 'Summary',
     step: 4,
   },
+  {
+    label: 'Final',
+    step: 5,
+  },
 ]
 
 const ProgressSteps = () => {
@@ -144,6 +148,8 @@ const ProgressSteps = () => {
   const totalSteps = steps.length
 
   const width = `${(100 / (totalSteps - 1)) * (activeStep - 1)}%`
+
+  console.log('width', width);
 
   return (
     <MainContainer>
