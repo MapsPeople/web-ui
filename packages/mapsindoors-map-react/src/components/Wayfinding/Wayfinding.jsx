@@ -14,7 +14,7 @@ const searchFieldItentifiers = {
     FROM: 'FROM'
 };
 
-function Wayfinding({ onStartDirections, onBack, location }) {
+function Wayfinding({ onStartDirections, onBack, location, isActive }) {
 
     /** Referencing the accessibility details DOM element */
     const detailsRef = useRef();
@@ -62,6 +62,13 @@ function Wayfinding({ onStartDirections, onBack, location }) {
             setToFieldDisplayText(location.properties.name);
         }
     }, [location]);
+
+    useEffect(() => {
+        // If the active view is the Wayfinding, then focus the input field.
+        if (isActive) {
+                startSearchFieldRef.current.focusInput();
+        }
+    }, [isActive]);
 
     return (
         <div className={`wayfinding ${hasInputFocus ? 'wayfinding--full' : 'wayfinding--fit'}`}>

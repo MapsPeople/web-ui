@@ -26,14 +26,6 @@
         }
     }
 
-    &--fit {
-        height: fit-content;
-    }
-
-    &--full {
-        height: 100vh;
-    }
-
     @media (min-width: $desktop-breakpoint) {
         &--fit {
             max-height: 50vh;
