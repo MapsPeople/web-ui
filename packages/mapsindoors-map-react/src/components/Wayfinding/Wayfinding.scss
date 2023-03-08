@@ -121,10 +121,11 @@
         }
     }
 
+    &__scrollable {
+        overflow: auto;
+    }
+
     @media (min-width: $desktop-breakpoint) {
-        &--full {
-            height: fit-content;
-            max-height: 50vh;
-        }
+        max-height: 50vh;
     }
 }
