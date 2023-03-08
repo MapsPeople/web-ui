@@ -30,6 +30,8 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
     const [locationDetailsSheetSize, setLocationDetailsSheetSize] = useState();
     const [locationDetailsSheetSwiped, setLocationDetailsSheetSwiped] = useState();
 
+    const [searchSheetSize, setSearchSheetSize] = useState();
+
     /*
      * React on changes on the current location.
      * Set the search bottom sheet to be active if there is no location selected.
@@ -41,20 +43,22 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
     const bottomSheets = [
         <Sheet
             minHeight="350"
-            isOpen={activeBottomSheet === BOTTOM_SHEETS.SEARCH} key="A">
+            preferredSizeSnapPoint={searchSheetSize}
+            isOpen={activeBottomSheet === BOTTOM_SHEETS.SEARCH}
+            key="A">
             <Search
+                onSetSize={size => setSearchSheetSize(size)}
                 onLocationClick={(location) => setCurrentLocation(location)}
                 categories={currentCategories}
                 onLocationsFiltered={(locations) => onLocationsFiltered(locations)}
-                />
+            />
         </Sheet>,
         <Sheet
             minHeight="128"
             preferredSizeSnapPoint={locationDetailsSheetSize}
             isOpen={activeBottomSheet === BOTTOM_SHEETS.LOCATION_DETAILS}
             key="B"
-            onSwipedToSnapPoint={snapPoint => setLocationDetailsSheetSwiped(snapPoint)}
-        >
+            onSwipedToSnapPoint={snapPoint => setLocationDetailsSheetSwiped(snapPoint)}>
             <LocationDetails
                 onSetSize={size => setLocationDetailsSheetSize(size)}
                 onStartWayfinding={() => setActiveBottomSheet(BOTTOM_SHEETS.WAYFINDING)}
@@ -65,17 +69,18 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
         </Sheet>,
         <Sheet
             minHeight="220"
-            isOpen={activeBottomSheet === BOTTOM_SHEETS.WAYFINDING} key="C"
-            preferredSizeSnapPoint={3}>
+            isOpen={activeBottomSheet === BOTTOM_SHEETS.WAYFINDING}
+            key="C">
             <Wayfinding
-                isActive={activeBottomSheet === BOTTOM_SHEETS.WAYFINDING}
                 onStartDirections={() => setActiveBottomSheet(BOTTOM_SHEETS.DIRECTIONS)}
                 location={currentLocation}
-                onBack={() => setActiveBottomSheet(BOTTOM_SHEETS.LOCATION_DETAILS)} />
+                onBack={() => setActiveBottomSheet(BOTTOM_SHEETS.LOCATION_DETAILS)}
+            />
         </Sheet>,
         <Sheet
             minHeight="220"
-            isOpen={activeBottomSheet === BOTTOM_SHEETS.DIRECTIONS} key="D">
+            isOpen={activeBottomSheet === BOTTOM_SHEETS.DIRECTIONS}
+            key="D">
             <Directions onBack={() => setActiveBottomSheet(BOTTOM_SHEETS.WAYFINDING)} />
         </Sheet>
     ]
