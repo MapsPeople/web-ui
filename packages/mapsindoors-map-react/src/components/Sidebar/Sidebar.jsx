@@ -47,9 +47,9 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
         <Modal isOpen={activePage === VIEWS.WAYFINDING} key="C">
             <Wayfinding
                 onStartDirections={() => setActivePage(VIEWS.DIRECTIONS)}
-                location={currentLocation}
-                onBack={() => setActivePage(VIEWS.LOCATION_DETAILS)}
-            />
+                isActive={activePage === VIEWS.WAYFINDING}
+                location={currentLocation} 
+				onBack={() => setActivePage(VIEWS.LOCATION_DETAILS)} />
         </Modal>,
         <Modal isOpen={activePage === VIEWS.DIRECTIONS} key="D">
             <Directions onBack={() => setActivePage(VIEWS.WAYFINDING)} />
