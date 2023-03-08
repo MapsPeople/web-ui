@@ -31,6 +31,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
     const [locationDetailsSheetSwiped, setLocationDetailsSheetSwiped] = useState();
 
     const [wayfindingSheetSize, setWayfindingSheetSize] = useState();
+	const [searchSheetSize, setSearchSheetSize] = useState();
 
     /*
      * React on changes on the current location.
@@ -43,9 +44,11 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
     const bottomSheets = [
         <Sheet
             minHeight="350"
+            preferredSizeSnapPoint={searchSheetSize}
             isOpen={activeBottomSheet === BOTTOM_SHEETS.SEARCH}
             key="A">
             <Search
+                onSetSize={size => setSearchSheetSize(size)}
                 onLocationClick={(location) => setCurrentLocation(location)}
                 categories={currentCategories}
                 onLocationsFiltered={(locations) => onLocationsFiltered(locations)}
