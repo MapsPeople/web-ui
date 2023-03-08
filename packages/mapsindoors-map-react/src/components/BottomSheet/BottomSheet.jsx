@@ -31,7 +31,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
     const [locationDetailsSheetSwiped, setLocationDetailsSheetSwiped] = useState();
 
     const [wayfindingSheetSize, setWayfindingSheetSize] = useState();
-	const [searchSheetSize, setSearchSheetSize] = useState();
+    const [searchSheetSize, setSearchSheetSize] = useState();
 
     /*
      * React on changes on the current location.
