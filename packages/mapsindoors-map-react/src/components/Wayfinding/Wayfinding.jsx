@@ -90,13 +90,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive }
 
     }, [location]);
 
-    useEffect(() => {
-        // If the active view is the Wayfinding, then focus the input field.
-        if (isActive) {
-                startSearchFieldRef.current.focusInput();
-        }
-    }, [isActive]);
-
     return (
         <div className="wayfinding">
             <div className="wayfinding__directions">
@@ -117,6 +110,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive }
                     <label className="wayfinding__label">
                         FROM
                         <SearchField
+                            hasInputFocus={isActive}
                             mapsindoors={true}
                             placeholder="Search by name, category, buildings..."
                             results={locations => searchResultsReceived(locations, searchFieldItentifiers.FROM)}
