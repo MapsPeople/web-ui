@@ -32,11 +32,6 @@
         }
     }
 
-
-        &--full {
-            height: fit-content;
-            max-height: 50vh;
-        }
     @media (min-width: $desktop-breakpoint) {
         max-height: 50vh;
     }
