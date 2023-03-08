@@ -39,6 +39,8 @@ function Wayfinding({ onStartDirections, onBack, location, onDirections }) {
     const [totalDistance, setTotalDistance] = useState();
     const [totalTime, setTotalTime] = useState();
 
+    const [accessibilityOn, setAccessibilityOn] = useState(false);
+
     /**
      * Click event handler function that sets the display text of the input field,
      * and clears out the results list.
@@ -94,8 +96,8 @@ function Wayfinding({ onStartDirections, onBack, location, onDirections }) {
         if (originLocation && destinationLocation) {
             directionsService.getRoute({
                 origin: getLocationPoint(originLocation),
-                destination: getLocationPoint(destinationLocation)
-                // FIXME: set avoidStairs to true if accessibility is toggled on.
+                destination: getLocationPoint(destinationLocation),
+                avoidStairs: accessibilityOn
             }).then(directionsResult => {
                 // Calculate total distance and time
                 // FIXME: Can we get a "faulty" response with no legs? If so, this will probably crash.
@@ -117,7 +119,7 @@ function Wayfinding({ onStartDirections, onBack, location, onDirections }) {
             });
 
         }
-    }, [originLocation, destinationLocation, directionsService]);
+    }, [originLocation, destinationLocation, directionsService, accessibilityOn]);
 
     return (
         <div className={`wayfinding ${hasInputFocus ? 'wayfinding--full' : 'wayfinding--fit'}`}>
@@ -155,7 +157,7 @@ function Wayfinding({ onStartDirections, onBack, location, onDirections }) {
             {/* Fixme: Add functionality to the accessibility feature. */}
             {!hasInputFocus && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
                 <div className="wayfinding__accessibility">
-                    <input className="mi-toggle" type="checkbox" />
+                    <input className="mi-toggle" type="checkbox" checked={accessibilityOn} onChange={e => setAccessibilityOn(e.target.checked)} />
                     <div>Accessibility</div>
                     <Tooltip text="Turn on Accessibility to get directions that avoids stairs and escalators."></Tooltip>
                 </div>
