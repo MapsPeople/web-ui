@@ -121,14 +121,6 @@
         }
     }
 
-    &--fit {
-        height: fit-content;
-    }
-
-    &--full {
-        height: 100vh;
-    }
-
     @media (min-width: $desktop-breakpoint) {
         &--full {
             height: fit-content;
