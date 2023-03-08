@@ -163,6 +163,16 @@ export class Search implements ComponentInterface {
     }
 
     /**
+     * Set focus on the input field.
+     * The preventScroll boolean is passed as true to prevent the browser
+     * from scrolling the document to bring the newly-focused element into view.
+     */
+    @Method()
+    focusInput(): void {
+        this.inputElement.focus({ preventScroll: true });
+    }
+
+    /**
      * Perform the search.
      */
     private search(inputValue): void {

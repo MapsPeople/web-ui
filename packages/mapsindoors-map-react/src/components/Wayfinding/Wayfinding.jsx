@@ -26,7 +26,7 @@ const searchFieldItentifiers = {
  * @param {function} props.onSetSize - Callback that is fired when the component has loaded.
  * @returns
  */
-function Wayfinding({ onStartDirections, onBack, location, onSetSize }) {
+function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive }) {
 
     /** Referencing the accessibility details DOM element */
     const detailsRef = useRef();
@@ -40,6 +40,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize }) {
     const [activeSearchField, setActiveSearchField] = useState();
 
     const [toFieldDisplayText, setToFieldDisplayText] = useState();
+
     const [fromFieldDisplayText, setFromFieldDisplayText] = useState();
 
     const scrollableContentSwipePrevent = usePreventSwipe();
@@ -86,7 +87,15 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize }) {
         if (location) {
             setToFieldDisplayText(location.properties.name);
         }
+
     }, [location]);
+
+    useEffect(() => {
+        // If the active view is the Wayfinding, then focus the input field.
+        if (isActive) {
+                startSearchFieldRef.current.focusInput();
+        }
+    }, [isActive]);
 
     return (
         <div className="wayfinding">
