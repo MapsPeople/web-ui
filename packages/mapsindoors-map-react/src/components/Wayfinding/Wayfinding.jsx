@@ -9,13 +9,25 @@ import { DirectionsServiceContext } from '../../DirectionsServiceContext';
 import Tooltip from '../Tooltip/Tooltip';
 import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
 import SearchField from '../WebComponentWrappers/Search/Search';
+import { snapPoints } from '../../constants/snapPoints';
+import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 
 const searchFieldItentifiers = {
     TO: 'TO',
     FROM: 'FROM'
 };
 
-function Wayfinding({ onStartDirections, onBack, location, onDirections }) {
+/**
+ * Show the wayfinding view.
+ *
+ * @param {Object} props
+ * @param {function} props.onStartDirections - Function that is run when the user navigates to the directions page.
+ * @param {function} props.onBack - Function that is run when the user navigates to the previous page.
+ * @param {string} props.location - The location that the user selected before starting the wayfinding.
+ * @param {function} props.onSetSize - Callback that is fired when the component has loaded.
+ * @returns
+ */
+function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, onDirections }) {
 
     /** Referencing the accessibility details DOM element */
     const detailsRef = useRef();
@@ -31,6 +43,7 @@ function Wayfinding({ onStartDirections, onBack, location, onDirections }) {
     const [activeSearchField, setActiveSearchField] = useState();
 
     const [toFieldDisplayText, setToFieldDisplayText] = useState();
+
     const [fromFieldDisplayText, setFromFieldDisplayText] = useState();
 
     const [destinationLocation, setDestinationLocation] = useState();
@@ -40,6 +53,8 @@ function Wayfinding({ onStartDirections, onBack, location, onDirections }) {
     const [totalTime, setTotalTime] = useState();
 
     const [accessibilityOn, setAccessibilityOn] = useState(false);
+
+   const scrollableContentSwipePrevent = usePreventSwipe();
 
     /**
      * Click event handler function that sets the display text of the input field,
@@ -69,12 +84,24 @@ function Wayfinding({ onStartDirections, onBack, location, onDirections }) {
         setSearchResults(results);
     }
 
+    /**
+     * Communicate size change to parent component.
+     * @param {number} size
+     */
+    function setSize(size) {
+        if (typeof onSetSize === 'function') {
+            onSetSize(size);
+        }
+    }
+
     useEffect(() => {
+        setSize(snapPoints.MAX);
         // If there is a location selected, pre-fill the value of the `to` field with the location name.
         if (location) {
             setToFieldDisplayText(location.properties.name);
             setDestinationLocation(location);
         }
+
     }, [location]);
 
     /**
@@ -122,7 +149,7 @@ function Wayfinding({ onStartDirections, onBack, location, onDirections }) {
     }, [originLocation, destinationLocation, directionsService, accessibilityOn]);
 
     return (
-        <div className={`wayfinding ${hasInputFocus ? 'wayfinding--full' : 'wayfinding--fit'}`}>
+        <div className="wayfinding">
             <div className="wayfinding__directions">
                 <div className="wayfinding__title">Start wayfinding</div>
                 <button className="wayfinding__close" onClick={() => onBack()} aria-label="Close">
@@ -142,6 +169,7 @@ function Wayfinding({ onStartDirections, onBack, location, onDirections }) {
                     <label className="wayfinding__label">
                         FROM
                         <SearchField
+                            hasInputFocus={isActive}
                             mapsindoors={true}
                             placeholder="Search by name, category, buildings..."
                             results={locations => searchResultsReceived(locations, searchFieldItentifiers.FROM)}
@@ -151,9 +179,11 @@ function Wayfinding({ onStartDirections, onBack, location, onDirections }) {
                     </label>
                 </div>
             </div>
-            {(!originLocation || !destinationLocation) && <div className="wayfinding__results">
+            {(!originLocation || !destinationLocation) &&  <div className="wayfinding__scrollable" {...scrollableContentSwipePrevent}>
+			<div className="wayfinding__results">
                 {searchResults.map(location => <ListItemLocation key={location.id} location={location} locationClicked={e => locationClickHandler(e)} />)}
             </div>}
+			</div>
             {/* Fixme: Add functionality to the accessibility feature. */}
             {!hasInputFocus && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
                 <div className="wayfinding__accessibility">

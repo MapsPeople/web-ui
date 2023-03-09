@@ -18,7 +18,7 @@ const VIEWS = {
  * @param {Object} props.setCurrentLocation - The setter for the currently selected MapsIndoors Location.
  * @param {Object} props.currentCategories - The unique categories displayed based on the existing locations.
  * @param {function} props.onLocationsFiltered - The list of locations after filtering through the categories.
- */
+*/
 function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered }) {
     const [activePage, setActivePage] = useState(null);
 
@@ -52,6 +52,7 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
                 location={currentLocation}
                 onDirections={result => setDirections(result)}
                 onBack={() => setActivePage(VIEWS.LOCATION_DETAILS)}
+ isActive={activePage === VIEWS.WAYFINDING}
             />
         </Modal>,
         <Modal isOpen={activePage === VIEWS.DIRECTIONS} key="D">
