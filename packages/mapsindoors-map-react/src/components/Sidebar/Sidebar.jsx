@@ -22,6 +22,8 @@ const VIEWS = {
 function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered }) {
     const [activePage, setActivePage] = useState(null);
 
+    const [directions, setDirections] = useState();
+
     /*
     * React on changes on the current location.
     */
@@ -47,12 +49,18 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
         <Modal isOpen={activePage === VIEWS.WAYFINDING} key="C">
             <Wayfinding
                 onStartDirections={() => setActivePage(VIEWS.DIRECTIONS)}
-                isActive={activePage === VIEWS.WAYFINDING}
-                location={currentLocation} 
-				onBack={() => setActivePage(VIEWS.LOCATION_DETAILS)} />
+                location={currentLocation}
+                onDirections={result => setDirections(result)}
+                onBack={() => setActivePage(VIEWS.LOCATION_DETAILS)}
+ isActive={activePage === VIEWS.WAYFINDING}
+            />
         </Modal>,
         <Modal isOpen={activePage === VIEWS.DIRECTIONS} key="D">
-            <Directions onBack={() => setActivePage(VIEWS.WAYFINDING)} />
+            <Directions
+                isOpen={activePage === VIEWS.DIRECTIONS}
+                directions={directions}
+                onBack={() => setActivePage(VIEWS.WAYFINDING)}
+            />
         </Modal>
     ]
 
