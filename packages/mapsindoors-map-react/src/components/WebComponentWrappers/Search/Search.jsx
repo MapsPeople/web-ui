@@ -10,8 +10,11 @@ import { useEffect, useRef } from 'react';
  * @param {function} props.clicked - Function that is called when search field is clicked.
  * @param {function} props.cleared - Function that is called when search field is cleared.
  * @param {boolean} props.clear - Programatically clear the search field.
+ * @param {string} props.displayText - Display text in the search field when the user selects a result.
+ * @param {boolean} props.hasInputFocus - If set to true, it will set focus to the input field.
+ *
  */
-function SearchField({ placeholder, mapsindoors, results, clicked, cleared, clear, displayText }) {
+function SearchField({ placeholder, mapsindoors, results, clicked, cleared, clear, displayText, hasInputFocus }) {
     const elementRef = useRef();
 
     useEffect(() => {
@@ -31,6 +34,10 @@ function SearchField({ placeholder, mapsindoors, results, clicked, cleared, clea
             current.setDisplayText(displayText);
         }
 
+        if (hasInputFocus) {
+            current.focusInput();
+        }
+
         current.addEventListener('results', searchResultsHandler);
         current.addEventListener('click', clicked);
         current.addEventListener('cleared', cleared);
@@ -41,7 +48,9 @@ function SearchField({ placeholder, mapsindoors, results, clicked, cleared, clea
             current.removeEventListener('cleared', cleared);
         }
 
-    }, [placeholder, mapsindoors, results, clicked, cleared, displayText]);
+    }, [placeholder, mapsindoors, results, clicked, cleared, displayText, hasInputFocus]);
+
+
 
     return <mi-search ref={elementRef} placeholder={placeholder} />
 }

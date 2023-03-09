@@ -235,6 +235,18 @@ Type: `Promise<void>`
 
 
 
+### `focusInput() => Promise<void>`
+
+Set focus on the input field.
+The preventScroll boolean is passed as true to prevent the browser
+from scrolling the document to bring the newly-focused element into view.
+
+#### Returns
+
+Type: `Promise<void>`
+
+
+
 ### `setDisplayText(displayText: string) => Promise<void>`
 
 Sets text to be shown in the search field.

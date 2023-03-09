@@ -45,13 +45,13 @@
     &__details {
         padding: var(--spacing-medium);
 
-        &--show {
-            display: block;
-        }
+        // &--show {
+        //     display: block;
+        // }
 
-        &--hide {
-            display: none;
-        }
+        // &--hide {
+        //     display: none;
+        // }
     }
 
     &__results {
@@ -121,18 +121,11 @@
         }
     }
 
-    &--fit {
-        height: fit-content;
-    }
-
-    &--full {
-        height: 100vh;
+    &__scrollable {
+        overflow: auto;
     }
 
     @media (min-width: $desktop-breakpoint) {
-        &--full {
-            height: fit-content;
-            max-height: 50vh;
-        }
+        max-height: 50vh;
     }
 }

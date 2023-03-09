@@ -4,8 +4,15 @@
     padding: var(--spacing-large) var(--spacing-x-small) var(--spacing-x-small) var(--spacing-x-small);
     display: grid;
     gap: var(--spacing-x-small);
-    color: var(--brand-colors-black-100);
-    grid-template-rows: var(--spacing-xxx-large) 60px 1fr;
+    height: 100%;
+    grid-auto-rows: min-content;
+    overflow: auto;
+
+    &__scrollable {
+        overflow: auto;
+        display: grid;
+        gap: var(--spacing-x-small);
+    }
 
     &__categories {
         display: grid;
@@ -26,22 +33,7 @@
         }
     }
 
-    &--fit {
-        height: fit-content;
-    }
-
-    &--full {
-        height: 100vh;
-    }
-
     @media (min-width: $desktop-breakpoint) {
-        &--fit {
-            max-height: 50vh;
-        }
-
-        &--full {
-            height: fit-content;
-            max-height: 50vh;
-        }
+        max-height: 50vh;
     }
 }

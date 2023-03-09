@@ -1,7 +1,8 @@
 import React from "react";
 import './Search.scss';
 import { useRef, useEffect, useState } from 'react';
-import Test from "../Test/Test";
+import { snapPoints } from '../../constants/snapPoints';
+import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import ProgressSteps from "../RouteInstructions/RouteInstructions";
 
 /** Initialize the MapsIndoors instance. */
@@ -20,9 +21,10 @@ let _selectedCategory;
  * @param {function} props.onLocationClick - Function that is run when a location from the search results is clicked.
  * @param {set} props.categories - All the unique categories that users can filter through.
  * @param {function} props.onLocationsFiltered - Function that is run when the user performs a filter through any category.
+ * @param {function} props.onSetSize - Callback that is fired when the search field takes focus.
  * @returns
  */
-function Search({ onLocationClick, categories, onLocationsFiltered }) {
+function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize }) {
 
     /** Referencing the search DOM element */
     const searchFieldRef = useRef();
@@ -33,11 +35,10 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
     /** Referencing the categories results container DOM element */
     const categoriesListRef = useRef();
 
-    /** Determines if the input has focus */
-    const [hasInputFocus, setHasInputFocus] = useState(false);
-
     /** Determines which category has been selected */
     const [selectedCategory, setSelectedCategory] = useState();
+
+    const scrollableContentSwipePrevent = usePreventSwipe();
 
     /**
      * Click event handler that takes the selected location as an argument.
@@ -106,6 +107,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
 
         /** Perform a search when a category is clicked and filter the results through the category. */
         searchFieldRef.current.setAttribute('mi-categories', category);
+        setSize(snapPoints.MAX);
 
         /**
          * Check if the clicked category is the same as the active one.
@@ -143,6 +145,16 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
             setSelectedCategory(category);
             _selectedCategory = category;
             getFilteredLocations(category);
+        }
+    }
+
+    /**
+     * Communicate size change to parent component.
+     * @param {number} size
+     */
+    function setSize(size) {
+        if (typeof onSetSize === 'function') {
+            onSetSize(size);
         }
     }
 
@@ -185,21 +197,24 @@ function Search({ onLocationClick, categories, onLocationsFiltered }) {
 
         /** Listen to click events on the input and set the input focus to true. */
         searchFieldRef.current.addEventListener('click', () => {
-            setHasInputFocus(true);
+            setSize(snapPoints.MAX);
         });
     }, []);
 
     return (
-        <div className={`search ${hasInputFocus ? 'search--full' : 'search--fit'}`}>
+        <div className="search">
             <mi-search ref={searchFieldRef} placeholder="Search by name, category, building..." mapsindoors="true"></mi-search>
-            <div ref={categoriesListRef} className="search__categories">
-                {categories && Array.from(categories).map(category =>
-                    <mi-chip content={category}
-                        active={selectedCategory === category}
-                        onClick={() => categoryClicked(category)}
-                        key={category}>
-                    </mi-chip>)
-                }
+            <div className="search__scrollable prevent-scroll" {...scrollableContentSwipePrevent}>
+                <div ref={categoriesListRef} className="search__categories">
+                    {categories && Array.from(categories).map(category =>
+                        <mi-chip content={category}
+                            active={selectedCategory === category}
+                            onClick={() => categoryClicked(category)}
+                            key={category}>
+                        </mi-chip>)
+                    }
+                </div>
+                <div ref={searchResultsRef} className="search__results"></div>
             </div>
             {/* <Test /> */}
             <ProgressSteps />
