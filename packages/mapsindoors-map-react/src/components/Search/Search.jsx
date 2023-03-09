@@ -106,6 +106,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
 
         /** Perform a search when a category is clicked and filter the results through the category. */
         searchFieldRef.current.setAttribute('mi-categories', category);
+        setSize(snapPoints.MAX);
 
         /**
          * Check if the clicked category is the same as the active one.
