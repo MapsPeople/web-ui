@@ -54,7 +54,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
 
     const [accessibilityOn, setAccessibilityOn] = useState(false);
 
-   const scrollableContentSwipePrevent = usePreventSwipe();
+    const scrollableContentSwipePrevent = usePreventSwipe();
 
     /**
      * Click event handler function that sets the display text of the input field,
@@ -134,7 +134,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                 setTotalDistance(totalDistance);
                 setTotalTime(totalTime);
 
-                onDirections( {
+                onDirections({
                     originLocation,
                     destinationLocation,
                     totalDistance,
@@ -164,7 +164,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                             results={locations => searchResultsReceived(locations, searchFieldItentifiers.TO)}
                             displayText={toFieldDisplayText}
                             clicked={() => setHasInputFocus(true)}
-                         />
+                        />
                     </label>
                     <label className="wayfinding__label">
                         FROM
@@ -179,11 +179,13 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                     </label>
                 </div>
             </div>
-            {(!originLocation || !destinationLocation) &&  <div className="wayfinding__scrollable" {...scrollableContentSwipePrevent}>
-			<div className="wayfinding__results">
-                {searchResults.map(location => <ListItemLocation key={location.id} location={location} locationClicked={e => locationClickHandler(e)} />)}
-            </div>}
-			</div>
+            {(!originLocation || !destinationLocation) && <div className="wayfinding__scrollable" {...scrollableContentSwipePrevent}>
+                <div className="wayfinding__results">
+                    {searchResults.map(location => <ListItemLocation key={location.id} location={location} locationClicked={e => locationClickHandler(e)} />)}
+                </div>
+            </div>
+            }
+
             {/* Fixme: Add functionality to the accessibility feature. */}
             {!hasInputFocus && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
                 <div className="wayfinding__accessibility">
