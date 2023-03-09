@@ -6,6 +6,7 @@
     gap: var(--spacing-x-small);
     height: 100%;
     grid-auto-rows: min-content;
+    overflow: auto;
 
     &__scrollable {
         overflow: auto;
