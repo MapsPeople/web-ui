@@ -216,8 +216,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
                 </div>
                 <div ref={searchResultsRef} className="search__results"></div>
             </div>
-            {/* <Test /> */}
-            <ProgressSteps />
+            {/* <ProgressSteps /> */}
             <div ref={searchResultsRef} className="search__results"></div>
         </div>
     )

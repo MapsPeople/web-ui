@@ -4,6 +4,7 @@ import { MapsIndoorsContext } from '../../MapsIndoorsContext';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
 import { ReactComponent as WalkingIcon } from '../../assets/walking.svg';
+import ProgressSteps from "../RouteInstructions/RouteInstructions";
 
 const mapsindoors = window.mapsindoors;
 
@@ -26,7 +27,32 @@ function Directions({ isOpen, onBack, directions }) {
 
             directionsRenderer.setRoute(directions.directionsResult);
         }
+
     }, [isOpen, directions, mapsIndoorsInstance]);
+
+    /**
+     * Transform the step in legs to a flat array of steps.
+     */
+     function getRouteSteps(){
+        if (!directions) {
+            return [];
+        }
+        let currentIndex = 0;
+
+        return directions.directionsResult.legs.reduce((accummulator, leg, legIndex) => {
+            for (const stepIndex in leg.steps) {
+                const step = leg.steps[stepIndex];
+                step.originalLegIndex = legIndex;
+                step.originalStepIndex = parseInt(stepIndex);
+                step.id = currentIndex;
+                currentIndex += 1;
+
+                accummulator.push(step);
+            }
+            return accummulator;
+
+        }, []);
+    }
 
     return (
         <div className="directions">
@@ -64,7 +90,7 @@ function Directions({ isOpen, onBack, directions }) {
                 </div>
                 <hr></hr>
                 <div className="directions__steps">
-                    Steps
+                    <ProgressSteps steps={getRouteSteps()}></ProgressSteps>
                 </div>
             </div>
         </div>
