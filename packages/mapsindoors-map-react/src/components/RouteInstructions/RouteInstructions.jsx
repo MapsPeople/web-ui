@@ -1,22 +1,21 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import './RouteInstructions.scss';
+import { ReactComponent as ArrowRight } from '../../assets/arrow-right.svg';
+import { ReactComponent as ArrowLeft } from '../../assets/arrow-left.svg';
 
 const ButtonStyle = styled.button`
-  border-radius: 4px;
-  border: 0;
-  background: #005655;
+  background: none;
   color: #ffffff;
   cursor: pointer;
-  padding: 8px;
-  width: 90px;
+  border: none;
   :active {
     transform: scale(0.98);
   }
   :disabled {
-    background: lightgray;
     color: #000000;
     cursor: not-allowed;
+    opacity:0.3;
   }
 `
 
@@ -92,11 +91,11 @@ function ProgressSteps({ steps }) {
                     </div>
                     <div className='route-instructions__actions'>
                         <ButtonStyle onClick={prevStep} disabled={activeStep === 1}>
-                            Previous
+                            <ArrowLeft></ArrowLeft>
                         </ButtonStyle>
                         <div className='route-instructions__overview'>Step {activeStep} of {steps.length}</div>
                         <ButtonStyle onClick={nextStep} disabled={activeStep === steps.length}>
-                            Next
+                            <ArrowRight></ArrowRight>
                         </ButtonStyle>
                     </div>
                 </>
