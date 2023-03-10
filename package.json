@@ -29,8 +29,5 @@
   ],
   "devDependencies": {
     "lerna": "^6.4.0"
-  },
-  "dependencies": {
-    "styled-components": "^5.3.8"
   }
 }
