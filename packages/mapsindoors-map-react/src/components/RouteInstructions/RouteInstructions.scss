@@ -1,82 +1,88 @@
 .route-instructions {
-    width: 100%;
-    display: grid;
-    gap: 20px;
+  width: 100%;
+  display: grid;
+  gap: var(--spacing-large);
 
-    &__progress {
-        display: flex;
+  &__progress {
+    display: flex;
+  }
+
+  &__step {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+
+    .step-counter {
+      z-index: 100;
+      width: var(--spacing-x-small);
+      height:  var(--spacing-x-small);
+      border-radius: 50%;
+      background: var(--color-gray-30);
     }
 
-    &__step {
-        position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      flex: 1;
+    &::after {
+      position: absolute;
+      content: "";
+      border-bottom: 2px solid var(--color-gray-30);
+      width: 100%;
+      top: 3px;
+      left: 50%;
+    }
 
+    &.completed {
       .step-counter {
-        z-index: 5;
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: #ccc;
+        background-color: var(--color-gray-60);
+        ;
       }
 
-      &::after {
+      &::before {
         position: absolute;
         content: "";
-        border-bottom: 2px solid #ccc;
+        border-bottom: 2px solid var(--color-gray-60);
         width: 100%;
-        top: 4px;
-        left: 50%;
-        z-index: 2;
-      }
-
-      &.completed {
-        .step-counter {
-          background-color: #005655;;
-        }
-        &::before {
-          position: absolute;
-          content: "";
-          border-bottom: 2px solid #005655;;
-          width: 100%;
-          top: 4px;
-          left: -50%;
-          z-index: 3;
-        }
-      }
-
-      &:first-child {
-        &::before {
-          content: none;
-        }
-      }
-
-      &:last-child {
-        &::after {
-          content: none;
-        }
+        top: 3px;
+        left: -50%;
       }
     }
 
-    &__actions {
-      display: grid;
-      grid-auto-flow: column;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    &__button {
-      background: none;
-      color: #ffffff;
-      cursor: pointer;
-      border: none;
-
-      &.disabled {
-        color: #000000;
-        cursor: not-allowed;
-        opacity:0.3;
+    &:first-child {
+      &::before {
+        content: none;
       }
     }
+
+    &:last-child {
+      &::after {
+        content: none;
+      }
+    }
+  }
+
+  &__actions {
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__overview {
+    color: var(--color-gray-60);;
+  }
+
+  &__button {
+    background: none;
+    cursor: pointer;
+    border: none;
+
+    &.disabled {
+      cursor: not-allowed;
+      opacity: 0.3;
+    }
+  }
+
+  mi-route-instructions-step {
+    padding: var(--spacing-large) 0;
+  }
 }

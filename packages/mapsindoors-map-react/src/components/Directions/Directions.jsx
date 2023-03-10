@@ -8,6 +8,8 @@ import ProgressSteps from "../RouteInstructions/RouteInstructions";
 
 const mapsindoors = window.mapsindoors;
 
+let directionsRenderer;
+
 function Directions({ isOpen, onBack, directions }) {
 
     const [totalDistance, setTotalDistance] = useState();
@@ -20,7 +22,7 @@ function Directions({ isOpen, onBack, directions }) {
             setTotalDistance(directions.totalDistance);
             setTotalTime(directions.totalTime);
 
-            const directionsRenderer = new mapsindoors.directions.DirectionsRenderer({
+            directionsRenderer = new mapsindoors.directions.DirectionsRenderer({
                 mapsIndoors: mapsIndoorsInstance,
                 fitBoundsPadding: { top: 60, bottom: 360, left: 60, right: 60 } // FIXME: Remove hardcoded values, while ensuring route is not be covered by bottom sheet or modal.
             });
@@ -33,10 +35,11 @@ function Directions({ isOpen, onBack, directions }) {
     /**
      * Transform the step in legs to a flat array of steps.
      */
-     function getRouteSteps(){
+    function getRouteSteps() {
         if (!directions) {
             return [];
         }
+
         let currentIndex = 0;
 
         return directions.directionsResult.legs.reduce((accummulator, leg, legIndex) => {
@@ -44,6 +47,7 @@ function Directions({ isOpen, onBack, directions }) {
                 const step = leg.steps[stepIndex];
                 step.originalLegIndex = legIndex;
                 step.originalStepIndex = parseInt(stepIndex);
+                // Assign each step an id for identifying the active step
                 step.id = currentIndex;
                 currentIndex += 1;
 
@@ -52,6 +56,24 @@ function Directions({ isOpen, onBack, directions }) {
             return accummulator;
 
         }, []);
+    }
+
+    /**
+     * Display the map interaction when navigatin to the next step.
+     */
+    function onNext() {
+        if (directionsRenderer) {
+            directionsRenderer.nextStep();
+        }
+    }
+
+    /**
+     * Display the map interaction when navigatin to the previous step.
+     */
+    function onPrevious() {
+        if (directionsRenderer) {
+            directionsRenderer.previousStep();
+        }
     }
 
     return (
@@ -90,7 +112,11 @@ function Directions({ isOpen, onBack, directions }) {
                 </div>
                 <hr></hr>
                 <div className="directions__steps">
-                    <ProgressSteps steps={getRouteSteps()}></ProgressSteps>
+                    <ProgressSteps
+                        steps={getRouteSteps()}
+                        onNextStep={() => onNext()}
+                        onPreviousStep={() => onPrevious()}>
+                    </ProgressSteps>
                 </div>
             </div>
         </div>

@@ -4,21 +4,25 @@ import { ReactComponent as ArrowRight } from '../../assets/arrow-right.svg';
 import { ReactComponent as ArrowLeft } from '../../assets/arrow-left.svg';
 
 /**
- * Progress steps
+ * Route instructions step by step component.
  *
  * @param {Object} props
- * @param {array} props.steps
+ * @param {array} props.steps - The steps array passed after the directions are set.
+ * @param {function} props.onNextStep - Function handling the navigation to the next step.
+ * @param {function} props.onPreviousStep - Function handling the navigation to the previous step.
  * @returns
  */
-function ProgressSteps({ steps }) {
+function ProgressSteps({ steps, onNextStep, onPreviousStep }) {
     const [activeStep, setActiveStep] = useState(1)
 
-    const nextStep = () => {
-        setActiveStep(activeStep + 1)
+    function nextStep() {
+        setActiveStep(activeStep + 1);
+        onNextStep();
     }
 
-    const prevStep = () => {
-        setActiveStep(activeStep - 1)
+    function previousStep() {
+        setActiveStep(activeStep - 1);
+        onPreviousStep();
     }
 
     const translations = {
@@ -74,11 +78,15 @@ function ProgressSteps({ steps }) {
                         ))}
                     </div>
                     <div className='route-instructions__actions'>
-                        <button className={`route-instructions__button ${activeStep === 1 ? 'disabled' : ''}`} onClick={prevStep}>
+                        <button className={`route-instructions__button ${activeStep === 1 ? 'disabled' : ''}`}
+                            onClick={() => previousStep()}
+                            disabled={activeStep === 1}>
                             <ArrowLeft></ArrowLeft>
                         </button>
                         <div className='route-instructions__overview'>Step {activeStep} of {steps.length}</div>
-                        <button className={`route-instructions__button ${activeStep === steps.length ? 'disabled' : ''}`} onClick={nextStep}>
+                        <button className={`route-instructions__button ${activeStep === steps.length ? 'disabled' : ''}`}
+                            onClick={() => nextStep()}
+                            disabled={activeStep === steps.length}>
                             <ArrowRight></ArrowRight>
                         </button>
                     </div>
