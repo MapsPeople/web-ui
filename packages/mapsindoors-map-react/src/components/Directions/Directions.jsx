@@ -18,15 +18,30 @@ function Directions({ isOpen, onBack, directions }) {
         if (isOpen && directions) {
             setTotalDistance(directions.totalDistance);
             setTotalTime(directions.totalTime);
+            const padding = Math.min(window.innerHeight, window.innerWidth) * 0.06; // 6 percent of smallest of viewport height or width
 
             const directionsRenderer = new mapsindoors.directions.DirectionsRenderer({
                 mapsIndoors: mapsIndoorsInstance,
-                fitBoundsPadding: { top: 60, bottom: 360, left: 60, right: 60 } // FIXME: Remove hardcoded values, while ensuring route is not be covered by bottom sheet or modal.
+                fitBoundsPadding: {
+                    top: padding,
+                    bottom: getBottomSheetHeight(),
+                    left: padding,
+                    right: padding
+                }
+
             });
 
             directionsRenderer.setRoute(directions.directionsResult);
         }
     }, [isOpen, directions, mapsIndoorsInstance]);
+
+    /**
+     * Get the height of the bottom sheet in pixels.
+    */
+    function getBottomSheetHeight() {
+        const bottomSheet = document.querySelector('.sheet--active');
+        return window.innerHeight - bottomSheet.offsetTop;
+    }
 
     return (
         <div className="directions">
