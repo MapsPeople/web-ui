@@ -17,19 +17,20 @@ function Directions({ isOpen, onBack, directions }) {
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
-
     useEffect(() => {
         if (isOpen && directions) {
             setTotalDistance(directions.totalDistance);
             setTotalTime(directions.totalTime);
-            const padding = Math.min(window.innerHeight, window.innerWidth) * 0.06; // 6 percent of smallest of viewport height or width
+
+            // 6 percent of smallest of viewport height or width
+            const padding = Math.min(window.innerHeight, window.innerWidth) * 0.06;
 
             const directionsRenderer = new mapsindoors.directions.DirectionsRenderer({
                 mapsIndoors: mapsIndoorsInstance,
                 fitBoundsPadding: {
                     top: padding,
-                    bottom: padding,
-                    left: isDesktop ? getSidebarWidth() : getBottomSheetHeight(),
+                    bottom: isDesktop ? padding : getBottomSheetHeight(),
+                    left: isDesktop ? getSidebarWidth() : padding,
                     right: padding
                 }
 
@@ -44,14 +45,16 @@ function Directions({ isOpen, onBack, directions }) {
     */
     function getBottomSheetHeight() {
         const bottomSheet = document.querySelector('.sheet--active');
+        // Subtract the top padding from the inner height of the window.
         return window.innerHeight - bottomSheet.offsetTop;
     }
 
     /**
-     * Get the height of the bottom sheet in pixels.
+     * Get the width of the sidebar in pixels
     */
-     function getSidebarWidth() {
+    function getSidebarWidth() {
         const sidebar = document.querySelector('.modal--open');
+        // Subtract the sum of the sidebar's width and the left padding from the inner width of the window.
         return window.innerWidth - (sidebar.offsetWidth + sidebar.offsetLeft);
     }
 
