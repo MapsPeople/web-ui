@@ -4,6 +4,7 @@ import { MapsIndoorsContext } from '../../MapsIndoorsContext';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
 import { ReactComponent as WalkingIcon } from '../../assets/walking.svg';
+import useMediaQuery from '../../hooks/useMediaQuery';
 
 const mapsindoors = window.mapsindoors;
 
@@ -13,6 +14,9 @@ function Directions({ isOpen, onBack, directions }) {
     const [totalTime, setTotalTime] = useState();
 
     const mapsIndoorsInstance = useContext(MapsIndoorsContext);
+
+    const isDesktop = useMediaQuery('(min-width: 992px)');
+
 
     useEffect(() => {
         if (isOpen && directions) {
@@ -24,8 +28,8 @@ function Directions({ isOpen, onBack, directions }) {
                 mapsIndoors: mapsIndoorsInstance,
                 fitBoundsPadding: {
                     top: padding,
-                    bottom: getBottomSheetHeight(),
-                    left: padding,
+                    bottom: padding,
+                    left: isDesktop ? getSidebarWidth() : getBottomSheetHeight(),
                     right: padding
                 }
 
@@ -41,6 +45,14 @@ function Directions({ isOpen, onBack, directions }) {
     function getBottomSheetHeight() {
         const bottomSheet = document.querySelector('.sheet--active');
         return window.innerHeight - bottomSheet.offsetTop;
+    }
+
+    /**
+     * Get the height of the bottom sheet in pixels.
+    */
+     function getSidebarWidth() {
+        const sidebar = document.querySelector('.modal--open');
+        return window.innerWidth - (sidebar.offsetWidth + sidebar.offsetLeft);
     }
 
     return (
