@@ -142,19 +142,24 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
             }).then(directionsResult => {
                 // Calculate total distance and time
                 // FIXME: Can we get a "faulty" response with no legs? If so, this will probably crash.
-                const totalDistance = directionsResult.legs.reduce((accumulator, current) => accumulator + current.distance.value, 0);
-                const totalTime = directionsResult.legs.reduce((accumulator, current) => accumulator + current.duration.value, 0);
+                if (directionsResult.legs) {
+                    const totalDistance = directionsResult.legs.reduce((accumulator, current) => accumulator + current.distance.value, 0);
+                    const totalTime = directionsResult.legs.reduce((accumulator, current) => accumulator + current.duration.value, 0);
 
-                setTotalDistance(totalDistance);
-                setTotalTime(totalTime);
+                    setTotalDistance(totalDistance);
+                    setTotalTime(totalTime);
 
-                onDirections({
-                    originLocation,
-                    destinationLocation,
-                    totalDistance,
-                    totalTime,
-                    directionsResult
-                });
+                    onDirections({
+                        originLocation,
+                        destinationLocation,
+                        totalDistance,
+                        totalTime,
+                        directionsResult
+                    });
+                } else {
+                    console.log('no legs');
+                }
+
             }, () => {
                 // FIXME: No route found or other request errors.
             });
