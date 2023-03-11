@@ -31,7 +31,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
     const [locationDetailsSheetSwiped, setLocationDetailsSheetSwiped] = useState();
 
     const [directions, setDirections] = useState();
-const [wayfindingSheetSize, setWayfindingSheetSize] = useState();
+    const [wayfindingSheetSize, setWayfindingSheetSize] = useState();
     const [searchSheetSize, setSearchSheetSize] = useState();
 
     /*
@@ -80,6 +80,7 @@ const [wayfindingSheetSize, setWayfindingSheetSize] = useState();
                 location={currentLocation}
                 onBack={() => setActiveBottomSheet(BOTTOM_SHEETS.LOCATION_DETAILS)}
                 isActive={activeBottomSheet === BOTTOM_SHEETS.WAYFINDING}
+                onDirections={result => setDirections(result)}
             />
         </Sheet>,
         <Sheet
@@ -91,7 +92,6 @@ const [wayfindingSheetSize, setWayfindingSheetSize] = useState();
                 directions={directions}
                 onBack={() => setActiveBottomSheet(BOTTOM_SHEETS.WAYFINDING)}
             />
-
         </Sheet>
     ]
 

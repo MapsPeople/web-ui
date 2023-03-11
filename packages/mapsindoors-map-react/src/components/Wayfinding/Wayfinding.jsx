@@ -32,6 +32,8 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     /** Referencing the accessibility details DOM element */
     const detailsRef = useRef();
 
+    const searchResultsRef = useRef();
+
     const directionsService = useContext(DirectionsServiceContext);
 
     const [hasInputFocus, setHasInputFocus] = useState(true);
@@ -73,6 +75,13 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
         setHasInputFocus(false);
     }
 
+    /** Display message when no results have been found. */
+    function showNotFoundMessage() {
+        const notFoundMessage = document.createElement('p');
+        notFoundMessage.innerHTML = "Nothing was found";
+        searchResultsRef.current.appendChild(notFoundMessage);
+    }
+
     /**
      * Handle incoming search results from one of the search fields.
      *
@@ -81,7 +90,12 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      */
     function searchResultsReceived(results, searchFieldIdentifier) {
         setActiveSearchField(searchFieldIdentifier);
-        setSearchResults(results);
+
+        if (results.length === 0) {
+            showNotFoundMessage()
+        } else {
+            setSearchResults(results);
+        }
     }
 
     /**
@@ -180,7 +194,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                 </div>
             </div>
             {(!originLocation || !destinationLocation) && <div className="wayfinding__scrollable" {...scrollableContentSwipePrevent}>
-                <div className="wayfinding__results">
+                <div className="wayfinding__results" ref={searchResultsRef}>
                     {searchResults.map(location => <ListItemLocation key={location.id} location={location} locationClicked={e => locationClickHandler(e)} />)}
                 </div>
             </div>
