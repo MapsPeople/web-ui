@@ -21,8 +21,9 @@ const BOTTOM_SHEETS = {
  * @param {Object} props.setCurrentLocation - The setter for the currently selected MapsIndoors Location.
  * @param {Object} props.currentCategories - The unique categories displayed based on the existing locations.
  * @param {function} props.onLocationsFiltered - The list of locations after filtering through the categories.
+ * @param {function} props.onDirectionsActive - The list of locations after filtering through the categories.
  */
-function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered }) {
+function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsActive }) {
 
     const bottomSheetRef = useRef();
     const [activeBottomSheet, setActiveBottomSheet] = useState(null);
@@ -41,6 +42,16 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
     useEffect(() => {
         setActiveBottomSheet(currentLocation ? BOTTOM_SHEETS.LOCATION_DETAILS : BOTTOM_SHEETS.SEARCH);
     }, [currentLocation]);
+
+    function openDirections() {
+        setActiveBottomSheet(BOTTOM_SHEETS.DIRECTIONS);
+        onDirectionsActive();
+    }
+
+    function closeDirections() {
+        setActiveBottomSheet(BOTTOM_SHEETS.WAYFINDING);
+        onDirectionsActive();
+    }
 
     const bottomSheets = [
         <Sheet
@@ -76,7 +87,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
             key="C">
             <Wayfinding
                 onSetSize={size => setWayfindingSheetSize(size)}
-                onStartDirections={() => setActiveBottomSheet(BOTTOM_SHEETS.DIRECTIONS)}
+                onStartDirections={() => openDirections()}
                 location={currentLocation}
                 onDirections={result => setDirections(result)}
                 onBack={() => setActiveBottomSheet(BOTTOM_SHEETS.LOCATION_DETAILS)}
@@ -90,7 +101,8 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
             <Directions
                 isOpen={activeBottomSheet === BOTTOM_SHEETS.DIRECTIONS}
                 directions={directions}
-                onBack={() => setActiveBottomSheet(BOTTOM_SHEETS.WAYFINDING)}
+                onBack={() => closeDirections()}
+                isActive={activeBottomSheet === BOTTOM_SHEETS.DIRECTIONS}
             />
         </Sheet>
     ]

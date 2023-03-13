@@ -33,6 +33,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [filteredLocations, setFilteredLocations] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const [directionsService, setDirectionsService] = useState();
+    const [hasFloorSelector, setHasFloorSelector] = useState(true);
+
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
     /**
@@ -41,6 +43,12 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     function venueChangedOnMap() {
         if (isMapReady === false) {
             setMapReady(true);
+        }
+    }
+
+    function hideFloorSelector() {
+        if (hasFloorSelector === true) {
+            setHasFloorSelector(false);
         }
     }
 
@@ -121,7 +129,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
 
     return (<MapsIndoorsContext.Provider value={mapsIndoorsInstance}>
         <DirectionsServiceContext.Provider value={directionsService}>
-            <div className="mapsindoors-map">
+            <div className={`mapsindoors-map ${!hasFloorSelector ? 'hide' : ''}`}>
                 {!isMapReady && <SplashScreen logo={logo} primaryColor={primaryColor} />}
                 {venues.length > 1 && <VenueSelector onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)} venues={venues} currentVenueName={currentVenueName} />}
                 {isMapReady && isDesktop
@@ -139,6 +147,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                         setCurrentLocation={setCurrentLocation}
                         currentCategories={currentCategories}
                         onLocationsFiltered={(locations) => setFilteredLocations(locations)}
+                        onDirectionsActive={() => hideFloorSelector()}
                     />
                 }
                 <Map
