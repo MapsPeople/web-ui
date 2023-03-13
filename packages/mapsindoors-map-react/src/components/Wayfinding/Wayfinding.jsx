@@ -36,10 +36,10 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
 
     const directionsService = useContext(DirectionsServiceContext);
 
-    const [hasInputFocus, setHasInputFocus] = useState(true);
-
     /** Holds search results given from a search field. */
     const [searchResults, setSearchResults] = useState([]);
+
+    const [isSearchTriggered, setIsSearchTriggered] = useState(false);
 
     /** Variable for determining the active search field */
     const [activeSearchField, setActiveSearchField] = useState();
@@ -72,7 +72,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
         }
 
         setSearchResults([]);
-        setHasInputFocus(false);
     }
 
     /** Display message when no results have been found. */
@@ -116,6 +115,8 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
             setDestinationLocation(location);
         }
 
+        setActiveSearchField(searchFieldItentifiers.FROM)
+
     }, [location]);
 
     /**
@@ -129,6 +130,16 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
         return { lat: coordinates[1], lng: coordinates[0], floor: location.properties.floor };
     }
 
+    /**
+     * Handle click events on the search field.
+     *
+     * @param {string} searchFieldIdentifier
+     */
+    function onSearchClicked(searchFieldIdentifier) {
+        setActiveSearchField(searchFieldIdentifier);
+        console.log('active',activeSearchField);
+        setIsSearchTriggered(true);
+    }
     /**
      * When both origin location and destination location are selected, call the MapsIndoors SDK
      * to get information about the route.
@@ -177,7 +188,8 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                             placeholder="Search by name, category, building..."
                             results={locations => searchResultsReceived(locations, searchFieldItentifiers.TO)}
                             displayText={toFieldDisplayText}
-                            clicked={() => setHasInputFocus(true)}
+                            triggerSearch={isSearchTriggered}
+                            clicked={() => onSearchClicked(searchFieldItentifiers.TO)}
                         />
                     </label>
                     <label className="wayfinding__label">
@@ -188,7 +200,8 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                             placeholder="Search by name, category, buildings..."
                             results={locations => searchResultsReceived(locations, searchFieldItentifiers.FROM)}
                             displayText={fromFieldDisplayText}
-                            clicked={() => setHasInputFocus(true)}
+                            triggerSearch={isSearchTriggered}
+                            clicked={() => onSearchClicked(searchFieldItentifiers.FROM)}
                         />
                     </label>
                 </div>
@@ -201,7 +214,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
             }
 
             {/* Fixme: Add functionality to the accessibility feature. */}
-            {!hasInputFocus && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
+            {originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
                 <div className="wayfinding__accessibility">
                     <input className="mi-toggle" type="checkbox" checked={accessibilityOn} onChange={e => setAccessibilityOn(e.target.checked)} />
                     <div>Accessibility</div>
