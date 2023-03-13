@@ -81,7 +81,6 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
                 onDirections={result => setDirections(result)}
                 onBack={() => setActiveBottomSheet(BOTTOM_SHEETS.LOCATION_DETAILS)}
                 isActive={activeBottomSheet === BOTTOM_SHEETS.WAYFINDING}
-                onDirections={result => setDirections(result)}
             />
         </Sheet>,
         <Sheet
