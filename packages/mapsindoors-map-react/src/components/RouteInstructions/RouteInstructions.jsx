@@ -82,7 +82,6 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep }) {
                     <mi-route-instructions-step
                         step={JSON.stringify(steps[activeStep])}
                         translations={JSON.stringify(translations)}
-                        hide-indoor-substeps={false}
                         from-travel-mode={previous?.travel_mode ?? ''}
                         from-route-context={previous?.route_context ?? steps[activeStep]?.start_context.building.buildingInfo.name ?? ''}>
                     </mi-route-instructions-step>

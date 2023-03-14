@@ -36,7 +36,7 @@ function Directions({ isOpen, onBack, directions }) {
     }, [isOpen, directions, mapsIndoorsInstance]);
 
     /**
-     * Transform the step in legs to a flat array of steps.
+     * Transform the steps in legs to a flat array of steps.
      */
     function getRouteSteps() {
         if (!directions) {
