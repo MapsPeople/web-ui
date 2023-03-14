@@ -3,7 +3,7 @@ import './Search.scss';
 import { useRef, useEffect, useState } from 'react';
 import { snapPoints } from '../../constants/snapPoints';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
-import ProgressSteps from "../RouteInstructions/RouteInstructions";
+import RouteInstructions from "../RouteInstructions/RouteInstructions";
 
 /** Initialize the MapsIndoors instance. */
 const mapsindoors = window.mapsindoors;
