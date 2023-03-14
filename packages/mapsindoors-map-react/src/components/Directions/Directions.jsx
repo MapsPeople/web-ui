@@ -110,7 +110,7 @@ function Directions({ isOpen, onBack, directions }) {
         // Subtract the sum of the sidebar's width and the left padding from the width of the map container element.
         return mapContainer.offsetWidth - (sidebar.offsetWidth + sidebar.offsetLeft);
 
-
+    }
 
     return (
         <div className="directions">
