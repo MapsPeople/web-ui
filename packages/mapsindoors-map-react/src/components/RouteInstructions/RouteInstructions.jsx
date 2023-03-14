@@ -13,17 +13,21 @@ import { ReactComponent as ArrowLeft } from '../../assets/arrow-left.svg';
  * @returns
  */
 function ProgressSteps({ steps, onNextStep, onPreviousStep }) {
-    const [activeStep, setActiveStep] = useState(1)
+    const [previous, setPreviousStep] = useState();
+    const [activeStep, setActiveStep] = useState(0)
 
     function nextStep() {
+        setPreviousStep(steps[activeStep])
         setActiveStep(activeStep + 1);
         onNextStep();
     }
 
     function previousStep() {
+        setPreviousStep(steps[activeStep - 2])
         setActiveStep(activeStep - 1);
         onPreviousStep();
     }
+
 
     const translations = {
         walk: 'Walk',
@@ -64,29 +68,29 @@ function ProgressSteps({ steps, onNextStep, onPreviousStep }) {
             {steps &&
                 <>
                     <mi-route-instructions-step
-                        step={JSON.stringify(steps.find(step => step.id === (activeStep - 1)))}
-                        key={activeStep}
+                        step={JSON.stringify(steps[activeStep])}
                         translations={JSON.stringify(translations)}
-                        hideIndoorSubsteps={false}
-                        fromRouteContext='Outside'>
+                        hide-indoor-substeps={false}
+                        from-travel-mode={previous?.travel_mode ?? ''}
+                        from-route-context={previous?.route_context ?? steps[activeStep]?.start_context.building.buildingInfo.name ?? "I don't know what to do."}>
                     </mi-route-instructions-step>
                     <div className='route-instructions__progress'>
-                        {steps.map(({ id }) => (
-                            <div className={`route-instructions__step ${(activeStep - 1) >= id ? 'completed' : ''}`} key={id}>
+                        {steps.map((_, index) => (
+                            <div className={`route-instructions__step ${(activeStep) >= index ? 'completed' : ''}`} key={index}>
                                 <div className="step-counter"></div>
                             </div>
                         ))}
                     </div>
                     <div className='route-instructions__actions'>
-                        <button className={`route-instructions__button ${activeStep === 1 ? 'disabled' : ''}`}
+                        <button className={`route-instructions__button ${activeStep === 0 ? 'disabled' : ''}`}
                             onClick={() => previousStep()}
-                            disabled={activeStep === 1}>
+                            disabled={activeStep === 0}>
                             <ArrowLeft></ArrowLeft>
                         </button>
-                        <div className='route-instructions__overview'>Step {activeStep} of {steps.length}</div>
-                        <button className={`route-instructions__button ${activeStep === steps.length ? 'disabled' : ''}`}
+                        <div className='route-instructions__overview'>Step {activeStep + 1} of {steps.length}</div>
+                        <button className={`route-instructions__button ${activeStep === steps.length - 1 ? 'disabled' : ''}`}
                             onClick={() => nextStep()}
-                            disabled={activeStep === steps.length}>
+                            disabled={activeStep === steps.length - 1}>
                             <ArrowRight></ArrowRight>
                         </button>
                     </div>

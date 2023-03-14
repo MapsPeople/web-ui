@@ -28,6 +28,7 @@ function Directions({ isOpen, onBack, directions }) {
             });
 
             directionsRenderer.setRoute(directions.directionsResult);
+            directionsRenderer.setStepIndex(0);
         }
 
     }, [isOpen, directions, mapsIndoorsInstance]);
