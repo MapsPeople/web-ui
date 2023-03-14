@@ -36,6 +36,12 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
 
     const [hasInputFocus, setHasInputFocus] = useState(true);
 
+    /** Check if a route has been found */
+    const [hasFoundRoute, setHasFoundRoute] = useState(true);
+
+    /** Check if the user has internet connection */
+    const [isOnline, setIsOnline] = useState(navigator.onLine);
+
     /** Holds search results given from a search field. */
     const [searchResults, setSearchResults] = useState([]);
 
@@ -142,11 +148,35 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                     directionsResult
                 });
             }, () => {
+                setHasFoundRoute(false);
                 // FIXME: No route found or other request errors.
             });
 
         }
     }, [originLocation, destinationLocation, directionsService, accessibilityOn]);
+
+
+    /**
+     * Check the user's connectivity to the internet
+     */
+    useEffect(() => {
+        // Update any status changes
+        const handleStatusChange = () => {
+            setIsOnline(navigator.onLine);
+        };
+
+        // Listen to the online status
+        window.addEventListener('online', handleStatusChange);
+
+        // Listen to the offline status
+        window.addEventListener('offline', handleStatusChange);
+
+        // Remove event listeners
+        return () => {
+            window.removeEventListener('online', handleStatusChange);
+            window.removeEventListener('offline', handleStatusChange);
+        };
+    }, [isOnline]);
 
     return (
         <div className="wayfinding">
@@ -179,15 +209,22 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                     </label>
                 </div>
             </div>
+            {!isOnline && <p className="wayfinding__error">No internet connection</p>}
+            {!hasFoundRoute && <p className="wayfinding__error">No route has been found</p>}
             {(!originLocation || !destinationLocation) && <div className="wayfinding__scrollable" {...scrollableContentSwipePrevent}>
                 <div className="wayfinding__results">
-                    {searchResults.map(location => <ListItemLocation key={location.id} location={location} locationClicked={e => locationClickHandler(e)} />)}
+                    {searchResults.map(location =>
+                        <ListItemLocation
+                            key={location.id}
+                            location={location}
+                            locationClicked={e => locationClickHandler(e)} />
+                    )}
                 </div>
             </div>
             }
 
             {/* Fixme: Add functionality to the accessibility feature. */}
-            {!hasInputFocus && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
+            {hasFoundRoute && isOnline && !hasInputFocus && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
                 <div className="wayfinding__accessibility">
                     <input className="mi-toggle" type="checkbox" checked={accessibilityOn} onChange={e => setAccessibilityOn(e.target.checked)} />
                     <div>Accessibility</div>
