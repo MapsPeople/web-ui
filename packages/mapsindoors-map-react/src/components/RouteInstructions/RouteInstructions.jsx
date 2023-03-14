@@ -72,7 +72,7 @@ function ProgressSteps({ steps, onNextStep, onPreviousStep }) {
                         translations={JSON.stringify(translations)}
                         hide-indoor-substeps={false}
                         from-travel-mode={previous?.travel_mode ?? ''}
-                        from-route-context={previous?.route_context ?? steps[activeStep]?.start_context.building.buildingInfo.name ?? "I don't know what to do."}>
+                        from-route-context={previous?.route_context ?? steps[activeStep]?.start_context.building.buildingInfo.name ?? ""}>
                     </mi-route-instructions-step>
                     <div className='route-instructions__progress'>
                         {steps.map((_, index) => (
@@ -82,13 +82,13 @@ function ProgressSteps({ steps, onNextStep, onPreviousStep }) {
                         ))}
                     </div>
                     <div className='route-instructions__actions'>
-                        <button className={`route-instructions__button ${activeStep === 0 ? 'disabled' : ''}`}
+                        <button className='route-instructions__button'
                             onClick={() => previousStep()}
                             disabled={activeStep === 0}>
                             <ArrowLeft></ArrowLeft>
                         </button>
                         <div className='route-instructions__overview'>Step {activeStep + 1} of {steps.length}</div>
-                        <button className={`route-instructions__button ${activeStep === steps.length - 1 ? 'disabled' : ''}`}
+                        <button className='route-instructions__button'
                             onClick={() => nextStep()}
                             disabled={activeStep === steps.length - 1}>
                             <ArrowRight></ArrowRight>

@@ -17,7 +17,7 @@
     .step-counter {
       z-index: 100;
       width: var(--spacing-x-small);
-      height:  var(--spacing-x-small);
+      height: var(--spacing-x-small);
       border-radius: 50%;
       background: var(--color-gray-30);
     }
@@ -68,21 +68,22 @@
   }
 
   &__overview {
-    color: var(--color-gray-60);;
+    color: var(--color-gray-60);
   }
 
   &__button {
     background: none;
     cursor: pointer;
     border: none;
+  }
 
-    &.disabled {
-      cursor: not-allowed;
-      opacity: 0.3;
+  button:disabled,
+  button[disabled] {
+    cursor: not-allowed;
+    opacity: 0.3;
+  }
+
+    mi-route-instructions-step {
+      padding: var(--spacing-medium) 0;
     }
   }
-
-  mi-route-instructions-step {
-    padding: var(--spacing-large) 0;
-  }
-}
