@@ -45,8 +45,9 @@ function Directions({ isOpen, onBack, directions }) {
     */
     function getBottomSheetHeight() {
         const bottomSheet = document.querySelector('.sheet--active');
-        // Subtract the top padding from the inner height of the window.
-        return window.innerHeight - bottomSheet.offsetTop;
+        const mapContainer = document.querySelector('.mapsindoors-map');
+        // Subtract the top padding from the height of the map container element.
+        return mapContainer.offsetHeight - bottomSheet.offsetTop;
     }
 
     /**
@@ -54,8 +55,9 @@ function Directions({ isOpen, onBack, directions }) {
     */
     function getSidebarWidth() {
         const sidebar = document.querySelector('.modal--open');
-        // Subtract the sum of the sidebar's width and the left padding from the inner width of the window.
-        return window.innerWidth - (sidebar.offsetWidth + sidebar.offsetLeft);
+        const mapContainer = document.querySelector('.mapsindoors-map');
+        // Subtract the sum of the sidebar's width and the left padding from the width of the map container element.
+        return mapContainer.offsetWidth - (sidebar.offsetWidth + sidebar.offsetLeft);
     }
 
     return (
