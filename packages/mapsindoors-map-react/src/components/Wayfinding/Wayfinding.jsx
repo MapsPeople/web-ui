@@ -139,14 +139,24 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      */
     function onSearchClicked(searchFieldIdentifier) {
         setActiveSearchField(searchFieldIdentifier);
+        // console.log('clicked', activeSearchField);
         // setIsSearchTriggered(true);
     }
 
     /**
      * Handle cleared events on the search field.
+     *
+     * @param {string} searchFieldIdentifier
      */
-    function onSearchCleared() {
-        setToFieldDisplayText('');
+    function onSearchCleared(searchFieldIdentifier) {
+        setActiveSearchField(searchFieldIdentifier);
+        if (activeSearchField === searchFieldItentifiers.TO) {
+            setToFieldDisplayText('');
+            setDestinationLocation();
+        } else if (activeSearchField === searchFieldItentifiers.FROM) {
+            setFromFieldDisplayText('');
+            setOriginLocation();
+        }
     }
 
     /**
@@ -199,7 +209,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                             displayText={toFieldDisplayText}
                             triggerSearch={isSearchTriggered}
                             clicked={() => onSearchClicked(searchFieldItentifiers.TO)}
-                            cleared={() => onSearchCleared()}
+                            cleared={() => onSearchCleared(searchFieldItentifiers.TO)}
                         />
                     </label>
                     <label className="wayfinding__label">
@@ -212,7 +222,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                             displayText={fromFieldDisplayText}
                             triggerSearch={isSearchTriggered}
                             clicked={() => onSearchClicked(searchFieldItentifiers.FROM)}
-                            cleared={() => onSearchCleared()}
+                            cleared={() => onSearchCleared(searchFieldItentifiers.FROM)}
 
                         />
                     </label>
