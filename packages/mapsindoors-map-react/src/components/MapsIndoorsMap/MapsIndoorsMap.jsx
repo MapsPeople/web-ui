@@ -46,6 +46,18 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
         }
     }
 
+    /**
+     * Show the floor selector.
+     */
+    function showFloorSelector() {
+        if (hasFloorSelector === false) {
+            setHasFloorSelector(true);
+        }
+    }
+
+    /**
+     * Hide the floor selector when the directions are open.
+     */
     function hideFloorSelector() {
         if (hasFloorSelector === true) {
             setHasFloorSelector(false);
@@ -129,7 +141,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
 
     return (<MapsIndoorsContext.Provider value={mapsIndoorsInstance}>
         <DirectionsServiceContext.Provider value={directionsService}>
-            <div className={`mapsindoors-map ${!hasFloorSelector ? 'hide' : ''}`}>
+            <div className={`mapsindoors-map ${!hasFloorSelector ? 'mapsindoors-map__floor-selector--hide' : 'mapsindoors-map__floor-selector--show'}`}>
                 {!isMapReady && <SplashScreen logo={logo} primaryColor={primaryColor} />}
                 {venues.length > 1 && <VenueSelector onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)} venues={venues} currentVenueName={currentVenueName} />}
                 {isMapReady && isDesktop
@@ -140,6 +152,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                         currentCategories={currentCategories}
                         onClose={() => setCurrentLocation(null)}
                         onLocationsFiltered={(locations) => setFilteredLocations(locations)}
+                        onHideFloorSelector={() => hideFloorSelector()}
+                        onShowFloorSelector={() => showFloorSelector()}
                     />
                     :
                     <BottomSheet
@@ -147,7 +161,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                         setCurrentLocation={setCurrentLocation}
                         currentCategories={currentCategories}
                         onLocationsFiltered={(locations) => setFilteredLocations(locations)}
-                        onDirectionsActive={() => hideFloorSelector()}
+                        onHideFloorSelector={() => hideFloorSelector()}
+                        onShowFloorSelector={() => showFloorSelector()}
                     />
                 }
                 <Map
