@@ -34,7 +34,6 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
         setActivePage(currentLocation ? VIEWS.LOCATION_DETAILS : VIEWS.SEARCH);
     }, [currentLocation]);
 
-
     /**
      * Set the active page and trigger the visibility of the floor selector to be shown.
      *

@@ -44,7 +44,6 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
         setActiveBottomSheet(currentLocation ? BOTTOM_SHEETS.LOCATION_DETAILS : BOTTOM_SHEETS.SEARCH);
     }, [currentLocation]);
 
-
     /**
      * Set the active bottom sheet and trigger the visibility of the floor selector to be shown.
      *
