@@ -3,7 +3,6 @@ import './Search.scss';
 import { useRef, useEffect, useState } from 'react';
 import { snapPoints } from '../../constants/snapPoints';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
-import ProgressSteps from "../RouteInstructions/RouteInstructions";
 
 /** Initialize the MapsIndoors instance. */
 const mapsindoors = window.mapsindoors;
@@ -216,8 +215,6 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
                 </div>
                 <div ref={searchResultsRef} className="search__results"></div>
             </div>
-            {/* <ProgressSteps /> */}
-            <div ref={searchResultsRef} className="search__results"></div>
         </div>
     )
 }
