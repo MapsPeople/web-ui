@@ -32,6 +32,8 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     /** Referencing the accessibility details DOM element */
     const detailsRef = useRef();
 
+    const searchResultsRef = useRef();
+
     const directionsService = useContext(DirectionsServiceContext);
 
     const [hasInputFocus, setHasInputFocus] = useState(true);
@@ -41,6 +43,8 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
 
     /** Check if the user has internet connection */
     const [isOnline, setIsOnline] = useState(navigator.onLine);
+
+    const [hasError, setHasError] = useState(false);
 
     /** Holds search results given from a search field. */
     const [searchResults, setSearchResults] = useState([]);
@@ -79,6 +83,13 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
         setHasInputFocus(false);
     }
 
+    /** Display message when no results have been found. */
+    function showNotFoundMessage() {
+        const notFoundMessage = document.createElement('p');
+        notFoundMessage.innerHTML = "Nothing was found";
+        searchResultsRef.current.appendChild(notFoundMessage);
+    }
+
     /**
      * Handle incoming search results from one of the search fields.
      *
@@ -87,7 +98,12 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      */
     function searchResultsReceived(results, searchFieldIdentifier) {
         setActiveSearchField(searchFieldIdentifier);
-        setSearchResults(results);
+
+        if (results.length === 0) {
+            showNotFoundMessage()
+        } else {
+            setSearchResults(results);
+        }
     }
 
     /**
@@ -132,21 +148,32 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                 destination: getLocationPoint(destinationLocation),
                 avoidStairs: accessibilityOn
             }).then(directionsResult => {
-                // Calculate total distance and time
-                // FIXME: Can we get a "faulty" response with no legs? If so, this will probably crash.
-                const totalDistance = directionsResult.legs.reduce((accumulator, current) => accumulator + current.distance.value, 0);
-                const totalTime = directionsResult.legs.reduce((accumulator, current) => accumulator + current.duration.value, 0);
+                if (directionsResult) {
+                    // Calculate total distance and time
+                    // FIXME: Can we get a "faulty" response with no legs? If so, this will probably crash.
+                    if (directionsResult.legs) {
+                        const totalDistance = directionsResult.legs.reduce((accumulator, current) => accumulator + current.distance.value, 0);
+                        const totalTime = directionsResult.legs.reduce((accumulator, current) => accumulator + current.duration.value, 0);
 
-                setTotalDistance(totalDistance);
-                setTotalTime(totalTime);
+                        setTotalDistance(totalDistance);
+                        setTotalTime(totalTime);
 
-                onDirections({
-                    originLocation,
-                    destinationLocation,
-                    totalDistance,
-                    totalTime,
-                    directionsResult
-                });
+                        onDirections({
+                            originLocation,
+                            destinationLocation,
+                            totalDistance,
+                            totalTime,
+                            directionsResult
+                        });
+                    } else {
+                        // FIXME: Handle error message.
+                        setHasError(true);
+                    }
+                } else {
+                    // FIXME: Handle error message.
+                    setHasError(true);
+                }
+
             }, () => {
                 setHasFoundRoute(false);
                 // FIXME: No route found or other request errors.
@@ -211,6 +238,9 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
             </div>
             {!isOnline && <p className="wayfinding__error">No internet connection</p>}
             {!hasFoundRoute && <p className="wayfinding__error">No route has been found</p>}
+			{/* Fixme: Implement correct error message. */}
+            {hasError && <p className="wayfinding__error">Implement error message</p>}
+
             {(!originLocation || !destinationLocation) && <div className="wayfinding__scrollable" {...scrollableContentSwipePrevent}>
                 <div className="wayfinding__results">
                     {searchResults.map(location =>
@@ -224,7 +254,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
             }
 
             {/* Fixme: Add functionality to the accessibility feature. */}
-            {hasFoundRoute && isOnline && !hasInputFocus && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
+            {!hasError && hasFoundRoute && isOnline && !hasInputFocus && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
                 <div className="wayfinding__accessibility">
                     <input className="mi-toggle" type="checkbox" checked={accessibilityOn} onChange={e => setAccessibilityOn(e.target.checked)} />
                     <div>Accessibility</div>
