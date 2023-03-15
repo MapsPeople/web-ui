@@ -115,7 +115,9 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
             setDestinationLocation(location);
         }
 
-        setActiveSearchField(searchFieldItentifiers.FROM)
+        // setActiveSearchField(searchFieldItentifiers.FROM)
+
+        // console.log('1 active', activeSearchField)
 
     }, [location]);
 
@@ -137,9 +139,14 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      */
     function onSearchClicked(searchFieldIdentifier) {
         setActiveSearchField(searchFieldIdentifier);
-        console.log('active',activeSearchField);
-        setIsSearchTriggered(true);
+        console.log('hi', searchFieldIdentifier)
+        // setIsSearchTriggered(true);
     }
+
+    function onSearchCleared() {
+        setToFieldDisplayText('');
+    }
+
     /**
      * When both origin location and destination location are selected, call the MapsIndoors SDK
      * to get information about the route.
@@ -184,24 +191,28 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                     <label className="wayfinding__label">
                         TO
                         <SearchField
+                            // hasInputFocus={isActive}
                             mapsindoors={true}
                             placeholder="Search by name, category, building..."
                             results={locations => searchResultsReceived(locations, searchFieldItentifiers.TO)}
                             displayText={toFieldDisplayText}
                             triggerSearch={isSearchTriggered}
                             clicked={() => onSearchClicked(searchFieldItentifiers.TO)}
+                            cleared={() => onSearchCleared()}
                         />
                     </label>
                     <label className="wayfinding__label">
                         FROM
                         <SearchField
-                            hasInputFocus={isActive}
+                            // hasInputFocus={isActive}
                             mapsindoors={true}
                             placeholder="Search by name, category, buildings..."
                             results={locations => searchResultsReceived(locations, searchFieldItentifiers.FROM)}
                             displayText={fromFieldDisplayText}
                             triggerSearch={isSearchTriggered}
                             clicked={() => onSearchClicked(searchFieldItentifiers.FROM)}
+                            cleared={() => onSearchCleared()}
+
                         />
                     </label>
                 </div>
