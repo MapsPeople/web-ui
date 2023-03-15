@@ -39,10 +39,10 @@ function SearchField({ placeholder, mapsindoors, results, clicked, cleared, clea
             current.focusInput();
         }
 
-        if (triggerSearch && current.value) {
-            current.triggerSearch();
-            console.log('search triggered');
-        }
+        // if (triggerSearch) {
+        //     current.triggerSearch();
+        //     console.log('search triggered');
+        // }
 
         current.addEventListener('results', searchResultsHandler);
         current.addEventListener('click', clicked);
