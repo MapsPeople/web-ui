@@ -41,6 +41,8 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     /** Holds search results given from a search field. */
     const [searchResults, setSearchResults] = useState([]);
 
+    const [hasError, setHasError] = useState(false);
+
     /** Variable for determining the active search field */
     const [activeSearchField, setActiveSearchField] = useState();
 
@@ -158,10 +160,12 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                             directionsResult
                         });
                     } else {
-                        console.log('no legs');
+                        // FIXME: Handle error message.
+                        setHasError(true);
                     }
                 } else {
-                    console.log('no directions result')
+                    // FIXME: Handle error message.
+                    setHasError(true);
                 }
 
             }, () => {
@@ -202,6 +206,8 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                     </label>
                 </div>
             </div>
+            {/* Fixme: Implement correct error message. */}
+            {hasError && <p className="wayfinding__error">Implement error message</p>}
             {(!originLocation || !destinationLocation) && <div className="wayfinding__scrollable" {...scrollableContentSwipePrevent}>
                 <div className="wayfinding__results" ref={searchResultsRef}>
                     {searchResults.map(location => <ListItemLocation key={location.id} location={location} locationClicked={e => locationClickHandler(e)} />)}
@@ -210,7 +216,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
             }
 
             {/* Fixme: Add functionality to the accessibility feature. */}
-            {!hasInputFocus && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
+            {!hasError && !hasInputFocus && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
                 <div className="wayfinding__accessibility">
                     <input className="mi-toggle" type="checkbox" checked={accessibilityOn} onChange={e => setAccessibilityOn(e.target.checked)} />
                     <div>Accessibility</div>
