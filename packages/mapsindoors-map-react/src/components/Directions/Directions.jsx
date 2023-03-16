@@ -25,7 +25,7 @@ function Directions({ isOpen, onBack, directions }) {
             setTotalDistance(directions.totalDistance);
             setTotalTime(directions.totalTime);
 
-   			// 6 percent of smallest of viewport height or width
+            // 6 percent of smallest of viewport height or width
             const padding = Math.min(window.innerHeight, window.innerWidth) * 0.06;
 
 
@@ -47,13 +47,13 @@ function Directions({ isOpen, onBack, directions }) {
 
     }, [isOpen, directions, mapsIndoorsInstance]);
 
-  /**
+    /**
      * Close the directions and set the visibility of the blue route to false.
      */
     function onDirectionsClosed() {
         directionsRenderer.setOptions({ mapsIndoors: null, visible: false });
         onBack();
-	}
+    }
 
     /**
      * Transform the step in legs to a flat array of steps.
@@ -99,9 +99,9 @@ function Directions({ isOpen, onBack, directions }) {
         }
     }
 
- /**
-     * Get the height of the bottom sheet in pixels.
-    */
+    /**
+        * Get the height of the bottom sheet in pixels.
+       */
     function getBottomSheetHeight() {
         const bottomSheet = document.querySelector('.sheet--active');
         const mapContainer = document.querySelector('.mapsindoors-map');
