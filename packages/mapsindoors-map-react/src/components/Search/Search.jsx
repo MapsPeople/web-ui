@@ -7,6 +7,9 @@ import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 /** Initialize the MapsIndoors instance. */
 const mapsindoors = window.mapsindoors;
 
+/** Initialize the MapsIndoors class. */
+const mapsIndoorsInstance = new mapsindoors.MapsIndoors();
+
 /**
  * Private variable used inside an event listener for a custom event from a web componenent.
  * Implemented due to the impossibility to use the React useState hook.
@@ -64,6 +67,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
      */
     function addSearchResults(result) {
         const listItem = document.createElement('mi-list-item-location');
+        result.properties.imageURL = mapsIndoorsInstance.getDisplayRule(result).icon;
         listItem.location = result;
         searchResultsRef.current.appendChild(listItem);
         listItem.addEventListener('locationClicked', resultClickedHandler);
