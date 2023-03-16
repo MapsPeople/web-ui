@@ -47,6 +47,14 @@ function Directions({ isOpen, onBack, directions }) {
 
     }, [isOpen, directions, mapsIndoorsInstance]);
 
+  /**
+     * Close the directions and set the visibility of the blue route to false.
+     */
+    function onDirectionsClosed() {
+        directionsRenderer.setOptions({ mapsIndoors: null, visible: false });
+        onBack();
+	}
+
     /**
      * Transform the step in legs to a flat array of steps.
      */
@@ -115,7 +123,7 @@ function Directions({ isOpen, onBack, directions }) {
     return (
         <div className="directions">
             <div className="directions__details">
-                <button className="directions__close" onClick={() => onBack()} aria-label="Close">
+                <button className="directions__close" onClick={() => onDirectionsClosed()} aria-label="Close">
                     <CloseIcon />
                 </button>
                 <div className="directions__locations">
