@@ -66,7 +66,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
 
         // Loop through the locations which have categories and create a set of unique categories.
         locationCategories.forEach(item => {
-            Object.keys(item).forEach(value => uniqueCategories.add(value));
+            Object.values(item).forEach(value => uniqueCategories.add(value));
         });
 
         setCurrentCategories(uniqueCategories);
