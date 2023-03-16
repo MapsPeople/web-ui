@@ -116,9 +116,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
         }
 
         setActiveSearchField(searchFieldItentifiers.FROM)
-
-        // console.log('1 active', activeSearchField)
-
     }, [location]);
 
     /**
@@ -139,8 +136,19 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      */
     function onSearchClicked(searchFieldIdentifier) {
         setActiveSearchField(searchFieldIdentifier);
-        // console.log('clicked', activeSearchField);
-        // setIsSearchTriggered(true);
+
+        if (activeSearchField === searchFieldItentifiers.TO) {
+            if (toFieldDisplayText) {
+                console.log('to display text', toFieldDisplayText);
+                setIsSearchTriggered(true);
+            }
+        } else if (activeSearchField === searchFieldItentifiers.FROM) {
+            if (fromFieldDisplayText) {
+                console.log('from field display text', fromFieldDisplayText)
+                setIsSearchTriggered(true);
+            }
+        }
+
     }
 
     /**
@@ -215,7 +223,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                     <label className="wayfinding__label">
                         FROM
                         <SearchField
-                            // hasInputFocus={isActive}
+                            hasInputFocus={isActive}
                             mapsindoors={true}
                             placeholder="Search by name, category, buildings..."
                             results={locations => searchResultsReceived(locations, searchFieldItentifiers.FROM)}
