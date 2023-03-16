@@ -44,7 +44,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
 
     const bottomSheets = [
         <Sheet
-            minHeight="350"
+            minHeight="144"
             preferredSizeSnapPoint={searchSheetSize}
             isOpen={activeBottomSheet === BOTTOM_SHEETS.SEARCH}
             key="A">
