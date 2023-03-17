@@ -6,7 +6,6 @@ module.exports = {
             add: [ /* ... */],
             remove: [ /* ... */],
         },
-        configure: { /* ... */ },
         configure: (webpackConfig, { env, paths }) => {
             /* ... */
             return webpackConfig;
