@@ -4,7 +4,7 @@ import { MapsIndoorsContext } from '../../MapsIndoorsContext';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
 import { ReactComponent as WalkingIcon } from '../../assets/walking.svg';
-import ProgressSteps from "../RouteInstructions/RouteInstructions";
+import RouteInstructions from "../RouteInstructions/RouteInstructions";
 import useMediaQuery from '../../hooks/useMediaQuery';
 
 const mapsindoors = window.mapsindoors;
@@ -42,6 +42,8 @@ function Directions({ isOpen, onBack, directions }) {
             });
 
             directionsRenderer.setRoute(directions.directionsResult);
+
+            // Set the step index to be 0 in order to display the correct instruction on the map.
             directionsRenderer.setStepIndex(0);
         }
 
@@ -63,16 +65,11 @@ function Directions({ isOpen, onBack, directions }) {
             return [];
         }
 
-        let currentIndex = 0;
-
         return directions.directionsResult.legs.reduce((accummulator, leg, legIndex) => {
             for (const stepIndex in leg.steps) {
                 const step = leg.steps[stepIndex];
                 step.originalLegIndex = legIndex;
                 step.originalStepIndex = parseInt(stepIndex);
-                // Assign each step an id for identifying the active step
-                step.id = currentIndex;
-                currentIndex += 1;
 
                 accummulator.push(step);
             }
@@ -156,11 +153,11 @@ function Directions({ isOpen, onBack, directions }) {
                 </div>
                 <hr></hr>
                 <div className="directions__steps">
-                    <ProgressSteps
+                    <RouteInstructions
                         steps={getRouteSteps()}
                         onNextStep={() => onNext()}
                         onPreviousStep={() => onPrevious()}>
-                    </ProgressSteps>
+                    </RouteInstructions>
                 </div>
             </div>
         </div>
