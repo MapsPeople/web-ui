@@ -2,7 +2,9 @@
   "name": "mapsindoors-map-react",
   "version": "0.1.0",
   "private": true,
+  "homepage": "3d-mapsindoors-demo/",
   "dependencies": {
+    "@craco/craco": "^7.1.0",
     "@googlemaps/js-api-loader": "^1.15.1",
     "@mapsindoors/components": "*",
     "@mapsindoors/css": "^3.0.0",
@@ -17,12 +19,13 @@
     "react-swipeable": "^7.0.0",
     "react-transition-group": "^4.4.5",
     "sass": "^1.57.1",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "worker-loader": "^3.0.8"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -35,7 +38,11 @@
     "production": [
       ">0.2%",
       "not dead",
-      "not op_mini all"
+      "not op_mini all",
+      "not safari < 10",
+      "not chrome < 51",
+      "not android < 5",
+      "not ie < 12"
     ],
     "development": [
       "last 1 chrome version",
