@@ -5,6 +5,8 @@
   <meta charset="utf-8" />
   <link rel="icon" href="%PUBLIC_URL%/favicon.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src='https://api.mapbox.com/mapbox-gl-js/v2.6.0/mapbox-gl.js'></script>
+  <link href='https://api.mapbox.com/mapbox-gl-js/v2.6.0/mapbox-gl.css' rel='stylesheet' />
   <meta name="theme-color" content="#005655" />
   <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
   <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
@@ -16,13 +18,23 @@
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="root"></div>
   <script>
+    const appSettings = {
+      apiKey: '04a3058f8c0947d6bd781e35', // MapspeopleDemo_WhiteMap, solution id 5a03e04fcfaf41a4adc4e0c6
+    };
+
+    const accessToken = 'pk.eyJ1IjoiZW5lcHBlciIsImEiOiJjazVzNjB5a3EwODd0M2Ztb3FjYmZmbzJhIn0._fo_iTl7ZHPrl634-F2qYg';
+
+    mapsindoors.MapsIndoors.setMapsIndoorsApiKey(appSettings.apiKey);
+
     const mapView = new mapsindoors.mapView.MapboxView({
+      accessToken: accessToken,
       element: document.getElementById('root')
     });
 
     const mi = new mapsindoors.MapsIndoors({
       mapView: mapView,
     });
+
     mi.addListener('ready', () => {
       mi.setDisplayRule('MI_BUILDING_OUTLINE', { visible: false })
     })
