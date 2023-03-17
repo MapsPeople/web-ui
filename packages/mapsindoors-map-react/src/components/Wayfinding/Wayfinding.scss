@@ -44,14 +44,7 @@
 
     &__details {
         padding: var(--spacing-medium);
-
-        // &--show {
-        //     display: block;
-        // }
-
-        // &--hide {
-        //     display: none;
-        // }
+        overflow: scroll;
     }
 
     &__results {
