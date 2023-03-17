@@ -12,23 +12,35 @@ import { ReactComponent as ArrowLeft } from '../../assets/arrow-left.svg';
  * @param {function} props.onPreviousStep - Function handling the navigation to the previous step.
  * @returns
  */
-function ProgressSteps({ steps, onNextStep, onPreviousStep }) {
-    const [previous, setPreviousStep] = useState();
+function RouteInstructions({ steps, onNextStep, onPreviousStep }) {
+    /** Referencing the previous step of each active step */
+    const [previous, setPrevious] = useState();
+
     const [activeStep, setActiveStep] = useState(0)
 
+    /**
+     * Navigate to the next step.
+     * Set the previous step in order to show the correct
+     * instruction and travel mode.
+     */
     function nextStep() {
-        setPreviousStep(steps[activeStep])
+        setPrevious(steps[activeStep])
         setActiveStep(activeStep + 1);
         onNextStep();
     }
 
+    /**
+     * Navigate to the previous step.
+     * Set the previous step in order to show the correct
+     * instruction and travel mode.
+     */
     function previousStep() {
-        setPreviousStep(steps[activeStep - 2])
+        setPrevious(steps[activeStep - 2])
         setActiveStep(activeStep - 1);
         onPreviousStep();
     }
 
-
+    // Translations required for the mi-route-instructions-step component
     const translations = {
         walk: 'Walk',
         bike: 'Bike',
@@ -70,9 +82,8 @@ function ProgressSteps({ steps, onNextStep, onPreviousStep }) {
                     <mi-route-instructions-step
                         step={JSON.stringify(steps[activeStep])}
                         translations={JSON.stringify(translations)}
-                        hide-indoor-substeps={false}
                         from-travel-mode={previous?.travel_mode ?? ''}
-                        from-route-context={previous?.route_context ?? steps[activeStep]?.start_context.building.buildingInfo.name ?? ""}>
+                        from-route-context={previous?.route_context ?? steps[activeStep]?.start_context.building.buildingInfo.name ?? ''}>
                     </mi-route-instructions-step>
                     <div className='route-instructions__progress'>
                         {steps.map((_, index) => (
@@ -100,4 +111,4 @@ function ProgressSteps({ steps, onNextStep, onPreviousStep }) {
     )
 }
 
-export default ProgressSteps
+export default RouteInstructions
