@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useState } from 'react';
 import './MapsIndoorsMap.scss';
-import Map from "../Map/Map";
+import MIMap from "../Map/Map";
 import SplashScreen from '../SplashScreen/SplashScreen';
 import VenueSelector from '../VenueSelector/VenueSelector';
 import BottomSheet from '../BottomSheet/BottomSheet';
@@ -29,7 +29,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [venues, setVenues] = useState([]);
     const [currentVenueName, setCurrentVenueName] = useState();
     const [currentLocation, setCurrentLocation] = useState();
-    const [currentCategories, setCurrentCategories] = useState(new Set());
+    const [currentCategories, setCurrentCategories] = useState(new Map());
     const [filteredLocations, setFilteredLocations] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const [directionsService, setDirectionsService] = useState();
@@ -65,29 +65,25 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     }
 
     /**
-     * Get all the categories that are in use.
-     * Filter through them to get the unique categories.
+     * Get the unique categories and the count of the categories with locations associated.
      *
      * @param {array} locationsResult
      */
     function getCategories(locationsResult) {
-        // All the locations that have categories.
-        let locationCategories = [];
+        const uniqueCategories = locationsResult
+            // Flatten the locations result to get a new array of locations that have categories.
+            .flatMap(location => Object.values(location.properties.categories ?? {}))
 
-        //The unique categories for all the locations.
-        let uniqueCategories = new Set();
-
-        // Loop through all the locations and only select the ones that have categories.
-        locationsResult.forEach(l => {
-            if (Object.keys(l.properties.categories).length > 0) {
-                locationCategories.push(l.properties.categories)
-            }
-        });
-
-        // Loop through the locations which have categories and create a set of unique categories.
-        locationCategories.forEach(item => {
-            Object.values(item).forEach(value => uniqueCategories.add(value));
-        });
+            // Reduce the array of elements in order to get a new Map with elements and the count of categories with locations associated.
+            .reduce((categories, category) => {
+                if (categories.has(category)) {
+                    let count = categories.get(category);
+                    categories.set(category, ++count);
+                } else {
+                    categories.set(category, 1);
+                }
+                return categories;
+            }, new Map());
 
         setCurrentCategories(uniqueCategories);
     }
@@ -165,7 +161,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                         onShowFloorSelector={() => showFloorSelector()}
                     />
                 }
-                <Map
+                <MIMap
                     apiKey={apiKey}
                     gmApiKey={gmApiKey}
                     mapboxAccessToken={mapboxAccessToken}
