@@ -81,6 +81,8 @@ function Map({ gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, 
             mapView
         });
 
+        miInstance.setDisplayRule('MI_BUILDING_OUTLINE', {visible: false});
+
         miInstance.on('click', location => onLocationClick(location));
 
         setMapsIndoorsInstance(miInstance);
