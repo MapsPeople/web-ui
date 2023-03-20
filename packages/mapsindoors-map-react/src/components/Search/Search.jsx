@@ -18,7 +18,7 @@ let _selectedCategory;
  *
  * @param {Object} props
  * @param {function} props.onLocationClick - Function that is run when a location from the search results is clicked.
- * @param {set} props.categories - All the unique categories that users can filter through.
+ * @param {Map<string, number>} props.categories - All the unique categories that users can filter through.
  * @param {function} props.onLocationsFiltered - Function that is run when the user performs a filter through any category.
  * @param {function} props.onSetSize - Callback that is fired when the search field takes focus.
  * @returns
@@ -205,12 +205,15 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
             <mi-search ref={searchFieldRef} placeholder="Search by name, category, building..." mapsindoors="true"></mi-search>
             <div className="search__scrollable prevent-scroll" {...scrollableContentSwipePrevent}>
                 <div ref={categoriesListRef} className="search__categories">
-                    {categories && Array.from(categories).map(category =>
-                        <mi-chip content={category}
-                            active={selectedCategory === category}
-                            onClick={() => categoryClicked(category)}
-                            key={category}>
-                        </mi-chip>)
+                    {/* Sort the categories with most locations associated.*/}
+                    {categories && Array.from(categories)
+                        .sort((a, b) => b[1] - a[1])
+                        .map(([category]) =>
+                            <mi-chip content={category}
+                                active={selectedCategory === category}
+                                onClick={() => categoryClicked(category)}
+                                key={category}>
+                            </mi-chip>)
                     }
                 </div>
                 <div ref={searchResultsRef} className="search__results"></div>
