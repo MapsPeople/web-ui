@@ -32,7 +32,6 @@ function Directions({ isOpen, onBack, directions }) {
             // Set the step index to be 0 in order to display the correct instruction on the map.
             directionsRenderer.setStepIndex(0);
         }
-
     }, [isOpen, directions, mapsIndoorsInstance]);
 
     /**
@@ -52,7 +51,6 @@ function Directions({ isOpen, onBack, directions }) {
                 accummulator.push(step);
             }
             return accummulator;
-
         }, []);
     }
 
@@ -112,6 +110,7 @@ function Directions({ isOpen, onBack, directions }) {
                 <div className="directions__steps">
                     <RouteInstructions
                         steps={getRouteSteps()}
+                        originLocation={directions?.originLocation}
                         onNextStep={() => onNext()}
                         onPreviousStep={() => onPrevious()}>
                     </RouteInstructions>

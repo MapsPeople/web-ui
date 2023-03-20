@@ -12,7 +12,7 @@ import { ReactComponent as ArrowLeft } from '../../assets/arrow-left.svg';
  * @param {function} props.onPreviousStep - Function handling the navigation to the previous step.
  * @returns
  */
-function RouteInstructions({ steps, onNextStep, onPreviousStep }) {
+function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }) {
     /** Referencing the previous step of each active step */
     const [previous, setPrevious] = useState();
 
@@ -83,7 +83,7 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep }) {
                         step={JSON.stringify(steps[activeStep])}
                         translations={JSON.stringify(translations)}
                         from-travel-mode={previous?.travel_mode ?? ''}
-                        from-route-context={previous?.route_context ?? steps[activeStep]?.start_context.building.buildingInfo.name ?? ''}>
+                        from-route-context={previous?.route_context ?? originLocation?.properties?.name ?? ''}>
                     </mi-route-instructions-step>
                     <div className='route-instructions__progress'>
                         {steps.map((_, index) => (

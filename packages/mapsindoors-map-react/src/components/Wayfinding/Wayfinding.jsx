@@ -144,7 +144,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
             }, () => {
                 // FIXME: No route found or other request errors.
             });
-
         }
     }, [originLocation, destinationLocation, directionsService, accessibilityOn]);
 
