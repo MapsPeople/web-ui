@@ -52,7 +52,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     function getCategories(locationsResult) {
         const uniqueCategories = locationsResult
             // Flatten the locations result to get a new array of locations that have categories.
-            .flatMap(location => Object.keys(location.properties.categories ?? {}))
+            .flatMap(location => Object.values(location.properties.categories ?? {}))
 
             // Reduce the array of elements in order to get a new Map with elements and the count of categories with locations associated.
             .reduce((categories, category) => {
