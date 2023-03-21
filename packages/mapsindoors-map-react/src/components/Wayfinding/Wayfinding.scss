@@ -44,14 +44,6 @@
 
     &__details {
         padding: var(--spacing-medium);
-
-        // &--show {
-        //     display: block;
-        // }
-
-        // &--hide {
-        //     display: none;
-        // }
     }
 
     &__results {
@@ -135,5 +127,6 @@
 
     @media (min-width: $desktop-breakpoint) {
         max-height: 50vh;
+        min-height: 400px;
     }
 }

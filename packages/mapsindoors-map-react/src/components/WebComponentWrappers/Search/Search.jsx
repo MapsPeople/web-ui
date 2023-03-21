@@ -34,7 +34,7 @@ function SearchField({ placeholder, mapsindoors, results, clicked, cleared, clea
             current.setDisplayText(displayText);
         }
 
-        if (hasInputFocus) {
+        if (hasInputFocus && !current.value) {
             current.focusInput();
         }
 
