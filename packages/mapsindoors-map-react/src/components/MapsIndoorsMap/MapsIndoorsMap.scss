@@ -21,6 +21,12 @@
     #mi_map_logo {
         z-index: var(--z-index-dropdown) !important;
     }
+
+    .floor-selector {
+        max-height: 300px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
 }
 
 /*
