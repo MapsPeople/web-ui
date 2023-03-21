@@ -152,6 +152,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
             setFromFieldDisplayText('');
             setOriginLocation();
         }
+        setSearchResults([]);
     }
 
 
