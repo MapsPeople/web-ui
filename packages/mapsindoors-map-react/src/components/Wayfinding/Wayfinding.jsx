@@ -58,15 +58,17 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
 
     const scrollableContentSwipePrevent = usePreventSwipe();
 
+    const [searchTriggered, setSearchTriggered] = useState(false);
+
     /**
      * Click event handler function that sets the display text of the input field,
      * and clears out the results list.
      */
     function locationClickHandler(location) {
-        if (activeSearchField === searchFieldItentifiers.TO) {
+        if (_selectedSearchField === searchFieldItentifiers.TO) {
             setToFieldDisplayText(location.properties.name);
             setDestinationLocation(location);
-        } else if (activeSearchField === searchFieldItentifiers.FROM) {
+        } else if (_selectedSearchField === searchFieldItentifiers.FROM) {
             setFromFieldDisplayText(location.properties.name);
             setOriginLocation(location);
         }
@@ -145,6 +147,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     function onSearchCleared(searchFieldIdentifier) {
         setActiveSearchField(searchFieldIdentifier);
         _selectedSearchField = searchFieldIdentifier;
+
         if (activeSearchField === searchFieldItentifiers.TO) {
             setToFieldDisplayText('');
             setDestinationLocation();
@@ -213,6 +216,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                             placeholder="Search by name, category, building..."
                             results={locations => searchResultsReceived(locations, searchFieldItentifiers.TO)}
                             displayText={toFieldDisplayText}
+                            triggerSearch={searchTriggered}
                             clicked={() => onSearchClicked(searchFieldItentifiers.TO)}
                             cleared={() => onSearchCleared(searchFieldItentifiers.TO)}
                         />
@@ -225,9 +229,9 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                             placeholder="Search by name, category, buildings..."
                             results={locations => searchResultsReceived(locations, searchFieldItentifiers.FROM)}
                             displayText={fromFieldDisplayText}
+                            triggerSearch={searchTriggered}
                             clicked={() => onSearchClicked(searchFieldItentifiers.FROM)}
                             cleared={() => onSearchCleared(searchFieldItentifiers.FROM)}
-
                         />
                     </label>
                 </div>
