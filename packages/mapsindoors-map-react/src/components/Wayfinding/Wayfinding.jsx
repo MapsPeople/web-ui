@@ -38,8 +38,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
 
     const directionsService = useContext(DirectionsServiceContext);
 
-    const [hasInputFocus, setHasInputFocus] = useState(true);
-
     /** Check if a route has been found */
     const [hasFoundRoute, setHasFoundRoute] = useState(true);
 
@@ -295,7 +293,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
             }
 
             {/* Fixme: Add functionality to the accessibility feature. */}
-            {!hasError && hasFoundRoute && isOnline && !hasInputFocus && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
+            {!hasError && hasFoundRoute && isOnline && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
                 <div className="wayfinding__accessibility">
                     <input className="mi-toggle" type="checkbox" checked={accessibilityOn} onChange={e => setAccessibilityOn(e.target.checked)} />
                     <div>Accessibility</div>
