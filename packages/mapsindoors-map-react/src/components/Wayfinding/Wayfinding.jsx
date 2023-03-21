@@ -17,6 +17,8 @@ const searchFieldItentifiers = {
     FROM: 'FROM'
 };
 
+let _selectedSearchField;
+
 /**
  * Show the wayfinding view.
  *
@@ -38,8 +40,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
 
     /** Holds search results given from a search field. */
     const [searchResults, setSearchResults] = useState([]);
-
-    const [isSearchTriggered, setIsSearchTriggered] = useState(false);
 
     /** Variable for determining the active search field */
     const [activeSearchField, setActiveSearchField] = useState();
@@ -89,6 +89,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      */
     function searchResultsReceived(results, searchFieldIdentifier) {
         setActiveSearchField(searchFieldIdentifier);
+        _selectedSearchField = searchFieldIdentifier;
 
         if (results.length === 0) {
             showNotFoundMessage()
@@ -106,17 +107,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
             onSetSize(size);
         }
     }
-
-    useEffect(() => {
-        setSize(snapPoints.MAX);
-        // If there is a location selected, pre-fill the value of the `to` field with the location name.
-        if (location) {
-            setToFieldDisplayText(location.properties.name);
-            setDestinationLocation(location);
-        }
-
-        setActiveSearchField(searchFieldItentifiers.FROM)
-    }, [location]);
 
     /**
      * Get a point with a floor from a Location to use as origin or destination point.
@@ -136,19 +126,15 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      */
     function onSearchClicked(searchFieldIdentifier) {
         setActiveSearchField(searchFieldIdentifier);
+        _selectedSearchField = searchFieldIdentifier;
 
-        if (activeSearchField === searchFieldItentifiers.TO) {
-            if (toFieldDisplayText) {
-                console.log('to display text', toFieldDisplayText);
-                setIsSearchTriggered(true);
-            }
-        } else if (activeSearchField === searchFieldItentifiers.FROM) {
-            if (fromFieldDisplayText) {
-                console.log('from field display text', fromFieldDisplayText)
-                setIsSearchTriggered(true);
-            }
+        if (_selectedSearchField === searchFieldItentifiers.TO) {
+                setToFieldDisplayText('');
+                setDestinationLocation();
+        } else if (_selectedSearchField === searchFieldItentifiers.FROM) {
+                setFromFieldDisplayText('');
+                setOriginLocation();
         }
-
     }
 
     /**
@@ -158,6 +144,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      */
     function onSearchCleared(searchFieldIdentifier) {
         setActiveSearchField(searchFieldIdentifier);
+        _selectedSearchField = searchFieldIdentifier;
         if (activeSearchField === searchFieldItentifiers.TO) {
             setToFieldDisplayText('');
             setDestinationLocation();
@@ -166,6 +153,17 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
             setOriginLocation();
         }
     }
+
+
+    useEffect(() => {
+        setSize(snapPoints.MAX);
+        // If there is a location selected, pre-fill the value of the `to` field with the location name.
+        if (location) {
+            setToFieldDisplayText(location.properties.name);
+            setDestinationLocation(location);
+        }
+        // setActiveSearchField(searchFieldItentifiers.FROM)
+    }, [location]);
 
     /**
      * When both origin location and destination location are selected, call the MapsIndoors SDK
@@ -196,7 +194,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
             }, () => {
                 // FIXME: No route found or other request errors.
             });
-
         }
     }, [originLocation, destinationLocation, directionsService, accessibilityOn]);
 
@@ -215,7 +212,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                             placeholder="Search by name, category, building..."
                             results={locations => searchResultsReceived(locations, searchFieldItentifiers.TO)}
                             displayText={toFieldDisplayText}
-                            triggerSearch={isSearchTriggered}
                             clicked={() => onSearchClicked(searchFieldItentifiers.TO)}
                             cleared={() => onSearchCleared(searchFieldItentifiers.TO)}
                         />
@@ -223,12 +219,11 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                     <label className="wayfinding__label">
                         FROM
                         <SearchField
-                            hasInputFocus={isActive}
+                            // hasInputFocus={isActive}
                             mapsindoors={true}
                             placeholder="Search by name, category, buildings..."
                             results={locations => searchResultsReceived(locations, searchFieldItentifiers.FROM)}
                             displayText={fromFieldDisplayText}
-                            triggerSearch={isSearchTriggered}
                             clicked={() => onSearchClicked(searchFieldItentifiers.FROM)}
                             cleared={() => onSearchCleared(searchFieldItentifiers.FROM)}
 
