@@ -34,8 +34,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
 
     const directionsService = useContext(DirectionsServiceContext);
 
-    const [hasInputFocus, setHasInputFocus] = useState(true);
-
     /** Check if a route has been found */
     const [hasFoundRoute, setHasFoundRoute] = useState(true);
 
@@ -76,7 +74,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
         }
 
         setSearchResults([]);
-        setHasInputFocus(false);
     }
 
     /**
@@ -193,7 +190,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                             placeholder="Search by name, category, building..."
                             results={locations => searchResultsReceived(locations, searchFieldItentifiers.TO)}
                             displayText={toFieldDisplayText}
-                            clicked={() => setHasInputFocus(true)}
                         />
                     </label>
                     <label className="wayfinding__label">
@@ -204,7 +200,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                             placeholder="Search by name, category, buildings..."
                             results={locations => searchResultsReceived(locations, searchFieldItentifiers.FROM)}
                             displayText={fromFieldDisplayText}
-                            clicked={() => setHasInputFocus(true)}
                         />
                     </label>
                 </div>
