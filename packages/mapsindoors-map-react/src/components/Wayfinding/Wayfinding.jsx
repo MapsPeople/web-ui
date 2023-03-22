@@ -219,7 +219,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
             }
 
             {/* Fixme: Add functionality to the accessibility feature. */}
-            {hasFoundRoute && isOnline && !hasInputFocus && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
+            {hasFoundRoute && isOnline && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
                 <div className="wayfinding__accessibility">
                     <input className="mi-toggle" type="checkbox" checked={accessibilityOn} onChange={e => setAccessibilityOn(e.target.checked)} />
                     <div>Accessibility</div>
