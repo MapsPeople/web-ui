@@ -12,7 +12,7 @@ import { useEffect, useRef } from 'react';
  * @param {boolean} props.clear - Programatically clear the search field.
  * @param {string} props.displayText - Display text in the search field when the user selects a result.
  * @param {boolean} props.hasInputFocus - If set to true, it will set focus to the input field.
- * @param {boolean} props.triggerSearch - If set to true, it will set focus to the input field.
+ * @param {boolean} props.triggerSearch - If set to true, it will trigger the search.
  *
  */
 function SearchField({ placeholder, mapsindoors, results, clicked, cleared, clear, displayText, hasInputFocus, triggerSearch }) {
