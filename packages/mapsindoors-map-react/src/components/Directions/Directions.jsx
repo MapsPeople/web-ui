@@ -7,6 +7,8 @@ import { ReactComponent as WalkingIcon } from '../../assets/walking.svg';
 
 const mapsindoors = window.mapsindoors;
 
+let directionsRenderer;
+
 function Directions({ isOpen, onBack, directions }) {
 
     const [totalDistance, setTotalDistance] = useState();
@@ -19,7 +21,7 @@ function Directions({ isOpen, onBack, directions }) {
             setTotalDistance(directions.totalDistance);
             setTotalTime(directions.totalTime);
 
-            const directionsRenderer = new mapsindoors.directions.DirectionsRenderer({
+            directionsRenderer = new mapsindoors.directions.DirectionsRenderer({
                 mapsIndoors: mapsIndoorsInstance,
                 fitBoundsPadding: { top: 60, bottom: 360, left: 60, right: 60 } // FIXME: Remove hardcoded values, while ensuring route is not be covered by bottom sheet or modal.
             });
@@ -28,10 +30,18 @@ function Directions({ isOpen, onBack, directions }) {
         }
     }, [isOpen, directions, mapsIndoorsInstance]);
 
+    /**
+     * Close the directions and set the visibility of the blue route to false.
+     */
+    function onDirectionsClosed() {
+        directionsRenderer.setRoute(null);
+        onBack();
+    }
+
     return (
         <div className="directions">
             <div className="directions__details">
-                <button className="directions__close" onClick={() => onBack()} aria-label="Close">
+                <button className="directions__close" onClick={() => onDirectionsClosed()} aria-label="Close">
                     <CloseIcon />
                 </button>
                 <div className="directions__locations">
