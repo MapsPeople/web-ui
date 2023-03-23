@@ -76,7 +76,7 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }
     }
 
     return (
-        <div className='route-instructions'>
+        <div className="route-instructions">
             {steps &&
                 <>
                     <mi-route-instructions-step
