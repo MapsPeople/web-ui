@@ -24,7 +24,7 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }
      * instruction and travel mode.
      */
     function nextStep() {
-        setPrevious(steps[activeStep])
+        setPrevious(steps[activeStep]);
         setActiveStep(activeStep + 1);
         onNextStep();
     }
