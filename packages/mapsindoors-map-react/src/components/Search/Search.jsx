@@ -116,6 +116,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
             searchResultsRef.current.innerHTML = '';
             setSelectedCategory(null);
             _selectedCategory = null;
+            searchFieldRef.current.removeAttribute('mi-categories');
 
             // Pass an empty array to the filtered locations in order to reset the locations.
             onLocationsFiltered([]);
