@@ -95,12 +95,14 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }
                     <div className='route-instructions__actions'>
                         <button className='route-instructions__button'
                             onClick={() => previousStep()}
+                            aria-label="Previous"
                             disabled={activeStep === 0}>
                             <ArrowLeft></ArrowLeft>
                         </button>
                         <div className='route-instructions__overview'>Step {activeStep + 1} of {steps.length}</div>
                         <button className='route-instructions__button'
                             onClick={() => nextStep()}
+                            aria-label="Next"
                             disabled={activeStep === steps.length - 1}>
                             <ArrowRight></ArrowRight>
                         </button>
