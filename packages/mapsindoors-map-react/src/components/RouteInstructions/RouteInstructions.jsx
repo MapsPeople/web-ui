@@ -10,6 +10,8 @@ import { ReactComponent as ArrowLeft } from '../../assets/arrow-left.svg';
  * @param {array} props.steps - The steps array passed after the directions are set.
  * @param {function} props.onNextStep - Function handling the navigation to the next step.
  * @param {function} props.onPreviousStep - Function handling the navigation to the previous step.
+ * @param {object} props.originLocation - The initial location where the route starts from.
+ *
  * @returns
  */
 function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }) {
