@@ -29,7 +29,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [venues, setVenues] = useState([]);
     const [currentVenueName, setCurrentVenueName] = useState();
     const [currentLocation, setCurrentLocation] = useState();
-    const [currentCategories, setCurrentCategories] = useState(new Map());
+    const [currentCategories, setCurrentCategories] = useState([]);
     const [filteredLocations, setFilteredLocations] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const [directionsService, setDirectionsService] = useState();
@@ -50,7 +50,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
      * @param {array} locationsResult
      */
     function getCategories(locationsResult) {
-        const uniqueCategories = locationsResult
+        let uniqueCategories = locationsResult
             // Flatten the locations result to get a new array of locations that have categories.
             .flatMap(location => Object.values(location.properties.categories ?? {}))
 
@@ -64,6 +64,9 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                 }
                 return categories;
             }, new Map());
+
+        // Sort the categories with most locations associated.
+        uniqueCategories = Array.from(uniqueCategories).sort((a, b) => b[1] - a[1])
 
         setCurrentCategories(uniqueCategories);
     }
