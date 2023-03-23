@@ -16,7 +16,7 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }
     /** Referencing the previous step of each active step */
     const [previous, setPrevious] = useState();
 
-    const [activeStep, setActiveStep] = useState(0)
+    const [activeStep, setActiveStep] = useState(0);
 
     /**
      * Navigate to the next step.
