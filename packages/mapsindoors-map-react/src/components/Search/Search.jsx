@@ -1,8 +1,9 @@
 import React from "react";
 import './Search.scss';
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useContext } from 'react';
 import { snapPoints } from '../../constants/snapPoints';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
+import { MapsIndoorsContext } from '../../MapsIndoorsContext';
 
 /** Initialize the MapsIndoors instance. */
 const mapsindoors = window.mapsindoors;
@@ -39,6 +40,8 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
 
     const scrollableContentSwipePrevent = usePreventSwipe();
 
+    const mapsIndoorsInstance = useContext(MapsIndoorsContext);
+
     /**
      * Click event handler that takes the selected location as an argument.
      *
@@ -64,6 +67,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
      */
     function addSearchResults(result) {
         const listItem = document.createElement('mi-list-item-location');
+        result.properties.imageURL = mapsIndoorsInstance.getDisplayRule(result).icon;
         listItem.location = result;
         searchResultsRef.current.appendChild(listItem);
         listItem.addEventListener('locationClicked', resultClickedHandler);
@@ -116,6 +120,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
             searchResultsRef.current.innerHTML = '';
             setSelectedCategory(null);
             _selectedCategory = null;
+            searchFieldRef.current.removeAttribute('mi-categories');
 
             // Pass an empty array to the filtered locations in order to reset the locations.
             onLocationsFiltered([]);
