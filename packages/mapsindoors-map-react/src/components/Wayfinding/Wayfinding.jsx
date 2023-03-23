@@ -205,7 +205,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                 </div>
             </div>
             {!hasFoundRoute && <p className="wayfinding__error">No route has been found</p>}
- {/* Fixme: Implement correct error message. */}
+            {/* Fixme: Implement correct error message. */}
             {hasError && <p className="wayfinding__error">Implement error message</p>}
             {(!originLocation || !destinationLocation) && <div className="wayfinding__scrollable" {...scrollableContentSwipePrevent}>
                 <div className="wayfinding__results">
