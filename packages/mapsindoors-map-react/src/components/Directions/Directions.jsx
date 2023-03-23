@@ -34,7 +34,7 @@ function Directions({ isOpen, onBack, directions }) {
      * Close the directions and set the visibility of the blue route to false.
      */
     function onDirectionsClosed() {
-        directionsRenderer.setOptions({ mapsIndoors: null, visible: false });
+        directionsRenderer.setRoute(null);
         onBack();
     }
 
