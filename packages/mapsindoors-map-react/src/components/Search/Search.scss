@@ -4,9 +4,9 @@
     padding: var(--spacing-large) var(--spacing-x-small) var(--spacing-x-small) var(--spacing-x-small);
     display: grid;
     gap: var(--spacing-x-small);
-    height: 100%;
     grid-auto-rows: min-content;
     overflow: auto;
+    min-height: 144px;
 
     &__scrollable {
         overflow: auto;
