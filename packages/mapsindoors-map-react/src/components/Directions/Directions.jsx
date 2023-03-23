@@ -55,7 +55,7 @@ function Directions({ isOpen, onBack, directions }) {
     }
 
     /**
-     * Display the map interaction when navigatin to the next step.
+     * Render the next navigation step on the map.
      */
     function onNext() {
         if (directionsRenderer) {
@@ -64,7 +64,7 @@ function Directions({ isOpen, onBack, directions }) {
     }
 
     /**
-     * Display the map interaction when navigatin to the previous step.
+     * Render the previous navigation step on the map.
      */
     function onPrevious() {
         if (directionsRenderer) {
