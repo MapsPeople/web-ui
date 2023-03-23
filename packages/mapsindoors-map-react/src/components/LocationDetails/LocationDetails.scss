@@ -126,4 +126,16 @@
         border: none;
         margin-left: auto;
     }
+
+    &__name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 100%;
+    }
+
+    &__content {
+        display: grid;
+        gap: var(--spacing-xx-small);
+    }
 }
