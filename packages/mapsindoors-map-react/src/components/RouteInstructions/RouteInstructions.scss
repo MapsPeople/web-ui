@@ -22,6 +22,7 @@
       background: var(--color-gray-30);
     }
 
+    // Rendering the progress line
     &::after {
       position: absolute;
       content: "";
@@ -37,6 +38,7 @@
         ;
       }
 
+      // Rendering the completed progress line
       &::before {
         position: absolute;
         content: "";
