@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useState } from 'react';
 import './MapsIndoorsMap.scss';
-import Map from "../Map/Map";
+import MIMap from "../Map/Map";
 import SplashScreen from '../SplashScreen/SplashScreen';
 import VenueSelector from '../VenueSelector/VenueSelector';
 import BottomSheet from '../BottomSheet/BottomSheet';
@@ -29,10 +29,12 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [venues, setVenues] = useState([]);
     const [currentVenueName, setCurrentVenueName] = useState();
     const [currentLocation, setCurrentLocation] = useState();
-    const [currentCategories, setCurrentCategories] = useState(new Set());
+    const [currentCategories, setCurrentCategories] = useState([]);
     const [filteredLocations, setFilteredLocations] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const [directionsService, setDirectionsService] = useState();
+    const [hasFloorSelector, setHasFloorSelector] = useState(true);
+
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
     /**
@@ -45,29 +47,46 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     }
 
     /**
-     * Get all the categories that are in use.
-     * Filter through them to get the unique categories.
+     * Show the floor selector.
+     */
+    function showFloorSelector() {
+        if (hasFloorSelector === false) {
+            setHasFloorSelector(true);
+        }
+    }
+
+    /**
+     * Hide the floor selector when the directions are open.
+     */
+    function hideFloorSelector() {
+        if (hasFloorSelector === true) {
+            setHasFloorSelector(false);
+        }
+    }
+
+    /**
+     * Get the unique categories and the count of the categories with locations associated.
      *
      * @param {array} locationsResult
      */
     function getCategories(locationsResult) {
-        // All the locations that have categories.
-        let locationCategories = [];
+        let uniqueCategories = locationsResult
+            // Flatten the locations result to get a new array of locations that have categories.
+            .flatMap(location => Object.values(location.properties.categories ?? {}))
 
-        //The unique categories for all the locations.
-        let uniqueCategories = new Set();
+            // Reduce the array of elements in order to get a new Map with elements and the count of categories with locations associated.
+            .reduce((categories, category) => {
+                if (categories.has(category)) {
+                    let count = categories.get(category);
+                    categories.set(category, ++count);
+                } else {
+                    categories.set(category, 1);
+                }
+                return categories;
+            }, new Map());
 
-        // Loop through all the locations and only select the ones that have categories.
-        locationsResult.forEach(l => {
-            if (Object.keys(l.properties.categories).length > 0) {
-                locationCategories.push(l.properties.categories)
-            }
-        });
-
-        // Loop through the locations which have categories and create a set of unique categories.
-        locationCategories.forEach(item => {
-            Object.keys(item).forEach(value => uniqueCategories.add(value));
-        });
+        // Sort the categories with most locations associated.
+        uniqueCategories = Array.from(uniqueCategories).sort((a, b) => b[1] - a[1])
 
         setCurrentCategories(uniqueCategories);
     }
@@ -121,7 +140,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
 
     return (<MapsIndoorsContext.Provider value={mapsIndoorsInstance}>
         <DirectionsServiceContext.Provider value={directionsService}>
-            <div className="mapsindoors-map">
+            <div className={`mapsindoors-map ${!hasFloorSelector ? 'mapsindoors-map__floor-selector--hide' : 'mapsindoors-map__floor-selector--show'}`}>
                 {!isMapReady && <SplashScreen logo={logo} primaryColor={primaryColor} />}
                 {venues.length > 1 && <VenueSelector onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)} venues={venues} currentVenueName={currentVenueName} />}
                 {isMapReady && isDesktop
@@ -132,6 +151,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                         currentCategories={currentCategories}
                         onClose={() => setCurrentLocation(null)}
                         onLocationsFiltered={(locations) => setFilteredLocations(locations)}
+                        onHideFloorSelector={() => hideFloorSelector()}
+                        onShowFloorSelector={() => showFloorSelector()}
                     />
                     :
                     <BottomSheet
@@ -139,9 +160,11 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                         setCurrentLocation={setCurrentLocation}
                         currentCategories={currentCategories}
                         onLocationsFiltered={(locations) => setFilteredLocations(locations)}
+                        onHideFloorSelector={() => hideFloorSelector()}
+                        onShowFloorSelector={() => showFloorSelector()}
                     />
                 }
-                <Map
+                <MIMap
                     apiKey={apiKey}
                     gmApiKey={gmApiKey}
                     mapboxAccessToken={mapboxAccessToken}
