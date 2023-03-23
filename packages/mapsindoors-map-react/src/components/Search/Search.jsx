@@ -1,14 +1,12 @@
 import React from "react";
 import './Search.scss';
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useContext } from 'react';
 import { snapPoints } from '../../constants/snapPoints';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
+import { MapsIndoorsContext } from '../../MapsIndoorsContext';
 
 /** Initialize the MapsIndoors instance. */
 const mapsindoors = window.mapsindoors;
-
-/** Initialize the MapsIndoors class. */
-const mapsIndoorsInstance = new mapsindoors.MapsIndoors();
 
 /**
  * Private variable used inside an event listener for a custom event from a web componenent.
@@ -41,6 +39,8 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
     const [selectedCategory, setSelectedCategory] = useState();
 
     const scrollableContentSwipePrevent = usePreventSwipe();
+
+    const mapsIndoorsInstance = useContext(MapsIndoorsContext);
 
     /**
      * Click event handler that takes the selected location as an argument.
