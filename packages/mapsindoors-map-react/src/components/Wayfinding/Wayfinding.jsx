@@ -34,7 +34,8 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
 
     const directionsService = useContext(DirectionsServiceContext);
 
-    const [hasInputFocus, setHasInputFocus] = useState(true);
+    /** Check if a route has been found */
+    const [hasFoundRoute, setHasFoundRoute] = useState(true);
 
     /** Holds search results given from a search field. */
     const [searchResults, setSearchResults] = useState([]);
@@ -70,7 +71,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
         }
 
         setSearchResults([]);
-        setHasInputFocus(false);
     }
 
     /**
@@ -142,7 +142,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                     directionsResult
                 });
             }, () => {
-                // FIXME: No route found or other request errors.
+                setHasFoundRoute(false);
             });
 
         }
@@ -163,7 +163,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                             placeholder="Search by name, category, building..."
                             results={locations => searchResultsReceived(locations, searchFieldItentifiers.TO)}
                             displayText={toFieldDisplayText}
-                            clicked={() => setHasInputFocus(true)}
                         />
                     </label>
                     <label className="wayfinding__label">
@@ -174,20 +173,25 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                             placeholder="Search by name, category, buildings..."
                             results={locations => searchResultsReceived(locations, searchFieldItentifiers.FROM)}
                             displayText={fromFieldDisplayText}
-                            clicked={() => setHasInputFocus(true)}
                         />
                     </label>
                 </div>
             </div>
+            {!hasFoundRoute && <p className="wayfinding__error">No route has been found</p>}
             {(!originLocation || !destinationLocation) && <div className="wayfinding__scrollable" {...scrollableContentSwipePrevent}>
                 <div className="wayfinding__results">
-                    {searchResults.map(location => <ListItemLocation key={location.id} location={location} locationClicked={e => locationClickHandler(e)} />)}
+                    {searchResults.map(location =>
+                        <ListItemLocation
+                            key={location.id}
+                            location={location}
+                            locationClicked={e => locationClickHandler(e)} />
+                    )}
                 </div>
             </div>
             }
 
             {/* Fixme: Add functionality to the accessibility feature. */}
-            {!hasInputFocus && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
+            {hasFoundRoute && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
                 <div className="wayfinding__accessibility">
                     <input className="mi-toggle" type="checkbox" checked={accessibilityOn} onChange={e => setAccessibilityOn(e.target.checked)} />
                     <div>Accessibility</div>
