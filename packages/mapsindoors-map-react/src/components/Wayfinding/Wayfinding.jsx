@@ -45,7 +45,10 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     /** Check if a route has been found */
     const [hasFoundRoute, setHasFoundRoute] = useState(true);
 
-    /** Holds search results given from a search field. */
+    /** Check if search results have been found */
+    const [hasSearchResults, setHasSearchResults] = useState(true);
+
+    /** Holds search results given from a search field */
     const [searchResults, setSearchResults] = useState([]);
 
     const [toFieldDisplayText, setToFieldDisplayText] = useState();
@@ -78,13 +81,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
         setSearchResults([]);
     }
 
-    /** Display message when no results have been found. */
-    function showNotFoundMessage() {
-        const notFoundMessage = document.createElement('p');
-        notFoundMessage.innerHTML = "Nothing was found";
-        searchResultsRef.current.appendChild(notFoundMessage);
-    }
-
     /**
      * Handle incoming search results from one of the search fields.
      *
@@ -95,8 +91,9 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
         _activeSearchField = searchFieldIdentifier;
 
         if (results.length === 0) {
-            showNotFoundMessage()
+            setHasSearchResults(false);
         } else {
+            setHasSearchResults(true);
             setSearchResults(results);
         }
     }
@@ -143,9 +140,9 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
         setSearchResults([]);
     }
 
-     /**
-     * Reset the active field's display text and location.
-     */
+    /**
+    * Reset the active field's display text and location.
+    */
     function resetSearchField() {
         if (_activeSearchField === searchFieldItentifiers.TO) {
             setToFieldDisplayText('');
@@ -234,6 +231,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                 </div>
             </div>
             {!hasFoundRoute && <p className="wayfinding__error">No route has been found</p>}
+            {!hasSearchResults && <p className="wayfinding__error">Nothing was found</p>}
             {(!originLocation || !destinationLocation) && <div className="wayfinding__scrollable" {...scrollableContentSwipePrevent}>
                 <div className="wayfinding__results" ref={searchResultsRef}>
                     {searchResults.map(location =>
