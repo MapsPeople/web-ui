@@ -142,32 +142,24 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                 destination: getLocationPoint(destinationLocation),
                 avoidStairs: accessibilityOn
             }).then(directionsResult => {
-                if (directionsResult) {
+                if (directionsResult && directionsResult.legs) {
                     // Calculate total distance and time
-                    // FIXME: Can we get a "faulty" response with no legs? If so, this will probably crash.
-                    if (directionsResult.legs) {
-                        const totalDistance = directionsResult.legs.reduce((accumulator, current) => accumulator + current.distance.value, 0);
-                        const totalTime = directionsResult.legs.reduce((accumulator, current) => accumulator + current.duration.value, 0);
+                    const totalDistance = directionsResult.legs.reduce((accumulator, current) => accumulator + current.distance.value, 0);
+                    const totalTime = directionsResult.legs.reduce((accumulator, current) => accumulator + current.duration.value, 0);
 
-                        setTotalDistance(totalDistance);
-                        setTotalTime(totalTime);
+                    setTotalDistance(totalDistance);
+                    setTotalTime(totalTime);
 
-                        onDirections({
-                            originLocation,
-                            destinationLocation,
-                            totalDistance,
-                            totalTime,
-                            directionsResult
-                        });
-                    } else {
-                        // FIXME: Handle error message.
-                        setHasError(true);
-                    }
+                    onDirections({
+                        originLocation,
+                        destinationLocation,
+                        totalDistance,
+                        totalTime,
+                        directionsResult
+                    });
                 } else {
-                    // FIXME: Handle error message.
                     setHasError(true);
                 }
-
             }, () => {
                 setHasFoundRoute(false);
             });
@@ -205,8 +197,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                 </div>
             </div>
             {!hasFoundRoute && <p className="wayfinding__error">No route has been found</p>}
-            {/* Fixme: Implement correct error message. */}
-            {hasError && <p className="wayfinding__error">Implement error message</p>}
+            {hasError && <p className="wayfinding__error">Something went wrong. Please try again.</p>}
             {(!originLocation || !destinationLocation) && <div className="wayfinding__scrollable" {...scrollableContentSwipePrevent}>
                 <div className="wayfinding__results">
                     {searchResults.map(location =>
@@ -219,7 +210,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
             </div>
             }
 
-            {/* Fixme: Add functionality to the accessibility feature. */}
             {hasFoundRoute && !hasError && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
                 <div className="wayfinding__accessibility">
                     <input className="mi-toggle" type="checkbox" checked={accessibilityOn} onChange={e => setAccessibilityOn(e.target.checked)} />
@@ -228,7 +218,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                 </div>
                 <hr></hr>
                 <div className="wayfinding__info">
-                    {/* Fixme: Implement dynamic value rendering. */}
                     <div className="wayfinding__distance">
                         <WalkingIcon />
                         <div>Distance:</div>
