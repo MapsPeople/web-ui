@@ -38,7 +38,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
 
     const directionsService = useContext(DirectionsServiceContext);
 
-/** Check if a route has been found */
+    /** Check if a route has been found */
     const [hasFoundRoute, setHasFoundRoute] = useState(true);
 
     /** Holds search results given from a search field. */
@@ -134,11 +134,11 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
         _selectedSearchField = searchFieldIdentifier;
 
         if (_selectedSearchField === searchFieldItentifiers.TO) {
-                setToFieldDisplayText('');
-                setDestinationLocation();
+            setToFieldDisplayText('');
+            setDestinationLocation();
         } else if (_selectedSearchField === searchFieldItentifiers.FROM) {
-                setFromFieldDisplayText('');
-                setOriginLocation();
+            setFromFieldDisplayText('');
+            setOriginLocation();
         }
     }
 
