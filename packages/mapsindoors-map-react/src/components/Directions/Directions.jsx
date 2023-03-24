@@ -70,10 +70,18 @@ function Directions({ isOpen, onBack, directions }) {
         }
     }
 
+    /**
+     * Close the directions and set the visibility of the blue route to false.
+     */
+    function onDirectionsClosed() {
+        directionsRenderer.setRoute(null);
+        onBack();
+    }
+
     return (
         <div className="directions">
             <div className="directions__details">
-                <button className="directions__close" onClick={() => onBack()} aria-label="Close">
+                <button className="directions__close" onClick={() => onDirectionsClosed()} aria-label="Close">
                     <CloseIcon />
                 </button>
                 <div className="directions__locations">
