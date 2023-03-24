@@ -129,14 +129,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      */
     function onSearchClicked(searchFieldIdentifier) {
         _activeSearchField = searchFieldIdentifier;
-
-        if (_activeSearchField === searchFieldItentifiers.TO) {
-            setToFieldDisplayText('');
-            setDestinationLocation();
-        } else if (_activeSearchField === searchFieldItentifiers.FROM) {
-            setFromFieldDisplayText('');
-            setOriginLocation();
-        }
+        resetSearchField();
     }
 
     /**
@@ -146,7 +139,14 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      */
     function onSearchCleared(searchFieldIdentifier) {
         _activeSearchField = searchFieldIdentifier;
+        resetSearchField();
+        setSearchResults([]);
+    }
 
+     /**
+     * Reset the active field's display text and location.
+     */
+    function resetSearchField() {
         if (_activeSearchField === searchFieldItentifiers.TO) {
             setToFieldDisplayText('');
             setDestinationLocation();
@@ -154,7 +154,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
             setFromFieldDisplayText('');
             setOriginLocation();
         }
-        setSearchResults([]);
     }
 
 
