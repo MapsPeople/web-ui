@@ -154,7 +154,9 @@ function LocationDetails({ location, onBack, onStartWayfinding, onSetSize, snapP
                     {locationDisplayRule && <img alt="" src={locationDisplayRule.icon} />}
                 </div>
                 <div className="location-info__content">
-                    {location.properties.name}<br />
+                    <div className='location-info__name'>
+                        {location.properties.name}
+                    </div>
                     <mi-location-info ref={locationInfoElement} />
                 </div>
                 <button className="location-info__close" onClick={() => back()}>
@@ -169,7 +171,7 @@ function LocationDetails({ location, onBack, onStartWayfinding, onSetSize, snapP
                 {/* Location categories */}
                 {Object.keys(location.properties.categories).length > 0 && <p className="location-details__categories">
                     {Object.values(location.properties.categories).map((category, index, array) => {
-                        return <React.Fragment key={category}>{category}{index < array.length-1 && <>・</>}</React.Fragment>
+                        return <React.Fragment key={category}>{category}{index < array.length - 1 && <>・</>}</React.Fragment>
                     })}
                 </p>}
 

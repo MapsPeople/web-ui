@@ -12,6 +12,7 @@
   font-size: var(--font-size-medium);
   height: var(--spacing-xxx-large);
   width: fit-content;
+  cursor: default;
 
   &--active {
     background-color: var(--brand-colors-dark-pine-100);
