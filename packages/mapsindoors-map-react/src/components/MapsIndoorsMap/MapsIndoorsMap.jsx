@@ -13,6 +13,12 @@ import Sidebar from '../Sidebar/Sidebar';
 const mapsindoors = window.mapsindoors;
 
 /**
+ * Private variable used for checking if the locations should be disabled.
+ * Implemented due to the impossibility to use the React useState hook.
+ */
+let _locationsDisabled;
+
+/**
  *
  * @param {Object} props
  * @param {string} props.apiKey - MapsIndoors API key or solution alias.
@@ -34,7 +40,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const [directionsService, setDirectionsService] = useState();
     const [hasFloorSelector, setHasFloorSelector] = useState(true);
-    const [hasLocationsDisabled, setHasLocationsDisabled] = useState(false);
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
@@ -65,18 +70,31 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
         }
     }
 
+    /**
+     * Disable the locations when in directions mode.
+     */
     function disableLocations() {
-        setHasLocationsDisabled(true);
+        _locationsDisabled = true;
     }
 
+    /**
+     * Enable the locations when not in directions mode.
+     */
+    function enableLocations() {
+        _locationsDisabled = false;
+    }
+
+    /**
+    * Handle the clicked location on the map.
+    * Set the current location if not in directions mode.
+    *
+    * @param {object} location
+    */
     function locationClicked(location) {
-        if(!hasLocationsDisabled) {
+        if (_locationsDisabled !== true) {
             setCurrentLocation(location);
-        } else {
-            setCurrentLocation({});
         }
     }
-
 
     /**
      * Get the unique categories and the count of the categories with locations associated.
@@ -167,6 +185,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                         onLocationsFiltered={(locations) => setFilteredLocations(locations)}
                         onHideFloorSelector={() => hideFloorSelector()}
                         onShowFloorSelector={() => showFloorSelector()}
+                        onDisableLocations={() => disableLocations()}
+                        onEnableLocations={() => enableLocations()}
                     />
                     :
                     <BottomSheet
@@ -177,6 +197,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                         onHideFloorSelector={() => hideFloorSelector()}
                         onShowFloorSelector={() => showFloorSelector()}
                         onDisableLocations={() => disableLocations()}
+                        onEnableLocations={() => enableLocations()}
                     />
                 }
                 <MIMap

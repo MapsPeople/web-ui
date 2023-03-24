@@ -22,10 +22,11 @@ const BOTTOM_SHEETS = {
  * @param {Object} props.currentCategories - The unique categories displayed based on the existing locations.
  * @param {function} props.onLocationsFiltered - The list of locations after filtering through the categories.
  * @param {function} props.onHideFloorSelector - Trigger the visibility of the floor selector to be hidden.
- * @param {function} props.onShowFloorSelector- Trigger the visibility of the floor selector to be shown.
- * @param {function} props.onDisableLocations- Trigger the visibility of the floor selector to be shown.
+ * @param {function} props.onShowFloorSelector - Trigger the visibility of the floor selector to be shown.
+ * @param {function} props.onDisableLocations - Restrict the user from interacting with the locations when in directions mode.
+ * @param {function} props.onEnableLocations - Allow the user to interact with the locations when outside of directions mode.
  */
-function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onHideFloorSelector, onShowFloorSelector, onDisableLocations }) {
+function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onHideFloorSelector, onShowFloorSelector, onDisableLocations, onEnableLocations}) {
 
     const bottomSheetRef = useRef();
     const [activeBottomSheet, setActiveBottomSheet] = useState(null);
@@ -53,6 +54,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
     function setBottomSheet(bottomSheet) {
         setActiveBottomSheet(bottomSheet);
         onShowFloorSelector();
+        onEnableLocations();
     }
 
     /**
