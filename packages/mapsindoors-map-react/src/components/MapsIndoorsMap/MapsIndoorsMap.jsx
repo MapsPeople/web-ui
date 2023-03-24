@@ -34,6 +34,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const [directionsService, setDirectionsService] = useState();
     const [hasFloorSelector, setHasFloorSelector] = useState(true);
+    const [hasLocationsDisabled, setHasLocationsDisabled] = useState(false);
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
@@ -63,6 +64,19 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             setHasFloorSelector(false);
         }
     }
+
+    function disableLocations() {
+        setHasLocationsDisabled(true);
+    }
+
+    function locationClicked(location) {
+        if(!hasLocationsDisabled) {
+            setCurrentLocation(location);
+        } else {
+            setCurrentLocation({});
+        }
+    }
+
 
     /**
      * Get the unique categories and the count of the categories with locations associated.
@@ -162,6 +176,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                         onLocationsFiltered={(locations) => setFilteredLocations(locations)}
                         onHideFloorSelector={() => hideFloorSelector()}
                         onShowFloorSelector={() => showFloorSelector()}
+                        onDisableLocations={() => disableLocations()}
                     />
                 }
                 <MIMap
@@ -173,7 +188,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                     onVenueChangedOnMap={() => venueChangedOnMap()}
                     onMapsIndoorsInstance={(instance) => setMapsIndoorsInstance(instance)}
                     onDirectionsService={(instance) => setDirectionsService(instance)}
-                    onLocationClick={(location) => setCurrentLocation(location)}
+                    onLocationClick={(location) => locationClicked(location)}
                     filteredLocationIds={filteredLocations?.map(location => location.id)} />
             </div>
         </DirectionsServiceContext.Provider>
