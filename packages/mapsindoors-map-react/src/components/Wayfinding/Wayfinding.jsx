@@ -165,7 +165,8 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
             setToFieldDisplayText(location.properties.name);
             setDestinationLocation(location);
         }
-        // setActiveSearchField(searchFieldItentifiers.FROM)
+
+        _activeSearchField = searchFieldItentifiers.FROM;
     }, [location]);
 
     /**
