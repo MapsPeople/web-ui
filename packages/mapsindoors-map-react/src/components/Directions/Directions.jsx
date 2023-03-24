@@ -45,8 +45,6 @@ function Directions({ isOpen, onBack, directions }) {
         return directions.directionsResult.legs.reduce((accummulator, leg, legIndex) => {
             for (const stepIndex in leg.steps) {
                 const step = leg.steps[stepIndex];
-                step.originalLegIndex = legIndex;
-                step.originalStepIndex = parseInt(stepIndex);
 
                 accummulator.push(step);
             }
