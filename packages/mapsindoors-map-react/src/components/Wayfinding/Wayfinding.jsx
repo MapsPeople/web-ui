@@ -151,10 +151,10 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
         setActiveSearchField(searchFieldIdentifier);
         _selectedSearchField = searchFieldIdentifier;
 
-        if (activeSearchField === searchFieldItentifiers.TO) {
+        if (_selectedSearchField === searchFieldItentifiers.TO) {
             setToFieldDisplayText('');
             setDestinationLocation();
-        } else if (activeSearchField === searchFieldItentifiers.FROM) {
+        } else if (_selectedSearchField === searchFieldItentifiers.FROM) {
             setFromFieldDisplayText('');
             setOriginLocation();
         }
@@ -227,7 +227,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                     <label className="wayfinding__label">
                         FROM
                         <SearchField
-                            // hasInputFocus={isActive}
+                            hasInputFocus={isActive}
                             mapsindoors={true}
                             placeholder="Search by name, category, buildings..."
                             results={locations => searchResultsReceived(locations, searchFieldItentifiers.FROM)}
