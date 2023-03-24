@@ -32,8 +32,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     /** Referencing the accessibility details DOM element */
     const detailsRef = useRef();
 
-    const searchResultsRef = useRef();
-
     const directionsService = useContext(DirectionsServiceContext);
 
     /** Check if a route has been found */
@@ -77,13 +75,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
         setSearchResults([]);
     }
 
-    /** Display message when no results have been found. */
-    function showNotFoundMessage() {
-        const notFoundMessage = document.createElement('p');
-        notFoundMessage.innerHTML = "Nothing was found";
-        searchResultsRef.current.appendChild(notFoundMessage);
-    }
-
     /**
      * Handle incoming search results from one of the search fields.
      *
@@ -92,12 +83,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      */
     function searchResultsReceived(results, searchFieldIdentifier) {
         setActiveSearchField(searchFieldIdentifier);
-
-        if (results.length === 0) {
-            showNotFoundMessage()
-        } else {
-            setSearchResults(results);
-        }
+        setSearchResults(results);
     }
 
     /**
