@@ -38,8 +38,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     /** Referencing the accessibility details DOM element */
     const detailsRef = useRef();
 
-    const searchResultsRef = useRef();
-
     const directionsService = useContext(DirectionsServiceContext);
 
     /** Check if a route has been found */
@@ -233,7 +231,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
             {!hasFoundRoute && <p className="wayfinding__error">No route has been found</p>}
             {!hasSearchResults && <p className="wayfinding__error">Nothing was found</p>}
             {(!originLocation || !destinationLocation) && <div className="wayfinding__scrollable" {...scrollableContentSwipePrevent}>
-                <div className="wayfinding__results" ref={searchResultsRef}>
+                <div className="wayfinding__results">
                     {searchResults.map(location =>
                         <ListItemLocation
                             key={location.id}
