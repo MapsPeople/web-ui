@@ -71,7 +71,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
      */
     function addSearchResults(result) {
         const listItem = document.createElement('mi-list-item-location');
-        result.properties.imageURL = mapsIndoorsInstance.getDisplayRule(result).icon;
+        result.properties.imageURL = mapsIndoorsInstance?.getDisplayRule(result).icon;
         listItem.location = result;
         searchResultsRef.current.appendChild(listItem);
         listItem.addEventListener('locationClicked', resultClickedHandler);
