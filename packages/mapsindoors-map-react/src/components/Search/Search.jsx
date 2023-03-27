@@ -211,7 +211,8 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
             <div className="search__scrollable prevent-scroll" {...scrollableContentSwipePrevent}>
                 <div ref={categoriesListRef} className="search__categories">
                     {categories?.map(([category, categoryInfo]) =>
-                        <mi-chip content={categoryInfo.displayName}
+                        <mi-chip
+                            content={categoryInfo.displayName}
                             active={selectedCategory === category}
                             onClick={() => categoryClicked(category)}
                             key={category}>
