@@ -4,6 +4,7 @@ import { useRef, useEffect, useState, useContext } from 'react';
 import { snapPoints } from '../../constants/snapPoints';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import { MapsIndoorsContext } from '../../MapsIndoorsContext';
+import useNear from '../../hooks/useNear';
 
 /** Initialize the MapsIndoors instance. */
 const mapsindoors = window.mapsindoors;
@@ -37,6 +38,9 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
 
     /** Determines which category has been selected */
     const [selectedCategory, setSelectedCategory] = useState();
+
+    /** Instruct the search field to search for Locations near the map center. */
+    const searchNear = useNear();
 
     const scrollableContentSwipePrevent = usePreventSwipe();
 
@@ -207,7 +211,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
 
     return (
         <div className="search">
-            <mi-search ref={searchFieldRef} placeholder="Search by name, category, building..." mapsindoors="true"></mi-search>
+            <mi-search mi-near={searchNear} ref={searchFieldRef} placeholder="Search by name, category, building..." mapsindoors="true"></mi-search>
             <div className="search__scrollable prevent-scroll" {...scrollableContentSwipePrevent}>
                 <div ref={categoriesListRef} className="search__categories">
                     {categories?.map(([category]) =>
