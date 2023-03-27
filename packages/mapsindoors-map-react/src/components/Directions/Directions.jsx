@@ -108,13 +108,20 @@ function Directions({ isOpen, onBack, directions }) {
 
     /**
      * Get the width of the sidebar in pixels
-    */
+     */
     function getSidebarWidth() {
         const sidebar = document.querySelector('.modal--open');
         const mapContainer = document.querySelector('.mapsindoors-map');
         // Subtract the sum of the sidebar's width and the left padding from the width of the map container element.
         return mapContainer.offsetWidth - (sidebar.offsetWidth + sidebar.offsetLeft);
+    }
 
+    /**
+     * Close the directions and set the visibility of the blue route to false.
+     */
+    function onDirectionsClosed() {
+        directionsRenderer.setRoute(null);
+        onBack();
     }
 
     return (
