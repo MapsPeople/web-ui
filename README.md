@@ -22,7 +22,7 @@ cd packages/mapsindoors-map-react && npm run start
 ```
 
 <details>
-  <summary>A quick primer on [Lerna](https://lerna.js.org)</summary>
+  <summary>A quick primer on Lerna</summary>
   <p>Built on top of [npm's Workspaces feature](https://docs.npmjs.com/cli/v9/using-npm/workspaces?v=true), [Lerna](https://lerna.js.org) makes sure you install the packages defined in each individual _package's_ `package.json`. In this case, from `components`, `mapsindoors-map-react` and `midt`. At the same time, you install the latest version of each of those projects so you can work with them across your _packages_ in this repo. We often make changes to `components` we need for a feature in the `mapsindoors-map-react` project. Using [Lerna](https://lerna.js.org), we don't have to deal with `npm link`, but can work on one feature across projects easily.</p>
 </details>
 
