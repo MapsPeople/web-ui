@@ -44,14 +44,6 @@
 
     &__details {
         padding: var(--spacing-medium);
-
-        // &--show {
-        //     display: block;
-        // }
-
-        // &--hide {
-        //     display: none;
-        // }
     }
 
     &__results {
@@ -60,6 +52,10 @@
         padding: var(--spacing-x-small);
         overflow: scroll;
         grid-auto-rows: min-content;
+
+        p {
+            text-align: center;
+        }
     }
 
     &__accessibility {
@@ -76,8 +72,7 @@
 
     &__info {
         display: grid;
-        grid-auto-flow: column;
-        justify-content: space-between;
+        gap: var(--spacing-x-small);
     }
 
     &__distance,
@@ -87,6 +82,7 @@
         gap: var(--spacing-xx-small);
         align-items: center;
         color: var(--color-gray-70);
+        width: fit-content;
     }
 
     &__minutes,
@@ -125,7 +121,12 @@
         overflow: auto;
     }
 
+    &__error {
+        text-align: center;
+    }
+
     @media (min-width: $desktop-breakpoint) {
         max-height: 50vh;
+        min-height: 400px;
     }
 }

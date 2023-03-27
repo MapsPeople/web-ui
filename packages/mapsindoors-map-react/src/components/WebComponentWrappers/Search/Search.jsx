@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import useNear from '../../../hooks/useNear';
 
 /**
  * React wrapper around the custom element <mi-search>.
@@ -17,6 +18,9 @@ import { useEffect, useRef } from 'react';
 function SearchField({ placeholder, mapsindoors, results, clicked, cleared, clear, displayText, hasInputFocus }) {
     const elementRef = useRef();
 
+    /** Instruct the search field to search for Locations near the map center. */
+    const searchNear = useNear();
+
     useEffect(() => {
         const searchResultsHandler = customEvent => results(customEvent.detail);
 
@@ -34,7 +38,7 @@ function SearchField({ placeholder, mapsindoors, results, clicked, cleared, clea
             current.setDisplayText(displayText);
         }
 
-        if (hasInputFocus) {
+        if (hasInputFocus && !current.value) {
             current.focusInput();
         }
 
@@ -50,9 +54,7 @@ function SearchField({ placeholder, mapsindoors, results, clicked, cleared, clea
 
     }, [placeholder, mapsindoors, results, clicked, cleared, displayText, hasInputFocus]);
 
-
-
-    return <mi-search ref={elementRef} placeholder={placeholder} />
+    return <mi-search ref={elementRef} placeholder={placeholder} mi-near={searchNear}  />
 }
 
 export default SearchField;
