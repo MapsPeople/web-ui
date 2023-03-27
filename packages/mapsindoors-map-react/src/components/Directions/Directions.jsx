@@ -42,6 +42,7 @@ function Directions({ isOpen, onBack, directions }) {
         }
     }, [isOpen, directions, mapsIndoorsInstance]);
 
+    // FIXME: investigate if we can handle the height and width with hooks
     /**
      * Get the height of the bottom sheet in pixels.
      */
