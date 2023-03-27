@@ -46,7 +46,6 @@ function Directions({ isOpen, onBack, directions }) {
             // Set the step index to be 0 in order to display the correct instruction on the map.
             directionsRenderer.setStepIndex(0);
         }
-
     }, [isOpen, directions, mapsIndoorsInstance]);
 
     /**
@@ -68,18 +67,15 @@ function Directions({ isOpen, onBack, directions }) {
         return directions.directionsResult.legs.reduce((accummulator, leg, legIndex) => {
             for (const stepIndex in leg.steps) {
                 const step = leg.steps[stepIndex];
-                step.originalLegIndex = legIndex;
-                step.originalStepIndex = parseInt(stepIndex);
 
                 accummulator.push(step);
             }
             return accummulator;
-
         }, []);
     }
 
     /**
-     * Display the map interaction when navigatin to the next step.
+     * Render the next navigation step on the map.
      */
     function onNext() {
         if (directionsRenderer) {
@@ -88,7 +84,7 @@ function Directions({ isOpen, onBack, directions }) {
     }
 
     /**
-     * Display the map interaction when navigatin to the previous step.
+     * Render the previous navigation step on the map.
      */
     function onPrevious() {
         if (directionsRenderer) {
@@ -162,6 +158,7 @@ function Directions({ isOpen, onBack, directions }) {
                 <div className="directions__steps">
                     <RouteInstructions
                         steps={getRouteSteps()}
+                        originLocation={directions?.originLocation}
                         onNextStep={() => onNext()}
                         onPreviousStep={() => onPrevious()}>
                     </RouteInstructions>

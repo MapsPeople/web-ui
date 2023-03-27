@@ -10,13 +10,15 @@ import { ReactComponent as ArrowLeft } from '../../assets/arrow-left.svg';
  * @param {array} props.steps - The steps array passed after the directions are set.
  * @param {function} props.onNextStep - Function handling the navigation to the next step.
  * @param {function} props.onPreviousStep - Function handling the navigation to the previous step.
+ * @param {object} props.originLocation - The initial location where the route starts from.
+ *
  * @returns
  */
-function RouteInstructions({ steps, onNextStep, onPreviousStep }) {
+function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }) {
     /** Referencing the previous step of each active step */
     const [previous, setPrevious] = useState();
 
-    const [activeStep, setActiveStep] = useState(0)
+    const [activeStep, setActiveStep] = useState(0);
 
     /**
      * Navigate to the next step.
@@ -24,7 +26,7 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep }) {
      * instruction and travel mode.
      */
     function nextStep() {
-        setPrevious(steps[activeStep])
+        setPrevious(steps[activeStep]);
         setActiveStep(activeStep + 1);
         onNextStep();
     }
@@ -35,7 +37,7 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep }) {
      * instruction and travel mode.
      */
     function previousStep() {
-        setPrevious(steps[activeStep - 2])
+        setPrevious(steps[activeStep - 2]);
         setActiveStep(activeStep - 1);
         onPreviousStep();
     }
@@ -76,31 +78,33 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep }) {
     }
 
     return (
-        <div className='route-instructions'>
+        <div className="route-instructions">
             {steps &&
                 <>
                     <mi-route-instructions-step
                         step={JSON.stringify(steps[activeStep])}
                         translations={JSON.stringify(translations)}
-                        from-travel-mode={previous?.travel_mode ?? ''}
-                        from-route-context={previous?.route_context ?? steps[activeStep]?.start_context.building.buildingInfo.name ?? ''}>
+                        from-travel-mode={previous?.travel_mode ?? ""}
+                        from-route-context={previous?.route_context ?? originLocation?.properties?.name ?? ""}>
                     </mi-route-instructions-step>
-                    <div className='route-instructions__progress'>
+                    <div className="route-instructions__progress">
                         {steps.map((_, index) => (
-                            <div className={`route-instructions__step ${(activeStep) >= index ? 'completed' : ''}`} key={index}>
+                            <div className={`route-instructions__step ${(activeStep) >= index ? "completed" : ""}`} key={index}>
                                 <div className="step-counter"></div>
                             </div>
                         ))}
                     </div>
-                    <div className='route-instructions__actions'>
-                        <button className='route-instructions__button'
+                    <div className="route-instructions__actions">
+                        <button className="route-instructions__button"
                             onClick={() => previousStep()}
+                            aria-label="Previous"
                             disabled={activeStep === 0}>
                             <ArrowLeft></ArrowLeft>
                         </button>
-                        <div className='route-instructions__overview'>Step {activeStep + 1} of {steps.length}</div>
-                        <button className='route-instructions__button'
+                        <div className="route-instructions__overview">Step {activeStep + 1} of {steps.length}</div>
+                        <button className="route-instructions__button"
                             onClick={() => nextStep()}
+                            aria-label="Next"
                             disabled={activeStep === steps.length - 1}>
                             <ArrowRight></ArrowRight>
                         </button>
