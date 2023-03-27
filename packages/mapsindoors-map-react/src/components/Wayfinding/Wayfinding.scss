@@ -44,14 +44,6 @@
 
     &__details {
         padding: var(--spacing-medium);
-
-        // &--show {
-        //     display: block;
-        // }
-
-        // &--hide {
-        //     display: none;
-        // }
     }
 
     &__results {
@@ -60,6 +52,10 @@
         padding: var(--spacing-x-small);
         overflow: scroll;
         grid-auto-rows: min-content;
+
+        p {
+            text-align: center;
+        }
     }
 
     &__accessibility {
@@ -131,5 +127,6 @@
 
     @media (min-width: $desktop-breakpoint) {
         max-height: 50vh;
+        min-height: 400px;
     }
 }

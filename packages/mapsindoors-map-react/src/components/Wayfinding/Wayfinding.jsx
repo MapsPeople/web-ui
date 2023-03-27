@@ -18,6 +18,12 @@ const searchFieldItentifiers = {
 };
 
 /**
+ * Private variable used to assign the active search field.
+ * Implemented due to the impossibility to use the React useState hook.
+ */
+let _activeSearchField;
+
+/**
  * Show the wayfinding view.
  *
  * @param {Object} props
@@ -37,11 +43,13 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     /** Check if a route has been found */
     const [hasFoundRoute, setHasFoundRoute] = useState(true);
 
-    /** Holds search results given from a search field. */
-    const [searchResults, setSearchResults] = useState([]);
+    /** Check if search results have been found */
+    const [hasSearchResults, setHasSearchResults] = useState(true);
 
-    /** Variable for determining the active search field */
-    const [activeSearchField, setActiveSearchField] = useState();
+    const [hasError, setHasError] = useState(false);
+
+    /** Holds search results given from a search field */
+    const [searchResults, setSearchResults] = useState([]);
 
     const [toFieldDisplayText, setToFieldDisplayText] = useState();
 
@@ -62,10 +70,10 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      * and clears out the results list.
      */
     function locationClickHandler(location) {
-        if (activeSearchField === searchFieldItentifiers.TO) {
+        if (_activeSearchField === searchFieldItentifiers.TO) {
             setToFieldDisplayText(location.properties.name);
             setDestinationLocation(location);
-        } else if (activeSearchField === searchFieldItentifiers.FROM) {
+        } else if (_activeSearchField === searchFieldItentifiers.FROM) {
             setFromFieldDisplayText(location.properties.name);
             setOriginLocation(location);
         }
@@ -80,8 +88,14 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      * @param {string} searchFieldIdentifier
      */
     function searchResultsReceived(results, searchFieldIdentifier) {
-        setActiveSearchField(searchFieldIdentifier);
-        setSearchResults(results);
+        _activeSearchField = searchFieldIdentifier;
+
+        if (results.length === 0) {
+            setHasSearchResults(false);
+        } else {
+            setHasSearchResults(true);
+            setSearchResults(results);
+        }
     }
 
     /**
@@ -93,16 +107,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
             onSetSize(size);
         }
     }
-
-    useEffect(() => {
-        setSize(snapPoints.MAX);
-        // If there is a location selected, pre-fill the value of the `to` field with the location name.
-        if (location) {
-            setToFieldDisplayText(location.properties.name);
-            setDestinationLocation(location);
-        }
-
-    }, [location]);
 
     /**
      * Get a point with a floor from a Location to use as origin or destination point.
@@ -116,6 +120,52 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     }
 
     /**
+     * Handle click events on the search field.
+     *
+     * @param {string} searchFieldIdentifier
+     */
+    function onSearchClicked(searchFieldIdentifier) {
+        _activeSearchField = searchFieldIdentifier;
+        resetSearchField();
+    }
+
+    /**
+     * Handle cleared events on the search field.
+     *
+     * @param {string} searchFieldIdentifier
+     */
+    function onSearchCleared(searchFieldIdentifier) {
+        _activeSearchField = searchFieldIdentifier;
+        resetSearchField();
+        setSearchResults([]);
+    }
+
+    /**
+    * Reset the active field's display text and location.
+    */
+    function resetSearchField() {
+        if (_activeSearchField === searchFieldItentifiers.TO) {
+            setToFieldDisplayText('');
+            setDestinationLocation();
+        } else if (_activeSearchField === searchFieldItentifiers.FROM) {
+            setFromFieldDisplayText('');
+            setOriginLocation();
+        }
+    }
+
+
+    useEffect(() => {
+        setSize(snapPoints.MAX);
+        // If there is a location selected, pre-fill the value of the `to` field with the location name.
+        if (location) {
+            setToFieldDisplayText(location.properties.name);
+            setDestinationLocation(location);
+        }
+
+        _activeSearchField = searchFieldItentifiers.FROM;
+    }, [location]);
+
+    /**
      * When both origin location and destination location are selected, call the MapsIndoors SDK
      * to get information about the route.
      */
@@ -126,21 +176,24 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                 destination: getLocationPoint(destinationLocation),
                 avoidStairs: accessibilityOn
             }).then(directionsResult => {
-                // Calculate total distance and time
-                // FIXME: Can we get a "faulty" response with no legs? If so, this will probably crash.
-                const totalDistance = directionsResult.legs.reduce((accumulator, current) => accumulator + current.distance.value, 0);
-                const totalTime = directionsResult.legs.reduce((accumulator, current) => accumulator + current.duration.value, 0);
+                if (directionsResult && directionsResult.legs) {
+                    // Calculate total distance and time
+                    const totalDistance = directionsResult.legs.reduce((accumulator, current) => accumulator + current.distance.value, 0);
+                    const totalTime = directionsResult.legs.reduce((accumulator, current) => accumulator + current.duration.value, 0);
 
-                setTotalDistance(totalDistance);
-                setTotalTime(totalTime);
+                    setTotalDistance(totalDistance);
+                    setTotalTime(totalTime);
 
-                onDirections({
-                    originLocation,
-                    destinationLocation,
-                    totalDistance,
-                    totalTime,
-                    directionsResult
-                });
+                    onDirections({
+                        originLocation,
+                        destinationLocation,
+                        totalDistance,
+                        totalTime,
+                        directionsResult
+                    });
+                } else {
+                    setHasError(true);
+                }
             }, () => {
                 setHasFoundRoute(false);
             });
@@ -162,6 +215,8 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                             placeholder="Search by name, category, building..."
                             results={locations => searchResultsReceived(locations, searchFieldItentifiers.TO)}
                             displayText={toFieldDisplayText}
+                            clicked={() => onSearchClicked(searchFieldItentifiers.TO)}
+                            cleared={() => onSearchCleared(searchFieldItentifiers.TO)}
                         />
                     </label>
                     <label className="wayfinding__label">
@@ -172,11 +227,15 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                             placeholder="Search by name, category, buildings..."
                             results={locations => searchResultsReceived(locations, searchFieldItentifiers.FROM)}
                             displayText={fromFieldDisplayText}
+                            clicked={() => onSearchClicked(searchFieldItentifiers.FROM)}
+                            cleared={() => onSearchCleared(searchFieldItentifiers.FROM)}
                         />
                     </label>
                 </div>
             </div>
             {!hasFoundRoute && <p className="wayfinding__error">No route has been found</p>}
+            {hasError && <p className="wayfinding__error">Something went wrong. Please try again.</p>}
+            {!hasSearchResults && <p className="wayfinding__error">Nothing was found</p>}
             {(!originLocation || !destinationLocation) && <div className="wayfinding__scrollable" {...scrollableContentSwipePrevent}>
                 <div className="wayfinding__results">
                     {searchResults.map(location =>
@@ -189,8 +248,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
             </div>
             }
 
-            {/* Fixme: Add functionality to the accessibility feature. */}
-            {hasFoundRoute && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
+            {hasFoundRoute && !hasError && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
                 <div className="wayfinding__accessibility">
                     <input className="mi-toggle" type="checkbox" checked={accessibilityOn} onChange={e => setAccessibilityOn(e.target.checked)} />
                     <div>Accessibility</div>
@@ -198,7 +256,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                 </div>
                 <hr></hr>
                 <div className="wayfinding__info">
-                    {/* Fixme: Implement dynamic value rendering. */}
                     <div className="wayfinding__distance">
                         <WalkingIcon />
                         <div>Distance:</div>
