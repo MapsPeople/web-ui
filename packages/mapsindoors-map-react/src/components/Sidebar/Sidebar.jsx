@@ -21,8 +21,11 @@ const VIEWS = {
  * @param {function} props.onLocationsFiltered - The list of locations after filtering through the categories.
  * @param {function} props.onHideFloorSelector - Trigger the visibility of the floor selector to be hidden.
  * @param {function} props.onShowFloorSelector- Trigger the visibility of the floor selector to be shown.
+ * @param {function} props.onDisableLocations - Restrict the user from interacting with the locations when in wayfinding mode.
+ * @param {function} props.onEnableLocations - Allow the user to interact with the locations when outside of directions mode.
+ *
 */
-function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onHideFloorSelector, onShowFloorSelector }) {
+function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onHideFloorSelector, onShowFloorSelector, onDisableLocations, onEnableLocations }) {
     const [activePage, setActivePage] = useState(null);
 
     const [directions, setDirections] = useState();
@@ -42,6 +45,7 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
     function setPage(page) {
         setActivePage(page);
         onShowFloorSelector();
+        onEnableLocations();
     }
 
     /**
@@ -50,6 +54,7 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
     function setDirectionsPage() {
         setActivePage(VIEWS.DIRECTIONS);
         onHideFloorSelector();
+        onDisableLocations();
     }
 
     const pages = [

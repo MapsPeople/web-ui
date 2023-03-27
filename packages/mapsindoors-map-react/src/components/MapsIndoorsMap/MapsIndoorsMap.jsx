@@ -14,6 +14,12 @@ import Sidebar from '../Sidebar/Sidebar';
 const mapsindoors = window.mapsindoors;
 
 /**
+ * Private variable used for checking if the locations should be disabled.
+ * Implemented due to the impossibility to use the React useState hook.
+ */
+let _locationsDisabled;
+
+/**
  *
  * @param {Object} props
  * @param {string} props.apiKey - MapsIndoors API key or solution alias.
@@ -62,6 +68,32 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     function hideFloorSelector() {
         if (hasFloorSelector === true) {
             setHasFloorSelector(false);
+        }
+    }
+
+    /**
+     * Disable the locations when in directions mode.
+     */
+    function disableLocations() {
+        _locationsDisabled = true;
+    }
+
+    /**
+     * Enable the locations when not in directions mode.
+     */
+    function enableLocations() {
+        _locationsDisabled = false;
+    }
+
+    /**
+    * Handle the clicked location on the map.
+    * Set the current location if not in directions mode.
+    *
+    * @param {object} location
+    */
+    function locationClicked(location) {
+        if (_locationsDisabled !== true) {
+            setCurrentLocation(location);
         }
     }
 
