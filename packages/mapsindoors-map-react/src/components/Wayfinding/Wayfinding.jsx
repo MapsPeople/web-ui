@@ -40,6 +40,8 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     /** Holds search results given from a search field. */
     const [searchResults, setSearchResults] = useState([]);
 
+    const [hasError, setHasError] = useState(false);
+
     /** Variable for determining the active search field */
     const [activeSearchField, setActiveSearchField] = useState();
 
@@ -126,21 +128,24 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                 destination: getLocationPoint(destinationLocation),
                 avoidStairs: accessibilityOn
             }).then(directionsResult => {
-                // Calculate total distance and time
-                // FIXME: Can we get a "faulty" response with no legs? If so, this will probably crash.
-                const totalDistance = directionsResult.legs.reduce((accumulator, current) => accumulator + current.distance.value, 0);
-                const totalTime = directionsResult.legs.reduce((accumulator, current) => accumulator + current.duration.value, 0);
+                if (directionsResult && directionsResult.legs) {
+                    // Calculate total distance and time
+                    const totalDistance = directionsResult.legs.reduce((accumulator, current) => accumulator + current.distance.value, 0);
+                    const totalTime = directionsResult.legs.reduce((accumulator, current) => accumulator + current.duration.value, 0);
 
-                setTotalDistance(totalDistance);
-                setTotalTime(totalTime);
+                    setTotalDistance(totalDistance);
+                    setTotalTime(totalTime);
 
-                onDirections({
-                    originLocation,
-                    destinationLocation,
-                    totalDistance,
-                    totalTime,
-                    directionsResult
-                });
+                    onDirections({
+                        originLocation,
+                        destinationLocation,
+                        totalDistance,
+                        totalTime,
+                        directionsResult
+                    });
+                } else {
+                    setHasError(true);
+                }
             }, () => {
                 setHasFoundRoute(false);
             });
@@ -178,6 +183,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                 </div>
             </div>
             {!hasFoundRoute && <p className="wayfinding__error">No route has been found</p>}
+            {hasError && <p className="wayfinding__error">Something went wrong. Please try again.</p>}
             {(!originLocation || !destinationLocation) && <div className="wayfinding__scrollable" {...scrollableContentSwipePrevent}>
                 <div className="wayfinding__results">
                     {searchResults.map(location =>
@@ -190,8 +196,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
             </div>
             }
 
-            {/* Fixme: Add functionality to the accessibility feature. */}
-            {hasFoundRoute && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
+            {hasFoundRoute && !hasError && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
                 <div className="wayfinding__accessibility">
                     <input className="mi-toggle" type="checkbox" checked={accessibilityOn} onChange={e => setAccessibilityOn(e.target.checked)} />
                     <div>Accessibility</div>
@@ -199,7 +204,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                 </div>
                 <hr></hr>
                 <div className="wayfinding__info">
-                    {/* Fixme: Implement dynamic value rendering. */}
                     <div className="wayfinding__distance">
                         <WalkingIcon />
                         <div>Distance:</div>

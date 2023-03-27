@@ -60,6 +60,10 @@
         padding: var(--spacing-x-small);
         overflow: scroll;
         grid-auto-rows: min-content;
+
+        p {
+            text-align: center;
+        }
     }
 
     &__accessibility {
