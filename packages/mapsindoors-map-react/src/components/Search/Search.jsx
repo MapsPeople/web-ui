@@ -4,7 +4,7 @@ import { useRef, useEffect, useState, useContext } from 'react';
 import { snapPoints } from '../../constants/snapPoints';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import { MapsIndoorsContext } from '../../MapsIndoorsContext';
-import { MapReadyContext } from '../../MapReadyContext';
+import useNear from '../../hooks/useNear';
 
 /** Initialize the MapsIndoors instance. */
 const mapsindoors = window.mapsindoors;
@@ -39,14 +39,12 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
     /** Determines which category has been selected */
     const [selectedCategory, setSelectedCategory] = useState();
 
-    /** Holds the center of the map. Used to instruct the search field to search near that. */
-    const [mapCenter, setMapCenter] = useState();
+    /** Instruct the search field to search for Locations near the map center. */
+    const searchNear = useNear();
 
     const scrollableContentSwipePrevent = usePreventSwipe();
 
     const mapsIndoorsInstance = useContext(MapsIndoorsContext);
-
-    const mapReady = useContext(MapReadyContext);
 
     /**
      * Click event handler that takes the selected location as an argument.
@@ -168,30 +166,6 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
         }
     }
 
-    /**
-     * Make the search field perform searches with the near parameter.
-     * Will update the near parameter with the center of the map whenever the map bounds change.
-     */
-    useEffect(() => {
-        function centerHandler() {
-            const center = mapsIndoorsInstance.getMapView().getCenter();
-            setMapCenter(center.lat + ',' + center.lng);
-        }
-
-        if (mapsIndoorsInstance && mapReady) {
-            mapsIndoorsInstance.getMapView().addListener('idle', centerHandler);
-            centerHandler();
-        } else if (mapsIndoorsInstance) {
-            mapsIndoorsInstance.getMapView().removeListener('idle', centerHandler);
-        }
-
-        return () => {
-            if (mapsIndoorsInstance) {
-                mapsIndoorsInstance.getMapView().removeListener('idle', centerHandler);
-            }
-        };
-    }, [mapsIndoorsInstance, mapReady]);
-
     useEffect(() => {
         /**
          * Search location and add results list implementation.
@@ -237,7 +211,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
 
     return (
         <div className="search">
-            <mi-search mi-near={mapCenter} ref={searchFieldRef} placeholder="Search by name, category, building..." mapsindoors="true"></mi-search>
+            <mi-search mi-near={searchNear} ref={searchFieldRef} placeholder="Search by name, category, building..." mapsindoors="true"></mi-search>
             <div className="search__scrollable prevent-scroll" {...scrollableContentSwipePrevent}>
                 <div ref={categoriesListRef} className="search__categories">
                     {categories?.map(([category]) =>
