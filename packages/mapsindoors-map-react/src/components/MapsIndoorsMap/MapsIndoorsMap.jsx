@@ -50,6 +50,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     function venueChangedOnMap() {
         if (isMapReady === false) {
             setMapReady(true);
+            setCurrentVenueName(currentVenueName);
         }
     }
 
@@ -129,6 +130,14 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
      */
     useEffect(() => {
         setCurrentVenueName(venue);
+        console.log(venue)
+        if (venue) {
+            mapsindoors.services.LocationsService.getLocations({}).then(locations => {
+                const filteredLocations = locations.filter(location => location.properties.venueId === venue);
+                getCategories(filteredLocations);
+            })
+        }
+
     }, [venue]);
 
     /**
@@ -156,12 +165,9 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             mapsindoors.services.VenuesService.getVenues(),
             // Fixme: Venue Images are currently stored in the AppConfig object. So we will need to fetch the AppConfig as well.
             mapsindoors.services.AppConfigService.getConfig(),
-            // Fetch all Locations
-            mapsindoors.services.LocationsService.getLocations({}),
             // Ensure a minimum waiting time of 3 seconds
             new Promise(resolve => setTimeout(resolve, 3000))
-        ]).then(([venuesResult, appConfigResult, locationsResult]) => {
-            getCategories(locationsResult);
+        ]).then(([venuesResult, appConfigResult]) => {
             venuesResult = venuesResult.map(venue => {
                 venue.image = appConfigResult.venueImages[venue.name.toLowerCase()];
                 return venue;
