@@ -228,5 +228,4 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
     )
 }
 
-
 export default Search;
