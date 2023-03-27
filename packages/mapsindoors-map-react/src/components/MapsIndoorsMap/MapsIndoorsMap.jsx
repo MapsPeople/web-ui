@@ -74,7 +74,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
         let uniqueCategories = new Map();
 
         // Loop through the locations and count the unique locations.
-        // Show the display name on the categories instead of the key.
+        // Build an object which contains the key, the count and the display name.
         for (const location of locationsResult) {
             const keys = Object.keys(location.properties.categories);
             for (const key of keys) {
