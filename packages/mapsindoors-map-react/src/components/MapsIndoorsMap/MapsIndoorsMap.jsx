@@ -187,6 +187,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             onLocationsFiltered={(locations) => setFilteredLocations(locations)}
                             onHideFloorSelector={() => hideFloorSelector()}
                             onShowFloorSelector={() => showFloorSelector()}
+                            onDisableLocations={() => disableLocations()}
+                            onEnableLocations={() => enableLocations()}
                         />
                         :
                         <BottomSheet
@@ -196,6 +198,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             onLocationsFiltered={(locations) => setFilteredLocations(locations)}
                             onHideFloorSelector={() => hideFloorSelector()}
                             onShowFloorSelector={() => showFloorSelector()}
+                            onDisableLocations={() => disableLocations()}
+                            onEnableLocations={() => enableLocations()}
                         />
                     }
                     <MIMap
@@ -207,7 +211,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                         onVenueChangedOnMap={() => venueChangedOnMap()}
                         onMapsIndoorsInstance={(instance) => setMapsIndoorsInstance(instance)}
                         onDirectionsService={(instance) => setDirectionsService(instance)}
-                        onLocationClick={(location) => setCurrentLocation(location)}
+                        onLocationClick={(location) => locationClicked(location)}
                         filteredLocationIds={filteredLocations?.map(location => location.id)} />
                 </div>
             </DirectionsServiceContext.Provider>
