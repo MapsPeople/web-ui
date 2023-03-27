@@ -6,6 +6,7 @@ import SplashScreen from '../SplashScreen/SplashScreen';
 import VenueSelector from '../VenueSelector/VenueSelector';
 import BottomSheet from '../BottomSheet/BottomSheet';
 import { MapsIndoorsContext } from '../../MapsIndoorsContext';
+import { MapReadyContext } from '../../MapReadyContext';
 import { DirectionsServiceContext } from '../../DirectionsServiceContext';
 import useMediaQuery from '../../hooks/useMediaQuery';
 import Sidebar from '../Sidebar/Sidebar';
@@ -171,48 +172,46 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
 
 
     return (<MapsIndoorsContext.Provider value={mapsIndoorsInstance}>
-        <DirectionsServiceContext.Provider value={directionsService}>
-            <div className={`mapsindoors-map ${!hasFloorSelector ? 'mapsindoors-map__floor-selector--hide' : 'mapsindoors-map__floor-selector--show'}`}>
-                {!isMapReady && <SplashScreen logo={logo} primaryColor={primaryColor} />}
-                {venues.length > 1 && <VenueSelector onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)} venues={venues} currentVenueName={currentVenueName} />}
-                {isMapReady && isDesktop
-                    ?
-                    <Sidebar
-                        currentLocation={currentLocation}
-                        setCurrentLocation={setCurrentLocation}
-                        currentCategories={currentCategories}
-                        onClose={() => setCurrentLocation(null)}
-                        onLocationsFiltered={(locations) => setFilteredLocations(locations)}
-                        onHideFloorSelector={() => hideFloorSelector()}
-                        onShowFloorSelector={() => showFloorSelector()}
-                        onDisableLocations={() => disableLocations()}
-                        onEnableLocations={() => enableLocations()}
-                    />
-                    :
-                    <BottomSheet
-                        currentLocation={currentLocation}
-                        setCurrentLocation={setCurrentLocation}
-                        currentCategories={currentCategories}
-                        onLocationsFiltered={(locations) => setFilteredLocations(locations)}
-                        onHideFloorSelector={() => hideFloorSelector()}
-                        onShowFloorSelector={() => showFloorSelector()}
-                        onDisableLocations={() => disableLocations()}
-                        onEnableLocations={() => enableLocations()}
-                    />
-                }
-                <MIMap
-                    apiKey={apiKey}
-                    gmApiKey={gmApiKey}
-                    mapboxAccessToken={mapboxAccessToken}
-                    venues={venues}
-                    venueName={currentVenueName}
-                    onVenueChangedOnMap={() => venueChangedOnMap()}
-                    onMapsIndoorsInstance={(instance) => setMapsIndoorsInstance(instance)}
-                    onDirectionsService={(instance) => setDirectionsService(instance)}
-                    onLocationClick={(location) => locationClicked(location)}
-                    filteredLocationIds={filteredLocations?.map(location => location.id)} />
-            </div>
-        </DirectionsServiceContext.Provider>
+        <MapReadyContext.Provider value={isMapReady}>
+            <DirectionsServiceContext.Provider value={directionsService}>
+                <div className={`mapsindoors-map ${!hasFloorSelector ? 'mapsindoors-map__floor-selector--hide' : 'mapsindoors-map__floor-selector--show'}`}>
+                    {!isMapReady && <SplashScreen logo={logo} primaryColor={primaryColor} />}
+                    {venues.length > 1 && <VenueSelector onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)} venues={venues} currentVenueName={currentVenueName} />}
+                    {isMapReady && isDesktop
+                        ?
+                        <Sidebar
+                            currentLocation={currentLocation}
+                            setCurrentLocation={setCurrentLocation}
+                            currentCategories={currentCategories}
+                            onClose={() => setCurrentLocation(null)}
+                            onLocationsFiltered={(locations) => setFilteredLocations(locations)}
+                            onHideFloorSelector={() => hideFloorSelector()}
+                            onShowFloorSelector={() => showFloorSelector()}
+                        />
+                        :
+                        <BottomSheet
+                            currentLocation={currentLocation}
+                            setCurrentLocation={setCurrentLocation}
+                            currentCategories={currentCategories}
+                            onLocationsFiltered={(locations) => setFilteredLocations(locations)}
+                            onHideFloorSelector={() => hideFloorSelector()}
+                            onShowFloorSelector={() => showFloorSelector()}
+                        />
+                    }
+                    <MIMap
+                        apiKey={apiKey}
+                        gmApiKey={gmApiKey}
+                        mapboxAccessToken={mapboxAccessToken}
+                        venues={venues}
+                        venueName={currentVenueName}
+                        onVenueChangedOnMap={() => venueChangedOnMap()}
+                        onMapsIndoorsInstance={(instance) => setMapsIndoorsInstance(instance)}
+                        onDirectionsService={(instance) => setDirectionsService(instance)}
+                        onLocationClick={(location) => setCurrentLocation(location)}
+                        filteredLocationIds={filteredLocations?.map(location => location.id)} />
+                </div>
+            </DirectionsServiceContext.Provider>
+        </MapReadyContext.Provider>
     </MapsIndoorsContext.Provider>)
 }
 
