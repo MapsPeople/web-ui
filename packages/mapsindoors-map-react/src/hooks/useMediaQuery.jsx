@@ -2,11 +2,10 @@ import { useState, useEffect } from "react";
 
 
 /**
- * Media query hook for determining the device's viewport size. 
+ * Media query hook for determining the device's viewport size.
  *
  * @param {string} query
  */
-
 const useMediaQuery = (query) => {
   const [matches, setMatches] = useState(false);
 
@@ -15,7 +14,7 @@ const useMediaQuery = (query) => {
     if (media.matches !== matches) {
       setMatches(media.matches);
     }
-    
+
     const listener = () => setMatches(media.matches);
     window.addEventListener("resize", listener);
     return () => window.removeEventListener("resize", listener);

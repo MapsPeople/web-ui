@@ -8,6 +8,8 @@ import useMediaQuery from '../../hooks/useMediaQuery';
 
 const mapsindoors = window.mapsindoors;
 
+let directionsRenderer;
+
 function Directions({ isOpen, onBack, directions }) {
 
     const [totalDistance, setTotalDistance] = useState();
@@ -42,7 +44,7 @@ function Directions({ isOpen, onBack, directions }) {
 
     /**
      * Get the height of the bottom sheet in pixels.
-    */
+     */
     function getBottomSheetHeight() {
         const bottomSheet = document.querySelector('.sheet--active');
         const mapContainer = document.querySelector('.mapsindoors-map');
@@ -52,7 +54,7 @@ function Directions({ isOpen, onBack, directions }) {
 
     /**
      * Get the width of the sidebar in pixels
-    */
+     */
     function getSidebarWidth() {
         const sidebar = document.querySelector('.modal--open');
         const mapContainer = document.querySelector('.mapsindoors-map');
@@ -60,10 +62,18 @@ function Directions({ isOpen, onBack, directions }) {
         return mapContainer.offsetWidth - (sidebar.offsetWidth + sidebar.offsetLeft);
     }
 
+    /**
+     * Close the directions and set the visibility of the blue route to false.
+     */
+    function onDirectionsClosed() {
+        directionsRenderer.setRoute(null);
+        onBack();
+    }
+
     return (
         <div className="directions">
             <div className="directions__details">
-                <button className="directions__close" onClick={() => onBack()} aria-label="Close">
+                <button className="directions__close" onClick={() => onDirectionsClosed()} aria-label="Close">
                     <CloseIcon />
                 </button>
                 <div className="directions__locations">

@@ -18,8 +18,14 @@ const VIEWS = {
  * @param {Object} props.setCurrentLocation - The setter for the currently selected MapsIndoors Location.
  * @param {Object} props.currentCategories - The unique categories displayed based on the existing locations.
  * @param {function} props.onLocationsFiltered - The list of locations after filtering through the categories.
+ * @param {function} props.onLocationsFiltered - The list of locations after filtering through the categories.
+ * @param {function} props.onHideFloorSelector - Trigger the visibility of the floor selector to be hidden.
+ * @param {function} props.onShowFloorSelector- Trigger the visibility of the floor selector to be shown.
+ * @param {function} props.onDisableLocations - Restrict the user from interacting with the locations when in wayfinding mode.
+ * @param {function} props.onEnableLocations - Allow the user to interact with the locations when outside of directions mode.
+ *
 */
-function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered }) {
+function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onHideFloorSelector, onShowFloorSelector, onDisableLocations, onEnableLocations }) {
     const [activePage, setActivePage] = useState(null);
 
     const [directions, setDirections] = useState();
@@ -31,6 +37,26 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
         setActivePage(currentLocation ? VIEWS.LOCATION_DETAILS : VIEWS.SEARCH);
     }, [currentLocation]);
 
+    /**
+     * Set the active page and trigger the visibility of the floor selector to be shown.
+     *
+     * @param {number} page
+     */
+    function setPage(page) {
+        setActivePage(page);
+        onShowFloorSelector();
+        onEnableLocations();
+    }
+
+    /**
+     * Navigate to the directions page and trigger the visibility of the floor selector to be hidden.
+     */
+    function setDirectionsPage() {
+        setActivePage(VIEWS.DIRECTIONS);
+        onHideFloorSelector();
+        onDisableLocations();
+    }
+
     const pages = [
         <Modal isOpen={activePage === VIEWS.SEARCH} key="A">
             <Search
@@ -41,17 +67,17 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
         </Modal>,
         <Modal isOpen={activePage === VIEWS.LOCATION_DETAILS} key="B">
             <LocationDetails
-                onStartWayfinding={() => setActivePage(VIEWS.WAYFINDING)}
+                onStartWayfinding={() => setPage(VIEWS.WAYFINDING)}
                 location={currentLocation}
-                onBack={() => setActivePage(VIEWS.SEARCH)}
+                onBack={() => setPage(VIEWS.SEARCH)}
             />
         </Modal>,
         <Modal isOpen={activePage === VIEWS.WAYFINDING} key="C">
             <Wayfinding
-                onStartDirections={() => setActivePage(VIEWS.DIRECTIONS)}
+                onStartDirections={() => setDirectionsPage()}
                 location={currentLocation}
                 onDirections={result => setDirections(result)}
-                onBack={() => setActivePage(VIEWS.LOCATION_DETAILS)}
+                onBack={() => setPage(VIEWS.LOCATION_DETAILS)}
                 isActive={activePage === VIEWS.WAYFINDING}
             />
         </Modal>,
@@ -59,7 +85,7 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
             <Directions
                 isOpen={activePage === VIEWS.DIRECTIONS}
                 directions={directions}
-                onBack={() => setActivePage(VIEWS.WAYFINDING)}
+                onBack={() => setPage(VIEWS.WAYFINDING)}
             />
         </Modal>
     ]
