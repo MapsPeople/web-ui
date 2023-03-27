@@ -70,27 +70,53 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
      * @param {array} locationsResult
      */
     function getCategories(locationsResult) {
-        let uniqueCategories = locationsResult
-            // Flatten the locations result to get a new array of locations that have categories.
-            .flatMap(location => Object.values(location.properties.categories ?? {}))
 
-            // Reduce the array of elements in order to get a new Map with elements and the count of categories with locations associated.
-            .reduce((categories, category) => {
-                if (categories.has(category)) {
-                    let count = categories.get(category);
-                    categories.set(category, ++count);
-                } else {
-                    categories.set(category, 1);
-                }
-                return categories;
-            }, new Map());
+        let categoriesMap = new Map();
+        for (const location of locationsResult) {
+            const displayName = Object.values(location.properties.categories);
+            const key = Object.keys(location.properties.categories);
 
-        // Sort the categories with most locations associated.
-        uniqueCategories = Array.from(uniqueCategories).sort((a, b) => b[1] - a[1])
+            if (categoriesMap.has(key)) {
+                let count = categoriesMap.get(key);
+                categoriesMap.set(key, {count: ++count, displayName: displayName});
+            } else {
+                categoriesMap.set(key, {count: 1, displayName: displayName});
+            }
+        }
 
-        setCurrentCategories(uniqueCategories);
+        categoriesMap = Array.from(categoriesMap).sort((a, b) => b[1] - a[1]);
+
+        setCurrentCategories(categoriesMap);
     }
 
+
+        //  /**
+    //  * Get the unique categories and the count of the categories with locations associated.
+    //  *
+    //  * @param {array} locationsResult
+    //  */
+    //   function getCategories(locationsResult) {
+    //     let uniqueCategories = locationsResult
+    //         // Flatten the locations result to get a new array of locations that have categories.
+    //         .flatMap(location => Object.values(location.properties.categories ?? {}))
+
+    //         // Reduce the array of elements in order to get a new Map with elements and the count of categories with locations associated.
+    //         .reduce((categories, category) => {
+    //             console.log(category)
+    //             if (categories.has(category)) {
+    //                 let count = categories.get(category);
+    //                 categories.set(category, ++count);
+    //             } else {
+    //                 categories.set(category, 1);
+    //             }
+    //             return categories;
+    //         }, new Map());
+
+    //     // Sort the categories with most locations associated.
+    //     uniqueCategories = Array.from(uniqueCategories).sort((a, b) => b[1] - a[1])
+
+    //     setCurrentCategories(uniqueCategories);
+    // }
     /*
      * React on changes in the venue prop.
      */
