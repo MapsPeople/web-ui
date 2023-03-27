@@ -48,10 +48,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
 
     const [hasError, setHasError] = useState(false);
 
-    /** Variable for determining the active search field */
-    const [activeSearchField, setActiveSearchField] = useState();
-
- /** Holds search results given from a search field */
+    /** Holds search results given from a search field */
     const [searchResults, setSearchResults] = useState([]);
 
     const [toFieldDisplayText, setToFieldDisplayText] = useState();
@@ -238,8 +235,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
             </div>
             {!hasFoundRoute && <p className="wayfinding__error">No route has been found</p>}
             {hasError && <p className="wayfinding__error">Something went wrong. Please try again.</p>}
- {!hasSearchResults && <p className="wayfinding__error">Nothing was found</p>}
-
+            {!hasSearchResults && <p className="wayfinding__error">Nothing was found</p>}
             {(!originLocation || !destinationLocation) && <div className="wayfinding__scrollable" {...scrollableContentSwipePrevent}>
                 <div className="wayfinding__results">
                     {searchResults.map(location =>
