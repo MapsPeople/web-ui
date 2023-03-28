@@ -13,8 +13,7 @@ In a terminal:
 
 ```bash
 $ git clone git@github.com:MapsPeople/web-ui.git && cd web-ui
-$ npx lerna run build
-$ npm ci && cd packages/components
+$ npm ci && npx lerna run build && cd packages/components
 $ npm run start
 ```
 
