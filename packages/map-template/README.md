@@ -9,10 +9,10 @@ To get the app up and running, clone this repo, install everything using [Lerna]
 ```zsh
 $ git clone git@github.com:MapsPeople/web-ui.git
 $ cd web-ui && npm install && npx lerna run build
-$ cd packages/mapsindoors-map-react && npm run start
+$ cd packages/map-template && npm run start
 ```
 
-The Map Template has a main `MapsIndoorsMap` React component. It wraps the whole app inside of it. It's used in a function in `App.js` which is imported into `index.js` where it's defined that an HTML element with `id="root"` will render the app. We show how that is done in `packages/mapsindoors-map-react/public/index.html`.
+The Map Template has a main `MapsIndoorsMap` React component. It wraps the whole app inside of it. It's used in a function in `App.js` which is imported into `index.js` where it's defined that an HTML element with `id="root"` will render the app. We show how that is done in `packages/map-template/public/index.html`.
 
 ### React Components
 
