@@ -31,7 +31,6 @@ We use our own Web Components ([Custom Elements](https://developer.mozilla.org/e
    - Directions
     - RouteInstructions
      - mi-route-instructions-step
-      - mi-route-instructions-maneuver
       - mi-icon
       - mi-time
       - mi-distance
