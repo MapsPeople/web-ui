@@ -12,11 +12,9 @@ Read more about Stencil here: [Getting started](https://stenciljs.com/docs/getti
 In a terminal:
 
 ```bash
-$ git clone git@github.com:MapsPeople/web-ui.git
-$ cd web-ui
+$ git clone git@github.com:MapsPeople/web-ui.git && cd web-ui
 $ npx lerna run build
-$ npm ci
-$ cd packages/components
+$ npm ci && cd packages/components
 $ npm run start
 ```
 
