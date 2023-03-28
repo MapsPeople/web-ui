@@ -102,9 +102,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
      */
     function getVenueCategories(venue) {
         mapsindoors.services.LocationsService.getLocations({}).then(locations => {
-            console.log(locations)
             const filteredLocations = locations.filter(location => location.properties.venueId === venue);
-            console.log(filteredLocations)
             getCategories(filteredLocations);
         })
     }
