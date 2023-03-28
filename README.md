@@ -10,7 +10,7 @@ The projects is setup with [Lerna](https://lerna.js.org/).
 
 ### Run the React project
 
-1. Run `npm start` from the `packages/mapsindoors-map-react` folder.
+1. Run `npm start` from the `packages/map-template` folder.
 
 ### Develop on the Stencil components
 
