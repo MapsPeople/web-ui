@@ -28,7 +28,7 @@ function Directions({ isOpen, onBack, directions }) {
             // 6 percent of smallest of viewport height or width
             const padding = Math.min(window.innerHeight, window.innerWidth) * 0.06;
 
-            const directionsRenderer = new mapsindoors.directions.DirectionsRenderer({
+            directionsRenderer = new mapsindoors.directions.DirectionsRenderer({
                 mapsIndoors: mapsIndoorsInstance,
                 fitBoundsPadding: {
                     top: padding,
