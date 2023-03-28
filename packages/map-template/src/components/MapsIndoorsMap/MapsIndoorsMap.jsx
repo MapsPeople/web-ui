@@ -50,8 +50,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     function venueChangedOnMap() {
         if (isMapReady === false) {
             setMapReady(true);
-            setCurrentVenueName(currentVenueName);
         }
+        getVenueCategories(currentVenueName);
     }
 
     /**
@@ -99,11 +99,21 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     }
 
     /**
+     * Get the categories for the selected venue;
+     */
+    function getVenueCategories(venue) {
+        mapsindoors.services.LocationsService.getLocations({}).then(locations => {
+            const filteredLocations = locations.filter(location => location.properties.venueId === venue);
+            getCategories(filteredLocations);
+        })
+    }
+
+    /**
      * Get the unique categories and the count of the categories with locations associated.
      *
      * @param {array} locationsResult
      */
-     function getCategories(locationsResult) {
+    function getCategories(locationsResult) {
         // Initialise the unique categories map
         let uniqueCategories = new Map();
 
@@ -133,14 +143,9 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
      */
     useEffect(() => {
         setCurrentVenueName(venue);
-        console.log(venue)
         if (venue) {
-            mapsindoors.services.LocationsService.getLocations({}).then(locations => {
-                const filteredLocations = locations.filter(location => location.properties.venueId === venue);
-                getCategories(filteredLocations);
-            })
+            getVenueCategories(venue);
         }
-
     }, [venue]);
 
     /**
