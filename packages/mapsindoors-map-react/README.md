@@ -8,7 +8,7 @@ To get the app up and running, clone this repo, install everything using [Lerna]
 
 ```zsh
 $ git clone git@github.com:MapsPeople/web-ui.git
-$ cd web-ui && npm install && npx run lerna build
+$ cd web-ui && npm install && npx lerna run build
 $ cd packages/mapsindoors-map-react && npm run start
 ```
 
