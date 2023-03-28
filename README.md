@@ -13,3 +13,10 @@ The repo consists of these _packages_, which are all found in the `packages` fol
 
 Built on top of [npm's Workspaces feature](https://docs.npmjs.com/cli/v9/using-npm/workspaces?v=true), [Lerna](https://lerna.js.org) makes sure you install the packages defined in each individual _package's_ `package.json`. In this case, from `components`, `mapsindoors-map-react` and `midt`. At the same time, you install the latest version of each of those projects so you can work with them across your _packages_ in this repo. We often make changes to `components` we need for a feature in the `mapsindoors-map-react` project. Using [Lerna](https://lerna.js.org), we don't have to deal with `npm link`, but can work on one feature across projects easily.
 
+## Conventional Commits
+
+We use, and heavily rely on, the use of [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
+
+Conventional Commits lets us write commits in a standardized fashion, no matter the contributor, and since we follow [Semantic Versioning](https://semver.org), we can keep everything in check more easily following the standards.
+
+If your contribution to this repository doesn't follow these standards, it might be rejected, so please familiarize yourself with them before opening Pull Requests.
