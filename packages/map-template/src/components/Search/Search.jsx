@@ -214,8 +214,9 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
             <mi-search mi-near={searchNear} ref={searchFieldRef} placeholder="Search by name, category, building..." mapsindoors="true"></mi-search>
             <div className="search__scrollable prevent-scroll" {...scrollableContentSwipePrevent}>
                 <div ref={categoriesListRef} className="search__categories">
-                    {categories?.map(([category]) =>
-                        <mi-chip content={category}
+                    {categories?.map(([category, categoryInfo]) =>
+                        <mi-chip
+                            content={categoryInfo.displayName}
                             active={selectedCategory === category}
                             onClick={() => categoryClicked(category)}
                             key={category}>
