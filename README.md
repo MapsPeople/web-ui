@@ -4,10 +4,10 @@ This monorepo contains all UI projects for the MapsIndoors platform for Web. It 
 
 The repo consists of these _packages_, which are all found in the `packages` folder:
 
-- `components`, the MapsIndoors Web Components found at [@mapsindoors/components](https://www.npmjs.com/package/@mapsindoors/components)
+- [`components`](https://github.com/MapsPeople/web-ui/blob/main/packages/components/README.md), the MapsIndoors Web Components found at [@mapsindoors/components](https://www.npmjs.com/package/@mapsindoors/components)
 - `demos`, a collection of demos of how to use the _packages_ in this repo
-- `map-template`, the MapsIndoors Map Template, a React app helping you get up and running fast and easy
-- `midt`, i.e. MapsIndoors Design Tokens, a design library used as the foundation for UI styles across MapsIndoors
+- [`map-template`](https://github.com/MapsPeople/web-ui/blob/main/packages/map-template/README.md), the MapsIndoors Map Template, a React app helping you get up and running fast and easy
+- [`midt`](https://github.com/MapsPeople/web-ui/blob/main/packages/midt/README.md), i.e. MapsIndoors Design Tokens, a design library used as the foundation for UI styles across MapsIndoors
 
 ## A quick primer on Lerna
 
