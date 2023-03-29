@@ -23,6 +23,18 @@
             display: none;
         }
     }
+
+    &__venue-selector--show {
+        .venue-selector__button {
+            display: block;
+        }
+    }
+
+    &__venue-selector--hide {
+        .venue-selector__button {
+            display: none;
+        }
+    }
 }
 
 .map-container {

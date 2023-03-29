@@ -23,9 +23,11 @@ const VIEWS = {
  * @param {function} props.onShowFloorSelector- Trigger the visibility of the floor selector to be shown.
  * @param {function} props.onDisableLocations - Restrict the user from interacting with the locations when in wayfinding mode.
  * @param {function} props.onEnableLocations - Allow the user to interact with the locations when outside of directions mode.
+ * @param {function} props.onHideVenueSelector - Trigger the visibility of the venue selector to be hidden.
+ * @param {function} props.onShowVenueSelector - Trigger the visibility of the venue selector to be shown.
  *
 */
-function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onHideFloorSelector, onShowFloorSelector, onDisableLocations, onEnableLocations }) {
+function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onHideFloorSelector, onShowFloorSelector, onDisableLocations, onEnableLocations, onHideVenueSelector, onShowVenueSelector }) {
     const [activePage, setActivePage] = useState(null);
 
     const [directions, setDirections] = useState();
@@ -46,6 +48,7 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
         setActivePage(page);
         onShowFloorSelector();
         onEnableLocations();
+        onShowVenueSelector();
     }
 
     /**
@@ -55,6 +58,7 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
         setActivePage(VIEWS.DIRECTIONS);
         onHideFloorSelector();
         onDisableLocations();
+        onHideVenueSelector();
     }
 
     const pages = [

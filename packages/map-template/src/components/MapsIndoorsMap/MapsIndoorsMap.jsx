@@ -41,6 +41,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const [directionsService, setDirectionsService] = useState();
     const [hasFloorSelector, setHasFloorSelector] = useState(true);
+    const [hasVenueSelector, setHasVenueSelector] = useState(true);
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
@@ -54,7 +55,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     }
 
     /**
-     * Show the floor selector.
+     * Show the floor selector when not having the directions open.
      */
     function showFloorSelector() {
         if (hasFloorSelector === false) {
@@ -86,6 +87,24 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     }
 
     /**
+    * Show the venue selector when not having the directions open.
+    */
+    function showVenueSelector() {
+        if (hasVenueSelector === false) {
+            setHasVenueSelector(true);
+        }
+    }
+
+    /**
+     * Hide the venue selector when the directions are open.
+     */
+    function hideVenueSelector() {
+        if (hasVenueSelector === true) {
+            setHasVenueSelector(false);
+        }
+    }
+
+    /**
     * Handle the clicked location on the map.
     * Set the current location if not in directions mode.
     *
@@ -102,7 +121,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
      *
      * @param {array} locationsResult
      */
-     function getCategories(locationsResult) {
+    function getCategories(locationsResult) {
         // Initialise the unique categories map
         let uniqueCategories = new Map();
 
@@ -177,7 +196,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     return (<MapsIndoorsContext.Provider value={mapsIndoorsInstance}>
         <MapReadyContext.Provider value={isMapReady}>
             <DirectionsServiceContext.Provider value={directionsService}>
-                <div className={`mapsindoors-map ${!hasFloorSelector ? 'mapsindoors-map__floor-selector--hide' : 'mapsindoors-map__floor-selector--show'}`}>
+                <div className={`mapsindoors-map ${!hasFloorSelector ? 'mapsindoors-map__floor-selector--hide' : 'mapsindoors-map__floor-selector--show'} ${!hasVenueSelector ? 'mapsindoors-map__venue-selector--hide' : 'mapsindoors-map__venue-selector--show'}`}>
                     {!isMapReady && <SplashScreen logo={logo} primaryColor={primaryColor} />}
                     {venues.length > 1 && <VenueSelector onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)} venues={venues} currentVenueName={currentVenueName} />}
                     {isMapReady && isDesktop
@@ -192,6 +211,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             onShowFloorSelector={() => showFloorSelector()}
                             onDisableLocations={() => disableLocations()}
                             onEnableLocations={() => enableLocations()}
+                            onHideVenueSelector={() => hideVenueSelector()}
+                            onShowVenueSelector={() => showVenueSelector()}
                         />
                         :
                         <BottomSheet
@@ -203,6 +224,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             onShowFloorSelector={() => showFloorSelector()}
                             onDisableLocations={() => disableLocations()}
                             onEnableLocations={() => enableLocations()}
+                            onHideVenueSelector={() => hideVenueSelector()}
+                            onShowVenueSelector={() => showVenueSelector()}
                         />
                     }
                     <MIMap
