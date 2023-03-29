@@ -99,7 +99,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     }
 
     /**
-     * Get the categories for the selected venue;
+     * Get the categories for the selected venue.
      */
     function getVenueCategories(venue) {
         mapsindoors.services.LocationsService.getLocations({}).then(locations => {
