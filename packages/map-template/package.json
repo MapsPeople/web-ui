@@ -21,14 +21,13 @@
     "sass": "^1.57.1",
     "web-vitals": "^2.1.4",
     "worker-loader": "^3.0.8",
-	"standard-version": "^9.5.0",
-
+	  "standard-version": "^9.5.0"
   },
   "scripts": {
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
-    "eject": "react-scripts eject", 
+    "eject": "react-scripts eject",
  	"release": "standard-version"
   },
   "eslintConfig": {
