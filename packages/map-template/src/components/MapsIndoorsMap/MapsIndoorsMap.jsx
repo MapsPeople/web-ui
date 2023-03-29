@@ -112,12 +112,12 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
      *
      * @param {array} locationsResult
      */
-    function getCategories(locationsResult) {
+     function getCategories(locationsResult) {
         // Initialise the unique categories map
         let uniqueCategories = new Map();
 
         // Loop through the locations and count the unique locations.
-        // Show the display name on the categories instead of the key.
+        // Build an object which contains the key, the count and the display name.
         for (const location of locationsResult) {
             const keys = Object.keys(location.properties.categories);
             for (const key of keys) {
@@ -128,7 +128,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                     uniqueCategories.set(key, { count: 1, displayName: location.properties.categories[key] });
                 }
             }
-
         }
 
         // Sort the categories with most locations associated.
@@ -136,6 +135,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
 
         setCurrentCategories(uniqueCategories);
     }
+
 
     /*
      * React on changes in the venue prop.

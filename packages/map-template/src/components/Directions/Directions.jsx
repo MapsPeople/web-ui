@@ -28,8 +28,6 @@ function Directions({ isOpen, onBack, directions }) {
             // 6 percent of smallest of viewport height or width
             const padding = Math.min(window.innerHeight, window.innerWidth) * 0.06;
 
-
-
             directionsRenderer = new mapsindoors.directions.DirectionsRenderer({
                 mapsIndoors: mapsIndoorsInstance,
                 fitBoundsPadding: {
@@ -49,15 +47,7 @@ function Directions({ isOpen, onBack, directions }) {
     }, [isOpen, directions, mapsIndoorsInstance]);
 
     /**
-     * Close the directions and set the visibility of the blue route to false.
-     */
-    function onDirectionsClosed() {
-        directionsRenderer.setRoute(null);
-        onBack();
-    }
-
-    /**
-     * Transform the step in legs to a flat array of steps.
+     * Transform the steps in legs to a flat array of steps.
      */
     function getRouteSteps() {
         if (!directions) {
@@ -92,9 +82,10 @@ function Directions({ isOpen, onBack, directions }) {
         }
     }
 
+    // FIXME: investigate if we can handle the height and width with hooks
     /**
-        * Get the height of the bottom sheet in pixels.
-       */
+     * Get the height of the bottom sheet in pixels.
+     */
     function getBottomSheetHeight() {
         const bottomSheet = document.querySelector('.sheet--active');
         const mapContainer = document.querySelector('.mapsindoors-map');
