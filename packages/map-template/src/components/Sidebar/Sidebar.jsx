@@ -19,15 +19,13 @@ const VIEWS = {
  * @param {Object} props.currentCategories - The unique categories displayed based on the existing locations.
  * @param {function} props.onLocationsFiltered - The list of locations after filtering through the categories.
  * @param {function} props.onLocationsFiltered - The list of locations after filtering through the categories.
- * @param {function} props.onHideFloorSelector - Trigger the visibility of the floor selector to be hidden.
- * @param {function} props.onShowFloorSelector- Trigger the visibility of the floor selector to be shown.
  * @param {function} props.onDisableLocations - Restrict the user from interacting with the locations when in wayfinding mode.
  * @param {function} props.onEnableLocations - Allow the user to interact with the locations when outside of directions mode.
- * @param {function} props.onHideVenueSelector - Trigger the visibility of the venue selector to be hidden.
- * @param {function} props.onShowVenueSelector - Trigger the visibility of the venue selector to be shown.
+ * @param {function} props.onDirectionsOpened - Check if the directions page state is open.
+ * @param {function} props.onDirectionsClosed - Check if the directions page state is closed.
  *
 */
-function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onHideFloorSelector, onShowFloorSelector, onDisableLocations, onEnableLocations, onHideVenueSelector, onShowVenueSelector }) {
+function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDisableLocations, onEnableLocations, onDirectionsOpened, onDirectionsClosed }) {
     const [activePage, setActivePage] = useState(null);
 
     const [directions, setDirections] = useState();
@@ -46,9 +44,8 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
      */
     function setPage(page) {
         setActivePage(page);
-        onShowFloorSelector();
         onEnableLocations();
-        onShowVenueSelector();
+        onDirectionsClosed();
     }
 
     /**
@@ -56,9 +53,9 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
      */
     function setDirectionsPage() {
         setActivePage(VIEWS.DIRECTIONS);
-        onHideFloorSelector();
         onDisableLocations();
-        onHideVenueSelector();
+        onDirectionsOpened();
+
     }
 
     const pages = [

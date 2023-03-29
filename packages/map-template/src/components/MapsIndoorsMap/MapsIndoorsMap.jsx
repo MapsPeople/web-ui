@@ -40,8 +40,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [filteredLocations, setFilteredLocations] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const [directionsService, setDirectionsService] = useState();
-    const [hasFloorSelector, setHasFloorSelector] = useState(true);
-    const [hasVenueSelector, setHasVenueSelector] = useState(true);
+    const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
@@ -55,20 +54,20 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     }
 
     /**
-     * Show the floor selector when not having the directions open.
+     * Handle the state where directions are closed.
      */
-    function showFloorSelector() {
-        if (hasFloorSelector === false) {
-            setHasFloorSelector(true);
+    function directionsClosed() {
+        if (hasDirectionsOpen === true) {
+            setHasDirectionsOpen(false);
         }
     }
 
     /**
-     * Hide the floor selector when the directions are open.
+     * Handle the state where directions are open.
      */
-    function hideFloorSelector() {
-        if (hasFloorSelector === true) {
-            setHasFloorSelector(false);
+    function directionsOpened() {
+        if (hasDirectionsOpen === false) {
+            setHasDirectionsOpen(true);
         }
     }
 
@@ -84,24 +83,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
      */
     function enableLocations() {
         _locationsDisabled = false;
-    }
-
-    /**
-    * Show the venue selector when not having the directions open.
-    */
-    function showVenueSelector() {
-        if (hasVenueSelector === false) {
-            setHasVenueSelector(true);
-        }
-    }
-
-    /**
-     * Hide the venue selector when the directions are open.
-     */
-    function hideVenueSelector() {
-        if (hasVenueSelector === true) {
-            setHasVenueSelector(false);
-        }
     }
 
     /**
@@ -196,7 +177,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     return (<MapsIndoorsContext.Provider value={mapsIndoorsInstance}>
         <MapReadyContext.Provider value={isMapReady}>
             <DirectionsServiceContext.Provider value={directionsService}>
-                <div className={`mapsindoors-map ${!hasFloorSelector ? 'mapsindoors-map__floor-selector--hide' : 'mapsindoors-map__floor-selector--show'} ${!hasVenueSelector ? 'mapsindoors-map__venue-selector--hide' : 'mapsindoors-map__venue-selector--show'}`}>
+                <div className={`mapsindoors-map ${hasDirectionsOpen ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}`}>
                     {!isMapReady && <SplashScreen logo={logo} primaryColor={primaryColor} />}
                     {venues.length > 1 && <VenueSelector onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)} venues={venues} currentVenueName={currentVenueName} />}
                     {isMapReady && isDesktop
@@ -207,12 +188,10 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             currentCategories={currentCategories}
                             onClose={() => setCurrentLocation(null)}
                             onLocationsFiltered={(locations) => setFilteredLocations(locations)}
-                            onHideFloorSelector={() => hideFloorSelector()}
-                            onShowFloorSelector={() => showFloorSelector()}
                             onDisableLocations={() => disableLocations()}
                             onEnableLocations={() => enableLocations()}
-                            onHideVenueSelector={() => hideVenueSelector()}
-                            onShowVenueSelector={() => showVenueSelector()}
+                            onDirectionsOpened={() => directionsOpened()}
+                            onDirectionsClosed={() => directionsClosed()}
                         />
                         :
                         <BottomSheet
@@ -220,12 +199,10 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             setCurrentLocation={setCurrentLocation}
                             currentCategories={currentCategories}
                             onLocationsFiltered={(locations) => setFilteredLocations(locations)}
-                            onHideFloorSelector={() => hideFloorSelector()}
-                            onShowFloorSelector={() => showFloorSelector()}
                             onDisableLocations={() => disableLocations()}
                             onEnableLocations={() => enableLocations()}
-                            onHideVenueSelector={() => hideVenueSelector()}
-                            onShowVenueSelector={() => showVenueSelector()}
+                            onDirectionsOpened={() => directionsOpened()}
+                            onDirectionsClosed={() => directionsClosed()}
                         />
                     }
                     <MIMap

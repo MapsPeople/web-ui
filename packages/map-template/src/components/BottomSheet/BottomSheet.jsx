@@ -21,14 +21,12 @@ const BOTTOM_SHEETS = {
  * @param {Object} props.setCurrentLocation - The setter for the currently selected MapsIndoors Location.
  * @param {Object} props.currentCategories - The unique categories displayed based on the existing locations.
  * @param {function} props.onLocationsFiltered - The list of locations after filtering through the categories.
- * @param {function} props.onHideFloorSelector - Trigger the visibility of the floor selector to be hidden.
- * @param {function} props.onShowFloorSelector - Trigger the visibility of the floor selector to be shown.
  * @param {function} props.onDisableLocations - Restrict the user from interacting with the locations when in directions mode.
  * @param {function} props.onEnableLocations - Allow the user to interact with the locations when outside of directions mode.
- * @param {function} props.onHideVenueSelector - Trigger the visibility of the venue selector to be hidden.
- * @param {function} props.onShowVenueSelector - Trigger the visibility of the venue selector to be shown.
+ * @param {function} props.onDirectionsOpened - Check if the directions page state is open.
+ * @param {function} props.onDirectionsClosed - Check if the directions page state is closed.
  */
-function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onHideFloorSelector, onShowFloorSelector, onDisableLocations, onEnableLocations, onHideVenueSelector, onShowVenueSelector}) {
+function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDisableLocations, onEnableLocations, onDirectionsOpened, onDirectionsClosed}) {
 
     const bottomSheetRef = useRef();
     const [activeBottomSheet, setActiveBottomSheet] = useState(null);
@@ -55,9 +53,8 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
      */
     function setBottomSheet(bottomSheet) {
         setActiveBottomSheet(bottomSheet);
-        onShowFloorSelector();
         onEnableLocations();
-        onShowVenueSelector()
+        onDirectionsClosed();
     }
 
     /**
@@ -65,9 +62,8 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
      */
     function setDirectionsBottomSheet() {
         setActiveBottomSheet(BOTTOM_SHEETS.DIRECTIONS);
-        onHideFloorSelector();
         onDisableLocations();
-        onHideVenueSelector();
+        onDirectionsOpened();
     }
 
     const bottomSheets = [

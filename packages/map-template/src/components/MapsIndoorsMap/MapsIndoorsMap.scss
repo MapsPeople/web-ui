@@ -12,25 +12,21 @@
         font-family: var(--font-family-system);
     }
 
-    &__floor-selector--show {
+    &--show-elements {
         .mapsindoors.floor-selector {
             display: block;
         }
-    }
 
-    &__floor-selector--hide {
-        .mapsindoors.floor-selector {
-            display: none;
-        }
-    }
-
-    &__venue-selector--show {
         .venue-selector__button {
             display: block;
         }
     }
 
-    &__venue-selector--hide {
+    &--hide-elements {
+        .mapsindoors.floor-selector {
+            display: none;
+        }
+
         .venue-selector__button {
             display: none;
         }
