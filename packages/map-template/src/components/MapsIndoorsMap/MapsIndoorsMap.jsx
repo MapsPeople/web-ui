@@ -100,8 +100,13 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
 
     /**
      * Get the categories for the selected venue.
+     *
+     * @param {string} venue
      */
     function getVenueCategories(venue) {
+        console.log('venue', venue);
+        // Filter through the locations which have the venueId equal to the selected venue,
+        // due to the impossibility to use the venue parameter in the getLocations().
         mapsindoors.services.LocationsService.getLocations({}).then(locations => {
             const filteredLocations = locations.filter(location => location.properties.venueId === venue);
             getCategories(filteredLocations);
