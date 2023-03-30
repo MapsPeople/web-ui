@@ -59,6 +59,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     function directionsClosed() {
         if (hasDirectionsOpen === true) {
             setHasDirectionsOpen(false);
+            _locationsDisabled = false;
         }
     }
 
@@ -68,21 +69,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     function directionsOpened() {
         if (hasDirectionsOpen === false) {
             setHasDirectionsOpen(true);
+            _locationsDisabled = true;
         }
-    }
-
-    /**
-     * Disable the locations when in directions mode.
-     */
-    function disableLocations() {
-        _locationsDisabled = true;
-    }
-
-    /**
-     * Enable the locations when not in directions mode.
-     */
-    function enableLocations() {
-        _locationsDisabled = false;
     }
 
     /**
@@ -173,7 +161,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
         });
     }, [apiKey]);
 
-
     return (<MapsIndoorsContext.Provider value={mapsIndoorsInstance}>
         <MapReadyContext.Provider value={isMapReady}>
             <DirectionsServiceContext.Provider value={directionsService}>
@@ -188,8 +175,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             currentCategories={currentCategories}
                             onClose={() => setCurrentLocation(null)}
                             onLocationsFiltered={(locations) => setFilteredLocations(locations)}
-                            onDisableLocations={() => disableLocations()}
-                            onEnableLocations={() => enableLocations()}
                             onDirectionsOpened={() => directionsOpened()}
                             onDirectionsClosed={() => directionsClosed()}
                         />
@@ -199,8 +184,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             setCurrentLocation={setCurrentLocation}
                             currentCategories={currentCategories}
                             onLocationsFiltered={(locations) => setFilteredLocations(locations)}
-                            onDisableLocations={() => disableLocations()}
-                            onEnableLocations={() => enableLocations()}
                             onDirectionsOpened={() => directionsOpened()}
                             onDirectionsClosed={() => directionsClosed()}
                         />
