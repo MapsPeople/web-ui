@@ -18,7 +18,6 @@ const VIEWS = {
  * @param {Object} props.setCurrentLocation - The setter for the currently selected MapsIndoors Location.
  * @param {Object} props.currentCategories - The unique categories displayed based on the existing locations.
  * @param {function} props.onLocationsFiltered - The list of locations after filtering through the categories.
- * @param {function} props.onLocationsFiltered - The list of locations after filtering through the categories.
  * @param {function} props.onHideFloorSelector - Trigger the visibility of the floor selector to be hidden.
  * @param {function} props.onShowFloorSelector- Trigger the visibility of the floor selector to be shown.
  * @param {function} props.onDisableLocations - Restrict the user from interacting with the locations when in wayfinding mode.

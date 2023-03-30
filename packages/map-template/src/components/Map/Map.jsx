@@ -26,9 +26,10 @@ const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
  * @param {function} props.onDirectionsService - Function that is run when a DirectionsService instance is created. The instance will be sent along as first argument.
  * @param {function} props.onVenueChangedOnMap - Function that is run when the map bounds was changed due to fitting to a venue.
  * @param {array} props.filteredLocationIds - Array of IDs of the filtered locations.
+ * @param {array} props.filteredLocationsByExternalId - Array of IDs of the filtered locations.
  * @returns
  */
-function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onMapsIndoorsInstance, onDirectionsService, onVenueChangedOnMap, filteredLocationIds }) {
+function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onMapsIndoorsInstance, onDirectionsService, onVenueChangedOnMap, filteredLocationIds, filteredLocationsByExternalId }) {
     const [mapType, setMapType] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState(null);
 
@@ -68,6 +69,13 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
         }
     }, [filteredLocationIds, mapsIndoorsInstance]);
 
+
+    useEffect(() => {
+        if (filteredLocationsByExternalId && mapsIndoorsInstance) {
+            mapsIndoorsInstance.filter(filteredLocationsByExternalId);
+        }
+    }, [filteredLocationsByExternalId, mapsIndoorsInstance]);
+
     /**
      * Set the venue to show on the map.
      *
@@ -84,7 +92,7 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
         const miInstance = new mapsindoors.MapsIndoors({
             mapView
         });
-        
+
         // TODO: This overrides the pink building outline color from the SDK. It's added here for demo purposes until the SDK supports Display Rules for Buildings too.
         miInstance.setDisplayRule('MI_BUILDING_OUTLINE', {visible: false});
 

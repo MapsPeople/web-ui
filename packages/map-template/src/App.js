@@ -9,6 +9,7 @@ function App() {
                 apiKey="mapspeople"
                 venue="Stigsborgvej"
                 mapboxAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
+                externalIds="test"
             // gmApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
             />
         </div>

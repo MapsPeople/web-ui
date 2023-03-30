@@ -29,8 +29,9 @@ let _locationsDisabled;
  * @param {string} [props.locationId] - If you want the map to show a specific Location, provide the Location ID here.
  * @param {string} [props.primaryColor] - If you want the splash screen to have a custom primary color, provide the value here.
  * @param {string} [props.logo] - If you want the splash screen to have a custom logo, provide the image path or address here.
+ * @param {string} [props.externalIds]
  */
-function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo }) {
+function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, externalIds }) {
 
     const [isMapReady, setMapReady] = useState(false);
     const [venues, setVenues] = useState([]);
@@ -41,6 +42,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const [directionsService, setDirectionsService] = useState();
     const [hasFloorSelector, setHasFloorSelector] = useState(true);
+    const [filteredLocationsByExternalIds, setFilteredLocationsByExternalIds] = useState();
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
@@ -146,8 +148,15 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
      */
     useEffect(() => {
         setCurrentVenueName(venue);
-
     }, [venue]);
+
+    /*
+     * React on changes in the external id prop.
+     */
+    useEffect(() => {
+        // console.log('external ids', externalIds)
+        setFilteredLocationsByExternalIds(externalIds)
+    }, [externalIds]);
 
     /**
      * React on changes to the locationId prop: Set as current location and make the map center on it.
@@ -161,6 +170,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             });
         }
     }, [locationId]);
+
+    console.log(filteredLocationsByExternalIds)
 
     /*
      * React on changes in the MapsIndoors API key by fetching the required data.
@@ -183,8 +194,9 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             });
             setVenues(venuesResult);
         });
-    }, [apiKey]);
+        setMapReady(false);
 
+    }, [apiKey]);
 
     return (<MapsIndoorsContext.Provider value={mapsIndoorsInstance}>
         <MapReadyContext.Provider value={isMapReady}>
@@ -227,7 +239,9 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                         onMapsIndoorsInstance={(instance) => setMapsIndoorsInstance(instance)}
                         onDirectionsService={(instance) => setDirectionsService(instance)}
                         onLocationClick={(location) => locationClicked(location)}
-                        filteredLocationIds={filteredLocations?.map(location => location.id)} />
+                        filteredLocationIds={filteredLocations?.map(location => location.id)}
+                        filteredLocationsByExternalId={filteredLocationsByExternalIds?.map(location => location.properties.externalId)}
+                        />
                 </div>
             </DirectionsServiceContext.Provider>
         </MapReadyContext.Provider>
