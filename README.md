@@ -2,12 +2,27 @@
 
 This monorepo contains all UI projects for the MapsIndoors platform for Web. It is managed with [Lerna](https://lerna.js.org), which makes it easier to work with multiple connected projects in one repo, like this.
 
+## Quickstart
+
+The most interesting part of this repository is the Map Template. Get it up and running like so:
+
+```
+$ git clone git@github.com:MapsPeople/web-ui && cd web-ui
+$ npm ci
+$ npx lerna run build && cd packages/map-template
+$ npm run start
+```
+
+Open your browser on <localhost:3000> to check it out.
+
+## How the repo is set up
+
 The repo consists of these _packages_, which are all found in the `packages` folder:
 
-- `components`, the MapsIndoors Web Components found at [@mapsindoors/components](https://www.npmjs.com/package/@mapsindoors/components)
+- [`components`](https://github.com/MapsPeople/web-ui/blob/main/packages/components/README.md), the MapsIndoors Web Components found at [@mapsindoors/components](https://www.npmjs.com/package/@mapsindoors/components)
 - `demos`, a collection of demos of how to use the _packages_ in this repo
-- `map-template`, the MapsIndoors Map Template, a React app helping you get up and running fast and easy
-- `midt`, i.e. MapsIndoors Design Tokens, a design library used as the foundation for UI styles across MapsIndoors
+- [`map-template`](https://github.com/MapsPeople/web-ui/blob/main/packages/map-template/README.md), the MapsIndoors Map Template, a React app helping you get up and running fast and easy
+- [`midt`](https://github.com/MapsPeople/web-ui/blob/main/packages/midt/README.md), i.e. MapsIndoors Design Tokens, a design library used as the foundation for UI styles across MapsIndoors
 
 ## A quick primer on Lerna
 
