@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import useLiveData from '../../hooks/useLivedata';
 import GoogleMapsMap from "./GoogleMapsMap/GoogleMapsMap";
 import MapboxMap from "./MapboxMap/MapboxMap";
 
@@ -15,6 +16,7 @@ const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
  * Shows a map.
  *
  * @param {Object} props
+ * @param {string} [props.apiKey] - MapsIndoors API key or solution alias.
  * @param {string} [props.gmApiKey] - Google Maps API key if you want to show a Google Maps map.
  * @param {string} [props.mapboxAccessToken] - Mapbox Access Token if you want to show a Mapbox map.
  * @param {array} [props.venues] - Array of Venues in the current solution.
@@ -26,9 +28,11 @@ const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
  * @param {array} props.filteredLocationIds - Array of IDs of the filtered locations.
  * @returns
  */
-function Map({ gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onMapsIndoorsInstance, onDirectionsService, onVenueChangedOnMap, filteredLocationIds }) {
+function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onMapsIndoorsInstance, onDirectionsService, onVenueChangedOnMap, filteredLocationIds }) {
     const [mapType, setMapType] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState(null);
+
+    useLiveData(apiKey);
 
     useEffect(() => {
         if (mapboxAccessToken) {
