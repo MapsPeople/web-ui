@@ -40,13 +40,13 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
 
     const directionsService = useContext(DirectionsServiceContext);
 
-    /** Check if a route has been found */
+    /** Indicate if a route has been found */
     const [hasFoundRoute, setHasFoundRoute] = useState(true);
 
-    /** Check if search results have been found */
+    /** Indicate if search results have been found */
     const [hasSearchResults, setHasSearchResults] = useState(true);
 
-    /** Check if the searched route throws errors */
+    /** Indicate if the searched route throws errors */
     const [hasError, setHasError] = useState(false);
 
     /** Holds search results given from a search field */
