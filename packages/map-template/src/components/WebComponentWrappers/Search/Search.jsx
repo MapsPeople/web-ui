@@ -13,9 +13,10 @@ import useNear from '../../../hooks/useNear';
  * @param {boolean} props.clear - Programatically clear the search field.
  * @param {string} props.displayText - Display text in the search field when the user selects a result.
  * @param {boolean} props.hasInputFocus - If set to true, it will set focus to the input field.
+ * @param {string} props.category - If set, search will be performed for Locations having this category.
  *
  */
-function SearchField({ placeholder, mapsindoors, results, clicked, cleared, clear, displayText, hasInputFocus }) {
+function SearchField({ placeholder, mapsindoors, results, clicked, cleared, clear, displayText, hasInputFocus, category }) {
     const elementRef = useRef();
 
     /** Instruct the search field to search for Locations near the map center. */
@@ -54,7 +55,7 @@ function SearchField({ placeholder, mapsindoors, results, clicked, cleared, clea
 
     }, [placeholder, mapsindoors, results, clicked, cleared, displayText, hasInputFocus]);
 
-    return <mi-search ref={elementRef} placeholder={placeholder} mi-near={searchNear}  />
+    return <mi-search ref={elementRef} placeholder={placeholder} mi-near={searchNear} mi-categories={category}  />
 }
 
 export default SearchField;
