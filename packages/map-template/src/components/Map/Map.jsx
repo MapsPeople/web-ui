@@ -84,6 +84,9 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
         const miInstance = new mapsindoors.MapsIndoors({
             mapView
         });
+        
+        // TODO: This overrides the pink building outline color from the SDK. It's added here for demo purposes until the SDK supports Display Rules for Buildings too.
+        miInstance.setDisplayRule('MI_BUILDING_OUTLINE', {visible: false});
 
         miInstance.on('click', location => onLocationClick(location));
 
