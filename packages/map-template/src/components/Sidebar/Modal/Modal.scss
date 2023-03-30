@@ -8,7 +8,7 @@
     border: 1px solid var(--color-gray-30);
     background: var(--color-white-white);
     transform: translateY(calc(100% + var(--spacing-large)));
-    max-height: 50vh; // UX spec
+    max-height: 80%; // UX spec
     min-height: fit-content;
     overflow: auto;
 
