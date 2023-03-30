@@ -14,6 +14,12 @@ import Sidebar from '../Sidebar/Sidebar';
 const mapsindoors = window.mapsindoors;
 
 /**
+ * Private variable used for checking if the locations should be disabled.
+ * Implemented due to the impossibility to use the React useState hook.
+ */
+let _locationsDisabled;
+
+/**
  *
  * @param {Object} props
  * @param {string} props.apiKey - MapsIndoors API key or solution alias.
@@ -66,31 +72,60 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     }
 
     /**
+     * Disable the locations when in directions mode.
+     */
+    function disableLocations() {
+        _locationsDisabled = true;
+    }
+
+    /**
+     * Enable the locations when not in directions mode.
+     */
+    function enableLocations() {
+        _locationsDisabled = false;
+    }
+
+    /**
+    * Handle the clicked location on the map.
+    * Set the current location if not in directions mode.
+    *
+    * @param {object} location
+    */
+    function locationClicked(location) {
+        if (_locationsDisabled !== true) {
+            setCurrentLocation(location);
+        }
+    }
+
+    /**
      * Get the unique categories and the count of the categories with locations associated.
      *
      * @param {array} locationsResult
      */
-    function getCategories(locationsResult) {
-        let uniqueCategories = locationsResult
-            // Flatten the locations result to get a new array of locations that have categories.
-            .flatMap(location => Object.values(location.properties.categories ?? {}))
+     function getCategories(locationsResult) {
+        // Initialise the unique categories map
+        let uniqueCategories = new Map();
 
-            // Reduce the array of elements in order to get a new Map with elements and the count of categories with locations associated.
-            .reduce((categories, category) => {
-                if (categories.has(category)) {
-                    let count = categories.get(category);
-                    categories.set(category, ++count);
+        // Loop through the locations and count the unique locations.
+        // Build an object which contains the key, the count and the display name.
+        for (const location of locationsResult) {
+            const keys = Object.keys(location.properties.categories);
+            for (const key of keys) {
+                if (uniqueCategories.has(key)) {
+                    let count = uniqueCategories.get(key).count;
+                    uniqueCategories.set(key, { count: ++count, displayName: location.properties.categories[key] });
                 } else {
-                    categories.set(category, 1);
+                    uniqueCategories.set(key, { count: 1, displayName: location.properties.categories[key] });
                 }
-                return categories;
-            }, new Map());
+            }
+        }
 
         // Sort the categories with most locations associated.
-        uniqueCategories = Array.from(uniqueCategories).sort((a, b) => b[1] - a[1])
+        uniqueCategories = Array.from(uniqueCategories).sort((a, b) => b[1].count - a[1].count);
 
         setCurrentCategories(uniqueCategories);
     }
+
 
     /*
      * React on changes in the venue prop.
@@ -155,6 +190,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             onLocationsFiltered={(locations) => setFilteredLocations(locations)}
                             onHideFloorSelector={() => hideFloorSelector()}
                             onShowFloorSelector={() => showFloorSelector()}
+                            onDisableLocations={() => disableLocations()}
+                            onEnableLocations={() => enableLocations()}
                         />
                         :
                         <BottomSheet
@@ -164,6 +201,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             onLocationsFiltered={(locations) => setFilteredLocations(locations)}
                             onHideFloorSelector={() => hideFloorSelector()}
                             onShowFloorSelector={() => showFloorSelector()}
+                            onDisableLocations={() => disableLocations()}
+                            onEnableLocations={() => enableLocations()}
                         />
                     }
                     <MIMap
@@ -175,7 +214,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                         onVenueChangedOnMap={() => venueChangedOnMap()}
                         onMapsIndoorsInstance={(instance) => setMapsIndoorsInstance(instance)}
                         onDirectionsService={(instance) => setDirectionsService(instance)}
-                        onLocationClick={(location) => setCurrentLocation(location)}
+                        onLocationClick={(location) => locationClicked(location)}
                         filteredLocationIds={filteredLocations?.map(location => location.id)} />
                 </div>
             </DirectionsServiceContext.Provider>
