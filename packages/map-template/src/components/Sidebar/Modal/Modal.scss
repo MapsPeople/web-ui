@@ -8,7 +8,9 @@
     border: 1px solid var(--color-gray-30);
     background: var(--color-white-white);
     transform: translateY(calc(100% + var(--spacing-large)));
-    max-height: calc(100% - var(--spacing-xx-large));
+    max-height: 80%; // UX spec
+    min-height: fit-content;
+    overflow: auto;
 
     &--open {
         transform: translateY(0);
