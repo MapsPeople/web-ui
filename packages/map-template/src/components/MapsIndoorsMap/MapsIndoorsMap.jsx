@@ -24,7 +24,7 @@ let _locationsDisabled;
  * @param {Object} props
  * @param {string} props.apiKey - MapsIndoors API key or solution alias.
  * @param {string} [props.gmApiKey] - Google Maps API key if you want to show a Google Maps map.
- * @param {string} [props.mapboxAccessToken] - Mapbox Access Token if you want to show a Google Maps map.
+ * @param {string} [props.mapboxAccessToken] - Mapbox Access Token if you want to show a Mapbox map.
  * @param {string} [props.venue] - If you want the map to show a specific Venue, provide the Venue name here.
  * @param {string} [props.locationId] - If you want the map to show a specific Location, provide the Location ID here.
  * @param {string} [props.primaryColor] - If you want the splash screen to have a custom primary color, provide the value here.
@@ -51,6 +51,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
         if (isMapReady === false) {
             setMapReady(true);
         }
+        getVenueCategories(currentVenueName);
     }
 
     /**
@@ -98,11 +99,25 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     }
 
     /**
+     * Get the categories for the selected venue.
+     *
+     * @param {string} venue
+     */
+    function getVenueCategories(venue) {
+        // Filter through the locations which have the venueId equal to the selected venue,
+        // due to the impossibility to use the venue parameter in the getLocations().
+        mapsindoors.services.LocationsService.getLocations({}).then(locations => {
+            const filteredLocations = locations.filter(location => location.properties.venueId === venue);
+            getCategories(filteredLocations);
+        })
+    }
+
+    /**
      * Get the unique categories and the count of the categories with locations associated.
      *
      * @param {array} locationsResult
      */
-     function getCategories(locationsResult) {
+    function getCategories(locationsResult) {
         // Initialise the unique categories map
         let uniqueCategories = new Map();
 
@@ -126,12 +141,12 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
         setCurrentCategories(uniqueCategories);
     }
 
-
     /*
      * React on changes in the venue prop.
      */
     useEffect(() => {
         setCurrentVenueName(venue);
+
     }, [venue]);
 
     /**
@@ -159,12 +174,9 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             mapsindoors.services.VenuesService.getVenues(),
             // Fixme: Venue Images are currently stored in the AppConfig object. So we will need to fetch the AppConfig as well.
             mapsindoors.services.AppConfigService.getConfig(),
-            // Fetch all Locations
-            mapsindoors.services.LocationsService.getLocations({}),
             // Ensure a minimum waiting time of 3 seconds
             new Promise(resolve => setTimeout(resolve, 3000))
-        ]).then(([venuesResult, appConfigResult, locationsResult]) => {
-            getCategories(locationsResult);
+        ]).then(([venuesResult, appConfigResult]) => {
             venuesResult = venuesResult.map(venue => {
                 venue.image = appConfigResult.venueImages[venue.name.toLowerCase()];
                 return venue;

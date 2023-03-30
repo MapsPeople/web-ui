@@ -40,12 +40,13 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
 
     const directionsService = useContext(DirectionsServiceContext);
 
-    /** Check if a route has been found */
+    /** Indicate if a route has been found */
     const [hasFoundRoute, setHasFoundRoute] = useState(true);
 
-    /** Check if search results have been found */
+    /** Indicate if search results have been found */
     const [hasSearchResults, setHasSearchResults] = useState(true);
 
+    /** Indicate if the searched route throws errors */
     const [hasError, setHasError] = useState(false);
 
     /** Holds search results given from a search field */
@@ -127,6 +128,8 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     function onSearchClicked(searchFieldIdentifier) {
         _activeSearchField = searchFieldIdentifier;
         resetSearchField();
+        setHasError(false);
+        setHasFoundRoute(true);
     }
 
     /**
@@ -138,6 +141,8 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
         _activeSearchField = searchFieldIdentifier;
         resetSearchField();
         setSearchResults([]);
+        setHasError(false);
+        setHasFoundRoute(true);
     }
 
     /**
