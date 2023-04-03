@@ -51,3 +51,15 @@ If you have a React app, you can use any of these React Components in your own a
 #### Working on Components used in Map Template
 
 To have any Stencil component changes be reflected in this project, you need to run  `npx lerna run build` from the root folder. There are no watch scripts yet.
+
+## Supported properties on the MapsIndoors Map component
+
+|Property|Type|Description|
+|:--|:--|:--|
+|`apiKey`|`string`|The MapsIndoors Solution you want to load. Takes both API key as string and "App alias". |
+|`gmApiKey`|`string`|Your Google Maps API key. |
+|`mapboxAccessToken`|`string`|Your Mapbox Access Token. Setting it will load a Mapbox map. If you set both a Mapbox Access Token and Google Maps API key, the Mapbox Access Token takes precedence. |
+|`venue`|`string`|The Venue to load from your MapsIndoors Solution. |
+|`locationId`|`string`|Set a MapsIndoors Location ID to show it on the map and its details in the sheet. |
+|`primaryColor`|`string`|The primary color to use throughout the app. |
+|`logo`|`string`|The logo to show during initial load. |
