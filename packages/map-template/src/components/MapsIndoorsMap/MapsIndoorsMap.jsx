@@ -44,6 +44,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [externalIdArray, setExternalIdArray] = useState([]);
     const [filteredLocationsByExternalId, setFilteredLocationsByExternalId] = useState();
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
+
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
     /**
