@@ -38,6 +38,9 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     /** Referencing the accessibility details DOM element */
     const detailsRef = useRef();
 
+    const toFieldRef = useRef();
+    const fromFieldRef = useRef();
+
     const directionsService = useContext(DirectionsServiceContext);
 
     /** Indicate if a route has been found */
@@ -51,10 +54,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
 
     /** Holds search results given from a search field */
     const [searchResults, setSearchResults] = useState([]);
-
-    const [toFieldDisplayText, setToFieldDisplayText] = useState();
-
-    const [fromFieldDisplayText, setFromFieldDisplayText] = useState();
 
     const [destinationLocation, setDestinationLocation] = useState();
     const [originLocation, setOriginLocation] = useState();
@@ -72,10 +71,10 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      */
     function locationClickHandler(location) {
         if (_activeSearchField === searchFieldItentifiers.TO) {
-            setToFieldDisplayText(location.properties.name);
+            toFieldRef.current.setDisplayText(location.properties.name);
             setDestinationLocation(location);
         } else if (_activeSearchField === searchFieldItentifiers.FROM) {
-            setFromFieldDisplayText(location.properties.name);
+            fromFieldRef.current.setDisplayText(location.properties.name);
             setOriginLocation(location);
         }
 
@@ -150,10 +149,10 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     */
     function resetSearchField() {
         if (_activeSearchField === searchFieldItentifiers.TO) {
-            setToFieldDisplayText('');
+            toFieldRef.current.setDisplayText('');
             setDestinationLocation();
         } else if (_activeSearchField === searchFieldItentifiers.FROM) {
-            setFromFieldDisplayText('');
+            fromFieldRef.current.setDisplayText('');
             setOriginLocation();
         }
     }
@@ -163,7 +162,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
         setSize(snapPoints.MAX);
         // If there is a location selected, pre-fill the value of the `to` field with the location name.
         if (location) {
-            setToFieldDisplayText(location.properties.name);
+            toFieldRef.current.setDisplayText(location.properties.name);
             setDestinationLocation(location);
         }
 
@@ -216,10 +215,10 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                     <label className="wayfinding__label">
                         TO
                         <SearchField
+                            ref={toFieldRef}
                             mapsindoors={true}
                             placeholder="Search by name, category, building..."
                             results={locations => searchResultsReceived(locations, searchFieldItentifiers.TO)}
-                            displayText={toFieldDisplayText}
                             clicked={() => onSearchClicked(searchFieldItentifiers.TO)}
                             cleared={() => onSearchCleared(searchFieldItentifiers.TO)}
                         />
@@ -227,11 +226,11 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                     <label className="wayfinding__label">
                         FROM
                         <SearchField
+                            ref={fromFieldRef}
                             hasInputFocus={isActive}
                             mapsindoors={true}
                             placeholder="Search by name, category, buildings..."
                             results={locations => searchResultsReceived(locations, searchFieldItentifiers.FROM)}
-                            displayText={fromFieldDisplayText}
                             clicked={() => onSearchClicked(searchFieldItentifiers.FROM)}
                             cleared={() => onSearchCleared(searchFieldItentifiers.FROM)}
                         />

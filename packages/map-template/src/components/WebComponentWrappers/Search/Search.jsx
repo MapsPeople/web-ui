@@ -11,11 +11,10 @@ import useNear from '../../../hooks/useNear';
  * @param {function} props.clicked - Function that is called when search field is clicked.
  * @param {function} props.cleared - Function that is called when search field is cleared.
  * @param {boolean} props.clear - Programatically clear the search field.
- * @param {string} props.displayText - Display text in the search field when the user selects a result.
  * @param {boolean} props.hasInputFocus - If set to true, it will set focus to the input field.
  * @param {string} props.category - If set, search will be performed for Locations having this category.
  */
-const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cleared, displayText, hasInputFocus, category }, ref) => {
+const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cleared, hasInputFocus, category }, ref) => {
     const elementRef = useRef();
 
     /** Instruct the search field to search for Locations near the map center. */
@@ -30,6 +29,9 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
         },
         getValue() {
             return elementRef.current.value;
+        },
+        setDisplayText(displayText) {
+            elementRef.current.setDisplayText(displayText);
         }
     }));
 
@@ -40,10 +42,6 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
 
         if (mapsindoors === true) {
             current.mapsindoors = 'true';
-        }
-
-        if (displayText) {
-            current.setDisplayText(displayText);
         }
 
         if (hasInputFocus && !current.value) {
@@ -60,7 +58,7 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
             current.removeEventListener('cleared', cleared);
         }
 
-    }, [placeholder, mapsindoors, results, clicked, cleared, displayText, hasInputFocus]);
+    }, [placeholder, mapsindoors, results, clicked, cleared, hasInputFocus]);
 
     return <mi-search ref={elementRef} placeholder={placeholder} mi-near={searchNear} mi-categories={category}  />
 });
