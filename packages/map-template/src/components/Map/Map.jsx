@@ -61,8 +61,7 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
     // We ignore eslint warnings about missing dependencies because mapsIndoorsInstance should never change runtime anyway.
 
     /**
-     * Show the filtered locations on the map based on their IDs.
-     *
+     * Show the filtered locations on the map based on their IDs or external IDs if present.
      */
     useEffect(() => {
         if (filteredLocationIds && mapsIndoorsInstance) {

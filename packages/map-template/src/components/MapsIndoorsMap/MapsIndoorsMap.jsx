@@ -29,7 +29,7 @@ let _locationsDisabled;
  * @param {string} [props.locationId] - If you want the map to show a specific Location, provide the Location ID here.
  * @param {string} [props.primaryColor] - If you want the splash screen to have a custom primary color, provide the value here.
  * @param {string} [props.logo] - If you want the splash screen to have a custom logo, provide the image path or address here.
- * @param {array} [props.externalIds]
+ * @param {array} [props.externalIds] - Filter locations shown on the map based on the external ids.
  */
 function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, externalIds }) {
 
