@@ -55,41 +55,31 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
 
     /**
      * Handles the click events on the categories list.
-     * Set a selected category and only allow one category to be selected at once.
      *
      * @param {string} category
      */
     function categoryClicked(category) {
-        /** Perform a search when a category is clicked and filter the results through the category. */
         setSelectedCategory(category);
         setSize(snapPoints.MAX);
 
-        /**
-         * Check if the clicked category is the same as the active one.
-         * Clear out the results list and set the selected category to null.
-         */
         if (selectedCategory === category) {
+            // If the clicked category is the same as currently selected, "deselect" it.
+
             setSearchResults([]);
             setSelectedCategory(null);
 
             // Pass an empty array to the filtered locations in order to reset the locations.
             onLocationsFiltered([]);
 
-            /** Check if the search field has a value and trigger the search again. */
+            // Check if the search field has a value and trigger the search again.
             if (searchFieldRef.current.getValue()) {
                 searchFieldRef.current.triggerSearch();
             }
-
-            /**
-             * Check if the search field has a value while a category is selected.
-             * Trigger the search again and set the current selected category.
-             */
-        } else if (searchFieldRef.current.value) {
-            /**
-             * Check if a category is selected and filter through the locations within that category.
-             * Clear out the search results after each category is selected.
-             */
+        } else if (searchFieldRef.current.getValue()) {
+            // If the search field has a value, trigger a research based on the new category.
+            searchFieldRef.current.triggerSearch();
         } else {
+            // If the search field is empty, show all locations with that category.
             getFilteredLocations(category);
         }
     }
