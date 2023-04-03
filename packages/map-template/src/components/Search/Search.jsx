@@ -26,6 +26,9 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
 
     const [searchResults, setSearchResults] = useState([]);
 
+    /** Indicate if search results have been found */
+    const [showNotFoundMessage, setShowNotFoundMessage] = useState(false);
+
     /** Referencing the search results container DOM element */
     const searchResultsRef = useRef();
 
@@ -42,13 +45,6 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
 
     function locationClickHandler(location) {
         onLocationClick(location);
-    }
-
-    /** Display message when no results have been found. */
-    function showNotFoundMessage() {
-        const notFoundMessage = document.createElement('p');
-        notFoundMessage.innerHTML = "Nothing was found";
-        searchResultsRef.current.appendChild(notFoundMessage);
     }
 
     /**
@@ -126,16 +122,13 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
     function onResults(locations) {
         setSearchResults(locations);
         onLocationsFiltered(locations);
-
-        if (locations.length === 0) {
-            showNotFoundMessage();
-        }
+        setShowNotFoundMessage(locations.length === 0);
     }
 
     function cleared() {
         setSearchResults([]);
+        setShowNotFoundMessage(false);
         if (selectedCategory) {
-            // TODO: Test
             getFilteredLocations(selectedCategory);
         }
 
@@ -166,6 +159,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
                 </div>
                 <div ref={searchResultsRef} className="search__results"></div>
                 <div className="search__results">
+                    {showNotFoundMessage && <p>Nothing was found</p>}
                     {searchResults.map(location => <ListItemLocation key={location.id} location={location} locationClicked={e => locationClickHandler(e)} />)}
                 </div>
             </div>
