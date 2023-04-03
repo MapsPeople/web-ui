@@ -1,20 +1,13 @@
 import React from "react";
 import './Search.scss';
-import { useRef, useState, useContext } from 'react';
+import { useRef, useState } from 'react';
 import { snapPoints } from '../../constants/snapPoints';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
-import { MapsIndoorsContext } from '../../MapsIndoorsContext';
 import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
 import SearchField from '../WebComponentWrappers/Search/Search';
 
 /** Initialize the MapsIndoors instance. */
 const mapsindoors = window.mapsindoors;
-
-/**
- * Private variable used inside an event listener for a custom event from a web componenent.
- * Implemented due to the impossibility to use the React useState hook.
- */
-let _selectedCategory;
 
 /**
  * Show the search results.
@@ -47,8 +40,6 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
 
     const scrollableContentSwipePrevent = usePreventSwipe();
 
-    const mapsIndoorsInstance = useContext(MapsIndoorsContext);
-
     function locationClickHandler(location) {
         onLocationClick(location);
     }
@@ -69,15 +60,10 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
         mapsindoors.services.LocationsService.getLocations({
             categories: category,
         }).then(locations => {
-
-            /** Function that takes the locations and passes them to the parent component. */
+            // Pass the locations to the parent component.
             onLocationsFiltered(locations);
 
-            /** Loop through the filtered locations and add them to the search results list. */
-            for (const location of locations) {
-                // FIXME: Make work with search field wrapper
-                //addSearchResults(location);
-            }
+            setSearchResults(locations);
         });
     }
 
@@ -88,50 +74,38 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
      * @param {string} category
      */
     function categoryClicked(category) {
-        // FIXME: Make work with search field wrapper
-
         /** Perform a search when a category is clicked and filter the results through the category. */
-        // searchFieldRef.current.setAttribute('mi-categories', category);
-        // setSize(snapPoints.MAX);
+        setSelectedCategory(category);
+        setSize(snapPoints.MAX);
 
-        // /**
-        //  * Check if the clicked category is the same as the active one.
-        //  * Clear out the results list and set the selected category to null.
-        //  */
-        // if (selectedCategory === category) {
-        //     searchResultsRef.current.innerHTML = '';
-        //     setSelectedCategory(null);
-        //     _selectedCategory = null;
-        //     searchFieldRef.current.removeAttribute('mi-categories');
+        /**
+         * Check if the clicked category is the same as the active one.
+         * Clear out the results list and set the selected category to null.
+         */
+        if (selectedCategory === category) {
+            setSearchResults([]);
+            setSelectedCategory(null);
 
-        //     // Pass an empty array to the filtered locations in order to reset the locations.
-        //     onLocationsFiltered([]);
+            // Pass an empty array to the filtered locations in order to reset the locations.
+            onLocationsFiltered([]);
 
-        //     /** Check if the search field has a value and trigger the search again. */
-        //     if (searchFieldRef.current.value) {
-        //         searchFieldRef.current.removeAttribute('mi-categories');
-        //         searchFieldRef.current.triggerSearch();
-        //     }
+            /** Check if the search field has a value and trigger the search again. */
+            if (searchFieldRef.current.getValue()) {
+                searchFieldRef.current.triggerSearch();
+            }
 
-        //     /**
-        //      * Check if the search field has a value while a category is selected.
-        //      * Trigger the search again and set the current selected category.
-        //      */
-        // } else if (searchFieldRef.current.value) {
-        //     searchFieldRef.current.triggerSearch();
-        //     setSelectedCategory(category);
-        //     _selectedCategory = category;
-
-        //     /**
-        //      * Check if a category is selected and filter through the locations within that category.
-        //      * Clear out the search results after each category is selected.
-        //      */
-        // } else {
-        //     searchResultsRef.current.innerHTML = '';
-        //     setSelectedCategory(category);
-        //     _selectedCategory = category;
-        //     getFilteredLocations(category);
-        // }
+            /**
+             * Check if the search field has a value while a category is selected.
+             * Trigger the search again and set the current selected category.
+             */
+        } else if (searchFieldRef.current.value) {
+            /**
+             * Check if a category is selected and filter through the locations within that category.
+             * Clear out the search results after each category is selected.
+             */
+        } else {
+            getFilteredLocations(category);
+        }
     }
 
     /**
@@ -160,9 +134,9 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
 
     function cleared() {
         setSearchResults([]);
-        if (_selectedCategory) {
+        if (selectedCategory) {
             // TODO: Test
-            getFilteredLocations(_selectedCategory);
+            getFilteredLocations(selectedCategory);
         }
 
         onLocationsFiltered([]);

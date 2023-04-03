@@ -14,10 +14,8 @@ import useNear from '../../../hooks/useNear';
  * @param {string} props.displayText - Display text in the search field when the user selects a result.
  * @param {boolean} props.hasInputFocus - If set to true, it will set focus to the input field.
  * @param {string} props.category - If set, search will be performed for Locations having this category.
- * @param {function} props.valueChanged - Function that is called when the search field value changes. Passes the value as payload.
- *
  */
-const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cleared, displayText, hasInputFocus, category, valueChanged }, ref) => {
+const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cleared, displayText, hasInputFocus, category }, ref) => {
     const elementRef = useRef();
 
     /** Instruct the search field to search for Locations near the map center. */
