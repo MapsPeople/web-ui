@@ -142,7 +142,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
      */
     useEffect(() => {
         mapsindoors.services.SolutionsService.getUserRoles().then(userRoles => {
-            const roles = userRoles.filter(role => appUserRoles.includes(role.name));
+            const roles = userRoles.filter(role => appUserRoles?.includes(role.name));
             mapsindoors.MapsIndoors.setUserRoles(roles);
         });
     }, [appUserRoles]);
