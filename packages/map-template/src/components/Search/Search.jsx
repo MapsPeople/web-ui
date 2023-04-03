@@ -28,11 +28,10 @@ let _selectedCategory;
  */
 function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize }) {
 
-    /** Referencing the search DOM element */
+    /** Referencing the search field */
     const searchFieldRef = useRef();
 
     const [searchResults, setSearchResults] = useState([]);
-    const [searchFieldValue, setSearchFieldValue] = useState();
 
     /** Referencing the search results container DOM element */
     const searchResultsRef = useRef();
@@ -172,13 +171,13 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
     return (
         <div className="search">
             <SearchField
+                ref={searchFieldRef}
                 mapsindoors={true}
                 placeholder="Search by name, category, building..."
                 results={locations => onResults(locations)}
                 clicked={() => setSize(snapPoints.MAX)}
                 cleared={() => cleared()}
                 category={selectedCategory}
-                valueChanged={value => setSearchFieldValue(value)}
             />
             <div className="search__scrollable prevent-scroll" {...scrollableContentSwipePrevent}>
                 <div ref={categoriesListRef} className="search__categories">

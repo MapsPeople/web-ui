@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import useNear from '../../../hooks/useNear';
 
 /**
@@ -17,11 +17,23 @@ import useNear from '../../../hooks/useNear';
  * @param {function} props.valueChanged - Function that is called when the search field value changes. Passes the value as payload.
  *
  */
-function SearchField({ placeholder, mapsindoors, results, clicked, cleared, clear, displayText, hasInputFocus, category, valueChanged }) {
+const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cleared, displayText, hasInputFocus, category, valueChanged }, ref) => {
     const elementRef = useRef();
 
     /** Instruct the search field to search for Locations near the map center. */
     const searchNear = useNear();
+
+    /**
+     * Methods that can be triggered on the mi-search element.
+     */
+    useImperativeHandle(ref, () => ({
+        triggerSearch() {
+            elementRef.current.triggerSearch()
+        },
+        getValue() {
+            return elementRef.current.value;
+        }
+    }));
 
     useEffect(() => {
         const searchResultsHandler = customEvent => results(customEvent.detail);
@@ -30,10 +42,6 @@ function SearchField({ placeholder, mapsindoors, results, clicked, cleared, clea
 
         if (mapsindoors === true) {
             current.mapsindoors = 'true';
-        }
-
-        if (clear === true) {
-            current.clear();
         }
 
         if (displayText) {
@@ -48,21 +56,7 @@ function SearchField({ placeholder, mapsindoors, results, clicked, cleared, clea
         current.addEventListener('click', clicked);
         current.addEventListener('cleared', cleared);
 
-        // Observer for the value attribute.
-        // TODO: Figure out if we should implement a proper way to do this: expose an event from the component.
-        const observer = new MutationObserver(mutationList => {
-            mutationList.forEach(mutation => {
-                if (mutation.attributeName === 'value') {
-                    if (typeof valueChanged === 'function') {
-                        valueChanged(current.getAttribute('value'));
-                    }
-                }
-            });
-        });
-        observer.observe(current, { attributes: true });
-
         return () => {
-            observer.disconnect();
             current.removeEventListener('results', searchResultsHandler);
             current.removeEventListener('click', clicked);
             current.removeEventListener('cleared', cleared);
@@ -71,6 +65,6 @@ function SearchField({ placeholder, mapsindoors, results, clicked, cleared, clea
     }, [placeholder, mapsindoors, results, clicked, cleared, displayText, hasInputFocus]);
 
     return <mi-search ref={elementRef} placeholder={placeholder} mi-near={searchNear} mi-categories={category}  />
-}
+});
 
 export default SearchField;
