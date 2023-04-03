@@ -37,10 +37,6 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
 
     const scrollableContentSwipePrevent = usePreventSwipe();
 
-    function locationClickHandler(location) {
-        onLocationClick(location);
-    }
-
     /**
      * Get the locations and filter through them based on categories selected.
      *
@@ -119,6 +115,9 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
         setShowNotFoundMessage(locations.length === 0);
     }
 
+    /**
+     * Clear results list when search field is cleared.
+     */
     function cleared() {
         setSearchResults([]);
         setShowNotFoundMessage(false);
@@ -153,7 +152,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
                 </div>
                 <div className="search__results">
                     {showNotFoundMessage && <p>Nothing was found</p>}
-                    {searchResults.map(location => <ListItemLocation key={location.id} location={location} locationClicked={e => locationClickHandler(e)} />)}
+                    {searchResults.map(location => <ListItemLocation key={location.id} location={location} locationClicked={e => onLocationClick(e)} />)}
                 </div>
             </div>
         </div>
