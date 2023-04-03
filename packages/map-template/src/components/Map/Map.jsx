@@ -26,10 +26,10 @@ const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
  * @param {function} props.onDirectionsService - Function that is run when a DirectionsService instance is created. The instance will be sent along as first argument.
  * @param {function} props.onVenueChangedOnMap - Function that is run when the map bounds was changed due to fitting to a venue.
  * @param {array} props.filteredLocationIds - Array of IDs of the filtered locations.
- * @param {array} props.filteredLocationsByExternalId - Array of IDs of the filtered locations.
+ * @param {array} props.filteredLocationsByExternalIds - Array of IDs of the filtered locations.
  * @returns
  */
-function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onMapsIndoorsInstance, onDirectionsService, onVenueChangedOnMap, filteredLocationIds, filteredLocationsByExternalId }) {
+function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onMapsIndoorsInstance, onDirectionsService, onVenueChangedOnMap, filteredLocationIds, filteredLocationsByExternalIds }) {
     const [mapType, setMapType] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState(null);
 
@@ -60,21 +60,18 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
     }, [venueName, venues]); // eslint-disable-line react-hooks/exhaustive-deps
     // We ignore eslint warnings about missing dependencies because mapsIndoorsInstance should never change runtime anyway.
 
-    /*
+    /**
      * Show the filtered locations on the map based on their IDs.
+     *
      */
     useEffect(() => {
         if (filteredLocationIds && mapsIndoorsInstance) {
             mapsIndoorsInstance.filter(filteredLocationIds);
         }
-    }, [filteredLocationIds, mapsIndoorsInstance]);
-
-
-    useEffect(() => {
-        if (filteredLocationsByExternalId && mapsIndoorsInstance) {
-            mapsIndoorsInstance.filter(filteredLocationsByExternalId);
+        else if (filteredLocationsByExternalIds && mapsIndoorsInstance) {
+            mapsIndoorsInstance.filter(filteredLocationsByExternalIds);
         }
-    }, [filteredLocationsByExternalId, mapsIndoorsInstance]);
+    }, [filteredLocationIds, filteredLocationsByExternalIds,  mapsIndoorsInstance]);
 
     /**
      * Set the venue to show on the map.
