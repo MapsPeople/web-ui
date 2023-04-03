@@ -169,6 +169,12 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
         _activeSearchField = searchFieldItentifiers.FROM;
     }, [location]);
 
+    useEffect(() => {
+        if (isActive && !fromFieldRef.current?.getValue()) {
+            fromFieldRef.current.focusInput();
+        }
+    }, [isActive]);
+
     /**
      * When both origin location and destination location are selected, call the MapsIndoors SDK
      * to get information about the route.
@@ -227,7 +233,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                         FROM
                         <SearchField
                             ref={fromFieldRef}
-                            hasInputFocus={isActive}
                             mapsindoors={true}
                             placeholder="Search by name, category, buildings..."
                             results={locations => searchResultsReceived(locations, searchFieldItentifiers.FROM)}
