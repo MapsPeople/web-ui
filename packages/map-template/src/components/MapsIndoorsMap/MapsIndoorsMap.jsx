@@ -29,8 +29,9 @@ let _locationsDisabled;
  * @param {string} [props.locationId] - If you want the map to show a specific Location, provide the Location ID here.
  * @param {string} [props.primaryColor] - If you want the splash screen to have a custom primary color, provide the value here.
  * @param {string} [props.logo] - If you want the splash screen to have a custom logo, provide the image path or address here.
+ * @param {array} [props.appUserRoles] - If you want the map to behave differently for specific users, set one or more app user roles here.
  */
-function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo }) {
+function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles }) {
 
     const [isMapReady, setMapReady] = useState(false);
     const [venues, setVenues] = useState([]);
@@ -134,8 +135,18 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
      */
     useEffect(() => {
         setCurrentVenueName(venue);
-
     }, [venue]);
+
+    /*
+     * React on changes in the app user roles prop.
+     */
+    useEffect(() => {
+        mapsindoors.services.SolutionsService.getUserRoles().then(userRoles => {
+            const roles = userRoles.filter(role => appUserRoles?.includes(role.name));
+            mapsindoors.MapsIndoors.setUserRoles(roles);
+        });
+    }, [appUserRoles]);
+
 
     /**
      * React on changes to the locationId prop: Set as current location and make the map center on it.
