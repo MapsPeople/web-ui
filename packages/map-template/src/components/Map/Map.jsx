@@ -64,13 +64,14 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
      * Show the filtered locations on the map based on their IDs or external IDs if present.
      */
     useEffect(() => {
-        if (filteredLocationIds && mapsIndoorsInstance) {
-            mapsIndoorsInstance.filter(filteredLocationIds);
+        if (mapsIndoorsInstance) {
+            if (filteredLocationIds) {
+                mapsIndoorsInstance.filter(filteredLocationIds);
+            } else if (filteredLocationsByExternalIds) {
+                mapsIndoorsInstance.filter(filteredLocationsByExternalIds);
+            }
         }
-        else if (filteredLocationsByExternalIds && mapsIndoorsInstance) {
-            mapsIndoorsInstance.filter(filteredLocationsByExternalIds);
-        }
-    }, [filteredLocationIds, filteredLocationsByExternalIds,  mapsIndoorsInstance]);
+    }, [filteredLocationIds, filteredLocationsByExternalIds, mapsIndoorsInstance]);
 
     /**
      * Set the venue to show on the map.
@@ -90,7 +91,7 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
         });
 
         // TODO: This overrides the pink building outline color from the SDK. It's added here for demo purposes until the SDK supports Display Rules for Buildings too.
-        miInstance.setDisplayRule('MI_BUILDING_OUTLINE', {visible: false});
+        miInstance.setDisplayRule('MI_BUILDING_OUTLINE', { visible: false });
 
         miInstance.on('click', location => onLocationClick(location));
 
