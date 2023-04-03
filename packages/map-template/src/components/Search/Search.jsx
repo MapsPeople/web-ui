@@ -29,17 +29,11 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
     /** Indicate if search results have been found */
     const [showNotFoundMessage, setShowNotFoundMessage] = useState(false);
 
-    /** Referencing the search results container DOM element */
-    const searchResultsRef = useRef();
-
     /** Referencing the categories results container DOM element */
     const categoriesListRef = useRef();
 
     /** Determines which category has been selected */
     const [selectedCategory, setSelectedCategory] = useState();
-
-    /** Instruct the search field to search for Locations near the map center. */
-    // const searchNear = useNear();
 
     const scrollableContentSwipePrevent = usePreventSwipe();
 
@@ -157,7 +151,6 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
                         </mi-chip>)
                     }
                 </div>
-                <div ref={searchResultsRef} className="search__results"></div>
                 <div className="search__results">
                     {showNotFoundMessage && <p>Nothing was found</p>}
                     {searchResults.map(location => <ListItemLocation key={location.id} location={location} locationClicked={e => locationClickHandler(e)} />)}
