@@ -14,9 +14,10 @@ import useNear from '../../../hooks/useNear';
  * @param {string} props.displayText - Display text in the search field when the user selects a result.
  * @param {boolean} props.hasInputFocus - If set to true, it will set focus to the input field.
  * @param {string} props.category - If set, search will be performed for Locations having this category.
+ * @param {function} props.valueChanged - Function that is called when the search field value changes. Passes the value as payload.
  *
  */
-function SearchField({ placeholder, mapsindoors, results, clicked, cleared, clear, displayText, hasInputFocus, category }) {
+function SearchField({ placeholder, mapsindoors, results, clicked, cleared, clear, displayText, hasInputFocus, category, valueChanged }) {
     const elementRef = useRef();
 
     /** Instruct the search field to search for Locations near the map center. */
@@ -47,7 +48,21 @@ function SearchField({ placeholder, mapsindoors, results, clicked, cleared, clea
         current.addEventListener('click', clicked);
         current.addEventListener('cleared', cleared);
 
+        // Observer for the value attribute.
+        // TODO: Figure out if we should implement a proper way to do this: expose an event from the component.
+        const observer = new MutationObserver(mutationList => {
+            mutationList.forEach(mutation => {
+                if (mutation.attributeName === 'value') {
+                    if (typeof valueChanged === 'function') {
+                        valueChanged(current.getAttribute('value'));
+                    }
+                }
+            });
+        });
+        observer.observe(current, { attributes: true });
+
         return () => {
+            observer.disconnect();
             current.removeEventListener('results', searchResultsHandler);
             current.removeEventListener('click', clicked);
             current.removeEventListener('cleared', cleared);
