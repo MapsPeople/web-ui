@@ -5,7 +5,7 @@
   background-color: var(--tailwind-colors-zinc-50);
   border: 1px solid var(--tailwind-colors-slate-200);
   padding: 0 var(--spacing-xx-small);
-  border-radius: 70px;
+  border-radius: var(--spacing-x-small);
   align-items: center;
   color: var(--tailwind-colors-zinc-500);
   font-family: var(--font-family-system);
@@ -20,7 +20,7 @@
   }
 
   &__content {
-    padding: 0 var(--spacing-x-small);
+    padding: 0 var(--spacing-small);
     white-space: nowrap;
   }
 

@@ -6,7 +6,7 @@
     display: grid;
     height: 100%;
     overflow-y: hidden;
-    grid-template-rows: 40px 1fr 56px;
+    grid-template-rows: 40px 1fr 64px;
 
     &--content-below {
         position: relative;
@@ -48,7 +48,7 @@
     &__image {
         max-width: 400px;
         width: 100%;
-        border-radius: var(--rounding-x-large);
+        border-radius: var(--rounding-large);
         aspect-ratio: 16 / 9;
         object-fit: cover;
     }
@@ -93,7 +93,7 @@
         border: none;
         font-size: var(--font-size-small);
         width: 100%;
-        height: var(--spacing-xx-large);
+        height: var(--spacing-xxx-large);
         position: relative;
         font-weight: var(--font-weight-x-large);
 
@@ -116,7 +116,7 @@
         margin-right: var(--spacing-medium);
 
         img {
-            height: var(--spacing-xx-large);
+            height: var(--spacing-x-large);
             display: block; /* to avoid spacing below */
         }
     }

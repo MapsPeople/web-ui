@@ -11,7 +11,7 @@ mi-search {
     position: relative;
 
     input[type="search"] {
-        @include border.radius(x-large);
+        @include border.radius(large);
         @include border.width(medium);
         @include border.style(solid);
         @include background-color.white(white);
