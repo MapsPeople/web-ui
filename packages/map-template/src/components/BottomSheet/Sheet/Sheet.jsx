@@ -65,7 +65,6 @@ function Sheet({ children, isOpen, minHeight, preferredSizeSnapPoint, onSwipedTo
             switch (targetSize) {
                 case snapPoints.MAX:
                     setStyle({ height: `${container.current.clientHeight}px`});
-                    console.log(container.current);
                     break;
                 case snapPoints.FIT:
                     setStyle({ height: `${contentHeight}px`});
