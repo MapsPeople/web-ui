@@ -98,10 +98,6 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
      * @param {array} locations
      */
     function onResults(locations) {
-        for (const location of locations) {
-            location.properties.imageURL = mapsIndoorsInstance.getDisplayRule(location).icon; // FIXME: Don't set icon as imageURL on referenced locations data.
-        }
-
         setSearchResults(locations);
         onLocationsFiltered(locations);
         setShowNotFoundMessage(locations.length === 0);
