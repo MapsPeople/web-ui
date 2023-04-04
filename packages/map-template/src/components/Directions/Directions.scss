@@ -55,6 +55,20 @@
         width: fit-content;
     }
 
+    &__distance {
+        svg {
+            width: 20px;
+            height: 20px;
+        }
+    }
+
+    &__time {
+        svg {
+            width: var(--spacing-medium);
+            height: var(--spacing-medium);
+        }
+    }
+
     &__minutes,
     &__meters {
         font-weight: var(--font-weight-large);
