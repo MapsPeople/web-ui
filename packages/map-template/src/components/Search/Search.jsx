@@ -1,9 +1,8 @@
 import React from "react";
 import './Search.scss';
-import { useContext, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { snapPoints } from '../../constants/snapPoints';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
-import { MapsIndoorsContext } from '../../MapsIndoorsContext';
 import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
 import SearchField from '../WebComponentWrappers/Search/Search';
 
@@ -37,8 +36,6 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
     const [selectedCategory, setSelectedCategory] = useState();
 
     const scrollableContentSwipePrevent = usePreventSwipe();
-
-    const mapsIndoorsInstance = useContext(MapsIndoorsContext);
 
     /**
      * Get the locations and filter through them based on categories selected.
@@ -98,10 +95,6 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
      * @param {array} locations
      */
     function onResults(locations) {
-        for (const location of locations) {
-            location.properties.imageURL = mapsIndoorsInstance.getDisplayRule(location).icon; // FIXME: Don't set icon as imageURL on referenced locations data.
-        }
-
         setSearchResults(locations);
         onLocationsFiltered(locations);
         setShowNotFoundMessage(locations.length === 0);

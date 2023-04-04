@@ -1,4 +1,5 @@
-import { useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
+import { MapsIndoorsContext } from '../../../MapsIndoorsContext';
 
 /**
  * React wrapper around the custom element <mi-list-item-location>.
@@ -10,12 +11,15 @@ import { useEffect, useRef } from 'react';
 function ListItemLocation({ location, locationClicked }) {
     const elementRef = useRef();
 
+    const mapsIndoorsInstance = useContext(MapsIndoorsContext);
+
     useEffect(() => {
         const clickHandler = customEvent => locationClicked(customEvent.detail);
 
         const { current } = elementRef;
 
         current.location = location;
+        current.icon = mapsIndoorsInstance.getDisplayRule(location).icon;
         current.addEventListener('locationClicked', clickHandler);
 
         return () => current.removeEventListener('locationClicked', clickHandler);
