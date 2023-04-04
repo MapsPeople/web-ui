@@ -38,8 +38,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [currentVenueName, setCurrentVenueName] = useState();
     const [currentLocation, setCurrentLocation] = useState();
     const [currentCategories, setCurrentCategories] = useState([]);
-    const [filteredLocations, setFilteredLocations] = useState();
-    const [previousFilteredLocations, setPreviousFilteredLocations] = useState();
+    const [filtereLocations, setFilteredLocations] = useState();
+    const [initialFilteredLocations, setInitialFilteredLocations] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const [directionsService, setDirectionsService] = useState();
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
@@ -75,17 +75,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             _locationsDisabled = true;
         }
     }
-
-
-    useEffect(() => {
-        if (hasDirectionsOpen) {
-            setPreviousFilteredLocations(filteredLocations)
-            setFilteredLocations([]);
-        } else {
-            setFilteredLocations(previousFilteredLocations);
-        }
-
-    }, [hasDirectionsOpen])
 
     /**
     * Handle the clicked location on the map.
@@ -173,7 +162,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
         }
     }, [locationId]);
 
-    /*
+    /**
      * React on changes in the MapsIndoors API key by fetching the required data.
      */
     useEffect(() => {
@@ -195,6 +184,19 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             setVenues(venuesResult);
         });
     }, [apiKey]);
+
+
+    /**
+     * React on changes in directions opened state.
+     */
+    useEffect(() => {
+        if (hasDirectionsOpen) {
+            setInitialFilteredLocations(filtereLocations)
+            setFilteredLocations([]);
+        } else {
+            setFilteredLocations(initialFilteredLocations);
+        }
+    }, [hasDirectionsOpen]);
 
     return (<MapsIndoorsContext.Provider value={mapsIndoorsInstance}>
         <MapReadyContext.Provider value={isMapReady}>
@@ -233,7 +235,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                         onMapsIndoorsInstance={(instance) => setMapsIndoorsInstance(instance)}
                         onDirectionsService={(instance) => setDirectionsService(instance)}
                         onLocationClick={(location) => locationClicked(location)}
-                        filteredLocationIds={filteredLocations?.map(location => location.id)} />
+                        filteredLocationIds={filtereLocations?.map(location => location.id)} />
                 </div>
             </DirectionsServiceContext.Provider>
         </MapReadyContext.Provider>
