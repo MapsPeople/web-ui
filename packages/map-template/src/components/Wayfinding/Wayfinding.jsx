@@ -18,12 +18,6 @@ const searchFieldItentifiers = {
 };
 
 /**
- * Private variable used to assign the active search field.
- * Implemented due to the impossibility to use the React useState hook.
- */
-let _activeSearchField;
-
-/**
  * Show the wayfinding view.
  *
  * @param {Object} props
@@ -42,6 +36,8 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     const fromFieldRef = useRef();
 
     const directionsService = useContext(DirectionsServiceContext);
+
+    const [activeSearchField, setActiveSearchField] = useState();
 
     /** Indicate if a route has been found */
     const [hasFoundRoute, setHasFoundRoute] = useState(true);
@@ -70,10 +66,10 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      * and clears out the results list.
      */
     function locationClickHandler(location) {
-        if (_activeSearchField === searchFieldItentifiers.TO) {
+        if (activeSearchField === searchFieldItentifiers.TO) {
             toFieldRef.current.setDisplayText(location.properties.name);
             setDestinationLocation(location);
-        } else if (_activeSearchField === searchFieldItentifiers.FROM) {
+        } else if (activeSearchField === searchFieldItentifiers.FROM) {
             fromFieldRef.current.setDisplayText(location.properties.name);
             setOriginLocation(location);
         }
@@ -88,7 +84,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      * @param {string} searchFieldIdentifier
      */
     function searchResultsReceived(results, searchFieldIdentifier) {
-        _activeSearchField = searchFieldIdentifier;
+        setActiveSearchField(searchFieldIdentifier);
 
         if (results.length === 0) {
             setHasSearchResults(false);
@@ -125,7 +121,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      * @param {string} searchFieldIdentifier
      */
     function onSearchClicked(searchFieldIdentifier) {
-        _activeSearchField = searchFieldIdentifier;
+        setActiveSearchField(searchFieldIdentifier);
         resetSearchField();
         setHasError(false);
         setHasFoundRoute(true);
@@ -137,7 +133,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      * @param {string} searchFieldIdentifier
      */
     function onSearchCleared(searchFieldIdentifier) {
-        _activeSearchField = searchFieldIdentifier;
+        setActiveSearchField(searchFieldIdentifier);
         resetSearchField();
         setSearchResults([]);
         setHasError(false);
@@ -148,10 +144,10 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     * Reset the active field's display text and location.
     */
     function resetSearchField() {
-        if (_activeSearchField === searchFieldItentifiers.TO) {
+        if (activeSearchField === searchFieldItentifiers.TO) {
             toFieldRef.current.setDisplayText('');
             setDestinationLocation();
-        } else if (_activeSearchField === searchFieldItentifiers.FROM) {
+        } else if (activeSearchField === searchFieldItentifiers.FROM) {
             fromFieldRef.current.setDisplayText('');
             setOriginLocation();
         }
@@ -166,7 +162,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
             setDestinationLocation(location);
         }
 
-        _activeSearchField = searchFieldItentifiers.FROM;
+        setActiveSearchField(searchFieldItentifiers.FROM);
     }, [location]);
 
     useEffect(() => {
