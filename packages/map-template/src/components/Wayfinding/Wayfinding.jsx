@@ -18,12 +18,6 @@ const searchFieldItentifiers = {
 };
 
 /**
- * Private variable used to assign the active search field.
- * Implemented due to the impossibility to use the React useState hook.
- */
-let _activeSearchField;
-
-/**
  * Show the wayfinding view.
  *
  * @param {Object} props
@@ -38,7 +32,12 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     /** Referencing the accessibility details DOM element */
     const detailsRef = useRef();
 
+    const toFieldRef = useRef();
+    const fromFieldRef = useRef();
+
     const directionsService = useContext(DirectionsServiceContext);
+
+    const [activeSearchField, setActiveSearchField] = useState();
 
     /** Indicate if a route has been found */
     const [hasFoundRoute, setHasFoundRoute] = useState(true);
@@ -51,10 +50,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
 
     /** Holds search results given from a search field */
     const [searchResults, setSearchResults] = useState([]);
-
-    const [toFieldDisplayText, setToFieldDisplayText] = useState();
-
-    const [fromFieldDisplayText, setFromFieldDisplayText] = useState();
 
     const [destinationLocation, setDestinationLocation] = useState();
     const [originLocation, setOriginLocation] = useState();
@@ -71,11 +66,11 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      * and clears out the results list.
      */
     function locationClickHandler(location) {
-        if (_activeSearchField === searchFieldItentifiers.TO) {
-            setToFieldDisplayText(location.properties.name);
+        if (activeSearchField === searchFieldItentifiers.TO) {
+            toFieldRef.current.setDisplayText(location.properties.name);
             setDestinationLocation(location);
-        } else if (_activeSearchField === searchFieldItentifiers.FROM) {
-            setFromFieldDisplayText(location.properties.name);
+        } else if (activeSearchField === searchFieldItentifiers.FROM) {
+            fromFieldRef.current.setDisplayText(location.properties.name);
             setOriginLocation(location);
         }
 
@@ -89,7 +84,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      * @param {string} searchFieldIdentifier
      */
     function searchResultsReceived(results, searchFieldIdentifier) {
-        _activeSearchField = searchFieldIdentifier;
+        setActiveSearchField(searchFieldIdentifier);
 
         if (results.length === 0) {
             setHasSearchResults(false);
@@ -126,7 +121,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      * @param {string} searchFieldIdentifier
      */
     function onSearchClicked(searchFieldIdentifier) {
-        _activeSearchField = searchFieldIdentifier;
+        setActiveSearchField(searchFieldIdentifier);
         resetSearchField();
         setHasError(false);
         setHasFoundRoute(true);
@@ -138,7 +133,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      * @param {string} searchFieldIdentifier
      */
     function onSearchCleared(searchFieldIdentifier) {
-        _activeSearchField = searchFieldIdentifier;
+        setActiveSearchField(searchFieldIdentifier);
         resetSearchField();
         setSearchResults([]);
         setHasError(false);
@@ -149,11 +144,11 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     * Reset the active field's display text and location.
     */
     function resetSearchField() {
-        if (_activeSearchField === searchFieldItentifiers.TO) {
-            setToFieldDisplayText('');
+        if (activeSearchField === searchFieldItentifiers.TO) {
+            toFieldRef.current.setDisplayText('');
             setDestinationLocation();
-        } else if (_activeSearchField === searchFieldItentifiers.FROM) {
-            setFromFieldDisplayText('');
+        } else if (activeSearchField === searchFieldItentifiers.FROM) {
+            fromFieldRef.current.setDisplayText('');
             setOriginLocation();
         }
     }
@@ -163,12 +158,18 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
         setSize(snapPoints.MAX);
         // If there is a location selected, pre-fill the value of the `to` field with the location name.
         if (location) {
-            setToFieldDisplayText(location.properties.name);
+            toFieldRef.current.setDisplayText(location.properties.name);
             setDestinationLocation(location);
         }
 
-        _activeSearchField = searchFieldItentifiers.FROM;
+        setActiveSearchField(searchFieldItentifiers.FROM);
     }, [location]);
+
+    useEffect(() => {
+        if (isActive && !fromFieldRef.current?.getValue()) {
+            fromFieldRef.current.focusInput();
+        }
+    }, [isActive]);
 
     /**
      * When both origin location and destination location are selected, call the MapsIndoors SDK
@@ -216,10 +217,10 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                     <label className="wayfinding__label">
                         TO
                         <SearchField
+                            ref={toFieldRef}
                             mapsindoors={true}
                             placeholder="Search by name, category, building..."
                             results={locations => searchResultsReceived(locations, searchFieldItentifiers.TO)}
-                            displayText={toFieldDisplayText}
                             clicked={() => onSearchClicked(searchFieldItentifiers.TO)}
                             cleared={() => onSearchCleared(searchFieldItentifiers.TO)}
                         />
@@ -227,11 +228,10 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                     <label className="wayfinding__label">
                         FROM
                         <SearchField
-                            hasInputFocus={isActive}
+                            ref={fromFieldRef}
                             mapsindoors={true}
                             placeholder="Search by name, category, buildings..."
                             results={locations => searchResultsReceived(locations, searchFieldItentifiers.FROM)}
-                            displayText={fromFieldDisplayText}
                             clicked={() => onSearchClicked(searchFieldItentifiers.FROM)}
                             cleared={() => onSearchCleared(searchFieldItentifiers.FROM)}
                         />
