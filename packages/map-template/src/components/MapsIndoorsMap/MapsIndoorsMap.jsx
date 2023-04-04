@@ -38,7 +38,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [currentVenueName, setCurrentVenueName] = useState();
     const [currentLocation, setCurrentLocation] = useState();
     const [currentCategories, setCurrentCategories] = useState([]);
-    const [filtereLocations, setFilteredLocations] = useState();
+    const [filteredLocations, setFilteredLocations] = useState();
     const [initialFilteredLocations, setInitialFilteredLocations] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const [directionsService, setDirectionsService] = useState();
@@ -191,7 +191,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
      */
     useEffect(() => {
         if (hasDirectionsOpen) {
-            setInitialFilteredLocations(filtereLocations)
+            setInitialFilteredLocations(filteredLocations)
             setFilteredLocations([]);
         } else {
             setFilteredLocations(initialFilteredLocations);
@@ -235,7 +235,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                         onMapsIndoorsInstance={(instance) => setMapsIndoorsInstance(instance)}
                         onDirectionsService={(instance) => setDirectionsService(instance)}
                         onLocationClick={(location) => locationClicked(location)}
-                        filteredLocationIds={filtereLocations?.map(location => location.id)} />
+                        filteredLocationIds={filteredLocations?.map(location => location.id)} />
                 </div>
             </DirectionsServiceContext.Provider>
         </MapReadyContext.Provider>
