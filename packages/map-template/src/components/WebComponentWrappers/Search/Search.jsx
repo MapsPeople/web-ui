@@ -45,14 +45,21 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
             current.mapsindoors = 'true';
         }
 
+        function onCleared() {
+            if (!current.getValue) {
+                current.focusInput();
+            }
+            cleared();
+        }
+
         current.addEventListener('results', searchResultsHandler);
         current.addEventListener('click', clicked);
-        current.addEventListener('cleared', cleared);
+        current.addEventListener('cleared', onCleared);
 
         return () => {
             current.removeEventListener('results', searchResultsHandler);
             current.removeEventListener('click', clicked);
-            current.removeEventListener('cleared', cleared);
+            current.removeEventListener('cleared', onCleared);
         }
 
     }, [placeholder, mapsindoors, results, clicked, cleared]);
