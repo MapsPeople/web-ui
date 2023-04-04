@@ -39,6 +39,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [currentLocation, setCurrentLocation] = useState();
     const [currentCategories, setCurrentCategories] = useState([]);
     const [filteredLocations, setFilteredLocations] = useState();
+    const [previousFilteredLocations, setPreviousFilteredLocations] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const [directionsService, setDirectionsService] = useState();
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
@@ -74,6 +75,17 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             _locationsDisabled = true;
         }
     }
+
+
+    useEffect(() => {
+        if (hasDirectionsOpen) {
+            setPreviousFilteredLocations(filteredLocations)
+            setFilteredLocations([]);
+        } else {
+            setFilteredLocations(previousFilteredLocations);
+        }
+
+    }, [hasDirectionsOpen])
 
     /**
     * Handle the clicked location on the map.
