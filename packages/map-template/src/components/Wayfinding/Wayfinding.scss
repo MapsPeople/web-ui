@@ -4,6 +4,7 @@
     color: var(--brand-colors-black-100);
     display: grid;
     grid-template-rows: 228px 1fr;
+    min-height: 435px;
 
     &__directions {
         background-color: var(--color-gray-20);
