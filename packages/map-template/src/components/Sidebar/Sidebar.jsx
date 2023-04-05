@@ -21,18 +21,23 @@ const VIEWS = {
  * @param {function} props.onLocationsFiltered - The list of locations after filtering through the categories.
  * @param {function} props.onDirectionsOpened - Check if the directions page state is open.
  * @param {function} props.onDirectionsClosed - Check if the directions page state is closed.
+ * @param {function} props.pushAppView - Function to push to app view to browser history.
+ * @param {string} props.currentAppView - Holds the current view/state of the Map Template.
+ * @param {array} props.appViews - Array of all possible views.
  *
-*/
-function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed }) {
-    const [activePage, setActivePage] = useState(null);
+ */
+function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed, pushAppView, currentAppView, appViews }) {
+    // const [activePage, setActivePage] = useState(null);
 
     const [directions, setDirections] = useState();
 
     /*
-    * React on changes on the current location.
-    */
+     * React on changes on the current location.
+     */
     useEffect(() => {
-        setActivePage(currentLocation ? VIEWS.LOCATION_DETAILS : VIEWS.SEARCH);
+        if (currentLocation) {
+            pushAppView(appViews.LOCATION_DETAILS, currentLocation);
+        }
     }, [currentLocation]);
 
     /**
@@ -41,7 +46,7 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
      * @param {number} page
      */
     function setPage(page) {
-        setActivePage(page);
+        pushAppView(page);
         onDirectionsClosed();
     }
 
@@ -49,40 +54,40 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
      * Navigate to the directions page and trigger the visibility of the floor selector to be hidden.
      */
     function setDirectionsPage() {
-        setActivePage(VIEWS.DIRECTIONS);
+        pushAppView(appViews.DIRECTIONS);
         onDirectionsOpened();
 
     }
 
     const pages = [
-        <Modal isOpen={activePage === VIEWS.SEARCH} key="A">
+        <Modal isOpen={currentAppView === appViews.SEARCH} key="A">
             <Search
                 onLocationClick={(location) => setCurrentLocation(location)}
                 categories={currentCategories}
                 onLocationsFiltered={(locations) => onLocationsFiltered(locations)}
             />
         </Modal>,
-        <Modal isOpen={activePage === VIEWS.LOCATION_DETAILS} key="B">
+        <Modal isOpen={currentAppView === appViews.LOCATION_DETAILS} key="B">
             <LocationDetails
-                onStartWayfinding={() => setPage(VIEWS.WAYFINDING)}
+                onStartWayfinding={() => setPage(appViews.WAYFINDING)}
                 location={currentLocation}
-                onBack={() => setPage(VIEWS.SEARCH)}
+                onBack={() => setPage(appViews.SEARCH)}
             />
         </Modal>,
-        <Modal isOpen={activePage === VIEWS.WAYFINDING} key="C">
+        <Modal isOpen={currentAppView === appViews.WAYFINDING} key="C">
             <Wayfinding
                 onStartDirections={() => setDirectionsPage()}
                 location={currentLocation}
                 onDirections={result => setDirections(result)}
-                onBack={() => setPage(VIEWS.LOCATION_DETAILS)}
-                isActive={activePage === VIEWS.WAYFINDING}
+                onBack={() => setPage(appViews.LOCATION_DETAILS)}
+                isActive={currentAppView === appViews.WAYFINDING}
             />
         </Modal>,
-        <Modal isOpen={activePage === VIEWS.DIRECTIONS} key="D">
+        <Modal isOpen={currentAppView === appViews.DIRECTIONS} key="D">
             <Directions
-                isOpen={activePage === VIEWS.DIRECTIONS}
+                isOpen={currentAppView === appViews.DIRECTIONS}
                 directions={directions}
-                onBack={() => setPage(VIEWS.WAYFINDING)}
+                onBack={() => setPage(appViews.WAYFINDING)}
             />
         </Modal>
     ]

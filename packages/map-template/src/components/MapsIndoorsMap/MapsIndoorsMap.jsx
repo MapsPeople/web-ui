@@ -8,6 +8,7 @@ import BottomSheet from '../BottomSheet/BottomSheet';
 import { MapsIndoorsContext } from '../../MapsIndoorsContext';
 import { MapReadyContext } from '../../MapReadyContext';
 import { DirectionsServiceContext } from '../../DirectionsServiceContext';
+import { useAppHistory } from '../../hooks/useAppHistory';
 import useMediaQuery from '../../hooks/useMediaQuery';
 import Sidebar from '../Sidebar/Sidebar';
 
@@ -44,6 +45,13 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
+    const [pushAppView, goBack, currentAppView, currentAppViewPayload, appStates] = useAppHistory();
+
+    useEffect(() => {
+        if (currentAppView === appStates.LOCATION_DETAILS && currentAppViewPayload && !currentLocation) {
+            setCurrentLocation(currentAppViewPayload);
+        }
+    }, [currentAppView]);
 
     /**
      * When venue is fitted while initializing the data, set map to be ready.
@@ -189,7 +197,14 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             <DirectionsServiceContext.Provider value={directionsService}>
                 <div className={`mapsindoors-map ${hasDirectionsOpen ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}`}>
                     {!isMapReady && <SplashScreen logo={logo} primaryColor={primaryColor} />}
-                    {venues.length > 1 && <VenueSelector onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)} venues={venues} currentVenueName={currentVenueName} />}
+                    {venues.length > 1 && <VenueSelector
+                        onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)}
+                        venues={venues}
+                        currentVenueName={currentVenueName}
+                        onOpen={() => pushAppView(appStates.VENUE_SELECTOR)}
+                        onClose={() => goBack()}
+                        active={currentAppView === appStates.VENUE_SELECTOR}
+                    />}
                     {isMapReady && isDesktop
                         ?
                         <Sidebar
@@ -200,6 +215,9 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             onLocationsFiltered={(locations) => setFilteredLocations(locations)}
                             onDirectionsOpened={() => directionsOpened()}
                             onDirectionsClosed={() => directionsClosed()}
+                            pushAppView={pushAppView}
+                            currentAppView={currentAppView}
+                            appViews={appStates}
                         />
                         :
                         <BottomSheet
@@ -209,6 +227,9 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             onLocationsFiltered={(locations) => setFilteredLocations(locations)}
                             onDirectionsOpened={() => directionsOpened()}
                             onDirectionsClosed={() => directionsClosed()}
+                            pushAppView={pushAppView}
+                            currentAppView={currentAppView}
+                            appViews={appStates}
                         />
                     }
                     <MIMap
