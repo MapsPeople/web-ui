@@ -190,7 +190,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     }, [apiKey]);
 
 
-    /**
+    /*
      * React on changes in directions opened state.
      */
     useEffect(() => {
