@@ -166,7 +166,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
         }
     }, [locationId]);
 
-    /**
+    /*
      * React on changes in the MapsIndoors API key by fetching the required data.
      */
     useEffect(() => {
@@ -200,7 +200,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             setInitialFilteredLocations(filteredLocations)
             setFilteredLocations([]);
         } else {
-        // Apply the previously filtered locations to the map when navigating outside the directions.
+            // Apply the previously filtered locations to the map when navigating outside the directions.
             setFilteredLocations(initialFilteredLocations);
         }
     }, [hasDirectionsOpen]);
