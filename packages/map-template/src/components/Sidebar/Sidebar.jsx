@@ -5,13 +5,6 @@ import Wayfinding from '../Wayfinding/Wayfinding';
 import Directions from '../Directions/Directions';
 import Search from '../Search/Search';
 
-const VIEWS = {
-    SEARCH: 0,
-    LOCATION_DETAILS: 1,
-    WAYFINDING: 2,
-    DIRECTIONS: 3
-};
-
 /**
  * @param {Object} props
  * @param {Object} props.currentLocation - The currently selected MapsIndoors Location.
@@ -27,8 +20,6 @@ const VIEWS = {
  *
  */
 function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed, pushAppView, currentAppView, appViews }) {
-    // const [activePage, setActivePage] = useState(null);
-
     const [directions, setDirections] = useState();
 
     /*
