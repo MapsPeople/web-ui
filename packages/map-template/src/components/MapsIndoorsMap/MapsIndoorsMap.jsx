@@ -47,6 +47,9 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const isDesktop = useMediaQuery('(min-width: 992px)');
     const [pushAppView, goBack, currentAppView, currentAppViewPayload, appStates] = useAppHistory();
 
+    /*
+     * Add Location to history payload to make it possible to re-enter location details with that Location.
+     */
     useEffect(() => {
         if (currentAppView === appStates.LOCATION_DETAILS && currentAppViewPayload && !currentLocation) {
             setCurrentLocation(currentAppViewPayload);
