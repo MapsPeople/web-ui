@@ -35,7 +35,7 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
      * React on changes on the current location.
      */
     useEffect(() => {
-        if (currentLocation) {
+        if (currentLocation && currentAppView !== appViews.LOCATION_DETAILS) {
             pushAppView(appViews.LOCATION_DETAILS, currentLocation);
         }
     }, [currentLocation]);

@@ -36,7 +36,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
      * Set the search bottom sheet to be active if there is no location selected.
      */
     useEffect(() => {
-        if (currentLocation) {
+        if (currentLocation && currentAppView !== appViews.LOCATION_DETAILS) {
             pushAppView(appViews.LOCATION_DETAILS, currentLocation);
         }
     }, [currentLocation]);
