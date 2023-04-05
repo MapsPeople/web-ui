@@ -38,11 +38,15 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [currentVenueName, setCurrentVenueName] = useState();
     const [currentLocation, setCurrentLocation] = useState();
     const [currentCategories, setCurrentCategories] = useState([]);
-    const [filteredLocations, setFilteredLocations] = useState();
-    const [initialFilteredLocations, setInitialFilteredLocations] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const [directionsService, setDirectionsService] = useState();
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
+
+    // The filtered locations that the user sets when selecting a category/location.
+    const [filteredLocations, setFilteredLocations] = useState();
+
+    // Holds a copy of the initially filtered locations.
+    const [initialFilteredLocations, setInitialFilteredLocations] = useState();
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
