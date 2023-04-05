@@ -273,7 +273,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                     </div>
                 </div>
                 <button className="wayfinding__button" onClick={() => onStartDirections()}>
-                    <CheckIcon />
                     Go!
                 </button>
             </div>}

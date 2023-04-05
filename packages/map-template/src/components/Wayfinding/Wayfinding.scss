@@ -108,13 +108,6 @@
         position: relative;
         margin-top: var(--spacing-x-large);
         font-weight: var(--font-weight-x-large);
-
-        svg {
-            position: absolute;
-            left: var(--spacing-small);
-            top: 50%;
-            transform: translateY(-50%);
-        }
     }
 
     &__scrollable {

@@ -195,7 +195,6 @@ function LocationDetails({ location, onBack, onStartWayfinding, onSetSize, snapP
             </div>
 
             <button onClick={() => startWayfinding()} className="location-details__wayfinding">
-                <PinIcon />
                 Start wayfinding
             </button>
         </>}
