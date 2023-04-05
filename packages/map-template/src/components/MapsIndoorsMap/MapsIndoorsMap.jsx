@@ -38,10 +38,15 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [currentVenueName, setCurrentVenueName] = useState();
     const [currentLocation, setCurrentLocation] = useState();
     const [currentCategories, setCurrentCategories] = useState([]);
-    const [filteredLocations, setFilteredLocations] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const [directionsService, setDirectionsService] = useState();
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
+
+    // The filtered locations that the user sets when selecting a category/location.
+    const [filteredLocations, setFilteredLocations] = useState();
+
+    // Holds a copy of the initially filtered locations.
+    const [initialFilteredLocations, setInitialFilteredLocations] = useState();
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
@@ -183,6 +188,22 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             setVenues(venuesResult);
         });
     }, [apiKey]);
+
+
+    /*
+     * React on changes in directions opened state.
+     */
+    useEffect(() => {
+        // Reset all the filters when in directions mode.
+        // Store the filtered locations in another state, to be able to access them again.
+        if (hasDirectionsOpen) {
+            setInitialFilteredLocations(filteredLocations)
+            setFilteredLocations([]);
+        } else {
+            // Apply the previously filtered locations to the map when navigating outside the directions.
+            setFilteredLocations(initialFilteredLocations);
+        }
+    }, [hasDirectionsOpen]);
 
     return (<MapsIndoorsContext.Provider value={mapsIndoorsInstance}>
         <MapReadyContext.Provider value={isMapReady}>
