@@ -17,6 +17,7 @@ function MapboxMap({ mapboxAccessToken, onMapView, mapsIndoorsInstance }) {
 
     const [mapView, setMapView] = useState();
     const [hasFloorSelector, setHasFloorSelector] = useState(false);
+    const [hasPositionControl, setHasPositionControl] = useState(false);
 
     useEffect(() => {
         // Initialize MapboxView MapView
@@ -50,7 +51,19 @@ function MapboxMap({ mapboxAccessToken, onMapView, mapsIndoorsInstance }) {
             }, 'top-right');
             setHasFloorSelector(true);
         }
-    }, [mapsIndoorsInstance, mapView, hasFloorSelector]);
+
+        if (mapsIndoorsInstance && mapView && !hasPositionControl) {
+            const positionControlDiv = document.createElement('div');
+            new mapsindoors.PositionControl(positionControlDiv, { mapsIndoors: mapsIndoorsInstance });
+            mapView.getMap().addControl({
+                onAdd: () => positionControlDiv,
+                onRemove: () => {
+                    positionControlDiv.parentNode.removeChild(positionControlDiv);
+                }
+            }, 'top-right');
+            setHasPositionControl(true);
+        }
+    }, [mapsIndoorsInstance, mapView, hasFloorSelector, hasPositionControl]);
 
     return <div className="map-container" id="map"></div>
 }

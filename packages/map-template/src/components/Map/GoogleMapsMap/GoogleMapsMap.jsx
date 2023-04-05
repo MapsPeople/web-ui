@@ -17,6 +17,7 @@ function GoogleMapsMap({ gmApiKey, onMapView, mapsIndoorsInstance }) {
     const [google, setGoogle] = useState();
     const [mapView, setMapView] = useState();
     const [hasFloorSelector, setHasFloorSelector] = useState(false);
+    const [hasPositionControl, setHasPositionControl] = useState(false);
 
     useEffect(() => {
         const loader = new GoogleMapsApiLoader({
@@ -54,7 +55,15 @@ function GoogleMapsMap({ gmApiKey, onMapView, mapsIndoorsInstance }) {
             mapView.getMap().controls[google.maps.ControlPosition.RIGHT_TOP].push(floorSelectorDiv);
             setHasFloorSelector(true);
         }
-    }, [mapsIndoorsInstance, mapView, google, hasFloorSelector])
+
+        if (mapsIndoorsInstance && mapView && google && !hasPositionControl) {
+            const positionControlDiv = document.createElement('div');
+            new mapsindoors.PositionControl(positionControlDiv, { mapsIndoors: mapsIndoorsInstance });
+            mapView.getMap().controls[google.maps.ControlPosition.RIGHT_TOP].push(positionControlDiv);
+            setHasPositionControl(true);
+        }
+
+    }, [mapsIndoorsInstance, mapView, google, hasFloorSelector, hasPositionControl])
 
     return <div className="map-container" id="map"></div>
 }
