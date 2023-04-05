@@ -190,10 +190,13 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
      * React on changes in directions opened state.
      */
     useEffect(() => {
+        // Reset all the filters when in directions mode.
+        // Store the filtered locations in another state, to be able to access them again.
         if (hasDirectionsOpen) {
             setInitialFilteredLocations(filteredLocations)
             setFilteredLocations([]);
         } else {
+        // Apply the previously filtered locations to the map when navigating outside the directions.
             setFilteredLocations(initialFilteredLocations);
         }
     }, [hasDirectionsOpen]);
