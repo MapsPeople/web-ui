@@ -6,6 +6,7 @@ import { ReactComponent as CheckIcon } from '../../assets/check.svg';
 import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
 import { ReactComponent as WalkingIcon } from '../../assets/walking.svg';
 import { DirectionsServiceContext } from '../../DirectionsServiceContext';
+import { UserPositionContext } from '../../UserPositionContext';
 import Tooltip from '../Tooltip/Tooltip';
 import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
 import SearchField from '../WebComponentWrappers/Search/Search';
@@ -36,6 +37,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     const fromFieldRef = useRef();
 
     const directionsService = useContext(DirectionsServiceContext);
+    const userPosition = useContext(UserPositionContext);
 
     const [activeSearchField, setActiveSearchField] = useState();
 
@@ -167,7 +169,28 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
 
     useEffect(() => {
         if (isActive && !fromFieldRef.current?.getValue()) {
-            fromFieldRef.current.focusInput();
+            if (userPosition) {
+                // If the user's position is known, we "mock" a MapsIndoors Location with the Geometry
+                // corresponding to the user position,
+                // and use that as wayfinding origin.
+                const myPositionGeometry = {
+                    type: 'Point',
+                    coordinates: [userPosition.coords.longitude, userPosition.coords.latitude]
+                };
+                const myPositionLocation = {
+                    geometry: myPositionGeometry,
+                    properties: {
+                        name: 'My Position',
+                        anchor: myPositionGeometry,
+                    },
+                    type: 'Feature'
+                };
+
+                fromFieldRef.current.setDisplayText(myPositionLocation.properties.name);
+                setOriginLocation(myPositionLocation);
+            } else {
+                fromFieldRef.current.focusInput();
+            }
         }
     }, [isActive]);
 
