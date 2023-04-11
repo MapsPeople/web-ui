@@ -10,9 +10,10 @@ const mapsindoors = window.mapsindoors;
  * @param {object} props
  * @param {string} props.gmApiKey - A Google Maps JS API key required for loading the Google Maps JS API.
  * @param {function} props.onMapView - A function that is called when the MapView is constructed. Sends the MapView instance and External Directions Provider as payload.
+ * @param {function} props.onPositionControl - A function that is called when the MapsIndoors PositionControl is contructed. Will send the PositionControl instance as payload.
  * @param {object} props.mapsIndoorsInstance - Instance of the mapsindoors.MapsIndoors
  */
-function GoogleMapsMap({ gmApiKey, onMapView, mapsIndoorsInstance }) {
+function GoogleMapsMap({ gmApiKey, onMapView, onPositionControl, mapsIndoorsInstance }) {
 
     const [google, setGoogle] = useState();
     const [mapView, setMapView] = useState();
@@ -58,9 +59,10 @@ function GoogleMapsMap({ gmApiKey, onMapView, mapsIndoorsInstance }) {
 
         if (mapsIndoorsInstance && mapView && google && !hasPositionControl) {
             const positionControlDiv = document.createElement('div');
-            new mapsindoors.PositionControl(positionControlDiv, { mapsIndoors: mapsIndoorsInstance });
+            const positionControl = new mapsindoors.PositionControl(positionControlDiv, { mapsIndoors: mapsIndoorsInstance });
             mapView.getMap().controls[google.maps.ControlPosition.RIGHT_TOP].push(positionControlDiv);
             setHasPositionControl(true);
+            onPositionControl(positionControl);
         }
 
     }, [mapsIndoorsInstance, mapView, google, hasFloorSelector, hasPositionControl])
