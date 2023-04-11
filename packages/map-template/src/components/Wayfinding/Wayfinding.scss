@@ -42,6 +42,20 @@
         font-weight: var(--font-weight-large);
     }
 
+    &__use-current-position {
+        position: relative;
+        top: -36px;
+        text-align: right;
+
+        button {
+            all: unset;
+            font-size: var(--font-size-small);
+            color: var(--color-blue-base);
+            margin-top: var(--spacing-x-small);
+            cursor: pointer;
+        }
+    }
+
     &__details {
         padding: var(--spacing-medium);
     }

@@ -118,6 +118,30 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     }
 
     /**
+     * Set the user's current position as the origin.
+     *
+     * This is done by mocking a MapsIndoors Location with the geometry
+     * corresponding to the user's position.
+     */
+    function setMyPositionAsOrigin() {
+        const myPositionGeometry = {
+            type: 'Point',
+            coordinates: [userPosition.coords.longitude, userPosition.coords.latitude]
+        };
+        const myPositionLocation = {
+            geometry: myPositionGeometry,
+            properties: {
+                name: 'My Position',
+                anchor: myPositionGeometry,
+            },
+            type: 'Feature'
+        };
+
+        fromFieldRef.current.setDisplayText(myPositionLocation.properties.name);
+        setOriginLocation(myPositionLocation);
+    }
+
+    /**
      * Handle click events on the search field.
      *
      * @param {string} searchFieldIdentifier
@@ -155,7 +179,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
         }
     }
 
-
     useEffect(() => {
         setSize(snapPoints.MAX);
         // If there is a location selected, pre-fill the value of the `to` field with the location name.
@@ -170,24 +193,8 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     useEffect(() => {
         if (isActive && !fromFieldRef.current?.getValue()) {
             if (userPosition) {
-                // If the user's position is known, we "mock" a MapsIndoors Location with the Geometry
-                // corresponding to the user position,
-                // and use that as wayfinding origin.
-                const myPositionGeometry = {
-                    type: 'Point',
-                    coordinates: [userPosition.coords.longitude, userPosition.coords.latitude]
-                };
-                const myPositionLocation = {
-                    geometry: myPositionGeometry,
-                    properties: {
-                        name: 'My Position',
-                        anchor: myPositionGeometry,
-                    },
-                    type: 'Feature'
-                };
-
-                fromFieldRef.current.setDisplayText(myPositionLocation.properties.name);
-                setOriginLocation(myPositionLocation);
+                // If the user's position is known, use that as Origin.
+                setMyPositionAsOrigin();
             } else {
                 fromFieldRef.current.focusInput();
             }
@@ -259,6 +266,9 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                             cleared={() => onSearchCleared(searchFieldItentifiers.FROM)}
                         />
                     </label>
+                    {userPosition && originLocation?.properties.name !== 'My Position' && <p className="wayfinding__use-current-position">
+                        <button onClick={() => setMyPositionAsOrigin()}>Use My Position</button>
+                    </p>}
                 </div>
             </div>
             {!hasFoundRoute && <p className="wayfinding__error">No route has been found</p>}
