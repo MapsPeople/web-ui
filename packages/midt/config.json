@@ -9,7 +9,10 @@
       "files": [
         {
           "destination": "_variables.scss",
-          "format": "scss/variables"
+          "format": "scss/variables",
+          "options": {
+            "showFileHeader": false
+          }
         }
       ]
     },
@@ -21,7 +24,8 @@
           "destination": "variables.css",
           "format": "css/variables",
           "options": {
-            "outputReferences": true
+            "outputReferences": true,
+            "showFileHeader": false
           }
         },
         {
@@ -29,7 +33,8 @@
           "format": "css/variables",
           "options": {
             "outputReferences": true,
-            "selector": ".mapsindoors-map"
+            "selector": ".mapsindoors-map",
+            "showFileHeader": false
           }
         }
       ]
@@ -39,7 +44,8 @@
       "files": [
         {
           "destination": "variables.json",
-          "format": "json/nested"
+          "format": "json/nested",
+          "showFileHeader": false
         }
       ]
     }

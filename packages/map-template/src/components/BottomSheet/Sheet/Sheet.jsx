@@ -165,7 +165,7 @@ function Sheet({ children, isOpen, minHeight, preferredSizeSnapPoint, onSwipedTo
     };
 
     return <div {...swipeHandler} ref={refPassthrough} style={style} className={`sheet ${isOpen ? 'sheet--active' : ''} ${isDragging ? 'sheet--dragging': ''}`}>
-        <div ref={contentRef} className="sheet__content">
+        <div ref={contentRef} className="sheet__content" style={style}>
             {children}
         </div>
     </div>

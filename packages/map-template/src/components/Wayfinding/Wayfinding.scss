@@ -109,13 +109,6 @@
         position: relative;
         margin-top: var(--spacing-x-large);
         font-weight: var(--font-weight-x-large);
-
-        svg {
-            position: absolute;
-            left: var(--spacing-small);
-            top: 50%;
-            transform: translateY(-50%);
-        }
     }
 
     &__scrollable {
@@ -124,10 +117,5 @@
 
     &__error {
         text-align: center;
-    }
-
-    @media (min-width: $desktop-breakpoint) {
-        max-height: 50vh;
-        min-height: 400px;
     }
 }

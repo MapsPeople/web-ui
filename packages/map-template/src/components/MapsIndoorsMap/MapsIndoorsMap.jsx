@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { DirectionsServiceContext } from '../../DirectionsServiceContext';
-import useMediaQuery from '../../hooks/useMediaQuery';
 import { MapReadyContext } from '../../MapReadyContext';
 import { MapsIndoorsContext } from '../../MapsIndoorsContext';
+import useMediaQuery from '../../hooks/useMediaQuery';
 import BottomSheet from '../BottomSheet/BottomSheet';
 import MIMap from "../Map/Map";
 import Sidebar from '../Sidebar/Sidebar';
@@ -23,23 +23,29 @@ let _locationsDisabled;
  * @param {Object} props
  * @param {string} props.apiKey - MapsIndoors API key or solution alias.
  * @param {string} [props.gmApiKey] - Google Maps API key if you want to show a Google Maps map.
- * @param {string} [props.mapboxAccessToken] - Mapbox Access Token if you want to show a Google Maps map.
+ * @param {string} [props.mapboxAccessToken] - Mapbox Access Token if you want to show a Mapbox map.
  * @param {string} [props.venue] - If you want the map to show a specific Venue, provide the Venue name here.
  * @param {string} [props.locationId] - If you want the map to show a specific Location, provide the Location ID here.
  * @param {string} [props.primaryColor] - If you want the splash screen to have a custom primary color, provide the value here.
  * @param {string} [props.logo] - If you want the splash screen to have a custom logo, provide the image path or address here.
+ * @param {array} [props.appUserRoles] - If you want the map to behave differently for specific users, set one or more app user roles here.
  */
-function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo }) {
+function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles }) {
 
     const [isMapReady, setMapReady] = useState(false);
     const [venues, setVenues] = useState([]);
     const [currentVenueName, setCurrentVenueName] = useState();
     const [currentLocation, setCurrentLocation] = useState();
     const [currentCategories, setCurrentCategories] = useState([]);
-    const [filteredLocations, setFilteredLocations] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const [directionsService, setDirectionsService] = useState();
-    const [hasFloorSelector, setHasFloorSelector] = useState(true);
+    const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
+
+    // The filtered locations that the user sets when selecting a category/location.
+    const [filteredLocations, setFilteredLocations] = useState();
+
+    // Holds a copy of the initially filtered locations.
+    const [initialFilteredLocations, setInitialFilteredLocations] = useState();
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
@@ -54,35 +60,23 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     }
 
     /**
-     * Show the floor selector.
+     * Handle the state where directions are closed.
      */
-    function showFloorSelector() {
-        if (hasFloorSelector === false) {
-            setHasFloorSelector(true);
+    function directionsClosed() {
+        if (hasDirectionsOpen === true) {
+            setHasDirectionsOpen(false);
+            _locationsDisabled = false;
         }
     }
 
     /**
-     * Hide the floor selector when the directions are open.
+     * Handle the state where directions are open.
      */
-    function hideFloorSelector() {
-        if (hasFloorSelector === true) {
-            setHasFloorSelector(false);
+    function directionsOpened() {
+        if (hasDirectionsOpen === false) {
+            setHasDirectionsOpen(true);
+            _locationsDisabled = true;
         }
-    }
-
-    /**
-     * Disable the locations when in directions mode.
-     */
-    function disableLocations() {
-        _locationsDisabled = true;
-    }
-
-    /**
-     * Enable the locations when not in directions mode.
-     */
-    function enableLocations() {
-        _locationsDisabled = false;
     }
 
     /**
@@ -98,9 +92,13 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     }
 
     /**
-     * Get the categories for the selected venue;
+     * Get the categories for the selected venue.
+     *
+     * @param {string} venue
      */
     function getVenueCategories(venue) {
+        // Filter through the locations which have the venueId equal to the selected venue,
+        // due to the impossibility to use the venue parameter in the getLocations().
         mapsindoors.services.LocationsService.getLocations({}).then(locations => {
             const filteredLocations = locations.filter(location => location.properties.venueId === venue);
             getCategories(filteredLocations);
@@ -112,7 +110,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
      *
      * @param {array} locationsResult
      */
-     function getCategories(locationsResult) {
+    function getCategories(locationsResult) {
         // Initialise the unique categories map
         let uniqueCategories = new Map();
 
@@ -136,7 +134,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
         setCurrentCategories(uniqueCategories);
     }
 
-
     /*
      * React on changes in the venue prop.
      */
@@ -146,6 +143,17 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             getVenueCategories(venue);
         }
     }, [venue]);
+
+    /*
+     * React on changes in the app user roles prop.
+     */
+    useEffect(() => {
+        mapsindoors.services.SolutionsService.getUserRoles().then(userRoles => {
+            const roles = userRoles.filter(role => appUserRoles?.includes(role.name));
+            mapsindoors.MapsIndoors.setUserRoles(roles);
+        });
+    }, [appUserRoles]);
+
 
     /**
      * React on changes to the locationId prop: Set as current location and make the map center on it.
@@ -184,10 +192,25 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     }, [apiKey]);
 
 
+    /*
+     * React on changes in directions opened state.
+     */
+    useEffect(() => {
+        // Reset all the filters when in directions mode.
+        // Store the filtered locations in another state, to be able to access them again.
+        if (hasDirectionsOpen) {
+            setInitialFilteredLocations(filteredLocations)
+            setFilteredLocations([]);
+        } else {
+            // Apply the previously filtered locations to the map when navigating outside the directions.
+            setFilteredLocations(initialFilteredLocations);
+        }
+    }, [hasDirectionsOpen]);
+
     return (<MapsIndoorsContext.Provider value={mapsIndoorsInstance}>
         <MapReadyContext.Provider value={isMapReady}>
             <DirectionsServiceContext.Provider value={directionsService}>
-                <div className={`mapsindoors-map ${!hasFloorSelector ? 'mapsindoors-map__floor-selector--hide' : 'mapsindoors-map__floor-selector--show'}`}>
+                <div className={`mapsindoors-map ${hasDirectionsOpen ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}`}>
                     {!isMapReady && <SplashScreen logo={logo} primaryColor={primaryColor} />}
                     {venues.length > 1 && <VenueSelector onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)} venues={venues} currentVenueName={currentVenueName} />}
                     {isMapReady && isDesktop
@@ -198,10 +221,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             currentCategories={currentCategories}
                             onClose={() => setCurrentLocation(null)}
                             onLocationsFiltered={(locations) => setFilteredLocations(locations)}
-                            onHideFloorSelector={() => hideFloorSelector()}
-                            onShowFloorSelector={() => showFloorSelector()}
-                            onDisableLocations={() => disableLocations()}
-                            onEnableLocations={() => enableLocations()}
+                            onDirectionsOpened={() => directionsOpened()}
+                            onDirectionsClosed={() => directionsClosed()}
                         />
                         :
                         <BottomSheet
@@ -209,10 +230,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             setCurrentLocation={setCurrentLocation}
                             currentCategories={currentCategories}
                             onLocationsFiltered={(locations) => setFilteredLocations(locations)}
-                            onHideFloorSelector={() => hideFloorSelector()}
-                            onShowFloorSelector={() => showFloorSelector()}
-                            onDisableLocations={() => disableLocations()}
-                            onEnableLocations={() => enableLocations()}
+                            onDirectionsOpened={() => directionsOpened()}
+                            onDirectionsClosed={() => directionsClosed()}
                         />
                     }
                     <MIMap

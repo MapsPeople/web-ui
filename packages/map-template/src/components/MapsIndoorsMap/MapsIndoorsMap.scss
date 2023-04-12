@@ -12,14 +12,22 @@
         font-family: var(--font-family-system);
     }
 
-    &__floor-selector--show {
+    &--show-elements {
         .mapsindoors.floor-selector {
+            display: block;
+        }
+
+        .venue-selector__button {
             display: block;
         }
     }
 
-    &__floor-selector--hide {
+    &--hide-elements {
         .mapsindoors.floor-selector {
+            display: none;
+        }
+
+        .venue-selector__button {
             display: none;
         }
     }
