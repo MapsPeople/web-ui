@@ -139,9 +139,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
      */
     useEffect(() => {
         setCurrentVenueName(venue);
-        if (venue) {
-            getVenueCategories(venue);
-        }
     }, [venue]);
 
     /*
