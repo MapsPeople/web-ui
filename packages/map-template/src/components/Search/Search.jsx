@@ -1,9 +1,10 @@
-import React, { useRef, useState } from "react";
+import React from "react";
+import './Search.scss';
+import { useRef, useState } from 'react';
 import { snapPoints } from '../../constants/snapPoints';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
 import SearchField from '../WebComponentWrappers/Search/Search';
-import './Search.scss';
 
 /** Initialize the MapsIndoors instance. */
 const mapsindoors = window.mapsindoors;
