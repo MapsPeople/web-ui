@@ -96,14 +96,6 @@
         height: var(--spacing-xx-large);
         position: relative;
         font-weight: var(--font-weight-x-large);
-
-        svg {
-            position: absolute;
-            left: var(--spacing-small);
-            top: 50%;
-            transform: translateY(-50%);
-            fill: white;
-        }
     }
 }
 

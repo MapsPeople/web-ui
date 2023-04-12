@@ -2,7 +2,6 @@ import React, { useContext, useState } from "react";
 import './Wayfinding.scss';
 import { useRef, useEffect } from 'react';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
-import { ReactComponent as CheckIcon } from '../../assets/check.svg';
 import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
 import { ReactComponent as WalkingIcon } from '../../assets/walking.svg';
 import { DirectionsServiceContext } from '../../DirectionsServiceContext';
@@ -294,7 +293,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                     </div>
                 </div>
                 <button className="wayfinding__button" onClick={() => onStartDirections()}>
-                    <CheckIcon />
                     Go!
                 </button>
             </div>}
