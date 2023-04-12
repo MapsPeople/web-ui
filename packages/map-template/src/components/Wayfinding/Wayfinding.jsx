@@ -33,7 +33,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     const detailsRef = useRef();
 
     const toFieldRef = useRef();
-
     const fromFieldRef = useRef();
 
     const directionsService = useContext(DirectionsServiceContext);
@@ -56,11 +55,9 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     const [searchResults, setSearchResults] = useState([]);
 
     const [destinationLocation, setDestinationLocation] = useState();
-
     const [originLocation, setOriginLocation] = useState();
 
     const [totalDistance, setTotalDistance] = useState();
-
     const [totalTime, setTotalTime] = useState();
 
     const [accessibilityOn, setAccessibilityOn] = useState(false);
