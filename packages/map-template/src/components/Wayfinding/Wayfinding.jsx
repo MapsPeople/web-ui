@@ -1,14 +1,15 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { DirectionsServiceContext } from '../../DirectionsServiceContext';
-import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
+import React, { useContext, useState } from "react";
+import './Wayfinding.scss';
+import { useRef, useEffect } from 'react';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
+import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
 import { ReactComponent as WalkingIcon } from '../../assets/walking.svg';
-import { snapPoints } from '../../constants/snapPoints';
-import { usePreventSwipe } from '../../hooks/usePreventSwipe';
+import { DirectionsServiceContext } from '../../DirectionsServiceContext';
 import Tooltip from '../Tooltip/Tooltip';
 import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
 import SearchField from '../WebComponentWrappers/Search/Search';
-import './Wayfinding.scss';
+import { snapPoints } from '../../constants/snapPoints';
+import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 
 const searchFieldIdentifiers = {
     TO: 'TO',

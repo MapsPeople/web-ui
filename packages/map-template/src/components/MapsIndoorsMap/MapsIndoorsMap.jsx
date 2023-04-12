@@ -1,14 +1,15 @@
-import { useEffect, useState } from 'react';
-import { DirectionsServiceContext } from '../../DirectionsServiceContext';
-import { MapReadyContext } from '../../MapReadyContext';
-import { MapsIndoorsContext } from '../../MapsIndoorsContext';
-import useMediaQuery from '../../hooks/useMediaQuery';
-import BottomSheet from '../BottomSheet/BottomSheet';
+import { useEffect } from 'react';
+import { useState } from 'react';
+import './MapsIndoorsMap.scss';
 import MIMap from "../Map/Map";
-import Sidebar from '../Sidebar/Sidebar';
 import SplashScreen from '../SplashScreen/SplashScreen';
 import VenueSelector from '../VenueSelector/VenueSelector';
-import './MapsIndoorsMap.scss';
+import BottomSheet from '../BottomSheet/BottomSheet';
+import { MapsIndoorsContext } from '../../MapsIndoorsContext';
+import { MapReadyContext } from '../../MapReadyContext';
+import { DirectionsServiceContext } from '../../DirectionsServiceContext';
+import useMediaQuery from '../../hooks/useMediaQuery';
+import Sidebar from '../Sidebar/Sidebar';
 
 const mapsindoors = window.mapsindoors;
 
