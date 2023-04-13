@@ -33,6 +33,11 @@ mi-search {
             @include border.blue(60);
             box-shadow: 0 0 0 2px #cfe0fc; /* blue 20 */
         }
+
+        // Disable pointer events when the input element is disabled to allow click events to fall through to the parent element.
+        &[disabled] {
+            pointer-events: none;
+        }
     }
 
     /*
