@@ -181,18 +181,20 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      * Click handler for switching the origin and destination fields.
      */
     function switchDirectionsHandler() {
-        if (originLocation) {
-            toFieldRef.current.setDisplayText(originLocation.properties.name);
-        } else {
-            toFieldRef.current.clearInput();
+        if (destinationLocation || originLocation) {
+            if (originLocation) {
+                toFieldRef.current.setDisplayText(originLocation.properties.name);
+            } else {
+                toFieldRef.current.clearInput();
+            }
+            if (destinationLocation) {
+                fromFieldRef.current.setDisplayText(destinationLocation.properties.name);
+            } else {
+                fromFieldRef.current.clearInput();
+            }
+            setDestinationLocation(originLocation);
+            setOriginLocation(destinationLocation);
         }
-        if (destinationLocation) {
-            fromFieldRef.current.setDisplayText(destinationLocation.properties.name);
-        } else {
-            fromFieldRef.current.clearInput();
-        }
-        setDestinationLocation(originLocation);
-        setOriginLocation(destinationLocation);
     }
 
     useEffect(() => {
