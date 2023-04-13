@@ -182,12 +182,12 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      */
     function switchDirectionsHandler() {
         if (originLocation) {
-            toFieldRef.current.setDisplayText(originLocation?.properties.name);
+            toFieldRef.current.setDisplayText(originLocation.properties.name);
         } else {
             toFieldRef.current.clearInput();
         }
         if (destinationLocation) {
-            fromFieldRef.current.setDisplayText(destinationLocation?.properties.name);
+            fromFieldRef.current.setDisplayText(destinationLocation.properties.name);
         } else {
             fromFieldRef.current.clearInput();
         }
