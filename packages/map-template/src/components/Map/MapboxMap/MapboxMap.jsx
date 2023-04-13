@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import { useEffect, useState } from 'react';
 
 // Make the global MapsIndoors JavaScript SDK available here
 const mapsindoors = window.mapsindoors;
@@ -56,6 +56,3 @@ function MapboxMap({ mapboxAccessToken, onMapView, mapsIndoorsInstance }) {
 }
 
 export default MapboxMap;
-
-// eslint-disable-next-line import/no-webpack-loader-syntax
-mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default;

@@ -20,7 +20,6 @@
     "react-transition-group": "^4.4.5",
     "sass": "^1.57.1",
     "web-vitals": "^2.1.4",
-    "worker-loader": "^3.0.8",
 	  "standard-version": "^9.5.0"
   },
   "scripts": {
@@ -28,7 +27,7 @@
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject",
- 	"release": "standard-version"
+ 	  "release": "standard-version"
   },
   "eslintConfig": {
     "extends": [
