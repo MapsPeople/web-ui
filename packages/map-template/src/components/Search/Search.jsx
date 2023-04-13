@@ -118,8 +118,10 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, c
      * Deselect category and clear results list.
      */
     useEffect(() => {
-        setSearchResults([]);
-        setSelectedCategory(null);
+        if (selectedCategory) {
+            setSearchResults([]);
+            setSelectedCategory(null);
+        }
     }, [currentVenueName]);
 
 
