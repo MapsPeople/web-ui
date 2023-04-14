@@ -133,4 +133,12 @@
     &__error {
         text-align: center;
     }
+
+    &__switch {
+        border: none;
+        background: transparent;
+        position: absolute;
+        right: 0;
+        top: 80px;
+    }
 }
