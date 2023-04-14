@@ -185,12 +185,12 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
             if (originLocation) {
                 toFieldRef.current.setDisplayText(originLocation.properties.name);
             } else {
-                toFieldRef.current.clearInput();
+                toFieldRef.current.clear();
             }
             if (destinationLocation) {
                 fromFieldRef.current.setDisplayText(destinationLocation.properties.name);
             } else {
-                fromFieldRef.current.clearInput();
+                fromFieldRef.current.clear();
             }
             setDestinationLocation(originLocation);
             setOriginLocation(destinationLocation);
