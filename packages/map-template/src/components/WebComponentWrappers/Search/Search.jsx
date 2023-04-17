@@ -11,8 +11,9 @@ import useNear from '../../../hooks/useNear';
  * @param {function} props.clicked - Function that is called when search field is clicked.
  * @param {function} props.cleared - Function that is called when search field is cleared.
  * @param {string} props.category - If set, search will be performed for Locations having this category.
+ * @param {boolean} props.preventFocus - If set to true, the search field will be disabled.
  */
-const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cleared, category }, ref) => {
+const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cleared, category, disabled=false }, ref) => {
     const elementRef = useRef();
 
     /** Instruct the search field to search for Locations near the map center. */
@@ -64,7 +65,7 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
 
     }, [placeholder, mapsindoors, results, clicked, cleared]);
 
-    return <mi-search ref={elementRef} placeholder={placeholder} mi-near={searchNear} mi-categories={category}  />
+    return <mi-search ref={elementRef} placeholder={placeholder} mi-near={searchNear} mi-categories={category} disabled={disabled} />
 });
 
 export default SearchField;
