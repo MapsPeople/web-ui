@@ -1,0 +1,24 @@
+.externalIds {
+    &__header {
+        background-color: var(--color-gray-20);
+        padding: var(--spacing-medium);
+        position: relative;
+    }
+
+    &__title {
+        font-size: var(--font-size-small);
+        text-align: center;
+        font-weight: var(--font-weight-large);
+        color: var(--color-gray-70);
+    }
+
+    &__close {
+        position: absolute;
+        top: var(--spacing-x-small);
+        right: var(--spacing-x-small);
+        background: none;
+        border: none;
+    }
+
+
+}

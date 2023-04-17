@@ -7,12 +7,14 @@ import LocationDetails from '../LocationDetails/LocationDetails';
 import Wayfinding from '../Wayfinding/Wayfinding';
 import Directions from '../Directions/Directions';
 import Search from '../Search/Search';
+import ExternalIds from '../ExternalIds/ExternalIds';
 
 const BOTTOM_SHEETS = {
     SEARCH: 0,
-    LOCATION_DETAILS: 1,
-    WAYFINDING: 2,
-    DIRECTIONS: 3
+    EXTERNALIDS: 1,
+    LOCATION_DETAILS: 2,
+    WAYFINDING: 3,
+    DIRECTIONS: 4
 };
 
 /**
@@ -23,8 +25,10 @@ const BOTTOM_SHEETS = {
  * @param {function} props.onLocationsFiltered - The list of locations after filtering through the categories.
  * @param {function} props.onDirectionsOpened - Check if the directions page state is open.
  * @param {function} props.onDirectionsClosed - Check if the directions page state is closed.
+ * @param {Object} props.externalIds
+ *
  */
-function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed}) {
+function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed, externalIds }) {
 
     const bottomSheetRef = useRef();
     const [activeBottomSheet, setActiveBottomSheet] = useState(null);
@@ -41,7 +45,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
      * Set the search bottom sheet to be active if there is no location selected.
      */
     useEffect(() => {
-        setActiveBottomSheet(currentLocation ? BOTTOM_SHEETS.LOCATION_DETAILS : BOTTOM_SHEETS.SEARCH);
+        setActiveBottomSheet(currentLocation ? BOTTOM_SHEETS.LOCATION_DETAILS : BOTTOM_SHEETS.EXTERNALIDS);
     }, [currentLocation]);
 
     /**
@@ -76,10 +80,19 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
             />
         </Sheet>,
         <Sheet
+            minHeight="144"
+            isOpen={activeBottomSheet === BOTTOM_SHEETS.EXTERNALIDS}
+            key="B">
+            <ExternalIds
+                onBack={() => setBottomSheet(BOTTOM_SHEETS.SEARCH)}
+                externalIds={externalIds}
+            />
+        </Sheet>,
+        <Sheet
             minHeight="128"
             preferredSizeSnapPoint={locationDetailsSheetSize}
             isOpen={activeBottomSheet === BOTTOM_SHEETS.LOCATION_DETAILS}
-            key="B"
+            key="C"
             onSwipedToSnapPoint={snapPoint => setLocationDetailsSheetSwiped(snapPoint)}>
             <LocationDetails
                 onSetSize={size => setLocationDetailsSheetSize(size)}
@@ -93,7 +106,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
             minHeight="220"
             isOpen={activeBottomSheet === BOTTOM_SHEETS.WAYFINDING}
             preferredSizeSnapPoint={wayfindingSheetSize}
-            key="C">
+            key="D">
             <Wayfinding
                 onSetSize={size => setWayfindingSheetSize(size)}
                 onStartDirections={() => setDirectionsBottomSheet()}
@@ -106,7 +119,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
         <Sheet
             minHeight="220"
             isOpen={activeBottomSheet === BOTTOM_SHEETS.DIRECTIONS}
-            key="D">
+            key="E">
             <Directions
                 isOpen={activeBottomSheet === BOTTOM_SHEETS.DIRECTIONS}
                 directions={directions}

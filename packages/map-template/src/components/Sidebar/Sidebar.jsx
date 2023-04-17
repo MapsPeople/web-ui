@@ -4,12 +4,14 @@ import LocationDetails from "../LocationDetails/LocationDetails";
 import Wayfinding from '../Wayfinding/Wayfinding';
 import Directions from '../Directions/Directions';
 import Search from '../Search/Search';
+import ExternalIds from '../ExternalIds/ExternalIds';
 
 const VIEWS = {
     SEARCH: 0,
-    LOCATION_DETAILS: 1,
-    WAYFINDING: 2,
-    DIRECTIONS: 3
+    EXTERNALIDS: 1,
+    LOCATION_DETAILS: 2,
+    WAYFINDING: 3,
+    DIRECTIONS: 4
 };
 
 /**
@@ -21,9 +23,10 @@ const VIEWS = {
  * @param {function} props.onLocationsFiltered - The list of locations after filtering through the categories.
  * @param {function} props.onDirectionsOpened - Check if the directions page state is open.
  * @param {function} props.onDirectionsClosed - Check if the directions page state is closed.
+ * @param {Object} props.externalIds
  *
 */
-function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed }) {
+function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed, externalIds }) {
     const [activePage, setActivePage] = useState(null);
 
     const [directions, setDirections] = useState();
@@ -32,7 +35,7 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
     * React on changes on the current location.
     */
     useEffect(() => {
-        setActivePage(currentLocation ? VIEWS.LOCATION_DETAILS : VIEWS.SEARCH);
+        setActivePage(currentLocation ? VIEWS.LOCATION_DETAILS : VIEWS.EXTERNALIDS);
     }, [currentLocation]);
 
     /**
@@ -51,7 +54,6 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
     function setDirectionsPage() {
         setActivePage(VIEWS.DIRECTIONS);
         onDirectionsOpened();
-
     }
 
     const pages = [
@@ -62,14 +64,20 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
                 onLocationsFiltered={(locations) => onLocationsFiltered(locations)}
             />
         </Modal>,
-        <Modal isOpen={activePage === VIEWS.LOCATION_DETAILS} key="B">
+        <Modal isOpen={activePage === VIEWS.EXTERNALIDS} key="B">
+            <ExternalIds
+                onBack={() => setPage(VIEWS.SEARCH)}
+                externalIds={externalIds}
+            />
+        </Modal>,
+        <Modal isOpen={activePage === VIEWS.LOCATION_DETAILS} key="C">
             <LocationDetails
                 onStartWayfinding={() => setPage(VIEWS.WAYFINDING)}
                 location={currentLocation}
                 onBack={() => setPage(VIEWS.SEARCH)}
             />
         </Modal>,
-        <Modal isOpen={activePage === VIEWS.WAYFINDING} key="C">
+        <Modal isOpen={activePage === VIEWS.WAYFINDING} key="D">
             <Wayfinding
                 onStartDirections={() => setDirectionsPage()}
                 location={currentLocation}
@@ -78,7 +86,7 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
                 isActive={activePage === VIEWS.WAYFINDING}
             />
         </Modal>,
-        <Modal isOpen={activePage === VIEWS.DIRECTIONS} key="D">
+        <Modal isOpen={activePage === VIEWS.DIRECTIONS} key="E">
             <Directions
                 isOpen={activePage === VIEWS.DIRECTIONS}
                 directions={directions}
