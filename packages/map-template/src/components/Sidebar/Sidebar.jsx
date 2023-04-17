@@ -51,7 +51,14 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
     function setDirectionsPage() {
         setActivePage(VIEWS.DIRECTIONS);
         onDirectionsOpened();
+    }
 
+    /**
+     * Navigate to the search page and reset the location that has been previously selected.
+     */
+     function setSearchPage() {
+        setActivePage(VIEWS.SEARCH);
+        setCurrentLocation();
     }
 
     const pages = [
@@ -67,7 +74,7 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
             <LocationDetails
                 onStartWayfinding={() => setPage(VIEWS.WAYFINDING)}
                 location={currentLocation}
-                onBack={() => setPage(VIEWS.SEARCH)}
+                onBack={() => setSearchPage()}
             />
         </Modal>,
         <Modal isOpen={activePage === VIEWS.WAYFINDING} key="C">

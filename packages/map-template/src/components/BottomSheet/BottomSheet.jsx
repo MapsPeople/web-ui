@@ -63,6 +63,14 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
         onDirectionsOpened();
     }
 
+    /**
+     * Navigate to the search screen and reset the location that has been previously selected.
+     */
+    function setSearchBottomSheet() {
+        setBottomSheet(BOTTOM_SHEETS.SEARCH);
+        setCurrentLocation();
+    }
+
     const bottomSheets = [
         <Sheet
             minHeight="144"
@@ -87,7 +95,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
                 onSetSize={size => setLocationDetailsSheetSize(size)}
                 onStartWayfinding={() => setBottomSheet(BOTTOM_SHEETS.WAYFINDING)}
                 location={currentLocation}
-                onBack={() => setBottomSheet(BOTTOM_SHEETS.SEARCH)}
+                onBack={() => setSearchBottomSheet()}
                 snapPointSwiped={locationDetailsSheetSwiped}
             />
         </Sheet>,
