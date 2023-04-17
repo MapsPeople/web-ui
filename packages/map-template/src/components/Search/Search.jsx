@@ -1,6 +1,5 @@
-import React from "react";
+import { useRef, useState } from "react";
 import './Search.scss';
-import { useRef, useState } from 'react';
 import { snapPoints } from '../../constants/snapPoints';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
@@ -21,9 +20,12 @@ const mapsindoors = window.mapsindoors;
  */
 function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize }) {
 
+    const searchRef = useRef();
+
     /** Referencing the search field */
     const searchFieldRef = useRef();
 
+    const [searchDisabled, setSearchDisabled] = useState(true);
     const [searchResults, setSearchResults] = useState([]);
 
     /** Indicate if search results have been found */
@@ -113,16 +115,35 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
         onLocationsFiltered([]);
     }
 
+    /**
+     * When search field is clicked, maximize the sheet size and set focus on the from field.
+     * But wait for any bottom sheet transition to end before doing that to avoid content jumping when virtual keyboard appears.
+     */
+    function searchFieldClicked() {
+        setSize(snapPoints.MAX);
+        setSearchDisabled(false);
+
+        const sheet = searchRef.current.closest('.sheet');
+        if (sheet) {
+            sheet.addEventListener('transitionend', () => {
+                searchFieldRef.current.focusInput();
+            }, { once: true });
+        } else {
+            searchFieldRef.current.focusInput();
+        }
+    }
+
     return (
-        <div className="search">
+        <div className="search" ref={searchRef}>
             <SearchField
                 ref={searchFieldRef}
                 mapsindoors={true}
                 placeholder="Search by name, category, building..."
                 results={locations => onResults(locations)}
-                clicked={() => setSize(snapPoints.MAX)}
+                clicked={() => searchFieldClicked()}
                 cleared={() => cleared()}
                 category={selectedCategory}
+                disabled={searchDisabled} // Disabled initially to prevent content jumping when clicking and changing sheet size.
             />
             <div className="search__scrollable prevent-scroll" {...scrollableContentSwipePrevent}>
                 <div ref={categoriesListRef} className="search__categories">

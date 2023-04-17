@@ -28,6 +28,8 @@ const searchFieldIdentifiers = {
  */
 function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, onDirections }) {
 
+    const wayfindingRef = useRef();
+
     /** Referencing the accessibility details DOM element */
     const detailsRef = useRef();
 
@@ -189,7 +191,16 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
 
     useEffect(() => {
         if (isActive && !fromFieldRef.current?.getValue()) {
-            fromFieldRef.current.focusInput();
+            // Set focus on the from field.
+            // But wait for any bottom sheet transition to end before doing that to avoid content jumping when virtual keyboard appears.
+            const sheet = wayfindingRef.current.closest('.sheet');
+            if (sheet) {
+                sheet.addEventListener('transitionend', () => {
+                    fromFieldRef.current.focusInput();
+                }, { once: true });
+            } else {
+                fromFieldRef.current.focusInput();
+            }
         }
     }, [isActive]);
 
@@ -229,7 +240,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     }, [originLocation, destinationLocation, directionsService, accessibilityOn]);
 
     return (
-        <div className="wayfinding">
+        <div className="wayfinding" ref={wayfindingRef}>
             <div className="wayfinding__directions">
                 <div className="wayfinding__title">Start wayfinding</div>
                 <button className="wayfinding__close" onClick={() => onBack()} aria-label="Close">
