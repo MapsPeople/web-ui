@@ -2,9 +2,9 @@ import React, { useContext, useState } from "react";
 import './Wayfinding.scss';
 import { useRef, useEffect } from 'react';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
-import { ReactComponent as CheckIcon } from '../../assets/check.svg';
 import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
 import { ReactComponent as WalkingIcon } from '../../assets/walking.svg';
+import { ReactComponent as SwitchIcon } from '../../assets/switch.svg';
 import { DirectionsServiceContext } from '../../DirectionsServiceContext';
 import Tooltip from '../Tooltip/Tooltip';
 import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
@@ -12,16 +12,10 @@ import SearchField from '../WebComponentWrappers/Search/Search';
 import { snapPoints } from '../../constants/snapPoints';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 
-const searchFieldItentifiers = {
+const searchFieldIdentifiers = {
     TO: 'TO',
     FROM: 'FROM'
 };
-
-/**
- * Private variable used to assign the active search field.
- * Implemented due to the impossibility to use the React useState hook.
- */
-let _activeSearchField;
 
 /**
  * Show the wayfinding view.
@@ -38,7 +32,12 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     /** Referencing the accessibility details DOM element */
     const detailsRef = useRef();
 
+    const toFieldRef = useRef();
+    const fromFieldRef = useRef();
+
     const directionsService = useContext(DirectionsServiceContext);
+
+    const [activeSearchField, setActiveSearchField] = useState();
 
     /** Indicate if a route has been found */
     const [hasFoundRoute, setHasFoundRoute] = useState(true);
@@ -49,12 +48,11 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     /** Indicate if the searched route throws errors */
     const [hasError, setHasError] = useState(false);
 
+    /** Indicate if the search has been triggered */
+    const [searchTriggered, setSearchTriggered] = useState(false);
+
     /** Holds search results given from a search field */
     const [searchResults, setSearchResults] = useState([]);
-
-    const [toFieldDisplayText, setToFieldDisplayText] = useState();
-
-    const [fromFieldDisplayText, setFromFieldDisplayText] = useState();
 
     const [destinationLocation, setDestinationLocation] = useState();
     const [originLocation, setOriginLocation] = useState();
@@ -71,14 +69,14 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      * and clears out the results list.
      */
     function locationClickHandler(location) {
-        if (_activeSearchField === searchFieldItentifiers.TO) {
-            setToFieldDisplayText(location.properties.name);
+        if (activeSearchField === searchFieldIdentifiers.TO) {
+            toFieldRef.current.setDisplayText(location.properties.name);
             setDestinationLocation(location);
-        } else if (_activeSearchField === searchFieldItentifiers.FROM) {
-            setFromFieldDisplayText(location.properties.name);
+        } else if (activeSearchField === searchFieldIdentifiers.FROM) {
+            fromFieldRef.current.setDisplayText(location.properties.name);
             setOriginLocation(location);
         }
-
+        setSearchTriggered(false);
         setSearchResults([]);
     }
 
@@ -89,7 +87,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      * @param {string} searchFieldIdentifier
      */
     function searchResultsReceived(results, searchFieldIdentifier) {
-        _activeSearchField = searchFieldIdentifier;
+        setActiveSearchField(searchFieldIdentifier);
 
         if (results.length === 0) {
             setHasSearchResults(false);
@@ -126,8 +124,8 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      * @param {string} searchFieldIdentifier
      */
     function onSearchClicked(searchFieldIdentifier) {
-        _activeSearchField = searchFieldIdentifier;
-        resetSearchField();
+        setActiveSearchField(searchFieldIdentifier);
+        triggerSearch(searchFieldIdentifier);
         setHasError(false);
         setHasFoundRoute(true);
     }
@@ -138,37 +136,83 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      * @param {string} searchFieldIdentifier
      */
     function onSearchCleared(searchFieldIdentifier) {
-        _activeSearchField = searchFieldIdentifier;
-        resetSearchField();
+        setActiveSearchField(searchFieldIdentifier);
+        resetSearchField(searchFieldIdentifier);
         setSearchResults([]);
         setHasError(false);
         setHasFoundRoute(true);
     }
 
     /**
-    * Reset the active field's display text and location.
-    */
-    function resetSearchField() {
-        if (_activeSearchField === searchFieldItentifiers.TO) {
-            setToFieldDisplayText('');
+     * Reset the active field's display text and location.
+     *
+     * @param {string} searchFieldIdentifier
+     */
+    function resetSearchField(searchFieldIdentifier) {
+        if (searchFieldIdentifier === searchFieldIdentifiers.TO) {
             setDestinationLocation();
-        } else if (_activeSearchField === searchFieldItentifiers.FROM) {
-            setFromFieldDisplayText('');
+        } else if (searchFieldIdentifier === searchFieldIdentifiers.FROM) {
             setOriginLocation();
         }
     }
 
+    /**
+     * Programatically trigger the search.
+     *
+     * @param {string} searchFieldIdentifier
+     */
+    function triggerSearch(searchFieldIdentifier) {
+        if (searchFieldIdentifier === searchFieldIdentifiers.TO) {
+            setSearchResults([]);
+            if (toFieldRef.current.getValue()) {
+                setSearchTriggered(true)
+                toFieldRef.current.triggerSearch();
+            }
+        } else if (searchFieldIdentifier === searchFieldIdentifiers.FROM) {
+            setSearchResults([]);
+            if (fromFieldRef.current.getValue()) {
+                setSearchTriggered(true)
+                fromFieldRef.current.triggerSearch();
+            }
+        }
+    }
+
+    /**
+     * Click handler for switching the origin and destination fields.
+     */
+    function switchDirectionsHandler() {
+        if (destinationLocation || originLocation) {
+            if (originLocation) {
+                toFieldRef.current.setDisplayText(originLocation.properties.name);
+            } else {
+                toFieldRef.current.clear();
+            }
+            if (destinationLocation) {
+                fromFieldRef.current.setDisplayText(destinationLocation.properties.name);
+            } else {
+                fromFieldRef.current.clear();
+            }
+            setDestinationLocation(originLocation);
+            setOriginLocation(destinationLocation);
+        }
+    }
 
     useEffect(() => {
         setSize(snapPoints.MAX);
         // If there is a location selected, pre-fill the value of the `to` field with the location name.
         if (location) {
-            setToFieldDisplayText(location.properties.name);
+            toFieldRef.current.setDisplayText(location.properties.name);
             setDestinationLocation(location);
         }
 
-        _activeSearchField = searchFieldItentifiers.FROM;
+        setActiveSearchField(searchFieldIdentifiers.FROM);
     }, [location]);
+
+    useEffect(() => {
+        if (isActive && !fromFieldRef.current?.getValue()) {
+            fromFieldRef.current.focusInput();
+        }
+    }, [isActive]);
 
     /**
      * When both origin location and destination location are selected, call the MapsIndoors SDK
@@ -209,31 +253,37 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
         <div className="wayfinding">
             <div className="wayfinding__directions">
                 <div className="wayfinding__title">Start wayfinding</div>
-                <button className="wayfinding__close" onClick={() => onBack()} aria-label="Close">
+                <button className="wayfinding__close"
+                    onClick={() => onBack()}
+                    aria-label="Close">
                     <CloseIcon />
                 </button>
                 <div className="wayfinding__locations">
                     <label className="wayfinding__label">
                         TO
                         <SearchField
+                            ref={toFieldRef}
                             mapsindoors={true}
                             placeholder="Search by name, category, building..."
-                            results={locations => searchResultsReceived(locations, searchFieldItentifiers.TO)}
-                            displayText={toFieldDisplayText}
-                            clicked={() => onSearchClicked(searchFieldItentifiers.TO)}
-                            cleared={() => onSearchCleared(searchFieldItentifiers.TO)}
+                            results={locations => searchResultsReceived(locations, searchFieldIdentifiers.TO)}
+                            clicked={() => onSearchClicked(searchFieldIdentifiers.TO)}
+                            cleared={() => onSearchCleared(searchFieldIdentifiers.TO)}
                         />
                     </label>
+                    <button onClick={() => switchDirectionsHandler()}
+                        aria-label="Switch"
+                        className="wayfinding__switch">
+                        <SwitchIcon />
+                    </button>
                     <label className="wayfinding__label">
                         FROM
                         <SearchField
-                            hasInputFocus={isActive}
+                            ref={fromFieldRef}
                             mapsindoors={true}
                             placeholder="Search by name, category, buildings..."
-                            results={locations => searchResultsReceived(locations, searchFieldItentifiers.FROM)}
-                            displayText={fromFieldDisplayText}
-                            clicked={() => onSearchClicked(searchFieldItentifiers.FROM)}
-                            cleared={() => onSearchCleared(searchFieldItentifiers.FROM)}
+                            results={locations => searchResultsReceived(locations, searchFieldIdentifiers.FROM)}
+                            clicked={() => onSearchClicked(searchFieldIdentifiers.FROM)}
+                            cleared={() => onSearchCleared(searchFieldIdentifiers.FROM)}
                         />
                     </label>
                 </div>
@@ -241,7 +291,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
             {!hasFoundRoute && <p className="wayfinding__error">No route has been found</p>}
             {hasError && <p className="wayfinding__error">Something went wrong. Please try again.</p>}
             {!hasSearchResults && <p className="wayfinding__error">Nothing was found</p>}
-            {(!originLocation || !destinationLocation) && <div className="wayfinding__scrollable" {...scrollableContentSwipePrevent}>
+            <div className="wayfinding__scrollable" {...scrollableContentSwipePrevent}>
                 <div className="wayfinding__results">
                     {searchResults.map(location =>
                         <ListItemLocation
@@ -251,9 +301,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                     )}
                 </div>
             </div>
-            }
-
-            {hasFoundRoute && !hasError && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
+            {!searchTriggered && hasFoundRoute && !hasError && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
                 <div className="wayfinding__accessibility">
                     <input className="mi-toggle" type="checkbox" checked={accessibilityOn} onChange={e => setAccessibilityOn(e.target.checked)} />
                     <div>Accessibility</div>
@@ -273,7 +321,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                     </div>
                 </div>
                 <button className="wayfinding__button" onClick={() => onStartDirections()}>
-                    <CheckIcon />
                     Go!
                 </button>
             </div>}

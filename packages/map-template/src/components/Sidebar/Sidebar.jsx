@@ -20,7 +20,6 @@ const VIEWS = {
  * @param {Object} props.setCurrentLocation - The setter for the currently selected MapsIndoors Location.
  * @param {Object} props.currentCategories - The unique categories displayed based on the existing locations.
  * @param {function} props.onLocationsFiltered - The list of locations after filtering through the categories.
- * @param {function} props.onLocationsFiltered - The list of locations after filtering through the categories.
  * @param {function} props.onDirectionsOpened - Check if the directions page state is open.
  * @param {function} props.onDirectionsClosed - Check if the directions page state is closed.
  * @param {Object} props.externalIds

@@ -36,6 +36,12 @@ You can change the MapsIndoors apiKey in start of the script below
             </label>
         </p>
         <p>
+            <label>
+                Icon
+                <input name="icon" placeholder="URL to icon" />
+            </label>
+        </p>
+        <p>
 
             Availability Badge
             <label>
@@ -60,7 +66,7 @@ You can change the MapsIndoors apiKey in start of the script below
 
         mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKey);
 
-        async function render(locationId, unit, badge) {
+        async function render(locationId, unit, icon, badge) {
             const location = await mapsindoors.services.LocationsService.getLocation(locationId);
 
             const listItemLocationComponent = document.createElement('mi-list-item-location');
@@ -68,6 +74,10 @@ You can change the MapsIndoors apiKey in start of the script below
 
             if (unit) {
                 listItemLocationComponent.setAttribute('unit', unit);
+            }
+
+            if (icon) {
+                listItemLocationComponent.setAttribute('icon', icon);
             }
 
             if (badge !== 'none') {
@@ -85,8 +95,9 @@ You can change the MapsIndoors apiKey in start of the script below
             e.preventDefault();
             const locationId = document.querySelector('input[name="locationId"]').value;
             const unit = document.querySelector('input[name="unit"]').value;
+            const icon = document.querySelector('input[name="icon"]').value;
             const badge = document.querySelector('input[name="badge"]:checked') ? document.querySelector('input[name="badge"]:checked').value : 'none';
-            render(locationId, unit, badge);
+            render(locationId, unit, icon, badge);
         }
     </script>
 

@@ -103,7 +103,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
             />
         </Sheet>,
         <Sheet
-            minHeight="220"
+            minHeight="228"
             isOpen={activeBottomSheet === BOTTOM_SHEETS.WAYFINDING}
             preferredSizeSnapPoint={wayfindingSheetSize}
             key="D">

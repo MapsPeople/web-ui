@@ -29,21 +29,28 @@ let _locationsDisabled;
  * @param {string} [props.locationId] - If you want the map to show a specific Location, provide the Location ID here.
  * @param {string} [props.primaryColor] - If you want the splash screen to have a custom primary color, provide the value here.
  * @param {string} [props.logo] - If you want the splash screen to have a custom logo, provide the image path or address here.
+ * @param {array} [props.appUserRoles] - If you want the map to behave differently for specific users, set one or more app user roles here.
  * @param {array} [props.externalIds] - Filter locations shown on the map based on the external ids.
+
  */
-function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, externalIds }) {
+function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, externalIds }) {
 
     const [isMapReady, setMapReady] = useState(false);
     const [venues, setVenues] = useState([]);
     const [currentVenueName, setCurrentVenueName] = useState();
     const [currentLocation, setCurrentLocation] = useState();
     const [currentCategories, setCurrentCategories] = useState([]);
-    const [filteredLocations, setFilteredLocations] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const [directionsService, setDirectionsService] = useState();
     const [externalIdArray, setExternalIdArray] = useState([]);
     const [filteredLocationsByExternalId, setFilteredLocationsByExternalId] = useState();
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
+
+    // The filtered locations that the user sets when selecting a category/location.
+    const [filteredLocations, setFilteredLocations] = useState();
+
+    // Holds a copy of the initially filtered locations.
+    const [initialFilteredLocations, setInitialFilteredLocations] = useState();
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
@@ -139,6 +146,17 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
         setCurrentVenueName(venue);
     }, [venue]);
 
+    /*
+     * React on changes in the app user roles prop.
+     */
+    useEffect(() => {
+        mapsindoors.services.SolutionsService.getUserRoles().then(userRoles => {
+            const roles = userRoles.filter(role => appUserRoles?.includes(role.name));
+            mapsindoors.MapsIndoors.setUserRoles(roles);
+        });
+    }, [appUserRoles]);
+
+
     /**
      * React on changes in the external id prop.
      * Get the locations by external ids, if present.
@@ -190,6 +208,22 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
         setMapReady(false);
 
     }, [apiKey]);
+
+
+    /*
+     * React on changes in directions opened state.
+     */
+    useEffect(() => {
+        // Reset all the filters when in directions mode.
+        // Store the filtered locations in another state, to be able to access them again.
+        if (hasDirectionsOpen) {
+            setInitialFilteredLocations(filteredLocations)
+            setFilteredLocations([]);
+        } else {
+            // Apply the previously filtered locations to the map when navigating outside the directions.
+            setFilteredLocations(initialFilteredLocations);
+        }
+    }, [hasDirectionsOpen]);
 
     return (<MapsIndoorsContext.Provider value={mapsIndoorsInstance}>
         <MapReadyContext.Provider value={isMapReady}>
