@@ -4,7 +4,7 @@ import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import ListItemLocation from "../WebComponentWrappers/ListItemLocation/ListItemLocation";
 
 /**
- * Show list of location filtered based on external ids.
+ * Show list of locations filtered based on external ids.
  *
  * @param {Object} props
  * @param {function} props.onLocationClick - Function that is run when a location is clicked.
