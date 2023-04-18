@@ -1,17 +1,18 @@
 import React from "react";
 import './ExternalIds.scss';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
+import ListItemLocation from "../WebComponentWrappers/ListItemLocation/ListItemLocation";
 
 /**
- * Show external ids list.
+ * Show list of location filtered based on external ids.
  *
  * @param {Object} props
- * @param {function} props.onLocationClick
+ * @param {function} props.onLocationClick - Function that is run when a location is clicked.
  * @param {function} props.onBack - Function that is run when the user navigates to the previous page.
- * @param {array} props.externalIds
- * @returns
+ * @param {array} props.filteredLocationsByExternalIds - Array of locations filtered based on the external id.
+ *
  */
-function ExternalIds({ onBack, onLocationClick, externalIds }) {
+function ExternalIds({ onBack, onLocationClick, filteredLocationsByExternalIds }) {
     return (
         <div className="externalIds">
             <div className="externalIds__header">
@@ -21,11 +22,10 @@ function ExternalIds({ onBack, onLocationClick, externalIds }) {
                 </button>
             </div>
             <div className="externalIds__list">
-                <p>External id 1</p>
-                {externalIds}
-                {/* {externalIds.map((externalId) => {
-                    <p>{externalId}</p>
-                })} */}
+                {filteredLocationsByExternalIds?.map(location => <ListItemLocation
+                    key={location.id}
+                    location={location}
+                    locationClicked={e => onLocationClick(e)} />)}
             </div>
         </div>
     )

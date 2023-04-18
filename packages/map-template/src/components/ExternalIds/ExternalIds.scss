@@ -20,5 +20,11 @@
         border: none;
     }
 
-
+    &__list {
+        display: grid;
+        gap: var(--spacing-x-small);
+        overflow: auto;
+        grid-auto-rows: min-content;
+        padding: var(--spacing-x-small);;
+    }
 }

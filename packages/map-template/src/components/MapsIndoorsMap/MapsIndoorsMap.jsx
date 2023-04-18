@@ -31,7 +31,7 @@ let _locationsDisabled;
  * @param {string} [props.logo] - If you want the splash screen to have a custom logo, provide the image path or address here.
  * @param {array} [props.appUserRoles] - If you want the map to behave differently for specific users, set one or more app user roles here.
  * @param {array} [props.externalIds] - Filter locations shown on the map based on the external ids.
-
+ *
  */
 function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, externalIds }) {
 
@@ -43,8 +43,10 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const [directionsService, setDirectionsService] = useState();
     const [externalIdArray, setExternalIdArray] = useState([]);
-    const [filteredLocationsByExternalId, setFilteredLocationsByExternalId] = useState();
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
+
+    // The filtered locations by external id, if present.
+    const [filteredLocationsByExternalId, setFilteredLocationsByExternalId] = useState();
 
     // The filtered locations that the user sets when selecting a category/location.
     const [filteredLocations, setFilteredLocations] = useState();
@@ -241,7 +243,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             onLocationsFiltered={(locations) => setFilteredLocations(locations)}
                             onDirectionsOpened={() => directionsOpened()}
                             onDirectionsClosed={() => directionsClosed()}
-                            externalIds={externalIdArray}
+                            filteredLocationsByExternalIds={filteredLocationsByExternalId}
                         />
                         :
                         <BottomSheet
@@ -251,7 +253,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             onLocationsFiltered={(locations) => setFilteredLocations(locations)}
                             onDirectionsOpened={() => directionsOpened()}
                             onDirectionsClosed={() => directionsClosed()}
-                            externalIds={externalIdArray}
+                            filteredLocationsByExternalIds={filteredLocationsByExternalId}
                         />
                     }
                     <MIMap

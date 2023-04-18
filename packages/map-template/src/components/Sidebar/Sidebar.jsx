@@ -22,10 +22,10 @@ const VIEWS = {
  * @param {function} props.onLocationsFiltered - The list of locations after filtering through the categories.
  * @param {function} props.onDirectionsOpened - Check if the directions page state is open.
  * @param {function} props.onDirectionsClosed - Check if the directions page state is closed.
- * @param {Object} props.externalIds
+ * @param {array} props.filteredLocationsByExternalIds - Array of locations filtered based on the external id.
  *
 */
-function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed, externalIds }) {
+function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed, filteredLocationsByExternalIds }) {
     const [activePage, setActivePage] = useState(null);
 
     const [directions, setDirections] = useState();
@@ -66,7 +66,8 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
         <Modal isOpen={activePage === VIEWS.EXTERNALIDS} key="B">
             <ExternalIds
                 onBack={() => setPage(VIEWS.SEARCH)}
-                externalIds={externalIds}
+                filteredLocationsByExternalIds={filteredLocationsByExternalIds}
+                onLocationClick={(location) => setCurrentLocation(location)}
             />
         </Modal>,
         <Modal isOpen={activePage === VIEWS.LOCATION_DETAILS} key="C">

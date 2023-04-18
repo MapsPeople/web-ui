@@ -25,10 +25,10 @@ const BOTTOM_SHEETS = {
  * @param {function} props.onLocationsFiltered - The list of locations after filtering through the categories.
  * @param {function} props.onDirectionsOpened - Check if the directions page state is open.
  * @param {function} props.onDirectionsClosed - Check if the directions page state is closed.
- * @param {Object} props.externalIds
+ * @param {array} props.filteredLocationsByExternalIds - Array of locations filtered based on the external id.
  *
  */
-function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed, externalIds }) {
+function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed, filteredLocationsByExternalIds }) {
 
     const bottomSheetRef = useRef();
     const [activeBottomSheet, setActiveBottomSheet] = useState(null);
@@ -85,7 +85,8 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
             key="B">
             <ExternalIds
                 onBack={() => setBottomSheet(BOTTOM_SHEETS.SEARCH)}
-                externalIds={externalIds}
+                filteredLocationsByExternalIds={filteredLocationsByExternalIds}
+                onLocationClick={(location) => setCurrentLocation(location)}
             />
         </Sheet>,
         <Sheet
