@@ -41,6 +41,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const [directionsService, setDirectionsService] = useState();
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
+    const [appConfigResult, setAppConfigResult] = useState();
 
     // The filtered locations that the user sets when selecting a category/location.
     const [filteredLocations, setFilteredLocations] = useState();
@@ -181,6 +182,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             // Ensure a minimum waiting time of 3 seconds
             new Promise(resolve => setTimeout(resolve, 3000))
         ]).then(([venuesResult, appConfigResult]) => {
+            setAppConfigResult(appConfigResult);
             venuesResult = venuesResult.map(venue => {
                 venue.image = appConfigResult.venueImages[venue.name.toLowerCase()];
                 return venue;
@@ -222,6 +224,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             onLocationsFiltered={(locations) => setFilteredLocations(locations)}
                             onDirectionsOpened={() => directionsOpened()}
                             onDirectionsClosed={() => directionsClosed()}
+                            appConfigResult={appConfigResult}
                         />
                         :
                         <BottomSheet
@@ -232,6 +235,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             onLocationsFiltered={(locations) => setFilteredLocations(locations)}
                             onDirectionsOpened={() => directionsOpened()}
                             onDirectionsClosed={() => directionsClosed()}
+                            appConfigResult={appConfigResult}
                         />
                     }
                     <MIMap

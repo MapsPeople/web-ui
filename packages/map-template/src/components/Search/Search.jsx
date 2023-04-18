@@ -18,9 +18,10 @@ const mapsindoors = window.mapsindoors;
  * @param {function} props.onLocationsFiltered - Function that is run when the user performs a filter through any category.
  * @param {function} props.onSetSize - Callback that is fired when the search field takes focus.
  * @param {string} props.currentVenueName - The currently selected venue.
+ * @param {Object} props.appConfigResult
  * @returns
  */
-function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, currentVenueName }) {
+function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, currentVenueName, appConfigResult }) {
 
     /** Referencing the search field */
     const searchFieldRef = useRef();
@@ -125,6 +126,12 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, c
     }, [currentVenueName]);
 
 
+    function getCategoryIcon(key) {
+        const appConfigCategories = appConfigResult?.menuInfo.mainmenu;
+        const appConfigCategory = appConfigCategories.find(category => category.categoryKey === key);
+        return appConfigCategory?.iconUrl;
+    }
+
     return (
         <div className="search">
             <SearchField
@@ -140,11 +147,13 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, c
                 <div ref={categoriesListRef} className="search__categories">
                     {categories?.map(([category, categoryInfo]) =>
                         <mi-chip
+                            icon={getCategoryIcon(category)}
                             content={categoryInfo.displayName}
                             active={selectedCategory === category}
                             onClick={() => categoryClicked(category)}
                             key={category}>
-                        </mi-chip>)
+                        </mi-chip>
+                    )
                     }
                 </div>
                 <div className="search__results">
