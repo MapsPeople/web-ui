@@ -95,7 +95,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
             />
         </Sheet>,
         <Sheet
-            minHeight="144"
+            minHeight="200"
             isOpen={activeBottomSheet === BOTTOM_SHEETS.EXTERNALIDS}
             key="B">
             <ExternalIds
