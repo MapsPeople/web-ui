@@ -22,10 +22,11 @@ const VIEWS = {
  * @param {function} props.onLocationsFiltered - The list of locations after filtering through the categories.
  * @param {function} props.onDirectionsOpened - Check if the directions page state is open.
  * @param {function} props.onDirectionsClosed - Check if the directions page state is closed.
+ * @param {string} props.currentVenueName - The currently selected venue.
  * @param {array} props.filteredLocationsByExternalIds - Array of locations filtered based on the external id.
  *
 */
-function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed, filteredLocationsByExternalIds }) {
+function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed, currentVenueName, filteredLocationsByExternalIds }) {
     const [activePage, setActivePage] = useState(null);
 
     const [directions, setDirections] = useState();
@@ -55,12 +56,21 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
         onDirectionsOpened();
     }
 
+    /**
+     * Navigate to the search page and reset the location that has been previously selected.
+     */
+     function setSearchPage() {
+        setActivePage(VIEWS.SEARCH);
+        setCurrentLocation();
+    }
+
     const pages = [
         <Modal isOpen={activePage === VIEWS.SEARCH} key="A">
             <Search
                 onLocationClick={(location) => setCurrentLocation(location)}
                 categories={currentCategories}
                 onLocationsFiltered={(locations) => onLocationsFiltered(locations)}
+                currentVenueName={currentVenueName}
             />
         </Modal>,
         <Modal isOpen={activePage === VIEWS.EXTERNALIDS} key="B">
@@ -74,7 +84,7 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
             <LocationDetails
                 onStartWayfinding={() => setPage(VIEWS.WAYFINDING)}
                 location={currentLocation}
-                onBack={() => setPage(VIEWS.SEARCH)}
+                onBack={() => setSearchPage()}
             />
         </Modal>,
         <Modal isOpen={activePage === VIEWS.WAYFINDING} key="D">

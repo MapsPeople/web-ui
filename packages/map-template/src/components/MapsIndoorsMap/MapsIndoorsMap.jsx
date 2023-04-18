@@ -237,6 +237,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                         ?
                         <Sidebar
                             currentLocation={currentLocation}
+                            currentVenueName={currentVenueName}
                             setCurrentLocation={setCurrentLocation}
                             currentCategories={currentCategories}
                             onClose={() => setCurrentLocation(null)}
@@ -248,6 +249,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                         :
                         <BottomSheet
                             currentLocation={currentLocation}
+                            currentVenueName={currentVenueName}
                             setCurrentLocation={setCurrentLocation}
                             currentCategories={currentCategories}
                             onLocationsFiltered={(locations) => setFilteredLocations(locations)}

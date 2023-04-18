@@ -23,9 +23,10 @@ let _selectedCategory;
  * @param {[[string, number]]} props.categories - All the unique categories that users can filter through.
  * @param {function} props.onLocationsFiltered - Function that is run when the user performs a filter through any category.
  * @param {function} props.onSetSize - Callback that is fired when the search field takes focus.
+ * @param {string} props.currentVenueName - The currently selected venue.
  * @returns
  */
-function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize }) {
+function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, currentVenueName }) {
 
     /** Referencing the search DOM element */
     const searchFieldRef = useRef();
@@ -121,7 +122,8 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
          * Clear out the results list and set the selected category to null.
          */
         if (selectedCategory === category) {
-            searchResultsRef.current.innerHTML = '';
+            // If the clicked category is the same as currently selected, "deselect" it.
+            setSearchResults([]);
             setSelectedCategory(null);
             _selectedCategory = null;
             searchFieldRef.current.removeAttribute('mi-categories');
@@ -208,6 +210,18 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
             setSize(snapPoints.MAX);
         });
     }, []);
+
+    /*
+     * React on changes in the venue prop.
+     * Deselect category and clear results list.
+     */
+    useEffect(() => {
+        if (selectedCategory) {
+            setSearchResults([]);
+            setSelectedCategory(null);
+        }
+    }, [currentVenueName]);
+
 
     return (
         <div className="search">
