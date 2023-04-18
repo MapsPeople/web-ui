@@ -11,12 +11,9 @@ mi-search {
     position: relative;
 
     input[type="search"] {
-        @include border.radius(x-large);
-        @include border.width(medium);
-        @include border.style(solid);
+        @include border.radius(large);
         @include background-color.white(white);
         @include padding.left(xx-large);
-        @include color.gray(50);
         @include sizing.height(xxx-large);
         @include font.size(medium);
         @include padding.right(xx-large);
@@ -28,6 +25,8 @@ mi-search {
         background-repeat: no-repeat;
         background-position: variables.$spacing-medium center;
         border-color: #E6E6E6;
+        color: var(--tailwind-colors-neutral-500);
+        border: 1px solid var(--tailwind-colors-gray-200);
 
         &:focus {
             @include border.blue(60);

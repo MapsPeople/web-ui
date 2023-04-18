@@ -34,6 +34,9 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
         },
         focusInput() {
             elementRef.current.focusInput();
+        },
+        clear() {
+            elementRef.current.clear();
         }
     }));
 

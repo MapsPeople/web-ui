@@ -16,7 +16,7 @@
     @include font.leading(medium);
     @include transitions.transition(quickly);
     @include font.family(system);
-    @include border.radius(x-large);
+    @include border.radius(large);
     @include background-color.gray(10);
     display: flex;
     flex-direction: row;
@@ -31,14 +31,15 @@
 }
 
 .img-container {
-    width: variables.$spacing-xx-large;
-    height: variables.$spacing-xx-large;
+    width: variables.$spacing-x-large;
+    height: variables.$spacing-x-large;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 img {
+    @include border.radius(large);
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -48,7 +49,7 @@ img {
     @include padding.right(medium);
     flex: 1;
     display: grid;
-    gap: 6px;
+    gap: variables.$spacing-xx-small;
 
     &-title {
         margin: 0;
