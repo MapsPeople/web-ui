@@ -165,10 +165,12 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
      */
     useEffect(() => {
         setExternalIdArray(externalIds);
-        if (externalIds && externalIdArray.length > 0) {
+        if (externalIds && externalIdArray?.length > 0) {
             mapsindoors.services.LocationsService.getLocationsByExternalId(externalIdArray).then(locations => {
                 setFilteredLocationsByExternalId(locations);
             });
+        } else {
+            setFilteredLocationsByExternalId([]);
         }
     }, [externalIds, externalIdArray]);
 
