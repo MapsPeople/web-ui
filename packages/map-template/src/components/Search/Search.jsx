@@ -1,19 +1,13 @@
 import React from "react";
 import './Search.scss';
-import { useRef, useEffect, useState, useContext } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { snapPoints } from '../../constants/snapPoints';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
-import { MapsIndoorsContext } from '../../MapsIndoorsContext';
-import useNear from '../../hooks/useNear';
+import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
+import SearchField from '../WebComponentWrappers/Search/Search';
 
 /** Initialize the MapsIndoors instance. */
 const mapsindoors = window.mapsindoors;
-
-/**
- * Private variable used inside an event listener for a custom event from a web componenent.
- * Implemented due to the impossibility to use the React useState hook.
- */
-let _selectedCategory;
 
 /**
  * Show the search results.
@@ -28,11 +22,13 @@ let _selectedCategory;
  */
 function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, currentVenueName }) {
 
-    /** Referencing the search DOM element */
+    /** Referencing the search field */
     const searchFieldRef = useRef();
 
-    /** Referencing the search results container DOM element */
-    const searchResultsRef = useRef();
+    const [searchResults, setSearchResults] = useState([]);
+
+    /** Indicate if search results have been found */
+    const [showNotFoundMessage, setShowNotFoundMessage] = useState(false);
 
     /** Referencing the categories results container DOM element */
     const categoriesListRef = useRef();
@@ -40,50 +36,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, c
     /** Determines which category has been selected */
     const [selectedCategory, setSelectedCategory] = useState();
 
-    /** Instruct the search field to search for Locations near the map center. */
-    const searchNear = useNear();
-
     const scrollableContentSwipePrevent = usePreventSwipe();
-
-    const mapsIndoorsInstance = useContext(MapsIndoorsContext);
-
-    /**
-     * Click event handler that takes the selected location as an argument.
-     *
-     * @param {string} category
-     */
-    function resultClickedHandler(location) {
-        onLocationClick(location.detail);
-    }
-
-    /** Remove click event listeners on all mi-list-item-location components. */
-    function clearEventListeners() {
-        const listItemLocations = document.querySelectorAll('mi-list-item-location');
-        listItemLocations.forEach(element => {
-            element.removeEventListener('click', resultClickedHandler);
-        });
-    }
-
-    /**
-     * Add search results by creating a 'mi-list-item-location' component for displaying the content of each result.
-     * Append all the results to the results container and listen to the events when a result item is clicked.
-     *
-     * @param {string} result
-     */
-    function addSearchResults(result) {
-        const listItem = document.createElement('mi-list-item-location');
-        result.properties.imageURL = mapsIndoorsInstance.getDisplayRule(result).icon;
-        listItem.location = result;
-        searchResultsRef.current.appendChild(listItem);
-        listItem.addEventListener('locationClicked', resultClickedHandler);
-    }
-
-    /** Display message when no results have been found. */
-    function showNotFoundMessage() {
-        const notFoundMessage = document.createElement('p');
-        notFoundMessage.innerHTML = "Nothing was found";
-        searchResultsRef.current.appendChild(notFoundMessage);
-    }
 
     /**
      * Get the locations and filter through them based on categories selected.
@@ -93,67 +46,35 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, c
     function getFilteredLocations(category) {
         mapsindoors.services.LocationsService.getLocations({
             categories: category,
-        }).then(locations => {
-
-            /** Function that takes the locations and passes them to the parent component. */
-            onLocationsFiltered(locations);
-
-            /** Loop through the filtered locations and add them to the search results list. */
-            for (const location of locations) {
-                addSearchResults(location);
-            }
-        });
+        }).then(onResults);
     }
 
     /**
      * Handles the click events on the categories list.
-     * Set a selected category and only allow one category to be selected at once.
      *
      * @param {string} category
      */
     function categoryClicked(category) {
-
-        /** Perform a search when a category is clicked and filter the results through the category. */
-        searchFieldRef.current.setAttribute('mi-categories', category);
+        setSelectedCategory(category);
         setSize(snapPoints.MAX);
 
-        /**
-         * Check if the clicked category is the same as the active one.
-         * Clear out the results list and set the selected category to null.
-         */
         if (selectedCategory === category) {
             // If the clicked category is the same as currently selected, "deselect" it.
             setSearchResults([]);
             setSelectedCategory(null);
-            _selectedCategory = null;
-            searchFieldRef.current.removeAttribute('mi-categories');
 
             // Pass an empty array to the filtered locations in order to reset the locations.
             onLocationsFiltered([]);
 
-            /** Check if the search field has a value and trigger the search again. */
-            if (searchFieldRef.current.value) {
-                searchFieldRef.current.removeAttribute('mi-categories');
+            // Check if the search field has a value and trigger the search again.
+            if (searchFieldRef.current.getValue()) {
                 searchFieldRef.current.triggerSearch();
             }
-
-            /**
-             * Check if the search field has a value while a category is selected.
-             * Trigger the search again and set the current selected category.
-             */
-        } else if (searchFieldRef.current.value) {
+        } else if (searchFieldRef.current.getValue()) {
+            // If the search field has a value, trigger a research based on the new category.
             searchFieldRef.current.triggerSearch();
-            setSelectedCategory(category);
-            _selectedCategory = category;
-
-            /**
-             * Check if a category is selected and filter through the locations within that category.
-             * Clear out the search results after each category is selected.
-             */
         } else {
-            searchResultsRef.current.innerHTML = '';
-            setSelectedCategory(category);
-            _selectedCategory = category;
+            // If the search field is empty, show all locations with that category.
             getFilteredLocations(category);
         }
     }
@@ -168,48 +89,29 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, c
         }
     }
 
-    useEffect(() => {
-        /**
-         * Search location and add results list implementation.
-         * Listen to the 'results' event provided by the 'mi-search' component.
-         */
-        searchFieldRef.current.addEventListener('results', e => {
-            clearEventListeners();
-            searchResultsRef.current.innerHTML = '';
+    /**
+     * Handle search results from the search field.
+     *
+     * @param {array} locations
+     */
+    function onResults(locations) {
+        setSearchResults(locations);
+        onLocationsFiltered(locations);
+        setShowNotFoundMessage(locations.length === 0);
+    }
 
-            onLocationsFiltered(e.detail);
+    /**
+     * Clear results list when search field is cleared.
+     */
+    function cleared() {
+        setSearchResults([]);
+        setShowNotFoundMessage(false);
+        if (selectedCategory) {
+            getFilteredLocations(selectedCategory);
+        }
 
-            if (e.detail.length === 0) {
-                showNotFoundMessage();
-            } else {
-                for (const result of e.detail) {
-                    addSearchResults(result);
-                }
-            }
-        });
-
-        clearEventListeners();
-
-        /**
-         * Listen to the 'cleared' event provided by the 'mi-search' component.
-         * Clear the results list.
-         */
-        searchFieldRef.current.addEventListener('cleared', () => {
-            clearEventListeners();
-            searchResultsRef.current.innerHTML = '';
-            if (_selectedCategory) {
-                getFilteredLocations(_selectedCategory);
-            }
-
-            // Pass an empty array to the filtered locations in order to reset the locations.
-            onLocationsFiltered([]);
-        });
-
-        /** Listen to click events on the input and set the input focus to true. */
-        searchFieldRef.current.addEventListener('click', () => {
-            setSize(snapPoints.MAX);
-        });
-    }, []);
+        onLocationsFiltered([]);
+    }
 
     /*
      * React on changes in the venue prop.
@@ -225,7 +127,15 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, c
 
     return (
         <div className="search">
-            <mi-search mi-near={searchNear} ref={searchFieldRef} placeholder="Search by name, category, building..." mapsindoors="true"></mi-search>
+            <SearchField
+                ref={searchFieldRef}
+                mapsindoors={true}
+                placeholder="Search by name, category, building..."
+                results={locations => onResults(locations)}
+                clicked={() => setSize(snapPoints.MAX)}
+                cleared={() => cleared()}
+                category={selectedCategory}
+            />
             <div className="search__scrollable prevent-scroll" {...scrollableContentSwipePrevent}>
                 <div ref={categoriesListRef} className="search__categories">
                     {categories?.map(([category, categoryInfo]) =>
@@ -237,7 +147,10 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, c
                         </mi-chip>)
                     }
                 </div>
-                <div ref={searchResultsRef} className="search__results"></div>
+                <div className="search__results">
+                    {showNotFoundMessage && <p>Nothing was found</p>}
+                    {searchResults.map(location => <ListItemLocation key={location.id} location={location} locationClicked={e => onLocationClick(e)} />)}
+                </div>
             </div>
         </div>
     )
