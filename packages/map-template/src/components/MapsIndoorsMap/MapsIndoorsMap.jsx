@@ -170,7 +170,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                 setFilteredLocationsByExternalId(locations);
             });
         }
-
     }, [externalIds, externalIdArray]);
 
     /**
@@ -240,11 +239,11 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             currentVenueName={currentVenueName}
                             setCurrentLocation={setCurrentLocation}
                             currentCategories={currentCategories}
-                            onClose={() => setCurrentLocation(null)}
                             onLocationsFiltered={(locations) => setFilteredLocations(locations)}
                             onDirectionsOpened={() => directionsOpened()}
                             onDirectionsClosed={() => directionsClosed()}
                             filteredLocationsByExternalIds={filteredLocationsByExternalId}
+                            onLocationsFilteredByExternalIds={(locations) => setFilteredLocationsByExternalId(locations)}
                         />
                         :
                         <BottomSheet
@@ -256,6 +255,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             onDirectionsOpened={() => directionsOpened()}
                             onDirectionsClosed={() => directionsClosed()}
                             filteredLocationsByExternalIds={filteredLocationsByExternalId}
+                            onLocationsFilteredByExternalIds={(locations) => setFilteredLocationsByExternalId(locations)}
                         />
                     }
                     <MIMap

@@ -27,9 +27,10 @@ const BOTTOM_SHEETS = {
  * @param {function} props.onDirectionsClosed - Check if the directions page state is closed.
  * @param {string} props.currentVenueName - The currently selected venue.
  * @param {array} props.filteredLocationsByExternalIds - Array of locations filtered based on the external id.
+ * @param {function} props.onLocationsFilteredByExternalIds - The list of locations after filtering through the categories.
  *
  */
-function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed, currentVenueName, filteredLocationsByExternalIds}) {
+function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed, currentVenueName, filteredLocationsByExternalIds, onLocationsFilteredByExternalIds }) {
 
     const bottomSheetRef = useRef();
     const [activeBottomSheet, setActiveBottomSheet] = useState(null);
@@ -41,13 +42,17 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
     const [wayfindingSheetSize, setWayfindingSheetSize] = useState();
     const [searchSheetSize, setSearchSheetSize] = useState();
 
+
     /*
      * React on changes on the current location.
-     * Set the search bottom sheet to be active if there is no location selected.
      */
     useEffect(() => {
-        setActiveBottomSheet(currentLocation ? BOTTOM_SHEETS.LOCATION_DETAILS : BOTTOM_SHEETS.EXTERNALIDS);
-    }, [currentLocation]);
+        if (filteredLocationsByExternalIds?.length > 0) {
+            setActiveBottomSheet(currentLocation ? BOTTOM_SHEETS.LOCATION_DETAILS : BOTTOM_SHEETS.EXTERNALIDS);
+        } else {
+            setActiveBottomSheet(currentLocation ? BOTTOM_SHEETS.LOCATION_DETAILS : BOTTOM_SHEETS.SEARCH);
+        }
+    }, [currentLocation, filteredLocationsByExternalIds]);
 
     /**
      * Set the active bottom sheet and trigger the visibility of the floor selector to be shown.
@@ -97,6 +102,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
                 onBack={() => setBottomSheet(BOTTOM_SHEETS.SEARCH)}
                 filteredLocationsByExternalIds={filteredLocationsByExternalIds}
                 onLocationClick={(location) => setCurrentLocation(location)}
+                onLocationsFilteredByExternalIds={(locations) => onLocationsFilteredByExternalIds(locations)}
             />
         </Sheet>,
         <Sheet

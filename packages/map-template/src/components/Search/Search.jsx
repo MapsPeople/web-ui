@@ -149,7 +149,13 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, c
                 </div>
                 <div className="search__results">
                     {showNotFoundMessage && <p>Nothing was found</p>}
-                    {searchResults.map(location => <ListItemLocation key={location.id} location={location} locationClicked={e => onLocationClick(e)} />)}
+                    {searchResults.map(location =>
+                        <ListItemLocation
+                            key={location.id}
+                            location={location}
+                            locationClicked={e => onLocationClick(e)}
+                        />
+                    )}
                 </div>
             </div>
         </div>

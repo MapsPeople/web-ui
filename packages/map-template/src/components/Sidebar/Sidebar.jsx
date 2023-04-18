@@ -24,19 +24,24 @@ const VIEWS = {
  * @param {function} props.onDirectionsClosed - Check if the directions page state is closed.
  * @param {string} props.currentVenueName - The currently selected venue.
  * @param {array} props.filteredLocationsByExternalIds - Array of locations filtered based on the external id.
+ * @param {function} props.onLocationsFilteredByExternalIds - The list of locations after filtering through the categories.
  *
 */
-function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed, currentVenueName, filteredLocationsByExternalIds }) {
+function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed, currentVenueName, filteredLocationsByExternalIds, onLocationsFilteredByExternalIds }) {
     const [activePage, setActivePage] = useState(null);
 
     const [directions, setDirections] = useState();
 
     /*
-    * React on changes on the current location.
-    */
+     * React on changes on the current location.
+     */
     useEffect(() => {
-        setActivePage(currentLocation ? VIEWS.LOCATION_DETAILS : VIEWS.EXTERNALIDS);
-    }, [currentLocation]);
+        if (filteredLocationsByExternalIds?.length > 0) {
+            setActivePage(currentLocation ? VIEWS.LOCATION_DETAILS : VIEWS.EXTERNALIDS);
+        } else {
+            setActivePage(currentLocation ? VIEWS.LOCATION_DETAILS : VIEWS.SEARCH);
+        }
+    }, [currentLocation, filteredLocationsByExternalIds]);
 
     /**
      * Set the active page and trigger the visibility of the floor selector to be shown.
@@ -59,7 +64,7 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
     /**
      * Navigate to the search page and reset the location that has been previously selected.
      */
-     function setSearchPage() {
+    function setSearchPage() {
         setActivePage(VIEWS.SEARCH);
         setCurrentLocation();
     }
@@ -78,6 +83,7 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
                 onBack={() => setPage(VIEWS.SEARCH)}
                 filteredLocationsByExternalIds={filteredLocationsByExternalIds}
                 onLocationClick={(location) => setCurrentLocation(location)}
+                onLocationsFilteredByExternalIds={(locations) => onLocationsFilteredByExternalIds(locations)}
             />
         </Modal>,
         <Modal isOpen={activePage === VIEWS.LOCATION_DETAILS} key="C">

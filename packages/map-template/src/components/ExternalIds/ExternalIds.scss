@@ -1,15 +1,14 @@
 .externalIds {
     &__header {
-        background-color: var(--color-gray-20);
         padding: var(--spacing-medium);
         position: relative;
     }
 
     &__title {
-        font-size: var(--font-size-small);
+        font-size: var(--font-size-medium);
         text-align: center;
         font-weight: var(--font-weight-large);
-        color: var(--color-gray-70);
+        color: var(--color-gray-90);
     }
 
     &__close {
