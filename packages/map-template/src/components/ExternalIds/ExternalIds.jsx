@@ -10,7 +10,7 @@ import ListItemLocation from "../WebComponentWrappers/ListItemLocation/ListItemL
  * @param {function} props.onLocationClick - Function that is run when a location is clicked.
  * @param {function} props.onBack - Function that is run when the user navigates to the previous page.
  * @param {array} props.filteredLocationsByExternalIds - Array of locations filtered based on the external id.
- * @param {function} props.onLocationsFilteredByExternalIds - Function that is run when
+ * @param {function} props.onLocationsFilteredByExternalIds - Function that handles the filtered locations by external id on the map.
  *
  */
 
@@ -20,7 +20,7 @@ function ExternalIds({ onBack, onLocationClick, filteredLocationsByExternalIds, 
      * Close the external id page and navigate to the search.
      * Clear the filtered locations by external id on the map.
      */
-    function onClose() {
+    function back() {
         onBack();
         onLocationsFilteredByExternalIds([]);
     }
@@ -29,7 +29,7 @@ function ExternalIds({ onBack, onLocationClick, filteredLocationsByExternalIds, 
         <div className="externalIds">
             <div className="externalIds__header">
                 <div className="externalIds__title">{filteredLocationsByExternalIds?.length} Locations</div>
-                <button className="externalIds__close" onClick={() => onClose()} aria-label="Close">
+                <button className="externalIds__close" onClick={() => back()} aria-label="Close">
                     <CloseIcon />
                 </button>
             </div>
