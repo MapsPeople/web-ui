@@ -24,8 +24,8 @@ const BOTTOM_SHEETS = {
  * @param {function} props.onDirectionsOpened - Check if the directions page state is open.
  * @param {function} props.onDirectionsClosed - Check if the directions page state is closed.
  * @param {string} props.currentVenueName - The currently selected venue.
- * @param {string} props.directionsFromLocation - ...
- * @param {string} props.directionsToLocation - ...
+ * @param {string} props.directionsFromLocation - Origin Location to be used to instantly show directions.
+ * @param {string} props.directionsToLocation - Destination Location to be used to instantly show directions.
  */
 function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed, currentVenueName, directionsFromLocation, directionsToLocation}) {
 
@@ -112,8 +112,8 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
             <Wayfinding
                 onSetSize={size => setWayfindingSheetSize(size)}
                 onStartDirections={() => setDirectionsBottomSheet()}
-                location={currentLocation || directionsToLocation}
-                origin={directionsFromLocation}
+                to={currentLocation || directionsToLocation}
+                from={directionsFromLocation}
                 onDirections={result => setDirections(result)}
                 onBack={() => setBottomSheet(currentLocation ? BOTTOM_SHEETS.LOCATION_DETAILS : BOTTOM_SHEETS.SEARCH)}
                 isActive={activeBottomSheet === BOTTOM_SHEETS.WAYFINDING}

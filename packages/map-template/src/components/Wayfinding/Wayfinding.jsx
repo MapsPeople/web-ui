@@ -23,11 +23,12 @@ const searchFieldIdentifiers = {
  * @param {Object} props
  * @param {function} props.onStartDirections - Function that is run when the user navigates to the directions page.
  * @param {function} props.onBack - Function that is run when the user navigates to the previous page.
- * @param {string} props.location - The location that the user selected before starting the wayfinding.
+ * @param {object} props.to - The location to navigate to.
+ * @param {object} [props.from] - Optional location to navigate from. If omitted, the user has to choose in the search field.
  * @param {function} props.onSetSize - Callback that is fired when the component has loaded.
  * @returns
  */
-function Wayfinding({ onStartDirections, onBack, location, origin, onSetSize, isActive, onDirections }) {
+function Wayfinding({ onStartDirections, onBack, to, from, onSetSize, isActive, onDirections }) {
 
     /** Referencing the accessibility details DOM element */
     const detailsRef = useRef();
@@ -200,20 +201,20 @@ function Wayfinding({ onStartDirections, onBack, location, origin, onSetSize, is
     useEffect(() => {
         setSize(snapPoints.MAX);
         // If there is a location, use that as the 'to' field.
-        if (location) {
-            toFieldRef.current.setDisplayText(location.properties.name);
-            setDestinationLocation(location);
+        if (to) {
+            toFieldRef.current.setDisplayText(to.properties.name);
+            setDestinationLocation(to);
         }
 
-        // If there is an origin location, use that as the 'from' field.
-        if (origin) {
-            fromFieldRef.current.setDisplayText(origin.properties.name);
-            setOriginLocation(origin);
+        // If there is an from location, use that as the 'from' field.
+        if (from) {
+            fromFieldRef.current.setDisplayText(from.properties.name);
+            setOriginLocation(from);
         } else {
             setActiveSearchField(searchFieldIdentifiers.FROM);
         }
 
-    }, [location]);
+    }, [to]);
 
     useEffect(() => {
         if (isActive && !fromFieldRef.current?.getValue()) {

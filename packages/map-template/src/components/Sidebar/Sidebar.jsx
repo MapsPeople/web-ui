@@ -21,8 +21,8 @@ const VIEWS = {
  * @param {function} props.onDirectionsOpened - Check if the directions page state is open.
  * @param {function} props.onDirectionsClosed - Check if the directions page state is closed.
  * @param {string} props.currentVenueName - The currently selected venue.
- * @param {string} props.directionsFromLocation - ...
- * @param {string} props.directionsToLocation - ...
+ * @param {string} props.directionsFromLocation - Origin Location to be used to instantly show directions.
+ * @param {string} props.directionsToLocation - Destination Location to be used to instantly show directions.
  */
 function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed, currentVenueName, directionsFromLocation, directionsToLocation }) {
     const [activePage, setActivePage] = useState(null);
@@ -85,8 +85,8 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
         <Modal isOpen={activePage === VIEWS.WAYFINDING} key="C">
             <Wayfinding
                 onStartDirections={() => setDirectionsPage()}
-                location={currentLocation || directionsToLocation}
-                origin={directionsFromLocation}
+                to={currentLocation || directionsToLocation}
+                from={directionsFromLocation}
                 onDirections={result => setDirections(result)}
                 onBack={() => setPage(currentLocation ? VIEWS.LOCATION_DETAILS : VIEWS.SEARCH)}
                 isActive={activePage === VIEWS.WAYFINDING}
