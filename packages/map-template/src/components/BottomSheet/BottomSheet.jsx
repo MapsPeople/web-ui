@@ -24,8 +24,10 @@ const BOTTOM_SHEETS = {
  * @param {function} props.onDirectionsOpened - Check if the directions page state is open.
  * @param {function} props.onDirectionsClosed - Check if the directions page state is closed.
  * @param {string} props.currentVenueName - The currently selected venue.
+ * @param {string} props.directionsFromLocation - ...
+ * @param {string} props.directionsToLocation - ...
  */
-function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed, currentVenueName}) {
+function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed, currentVenueName, directionsFromLocation, directionsToLocation}) {
 
     const bottomSheetRef = useRef();
     const [activeBottomSheet, setActiveBottomSheet] = useState(null);
@@ -38,12 +40,15 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
     const [searchSheetSize, setSearchSheetSize] = useState();
 
     /*
-     * React on changes on the current location.
-     * Set the search bottom sheet to be active if there is no location selected.
+     * React on changes on the current location and directions locations and set relevant bottom sheet.
      */
     useEffect(() => {
-        setActiveBottomSheet(currentLocation ? BOTTOM_SHEETS.LOCATION_DETAILS : BOTTOM_SHEETS.SEARCH);
-    }, [currentLocation]);
+        if (directionsFromLocation && directionsToLocation) {
+            setActiveBottomSheet(BOTTOM_SHEETS.WAYFINDING);
+        } else {
+            setActiveBottomSheet(currentLocation ? BOTTOM_SHEETS.LOCATION_DETAILS : BOTTOM_SHEETS.SEARCH);
+        }
+    }, [currentLocation, directionsFromLocation, directionsToLocation]);
 
     /**
      * Set the active bottom sheet and trigger the visibility of the floor selector to be shown.
@@ -107,9 +112,10 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
             <Wayfinding
                 onSetSize={size => setWayfindingSheetSize(size)}
                 onStartDirections={() => setDirectionsBottomSheet()}
-                location={currentLocation}
+                location={currentLocation || directionsToLocation}
+                origin={directionsFromLocation}
                 onDirections={result => setDirections(result)}
-                onBack={() => setBottomSheet(BOTTOM_SHEETS.LOCATION_DETAILS)}
+                onBack={() => setBottomSheet(currentLocation ? BOTTOM_SHEETS.LOCATION_DETAILS : BOTTOM_SHEETS.SEARCH)}
                 isActive={activeBottomSheet === BOTTOM_SHEETS.WAYFINDING}
             />
         </Sheet>,

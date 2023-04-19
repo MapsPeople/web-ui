@@ -31,7 +31,7 @@ let _locationsDisabled;
  * @param {string} [props.logo] - If you want the splash screen to have a custom logo, provide the image path or address here.
  * @param {array} [props.appUserRoles] - If you want the map to behave differently for specific users, set one or more app user roles here.
  */
-function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles }) {
+function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo }) {
 
     const [isMapReady, setMapReady] = useState(false);
     const [venues, setVenues] = useState([]);
@@ -41,6 +41,9 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const [directionsService, setDirectionsService] = useState();
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
+
+    const [directionsFromLocation, setDirectionsFromLocation] = useState();
+    const [directionsToLocation, setDirectionsToLocation] = useState();
 
     // The filtered locations that the user sets when selecting a category/location.
     const [filteredLocations, setFilteredLocations] = useState();
@@ -166,6 +169,13 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
         }
     }, [locationId]);
 
+    useEffect(() => {
+        if (directionsFrom && directionsTo) {
+            mapsindoors.services.LocationsService.getLocation(directionsFrom).then(location => setDirectionsFromLocation(location));
+            mapsindoors.services.LocationsService.getLocation(directionsTo).then(location => setDirectionsToLocation(location));
+        }
+    }, [directionsFrom, directionsTo]);
+
     /*
      * React on changes in the MapsIndoors API key by fetching the required data.
      */
@@ -232,6 +242,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             onLocationsFiltered={(locations) => setFilteredLocations(locations)}
                             onDirectionsOpened={() => directionsOpened()}
                             onDirectionsClosed={() => directionsClosed()}
+                            directionsFromLocation={directionsFromLocation}
+                            directionsToLocation={directionsToLocation}
                         />
                     }
                     <MIMap

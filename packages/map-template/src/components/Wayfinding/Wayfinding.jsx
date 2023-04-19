@@ -27,7 +27,7 @@ const searchFieldIdentifiers = {
  * @param {function} props.onSetSize - Callback that is fired when the component has loaded.
  * @returns
  */
-function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, onDirections }) {
+function Wayfinding({ onStartDirections, onBack, location, origin, onSetSize, isActive, onDirections }) {
 
     /** Referencing the accessibility details DOM element */
     const detailsRef = useRef();
@@ -199,13 +199,20 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
 
     useEffect(() => {
         setSize(snapPoints.MAX);
-        // If there is a location selected, pre-fill the value of the `to` field with the location name.
+        // If there is a location, use that as the 'to' field.
         if (location) {
             toFieldRef.current.setDisplayText(location.properties.name);
             setDestinationLocation(location);
         }
 
-        setActiveSearchField(searchFieldIdentifiers.FROM);
+        // If there is an origin location, use that as the 'from' field.
+        if (origin) {
+            fromFieldRef.current.setDisplayText(origin.properties.name);
+            setOriginLocation(origin);
+        } else {
+            setActiveSearchField(searchFieldIdentifiers.FROM);
+        }
+
     }, [location]);
 
     useEffect(() => {
