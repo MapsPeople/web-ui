@@ -160,7 +160,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
 
 
     /**
-     * React on changes in the external id prop.
+     * React on changes in the externalIds prop.
      * Get the locations by external ids, if present.
      */
     useEffect(() => {
