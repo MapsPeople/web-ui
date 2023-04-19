@@ -8,8 +8,8 @@
     max-height: 100%;
     transform: translateY(100%);
     background-color: var(--color-white-white);
-    border-top-left-radius: var(--rounding-x-large);
-    border-top-right-radius: var(--rounding-x-large);
+    border-top-left-radius: var(--rounding-large);
+    border-top-right-radius: var(--rounding-large);
 
     // A drag indicator as pseudo element
     &::before {

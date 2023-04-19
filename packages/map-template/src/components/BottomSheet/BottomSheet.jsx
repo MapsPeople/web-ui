@@ -23,8 +23,9 @@ const BOTTOM_SHEETS = {
  * @param {function} props.onLocationsFiltered - The list of locations after filtering through the categories.
  * @param {function} props.onDirectionsOpened - Check if the directions page state is open.
  * @param {function} props.onDirectionsClosed - Check if the directions page state is closed.
+ * @param {string} props.currentVenueName - The currently selected venue.
  */
-function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed}) {
+function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed, currentVenueName}) {
 
     const bottomSheetRef = useRef();
     const [activeBottomSheet, setActiveBottomSheet] = useState(null);
@@ -62,6 +63,14 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
         onDirectionsOpened();
     }
 
+    /**
+     * Navigate to the search screen and reset the location that has been previously selected.
+     */
+    function setSearchBottomSheet() {
+        setBottomSheet(BOTTOM_SHEETS.SEARCH);
+        setCurrentLocation();
+    }
+
     const bottomSheets = [
         <Sheet
             minHeight="144"
@@ -73,6 +82,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
                 onLocationClick={(location) => setCurrentLocation(location)}
                 categories={currentCategories}
                 onLocationsFiltered={(locations) => onLocationsFiltered(locations)}
+                currentVenueName={currentVenueName}
             />
         </Sheet>,
         <Sheet
@@ -85,12 +95,12 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
                 onSetSize={size => setLocationDetailsSheetSize(size)}
                 onStartWayfinding={() => setBottomSheet(BOTTOM_SHEETS.WAYFINDING)}
                 location={currentLocation}
-                onBack={() => setBottomSheet(BOTTOM_SHEETS.SEARCH)}
+                onBack={() => setSearchBottomSheet()}
                 snapPointSwiped={locationDetailsSheetSwiped}
             />
         </Sheet>,
         <Sheet
-            minHeight="220"
+            minHeight="228"
             isOpen={activeBottomSheet === BOTTOM_SHEETS.WAYFINDING}
             preferredSizeSnapPoint={wayfindingSheetSize}
             key="C">

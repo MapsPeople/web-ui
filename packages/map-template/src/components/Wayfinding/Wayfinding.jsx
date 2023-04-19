@@ -4,6 +4,7 @@ import { useRef, useEffect } from 'react';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
 import { ReactComponent as WalkingIcon } from '../../assets/walking.svg';
+import { ReactComponent as SwitchIcon } from '../../assets/switch.svg';
 import { DirectionsServiceContext } from '../../DirectionsServiceContext';
 import { UserPositionContext } from '../../UserPositionContext';
 import Tooltip from '../Tooltip/Tooltip';
@@ -49,7 +50,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     /** Indicate if the searched route throws errors */
     const [hasError, setHasError] = useState(false);
 
-     /** Indicate if the search has been triggered */
+    /** Indicate if the search has been triggered */
     const [searchTriggered, setSearchTriggered] = useState(false);
 
     /** Holds search results given from a search field */
@@ -202,6 +203,26 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
         }
     }
 
+    /**
+     * Click handler for switching the origin and destination fields.
+     */
+    function switchDirectionsHandler() {
+        if (destinationLocation || originLocation) {
+            if (originLocation) {
+                toFieldRef.current.setDisplayText(originLocation.properties.name);
+            } else {
+                toFieldRef.current.clear();
+            }
+            if (destinationLocation) {
+                fromFieldRef.current.setDisplayText(destinationLocation.properties.name);
+            } else {
+                fromFieldRef.current.clear();
+            }
+            setDestinationLocation(originLocation);
+            setOriginLocation(destinationLocation);
+        }
+    }
+
     useEffect(() => {
         setSize(snapPoints.MAX);
         // If there is a location selected, pre-fill the value of the `to` field with the location name.
@@ -263,7 +284,9 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
         <div className="wayfinding">
             <div className="wayfinding__directions">
                 <div className="wayfinding__title">Start wayfinding</div>
-                <button className="wayfinding__close" onClick={() => onBack()} aria-label="Close">
+                <button className="wayfinding__close"
+                    onClick={() => onBack()}
+                    aria-label="Close">
                     <CloseIcon />
                 </button>
                 <div className="wayfinding__locations">
@@ -278,6 +301,11 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                             cleared={() => onSearchCleared(searchFieldIdentifiers.TO)}
                         />
                     </label>
+                    <button onClick={() => switchDirectionsHandler()}
+                        aria-label="Switch"
+                        className="wayfinding__switch">
+                        <SwitchIcon />
+                    </button>
                     <label className="wayfinding__label">
                         FROM
                         <SearchField

@@ -20,9 +20,10 @@ const VIEWS = {
  * @param {function} props.onLocationsFiltered - The list of locations after filtering through the categories.
  * @param {function} props.onDirectionsOpened - Check if the directions page state is open.
  * @param {function} props.onDirectionsClosed - Check if the directions page state is closed.
+ * @param {string} props.currentVenueName - The currently selected venue.
  *
 */
-function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed }) {
+function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed, currentVenueName }) {
     const [activePage, setActivePage] = useState(null);
 
     const [directions, setDirections] = useState();
@@ -50,7 +51,14 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
     function setDirectionsPage() {
         setActivePage(VIEWS.DIRECTIONS);
         onDirectionsOpened();
+    }
 
+    /**
+     * Navigate to the search page and reset the location that has been previously selected.
+     */
+     function setSearchPage() {
+        setActivePage(VIEWS.SEARCH);
+        setCurrentLocation();
     }
 
     const pages = [
@@ -59,13 +67,14 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
                 onLocationClick={(location) => setCurrentLocation(location)}
                 categories={currentCategories}
                 onLocationsFiltered={(locations) => onLocationsFiltered(locations)}
+                currentVenueName={currentVenueName}
             />
         </Modal>,
         <Modal isOpen={activePage === VIEWS.LOCATION_DETAILS} key="B">
             <LocationDetails
                 onStartWayfinding={() => setPage(VIEWS.WAYFINDING)}
                 location={currentLocation}
-                onBack={() => setPage(VIEWS.SEARCH)}
+                onBack={() => setSearchPage()}
             />
         </Modal>,
         <Modal isOpen={activePage === VIEWS.WAYFINDING} key="C">
