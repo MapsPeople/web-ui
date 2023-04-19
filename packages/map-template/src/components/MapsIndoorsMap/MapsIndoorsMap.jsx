@@ -42,7 +42,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [currentCategories, setCurrentCategories] = useState([]);
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const [directionsService, setDirectionsService] = useState();
-    const [externalIDArray, setExternalIDArray] = useState([]);
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
 
     // The filtered locations by external id, if present.
@@ -164,15 +163,14 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
      * Get the locations by external IDs, if present.
      */
     useEffect(() => {
-        setExternalIDArray(externalIDs);
-        if (externalIDs && externalIDArray?.length > 0) {
-            mapsindoors.services.LocationsService.getLocationsByExternalId(externalIDArray).then(locations => {
+        if (externalIDs) {
+            mapsindoors.services.LocationsService.getLocationsByExternalId(externalIDs).then(locations => {
                 setFilteredLocationsByExternalID(locations);
             });
         } else {
             setFilteredLocationsByExternalID([]);
         }
-    }, [externalIDs, externalIDArray]);
+    }, [externalIDs]);
 
     /**
      * React on changes to the locationId prop: Set as current location and make the map center on it.
