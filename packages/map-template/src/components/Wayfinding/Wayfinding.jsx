@@ -206,7 +206,7 @@ function Wayfinding({ onStartDirections, onBack, to, from, onSetSize, isActive, 
             setDestinationLocation(to);
         }
 
-        // If there is an "from" location, use that as the 'from' field. Otherwise trigger focus on search field.
+        // If there is a "from" location, use that as the 'from' field. Otherwise trigger focus on search field.
         if (from) {
             fromFieldRef.current.setDisplayText(from.properties.name);
             setOriginLocation(from);
