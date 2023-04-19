@@ -120,12 +120,16 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
         // Build an object which contains the key, the count and the display name.
         for (const location of locationsResult) {
             const keys = Object.keys(location.properties.categories);
+
             for (const key of keys) {
+                const appConfigCategories = appConfigResult?.menuInfo.mainmenu;
+                const appConfigCategory = appConfigCategories.find(category => category.categoryKey === key);
+
                 if (uniqueCategories.has(key)) {
                     let count = uniqueCategories.get(key).count;
-                    uniqueCategories.set(key, { count: ++count, displayName: location.properties.categories[key] });
+                    uniqueCategories.set(key, { count: ++count, displayName: location.properties.categories[key], iconUrl: appConfigCategory?.iconUrl });
                 } else {
-                    uniqueCategories.set(key, { count: 1, displayName: location.properties.categories[key] });
+                    uniqueCategories.set(key, { count: 1, displayName: location.properties.categories[key], iconUrl: appConfigCategory?.iconUrl });
                 }
             }
         }
@@ -182,11 +186,11 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             // Ensure a minimum waiting time of 3 seconds
             new Promise(resolve => setTimeout(resolve, 3000))
         ]).then(([venuesResult, appConfigResult]) => {
-            setAppConfigResult(appConfigResult);
             venuesResult = venuesResult.map(venue => {
                 venue.image = appConfigResult.venueImages[venue.name.toLowerCase()];
                 return venue;
             });
+            setAppConfigResult(appConfigResult);
             setVenues(venuesResult);
         });
     }, [apiKey]);
@@ -224,7 +228,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             onLocationsFiltered={(locations) => setFilteredLocations(locations)}
                             onDirectionsOpened={() => directionsOpened()}
                             onDirectionsClosed={() => directionsClosed()}
-                            appConfigResult={appConfigResult}
                         />
                         :
                         <BottomSheet
@@ -235,7 +238,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             onLocationsFiltered={(locations) => setFilteredLocations(locations)}
                             onDirectionsOpened={() => directionsOpened()}
                             onDirectionsClosed={() => directionsClosed()}
-                            appConfigResult={appConfigResult}
                         />
                     }
                     <MIMap

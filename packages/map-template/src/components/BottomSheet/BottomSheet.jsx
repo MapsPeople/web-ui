@@ -24,9 +24,8 @@ const BOTTOM_SHEETS = {
  * @param {function} props.onDirectionsOpened - Check if the directions page state is open.
  * @param {function} props.onDirectionsClosed - Check if the directions page state is closed.
  * @param {string} props.currentVenueName - The currently selected venue.
- * @param {Object} props.appConfigResult
  */
-function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed, currentVenueName, appConfigResult}) {
+function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed, currentVenueName}) {
 
     const bottomSheetRef = useRef();
     const [activeBottomSheet, setActiveBottomSheet] = useState(null);
@@ -84,7 +83,6 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
                 categories={currentCategories}
                 onLocationsFiltered={(locations) => onLocationsFiltered(locations)}
                 currentVenueName={currentVenueName}
-                appConfigResult={appConfigResult}
             />
         </Sheet>,
         <Sheet
