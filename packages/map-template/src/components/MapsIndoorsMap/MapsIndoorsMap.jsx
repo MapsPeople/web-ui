@@ -42,8 +42,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [directionsService, setDirectionsService] = useState();
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
 
-    const [directionsFromLocation, setDirectionsFromLocation] = useState();
-    const [directionsToLocation, setDirectionsToLocation] = useState();
+    const [directionsFromLocation, setDirectionsFromLocation] = useState(null);
+    const [directionsToLocation, setDirectionsToLocation] = useState(null);
 
     // The filtered locations that the user sets when selecting a category/location.
     const [filteredLocations, setFilteredLocations] = useState();
@@ -173,6 +173,9 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
         if (directionsFrom && directionsTo) {
             mapsindoors.services.LocationsService.getLocation(directionsFrom).then(location => setDirectionsFromLocation(location));
             mapsindoors.services.LocationsService.getLocation(directionsTo).then(location => setDirectionsToLocation(location));
+        } else {
+            setDirectionsFromLocation(null);
+            setDirectionsToLocation(null);
         }
     }, [directionsFrom, directionsTo]);
 
