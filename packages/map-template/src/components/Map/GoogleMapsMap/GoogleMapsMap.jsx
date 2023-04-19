@@ -22,7 +22,7 @@ function GoogleMapsMap({ gmApiKey, onMapView, mapsIndoorsInstance }) {
         const loader = new GoogleMapsApiLoader({
             apiKey: gmApiKey,
             version: 'quarterly',
-            libraries: ['geometry']
+            libraries: ['geometry', 'places']
         });
 
         loader.load().then(loadedGoogle => {
