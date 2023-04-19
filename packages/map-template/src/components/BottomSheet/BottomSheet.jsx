@@ -7,7 +7,7 @@ import LocationDetails from '../LocationDetails/LocationDetails';
 import Wayfinding from '../Wayfinding/Wayfinding';
 import Directions from '../Directions/Directions';
 import Search from '../Search/Search';
-import ExternalIDs from '../ExternalIDs/ExternalIDs';
+import LocationsList from '../LocationsList/LocationsList';
 
 const BOTTOM_SHEETS = {
     SEARCH: 0,
@@ -98,7 +98,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
             minHeight="165"
             isOpen={activeBottomSheet === BOTTOM_SHEETS.EXTERNALIDS}
             key="B">
-            <ExternalIDs
+            <LocationsList
                 onBack={() => setBottomSheet(BOTTOM_SHEETS.SEARCH)}
                 filteredLocationsByExternalIDs={filteredLocationsByExternalIDs}
                 onLocationClick={(location) => setCurrentLocation(location)}

@@ -1,10 +1,10 @@
 import React from "react";
-import './ExternalIDs.scss';
+import './LocationsList.scss';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import ListItemLocation from "../WebComponentWrappers/ListItemLocation/ListItemLocation";
 
 /**
- * Show list of locations filtered based on external IDs.
+ * Show list of locations.
  *
  * @param {Object} props
  * @param {function} props.onLocationClick - Function that is run when a location is clicked.
@@ -13,8 +13,7 @@ import ListItemLocation from "../WebComponentWrappers/ListItemLocation/ListItemL
  * @param {function} props.onLocationsFilteredByExternalIDs - Function that handles the filtered locations by external ID on the map.
  *
  */
-
-function ExternalIDs({ onBack, onLocationClick, filteredLocationsByExternalIDs, onLocationsFilteredByExternalIDs }) {
+function LocationsList({ onBack, onLocationClick, filteredLocationsByExternalIDs, onLocationsFilteredByExternalIDs }) {
 
     /**
      * Close the external ID page and navigate to the search.
@@ -46,4 +45,4 @@ function ExternalIDs({ onBack, onLocationClick, filteredLocationsByExternalIDs, 
     )
 }
 
-export default ExternalIDs;
+export default LocationsList;

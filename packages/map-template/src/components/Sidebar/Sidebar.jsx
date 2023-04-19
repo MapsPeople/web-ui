@@ -4,7 +4,7 @@ import LocationDetails from "../LocationDetails/LocationDetails";
 import Wayfinding from '../Wayfinding/Wayfinding';
 import Directions from '../Directions/Directions';
 import Search from '../Search/Search';
-import ExternalIDs from '../ExternalIDs/ExternalIDs';
+import LocationsList from '../LocationsList/LocationsList';
 
 const VIEWS = {
     SEARCH: 0,
@@ -79,7 +79,7 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
             />
         </Modal>,
         <Modal isOpen={activePage === VIEWS.EXTERNALIDS} key="B">
-            <ExternalIDs
+            <LocationsList
                 onBack={() => setPage(VIEWS.SEARCH)}
                 filteredLocationsByExternalIDs={filteredLocationsByExternalIDs}
                 onLocationClick={(location) => setCurrentLocation(location)}
