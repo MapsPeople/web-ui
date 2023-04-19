@@ -16,11 +16,12 @@ import Search from '../Search/Search';
  * @param {function} props.onLocationsFiltered - The list of locations after filtering through the categories.
  * @param {function} props.onDirectionsOpened - Check if the directions page state is open.
  * @param {function} props.onDirectionsClosed - Check if the directions page state is closed.
+ * @param {string} props.currentVenueName - The currently selected venue.
  * @param {function} props.pushAppView - Function to push to app view to browser history.
  * @param {string} props.currentAppView - Holds the current view/state of the Map Template.
  * @param {array} props.appViews - Array of all possible views.
  */
-function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed, pushAppView, currentAppView, appViews}) {
+function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed, currentVenueName, pushAppView, currentAppView, appViews}) {
 
     const bottomSheetRef = useRef();
 
@@ -59,6 +60,14 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
         onDirectionsOpened();
     }
 
+    /**
+     * Navigate to the search screen and reset the location that has been previously selected.
+     */
+    function setSearchBottomSheet() {
+        setBottomSheet(appViews.SEARCH);
+        setCurrentLocation();
+    }
+
     const bottomSheets = [
         <Sheet
             minHeight="144"
@@ -70,6 +79,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
                 onLocationClick={(location) => setCurrentLocation(location)}
                 categories={currentCategories}
                 onLocationsFiltered={(locations) => onLocationsFiltered(locations)}
+                currentVenueName={currentVenueName}
             />
         </Sheet>,
         <Sheet
@@ -82,12 +92,12 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
                 onSetSize={size => setLocationDetailsSheetSize(size)}
                 onStartWayfinding={() => setBottomSheet(appViews.WAYFINDING)}
                 location={currentLocation}
-                onBack={() => setBottomSheet(appViews.SEARCH)}
+                onBack={() => setSearchBottomSheet()}
                 snapPointSwiped={locationDetailsSheetSwiped}
             />
         </Sheet>,
         <Sheet
-            minHeight="220"
+            minHeight="228"
             isOpen={currentAppView === appViews.WAYFINDING}
             preferredSizeSnapPoint={wayfindingSheetSize}
             key="C">

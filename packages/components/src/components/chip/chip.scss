@@ -2,12 +2,12 @@
 
 .chip {
   display: flex;
-  background-color: var(--tailwind-colors-zinc-50);
-  border: 1px solid var(--tailwind-colors-slate-200);
+  background-color: var(--tailwind-colors-gray-50);
+  border: 1px solid var(--tailwind-colors-gray-200);
   padding: 0 var(--spacing-xx-small);
-  border-radius: 70px;
+  border-radius: var(--spacing-x-small);
   align-items: center;
-  color: var(--tailwind-colors-zinc-500);
+  color: var(--tailwind-colors-neutral-500);
   font-family: var(--font-family-system);
   font-size: var(--font-size-medium);
   height: var(--spacing-xxx-large);
@@ -20,7 +20,7 @@
   }
 
   &__content {
-    padding: 0 var(--spacing-x-small);
+    padding: 0 var(--spacing-small);
     white-space: nowrap;
   }
 

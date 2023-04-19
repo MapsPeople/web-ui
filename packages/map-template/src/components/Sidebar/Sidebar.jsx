@@ -11,15 +11,15 @@ import Search from '../Search/Search';
  * @param {Object} props.setCurrentLocation - The setter for the currently selected MapsIndoors Location.
  * @param {Object} props.currentCategories - The unique categories displayed based on the existing locations.
  * @param {function} props.onLocationsFiltered - The list of locations after filtering through the categories.
- * @param {function} props.onLocationsFiltered - The list of locations after filtering through the categories.
  * @param {function} props.onDirectionsOpened - Check if the directions page state is open.
  * @param {function} props.onDirectionsClosed - Check if the directions page state is closed.
+ * @param {string} props.currentVenueName - The currently selected venue.
  * @param {function} props.pushAppView - Function to push to app view to browser history.
  * @param {string} props.currentAppView - Holds the current view/state of the Map Template.
  * @param {array} props.appViews - Array of all possible views.
  *
  */
-function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed, pushAppView, currentAppView, appViews }) {
+function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed, currentVenueName, pushAppView, currentAppView, appViews }) {
     const [directions, setDirections] = useState();
 
     /*
@@ -47,7 +47,14 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
     function setDirectionsPage() {
         pushAppView(appViews.DIRECTIONS);
         onDirectionsOpened();
+    }
 
+    /**
+     * Navigate to the search page and reset the location that has been previously selected.
+     */
+     function setSearchPage() {
+        setPage(appViews.SEARCH);
+        setCurrentLocation();
     }
 
     const pages = [
@@ -56,13 +63,14 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
                 onLocationClick={(location) => setCurrentLocation(location)}
                 categories={currentCategories}
                 onLocationsFiltered={(locations) => onLocationsFiltered(locations)}
+                currentVenueName={currentVenueName}
             />
         </Modal>,
         <Modal isOpen={currentAppView === appViews.LOCATION_DETAILS} key="B">
             <LocationDetails
                 onStartWayfinding={() => setPage(appViews.WAYFINDING)}
                 location={currentLocation}
-                onBack={() => setPage(appViews.SEARCH)}
+                onBack={() => setSearchPage()}
             />
         </Modal>,
         <Modal isOpen={currentAppView === appViews.WAYFINDING} key="C">

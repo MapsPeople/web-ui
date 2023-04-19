@@ -6,14 +6,14 @@
     display: grid;
     height: 100%;
     overflow-y: hidden;
-    grid-template-rows: 40px 1fr 56px;
+    grid-template-rows: 40px 1fr 64px;
 
     &--content-below {
         position: relative;
         &::before {
             content: '';
             position: absolute;
-            bottom: calc(56px + var(--spacing-medium));
+            bottom: calc(64px + var(--spacing-medium));
             left: 0;
             right: 0;
             height: var(--spacing-xx-large);
@@ -26,7 +26,7 @@
         &::after {
             content: '';
             position: absolute;
-            top: 56px;
+            top: 64px;
             left: 0;
             right: 0;
             height: var(--spacing-xx-large);
@@ -48,7 +48,7 @@
     &__image {
         max-width: 400px;
         width: 100%;
-        border-radius: var(--rounding-x-large);
+        border-radius: var(--rounding-large);
         aspect-ratio: 16 / 9;
         object-fit: cover;
     }
@@ -93,17 +93,9 @@
         border: none;
         font-size: var(--font-size-small);
         width: 100%;
-        height: var(--spacing-xx-large);
+        height: var(--spacing-xxx-large);
         position: relative;
         font-weight: var(--font-weight-x-large);
-
-        svg {
-            position: absolute;
-            left: var(--spacing-small);
-            top: 50%;
-            transform: translateY(-50%);
-            fill: white;
-        }
     }
 }
 
@@ -116,7 +108,7 @@
         margin-right: var(--spacing-medium);
 
         img {
-            height: var(--spacing-xx-large);
+            height: var(--spacing-x-large);
             display: block; /* to avoid spacing below */
         }
     }

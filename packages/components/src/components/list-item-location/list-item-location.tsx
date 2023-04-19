@@ -1,5 +1,5 @@
 import midtIcon from '@mapsindoors/midt/tokens/icon.json';
-import { Component, Event, EventEmitter, h, Host, JSX, Prop, Watch } from '@stencil/core';
+import { Component, Event, EventEmitter, h, Host, JSX, Prop, State, Watch } from '@stencil/core';
 import { appendMapsIndoorsImageQueryParameters } from '../../utils/utils';
 import { UnitSystem } from './../../enums/unit-system.enum';
 
@@ -22,6 +22,12 @@ export class ListItemLocation {
      * @type {UnitSystem}
      */
     @Prop() unit: UnitSystem;
+
+    /**
+     * @description Optional URL to icon to render for the Location. If not set, imageURL on the Location data will be used.
+     * @type {string}
+     */
+    @Prop() icon: string;
 
     /**
      * @description Add a badge to the location icon of the type given as value.
@@ -57,6 +63,8 @@ export class ListItemLocation {
      */
     @Event() listItemDidRender: EventEmitter;
 
+    @State() iconURLToRender; string;
+
     private imageElement: HTMLImageElement;
     private infoElement: HTMLMiLocationInfoElement;
     private iconAttributes: {};
@@ -72,6 +80,7 @@ export class ListItemLocation {
     }
 
     componentWillLoad(): void {
+        this.iconURLToRender = this.icon ? this.icon : this.location?.properties.imageURL;
         this.updateBadge();
     }
 
@@ -93,7 +102,7 @@ export class ListItemLocation {
      * Apply badge to location icon
      */
     updateBadge(): void {
-        if (this.iconBadge && this.iconBadgeValue && this.location.properties.imageURL) {
+        if (this.iconBadge && this.iconBadgeValue && this.iconURLToRender) {
             this.applyBadgeToIcon();
         }
     }
@@ -103,7 +112,7 @@ export class ListItemLocation {
      * @param {HTMLImageElement} image
      */
     objectFitImage(image: HTMLImageElement): void {
-        image.setAttribute('style', `background: no-repeat center center url("${this.location.properties.imageURL}"); background-size: cover;`);
+        image.setAttribute('style', `background: no-repeat center center url("${this.iconURLToRender}"); background-size: cover;`);
         image.src = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='${image.width}' height='${image.height}'%3E%3C/svg%3E`;
     }
 
@@ -114,7 +123,9 @@ export class ListItemLocation {
     applyBadgeToIcon(): void {
         let originalIconScale;
 
-        const iconURL = appendMapsIndoorsImageQueryParameters(this.location.properties.imageURL, this.iconDisplaySize);
+        this.iconURLToRender = this.icon ? this.icon : this.location.properties.imageURL;
+
+        const iconURL = appendMapsIndoorsImageQueryParameters(this.iconURLToRender, this.iconDisplaySize);
         this.getImageFromUrl(iconURL).then(image => {
             originalIconScale = image.width / 24;
             switch (this.iconBadge.toLowerCase()) {
@@ -133,9 +144,7 @@ export class ListItemLocation {
             }
         }).then(badgedImage => {
             if (badgedImage) {
-                const newLocation = {...this.location};
-                newLocation.properties.imageURL = badgedImage.src;
-                this.location = newLocation;
+                this.iconURLToRender = badgedImage.src;
 
                 // Badged image must be moved so the original image aligns with other.
                 const translateIcon = (badgedImage.width - 24) / -2;
@@ -178,7 +187,7 @@ export class ListItemLocation {
     render(): JSX.Element {
         return this.location && (
             <Host role="listitem" onClick={() => this.locationClickedHandler(this.location)}>
-                {this.location.properties.imageURL ? this.renderIcon() : null}
+                {this.iconURLToRender ? this.renderIcon() : null}
 
                 <div class="details">
                     <p class="details-title">{this.location.properties.name}</p>
@@ -195,8 +204,7 @@ export class ListItemLocation {
      * @returns {JSX.Element}
      */
     renderIcon(): JSX.Element {
-        const iconURL = appendMapsIndoorsImageQueryParameters(this.location.properties.imageURL, this.iconDisplaySize);
-
+        const iconURL = appendMapsIndoorsImageQueryParameters(this.iconURLToRender, this.iconDisplaySize);
         return (
             <div class="img-container">
                 <img {...this.iconAttributes} ref={(el) => this.imageElement = el as HTMLImageElement} src={iconURL} />

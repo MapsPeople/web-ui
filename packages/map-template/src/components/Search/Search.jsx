@@ -1,9 +1,8 @@
 import React from "react";
 import './Search.scss';
-import { useContext, useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { snapPoints } from '../../constants/snapPoints';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
-import { MapsIndoorsContext } from '../../MapsIndoorsContext';
 import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
 import SearchField from '../WebComponentWrappers/Search/Search';
 
@@ -18,9 +17,10 @@ const mapsindoors = window.mapsindoors;
  * @param {[[string, number]]} props.categories - All the unique categories that users can filter through.
  * @param {function} props.onLocationsFiltered - Function that is run when the user performs a filter through any category.
  * @param {function} props.onSetSize - Callback that is fired when the search field takes focus.
+ * @param {string} props.currentVenueName - The currently selected venue.
  * @returns
  */
-function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize }) {
+function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, currentVenueName }) {
 
     /** Referencing the search field */
     const searchFieldRef = useRef();
@@ -37,8 +37,6 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
     const [selectedCategory, setSelectedCategory] = useState();
 
     const scrollableContentSwipePrevent = usePreventSwipe();
-
-    const mapsIndoorsInstance = useContext(MapsIndoorsContext);
 
     /**
      * Get the locations and filter through them based on categories selected.
@@ -62,7 +60,6 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
 
         if (selectedCategory === category) {
             // If the clicked category is the same as currently selected, "deselect" it.
-
             setSearchResults([]);
             setSelectedCategory(null);
 
@@ -98,10 +95,6 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
      * @param {array} locations
      */
     function onResults(locations) {
-        for (const location of locations) {
-            location.properties.imageURL = mapsIndoorsInstance.getDisplayRule(location).icon; // FIXME: Don't set icon as imageURL on referenced locations data.
-        }
-
         setSearchResults(locations);
         onLocationsFiltered(locations);
         setShowNotFoundMessage(locations.length === 0);
@@ -119,6 +112,18 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
 
         onLocationsFiltered([]);
     }
+
+    /*
+     * React on changes in the venue prop.
+     * Deselect category and clear results list.
+     */
+    useEffect(() => {
+        if (selectedCategory) {
+            setSearchResults([]);
+            setSelectedCategory(null);
+        }
+    }, [currentVenueName]);
+
 
     return (
         <div className="search">
