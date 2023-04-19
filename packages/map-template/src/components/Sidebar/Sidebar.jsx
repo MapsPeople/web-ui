@@ -21,19 +21,24 @@ const VIEWS = {
  * @param {function} props.onDirectionsOpened - Check if the directions page state is open.
  * @param {function} props.onDirectionsClosed - Check if the directions page state is closed.
  * @param {string} props.currentVenueName - The currently selected venue.
- *
-*/
-function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed, currentVenueName }) {
+ * @param {string} props.directionsFromLocation - ...
+ * @param {string} props.directionsToLocation - ...
+ */
+function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed, currentVenueName, directionsFromLocation, directionsToLocation }) {
     const [activePage, setActivePage] = useState(null);
 
     const [directions, setDirections] = useState();
 
     /*
-    * React on changes on the current location.
+    * React on changes on the current location and directions locations and set relevant page.
     */
     useEffect(() => {
-        setActivePage(currentLocation ? VIEWS.LOCATION_DETAILS : VIEWS.SEARCH);
-    }, [currentLocation]);
+        if (directionsFromLocation && directionsToLocation) {
+            setActivePage(VIEWS.WAYFINDING)
+        } else {
+            setActivePage(currentLocation ? VIEWS.LOCATION_DETAILS : VIEWS.SEARCH);
+        }
+    }, [currentLocation, directionsFromLocation, directionsToLocation]);
 
     /**
      * Set the active page and trigger the visibility of the floor selector to be shown.
@@ -80,9 +85,10 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
         <Modal isOpen={activePage === VIEWS.WAYFINDING} key="C">
             <Wayfinding
                 onStartDirections={() => setDirectionsPage()}
-                location={currentLocation}
+                location={currentLocation || directionsToLocation}
+                origin={directionsFromLocation}
                 onDirections={result => setDirections(result)}
-                onBack={() => setPage(VIEWS.LOCATION_DETAILS)}
+                onBack={() => setPage(currentLocation ? VIEWS.LOCATION_DETAILS : VIEWS.SEARCH)}
                 isActive={activePage === VIEWS.WAYFINDING}
             />
         </Modal>,

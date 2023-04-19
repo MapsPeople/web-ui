@@ -232,6 +232,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             onLocationsFiltered={(locations) => setFilteredLocations(locations)}
                             onDirectionsOpened={() => directionsOpened()}
                             onDirectionsClosed={() => directionsClosed()}
+                            directionsFromLocation={directionsFromLocation}
+                            directionsToLocation={directionsToLocation}
                         />
                         :
                         <BottomSheet
