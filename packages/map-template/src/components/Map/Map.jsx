@@ -26,10 +26,10 @@ const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
  * @param {function} props.onDirectionsService - Function that is run when a DirectionsService instance is created. The instance will be sent along as first argument.
  * @param {function} props.onVenueChangedOnMap - Function that is run when the map bounds was changed due to fitting to a venue.
  * @param {array} props.filteredLocationIds - Array of IDs of the filtered locations.
- * @param {array} props.filteredLocationsByExternalIds - Array of IDs of the filtered locations.
+ * @param {array} props.filteredLocationsByExternalIDs - Array of IDs of the filtered locations based on external ID.
  * @returns
  */
-function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onMapsIndoorsInstance, onDirectionsService, onVenueChangedOnMap, filteredLocationIds, filteredLocationsByExternalIds }) {
+function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onMapsIndoorsInstance, onDirectionsService, onVenueChangedOnMap, filteredLocationIds, filteredLocationsByExternalIDs }) {
     const [mapType, setMapType] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState(null);
 
@@ -67,11 +67,11 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
         if (mapsIndoorsInstance) {
             if (filteredLocationIds) {
                 mapsIndoorsInstance.filter(filteredLocationIds);
-            } else if (filteredLocationsByExternalIds) {
-                mapsIndoorsInstance.filter(filteredLocationsByExternalIds);
+            } else if (filteredLocationsByExternalIDs) {
+                mapsIndoorsInstance.filter(filteredLocationsByExternalIDs);
             }
         }
-    }, [filteredLocationIds, filteredLocationsByExternalIds, mapsIndoorsInstance]);
+    }, [filteredLocationIds, filteredLocationsByExternalIDs, mapsIndoorsInstance]);
 
     /**
      * Set the venue to show on the map.

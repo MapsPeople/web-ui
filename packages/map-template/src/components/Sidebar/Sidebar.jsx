@@ -4,7 +4,7 @@ import LocationDetails from "../LocationDetails/LocationDetails";
 import Wayfinding from '../Wayfinding/Wayfinding';
 import Directions from '../Directions/Directions';
 import Search from '../Search/Search';
-import ExternalIds from '../ExternalIds/ExternalIds';
+import ExternalIDs from '../ExternalIDs/ExternalIDs';
 
 const VIEWS = {
     SEARCH: 0,
@@ -23,25 +23,25 @@ const VIEWS = {
  * @param {function} props.onDirectionsOpened - Check if the directions page state is open.
  * @param {function} props.onDirectionsClosed - Check if the directions page state is closed.
  * @param {string} props.currentVenueName - The currently selected venue.
- * @param {array} props.filteredLocationsByExternalIds - Array of locations filtered based on the external id.
- * @param {function} props.onLocationsFilteredByExternalIds - The list of locations after filtering through the categories.
+ * @param {array} props.filteredLocationsByExternalIDs - Array of locations filtered based on the external ID.
+ * @param {function} props.onLocationsFilteredByExternalIDs - The list of locations after filtering based on external ID.
  *
 */
-function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed, currentVenueName, filteredLocationsByExternalIds, onLocationsFilteredByExternalIds }) {
+function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed, currentVenueName, filteredLocationsByExternalIDs, onLocationsFilteredByExternalIDs }) {
     const [activePage, setActivePage] = useState(null);
 
     const [directions, setDirections] = useState();
 
     /*
-     * React on changes on the current location.
+     * React on changes on the current location and the locations filtered by external ID.
      */
     useEffect(() => {
-        if (filteredLocationsByExternalIds?.length > 0) {
+        if (filteredLocationsByExternalIDs?.length > 0) {
             setActivePage(currentLocation ? VIEWS.LOCATION_DETAILS : VIEWS.EXTERNALIDS);
         } else {
             setActivePage(currentLocation ? VIEWS.LOCATION_DETAILS : VIEWS.SEARCH);
         }
-    }, [currentLocation, filteredLocationsByExternalIds]);
+    }, [currentLocation, filteredLocationsByExternalIDs]);
 
     /**
      * Set the active page and trigger the visibility of the floor selector to be shown.
@@ -79,11 +79,11 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
             />
         </Modal>,
         <Modal isOpen={activePage === VIEWS.EXTERNALIDS} key="B">
-            <ExternalIds
+            <ExternalIDs
                 onBack={() => setPage(VIEWS.SEARCH)}
-                filteredLocationsByExternalIds={filteredLocationsByExternalIds}
+                filteredLocationsByExternalIDs={filteredLocationsByExternalIDs}
                 onLocationClick={(location) => setCurrentLocation(location)}
-                onLocationsFilteredByExternalIds={(locations) => onLocationsFilteredByExternalIds(locations)}
+                onLocationsFilteredByExternalIDs={(locations) => onLocationsFilteredByExternalIDs(locations)}
             />
         </Modal>,
         <Modal isOpen={activePage === VIEWS.LOCATION_DETAILS} key="C">

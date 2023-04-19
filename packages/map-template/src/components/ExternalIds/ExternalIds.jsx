@@ -1,40 +1,40 @@
 import React from "react";
-import './ExternalIds.scss';
+import './ExternalIDs.scss';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import ListItemLocation from "../WebComponentWrappers/ListItemLocation/ListItemLocation";
 
 /**
- * Show list of locations filtered based on external ids.
+ * Show list of locations filtered based on external IDs.
  *
  * @param {Object} props
  * @param {function} props.onLocationClick - Function that is run when a location is clicked.
  * @param {function} props.onBack - Function that is run when the user navigates to the previous page.
- * @param {array} props.filteredLocationsByExternalIds - Array of locations filtered based on the external id.
- * @param {function} props.onLocationsFilteredByExternalIds - Function that handles the filtered locations by external id on the map.
+ * @param {array} props.filteredLocationsByExternalIDs - Array of locations filtered based on the external ID.
+ * @param {function} props.onLocationsFilteredByExternalIDs - Function that handles the filtered locations by external ID on the map.
  *
  */
 
-function ExternalIds({ onBack, onLocationClick, filteredLocationsByExternalIds, onLocationsFilteredByExternalIds }) {
+function ExternalIDs({ onBack, onLocationClick, filteredLocationsByExternalIDs, onLocationsFilteredByExternalIDs }) {
 
     /**
-     * Close the external id page and navigate to the search.
-     * Clear the filtered locations by external id on the map.
+     * Close the external ID page and navigate to the search.
+     * Clear the filtered locations by external ID on the map.
      */
     function back() {
         onBack();
-        onLocationsFilteredByExternalIds([]);
+        onLocationsFilteredByExternalIDs([]);
     }
 
     return (
-        <div className="externalIds">
-            <div className="externalIds__header">
-                <div className="externalIds__title">{filteredLocationsByExternalIds?.length} Locations</div>
-                <button className="externalIds__close" onClick={() => back()} aria-label="Close">
+        <div className="externalIDs">
+            <div className="externalIDs__header">
+                <div className="externalIDs__title">{filteredLocationsByExternalIDs?.length} Locations</div>
+                <button className="externalIDs__close" onClick={() => back()} aria-label="Close">
                     <CloseIcon />
                 </button>
             </div>
-            <div className="externalIds__list">
-                {filteredLocationsByExternalIds?.map(location =>
+            <div className="externalIDs__list">
+                {filteredLocationsByExternalIDs?.map(location =>
                     <ListItemLocation
                         key={location.id}
                         location={location}
@@ -46,4 +46,4 @@ function ExternalIds({ onBack, onLocationClick, filteredLocationsByExternalIds, 
     )
 }
 
-export default ExternalIds;
+export default ExternalIDs;
