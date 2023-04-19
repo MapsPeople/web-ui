@@ -122,6 +122,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             const keys = Object.keys(location.properties.categories);
 
             for (const key of keys) {
+                // Get the categories from the App Config and find the ones with a matching key.
                 const appConfigCategories = appConfigResult?.menuInfo.mainmenu;
                 const appConfigCategory = appConfigCategories.find(category => category.categoryKey === key);
 
