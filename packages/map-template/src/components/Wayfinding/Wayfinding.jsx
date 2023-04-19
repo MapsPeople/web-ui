@@ -200,13 +200,13 @@ function Wayfinding({ onStartDirections, onBack, to, from, onSetSize, isActive, 
 
     useEffect(() => {
         setSize(snapPoints.MAX);
-        // If there is a location, use that as the 'to' field.
+        // If there is a "to" location, use that as the "to" field.
         if (to) {
             toFieldRef.current.setDisplayText(to.properties.name);
             setDestinationLocation(to);
         }
 
-        // If there is an from location, use that as the 'from' field.
+        // If there is an "from" location, use that as the 'from' field. Otherwise trigger focus on search field.
         if (from) {
             fromFieldRef.current.setDisplayText(from.properties.name);
             setOriginLocation(from);
