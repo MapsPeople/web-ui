@@ -142,6 +142,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
 
         fromFieldRef.current.setDisplayText(myPositionLocation.properties.name);
         setOriginLocation(myPositionLocation);
+        setHasFoundRoute(true);
     }
 
     /**
