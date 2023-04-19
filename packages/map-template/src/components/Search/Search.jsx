@@ -95,9 +95,11 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, c
      * @param {array} locations
      */
     function onResults(locations) {
+        console.log(locations);
         setSearchResults(locations);
         onLocationsFiltered(locations);
         setShowNotFoundMessage(locations.length === 0);
+
     }
 
     /**
@@ -130,6 +132,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, c
             <SearchField
                 ref={searchFieldRef}
                 mapsindoors={true}
+                google={true}
                 placeholder="Search by name, category, building..."
                 results={locations => onResults(locations)}
                 clicked={() => setSize(snapPoints.MAX)}
