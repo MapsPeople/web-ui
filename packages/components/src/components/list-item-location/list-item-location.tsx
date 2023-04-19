@@ -80,7 +80,7 @@ export class ListItemLocation {
     }
 
     componentWillLoad(): void {
-        this.iconURLToRender = this.icon ? this.icon : this.location.properties.imageURL;
+        this.iconURLToRender = this.icon ? this.icon : this.location?.properties.imageURL;
         this.updateBadge();
     }
 
