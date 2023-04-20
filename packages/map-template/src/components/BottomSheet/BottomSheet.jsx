@@ -11,7 +11,7 @@ import LocationsList from '../LocationsList/LocationsList';
 
 const BOTTOM_SHEETS = {
     SEARCH: 0,
-    EXTERNALIDS: 1,
+    LOCATIONS_LIST: 1,
     LOCATION_DETAILS: 2,
     WAYFINDING: 3,
     DIRECTIONS: 4
@@ -48,7 +48,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
      */
     useEffect(() => {
         if (filteredLocationsByExternalIDs?.length > 0) {
-            setActiveBottomSheet(currentLocation ? BOTTOM_SHEETS.LOCATION_DETAILS : BOTTOM_SHEETS.EXTERNALIDS);
+            setActiveBottomSheet(currentLocation ? BOTTOM_SHEETS.LOCATION_DETAILS : BOTTOM_SHEETS.LOCATIONS_LIST);
         } else {
             setActiveBottomSheet(currentLocation ? BOTTOM_SHEETS.LOCATION_DETAILS : BOTTOM_SHEETS.SEARCH);
         }
@@ -78,6 +78,30 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
     function setSearchBottomSheet() {
         setBottomSheet(BOTTOM_SHEETS.SEARCH);
         setCurrentLocation();
+        onLocationsFilteredByExternalIDs([])
+    }
+
+
+    /**
+   * Close the location details page and navigate to either the Locations list page or the Search page.
+   */
+    function closeLocationDetails() {
+        if (filteredLocationsByExternalIDs?.length > 0) {
+            setBottomSheet(BOTTOM_SHEETS.LOCATIONS_LIST);
+            setCurrentLocation();
+        } else {
+            setBottomSheet(BOTTOM_SHEETS.SEARCH);
+            setCurrentLocation();
+        }
+    }
+
+    /**
+     * Close the Locations list page and navigate to the Search page, resetting the filtered locations.
+     */
+    function closeLocationsList() {
+        setBottomSheet(BOTTOM_SHEETS.SEARCH);
+        setCurrentLocation();
+        onLocationsFilteredByExternalIDs([]);
     }
 
     const bottomSheets = [
@@ -96,13 +120,13 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
         </Sheet>,
         <Sheet
             minHeight="165"
-            isOpen={activeBottomSheet === BOTTOM_SHEETS.EXTERNALIDS}
+            isOpen={activeBottomSheet === BOTTOM_SHEETS.LOCATIONS_LIST}
             key="B">
             <LocationsList
-                onBack={() => setBottomSheet(BOTTOM_SHEETS.SEARCH)}
-                filteredLocationsByExternalIDs={filteredLocationsByExternalIDs}
+                onBack={() => closeLocationsList()}
+                locations={filteredLocationsByExternalIDs}
                 onLocationClick={(location) => setCurrentLocation(location)}
-                onLocationsFilteredByExternalIDs={(locations) => onLocationsFilteredByExternalIDs(locations)}
+                onLocationsFiltered={(locations) => onLocationsFilteredByExternalIDs(locations)}
             />
         </Sheet>,
         <Sheet
@@ -115,7 +139,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
                 onSetSize={size => setLocationDetailsSheetSize(size)}
                 onStartWayfinding={() => setBottomSheet(BOTTOM_SHEETS.WAYFINDING)}
                 location={currentLocation}
-                onBack={() => setSearchBottomSheet()}
+                onBack={() => closeLocationDetails()}
                 snapPointSwiped={locationDetailsSheetSwiped}
             />
         </Sheet>,

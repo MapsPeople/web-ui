@@ -8,7 +8,7 @@ import LocationsList from '../LocationsList/LocationsList';
 
 const VIEWS = {
     SEARCH: 0,
-    EXTERNALIDS: 1,
+    LOCATIONS_LIST: 1,
     LOCATION_DETAILS: 2,
     WAYFINDING: 3,
     DIRECTIONS: 4
@@ -37,7 +37,7 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
      */
     useEffect(() => {
         if (filteredLocationsByExternalIDs?.length > 0) {
-            setActivePage(currentLocation ? VIEWS.LOCATION_DETAILS : VIEWS.EXTERNALIDS);
+            setActivePage(currentLocation ? VIEWS.LOCATION_DETAILS : VIEWS.LOCATIONS_LIST);
         } else {
             setActivePage(currentLocation ? VIEWS.LOCATION_DETAILS : VIEWS.SEARCH);
         }
@@ -62,11 +62,25 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
     }
 
     /**
-     * Navigate to the search page and reset the location that has been previously selected.
+     * Close the location details page and navigate to either the Locations list page or the Search page.
      */
-    function setSearchPage() {
+    function closeLocationDetails() {
+        if (filteredLocationsByExternalIDs?.length > 0) {
+            setActivePage(VIEWS.LOCATIONS_LIST);
+            setCurrentLocation();
+        } else {
+            setActivePage(VIEWS.SEARCH);
+            setCurrentLocation();
+        }
+    }
+
+    /**
+     * Close the Locations list page and navigate to the Search page, resetting the filtered locations.
+     */
+    function closeLocationsList() {
         setActivePage(VIEWS.SEARCH);
         setCurrentLocation();
+        onLocationsFilteredByExternalIDs([]);
     }
 
     const pages = [
@@ -78,19 +92,19 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
                 currentVenueName={currentVenueName}
             />
         </Modal>,
-        <Modal isOpen={activePage === VIEWS.EXTERNALIDS} key="B">
+        <Modal isOpen={activePage === VIEWS.LOCATIONS_LIST} key="B">
             <LocationsList
-                onBack={() => setPage(VIEWS.SEARCH)}
-                filteredLocationsByExternalIDs={filteredLocationsByExternalIDs}
+                onBack={() => closeLocationsList()}
+                locations={filteredLocationsByExternalIDs}
                 onLocationClick={(location) => setCurrentLocation(location)}
-                onLocationsFilteredByExternalIDs={(locations) => onLocationsFilteredByExternalIDs(locations)}
+                onLocationsFiltered={(locations) => onLocationsFilteredByExternalIDs(locations)}
             />
         </Modal>,
         <Modal isOpen={activePage === VIEWS.LOCATION_DETAILS} key="C">
             <LocationDetails
                 onStartWayfinding={() => setPage(VIEWS.WAYFINDING)}
                 location={currentLocation}
-                onBack={() => setSearchPage()}
+                onBack={() => closeLocationDetails()}
             />
         </Modal>,
         <Modal isOpen={activePage === VIEWS.WAYFINDING} key="D">

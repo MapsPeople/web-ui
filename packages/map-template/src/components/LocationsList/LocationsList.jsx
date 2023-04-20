@@ -9,31 +9,20 @@ import ListItemLocation from "../WebComponentWrappers/ListItemLocation/ListItemL
  * @param {Object} props
  * @param {function} props.onLocationClick - Function that is run when a location is clicked.
  * @param {function} props.onBack - Function that is run when the user navigates to the previous page.
- * @param {array} props.filteredLocationsByExternalIDs - Array of locations filtered based on the external ID.
- * @param {function} props.onLocationsFilteredByExternalIDs - Function that handles the filtered locations by external ID on the map.
+ * @param {array} props.locations - Array of locations to be shown on the list.
  *
  */
-function LocationsList({ onBack, onLocationClick, filteredLocationsByExternalIDs, onLocationsFilteredByExternalIDs }) {
-
-    /**
-     * Close the external ID page and navigate to the search.
-     * Clear the filtered locations by external ID on the map.
-     */
-    function back() {
-        onBack();
-        onLocationsFilteredByExternalIDs([]);
-    }
-
+function LocationsList({ onBack, onLocationClick, locations }) {
     return (
         <div className="locations-list">
             <div className="locations-list__header">
-                <div className="locations-list__title">{filteredLocationsByExternalIDs?.length} Locations</div>
-                <button className="locations-list__close" onClick={() => back()} aria-label="Close">
+                <div className="locations-list__title">{locations?.length} Locations</div>
+                <button className="locations-list__close" onClick={() => onBack()} aria-label="Close">
                     <CloseIcon />
                 </button>
             </div>
             <div className="locations-list__list">
-                {filteredLocationsByExternalIDs?.map(location =>
+                {locations?.map(location =>
                     <ListItemLocation
                         key={location.id}
                         location={location}
