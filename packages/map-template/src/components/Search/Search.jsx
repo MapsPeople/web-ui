@@ -132,7 +132,6 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, c
             <SearchField
                 ref={searchFieldRef}
                 mapsindoors={true}
-                google={true}
                 placeholder="Search by name, category, building..."
                 results={locations => onResults(locations)}
                 clicked={() => setSize(snapPoints.MAX)}

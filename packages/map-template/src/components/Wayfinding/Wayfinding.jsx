@@ -264,6 +264,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                         <SearchField
                             ref={toFieldRef}
                             mapsindoors={true}
+                            google={true}
                             placeholder="Search by name, category, building..."
                             results={locations => searchResultsReceived(locations, searchFieldIdentifiers.TO)}
                             clicked={() => onSearchClicked(searchFieldIdentifiers.TO)}
@@ -280,6 +281,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                         <SearchField
                             ref={fromFieldRef}
                             mapsindoors={true}
+                            google={true}
                             placeholder="Search by name, category, buildings..."
                             results={locations => searchResultsReceived(locations, searchFieldIdentifiers.FROM)}
                             clicked={() => onSearchClicked(searchFieldIdentifiers.FROM)}
