@@ -46,6 +46,15 @@ function Directions({ isOpen, onBack, directions }) {
         }
     }, [isOpen, directions, mapsIndoorsInstance]);
 
+    /*
+     * Make sure directions stop rendering on the map when the Directions view is not active anymore.
+     */
+    useEffect(() => {
+        if (!isOpen && directionsRenderer) {
+            stopRendering();
+        }
+    }, [isOpen]);
+
     /**
      * Transform the steps in legs to a flat array of steps.
      */
@@ -104,10 +113,18 @@ function Directions({ isOpen, onBack, directions }) {
     }
 
     /**
-     * Close the directions and set the visibility of the blue route to false.
+     * Stop rendering directions on the map.
+     */
+    function stopRendering() {
+        directionsRenderer.setRoute(null);
+        directionsRenderer = null;
+    }
+
+    /**
+     * Close the directions.
      */
     function onDirectionsClosed() {
-        directionsRenderer.setRoute(null);
+        stopRendering();
         onBack();
     }
 
