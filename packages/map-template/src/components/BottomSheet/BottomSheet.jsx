@@ -11,7 +11,7 @@ import LocationsList from '../LocationsList/LocationsList';
 
 const BOTTOM_SHEETS = {
     SEARCH: 0,
-    LOCATIONS_LIST: 1,
+    EXTERNALIDS: 1,
     LOCATION_DETAILS: 2,
     WAYFINDING: 3,
     DIRECTIONS: 4
@@ -48,7 +48,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
      */
     useEffect(() => {
         if (filteredLocationsByExternalIDs?.length > 0) {
-            setActiveBottomSheet(currentLocation ? BOTTOM_SHEETS.LOCATION_DETAILS : BOTTOM_SHEETS.LOCATIONS_LIST);
+            setActiveBottomSheet(currentLocation ? BOTTOM_SHEETS.LOCATION_DETAILS : BOTTOM_SHEETS.EXTERNALIDS);
         } else {
             setActiveBottomSheet(currentLocation ? BOTTOM_SHEETS.LOCATION_DETAILS : BOTTOM_SHEETS.SEARCH);
         }
@@ -87,7 +87,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
    */
     function closeLocationDetails() {
         if (filteredLocationsByExternalIDs?.length > 0) {
-            setBottomSheet(BOTTOM_SHEETS.LOCATIONS_LIST);
+            setBottomSheet(BOTTOM_SHEETS.EXTERNALIDS);
             setCurrentLocation();
         } else {
             setBottomSheet(BOTTOM_SHEETS.SEARCH);
@@ -120,7 +120,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
         </Sheet>,
         <Sheet
             minHeight="165"
-            isOpen={activeBottomSheet === BOTTOM_SHEETS.LOCATIONS_LIST}
+            isOpen={activeBottomSheet === BOTTOM_SHEETS.EXTERNALIDS}
             key="B">
             <LocationsList
                 onBack={() => closeLocationsList()}

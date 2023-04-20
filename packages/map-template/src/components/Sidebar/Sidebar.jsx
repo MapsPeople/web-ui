@@ -8,7 +8,7 @@ import LocationsList from '../LocationsList/LocationsList';
 
 const VIEWS = {
     SEARCH: 0,
-    LOCATIONS_LIST: 1,
+    EXTERNALIDS: 1,
     LOCATION_DETAILS: 2,
     WAYFINDING: 3,
     DIRECTIONS: 4
@@ -37,7 +37,7 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
      */
     useEffect(() => {
         if (filteredLocationsByExternalIDs?.length > 0) {
-            setActivePage(currentLocation ? VIEWS.LOCATION_DETAILS : VIEWS.LOCATIONS_LIST);
+            setActivePage(currentLocation ? VIEWS.LOCATION_DETAILS : VIEWS.EXTERNALIDS);
         } else {
             setActivePage(currentLocation ? VIEWS.LOCATION_DETAILS : VIEWS.SEARCH);
         }
@@ -66,7 +66,7 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
      */
     function closeLocationDetails() {
         if (filteredLocationsByExternalIDs?.length > 0) {
-            setActivePage(VIEWS.LOCATIONS_LIST);
+            setActivePage(VIEWS.EXTERNALIDS);
             setCurrentLocation();
         } else {
             setActivePage(VIEWS.SEARCH);
@@ -92,7 +92,7 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
                 currentVenueName={currentVenueName}
             />
         </Modal>,
-        <Modal isOpen={activePage === VIEWS.LOCATIONS_LIST} key="B">
+        <Modal isOpen={activePage === VIEWS.EXTERNALIDS} key="B">
             <LocationsList
                 onBack={() => closeLocationsList()}
                 locations={filteredLocationsByExternalIDs}
