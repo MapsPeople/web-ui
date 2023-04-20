@@ -59,6 +59,9 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
         if (currentAppView === appStates.LOCATION_DETAILS && currentAppViewPayload && !currentLocation) {
             setCurrentLocation(currentAppViewPayload);
         }
+
+        setHasDirectionsOpen(currentAppView === appStates.DIRECTIONS);
+        _locationsDisabled = currentAppView === appStates.DIRECTIONS;
     }, [currentAppView]);
 
     /**
@@ -69,26 +72,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             setMapReady(true);
         }
         getVenueCategories(currentVenueName);
-    }
-
-    /**
-     * Handle the state where directions are closed.
-     */
-    function directionsClosed() {
-        if (hasDirectionsOpen === true) {
-            setHasDirectionsOpen(false);
-            _locationsDisabled = false;
-        }
-    }
-
-    /**
-     * Handle the state where directions are open.
-     */
-    function directionsOpened() {
-        if (hasDirectionsOpen === false) {
-            setHasDirectionsOpen(true);
-            _locationsDisabled = true;
-        }
     }
 
     /**
@@ -238,8 +221,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             currentCategories={currentCategories}
                             onClose={() => setCurrentLocation(null)}
                             onLocationsFiltered={(locations) => setFilteredLocations(locations)}
-                            onDirectionsOpened={() => directionsOpened()}
-                            onDirectionsClosed={() => directionsClosed()}
                             pushAppView={pushAppView}
                             currentAppView={currentAppView}
                             appViews={appStates}
@@ -251,8 +232,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             setCurrentLocation={setCurrentLocation}
                             currentCategories={currentCategories}
                             onLocationsFiltered={(locations) => setFilteredLocations(locations)}
-                            onDirectionsOpened={() => directionsOpened()}
-                            onDirectionsClosed={() => directionsClosed()}
                             pushAppView={pushAppView}
                             currentAppView={currentAppView}
                             appViews={appStates}
