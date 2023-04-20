@@ -77,7 +77,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
             />
         </Sheet>,
         <Sheet
-            minHeight="228"
+            minHeight="238"
             isOpen={currentAppView === appViews.WAYFINDING}
             preferredSizeSnapPoint={wayfindingSheetSize}
             key="C">
