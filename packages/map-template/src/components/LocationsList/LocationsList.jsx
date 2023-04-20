@@ -25,14 +25,14 @@ function LocationsList({ onBack, onLocationClick, filteredLocationsByExternalIDs
     }
 
     return (
-        <div className="externalIDs">
-            <div className="externalIDs__header">
-                <div className="externalIDs__title">{filteredLocationsByExternalIDs?.length} Locations</div>
-                <button className="externalIDs__close" onClick={() => back()} aria-label="Close">
+        <div className="locations-list">
+            <div className="locations-list__header">
+                <div className="locations-list__title">{filteredLocationsByExternalIDs?.length} Locations</div>
+                <button className="locations-list__close" onClick={() => back()} aria-label="Close">
                     <CloseIcon />
                 </button>
             </div>
-            <div className="externalIDs__list">
+            <div className="locations-list__list">
                 {filteredLocationsByExternalIDs?.map(location =>
                     <ListItemLocation
                         key={location.id}
