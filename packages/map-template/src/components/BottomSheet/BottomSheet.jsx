@@ -14,14 +14,12 @@ import Search from '../Search/Search';
  * @param {Object} props.setCurrentLocation - The setter for the currently selected MapsIndoors Location.
  * @param {Object} props.currentCategories - The unique categories displayed based on the existing locations.
  * @param {function} props.onLocationsFiltered - The list of locations after filtering through the categories.
- * @param {function} props.onDirectionsOpened - Check if the directions page state is open.
- * @param {function} props.onDirectionsClosed - Check if the directions page state is closed.
  * @param {string} props.currentVenueName - The currently selected venue.
  * @param {function} props.pushAppView - Function to push to app view to browser history.
  * @param {string} props.currentAppView - Holds the current view/state of the Map Template.
  * @param {array} props.appViews - Array of all possible views.
  */
-function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed, currentVenueName, pushAppView, currentAppView, appViews}) {
+function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, currentVenueName, pushAppView, currentAppView, appViews}) {
 
     const bottomSheetRef = useRef();
 
@@ -43,28 +41,10 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
     }, [currentLocation]);
 
     /**
-     * Set the active bottom sheet and trigger the visibility of the floor selector to be shown.
-     *
-     * @param {number} bottomSheet
-     */
-    function setBottomSheet(bottomSheet) {
-        pushAppView(bottomSheet);
-        onDirectionsClosed();
-    }
-
-    /**
-     * Navigate to the directions screen and trigger the visibility of the floor selector to be hidden.
-     */
-    function setDirectionsBottomSheet() {
-        pushAppView(appViews.DIRECTIONS);
-        onDirectionsOpened();
-    }
-
-    /**
      * Navigate to the search screen and reset the location that has been previously selected.
      */
     function setSearchBottomSheet() {
-        setBottomSheet(appViews.SEARCH);
+        pushAppView(appViews.SEARCH);
         setCurrentLocation();
     }
 
@@ -90,7 +70,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
             onSwipedToSnapPoint={snapPoint => setLocationDetailsSheetSwiped(snapPoint)}>
             <LocationDetails
                 onSetSize={size => setLocationDetailsSheetSize(size)}
-                onStartWayfinding={() => setBottomSheet(appViews.WAYFINDING)}
+                onStartWayfinding={() => pushAppView(appViews.WAYFINDING)}
                 location={currentLocation}
                 onBack={() => setSearchBottomSheet()}
                 snapPointSwiped={locationDetailsSheetSwiped}
@@ -103,10 +83,10 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
             key="C">
             <Wayfinding
                 onSetSize={size => setWayfindingSheetSize(size)}
-                onStartDirections={() => setDirectionsBottomSheet()}
+                onStartDirections={() => pushAppView(appViews.DIRECTIONS)}
                 location={currentLocation}
                 onDirections={result => setDirections(result)}
-                onBack={() => setBottomSheet(appViews.LOCATION_DETAILS)}
+                onBack={() => pushAppView(appViews.LOCATION_DETAILS)}
                 isActive={currentAppView === appViews.WAYFINDING}
             />
         </Sheet>,
@@ -117,7 +97,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
             <Directions
                 isOpen={currentAppView === appViews.DIRECTIONS}
                 directions={directions}
-                onBack={() => setBottomSheet(appViews.WAYFINDING)}
+                onBack={() => pushAppView(appViews.WAYFINDING)}
                 isActive={currentAppView === appViews.DIRECTIONS}
             />
         </Sheet>
