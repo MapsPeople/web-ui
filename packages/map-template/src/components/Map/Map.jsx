@@ -25,10 +25,11 @@ const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
  * @param {function} props.onMapsIndoorsInstance - Function that is run when a MapsIndoors instance is created. The instance will be sent along as first argument.
  * @param {function} props.onDirectionsService - Function that is run when a DirectionsService instance is created. The instance will be sent along as first argument.
  * @param {function} props.onVenueChangedOnMap - Function that is run when the map bounds was changed due to fitting to a venue.
+ * @param {function} props.onUserPosition - Function that is run when (if) the user position updates. Sends position as payload.
  * @param {array} props.filteredLocationIds - Array of IDs of the filtered locations.
  * @returns
  */
-function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onMapsIndoorsInstance, onDirectionsService, onVenueChangedOnMap, filteredLocationIds }) {
+function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onMapsIndoorsInstance, onDirectionsService, onVenueChangedOnMap, onUserPosition, filteredLocationIds }) {
     const [mapType, setMapType] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState(null);
 
@@ -84,7 +85,7 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
         const miInstance = new mapsindoors.MapsIndoors({
             mapView
         });
-        
+
         // TODO: This overrides the pink building outline color from the SDK. It's added here for demo purposes until the SDK supports Display Rules for Buildings too.
         miInstance.setDisplayRule('MI_BUILDING_OUTLINE', {visible: false});
 
@@ -103,9 +104,22 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
         }
     };
 
+    /**
+     * Listen for changes in user position and update state for it.
+     *
+     * @param {object} positionControl - MapsIndoors PositionControl instance.
+     */
+    const onPositionControl = positionControl => {
+        positionControl.on('position_received', positionInfo => {
+            if (positionInfo.accurate === true) {
+                onUserPosition(positionInfo.position);
+            }
+        });
+    }
+
     return (<>
-        {mapType === MAP_TYPES.GOOGLE && <GoogleMapsMap gmApiKey={gmApiKey} onMapView={onMapView} mapsIndoorsInstance={mapsIndoorsInstance} />}
-        {mapType === MAP_TYPES.MAPBOX && <MapboxMap mapboxAccessToken={mapboxAccessToken} onMapView={onMapView} mapsIndoorsInstance={mapsIndoorsInstance} />}
+        {mapType === MAP_TYPES.GOOGLE && <GoogleMapsMap gmApiKey={gmApiKey} onMapView={onMapView} onPositionControl={onPositionControl} mapsIndoorsInstance={mapsIndoorsInstance} />}
+        {mapType === MAP_TYPES.MAPBOX && <MapboxMap mapboxAccessToken={mapboxAccessToken} onMapView={onMapView} onPositionControl={onPositionControl} mapsIndoorsInstance={mapsIndoorsInstance} />}
     </>)
 }
 
