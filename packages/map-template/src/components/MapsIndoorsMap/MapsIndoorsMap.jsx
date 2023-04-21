@@ -44,6 +44,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const [directionsService, setDirectionsService] = useState();
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
+    const [positionControl, setPositionControl] = useState();
     const [userPosition, setUserPosition] = useState();
 
     const [directionsFromLocation, setDirectionsFromLocation] = useState(null);
@@ -270,6 +271,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             onMapsIndoorsInstance={(instance) => setMapsIndoorsInstance(instance)}
                             onDirectionsService={(instance) => setDirectionsService(instance)}
                             onLocationClick={(location) => locationClicked(location)}
+                            onPositionControl={positionControl => setPositionControl(positionControl)}
                             onUserPosition={position => setUserPosition(position)}
                             filteredLocationIds={filteredLocations?.map(location => location.id)} />
                     </div>
