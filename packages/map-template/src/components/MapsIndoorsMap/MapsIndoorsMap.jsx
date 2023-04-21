@@ -11,6 +11,7 @@ import { DirectionsServiceContext } from '../../DirectionsServiceContext';
 import { UserPositionContext } from '../../UserPositionContext';
 import useMediaQuery from '../../hooks/useMediaQuery';
 import Sidebar from '../Sidebar/Sidebar';
+import useLocationForWayfinding from '../../hooks/useLocationForWayfinding';
 
 const mapsindoors = window.mapsindoors;
 
@@ -47,7 +48,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [positionControl, setPositionControl] = useState();
     const [userPosition, setUserPosition] = useState();
 
-    const [directionsFromLocation, setDirectionsFromLocation] = useState(null);
+    const directionsFromLocation = useLocationForWayfinding(directionsFrom, userPosition, positionControl);
     const [directionsToLocation, setDirectionsToLocation] = useState(null);
 
     // The filtered locations that the user sets when selecting a category/location.
@@ -180,10 +181,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
      */
     useEffect(() => {
         if (directionsFrom && directionsTo) {
-            mapsindoors.services.LocationsService.getLocation(directionsFrom).then(location => setDirectionsFromLocation(location));
             mapsindoors.services.LocationsService.getLocation(directionsTo).then(location => setDirectionsToLocation(location));
         } else {
-            setDirectionsFromLocation(null);
             setDirectionsToLocation(null);
         }
     }, [directionsFrom, directionsTo]);
