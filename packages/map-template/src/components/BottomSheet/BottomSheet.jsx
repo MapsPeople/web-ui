@@ -8,29 +8,22 @@ import Wayfinding from '../Wayfinding/Wayfinding';
 import Directions from '../Directions/Directions';
 import Search from '../Search/Search';
 
-const BOTTOM_SHEETS = {
-    SEARCH: 0,
-    LOCATION_DETAILS: 1,
-    WAYFINDING: 2,
-    DIRECTIONS: 3
-};
-
 /**
  * @param {Object} props
  * @param {Object} props.currentLocation - The currently selected MapsIndoors Location.
  * @param {Object} props.setCurrentLocation - The setter for the currently selected MapsIndoors Location.
  * @param {Object} props.currentCategories - The unique categories displayed based on the existing locations.
  * @param {function} props.onLocationsFiltered - The list of locations after filtering through the categories.
- * @param {function} props.onDirectionsOpened - Check if the directions page state is open.
- * @param {function} props.onDirectionsClosed - Check if the directions page state is closed.
  * @param {string} props.currentVenueName - The currently selected venue.
  * @param {string} props.directionsFromLocation - Origin Location to be used to instantly show directions.
  * @param {string} props.directionsToLocation - Destination Location to be used to instantly show directions.
+ * @param {function} props.pushAppView - Function to push to app view to browser history.
+ * @param {string} props.currentAppView - Holds the current view/state of the Map Template.
+ * @param {array} props.appViews - Array of all possible views.
  */
-function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed, currentVenueName, directionsFromLocation, directionsToLocation}) {
+function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, currentVenueName, directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews}) {
 
     const bottomSheetRef = useRef();
-    const [activeBottomSheet, setActiveBottomSheet] = useState(null);
 
     const [locationDetailsSheetSize, setLocationDetailsSheetSize] = useState();
     const [locationDetailsSheetSwiped, setLocationDetailsSheetSwiped] = useState();
@@ -44,35 +37,19 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
      */
     useEffect(() => {
         if (directionsFromLocation && directionsToLocation) {
-            setActiveBottomSheet(BOTTOM_SHEETS.WAYFINDING);
+            pushAppView(appViews.WAYFINDING);
+        } else if (currentLocation && currentAppView !== appViews.LOCATION_DETAILS) {
+            pushAppView(appViews.LOCATION_DETAILS, currentLocation);
         } else {
-            setActiveBottomSheet(currentLocation ? BOTTOM_SHEETS.LOCATION_DETAILS : BOTTOM_SHEETS.SEARCH);
+            pushAppView(appViews.SEARCH);
         }
     }, [currentLocation, directionsFromLocation, directionsToLocation]);
-
-    /**
-     * Set the active bottom sheet and trigger the visibility of the floor selector to be shown.
-     *
-     * @param {number} bottomSheet
-     */
-    function setBottomSheet(bottomSheet) {
-        setActiveBottomSheet(bottomSheet);
-        onDirectionsClosed();
-    }
-
-    /**
-     * Navigate to the directions screen and trigger the visibility of the floor selector to be hidden.
-     */
-    function setDirectionsBottomSheet() {
-        setActiveBottomSheet(BOTTOM_SHEETS.DIRECTIONS);
-        onDirectionsOpened();
-    }
 
     /**
      * Navigate to the search screen and reset the location that has been previously selected.
      */
     function setSearchBottomSheet() {
-        setBottomSheet(BOTTOM_SHEETS.SEARCH);
+        pushAppView(appViews.SEARCH);
         setCurrentLocation();
     }
 
@@ -80,7 +57,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
         <Sheet
             minHeight="144"
             preferredSizeSnapPoint={searchSheetSize}
-            isOpen={activeBottomSheet === BOTTOM_SHEETS.SEARCH}
+            isOpen={currentAppView === appViews.SEARCH}
             key="A">
             <Search
                 onSetSize={size => setSearchSheetSize(size)}
@@ -93,12 +70,12 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
         <Sheet
             minHeight="128"
             preferredSizeSnapPoint={locationDetailsSheetSize}
-            isOpen={activeBottomSheet === BOTTOM_SHEETS.LOCATION_DETAILS}
+            isOpen={currentAppView === appViews.LOCATION_DETAILS}
             key="B"
             onSwipedToSnapPoint={snapPoint => setLocationDetailsSheetSwiped(snapPoint)}>
             <LocationDetails
                 onSetSize={size => setLocationDetailsSheetSize(size)}
-                onStartWayfinding={() => setBottomSheet(BOTTOM_SHEETS.WAYFINDING)}
+                onStartWayfinding={() => pushAppView(appViews.WAYFINDING)}
                 location={currentLocation}
                 onBack={() => setSearchBottomSheet()}
                 snapPointSwiped={locationDetailsSheetSwiped}
@@ -106,28 +83,28 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
         </Sheet>,
         <Sheet
             minHeight="238"
-            isOpen={activeBottomSheet === BOTTOM_SHEETS.WAYFINDING}
+            isOpen={currentAppView === appViews.WAYFINDING}
             preferredSizeSnapPoint={wayfindingSheetSize}
             key="C">
             <Wayfinding
                 onSetSize={size => setWayfindingSheetSize(size)}
-                onStartDirections={() => setDirectionsBottomSheet()}
+                onStartDirections={() => pushAppView(appViews.DIRECTIONS)}
                 to={currentLocation || directionsToLocation}
                 from={directionsFromLocation}
                 onDirections={result => setDirections(result)}
-                onBack={() => setBottomSheet(currentLocation ? BOTTOM_SHEETS.LOCATION_DETAILS : BOTTOM_SHEETS.SEARCH)}
-                isActive={activeBottomSheet === BOTTOM_SHEETS.WAYFINDING}
+                onBack={() => pushAppView(currentLocation ? appViews.LOCATION_DETAILS : appViews.SEARCH)}
+                isActive={currentAppView === appViews.WAYFINDING}
             />
         </Sheet>,
         <Sheet
             minHeight="220"
-            isOpen={activeBottomSheet === BOTTOM_SHEETS.DIRECTIONS}
+            isOpen={currentAppView === appViews.DIRECTIONS}
             key="D">
             <Directions
-                isOpen={activeBottomSheet === BOTTOM_SHEETS.DIRECTIONS}
+                isOpen={currentAppView === appViews.DIRECTIONS}
                 directions={directions}
-                onBack={() => setBottomSheet(BOTTOM_SHEETS.WAYFINDING)}
-                isActive={activeBottomSheet === BOTTOM_SHEETS.DIRECTIONS}
+                onBack={() => pushAppView(appViews.WAYFINDING)}
+                isActive={currentAppView === appViews.DIRECTIONS}
             />
         </Sheet>
     ]

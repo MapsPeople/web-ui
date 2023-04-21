@@ -8,6 +8,7 @@ import BottomSheet from '../BottomSheet/BottomSheet';
 import { MapsIndoorsContext } from '../../MapsIndoorsContext';
 import { MapReadyContext } from '../../MapReadyContext';
 import { DirectionsServiceContext } from '../../DirectionsServiceContext';
+import { useAppHistory } from '../../hooks/useAppHistory';
 import { UserPositionContext } from '../../UserPositionContext';
 import useMediaQuery from '../../hooks/useMediaQuery';
 import Sidebar from '../Sidebar/Sidebar';
@@ -45,6 +46,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [directionsService, setDirectionsService] = useState();
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
     const [userPosition, setUserPosition] = useState();
+ 	const [appConfigResult, setAppConfigResult] = useState();
 
     const [directionsFromLocation, setDirectionsFromLocation] = useState(null);
     const [directionsToLocation, setDirectionsToLocation] = useState(null);
@@ -56,6 +58,19 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [initialFilteredLocations, setInitialFilteredLocations] = useState();
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
+    const [pushAppView, goBack, currentAppView, currentAppViewPayload, appStates] = useAppHistory();
+
+    /*
+     * Add Location to history payload to make it possible to re-enter location details with that Location.
+     */
+    useEffect(() => {
+        if (currentAppView === appStates.LOCATION_DETAILS && currentAppViewPayload && !currentLocation) {
+            setCurrentLocation(currentAppViewPayload);
+        }
+
+        setHasDirectionsOpen(currentAppView === appStates.DIRECTIONS);
+        _locationsDisabled = currentAppView === appStates.DIRECTIONS;
+    }, [currentAppView]);
 
     /**
      * When venue is fitted while initializing the data, set map to be ready.
@@ -65,26 +80,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             setMapReady(true);
         }
         getVenueCategories(currentVenueName);
-    }
-
-    /**
-     * Handle the state where directions are closed.
-     */
-    function directionsClosed() {
-        if (hasDirectionsOpen === true) {
-            setHasDirectionsOpen(false);
-            _locationsDisabled = false;
-        }
-    }
-
-    /**
-     * Handle the state where directions are open.
-     */
-    function directionsOpened() {
-        if (hasDirectionsOpen === false) {
-            setHasDirectionsOpen(true);
-            _locationsDisabled = true;
-        }
     }
 
     /**
@@ -123,15 +118,19 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
         let uniqueCategories = new Map();
 
         // Loop through the locations and count the unique locations.
-        // Build an object which contains the key, the count and the display name.
+        // Build an object which contains the key, the count, the display name and an icon.
         for (const location of locationsResult) {
             const keys = Object.keys(location.properties.categories);
+
             for (const key of keys) {
+                // Get the categories from the App Config that have a matching key.
+                const appConfigCategory = appConfigResult?.menuInfo.mainmenu.find(category => category.categoryKey === key);
+
                 if (uniqueCategories.has(key)) {
                     let count = uniqueCategories.get(key).count;
-                    uniqueCategories.set(key, { count: ++count, displayName: location.properties.categories[key] });
+                    uniqueCategories.set(key, { count: ++count, displayName: location.properties.categories[key], iconUrl: appConfigCategory?.iconUrl });
                 } else {
-                    uniqueCategories.set(key, { count: 1, displayName: location.properties.categories[key] });
+                    uniqueCategories.set(key, { count: 1, displayName: location.properties.categories[key], iconUrl: appConfigCategory?.iconUrl });
                 }
             }
         }
@@ -206,6 +205,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                 venue.image = appConfigResult.venueImages[venue.name.toLowerCase()];
                 return venue;
             });
+            setAppConfigResult(appConfigResult);
             setVenues(venuesResult);
         });
     }, [apiKey]);
@@ -232,7 +232,14 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                 <UserPositionContext.Provider value={userPosition}>
                     <div className={`mapsindoors-map ${hasDirectionsOpen ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}`}>
                         {!isMapReady && <SplashScreen logo={logo} primaryColor={primaryColor} />}
-                        {venues.length > 1 && <VenueSelector onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)} venues={venues} currentVenueName={currentVenueName} />}
+                        {venues.length > 1 && <VenueSelector
+                            onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)}
+                            venues={venues}
+                            currentVenueName={currentVenueName}
+                            onOpen={() => pushAppView(appStates.VENUE_SELECTOR)}
+                            onClose={() => goBack()}
+                            active={currentAppView === appStates.VENUE_SELECTOR}
+                        />}
                         {isMapReady && isDesktop
                             ?
                             <Sidebar
@@ -242,10 +249,11 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                                 currentCategories={currentCategories}
                                 onClose={() => setCurrentLocation(null)}
                                 onLocationsFiltered={(locations) => setFilteredLocations(locations)}
-                                onDirectionsOpened={() => directionsOpened()}
-                                onDirectionsClosed={() => directionsClosed()}
                                 directionsFromLocation={directionsFromLocation}
                                 directionsToLocation={directionsToLocation}
+                                pushAppView={pushAppView}
+                                currentAppView={currentAppView}
+                                appViews={appStates}
                             />
                             :
                             <BottomSheet
@@ -254,10 +262,11 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                                 setCurrentLocation={setCurrentLocation}
                                 currentCategories={currentCategories}
                                 onLocationsFiltered={(locations) => setFilteredLocations(locations)}
-                                onDirectionsOpened={() => directionsOpened()}
-                                onDirectionsClosed={() => directionsClosed()}
                                 directionsFromLocation={directionsFromLocation}
                                 directionsToLocation={directionsToLocation}
+                                pushAppView={pushAppView}
+                                currentAppView={currentAppView}
+                                appViews={appStates}
                             />
                         }
                         <MIMap

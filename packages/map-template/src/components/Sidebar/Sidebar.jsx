@@ -5,69 +5,46 @@ import Wayfinding from '../Wayfinding/Wayfinding';
 import Directions from '../Directions/Directions';
 import Search from '../Search/Search';
 
-const VIEWS = {
-    SEARCH: 0,
-    LOCATION_DETAILS: 1,
-    WAYFINDING: 2,
-    DIRECTIONS: 3
-};
-
 /**
  * @param {Object} props
  * @param {Object} props.currentLocation - The currently selected MapsIndoors Location.
  * @param {Object} props.setCurrentLocation - The setter for the currently selected MapsIndoors Location.
  * @param {Object} props.currentCategories - The unique categories displayed based on the existing locations.
  * @param {function} props.onLocationsFiltered - The list of locations after filtering through the categories.
- * @param {function} props.onDirectionsOpened - Check if the directions page state is open.
- * @param {function} props.onDirectionsClosed - Check if the directions page state is closed.
  * @param {string} props.currentVenueName - The currently selected venue.
  * @param {string} props.directionsFromLocation - Origin Location to be used to instantly show directions.
  * @param {string} props.directionsToLocation - Destination Location to be used to instantly show directions.
+ * @param {function} props.pushAppView - Function to push to app view to browser history.
+ * @param {string} props.currentAppView - Holds the current view/state of the Map Template.
+ * @param {array} props.appViews - Array of all possible views.
+ *
  */
-function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed, currentVenueName, directionsFromLocation, directionsToLocation }) {
-    const [activePage, setActivePage] = useState(null);
-
+function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, currentVenueName, directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews }) {
     const [directions, setDirections] = useState();
 
     /*
-    * React on changes on the current location and directions locations and set relevant page.
-    */
+     * React on changes on the current location and directions locations and set relevant bottom sheet.
+     */
     useEffect(() => {
         if (directionsFromLocation && directionsToLocation) {
-            setActivePage(VIEWS.WAYFINDING)
+            pushAppView(appViews.WAYFINDING);
+        } else if (currentLocation && currentAppView !== appViews.LOCATION_DETAILS) {
+            pushAppView(appViews.LOCATION_DETAILS, currentLocation);
         } else {
-            setActivePage(currentLocation ? VIEWS.LOCATION_DETAILS : VIEWS.SEARCH);
+            pushAppView(appViews.SEARCH);
         }
     }, [currentLocation, directionsFromLocation, directionsToLocation]);
-
-    /**
-     * Set the active page and trigger the visibility of the floor selector to be shown.
-     *
-     * @param {number} page
-     */
-    function setPage(page) {
-        setActivePage(page);
-        onDirectionsClosed();
-    }
-
-    /**
-     * Navigate to the directions page and trigger the visibility of the floor selector to be hidden.
-     */
-    function setDirectionsPage() {
-        setActivePage(VIEWS.DIRECTIONS);
-        onDirectionsOpened();
-    }
 
     /**
      * Navigate to the search page and reset the location that has been previously selected.
      */
      function setSearchPage() {
-        setActivePage(VIEWS.SEARCH);
+        pushAppView(appViews.SEARCH);
         setCurrentLocation();
     }
 
     const pages = [
-        <Modal isOpen={activePage === VIEWS.SEARCH} key="A">
+        <Modal isOpen={currentAppView === appViews.SEARCH} key="A">
             <Search
                 onLocationClick={(location) => setCurrentLocation(location)}
                 categories={currentCategories}
@@ -75,28 +52,28 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
                 currentVenueName={currentVenueName}
             />
         </Modal>,
-        <Modal isOpen={activePage === VIEWS.LOCATION_DETAILS} key="B">
+        <Modal isOpen={currentAppView === appViews.LOCATION_DETAILS} key="B">
             <LocationDetails
-                onStartWayfinding={() => setPage(VIEWS.WAYFINDING)}
+                onStartWayfinding={() => pushAppView(appViews.WAYFINDING)}
                 location={currentLocation}
                 onBack={() => setSearchPage()}
             />
         </Modal>,
-        <Modal isOpen={activePage === VIEWS.WAYFINDING} key="C">
+        <Modal isOpen={currentAppView === appViews.WAYFINDING} key="C">
             <Wayfinding
-                onStartDirections={() => setDirectionsPage()}
+                onStartDirections={() => pushAppView(appViews.DIRECTIONS)}
                 to={currentLocation || directionsToLocation}
                 from={directionsFromLocation}
                 onDirections={result => setDirections(result)}
-                onBack={() => setPage(currentLocation ? VIEWS.LOCATION_DETAILS : VIEWS.SEARCH)}
-                isActive={activePage === VIEWS.WAYFINDING}
+                onBack={() => pushAppView(currentLocation ? appViews.LOCATION_DETAILS : appViews.SEARCH)}
+                isActive={currentAppView === appViews.WAYFINDING}
             />
         </Modal>,
-        <Modal isOpen={activePage === VIEWS.DIRECTIONS} key="D">
+        <Modal isOpen={currentAppView === appViews.DIRECTIONS} key="D">
             <Directions
-                isOpen={activePage === VIEWS.DIRECTIONS}
+                isOpen={currentAppView === appViews.DIRECTIONS}
                 directions={directions}
-                onBack={() => setPage(VIEWS.WAYFINDING)}
+                onBack={() => pushAppView(appViews.WAYFINDING)}
             />
         </Modal>
     ]
