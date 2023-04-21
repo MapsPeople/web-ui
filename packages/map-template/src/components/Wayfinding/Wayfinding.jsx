@@ -12,6 +12,7 @@ import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemL
 import SearchField from '../WebComponentWrappers/Search/Search';
 import { snapPoints } from '../../constants/snapPoints';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
+import generateMyPositionLocation from '../../helpers/MyPositionLocation';
 
 const searchFieldIdentifiers = {
     TO: 'TO',
@@ -124,23 +125,11 @@ function Wayfinding({ onStartDirections, onBack, to, from, onSetSize, isActive, 
     /**
      * Set the user's current position as the origin.
      *
-     * This is done by mocking a MapsIndoors Location with the geometry
-     * corresponding to the user's position.
+     * This is done by having a GeoJSON Feature with geometry corresponding to
+     * the user's position.
      */
     function setMyPositionAsOrigin() {
-        const myPositionGeometry = {
-            type: 'Point',
-            coordinates: [userPosition.coords.longitude, userPosition.coords.latitude]
-        };
-        const myPositionLocation = {
-            geometry: myPositionGeometry,
-            properties: {
-                name: 'My Position',
-                anchor: myPositionGeometry,
-            },
-            type: 'Feature'
-        };
-
+        const myPositionLocation = generateMyPositionLocation(userPosition);
         fromFieldRef.current.setDisplayText(myPositionLocation.properties.name);
         setOriginLocation(myPositionLocation);
         setHasFoundRoute(true);
