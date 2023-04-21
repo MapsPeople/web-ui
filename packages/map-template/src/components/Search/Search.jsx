@@ -95,11 +95,9 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, c
      * @param {array} locations
      */
     function onResults(locations) {
-        console.log(locations);
         setSearchResults(locations);
         onLocationsFiltered(locations);
         setShowNotFoundMessage(locations.length === 0);
-
     }
 
     /**

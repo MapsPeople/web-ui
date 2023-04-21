@@ -41,6 +41,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const [directionsService, setDirectionsService] = useState();
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
+    const [selectedMapType, setSelectedMapType] = useState();
 
     // The filtered locations that the user sets when selecting a category/location.
     const [filteredLocations, setFilteredLocations] = useState();
@@ -222,6 +223,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             onLocationsFiltered={(locations) => setFilteredLocations(locations)}
                             onDirectionsOpened={() => directionsOpened()}
                             onDirectionsClosed={() => directionsClosed()}
+                            selectedMapType={selectedMapType}
                         />
                         :
                         <BottomSheet
@@ -232,6 +234,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             onLocationsFiltered={(locations) => setFilteredLocations(locations)}
                             onDirectionsOpened={() => directionsOpened()}
                             onDirectionsClosed={() => directionsClosed()}
+                            selectedMapType={selectedMapType}
                         />
                     }
                     <MIMap
@@ -244,7 +247,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                         onMapsIndoorsInstance={(instance) => setMapsIndoorsInstance(instance)}
                         onDirectionsService={(instance) => setDirectionsService(instance)}
                         onLocationClick={(location) => locationClicked(location)}
-                        filteredLocationIds={filteredLocations?.map(location => location.id)} />
+                        filteredLocationIds={filteredLocations?.map(location => location.id)}
+                        onSelectedMapType={(mapType) => setSelectedMapType(mapType)}/>
                 </div>
             </DirectionsServiceContext.Provider>
         </MapReadyContext.Provider>

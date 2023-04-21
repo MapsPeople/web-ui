@@ -25,9 +25,10 @@ const searchFieldIdentifiers = {
  * @param {function} props.onBack - Function that is run when the user navigates to the previous page.
  * @param {string} props.location - The location that the user selected before starting the wayfinding.
  * @param {function} props.onSetSize - Callback that is fired when the component has loaded.
+ * @param {string} props.selectedMapType - The currently selected map type.
  * @returns
  */
-function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, onDirections }) {
+function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, onDirections, selectedMapType }) {
 
     /** Referencing the accessibility details DOM element */
     const detailsRef = useRef();

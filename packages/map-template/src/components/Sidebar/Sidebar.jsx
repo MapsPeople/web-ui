@@ -21,9 +21,10 @@ const VIEWS = {
  * @param {function} props.onDirectionsOpened - Check if the directions page state is open.
  * @param {function} props.onDirectionsClosed - Check if the directions page state is closed.
  * @param {string} props.currentVenueName - The currently selected venue.
+ * @param {string} props.selectedMapType - The currently selected map type.
  *
 */
-function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed, currentVenueName }) {
+function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, onDirectionsOpened, onDirectionsClosed, currentVenueName, selectedMapType }) {
     const [activePage, setActivePage] = useState(null);
 
     const [directions, setDirections] = useState();
@@ -84,6 +85,7 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
                 onDirections={result => setDirections(result)}
                 onBack={() => setPage(VIEWS.LOCATION_DETAILS)}
                 isActive={activePage === VIEWS.WAYFINDING}
+                selectedMapType={selectedMapType}
             />
         </Modal>,
         <Modal isOpen={activePage === VIEWS.DIRECTIONS} key="D">
