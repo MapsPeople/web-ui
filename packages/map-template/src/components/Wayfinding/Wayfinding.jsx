@@ -65,15 +65,35 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
 
     const scrollableContentSwipePrevent = usePreventSwipe();
 
+    function handleGoogleLocations() {
+        var googleMapsGeocoder = new window.google.maps.Geocoder();
+        console.log('geocoder', googleMapsGeocoder);
+        googleMapsGeocoder.geocode({ 'placeId': location.properties.placeId }, (results) => {
+            if (results.length > 0) {
+                location.geometry = {
+                    type: 'Point',
+                    coordinates: [results[0].geometry.location.lng(), results[0].geometry.location.lat()]
+                };
+            }
+        });
+    }
+
     /**
      * Click event handler function that sets the display text of the input field,
      * and clears out the results list.
      */
     function locationClickHandler(location) {
         if (activeSearchField === searchFieldIdentifiers.TO) {
+            if (selectedMapType === 'google') {
+                handleGoogleLocations();
+            }
             toFieldRef.current.setDisplayText(location.properties.name);
             setDestinationLocation(location);
+
         } else if (activeSearchField === searchFieldIdentifiers.FROM) {
+            if (selectedMapType === 'google') {
+                handleGoogleLocations();
+            }
             fromFieldRef.current.setDisplayText(location.properties.name);
             setOriginLocation(location);
         }
@@ -249,6 +269,14 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
             });
         }
     }, [originLocation, destinationLocation, directionsService, accessibilityOn]);
+
+    useEffect(() => {
+        if (selectedMapType === 'google') {
+            console.log('google');
+        } else {
+            console.log('mapbox')
+        }
+    }, [selectedMapType]);
 
     return (
         <div className="wayfinding">
