@@ -46,6 +46,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [directionsService, setDirectionsService] = useState();
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
     const [userPosition, setUserPosition] = useState();
+ 	const [appConfigResult, setAppConfigResult] = useState();
 
     // The filtered locations by external id, if present.
     const [filteredLocationsByExternalID, setFilteredLocationsByExternalID] = useState();
@@ -117,15 +118,19 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
         let uniqueCategories = new Map();
 
         // Loop through the locations and count the unique locations.
-        // Build an object which contains the key, the count and the display name.
+        // Build an object which contains the key, the count, the display name and an icon.
         for (const location of locationsResult) {
             const keys = Object.keys(location.properties.categories);
+
             for (const key of keys) {
+                // Get the categories from the App Config that have a matching key.
+                const appConfigCategory = appConfigResult?.menuInfo.mainmenu.find(category => category.categoryKey === key);
+
                 if (uniqueCategories.has(key)) {
                     let count = uniqueCategories.get(key).count;
-                    uniqueCategories.set(key, { count: ++count, displayName: location.properties.categories[key] });
+                    uniqueCategories.set(key, { count: ++count, displayName: location.properties.categories[key], iconUrl: appConfigCategory?.iconUrl });
                 } else {
-                    uniqueCategories.set(key, { count: 1, displayName: location.properties.categories[key] });
+                    uniqueCategories.set(key, { count: 1, displayName: location.properties.categories[key], iconUrl: appConfigCategory?.iconUrl });
                 }
             }
         }
@@ -200,6 +205,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                 venue.image = appConfigResult.venueImages[venue.name.toLowerCase()];
                 return venue;
             });
+            setAppConfigResult(appConfigResult);
             setVenues(venuesResult);
         });
         setMapReady(false);
