@@ -65,17 +65,24 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
 
     const scrollableContentSwipePrevent = usePreventSwipe();
 
+    let googleMapsGeocoder;
+
     function handleGoogleLocations(location) {
-        console.log('location',location);
-        var googleMapsGeocoder = new window.google.maps.Geocoder();
-        console.log('geocoder', googleMapsGeocoder);
-        googleMapsGeocoder.geocode({ 'placeId': location.properties.placeId }, (results) => {
-            if (results.length > 0) {
-                location.geometry = {
-                    type: 'Point',
-                    coordinates: [results[0].geometry.location.lng(), results[0].geometry.location.lat()]
-                };
+        return new Promise((resolve) => {
+            if (!googleMapsGeocoder) {
+                googleMapsGeocoder = new window.google.maps.Geocoder();
             }
+            googleMapsGeocoder.geocode({ 'placeId': location.properties.placeId }, (results) => {
+                if (results.length > 0) {
+                    location.geometry = {
+                        type: 'Point',
+                        coordinates: [results[0].geometry.location.lng(), results[0].geometry.location.lat()]
+                    };
+                    resolve();
+                } else {
+                    setHasFoundRoute(false);
+                }
+            });
         });
     }
 
@@ -83,17 +90,17 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      * Click event handler function that sets the display text of the input field,
      * and clears out the results list.
      */
-    function locationClickHandler(location) {
+    async function locationClickHandler(location) {
         if (activeSearchField === searchFieldIdentifiers.TO) {
             if (selectedMapType === 'google') {
-                handleGoogleLocations(location);
+                await handleGoogleLocations(location);
             }
             toFieldRef.current.setDisplayText(location.properties.name);
             setDestinationLocation(location);
 
         } else if (activeSearchField === searchFieldIdentifiers.FROM) {
             if (selectedMapType === 'google') {
-                handleGoogleLocations(location);
+                await handleGoogleLocations(location);
             }
             fromFieldRef.current.setDisplayText(location.properties.name);
             setOriginLocation(location);
@@ -110,7 +117,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      */
     function searchResultsReceived(results, searchFieldIdentifier) {
         setActiveSearchField(searchFieldIdentifier);
-        console.log('results',results);
         if (results.length === 0) {
             setHasSearchResults(false);
         } else {
@@ -136,8 +142,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      * @returns {object}
      */
     function getLocationPoint(location) {
-        console.log('location point', location)
-        const coordinates = location.geometry.type === 'Point' ? location.geometry.coordinates : location.properties.anchor.coordinates;
+        const coordinates = location.geometry.type === 'Point' ? location.geometry.coordinates : location.properties.anchor?.coordinates;
         return { lat: coordinates[1], lng: coordinates[0], floor: location.properties.floor };
     }
 
