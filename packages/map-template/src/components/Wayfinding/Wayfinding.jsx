@@ -68,19 +68,15 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     let googleMapsGeocoder;
 
     function handleGoogleLocations(location) {
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             if (!googleMapsGeocoder) {
                 googleMapsGeocoder = new window.google.maps.Geocoder();
             }
             googleMapsGeocoder.geocode({ 'placeId': location.properties.placeId }, (results) => {
                 if (results.length > 0) {
-                    location.geometry = {
-                        type: 'Point',
-                        coordinates: [results[0].geometry.location.lng(), results[0].geometry.location.lat()]
-                    };
-                    resolve();
+                    resolve(results[0]);
                 } else {
-                    setHasFoundRoute(false);
+                    reject();
                 }
             });
         });
@@ -93,14 +89,32 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     async function locationClickHandler(location) {
         if (activeSearchField === searchFieldIdentifiers.TO) {
             if (selectedMapType === 'google') {
-                await handleGoogleLocations(location);
+                handleGoogleLocations(location)
+                    .then((result) => {
+                        location.geometry = {
+                            type: 'Point',
+                            coordinates: [result.geometry.location.lng(), result.geometry.location.lat()]
+                        };
+                    })
+                    .catch(() => {
+                        setHasFoundRoute(false);
+                    });
             }
             toFieldRef.current.setDisplayText(location.properties.name);
             setDestinationLocation(location);
 
         } else if (activeSearchField === searchFieldIdentifiers.FROM) {
             if (selectedMapType === 'google') {
-                await handleGoogleLocations(location);
+                handleGoogleLocations(location)
+                    .then((result) => {
+                        location.geometry = {
+                            type: 'Point',
+                            coordinates: [result.geometry.location.lng(), result.geometry.location.lat()]
+                        };
+                    })
+                    .catch(() => {
+                        setHasFoundRoute(false);
+                    });
             }
             fromFieldRef.current.setDisplayText(location.properties.name);
             setOriginLocation(location);
