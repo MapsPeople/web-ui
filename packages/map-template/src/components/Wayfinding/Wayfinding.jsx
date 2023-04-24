@@ -65,7 +65,8 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
 
     const scrollableContentSwipePrevent = usePreventSwipe();
 
-    function handleGoogleLocations() {
+    function handleGoogleLocations(location) {
+        console.log('location',location);
         var googleMapsGeocoder = new window.google.maps.Geocoder();
         console.log('geocoder', googleMapsGeocoder);
         googleMapsGeocoder.geocode({ 'placeId': location.properties.placeId }, (results) => {
@@ -85,14 +86,14 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     function locationClickHandler(location) {
         if (activeSearchField === searchFieldIdentifiers.TO) {
             if (selectedMapType === 'google') {
-                handleGoogleLocations();
+                handleGoogleLocations(location);
             }
             toFieldRef.current.setDisplayText(location.properties.name);
             setDestinationLocation(location);
 
         } else if (activeSearchField === searchFieldIdentifiers.FROM) {
             if (selectedMapType === 'google') {
-                handleGoogleLocations();
+                handleGoogleLocations(location);
             }
             fromFieldRef.current.setDisplayText(location.properties.name);
             setOriginLocation(location);
@@ -109,7 +110,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      */
     function searchResultsReceived(results, searchFieldIdentifier) {
         setActiveSearchField(searchFieldIdentifier);
-
+        console.log('results',results);
         if (results.length === 0) {
             setHasSearchResults(false);
         } else {
@@ -135,6 +136,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      * @returns {object}
      */
     function getLocationPoint(location) {
+        console.log('location point', location)
         const coordinates = location.geometry.type === 'Point' ? location.geometry.coordinates : location.properties.anchor.coordinates;
         return { lat: coordinates[1], lng: coordinates[0], floor: location.properties.floor };
     }
