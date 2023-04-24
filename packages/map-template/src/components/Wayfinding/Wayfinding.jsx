@@ -11,6 +11,7 @@ import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemL
 import SearchField from '../WebComponentWrappers/Search/Search';
 import { snapPoints } from '../../constants/snapPoints';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
+import handleGooglePlaces from "../Map/GoogleMapsMap/GooglePlacesHandler";
 
 const searchFieldIdentifiers = {
     TO: 'TO',
@@ -65,22 +66,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
 
     const scrollableContentSwipePrevent = usePreventSwipe();
 
-    let googleMapsGeocoder;
-
-    function handleGoogleLocations(location) {
-        return new Promise((resolve, reject) => {
-            if (!googleMapsGeocoder) {
-                googleMapsGeocoder = new window.google.maps.Geocoder();
-            }
-            googleMapsGeocoder.geocode({ 'placeId': location.properties.placeId }, (results) => {
-                if (results.length > 0) {
-                    resolve(results[0]);
-                } else {
-                    reject();
-                }
-            });
-        });
-    }
+    const [isGoogleMap, setIsGoogleMap] = useState(false);
 
     /**
      * Click event handler function that sets the display text of the input field,
@@ -88,36 +74,41 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      */
     async function locationClickHandler(location) {
         if (activeSearchField === searchFieldIdentifiers.TO) {
-            if (selectedMapType === 'google') {
-                handleGoogleLocations(location)
+            if (selectedMapType === 'google' && location.properties.type === 'google_places') {
+                handleGooglePlaces(location)
                     .then((result) => {
                         location.geometry = {
                             type: 'Point',
                             coordinates: [result.geometry.location.lng(), result.geometry.location.lat()]
                         };
+                        setDestinationLocation(location);
+                        toFieldRef.current.setDisplayText(location.properties.name);
                     })
                     .catch(() => {
                         setHasFoundRoute(false);
                     });
+            } else {
+                setDestinationLocation(location);
+                toFieldRef.current.setDisplayText(location.properties.name);
             }
-            toFieldRef.current.setDisplayText(location.properties.name);
-            setDestinationLocation(location);
-
         } else if (activeSearchField === searchFieldIdentifiers.FROM) {
-            if (selectedMapType === 'google') {
-                handleGoogleLocations(location)
+            if (selectedMapType === 'google' && location.properties.type === 'google_places') {
+                handleGooglePlaces(location)
                     .then((result) => {
                         location.geometry = {
                             type: 'Point',
                             coordinates: [result.geometry.location.lng(), result.geometry.location.lat()]
                         };
+                        fromFieldRef.current.setDisplayText(location.properties.name);
+                        setOriginLocation(location);
                     })
                     .catch(() => {
                         setHasFoundRoute(false);
                     });
+            } else {
+                fromFieldRef.current.setDisplayText(location.properties.name);
+                setOriginLocation(location);
             }
-            fromFieldRef.current.setDisplayText(location.properties.name);
-            setOriginLocation(location);
         }
         setSearchTriggered(false);
         setSearchResults([]);
@@ -293,9 +284,9 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
 
     useEffect(() => {
         if (selectedMapType === 'google') {
-            console.log('google');
+            setIsGoogleMap(true);
         } else {
-            console.log('mapbox')
+            setIsGoogleMap(false);
         }
     }, [selectedMapType]);
 
@@ -314,7 +305,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                         <SearchField
                             ref={toFieldRef}
                             mapsindoors={true}
-                            google={true}
+                            google={isGoogleMap}
                             placeholder="Search by name, category, building..."
                             results={locations => searchResultsReceived(locations, searchFieldIdentifiers.TO)}
                             clicked={() => onSearchClicked(searchFieldIdentifiers.TO)}
@@ -331,7 +322,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                         <SearchField
                             ref={fromFieldRef}
                             mapsindoors={true}
-                            google={true}
+                            google={isGoogleMap}
                             placeholder="Search by name, category, buildings..."
                             results={locations => searchResultsReceived(locations, searchFieldIdentifiers.FROM)}
                             clicked={() => onSearchClicked(searchFieldIdentifiers.FROM)}
