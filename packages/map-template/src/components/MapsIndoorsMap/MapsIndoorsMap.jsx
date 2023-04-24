@@ -51,7 +51,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
  	const [appConfigResult, setAppConfigResult] = useState();
 
     const directionsFromLocation = useLocationForWayfinding(directionsFrom, userPosition, positionControl);
-    const [directionsToLocation, setDirectionsToLocation] = useState(null);
+    const directionsToLocation = useLocationForWayfinding(directionsTo, userPosition, positionControl);
 
     // The filtered locations that the user sets when selecting a category/location.
     const [filteredLocations, setFilteredLocations] = useState();
@@ -173,18 +173,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             });
         }
     }, [locationId]);
-
-    /*
-     * React on changes to the directionsFrom and directionsTo props. When both are set, wayfinding should be shown.
-     * Setting the directionsFromLocation and directionsToLocation make that happen.
-     */
-    useEffect(() => {
-        if (directionsFrom && directionsTo) {
-            mapsindoors.services.LocationsService.getLocation(directionsTo).then(location => setDirectionsToLocation(location));
-        } else {
-            setDirectionsToLocation(null);
-        }
-    }, [directionsFrom, directionsTo]);
 
     /*
      * React on changes in the MapsIndoors API key by fetching the required data.
