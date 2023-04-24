@@ -61,7 +61,7 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
     }, [venueName, venues]); // eslint-disable-line react-hooks/exhaustive-deps
     // We ignore eslint warnings about missing dependencies because mapsIndoorsInstance should never change runtime anyway.
 
-    /**
+    /*
      * Show the filtered locations on the map based on their IDs or external IDs if present.
      */
     useEffect(() => {
