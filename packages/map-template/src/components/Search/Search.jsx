@@ -1,6 +1,6 @@
 import React from "react";
 import './Search.scss';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { snapPoints } from '../../constants/snapPoints';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
@@ -17,9 +17,10 @@ const mapsindoors = window.mapsindoors;
  * @param {[[string, number]]} props.categories - All the unique categories that users can filter through.
  * @param {function} props.onLocationsFiltered - Function that is run when the user performs a filter through any category.
  * @param {function} props.onSetSize - Callback that is fired when the search field takes focus.
+ * @param {string} props.currentVenueName - The currently selected venue.
  * @returns
  */
-function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize }) {
+function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, currentVenueName }) {
 
     /** Referencing the search field */
     const searchFieldRef = useRef();
@@ -59,7 +60,6 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
 
         if (selectedCategory === category) {
             // If the clicked category is the same as currently selected, "deselect" it.
-
             setSearchResults([]);
             setSelectedCategory(null);
 
@@ -113,6 +113,17 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
         onLocationsFiltered([]);
     }
 
+    /*
+     * React on changes in the venue prop.
+     * Deselect category and clear results list.
+     */
+    useEffect(() => {
+        if (selectedCategory) {
+            setSearchResults([]);
+            setSelectedCategory(null);
+        }
+    }, [currentVenueName]);
+
     return (
         <div className="search">
             <SearchField
@@ -128,11 +139,13 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize })
                 <div ref={categoriesListRef} className="search__categories">
                     {categories?.map(([category, categoryInfo]) =>
                         <mi-chip
+                            icon={categoryInfo.iconUrl}
                             content={categoryInfo.displayName}
                             active={selectedCategory === category}
                             onClick={() => categoryClicked(category)}
                             key={category}>
-                        </mi-chip>)
+                        </mi-chip>
+                    )
                     }
                 </div>
                 <div className="search__results">

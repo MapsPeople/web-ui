@@ -11,12 +11,14 @@ const mapsindoors = window.mapsindoors;
  * @param {object} props
  * @param {string} props.mapboxAccessToken - A Mapbox Access Token required for showing the map.
  * @param {function} props.onMapView - A function that is called when the MapView is constructed. Sends the MapView instance and External Directions Provider as payload.
+ * @param {function} props.onPositionControl - A function that is called when the MapsIndoors PositionControl is contructed. Will send the PositionControl instance as payload.
  * @param {object} props.mapsIndoorsInstance - Instance of the mapsindoors.MapsIndoors
  */
-function MapboxMap({ mapboxAccessToken, onMapView, mapsIndoorsInstance }) {
+function MapboxMap({ mapboxAccessToken, onMapView, onPositionControl, mapsIndoorsInstance }) {
 
     const [mapView, setMapView] = useState();
     const [hasFloorSelector, setHasFloorSelector] = useState(false);
+    const [hasPositionControl, setHasPositionControl] = useState(false);
 
     useEffect(() => {
         // Initialize MapboxView MapView
@@ -50,7 +52,20 @@ function MapboxMap({ mapboxAccessToken, onMapView, mapsIndoorsInstance }) {
             }, 'top-right');
             setHasFloorSelector(true);
         }
-    }, [mapsIndoorsInstance, mapView, hasFloorSelector]);
+
+        if (mapsIndoorsInstance && mapView && !hasPositionControl) {
+            const positionControlDiv = document.createElement('div');
+            const positionControl = new mapsindoors.PositionControl(positionControlDiv, { mapsIndoors: mapsIndoorsInstance });
+            mapView.getMap().addControl({
+                onAdd: () => positionControlDiv,
+                onRemove: () => {
+                    positionControlDiv.parentNode.removeChild(positionControlDiv);
+                }
+            }, 'top-right');
+            setHasPositionControl(true);
+            onPositionControl(positionControl);
+        }
+    }, [mapsIndoorsInstance, mapView, hasFloorSelector, hasPositionControl]);
 
     return <div className="map-container" id="map"></div>
 }

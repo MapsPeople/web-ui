@@ -9,7 +9,7 @@ function App() {
                 apiKey="139e36785edf479b9a413721"
                 venue="WEWORK"
                 mapboxAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
-            // gmApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
+                // gmApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
             />
         </div>
     );
