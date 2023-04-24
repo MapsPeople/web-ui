@@ -141,7 +141,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
         setCurrentCategories(uniqueCategories);
     }
 
-    /**
+    /*
      * React on changes in the venue prop.
      */
     useEffect(() => {
