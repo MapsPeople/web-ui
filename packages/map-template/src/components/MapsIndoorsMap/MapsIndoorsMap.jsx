@@ -159,7 +159,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     }, [appUserRoles]);
 
 
-    /**
+    /*
      * React on changes in the externalIDs prop.
      * Get the locations by external IDs, if present.
      */
