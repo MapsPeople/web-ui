@@ -12,6 +12,7 @@ export default function generateMyPositionLocation(userPosition) {
     };
 
     return {
+        id: 'USER_POSITION',
         geometry: geometry,
         properties: {
             name: 'My Position',
