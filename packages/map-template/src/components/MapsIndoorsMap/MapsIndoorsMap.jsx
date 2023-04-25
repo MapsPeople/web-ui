@@ -33,8 +33,8 @@ let _locationsDisabled;
  * @param {string} [props.primaryColor] - If you want the splash screen to have a custom primary color, provide the value here.
  * @param {string} [props.logo] - If you want the splash screen to have a custom logo, provide the image path or address here.
  * @param {array} [props.appUserRoles] - If you want the map to behave differently for specific users, set one or more app user roles here.
- * @param {string} [props.directionsFrom] - If you want to show directions instantly, provide a MapsIndoors Location ID here to be used as the origin. Must be used together with directionsTo.
- * @param {string} [props.directionsTo] - If you want to show directions instantly, provide a MapsIndoors Location ID here to be used as the destination. Must be used together with directionsFrom.
+ * @param {string} [props.directionsFrom] - Set a MapsIndoors Location ID or the string "USER_POSITION" to be used as origin when showing directions. To instantly show directions, use it together with "directionsTo".
+ * @param {string} [props.directionsTo] - Set a MapsIndoors Location ID or the string "USER_POSITION" to be used as destination when showing directions. To instantly show directions, use it together with "directionsFrom".
  */
 function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo }) {
 
