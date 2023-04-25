@@ -782,6 +782,10 @@ export namespace Components {
          */
         "dataAttributes": { [key: string]: string };
         /**
+          * Make the search field disabled
+         */
+        "disabled": boolean;
+        /**
           * Set focus on the input field. The preventScroll boolean is passed as true to prevent the browser from scrolling the document to bring the newly-focused element into view.
          */
         "focusInput": () => Promise<void>;
@@ -2010,6 +2014,10 @@ declare namespace LocalJSX {
           * Data attributes for the input field.
          */
         "dataAttributes"?: { [key: string]: string };
+        /**
+          * Make the search field disabled
+         */
+        "disabled"?: boolean;
         /**
           * Restrict Google Places search to a specific country (two-character, ISO 3166-1 Alpha-2 compatible country code)
          */
