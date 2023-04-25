@@ -32,6 +32,8 @@ const searchFieldIdentifiers = {
  */
 function Wayfinding({ onStartDirections, onBack, to, from, onSetSize, isActive, onDirections }) {
 
+    const wayfindingRef = useRef();
+
     /** Referencing the accessibility details DOM element */
     const detailsRef = useRef();
 
@@ -233,11 +235,22 @@ function Wayfinding({ onStartDirections, onBack, to, from, onSetSize, isActive, 
 
     useEffect(() => {
         if (isActive && !fromFieldRef.current?.getValue()) {
+            // Set focus on the from field.
+            // But wait for any bottom sheet transition to end before doing that to avoid content jumping when virtual keyboard appears.
+            const sheet = wayfindingRef.current.closest('.sheet');
+            if (sheet) {
+                sheet.addEventListener('transitionend', () => {
+                    if (from !== 'USER_POSITION_PENDING' && to.id !== 'USER_POSITION') {
+                        fromFieldRef.current.focusInput();
+                    }
+                }, { once: true });
+            } else if (from !== 'USER_POSITION_PENDING' && to.id !== 'USER_POSITION') {
+                fromFieldRef.current.focusInput();
+            }
+
             if (userPosition && to.id !== 'USER_POSITION') {
                 // If the user's position is known, use that as Origin.
                 setMyPositionAsOrigin();
-            } else if (from !== 'USER_POSITION_PENDING' && to.id !== 'USER_POSITION') {
-                fromFieldRef.current.focusInput();
             }
         }
     }, [isActive]);
@@ -278,7 +291,7 @@ function Wayfinding({ onStartDirections, onBack, to, from, onSetSize, isActive, 
     }, [originLocation, destinationLocation, directionsService, accessibilityOn]);
 
     return (
-        <div className="wayfinding">
+        <div className="wayfinding" ref={wayfindingRef}>
             <div className="wayfinding__directions">
                 <div className="wayfinding__title">Start wayfinding</div>
                 <button className="wayfinding__close"
