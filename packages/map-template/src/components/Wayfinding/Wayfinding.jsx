@@ -12,6 +12,7 @@ import SearchField from '../WebComponentWrappers/Search/Search';
 import { snapPoints } from '../../constants/snapPoints';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import handleGooglePlaces from "../Map/GoogleMapsMap/GooglePlacesHandler";
+import GooglePlaces from '../../assets/google-places.png';
 
 const searchFieldIdentifiers = {
     TO: 'TO',
@@ -66,7 +67,9 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
 
     const scrollableContentSwipePrevent = usePreventSwipe();
 
-    const [isGoogleMap, setIsGoogleMap] = useState(false);
+    const [isGoogleMap, setIsGoogleMap] = useState();
+
+    const [hasGooglePlaces, setHasGooglePlaces] = useState(false);
 
     /**
      * Click event handler function that sets the display text of the input field,
@@ -82,6 +85,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                             coordinates: [result.geometry.location.lng(), result.geometry.location.lat()]
                         };
                         setDestinationLocation(location);
+                        setHasGooglePlaces(false);
                         toFieldRef.current.setDisplayText(location.properties.name);
                     })
                     .catch(() => {
@@ -89,6 +93,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                     });
             } else {
                 setDestinationLocation(location);
+                setHasGooglePlaces(false);
                 toFieldRef.current.setDisplayText(location.properties.name);
             }
         } else if (activeSearchField === searchFieldIdentifiers.FROM) {
@@ -99,15 +104,17 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                             type: 'Point',
                             coordinates: [result.geometry.location.lng(), result.geometry.location.lat()]
                         };
-                        fromFieldRef.current.setDisplayText(location.properties.name);
                         setOriginLocation(location);
+                        setHasGooglePlaces(false);
+                        fromFieldRef.current.setDisplayText(location.properties.name);
                     })
                     .catch(() => {
                         setHasFoundRoute(false);
                     });
             } else {
-                fromFieldRef.current.setDisplayText(location.properties.name);
                 setOriginLocation(location);
+                setHasGooglePlaces(false);
+                fromFieldRef.current.setDisplayText(location.properties.name);
             }
         }
         setSearchTriggered(false);
@@ -124,9 +131,13 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
         setActiveSearchField(searchFieldIdentifier);
         if (results.length === 0) {
             setHasSearchResults(false);
+            setHasGooglePlaces(false);
         } else {
             setHasSearchResults(true);
             setSearchResults(results);
+            if (results.find(result => result.properties.type === 'google_places')) {
+                setHasGooglePlaces(true);
+            }
         }
     }
 
@@ -161,6 +172,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
         triggerSearch(searchFieldIdentifier);
         setHasError(false);
         setHasFoundRoute(true);
+        setHasGooglePlaces(false);
     }
 
     /**
@@ -174,6 +186,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
         setSearchResults([]);
         setHasError(false);
         setHasFoundRoute(true);
+        setHasGooglePlaces(false);
     }
 
     /**
@@ -342,6 +355,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                             location={location}
                             locationClicked={e => locationClickHandler(e)} />
                     )}
+                    {hasGooglePlaces && <img className="wayfinding__google" alt="Powered by Google" src={GooglePlaces} />}
                 </div>
             </div>
             {!searchTriggered && hasFoundRoute && !hasError && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
