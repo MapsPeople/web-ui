@@ -135,7 +135,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
         } else {
             setHasSearchResults(true);
             setSearchResults(results);
-            if (results.find(result => result.properties.type === 'google_places')) {
+            if (results.filter(result => result.properties.type === 'google_places').length > 0) {
                 setHasGooglePlaces(true);
             }
         }
