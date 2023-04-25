@@ -216,39 +216,38 @@ function Wayfinding({ onStartDirections, onBack, to, from, onSetSize, isActive, 
 
     useEffect(() => {
         setSize(snapPoints.MAX);
-        // If there is a "to" location, use that as the "to" field.
-        if (to) {
+        // If there is a "to" feature, use that as the "to" field.
+        if (to?.properties) {
             toFieldRef.current.setDisplayText(to.properties.name);
             setDestinationLocation(to);
         }
 
-        // If there is a "from" location, use that as the 'from' field. Otherwise trigger focus on search field.
-        if (from) {
+        // If there is a "from" feature, use that as the 'from' field. Otherwise trigger focus on search field.
+        if (from?.properties) {
             fromFieldRef.current.setDisplayText(from.properties.name);
             setOriginLocation(from);
         } else {
             setActiveSearchField(searchFieldIdentifiers.FROM);
         }
-
-    }, [to]);
+    }, [from, to]);
 
     useEffect(() => {
         if (isActive && !fromFieldRef.current?.getValue()) {
-            if (userPosition) {
+            if (userPosition && to.id !== 'USER_POSITION') {
                 // If the user's position is known, use that as Origin.
                 setMyPositionAsOrigin();
-            } else {
+            } else if (from !== 'USER_POSITION_PENDING' && to.id !== 'USER_POSITION') {
                 fromFieldRef.current.focusInput();
             }
         }
     }, [isActive]);
 
-    /**
-     * When both origin location and destination location are selected, call the MapsIndoors SDK
+    /*
+     * When both origin location and destination location are selected, and have geometry, call the MapsIndoors SDK
      * to get information about the route.
      */
     useEffect(() => {
-        if (originLocation && destinationLocation) {
+        if (originLocation?.geometry && destinationLocation?.geometry) {
             directionsService.getRoute({
                 origin: getLocationPoint(originLocation),
                 destination: getLocationPoint(destinationLocation),
