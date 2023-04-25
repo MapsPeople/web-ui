@@ -144,7 +144,6 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, c
         }
     }, [currentVenueName]);
 
-
     return (
         <div className="search" ref={searchRef}>
             <SearchField
@@ -161,11 +160,13 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, c
                 <div ref={categoriesListRef} className="search__categories">
                     {categories?.map(([category, categoryInfo]) =>
                         <mi-chip
+                            icon={categoryInfo.iconUrl}
                             content={categoryInfo.displayName}
                             active={selectedCategory === category}
                             onClick={() => categoryClicked(category)}
                             key={category}>
-                        </mi-chip>)
+                        </mi-chip>
+                    )
                     }
                 </div>
                 <div className="search__results">

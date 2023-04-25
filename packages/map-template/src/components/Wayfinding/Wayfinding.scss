@@ -3,7 +3,7 @@
 .wayfinding {
     color: var(--brand-colors-black-100);
     display: grid;
-    grid-template-rows: 228px 1fr;
+    grid-template-rows: 238px 1fr;
     min-height: 435px;
 
     &__directions {
@@ -42,6 +42,20 @@
         font-size: var(--font-size-small);
         color: var(--color-gray-70);
         font-weight: var(--font-weight-large);
+    }
+
+    &__use-current-position {
+        position: relative;
+        top: -36px;
+        text-align: right;
+
+        button {
+            all: unset;
+            font-size: var(--font-size-small);
+            color: var(--color-blue-base);
+            margin-top: var(--spacing-x-small);
+            cursor: pointer;
+        }
     }
 
     &__details {

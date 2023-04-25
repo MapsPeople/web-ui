@@ -6,6 +6,7 @@ import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
 import { ReactComponent as WalkingIcon } from '../../assets/walking.svg';
 import { ReactComponent as SwitchIcon } from '../../assets/switch.svg';
 import { DirectionsServiceContext } from '../../DirectionsServiceContext';
+import { UserPositionContext } from '../../UserPositionContext';
 import Tooltip from '../Tooltip/Tooltip';
 import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
 import SearchField from '../WebComponentWrappers/Search/Search';
@@ -38,6 +39,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     const fromFieldRef = useRef();
 
     const directionsService = useContext(DirectionsServiceContext);
+    const userPosition = useContext(UserPositionContext);
 
     const [activeSearchField, setActiveSearchField] = useState();
 
@@ -118,6 +120,31 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     function getLocationPoint(location) {
         const coordinates = location.geometry.type === 'Point' ? location.geometry.coordinates : location.properties.anchor.coordinates;
         return { lat: coordinates[1], lng: coordinates[0], floor: location.properties.floor };
+    }
+
+    /**
+     * Set the user's current position as the origin.
+     *
+     * This is done by mocking a MapsIndoors Location with the geometry
+     * corresponding to the user's position.
+     */
+    function setMyPositionAsOrigin() {
+        const myPositionGeometry = {
+            type: 'Point',
+            coordinates: [userPosition.coords.longitude, userPosition.coords.latitude]
+        };
+        const myPositionLocation = {
+            geometry: myPositionGeometry,
+            properties: {
+                name: 'My Position',
+                anchor: myPositionGeometry,
+            },
+            type: 'Feature'
+        };
+
+        fromFieldRef.current.setDisplayText(myPositionLocation.properties.name);
+        setOriginLocation(myPositionLocation);
+        setHasFoundRoute(true);
     }
 
     /**
@@ -222,6 +249,11 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
             } else {
                 fromFieldRef.current.focusInput();
             }
+
+            if (userPosition) {
+                // If the user's position is known, use that as Origin.
+                setMyPositionAsOrigin();
+            }
         }
     }, [isActive]);
 
@@ -297,6 +329,9 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                             cleared={() => onSearchCleared(searchFieldIdentifiers.FROM)}
                         />
                     </label>
+                    {userPosition && originLocation?.properties.name !== 'My Position' && <p className="wayfinding__use-current-position">
+                        <button onClick={() => setMyPositionAsOrigin()}>Use My Position</button>
+                    </p>}
                 </div>
             </div>
             {!hasFoundRoute && <p className="wayfinding__error">No route has been found</p>}
