@@ -72,7 +72,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     const scrollableContentSwipePrevent = usePreventSwipe();
 
     const [isGoogleMap, setIsGoogleMap] = useState();
-
     const [hasGooglePlaces, setHasGooglePlaces] = useState(false);
 
     /**
@@ -80,6 +79,8 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      * and clears out the results list.
      * Handle the google places and create the coordinates in order to be able
      * to get directions, if selected.
+     *
+     * @param {object} location
      */
     async function locationClickHandler(location) {
         if (activeSearchField === searchFieldIdentifiers.TO) {
