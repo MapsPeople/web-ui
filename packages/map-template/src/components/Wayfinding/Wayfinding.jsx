@@ -78,6 +78,8 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     /**
      * Click event handler function that sets the display text of the input field,
      * and clears out the results list.
+     * Handle the google places and create the coordinates in order to be able
+     * to get directions, if selected.
      */
     async function locationClickHandler(location) {
         if (activeSearchField === searchFieldIdentifiers.TO) {
