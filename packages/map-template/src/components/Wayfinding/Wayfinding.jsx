@@ -160,7 +160,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      * @returns {object}
      */
     function getLocationPoint(location) {
-        const coordinates = location.geometry.type === 'Point' ? location.geometry.coordinates : location.properties.anchor?.coordinates;
+        const coordinates = location.geometry.type === 'Point' ? location.geometry.coordinates : location.properties.anchor.coordinates;
         return { lat: coordinates[1], lng: coordinates[0], floor: location.properties.floor };
     }
 
