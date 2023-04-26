@@ -36,7 +36,7 @@ function MapboxMap({ mapboxAccessToken, onMapView, onPositionControl, mapsIndoor
 
         const mapViewStyle = new mapsindoors.mapView.MapboxView(mapViewOptions).setMapsIndoorsTileURL(tileStyle);
 
-        console.log('tile style', mapViewStyle)
+        console.log('map view style', mapViewStyle)
 
         // Setup an external directions provider that will be used to calculate directions
         // outside MapsIndoors venues.
