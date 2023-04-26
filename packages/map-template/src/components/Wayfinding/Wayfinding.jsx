@@ -89,7 +89,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                             coordinates: [result.geometry.location.lng(), result.geometry.location.lat()]
                         };
                         setDestinationLocation(location);
-                        setHasGooglePlaces(false);
                         toFieldRef.current.setDisplayText(location.properties.name);
                     })
                     .catch(() => {
@@ -97,7 +96,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                     });
             } else {
                 setDestinationLocation(location);
-                setHasGooglePlaces(false);
                 toFieldRef.current.setDisplayText(location.properties.name);
             }
         } else if (activeSearchField === searchFieldIdentifiers.FROM) {
@@ -109,7 +107,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                             coordinates: [result.geometry.location.lng(), result.geometry.location.lat()]
                         };
                         setOriginLocation(location);
-                        setHasGooglePlaces(false);
                         fromFieldRef.current.setDisplayText(location.properties.name);
                     })
                     .catch(() => {
@@ -117,7 +114,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                     });
             } else {
                 setOriginLocation(location);
-                setHasGooglePlaces(false);
                 fromFieldRef.current.setDisplayText(location.properties.name);
             }
         }
@@ -141,6 +137,8 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
             setSearchResults(results);
             if (results.filter(result => result.properties.type === 'google_places').length > 0) {
                 setHasGooglePlaces(true);
+            } else {
+                setHasGooglePlaces(false);
             }
         }
     }
