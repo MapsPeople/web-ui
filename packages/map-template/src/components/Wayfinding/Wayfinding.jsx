@@ -300,6 +300,8 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
             setIsGoogleMap(true);
         } else {
             setIsGoogleMap(false);
+            setHasGooglePlaces(false);
+            setSearchResults(searchResults.filter(result => result.properties.type !== 'google_places'));
         }
     }, [selectedMapType]);
 

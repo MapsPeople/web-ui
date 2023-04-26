@@ -50,10 +50,6 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
             current.mapsindoors = 'true';
         }
 
-        if (google === true) {
-            current.google = 'true';
-        }
-
         function onCleared() {
             if (!current.getValue) {
                 current.focusInput();
@@ -73,7 +69,7 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
 
     }, [placeholder, mapsindoors, results, clicked, cleared, google]);
 
-    return <mi-search ref={elementRef} placeholder={placeholder} mi-near={searchNear} mi-categories={category}  />
+    return <mi-search ref={elementRef} placeholder={placeholder} mi-near={searchNear} mi-categories={category} google={google} />
 });
 
 export default SearchField;
