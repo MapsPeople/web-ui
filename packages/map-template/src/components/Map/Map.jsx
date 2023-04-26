@@ -13,6 +13,12 @@ const MAP_TYPES = {
 const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
 
 /**
+ * Private variable used for storing the tile style.
+ * Implemented due to the impossibility to use the React useState hook.
+ */
+let _tileStyle;
+
+/**
  * Shows a map.
  *
  * @param {Object} props
@@ -27,7 +33,7 @@ const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
  * @param {function} props.onVenueChangedOnMap - Function that is run when the map bounds was changed due to fitting to a venue.
  * @param {function} props.onUserPosition - Function that is run when (if) the user position updates. Sends position as payload.
  * @param {array} props.filteredLocationIds - Array of IDs of the filtered locations.
- * @param {string} props.tileStyle - Tile style URL to change the map style.
+ * @param {string} props.tileStyle - Tile style name to change the interface of the map.
  * @returns
  */
 function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onMapsIndoorsInstance, onDirectionsService, onVenueChangedOnMap, onUserPosition, filteredLocationIds, tileStyle }) {
@@ -81,6 +87,21 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
         return mapsIndoorsInstance.fitVenue(venue);
     }
 
+    /**
+     * When the building changes, replace the default tile URL style to the incoming tile style.
+     * Set the MapsIndoors Tile URL to the incoming tile style.
+     */
+    const onBuildingChanged = (miInstance) => {
+        if(miInstance) {
+            const tileURL = miInstance.getTileURL().replace('lundefined/', 'l{floor}/').replace(/\/l(\d+)\//gm, '/l{floor}/');
+            const newTileURL = tileURL.replace('default', _tileStyle);
+
+            // Set Tile URL whenever the floor changes
+            const tileStyleWithFloor = newTileURL?.replace('{floor}', miInstance.getFloor());
+            miInstance.getMapView().setMapsIndoorsTileURL(tileStyleWithFloor);
+        }
+    }
+
     const onMapView = async (mapView, externalDirectionsProvider) => {
         // Instantiate MapsIndoors instance
         const miInstance = new mapsindoors.MapsIndoors({
@@ -88,9 +109,10 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
         });
 
         // TODO: This overrides the pink building outline color from the SDK. It's added here for demo purposes until the SDK supports Display Rules for Buildings too.
-        miInstance.setDisplayRule('MI_BUILDING_OUTLINE', {visible: false});
+        miInstance.setDisplayRule('MI_BUILDING_OUTLINE', { visible: false });
 
         miInstance.on('click', location => onLocationClick(location));
+        miInstance.once('building_changed', () => onBuildingChanged(miInstance))
 
         setMapsIndoorsInstance(miInstance);
         onMapsIndoorsInstance(miInstance);
@@ -118,9 +140,23 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
         });
     }
 
+    /*
+     * React on changes in the tile style prop.
+     */
+    useEffect(() => {
+        if (tileStyle) {
+            _tileStyle = tileStyle;
+            onBuildingChanged(mapsIndoorsInstance);
+        } else {
+            _tileStyle = 'default';
+            onBuildingChanged(mapsIndoorsInstance);
+        }
+    }, [tileStyle]);
+
+
     return (<>
-        {mapType === MAP_TYPES.GOOGLE && <GoogleMapsMap gmApiKey={gmApiKey} onMapView={onMapView} onPositionControl={onPositionControl} mapsIndoorsInstance={mapsIndoorsInstance} tileStyle={tileStyle} />}
-        {mapType === MAP_TYPES.MAPBOX && <MapboxMap mapboxAccessToken={mapboxAccessToken} onMapView={onMapView} onPositionControl={onPositionControl} mapsIndoorsInstance={mapsIndoorsInstance} tileStyle={tileStyle}  />}
+        {mapType === MAP_TYPES.GOOGLE && <GoogleMapsMap gmApiKey={gmApiKey} onMapView={onMapView} onPositionControl={onPositionControl} mapsIndoorsInstance={mapsIndoorsInstance} />}
+        {mapType === MAP_TYPES.MAPBOX && <MapboxMap mapboxAccessToken={mapboxAccessToken} onMapView={onMapView} onPositionControl={onPositionControl} mapsIndoorsInstance={mapsIndoorsInstance} />}
     </>)
 }
 

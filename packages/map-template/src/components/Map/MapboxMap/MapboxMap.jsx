@@ -13,9 +13,8 @@ const mapsindoors = window.mapsindoors;
  * @param {function} props.onMapView - A function that is called when the MapView is constructed. Sends the MapView instance and External Directions Provider as payload.
  * @param {function} props.onPositionControl - A function that is called when the MapsIndoors PositionControl is contructed. Will send the PositionControl instance as payload.
  * @param {object} props.mapsIndoorsInstance - Instance of the mapsindoors.MapsIndoors
- * @param {string} props.tileStyle - Tile style URL to change the map style.
  */
-function MapboxMap({ mapboxAccessToken, onMapView, onPositionControl, mapsIndoorsInstance, tileStyle }) {
+function MapboxMap({ mapboxAccessToken, onMapView, onPositionControl, mapsIndoorsInstance }) {
 
     const [mapView, setMapView] = useState();
     const [hasFloorSelector, setHasFloorSelector] = useState(false);
@@ -29,21 +28,15 @@ function MapboxMap({ mapboxAccessToken, onMapView, onPositionControl, mapsIndoor
             element: document.getElementById('map')
         };
 
-        console.log('tile style', tileStyle)
-
         const mapViewInstance = new mapsindoors.mapView.MapboxView(mapViewOptions);
         setMapView(mapViewInstance);
-
-        const mapViewStyle = new mapsindoors.mapView.MapboxView(mapViewOptions).setMapsIndoorsTileURL(tileStyle);
-
-        console.log('map view style', mapViewStyle)
 
         // Setup an external directions provider that will be used to calculate directions
         // outside MapsIndoors venues.
         const externalDirectionsProvider = new mapsindoors.directions.MapboxProvider(mapboxAccessToken);
 
         onMapView(mapViewInstance, externalDirectionsProvider);
-    }, [tileStyle]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
     // We ignore eslint warnings about missing dependencies because onMapView should never change runtime and changing Mapbox Access Token runtime will give other problems.
 
     // Add Floor Selector to the Map when ready.

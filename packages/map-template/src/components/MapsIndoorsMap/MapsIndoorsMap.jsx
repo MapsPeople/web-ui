@@ -32,7 +32,7 @@ let _locationsDisabled;
  * @param {string} [props.primaryColor] - If you want the splash screen to have a custom primary color, provide the value here.
  * @param {string} [props.logo] - If you want the splash screen to have a custom logo, provide the image path or address here.
  * @param {array} [props.appUserRoles] - If you want the map to behave differently for specific users, set one or more app user roles here.
- * @param {string} [props.tileStyle] - Tile style URL to change the map style.
+ * @param {string} [props.tileStyle] - Tile style name to change the interface of the map.
  */
 function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, tileStyle }) {
 

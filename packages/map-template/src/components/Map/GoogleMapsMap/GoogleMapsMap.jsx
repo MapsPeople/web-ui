@@ -12,9 +12,8 @@ const mapsindoors = window.mapsindoors;
  * @param {function} props.onMapView - A function that is called when the MapView is constructed. Sends the MapView instance and External Directions Provider as payload.
  * @param {function} props.onPositionControl - A function that is called when the MapsIndoors PositionControl is contructed. Will send the PositionControl instance as payload.
  * @param {object} props.mapsIndoorsInstance - Instance of the mapsindoors.MapsIndoors
- * @param {string} props.tileStyle - Tile style URL to change the map style.
  */
-function GoogleMapsMap({ gmApiKey, onMapView, onPositionControl, mapsIndoorsInstance, tileStyle }) {
+function GoogleMapsMap({ gmApiKey, onMapView, onPositionControl, mapsIndoorsInstance }) {
 
     const [google, setGoogle] = useState();
     const [mapView, setMapView] = useState();
