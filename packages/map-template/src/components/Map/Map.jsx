@@ -92,7 +92,7 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
      * Set the MapsIndoors Tile URL to the incoming tile style.
      */
     const onBuildingChanged = (miInstance) => {
-        if(miInstance) {
+        if (miInstance) {
             const tileURL = miInstance.getTileURL().replace('lundefined/', 'l{floor}/').replace(/\/l(\d+)\//gm, '/l{floor}/');
             const newTileURL = tileURL.replace('default', _tileStyle);
 
