@@ -110,6 +110,11 @@ export class Search implements ComponentInterface {
     @Prop({ mutable: true, reflect: true }) value: string;
 
     /**
+     * Make the search field disabled
+     */
+    @Prop() disabled: boolean = false;
+
+    /**
      * Sets the prevention of the search.
      */
     private preventSearch: boolean = false;
@@ -327,6 +332,7 @@ export class Search implements ComponentInterface {
         return (
             <Host>
                 <input
+                    disabled={this.disabled}
                     id={this.idAttribute ? this.idAttribute : null}
                     type="search"
                     ref={(el) => this.inputElement = el as HTMLInputElement}

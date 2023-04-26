@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './RouteInstructions.scss';
 import { ReactComponent as ArrowRight } from '../../assets/arrow-right.svg';
 import { ReactComponent as ArrowLeft } from '../../assets/arrow-left.svg';
@@ -19,6 +19,13 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }
     const [previous, setPrevious] = useState();
 
     const [activeStep, setActiveStep] = useState(0);
+
+    /*
+     * Make sure to reset active step whenever the steps change.
+     */
+    useEffect(() => {
+        setActiveStep(0);
+    }, [steps]);
 
     /**
      * Navigate to the next step.

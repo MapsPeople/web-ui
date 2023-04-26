@@ -6,6 +6,7 @@ import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
 import { ReactComponent as WalkingIcon } from '../../assets/walking.svg';
 import { ReactComponent as SwitchIcon } from '../../assets/switch.svg';
 import { DirectionsServiceContext } from '../../DirectionsServiceContext';
+import { UserPositionContext } from '../../UserPositionContext';
 import Tooltip from '../Tooltip/Tooltip';
 import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
 import SearchField from '../WebComponentWrappers/Search/Search';
@@ -32,6 +33,8 @@ const searchFieldIdentifiers = {
  */
 function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, onDirections, selectedMapType }) {
 
+    const wayfindingRef = useRef();
+
     /** Referencing the accessibility details DOM element */
     const detailsRef = useRef();
 
@@ -39,6 +42,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     const fromFieldRef = useRef();
 
     const directionsService = useContext(DirectionsServiceContext);
+    const userPosition = useContext(UserPositionContext);
 
     const [activeSearchField, setActiveSearchField] = useState();
 
@@ -163,6 +167,31 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     }
 
     /**
+     * Set the user's current position as the origin.
+     *
+     * This is done by mocking a MapsIndoors Location with the geometry
+     * corresponding to the user's position.
+     */
+    function setMyPositionAsOrigin() {
+        const myPositionGeometry = {
+            type: 'Point',
+            coordinates: [userPosition.coords.longitude, userPosition.coords.latitude]
+        };
+        const myPositionLocation = {
+            geometry: myPositionGeometry,
+            properties: {
+                name: 'My Position',
+                anchor: myPositionGeometry,
+            },
+            type: 'Feature'
+        };
+
+        fromFieldRef.current.setDisplayText(myPositionLocation.properties.name);
+        setOriginLocation(myPositionLocation);
+        setHasFoundRoute(true);
+    }
+
+    /**
      * Handle click events on the search field.
      *
      * @param {string} searchFieldIdentifier
@@ -256,7 +285,21 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
 
     useEffect(() => {
         if (isActive && !fromFieldRef.current?.getValue()) {
-            fromFieldRef.current.focusInput();
+            // Set focus on the from field.
+            // But wait for any bottom sheet transition to end before doing that to avoid content jumping when virtual keyboard appears.
+            const sheet = wayfindingRef.current.closest('.sheet');
+            if (sheet) {
+                sheet.addEventListener('transitionend', () => {
+                    fromFieldRef.current.focusInput();
+                }, { once: true });
+            } else {
+                fromFieldRef.current.focusInput();
+            }
+
+            if (userPosition) {
+                // If the user's position is known, use that as Origin.
+                setMyPositionAsOrigin();
+            }
         }
     }, [isActive]);
 
@@ -306,7 +349,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     }, [selectedMapType]);
 
     return (
-        <div className="wayfinding">
+        <div className="wayfinding" ref={wayfindingRef}>
             <div className="wayfinding__directions">
                 <div className="wayfinding__title">Start wayfinding</div>
                 <button className="wayfinding__close"
@@ -344,6 +387,9 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                             cleared={() => onSearchCleared(searchFieldIdentifiers.FROM)}
                         />
                     </label>
+                    {userPosition && originLocation?.properties.name !== 'My Position' && <p className="wayfinding__use-current-position">
+                        <button onClick={() => setMyPositionAsOrigin()}>Use My Position</button>
+                    </p>}
                 </div>
             </div>
             {!hasFoundRoute && <p className="wayfinding__error">No route has been found</p>}

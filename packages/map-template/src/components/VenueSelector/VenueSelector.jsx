@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import './VenueSelector.scss';
 import { ReactComponent as BuildingIcon } from '../../assets/building.svg';
@@ -12,10 +12,10 @@ import Venue from './Venue/Venue';
  * @param {array} props.venues - Venues to present.
  * @param {string} props.currentVenueName - The name of the current venue.
  * @param {function} props.onVenueSelected - Callback to execute when a Venue is selected.
+ * @param {function} props.onOpen - Callback to execute when the Venue Selector is opened.
  * @returns
  */
-function VenueSelector({ venues, currentVenueName, onVenueSelected }) {
-    const [active, setActive] = useState(false);
+function VenueSelector({ venues, currentVenueName, onVenueSelected, onOpen, onClose, active }) {
     const venueSelectorContentRef = useRef(null);
 
     /**
@@ -24,12 +24,23 @@ function VenueSelector({ venues, currentVenueName, onVenueSelected }) {
      * @param {object} venue
      */
     const selectVenue = venue => {
-        setActive(false);
         onVenueSelected(venue);
+        toggle();
+    };
+
+    /**
+     * Toggle the venue selector.
+     */
+    const toggle = () => {
+        if (!active) {
+            onOpen();
+        } else {
+            onClose();
+        }
     };
 
     return <>
-        <button className={`venue-selector__button ${active ? 'venue-selector__button--open' : '' }`} onClick={() => setActive(current => !current)} aria-label="Venues">
+        <button className={`venue-selector__button ${active ? 'venue-selector__button--open' : '' }`} onClick={() => toggle()} aria-label="Venues">
             {active ? <CloseIcon /> : <BuildingIcon />}
         </button>
         <CSSTransition unmountOnExit in={active} nodeRef={venueSelectorContentRef} timeout={400} classNames="venue-selector__content">
