@@ -126,11 +126,8 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
         } else {
             setHasSearchResults(true);
             setSearchResults(results);
-            if (results.filter(result => result.properties.type === 'google_places').length > 0) {
-                setHasGooglePlaces(true);
-            } else {
-                setHasGooglePlaces(false);
-            }
+            const resultsHaveGooglePlaces = results.filter(result => result.properties.type === 'google_places').length > 0;
+            setHasGooglePlaces(resultsHaveGooglePlaces);
         }
     }
 
