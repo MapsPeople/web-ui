@@ -85,7 +85,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
         if (selectedMapType === 'google' && location.properties.type === 'google_places') {
             return handleGooglePlaces(location);
         } else {
-            Promise.resolve(location);
+            return Promise.resolve(location);
         }
     }
 
