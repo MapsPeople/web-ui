@@ -72,7 +72,6 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
 
     const scrollableContentSwipePrevent = usePreventSwipe();
 
-    const [isGoogleMap, setIsGoogleMap] = useState();
     const [hasGooglePlaces, setHasGooglePlaces] = useState(false);
 
 
@@ -326,10 +325,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     }, [originLocation, destinationLocation, directionsService, accessibilityOn]);
 
     useEffect(() => {
-        if (selectedMapType === mapTypes.Google) {
-            setIsGoogleMap(true);
-        } else {
-            setIsGoogleMap(false);
+        if (selectedMapType === mapTypes.Mapbox) {
             setHasGooglePlaces(false);
             setSearchResults(searchResults.filter(result => result.properties.type !== 'google_places'));
         }
@@ -350,7 +346,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                         <SearchField
                             ref={toFieldRef}
                             mapsindoors={true}
-                            google={isGoogleMap}
+                            google={selectedMapType === mapTypes.Google}
                             placeholder="Search by name, category, building..."
                             results={locations => searchResultsReceived(locations, searchFieldIdentifiers.TO)}
                             clicked={() => onSearchClicked(searchFieldIdentifiers.TO)}
@@ -367,7 +363,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                         <SearchField
                             ref={fromFieldRef}
                             mapsindoors={true}
-                            google={isGoogleMap}
+                            google={selectedMapType === mapTypes.Google}
                             placeholder="Search by name, category, buildings..."
                             results={locations => searchResultsReceived(locations, searchFieldIdentifiers.FROM)}
                             clicked={() => onSearchClicked(searchFieldIdentifiers.FROM)}
