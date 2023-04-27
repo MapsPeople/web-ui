@@ -88,10 +88,9 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
     }
 
     /**
-     * When the building changes, replace the default tile URL style to the incoming tile style.
-     * Set the MapsIndoors Tile URL to the incoming tile style.
+     * Replace the default tile URL style to the incoming tile style.
      */
-    const onBuildingChanged = (miInstance) => {
+    const onTileStyleChanged = (miInstance) => {
         if (miInstance) {
             const tileURL = miInstance.getTileURL().replace('lundefined/', 'l{floor}/').replace(/\/l(\d+)\//gm, '/l{floor}/');
             const newTileURL = tileURL.replace('default', _tileStyle);
@@ -112,7 +111,7 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
         miInstance.setDisplayRule('MI_BUILDING_OUTLINE', { visible: false });
 
         miInstance.on('click', location => onLocationClick(location));
-        miInstance.once('building_changed', () => onBuildingChanged(miInstance))
+        miInstance.once('building_changed', () => onTileStyleChanged(miInstance))
 
         setMapsIndoorsInstance(miInstance);
         onMapsIndoorsInstance(miInstance);
@@ -146,10 +145,10 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
     useEffect(() => {
         if (tileStyle) {
             _tileStyle = tileStyle;
-            onBuildingChanged(mapsIndoorsInstance);
+            onTileStyleChanged(mapsIndoorsInstance);
         } else {
             _tileStyle = 'default';
-            onBuildingChanged(mapsIndoorsInstance);
+            onTileStyleChanged(mapsIndoorsInstance);
         }
     }, [tileStyle]);
 
