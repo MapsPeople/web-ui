@@ -107,7 +107,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                 fromFieldRef.current.setDisplayText(location.properties.name);
             }, () => setHasFoundRoute(false));
         }
-
+        setHasGooglePlaces(false);
         setSearchTriggered(false);
         setSearchResults([]);
     }
