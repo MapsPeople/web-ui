@@ -307,7 +307,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                         <SearchField
                             ref={fromFieldRef}
                             mapsindoors={true}
-                            placeholder="Search by name, category, buildings..."
+                            placeholder="Search by name, category, building..."
                             results={locations => searchResultsReceived(locations, searchFieldIdentifiers.FROM)}
                             clicked={() => onSearchClicked(searchFieldIdentifiers.FROM)}
                             cleared={() => onSearchCleared(searchFieldIdentifiers.FROM)}
