@@ -258,8 +258,8 @@ function Wayfinding({ onStartDirections, onBack, to, from, onSetSize, isActive, 
                 fromFieldRef.current.focusInput();
             }
 
-            if (userPosition) {
-                // If the user's position is known, use that as Origin.
+            if (userPosition && !originLocation) {
+                // If the user's position is known and no origin location is set, use the position as Origin.
                 setMyPositionAsOrigin();
             }
         }
