@@ -74,52 +74,39 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     const [isGoogleMap, setIsGoogleMap] = useState();
     const [hasGooglePlaces, setHasGooglePlaces] = useState(false);
 
+
+    /**
+     * Decorates location with data that is required for wayfinding to work.
+     * Specifically, adds geometry to a google_places location.
+     * @param {object} location
+     */
+    function decorateLocation(location) {
+        if (selectedMapType === 'google' && location.properties.type === 'google_places') {
+            return handleGooglePlaces(location);
+        } else {
+            Promise.resolve(location);
+        }
+    }
+
     /**
      * Click event handler function that sets the display text of the input field,
      * and clears out the results list.
-     * Handle the google places and create the coordinates in order to be able
-     * to get directions, if selected.
      *
      * @param {object} location
      */
-    async function locationClickHandler(location) {
+    function locationClickHandler(location) {
         if (activeSearchField === searchFieldIdentifiers.TO) {
-            if (selectedMapType === 'google' && location.properties.type === 'google_places') {
-                handleGooglePlaces(location)
-                    .then((result) => {
-                        location.geometry = {
-                            type: 'Point',
-                            coordinates: [result.geometry.location.lng(), result.geometry.location.lat()]
-                        };
-                        setDestinationLocation(location);
-                        toFieldRef.current.setDisplayText(location.properties.name);
-                    })
-                    .catch(() => {
-                        setHasFoundRoute(false);
-                    });
-            } else {
+            decorateLocation(location).then(location => {
                 setDestinationLocation(location);
                 toFieldRef.current.setDisplayText(location.properties.name);
-            }
+            }, () => setHasFoundRoute(false));
         } else if (activeSearchField === searchFieldIdentifiers.FROM) {
-            if (selectedMapType === 'google' && location.properties.type === 'google_places') {
-                handleGooglePlaces(location)
-                    .then((result) => {
-                        location.geometry = {
-                            type: 'Point',
-                            coordinates: [result.geometry.location.lng(), result.geometry.location.lat()]
-                        };
-                        setOriginLocation(location);
-                        fromFieldRef.current.setDisplayText(location.properties.name);
-                    })
-                    .catch(() => {
-                        setHasFoundRoute(false);
-                    });
-            } else {
+            decorateLocation(location).then(location => {
                 setOriginLocation(location);
                 fromFieldRef.current.setDisplayText(location.properties.name);
-            }
+            }, () => setHasFoundRoute(false));
         }
+
         setSearchTriggered(false);
         setSearchResults([]);
     }
