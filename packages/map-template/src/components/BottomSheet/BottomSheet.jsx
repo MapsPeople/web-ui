@@ -89,7 +89,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
                 onDirections={result => setDirections(result)}
                 onBack={() => pushAppView(appViews.LOCATION_DETAILS)}
                 isActive={currentAppView === appViews.WAYFINDING}
- 				selectedMapType={selectedMapType}
+                 selectedMapType={selectedMapType}
             />
         </Sheet>,
         <Sheet
