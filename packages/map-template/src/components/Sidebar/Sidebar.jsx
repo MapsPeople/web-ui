@@ -61,7 +61,7 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
                 onDirections={result => setDirections(result)}
                 onBack={() => pushAppView(appViews.LOCATION_DETAILS)}
                 isActive={currentAppView === appViews.WAYFINDING}
-				selectedMapType={selectedMapType}
+                selectedMapType={selectedMapType}
             />
         </Modal>,
         <Modal isOpen={currentAppView === appViews.DIRECTIONS} key="D">
