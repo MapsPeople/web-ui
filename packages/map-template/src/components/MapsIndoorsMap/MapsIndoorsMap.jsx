@@ -234,7 +234,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                                 pushAppView={pushAppView}
                                 currentAppView={currentAppView}
                                 appViews={appStates}
-								selectedMapType={selectedMapType}
+                                selectedMapType={selectedMapType}
                             />
                             :
                             <BottomSheet
