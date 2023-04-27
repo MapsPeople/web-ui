@@ -1,14 +1,10 @@
 import { useEffect, useState } from "react";
+import { mapTypes } from "../../constants/mapTypes";
 import useLiveData from '../../hooks/useLivedata';
 import GoogleMapsMap from "./GoogleMapsMap/GoogleMapsMap";
 import MapboxMap from "./MapboxMap/MapboxMap";
 
 const mapsindoors = window.mapsindoors;
-
-const MAP_TYPES = {
-    GOOGLE: 'google',
-    MAPBOX: 'mapbox'
-};
 
 const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
 
@@ -38,12 +34,12 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
 
     useEffect(() => {
         if (mapboxAccessToken) {
-            setMapType(MAP_TYPES.MAPBOX);
-            onMapTypeChanged(MAP_TYPES.MAPBOX)
+            setMapType(mapTypes.Mapbox);
+            onMapTypeChanged(mapTypes.Mapbox)
         } else {
             // A Google Maps map will have precedense if no keys or keys for both providers are set.
-            setMapType(MAP_TYPES.GOOGLE);
-            onMapTypeChanged(MAP_TYPES.GOOGLE)
+            setMapType(mapTypes.Google);
+            onMapTypeChanged(mapTypes.Google)
         }
     }, [gmApiKey, mapboxAccessToken]);
 
@@ -121,8 +117,8 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
     }
 
     return (<>
-        {mapType === MAP_TYPES.GOOGLE && <GoogleMapsMap gmApiKey={gmApiKey} onMapView={onMapView} onPositionControl={onPositionControl} mapsIndoorsInstance={mapsIndoorsInstance} />}
-        {mapType === MAP_TYPES.MAPBOX && <MapboxMap mapboxAccessToken={mapboxAccessToken} onMapView={onMapView} onPositionControl={onPositionControl} mapsIndoorsInstance={mapsIndoorsInstance} />}
+        {mapType === mapTypes.Google && <GoogleMapsMap gmApiKey={gmApiKey} onMapView={onMapView} onPositionControl={onPositionControl} mapsIndoorsInstance={mapsIndoorsInstance} />}
+        {mapType === mapTypes.Mapbox && <MapboxMap mapboxAccessToken={mapboxAccessToken} onMapView={onMapView} onPositionControl={onPositionControl} mapsIndoorsInstance={mapsIndoorsInstance} />}
     </>)
 }
 

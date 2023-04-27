@@ -14,6 +14,7 @@ import { snapPoints } from '../../constants/snapPoints';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import handleGooglePlaces from "../Map/GoogleMapsMap/GooglePlacesHandler";
 import GooglePlaces from '../../assets/google-places.png';
+import { mapTypes } from "../../constants/mapTypes";
 
 const searchFieldIdentifiers = {
     TO: 'TO',
@@ -82,7 +83,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      * @param {object} location
      */
     function decorateLocation(location) {
-        if (selectedMapType === 'google' && location.properties.type === 'google_places') {
+        if (selectedMapType === mapTypes.Google && location.properties.type === 'google_places') {
             return handleGooglePlaces(location);
         } else {
             return Promise.resolve(location);
@@ -325,7 +326,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     }, [originLocation, destinationLocation, directionsService, accessibilityOn]);
 
     useEffect(() => {
-        if (selectedMapType === 'google') {
+        if (selectedMapType === mapTypes.Google) {
             setIsGoogleMap(true);
         } else {
             setIsGoogleMap(false);
