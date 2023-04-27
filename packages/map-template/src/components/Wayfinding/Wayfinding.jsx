@@ -78,6 +78,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     /**
      * Decorates location with data that is required for wayfinding to work.
      * Specifically, adds geometry to a google_places location.
+     *
      * @param {object} location
      */
     function decorateLocation(location) {

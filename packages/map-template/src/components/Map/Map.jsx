@@ -30,7 +30,7 @@ const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
  * @param {function} props.onMapTypeChanged - Function that is run when the map type is changed.
  * @returns
  */
-function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onMapsIndoorsInstance, onDirectionsService, onVenueChangedOnMap, onUserPosition, filteredLocationIds, onSelectedMapType }) {
+function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onMapsIndoorsInstance, onDirectionsService, onVenueChangedOnMap, onUserPosition, filteredLocationIds, onMapTypeChanged }) {
     const [mapType, setMapType] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState(null);
 
@@ -39,11 +39,11 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
     useEffect(() => {
         if (mapboxAccessToken) {
             setMapType(MAP_TYPES.MAPBOX);
-            onSelectedMapType(MAP_TYPES.MAPBOX)
+            onMapTypeChanged(MAP_TYPES.MAPBOX)
         } else {
             // A Google Maps map will have precedense if no keys or keys for both providers are set.
             setMapType(MAP_TYPES.GOOGLE);
-            onSelectedMapType(MAP_TYPES.GOOGLE)
+            onMapTypeChanged(MAP_TYPES.GOOGLE)
         }
     }, [gmApiKey, mapboxAccessToken]);
 

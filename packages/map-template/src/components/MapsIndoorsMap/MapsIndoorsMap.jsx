@@ -44,8 +44,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [directionsService, setDirectionsService] = useState();
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
     const [userPosition, setUserPosition] = useState();
- 	const [appConfigResult, setAppConfigResult] = useState();
-	const [selectedMapType, setSelectedMapType] = useState();
+    const [appConfigResult, setAppConfigResult] = useState();
+    const [selectedMapType, setSelectedMapType] = useState();
 
     // The filtered locations that the user sets when selecting a category/location.
     const [filteredLocations, setFilteredLocations] = useState();
@@ -260,7 +260,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             onDirectionsService={(instance) => setDirectionsService(instance)}
                             onLocationClick={(location) => locationClicked(location)}
                             onUserPosition={position => setUserPosition(position)}
-                                onSelectedMapType={(mapType) => setSelectedMapType(mapType)}/>
+                            onMapTypeChanged={(mapType) => setSelectedMapType(mapType)}
                             filteredLocationIds={filteredLocations?.map(location => location.id)} />
                     </div>
                 </UserPositionContext.Provider>
