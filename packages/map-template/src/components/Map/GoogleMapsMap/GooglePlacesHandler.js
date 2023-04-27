@@ -12,7 +12,11 @@ function handleGooglePlaces(location) {
         }
         googleMapsGeocoder.geocode({ 'placeId': location.properties.placeId }, (results) => {
             if (results.length > 0) {
-                resolve(results[0]);
+                location.geometry = {
+                    type: 'Point',
+                    coordinates: [results[0].geometry.location.lng(), results[0].geometry.location.lat()]
+                };
+                resolve(location);
             } else {
                 reject();
             }
