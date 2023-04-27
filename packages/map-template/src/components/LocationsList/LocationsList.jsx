@@ -2,6 +2,7 @@ import React from "react";
 import './LocationsList.scss';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import ListItemLocation from "../WebComponentWrappers/ListItemLocation/ListItemLocation";
+import { usePreventSwipe } from "../../hooks/usePreventSwipe";
 
 /**
  * Show list of locations.
@@ -13,6 +14,9 @@ import ListItemLocation from "../WebComponentWrappers/ListItemLocation/ListItemL
  *
  */
 function LocationsList({ onBack, onLocationClick, locations }) {
+
+    const scrollableContentSwipePrevent = usePreventSwipe();
+
     return (
         <div className="locations-list">
             <div className="locations-list__header">
@@ -21,14 +25,16 @@ function LocationsList({ onBack, onLocationClick, locations }) {
                     <CloseIcon />
                 </button>
             </div>
-            <div className="locations-list__list">
-                {locations?.map(location =>
-                    <ListItemLocation
-                        key={location.id}
-                        location={location}
-                        locationClicked={e => onLocationClick(e)}
-                    />
-                )}
+            <div className="locations-list__scrollable prevent-scroll" {...scrollableContentSwipePrevent}>
+                <div className="locations-list__list">
+                    {locations?.map(location =>
+                        <ListItemLocation
+                            key={location.id}
+                            location={location}
+                            locationClicked={e => onLocationClick(e)}
+                        />
+                    )}
+                </div>
             </div>
         </div>
     )

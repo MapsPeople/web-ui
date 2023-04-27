@@ -28,4 +28,8 @@
         grid-auto-rows: min-content;
         padding: var(--spacing-x-small);;
     }
+
+    &__scrollable {
+        overflow: auto;
+    }
 }
