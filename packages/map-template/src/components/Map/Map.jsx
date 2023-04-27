@@ -92,11 +92,10 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
      */
     const onTileStyleChanged = (miInstance) => {
         if (miInstance) {
-            const tileURL = miInstance.getTileURL().replace('lundefined/', 'l{floor}/').replace(/\/l(\d+)\//gm, '/l{floor}/');
-            const newTileURL = tileURL.replace('default', _tileStyle);
+            const tileURL = miInstance.getTileURL().replace('default', _tileStyle);
 
             // Set Tile URL whenever the floor changes
-            const tileStyleWithFloor = newTileURL?.replace('{floor}', miInstance.getFloor());
+            const tileStyleWithFloor = tileURL?.replace('{floor}', miInstance.getFloor());
             miInstance.getMapView().setMapsIndoorsTileURL(tileStyleWithFloor);
         }
     }
