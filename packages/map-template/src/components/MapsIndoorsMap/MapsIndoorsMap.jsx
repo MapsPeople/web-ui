@@ -260,7 +260,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             onDirectionsService={(instance) => setDirectionsService(instance)}
                             onLocationClick={(location) => locationClicked(location)}
                             onUserPosition={position => setUserPosition(position)}
-							onSelectedMapType={(mapType) => setSelectedMapType(mapType)}/>
+                                onSelectedMapType={(mapType) => setSelectedMapType(mapType)}/>
                             filteredLocationIds={filteredLocations?.map(location => location.id)} />
                     </div>
                 </UserPositionContext.Provider>
