@@ -227,8 +227,20 @@ function Wayfinding({ onStartDirections, onBack, to, from, onSetSize, isActive, 
         }
     }
 
+    /**
+     * Either set user position to "from field" or focus the "from" field.
+     */
+    function setPositionOrSetFocus() {
+        if (userPosition && !from) {
+            setMyPositionAsOrigin();
+        } else if (!from) {
+            fromFieldRef.current.focusInput();
+        }
+    }
+
     useEffect(() => {
         setSize(snapPoints.MAX);
+
         // If there is a "to" location, use that as the "to" field.
         if (to) {
             toFieldRef.current.setDisplayText(to.properties.name);
@@ -243,27 +255,19 @@ function Wayfinding({ onStartDirections, onBack, to, from, onSetSize, isActive, 
             setActiveSearchField(searchFieldIdentifiers.FROM);
         }
 
-    }, [to]);
-
-    useEffect(() => {
         if (isActive && !fromFieldRef.current?.getValue()) {
             // Set focus on the from field.
             // But wait for any bottom sheet transition to end before doing that to avoid content jumping when virtual keyboard appears.
             const sheet = wayfindingRef.current.closest('.sheet');
             if (sheet) {
                 sheet.addEventListener('transitionend', () => {
-                    fromFieldRef.current.focusInput();
+                    setPositionOrSetFocus();
                 }, { once: true });
             } else {
-                fromFieldRef.current.focusInput();
-            }
-
-            if (userPosition && !originLocation) {
-                // If the user's position is known and no origin location is set, use the position as Origin.
-                setMyPositionAsOrigin();
+                setPositionOrSetFocus();
             }
         }
-    }, [isActive]);
+    }, [isActive, to, from]);
 
     /**
      * When both origin location and destination location are selected, call the MapsIndoors SDK
