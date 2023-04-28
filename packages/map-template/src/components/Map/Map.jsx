@@ -13,12 +13,6 @@ const MAP_TYPES = {
 const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
 
 /**
- * Private variable used for storing the tile style.
- * Implemented due to the impossibility to use the React useState hook.
- */
-let _tileStyle;
-
-/**
  * Shows a map.
  *
  * @param {Object} props
@@ -92,7 +86,7 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
      */
     const onTileStyleChanged = (miInstance) => {
         if (miInstance) {
-            const tileURL = miInstance.getTileURL().replace('default', _tileStyle);
+            const tileURL = miInstance.getTileURL().replace('default', tileStyle);
 
             // Set Tile URL whenever the floor changes
             const tileStyleWithFloor = tileURL?.replace('{floor}', miInstance.getFloor());
@@ -143,10 +137,8 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
      */
     useEffect(() => {
         if (tileStyle) {
-            _tileStyle = tileStyle;
             onTileStyleChanged(mapsIndoorsInstance);
         } else {
-            _tileStyle = 'default';
             onTileStyleChanged(mapsIndoorsInstance);
         }
     }, [tileStyle]);
