@@ -12,7 +12,7 @@ import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemL
 import SearchField from '../WebComponentWrappers/Search/Search';
 import { snapPoints } from '../../constants/snapPoints';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
-import handleGooglePlaces from "../Map/GoogleMapsMap/GooglePlacesHandler";
+import addGooglePlaceGeometry from "../Map/GoogleMapsMap/GooglePlacesHandler";
 import GooglePlaces from '../../assets/google-places.png';
 import { mapTypes } from "../../constants/mapTypes";
 
@@ -84,7 +84,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      */
     function decorateLocation(location) {
         if (selectedMapType === mapTypes.Google && location.properties.type === 'google_places') {
-            return handleGooglePlaces(location);
+            return addGooglePlaceGeometry(location);
         } else {
             return Promise.resolve(location);
         }

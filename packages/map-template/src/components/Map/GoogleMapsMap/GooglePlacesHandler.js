@@ -1,11 +1,11 @@
 let googleMapsGeocoder;
 
 /**
- *  Handle google places.
+ *  Handle google places and add geometry with type and coordinates.
  *
  * @param {Object} location
  */
-function handleGooglePlaces(location) {
+function addGooglePlaceGeometry(location) {
     return new Promise((resolve, reject) => {
         if (!googleMapsGeocoder) {
             googleMapsGeocoder = new window.google.maps.Geocoder();
@@ -24,4 +24,4 @@ function handleGooglePlaces(location) {
     });
 }
 
-export default handleGooglePlaces;
+export default addGooglePlaceGeometry;
