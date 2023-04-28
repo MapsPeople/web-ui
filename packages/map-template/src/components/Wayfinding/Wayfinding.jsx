@@ -248,8 +248,8 @@ function Wayfinding({ onStartDirections, onBack, to, from, onSetSize, isActive, 
                 fromFieldRef.current.focusInput();
             }
 
-            if (userPosition && to.id !== 'USER_POSITION') {
-                // If the user's position is known, use that as Origin.
+            if (userPosition && !originLocation && to.id !== 'USER_POSITION') {
+                // If the user's position is known and no origin location is set, use the position as Origin.
                 setMyPositionAsOrigin();
             }
         }
@@ -301,14 +301,14 @@ function Wayfinding({ onStartDirections, onBack, to, from, onSetSize, isActive, 
                 </button>
                 <div className="wayfinding__locations">
                     <label className="wayfinding__label">
-                        TO
+                        FROM
                         <SearchField
-                            ref={toFieldRef}
+                            ref={fromFieldRef}
                             mapsindoors={true}
                             placeholder="Search by name, category, building..."
-                            results={locations => searchResultsReceived(locations, searchFieldIdentifiers.TO)}
-                            clicked={() => onSearchClicked(searchFieldIdentifiers.TO)}
-                            cleared={() => onSearchCleared(searchFieldIdentifiers.TO)}
+                            results={locations => searchResultsReceived(locations, searchFieldIdentifiers.FROM)}
+                            clicked={() => onSearchClicked(searchFieldIdentifiers.FROM)}
+                            cleared={() => onSearchCleared(searchFieldIdentifiers.FROM)}
                         />
                     </label>
                     <button onClick={() => switchDirectionsHandler()}
@@ -317,14 +317,14 @@ function Wayfinding({ onStartDirections, onBack, to, from, onSetSize, isActive, 
                         <SwitchIcon />
                     </button>
                     <label className="wayfinding__label">
-                        FROM
+                        TO
                         <SearchField
-                            ref={fromFieldRef}
+                            ref={toFieldRef}
                             mapsindoors={true}
-                            placeholder="Search by name, category, buildings..."
-                            results={locations => searchResultsReceived(locations, searchFieldIdentifiers.FROM)}
-                            clicked={() => onSearchClicked(searchFieldIdentifiers.FROM)}
-                            cleared={() => onSearchCleared(searchFieldIdentifiers.FROM)}
+                            placeholder="Search by name, category, building..."
+                            results={locations => searchResultsReceived(locations, searchFieldIdentifiers.TO)}
+                            clicked={() => onSearchClicked(searchFieldIdentifiers.TO)}
+                            cleared={() => onSearchCleared(searchFieldIdentifiers.TO)}
                         />
                     </label>
                     {userPosition && originLocation?.properties.name !== 'My Position' && <p className="wayfinding__use-current-position">
