@@ -30,6 +30,8 @@ const searchFieldIdentifiers = {
  */
 function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, onDirections }) {
 
+    const wayfindingRef = useRef();
+
     /** Referencing the accessibility details DOM element */
     const detailsRef = useRef();
 
@@ -237,11 +239,20 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
 
     useEffect(() => {
         if (isActive && !fromFieldRef.current?.getValue()) {
+            // Set focus on the from field.
+            // But wait for any bottom sheet transition to end before doing that to avoid content jumping when virtual keyboard appears.
+            const sheet = wayfindingRef.current.closest('.sheet');
+            if (sheet) {
+                sheet.addEventListener('transitionend', () => {
+                    fromFieldRef.current.focusInput();
+                }, { once: true });
+            } else {
+                fromFieldRef.current.focusInput();
+            }
+
             if (userPosition) {
                 // If the user's position is known, use that as Origin.
                 setMyPositionAsOrigin();
-            } else {
-                fromFieldRef.current.focusInput();
             }
         }
     }, [isActive]);
@@ -258,6 +269,8 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                 avoidStairs: accessibilityOn
             }).then(directionsResult => {
                 if (directionsResult && directionsResult.legs) {
+                    setHasError(false);
+                    setHasFoundRoute(true);
                     // Calculate total distance and time
                     const totalDistance = directionsResult.legs.reduce((accumulator, current) => accumulator + current.distance.value, 0);
                     const totalTime = directionsResult.legs.reduce((accumulator, current) => accumulator + current.duration.value, 0);
@@ -282,7 +295,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
     }, [originLocation, destinationLocation, directionsService, accessibilityOn]);
 
     return (
-        <div className="wayfinding">
+        <div className="wayfinding" ref={wayfindingRef}>
             <div className="wayfinding__directions">
                 <div className="wayfinding__title">Start wayfinding</div>
                 <button className="wayfinding__close"
@@ -292,14 +305,14 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                 </button>
                 <div className="wayfinding__locations">
                     <label className="wayfinding__label">
-                        TO
+                        FROM
                         <SearchField
-                            ref={toFieldRef}
+                            ref={fromFieldRef}
                             mapsindoors={true}
                             placeholder="Search by name, category, building..."
-                            results={locations => searchResultsReceived(locations, searchFieldIdentifiers.TO)}
-                            clicked={() => onSearchClicked(searchFieldIdentifiers.TO)}
-                            cleared={() => onSearchCleared(searchFieldIdentifiers.TO)}
+                            results={locations => searchResultsReceived(locations, searchFieldIdentifiers.FROM)}
+                            clicked={() => onSearchClicked(searchFieldIdentifiers.FROM)}
+                            cleared={() => onSearchCleared(searchFieldIdentifiers.FROM)}
                         />
                     </label>
                     <button onClick={() => switchDirectionsHandler()}
@@ -308,14 +321,14 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                         <SwitchIcon />
                     </button>
                     <label className="wayfinding__label">
-                        FROM
+                        TO
                         <SearchField
-                            ref={fromFieldRef}
+                            ref={toFieldRef}
                             mapsindoors={true}
-                            placeholder="Search by name, category, buildings..."
-                            results={locations => searchResultsReceived(locations, searchFieldIdentifiers.FROM)}
-                            clicked={() => onSearchClicked(searchFieldIdentifiers.FROM)}
-                            cleared={() => onSearchCleared(searchFieldIdentifiers.FROM)}
+                            placeholder="Search by name, category, building..."
+                            results={locations => searchResultsReceived(locations, searchFieldIdentifiers.TO)}
+                            clicked={() => onSearchClicked(searchFieldIdentifiers.TO)}
+                            cleared={() => onSearchCleared(searchFieldIdentifiers.TO)}
                         />
                     </label>
                     {userPosition && originLocation?.properties.name !== 'My Position' && <p className="wayfinding__use-current-position">
