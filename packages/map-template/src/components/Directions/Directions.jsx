@@ -137,15 +137,15 @@ function Directions({ isOpen, onBack, directions }) {
                 <div className="directions__locations">
                     <div className="directions__container">
                         <label className="directions__label">
-                            To
-                        </label>
-                        {directions?.destinationLocation && <div>{directions.destinationLocation.properties.name}</div>}
-                    </div>
-                    <div className="directions__container">
-                        <label className="directions__label">
                             From
                         </label>
                         {directions?.originLocation && <div>{directions.originLocation.properties.name}</div>}
+                    </div>
+                    <div className="directions__container">
+                        <label className="directions__label">
+                            To
+                        </label>
+                        {directions?.destinationLocation && <div>{directions.destinationLocation.properties.name}</div>}
                     </div>
                 </div>
             </div>
