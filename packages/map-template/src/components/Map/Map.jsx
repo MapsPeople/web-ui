@@ -88,7 +88,7 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
         if (miInstance) {
             const tileURL = miInstance.getTileURL().replace('default', tileStyle);
 
-            // Set Tile URL whenever the floor changes
+            // Replace the floor placeholder with the actual floor and set the tile URL on the MapView.
             const tileStyleWithFloor = tileURL?.replace('{floor}', miInstance.getFloor());
             miInstance.getMapView().setMapsIndoorsTileURL(tileStyleWithFloor);
         }
