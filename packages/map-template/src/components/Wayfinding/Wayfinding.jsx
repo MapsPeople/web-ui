@@ -269,6 +269,8 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                 avoidStairs: accessibilityOn
             }).then(directionsResult => {
                 if (directionsResult && directionsResult.legs) {
+                    setHasError(false);
+                    setHasFoundRoute(true);
                     // Calculate total distance and time
                     const totalDistance = directionsResult.legs.reduce((accumulator, current) => accumulator + current.distance.value, 0);
                     const totalTime = directionsResult.legs.reduce((accumulator, current) => accumulator + current.duration.value, 0);
