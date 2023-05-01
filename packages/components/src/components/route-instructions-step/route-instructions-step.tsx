@@ -248,8 +248,7 @@ export class RouteInstructionsStep implements ComponentInterface {
     renderDistance(): JSX.Element {
         return <span part="step-info" class="step__distance-duration">
             <mi-distance
-                meters={this.stepData.distance.value}
-                unit={this.unit}>
+                meters={this.stepData.distance.value}>
             </mi-distance><br />
         </span>;
     }
