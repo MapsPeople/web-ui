@@ -143,11 +143,7 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
      * React on changes in the tile style prop.
      */
     useEffect(() => {
-        if (tileStyle) {
-            _tileStyle = tileStyle;
-        } else {
-            _tileStyle = 'default';
-        }
+        _tileStyle = tileStyle || 'default' 
         onTileStyleChanged(mapsIndoorsInstance);
     }, [tileStyle]);
 
