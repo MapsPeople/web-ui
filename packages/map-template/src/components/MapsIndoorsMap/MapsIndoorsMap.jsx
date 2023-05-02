@@ -68,20 +68,14 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     }, [currentAppView]);
 
     /**
-     * When venue is fitted while initializing the data, set map to be ready.
+     * When venue is fitted while initializing the data,
+     * set map to be ready and get the venue categories.
      */
     function venueChangedOnMap(venue) {
         if (isMapReady === false) {
             setMapReady(true);
         }
-
-        // If a venue is passed from the Map component, use that to get the venue categories,
-        // otherwise use the venue that has been set in the prop to get the categories.
-        if (venue) {
-            getVenueCategories(venue.name);
-        } else {
-            getVenueCategories(currentVenueName);
-        }
+        getVenueCategories(venue.name);
     }
 
     /**
