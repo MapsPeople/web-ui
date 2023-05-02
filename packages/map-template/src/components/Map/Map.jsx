@@ -91,7 +91,7 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
      * Replace the default tile URL style to the incoming tile style.
      */
     const onTileStyleChanged = (miInstance) => {
-        if (miInstance) {
+        if (miInstance && _tileStyle) {
             const tileURL = miInstance.getTileURL().replace('default', _tileStyle);
 
             // Replace the floor placeholder with the actual floor and set the tile URL on the MapView.
