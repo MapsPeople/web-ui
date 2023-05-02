@@ -715,8 +715,8 @@ export namespace Components {
          */
         "translations": string;
         /**
-          * Set imperial or metric as default unit system.
-          * @type {UnitSystem} 'imperial' or 'metric'
+          * Set imperial or metric as default unit system. Default is Metric unless the browser is running US English. In that case Imperial.
+          * @type {UnitSystem}
          */
         "unit": UnitSystem;
     }
@@ -1950,8 +1950,8 @@ declare namespace LocalJSX {
          */
         "translations"?: string;
         /**
-          * Set imperial or metric as default unit system.
-          * @type {UnitSystem} 'imperial' or 'metric'
+          * Set imperial or metric as default unit system. Default is Metric unless the browser is running US English. In that case Imperial.
+          * @type {UnitSystem}
          */
         "unit"?: UnitSystem;
     }

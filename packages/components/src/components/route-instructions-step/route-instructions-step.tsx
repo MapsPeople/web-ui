@@ -56,10 +56,10 @@ export class RouteInstructionsStep implements ComponentInterface {
     @Prop() fromTransitStop: string;
 
     /**
-     * Set imperial or metric as default unit system.
-     * @type {UnitSystem} 'imperial' or 'metric'
+     * Set imperial or metric as default unit system. Default is Metric unless the browser is running US English. In that case Imperial.
+     * @type {UnitSystem}
      */
-    @Prop() unit: UnitSystem = UnitSystem.Metric;
+    @Prop() unit: UnitSystem = navigator.language === 'en-US' ? UnitSystem.Imperial : UnitSystem.Metric;
 
     /**
      * Object with translation strings as stringified JSON.
@@ -248,7 +248,8 @@ export class RouteInstructionsStep implements ComponentInterface {
     renderDistance(): JSX.Element {
         return <span part="step-info" class="step__distance-duration">
             <mi-distance
-                meters={this.stepData.distance.value}>
+                meters={this.stepData.distance.value}
+                unit={this.unit}>
             </mi-distance><br />
         </span>;
     }
