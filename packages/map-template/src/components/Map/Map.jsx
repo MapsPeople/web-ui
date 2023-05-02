@@ -145,11 +145,10 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
     useEffect(() => {
         if (tileStyle) {
             _tileStyle = tileStyle;
-            onTileStyleChanged(mapsIndoorsInstance);
         } else {
             _tileStyle = 'default';
-            onTileStyleChanged(mapsIndoorsInstance);
         }
+        onTileStyleChanged(mapsIndoorsInstance);
     }, [tileStyle]);
 
 
