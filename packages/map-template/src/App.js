@@ -13,11 +13,11 @@ const mapboxAccessToken = params.get('mapboxAccessToken');
 const gmApiKey = params.get('gmApiKey');
 
 // Append the hashtag symbol to the colour code (i.e. ffffff)
-const primaryColor = '#'.concat(params.get('primaryColor'))
+const primaryColor = params.get('primaryColor');
+const hexPrimaryColor = primaryColor ? '#'.concat(primaryColor) : undefined;
 
 // Create an array of elements based on the comma separated values
 const appUserRoles = params.get('appUserRoles')?.split(',')
-
 
 function App() {
     return (
@@ -27,7 +27,7 @@ function App() {
                 apiKey={apiKey ? apiKey : 'demo'}
                 venue={venue}
                 locationId={`${locationId}`}
-                primaryColor={primaryColor ? primaryColor : undefined}
+                primaryColor={hexPrimaryColor}
                 logo={logo ? logo : undefined}
                 appUserRoles={appUserRoles}
                 mapboxAccessToken={mapboxAccessToken ? mapboxAccessToken : process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
