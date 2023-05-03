@@ -9,9 +9,11 @@ function App() {
     const venue = params.get('venue');
     const locationId = params.get('locationId');
     const primaryColor = params.get('primaryColor');
-    const hexPrimaryColor='#'.concat(primaryColor)
+    const hexPrimaryColor = '#'.concat(primaryColor)
     const logo = params.get('logo');
     const appUserRoles = params.get('appUserRoles');
+    const mapboxAccessToken = params.get('mapboxAccessToken');
+    const gmApiKey = params.get('gmApiKey');
 
     console.log('query string', queryString);
     console.log('params', params);
@@ -23,6 +25,8 @@ function App() {
     console.log('hexPrimaryColor', hexPrimaryColor)
     console.log('logo', logo)
     console.log('appUserRoles', appUserRoles)
+    console.log('mapboxAccessToken', mapboxAccessToken)
+    console.log('gmApiKey', gmApiKey)
 
     return (
         <div className="app">
@@ -34,8 +38,8 @@ function App() {
                 primaryColor={hexPrimaryColor ? hexPrimaryColor : undefined}
                 logo={logo ? logo : undefined}
                 appUserRoles={appUserRoles}
-                mapboxAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
-            // gmApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
+                mapboxAccessToken={mapboxAccessToken ? mapboxAccessToken : process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
+            // gmApiKey={gmApiKey ? gmApiKey : process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
             />
         </div>
     );
