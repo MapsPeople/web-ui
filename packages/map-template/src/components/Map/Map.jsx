@@ -92,11 +92,14 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
      */
     const onTileStyleChanged = (miInstance) => {
         if (miInstance && _tileStyle) {
-            const tileURL = miInstance.getTileURL().replace('default', _tileStyle);
+            let tileURL = miInstance.getTileURL();
+            if (tileURL) {
+                tileURL = miInstance.getTileURL().replace('default', _tileStyle);
 
-            // Replace the floor placeholder with the actual floor and set the tile URL on the MapView.
-            const tileStyleWithFloor = tileURL?.replace('{floor}', miInstance.getFloor());
-            miInstance.getMapView().setMapsIndoorsTileURL(tileStyleWithFloor);
+                // Replace the floor placeholder with the actual floor and set the tile URL on the MapView.
+                const tileStyleWithFloor = tileURL?.replace('{floor}', miInstance.getFloor());
+                miInstance.getMapView().setMapsIndoorsTileURL(tileStyleWithFloor);
+            }
         }
     }
 
@@ -143,7 +146,7 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
      * React on changes in the tile style prop.
      */
     useEffect(() => {
-        _tileStyle = tileStyle || 'default' 
+        _tileStyle = tileStyle || 'default';
         onTileStyleChanged(mapsIndoorsInstance);
     }, [tileStyle]);
 
