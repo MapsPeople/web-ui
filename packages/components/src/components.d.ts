@@ -290,7 +290,7 @@ export namespace Components {
          */
         "iconBadgeValue": string;
         /**
-          * @description MI location.
+          * @description Location object.
          */
         "location": any;
         /**
@@ -340,7 +340,7 @@ export namespace Components {
     }
     interface MiLocationInfo {
         /**
-          * @description MI location.
+          * @description Location object.
          */
         "location": any;
     }
@@ -1540,7 +1540,7 @@ declare namespace LocalJSX {
          */
         "iconBadgeValue"?: string;
         /**
-          * @description MI location.
+          * @description Location object.
          */
         "location"?: any;
         /**
@@ -1622,7 +1622,7 @@ declare namespace LocalJSX {
     }
     interface MiLocationInfo {
         /**
-          * @description MI location.
+          * @description Location object.
          */
         "location"?: any;
     }

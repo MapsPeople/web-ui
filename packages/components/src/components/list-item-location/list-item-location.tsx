@@ -13,7 +13,7 @@ declare const mapsindoors;
 export class ListItemLocation {
 
     /**
-     * @description MI location.
+     * @description Location object.
      */
     @Prop() location;
 

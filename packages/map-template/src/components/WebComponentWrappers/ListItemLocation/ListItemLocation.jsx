@@ -7,8 +7,9 @@ import { MapsIndoorsContext } from '../../../MapsIndoorsContext';
  * @param {object} props
  * @param {object} location - MapsIndoors Location
  * @param {function} locationClicked - Function that is called when Location is clicked.
+ * @param {string} icon
  */
-function ListItemLocation({ location, locationClicked }) {
+function ListItemLocation({ location, locationClicked, icon }) {
     const elementRef = useRef();
 
     const mapsIndoorsInstance = useContext(MapsIndoorsContext);
@@ -19,7 +20,9 @@ function ListItemLocation({ location, locationClicked }) {
         const { current } = elementRef;
 
         current.location = location;
-        current.icon = mapsIndoorsInstance.getDisplayRule(location).icon;
+
+        current.icon = icon ? icon : mapsIndoorsInstance.getDisplayRule(location).icon;
+
         current.addEventListener('locationClicked', clickHandler);
 
         return () => current.removeEventListener('locationClicked', clickHandler);

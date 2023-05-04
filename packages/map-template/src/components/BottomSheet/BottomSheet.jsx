@@ -18,8 +18,9 @@ import Search from '../Search/Search';
  * @param {function} props.pushAppView - Function to push to app view to browser history.
  * @param {string} props.currentAppView - Holds the current view/state of the Map Template.
  * @param {array} props.appViews - Array of all possible views.
+ * @param {string} props.selectedMapType - The currently selected map type.
  */
-function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, currentVenueName, pushAppView, currentAppView, appViews}) {
+function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, currentVenueName, pushAppView, currentAppView, appViews, selectedMapType}) {
 
     const bottomSheetRef = useRef();
 
@@ -88,6 +89,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
                 onDirections={result => setDirections(result)}
                 onBack={() => pushAppView(appViews.LOCATION_DETAILS)}
                 isActive={currentAppView === appViews.WAYFINDING}
+                 selectedMapType={selectedMapType}
             />
         </Sheet>,
         <Sheet
