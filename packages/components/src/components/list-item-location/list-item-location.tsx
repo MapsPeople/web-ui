@@ -29,6 +29,11 @@ export class ListItemLocation {
      */
     @Prop() icon: string;
 
+    @Watch('icon')
+    iconChanged(): void {
+        this.iconURLToRender = this.icon ? this.icon : this.location?.properties.imageURL;
+        this.updateBadge();
+    }
     /**
      * @description Add a badge to the location icon of the type given as value.
      * @type {string}
@@ -63,7 +68,7 @@ export class ListItemLocation {
      */
     @Event() listItemDidRender: EventEmitter;
 
-    @State() iconURLToRender; string;
+    @State() iconURLToRender: string;
 
     private imageElement: HTMLImageElement;
     private infoElement: HTMLMiLocationInfoElement;
