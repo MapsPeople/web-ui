@@ -53,7 +53,7 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
             const venueToShow = getVenueToShow(venueName, venues);
             if (venueToShow) {
                 setVenue(venueToShow, mapsIndoorsInstance).then(() => {
-                    onVenueChangedOnMap();
+                    onVenueChangedOnMap(venueToShow);
                 });
             };
         }
