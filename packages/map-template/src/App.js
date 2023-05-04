@@ -12,7 +12,7 @@ const logo = params.get('logo');
 const mapboxAccessToken = params.get('mapboxAccessToken');
 const gmApiKey = params.get('gmApiKey');
 
-// Append the hashtag symbol to the colour code (i.e. ffffff)
+// Append the hashtag symbol to the color code (i.e. ffffff)
 const primaryColor = params.get('primaryColor');
 const hexPrimaryColor = primaryColor ? '#'.concat(primaryColor) : undefined;
 
