@@ -1,6 +1,6 @@
-.locations-list {
-    min-height: 165px;
+@import '../../variables.scss';
 
+.locations-list {
     &__header {
         padding: var(--spacing-medium);
         position: relative;
@@ -27,5 +27,13 @@
         overflow: auto;
         grid-auto-rows: min-content;
         padding: var(--spacing-x-small);;
+    }
+
+    &__scrollable {
+        overflow: auto;
+    }
+
+    @media (max-width: $desktop-breakpoint) {
+        height: 200px;
     }
 }

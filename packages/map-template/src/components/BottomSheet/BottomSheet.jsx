@@ -85,7 +85,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
             />
         </Sheet>,
         <Sheet
-            minHeight="165"
+            minHeight="200"
             isOpen={currentAppView === appViews.EXTERNALIDS}
             key="B">
             <LocationsList
