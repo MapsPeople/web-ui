@@ -63,3 +63,4 @@ To have any Stencil component changes be reflected in this project, you need to 
 |`locationId`|`string`|Set a MapsIndoors Location ID to show it on the map and its details in the sheet. |
 |`primaryColor`|`string`|The primary color to use throughout the app. |
 |`logo`|`string`|The logo to show during initial load. |
+|`appUserRoles`|`array`|A list of App User Roles to apply when loading data. Used like so: `appUserRoles={["App User Role"]}`|
