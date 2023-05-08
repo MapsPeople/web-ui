@@ -40,7 +40,7 @@
         padding: var(--spacing-medium);
     }
 
-    &__info {
+    &__metrics {
         display: grid;
         gap: var(--spacing-x-small);
     }
@@ -81,4 +81,32 @@
         height: 1px;
     }
 
+
+    &__info {
+        display: flex;
+        align-items: center;
+        font-size: var(--font-size-small);
+    }
+
+    &__icon {
+        margin-right: var(--spacing-medium);
+
+        img {
+            height: var(--spacing-x-large);
+            display: block;
+            /* to avoid spacing below */
+        }
+    }
+
+    &__name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 100%;
+    }
+
+    &__content {
+        display: grid;
+        gap: var(--spacing-xx-small);
+    }
 }

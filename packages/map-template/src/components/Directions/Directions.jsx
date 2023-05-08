@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import './Directions.scss';
 import { MapsIndoorsContext } from '../../MapsIndoorsContext';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
@@ -12,6 +12,13 @@ const mapsindoors = window.mapsindoors;
 let directionsRenderer;
 
 function Directions({ isOpen, onBack, directions }) {
+    // Holds the MapsIndoors DisplayRule for the origin
+    const [originDisplayRule, setOriginDisplayRule] = useState(null);
+    // Holds the MapsIndoors DisplayRule for the destination
+    const [destinationDisplayRule, setDestinationDisplayRule] = useState(null);
+
+    const destinationInfoElement = useRef(null);
+    const originInfoElement = useRef(null);
 
     const [totalDistance, setTotalDistance] = useState();
     const [totalTime, setTotalTime] = useState();
@@ -21,6 +28,8 @@ function Directions({ isOpen, onBack, directions }) {
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
     useEffect(() => {
+        setDestinationDisplayRule(null);
+        setOriginDisplayRule(null);
         if (isOpen && directions) {
             setTotalDistance(directions.totalDistance);
             setTotalTime(directions.totalTime);
@@ -43,7 +52,14 @@ function Directions({ isOpen, onBack, directions }) {
 
             // Set the step index to be 0 in order to display the correct instruction on the map.
             directionsRenderer.setStepIndex(0);
+
+            originInfoElement.current.location = directions.originLocation;
+            destinationInfoElement.current.location = directions.destinationLocation;
+            setOriginDisplayRule(mapsIndoorsInstance.getDisplayRule(directions.originLocation));
+            setDestinationDisplayRule(mapsIndoorsInstance.getDisplayRule(directions.destinationLocation));
         }
+
+
     }, [isOpen, directions, mapsIndoorsInstance]);
 
     /*
@@ -139,18 +155,42 @@ function Directions({ isOpen, onBack, directions }) {
                         <label className="directions__label">
                             From
                         </label>
-                        {directions?.originLocation && <div>{directions.originLocation.properties.name}</div>}
+                        {directions?.originLocation &&
+                            <div className="directions__info">
+                                <div className="directions__icon">
+                                    {originDisplayRule && <img alt="" src={originDisplayRule.icon.src ? originDisplayRule.icon.src : originDisplayRule.icon} />}
+                                </div>
+                                <div className="directions__content">
+                                    <div className='directions__name'>
+                                        {directions?.originLocation.properties.name}
+                                    </div>
+                                    <mi-location-info ref={originInfoElement} />
+                                </div>
+                            </div>
+                        }
                     </div>
                     <div className="directions__container">
                         <label className="directions__label">
                             To
                         </label>
-                        {directions?.destinationLocation && <div>{directions.destinationLocation.properties.name}</div>}
+                        {directions?.destinationLocation &&
+                            <div className="directions__info">
+                                <div className="directions__icon">
+                                    {destinationDisplayRule && <img alt="" src={destinationDisplayRule.icon.src ? destinationDisplayRule.icon.src : destinationDisplayRule.icon} />}
+                                </div>
+                                <div className="directions__content">
+                                    <div className='directions__name'>
+                                        {directions?.destinationLocation.properties.name}
+                                    </div>
+                                    <mi-location-info ref={destinationInfoElement} />
+                                </div>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
             <div className="directions__guide">
-                <div className="directions__info">
+                <div className="directions__metrics">
                     <div className="directions__distance">
                         <WalkingIcon />
                         <div>Distance:</div>
