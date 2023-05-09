@@ -165,7 +165,7 @@ function Directions({ isOpen, onBack, directions }) {
                                 <div className="directions__content">
                                     <div className='directions__name'>
                                         {directions?.originLocation.properties.name}
-                                        <div>·</div>
+                                        {directions?.originLocation.properties.name !== 'My Position' && <div>·</div>}
                                         <mi-location-info ref={originInfoElement} />
                                     </div>
                                 </div>
