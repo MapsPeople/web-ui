@@ -34,10 +34,10 @@ let _locationsDisabled;
  * @param {array} [props.appUserRoles] - If you want the map to behave differently for specific users, set one or more app user roles here.
  * @param {string} [props.directionsFrom] - If you want to show directions instantly, provide a MapsIndoors Location ID here to be used as the origin. Must be used together with directionsTo.
  * @param {string} [props.directionsTo] - If you want to show directions instantly, provide a MapsIndoors Location ID here to be used as the destination. Must be used together with directionsFrom.
+ * @param {string} [props.tileStyle] - Tile style name to change the interface of the map.
  * @param {array} [props.externalIDs] - Filter locations shown on the map based on the external IDs.
  */
-function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs }) {
-
+function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle }) {
     const [isMapReady, setMapReady] = useState(false);
     const [venues, setVenues] = useState([]);
     const [currentVenueName, setCurrentVenueName] = useState();
@@ -310,7 +310,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             onMapTypeChanged={(mapType) => setSelectedMapType(mapType)}
                             filteredLocationIds={filteredLocations?.map(location => location.id)}
                             filteredLocationsByExternalIDs={filteredLocationsByExternalID?.map(location => location.id)}
-                        />
+							tileStyle={tileStyle} />
                     </div>
                 </UserPositionContext.Provider>
             </DirectionsServiceContext.Provider>

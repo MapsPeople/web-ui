@@ -9,6 +9,12 @@ const mapsindoors = window.mapsindoors;
 const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
 
 /**
+ * Private variable used for storing the tile style.
+ * Implemented due to the impossibility to use the React useState hook.
+ */
+let _tileStyle;
+
+/**
  * Shows a map.
  *
  * @param {Object} props
@@ -24,10 +30,11 @@ const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
  * @param {function} props.onUserPosition - Function that is run when (if) the user position updates. Sends position as payload.
  * @param {array} props.filteredLocationIds - Array of IDs of the filtered locations.
  * @param {function} props.onMapTypeChanged - Function that is run when the map type is changed.
+ * @param {string} props.tileStyle - Tile style name to change the interface of the map.
  * @param {array} props.filteredLocationsByExternalIDs - Array of IDs of the filtered locations based on external ID.
  * @returns
  */
-function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onMapsIndoorsInstance, onDirectionsService, onVenueChangedOnMap, onUserPosition, filteredLocationIds, onMapTypeChanged, filteredLocationsByExternalIDs }) {
+function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onMapsIndoorsInstance, onDirectionsService, onVenueChangedOnMap, onUserPosition, filteredLocationIds, onMapTypeChanged, tileStyle, filteredLocationsByExternalIDs }) {
     const [mapType, setMapType] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState(null);
 
@@ -84,6 +91,22 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
         return mapsIndoorsInstance.fitVenue(venue);
     }
 
+    /**
+     * Replace the default tile URL style to the incoming tile style.
+     */
+    const onTileStyleChanged = (miInstance) => {
+        if (miInstance && _tileStyle) {
+            let tileURL = miInstance.getTileURL();
+            if (tileURL) {
+                tileURL = miInstance.getTileURL().replace('default', _tileStyle);
+
+                // Replace the floor placeholder with the actual floor and set the tile URL on the MapView.
+                const tileStyleWithFloor = tileURL?.replace('{floor}', miInstance.getFloor());
+                miInstance.getMapView().setMapsIndoorsTileURL(tileStyleWithFloor);
+            }
+        }
+    }
+
     const onMapView = async (mapView, externalDirectionsProvider) => {
         // Instantiate MapsIndoors instance
         const miInstance = new mapsindoors.MapsIndoors({
@@ -94,6 +117,8 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
         miInstance.setDisplayRule('MI_BUILDING_OUTLINE', { visible: false });
 
         miInstance.on('click', location => onLocationClick(location));
+        miInstance.once('building_changed', () => onTileStyleChanged(miInstance))
+        miInstance.on('floor_changed', () => onTileStyleChanged(miInstance));
 
         setMapsIndoorsInstance(miInstance);
         onMapsIndoorsInstance(miInstance);
@@ -120,6 +145,15 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
             }
         });
     }
+
+    /*
+     * React on changes in the tile style prop.
+     */
+    useEffect(() => {
+        _tileStyle = tileStyle || 'default';
+        onTileStyleChanged(mapsIndoorsInstance);
+    }, [tileStyle]);
+
 
     return (<>
         {mapType === mapTypes.Google && <GoogleMapsMap gmApiKey={gmApiKey} onMapView={onMapView} onPositionControl={onPositionControl} mapsIndoorsInstance={mapsIndoorsInstance} />}
