@@ -15,11 +15,14 @@ import Search from '../Search/Search';
  * @param {Object} props.currentCategories - The unique categories displayed based on the existing locations.
  * @param {function} props.onLocationsFiltered - The list of locations after filtering through the categories.
  * @param {string} props.currentVenueName - The currently selected venue.
+ * @param {string} props.directionsFromLocation - Origin Location to be used to instantly show directions.
+ * @param {string} props.directionsToLocation - Destination Location to be used to instantly show directions.
  * @param {function} props.pushAppView - Function to push to app view to browser history.
  * @param {string} props.currentAppView - Holds the current view/state of the Map Template.
  * @param {array} props.appViews - Array of all possible views.
+ * @param {string} props.selectedMapType - The currently selected map type.
  */
-function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, currentVenueName, pushAppView, currentAppView, appViews}) {
+function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, currentVenueName, directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews, selectedMapType}) {
 
     const bottomSheetRef = useRef();
 
@@ -31,14 +34,17 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
     const [searchSheetSize, setSearchSheetSize] = useState();
 
     /*
-     * React on changes on the current location.
-     * Set the search bottom sheet to be active if there is no location selected.
+     * React on changes on the current location and directions locations and set relevant bottom sheet.
      */
     useEffect(() => {
-        if (currentLocation && currentAppView !== appViews.LOCATION_DETAILS) {
+        if (directionsFromLocation && directionsToLocation) {
+            pushAppView(appViews.WAYFINDING);
+        } else if (currentLocation && currentAppView !== appViews.LOCATION_DETAILS) {
             pushAppView(appViews.LOCATION_DETAILS, currentLocation);
+        } else {
+            pushAppView(appViews.SEARCH);
         }
-    }, [currentLocation]);
+    }, [currentLocation, directionsFromLocation, directionsToLocation]);
 
     /**
      * Navigate to the search screen and reset the location that has been previously selected.
@@ -84,10 +90,12 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
             <Wayfinding
                 onSetSize={size => setWayfindingSheetSize(size)}
                 onStartDirections={() => pushAppView(appViews.DIRECTIONS)}
-                location={currentLocation}
+                to={currentLocation || directionsToLocation}
+                from={directionsFromLocation}
                 onDirections={result => setDirections(result)}
-                onBack={() => pushAppView(appViews.LOCATION_DETAILS)}
+                onBack={() => pushAppView(currentLocation ? appViews.LOCATION_DETAILS : appViews.SEARCH)}
                 isActive={currentAppView === appViews.WAYFINDING}
+                 selectedMapType={selectedMapType}
             />
         </Sheet>,
         <Sheet
