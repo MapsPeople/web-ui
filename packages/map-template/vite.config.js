@@ -13,9 +13,7 @@ export default defineConfig(() => {
         },
         plugins: [
            react(),
-           svgr({
-            svgrOptions: {}
-           }),
+           svgr(),
            eslint()
         ]
     }
