@@ -11,6 +11,14 @@ const mapsindoors = window.mapsindoors;
 
 let directionsRenderer;
 
+/**
+ * Show the directions view.
+ *
+ * @param {object} props
+ * @param {boolean} props.isOpen - Indicates if the directions view is open.
+ * @param {function} props.onBack - Callback that fires when the directions view is closed by the user.
+ * @param {function} props.directions - The directions information based on the origin and destination.
+ */
 function Directions({ isOpen, onBack, directions }) {
     // Holds the MapsIndoors DisplayRule for the origin
     const [originDisplayRule, setOriginDisplayRule] = useState(null);
