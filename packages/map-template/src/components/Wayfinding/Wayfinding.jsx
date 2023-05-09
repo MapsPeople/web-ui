@@ -29,12 +29,13 @@ const googlePlacesIcon = "data:image/svg+xml,%3Csvg width='10' height='10' viewB
  * @param {Object} props
  * @param {function} props.onStartDirections - Function that is run when the user navigates to the directions page.
  * @param {function} props.onBack - Function that is run when the user navigates to the previous page.
- * @param {string} props.location - The location that the user selected before starting the wayfinding.
+ * @param {object} props.to - The location to navigate to.
+ * @param {object} [props.from] - Optional location to navigate from. If omitted, the user has to choose in the search field.
  * @param {function} props.onSetSize - Callback that is fired when the component has loaded.
  * @param {string} props.selectedMapType - The currently selected map type.
  * @returns
  */
-function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, onDirections, selectedMapType }) {
+function Wayfinding({ onStartDirections, onBack, to, from, onSetSize, isActive, onDirections, selectedMapType }) {
 
     const wayfindingRef = useRef();
 
@@ -259,36 +260,47 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
         }
     }
 
+    /**
+     * Either set user position to "from field" or focus the "from" field.
+     */
+    function setPositionOrSetFocus() {
+        if (userPosition && !from) {
+            setMyPositionAsOrigin();
+        } else if (!from) {
+            fromFieldRef.current.focusInput();
+        }
+    }
+
     useEffect(() => {
         setSize(snapPoints.MAX);
-        // If there is a location selected, pre-fill the value of the `to` field with the location name.
-        if (location) {
-            toFieldRef.current.setDisplayText(location.properties.name);
-            setDestinationLocation(location);
+
+        // If there is a "to" location, use that as the "to" field.
+        if (to) {
+            toFieldRef.current.setDisplayText(to.properties.name);
+            setDestinationLocation(to);
         }
 
-        setActiveSearchField(searchFieldIdentifiers.FROM);
-    }, [location]);
+        // If there is a "from" location, use that as the 'from' field. Otherwise trigger focus on search field.
+        if (from) {
+            fromFieldRef.current.setDisplayText(from.properties.name);
+            setOriginLocation(from);
+        } else {
+            setActiveSearchField(searchFieldIdentifiers.FROM);
+        }
 
-    useEffect(() => {
         if (isActive && !fromFieldRef.current?.getValue()) {
             // Set focus on the from field.
             // But wait for any bottom sheet transition to end before doing that to avoid content jumping when virtual keyboard appears.
             const sheet = wayfindingRef.current.closest('.sheet');
             if (sheet) {
                 sheet.addEventListener('transitionend', () => {
-                    fromFieldRef.current.focusInput();
+                    setPositionOrSetFocus();
                 }, { once: true });
             } else {
-                fromFieldRef.current.focusInput();
-            }
-
-            if (userPosition) {
-                // If the user's position is known, use that as Origin.
-                setMyPositionAsOrigin();
+                setPositionOrSetFocus();
             }
         }
-    }, [isActive]);
+    }, [isActive, to, from]);
 
     /**
      * When both origin location and destination location are selected, call the MapsIndoors SDK
