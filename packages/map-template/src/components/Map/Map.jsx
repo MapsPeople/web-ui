@@ -1,14 +1,10 @@
 import { useEffect, useState } from "react";
+import { mapTypes } from "../../constants/mapTypes";
 import useLiveData from '../../hooks/useLivedata';
 import GoogleMapsMap from "./GoogleMapsMap/GoogleMapsMap";
 import MapboxMap from "./MapboxMap/MapboxMap";
 
 const mapsindoors = window.mapsindoors;
-
-const MAP_TYPES = {
-    GOOGLE: 'google',
-    MAPBOX: 'mapbox'
-};
 
 const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
 
@@ -33,10 +29,11 @@ let _tileStyle;
  * @param {function} props.onVenueChangedOnMap - Function that is run when the map bounds was changed due to fitting to a venue.
  * @param {function} props.onUserPosition - Function that is run when (if) the user position updates. Sends position as payload.
  * @param {array} props.filteredLocationIds - Array of IDs of the filtered locations.
+ * @param {function} props.onMapTypeChanged - Function that is run when the map type is changed.
  * @param {string} props.tileStyle - Tile style name to change the interface of the map.
  * @returns
  */
-function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onMapsIndoorsInstance, onDirectionsService, onVenueChangedOnMap, onUserPosition, filteredLocationIds, tileStyle }) {
+function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onMapsIndoorsInstance, onDirectionsService, onVenueChangedOnMap, onUserPosition, filteredLocationIds, onMapTypeChanged, tileStyle }) {
     const [mapType, setMapType] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState(null);
 
@@ -44,10 +41,12 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
 
     useEffect(() => {
         if (mapboxAccessToken) {
-            setMapType(MAP_TYPES.MAPBOX);
+            setMapType(mapTypes.Mapbox);
+            onMapTypeChanged(mapTypes.Mapbox)
         } else {
             // A Google Maps map will have precedense if no keys or keys for both providers are set.
-            setMapType(MAP_TYPES.GOOGLE);
+            setMapType(mapTypes.Google);
+            onMapTypeChanged(mapTypes.Google)
         }
     }, [gmApiKey, mapboxAccessToken]);
 
@@ -60,7 +59,7 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
             const venueToShow = getVenueToShow(venueName, venues);
             if (venueToShow) {
                 setVenue(venueToShow, mapsIndoorsInstance).then(() => {
-                    onVenueChangedOnMap();
+                    onVenueChangedOnMap(venueToShow);
                 });
             };
         }
@@ -152,8 +151,8 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
 
 
     return (<>
-        {mapType === MAP_TYPES.GOOGLE && <GoogleMapsMap gmApiKey={gmApiKey} onMapView={onMapView} onPositionControl={onPositionControl} mapsIndoorsInstance={mapsIndoorsInstance} />}
-        {mapType === MAP_TYPES.MAPBOX && <MapboxMap mapboxAccessToken={mapboxAccessToken} onMapView={onMapView} onPositionControl={onPositionControl} mapsIndoorsInstance={mapsIndoorsInstance} />}
+        {mapType === mapTypes.Google && <GoogleMapsMap gmApiKey={gmApiKey} onMapView={onMapView} onPositionControl={onPositionControl} mapsIndoorsInstance={mapsIndoorsInstance} />}
+        {mapType === mapTypes.Mapbox && <MapboxMap mapboxAccessToken={mapboxAccessToken} onMapView={onMapView} onPositionControl={onPositionControl} mapsIndoorsInstance={mapsIndoorsInstance} />}
     </>)
 }
 
