@@ -66,3 +66,4 @@ To have any Stencil component changes be reflected in this project, you need to 
 |`appUserRoles`|`array`|A list of App User Roles to apply when loading data. Used like so: `appUserRoles={["App User Role"]}`|
 |`directionsFrom`|`string`|Set a MapsIndoors Location ID to be used as origin to instantly show directions. Must be used together with `directionsTo`|
 |`directionsTo`|`string`|Set a MapsIndoors Location ID to be used as destination to instantly show directions. Must be used together with `directionsFrom`|
+|`externalIDs`|`array`|Array of external IDs which filters the map and shows a list of locations. |

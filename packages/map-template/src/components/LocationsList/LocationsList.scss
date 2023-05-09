@@ -1,0 +1,58 @@
+@import '../../variables.scss';
+
+.locations-list {
+
+    // A drag indicator as pseudo element
+    &::before {
+        position: absolute;
+        content: ' ';
+        top: var(--spacing-xx-small);
+        left: 50%;
+        transform: translateX(-50%);
+        width: 28px;
+        height: var(--spacing-xx-small);
+        border-radius: var(--spacing-xx-small);
+        background-color: var(--color-gray-20);
+        z-index: 1000;
+    }
+
+    &__header {
+        padding: var(--spacing-medium);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: white;
+        border-radius: var(--spacing-medium) var(--spacing-medium) 0 0;
+    }
+
+    &__title {
+        font-size: var(--font-size-medium);
+        text-align: center;
+        font-weight: var(--font-weight-large);
+        color: var(--color-gray-90);
+    }
+
+    &__close {
+        position: absolute;
+        top: var(--spacing-x-small);
+        right: var(--spacing-x-small);
+        background: none;
+        border: none;
+    }
+
+    &__list {
+        display: grid;
+        gap: var(--spacing-x-small);
+        overflow: auto;
+        grid-auto-rows: min-content;
+        padding: var(--spacing-x-small);
+    }
+
+    &__scrollable {
+        overflow: auto;
+    }
+
+    @media (max-width: $desktop-breakpoint) {
+        min-height: 200px;
+    }
+}
