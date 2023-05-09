@@ -15,7 +15,6 @@ const useLiveData = (apiKey) => {
     const [enabledLiveDataDomainTypes, setEnabledLiveDataDomainTypes] = useState([]);
 
     useEffect(() => {
-
         /*
          * Handle enabling and disabling of MapsIndoors Live Data.
          *

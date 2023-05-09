@@ -32,8 +32,10 @@ let _locationsDisabled;
  * @param {string} [props.primaryColor] - If you want the splash screen to have a custom primary color, provide the value here.
  * @param {string} [props.logo] - If you want the splash screen to have a custom logo, provide the image path or address here.
  * @param {array} [props.appUserRoles] - If you want the map to behave differently for specific users, set one or more app user roles here.
+ * @param {string} [props.directionsFrom] - If you want to show directions instantly, provide a MapsIndoors Location ID here to be used as the origin. Must be used together with directionsTo.
+ * @param {string} [props.directionsTo] - If you want to show directions instantly, provide a MapsIndoors Location ID here to be used as the destination. Must be used together with directionsFrom.
  */
-function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles }) {
+function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo }) {
 
     const [isMapReady, setMapReady] = useState(false);
     const [venues, setVenues] = useState([]);
@@ -44,7 +46,11 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [directionsService, setDirectionsService] = useState();
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
     const [userPosition, setUserPosition] = useState();
- 	const [appConfigResult, setAppConfigResult] = useState();
+    const [appConfigResult, setAppConfigResult] = useState();
+    const [selectedMapType, setSelectedMapType] = useState();
+
+    const [directionsFromLocation, setDirectionsFromLocation] = useState(null);
+    const [directionsToLocation, setDirectionsToLocation] = useState(null);
 
     // The filtered locations that the user sets when selecting a category/location.
     const [filteredLocations, setFilteredLocations] = useState();
@@ -68,13 +74,14 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     }, [currentAppView]);
 
     /**
-     * When venue is fitted while initializing the data, set map to be ready.
+     * When venue is fitted while initializing the data,
+     * set map to be ready and get the venue categories.
      */
-    function venueChangedOnMap() {
+    function venueChangedOnMap(venue) {
         if (isMapReady === false) {
             setMapReady(true);
         }
-        getVenueCategories(currentVenueName);
+        getVenueCategories(venue.name);
     }
 
     /**
@@ -168,6 +175,20 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     }, [locationId]);
 
     /*
+     * React on changes to the directionsFrom and directionsTo props. When both are set, wayfinding should be shown.
+     * Setting the directionsFromLocation and directionsToLocation make that happen.
+     */
+    useEffect(() => {
+        if (directionsFrom && directionsTo) {
+            mapsindoors.services.LocationsService.getLocation(directionsFrom).then(location => setDirectionsFromLocation(location));
+            mapsindoors.services.LocationsService.getLocation(directionsTo).then(location => setDirectionsToLocation(location));
+        } else {
+            setDirectionsFromLocation(null);
+            setDirectionsToLocation(null);
+        }
+    }, [directionsFrom, directionsTo]);
+
+    /*
      * React on changes in the MapsIndoors API key by fetching the required data.
      */
     useEffect(() => {
@@ -230,9 +251,12 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                                 currentCategories={currentCategories}
                                 onClose={() => setCurrentLocation(null)}
                                 onLocationsFiltered={(locations) => setFilteredLocations(locations)}
+                                directionsFromLocation={directionsFromLocation}
+                                directionsToLocation={directionsToLocation}
                                 pushAppView={pushAppView}
                                 currentAppView={currentAppView}
                                 appViews={appStates}
+                                selectedMapType={selectedMapType}
                             />
                             :
                             <BottomSheet
@@ -241,9 +265,12 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                                 setCurrentLocation={setCurrentLocation}
                                 currentCategories={currentCategories}
                                 onLocationsFiltered={(locations) => setFilteredLocations(locations)}
+                                directionsFromLocation={directionsFromLocation}
+                                directionsToLocation={directionsToLocation}
                                 pushAppView={pushAppView}
                                 currentAppView={currentAppView}
                                 appViews={appStates}
+                                selectedMapType={selectedMapType}
                             />
                         }
                         <MIMap
@@ -252,11 +279,12 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             mapboxAccessToken={mapboxAccessToken}
                             venues={venues}
                             venueName={currentVenueName}
-                            onVenueChangedOnMap={() => venueChangedOnMap()}
+                            onVenueChangedOnMap={(venue) => venueChangedOnMap(venue)}
                             onMapsIndoorsInstance={(instance) => setMapsIndoorsInstance(instance)}
                             onDirectionsService={(instance) => setDirectionsService(instance)}
                             onLocationClick={(location) => locationClicked(location)}
                             onUserPosition={position => setUserPosition(position)}
+                            onMapTypeChanged={(mapType) => setSelectedMapType(mapType)}
                             filteredLocationIds={filteredLocations?.map(location => location.id)} />
                     </div>
                 </UserPositionContext.Provider>
