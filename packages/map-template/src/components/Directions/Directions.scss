@@ -30,7 +30,7 @@
     }
 
     &__label {
-        font-size: 14px;
+        font-size: var(--font-size-small);
         color: var(--color-gray-70);
         font-weight: var(--font-weight-large);
         text-transform: uppercase;
@@ -99,6 +99,13 @@
     }
 
     &__name {
+        display: grid;
+        grid-auto-flow: column;
+        gap: var(--spacing-xx-small);
+        font-size: var(--font-size-small);
+    }
+
+    mi-location-info {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;

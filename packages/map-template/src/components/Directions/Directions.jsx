@@ -20,8 +20,6 @@ let directionsRenderer;
  * @param {function} props.directions - The directions information based on the origin and destination.
  */
 function Directions({ isOpen, onBack, directions }) {
-    // Holds the MapsIndoors DisplayRule for the origin
-    const [originDisplayRule, setOriginDisplayRule] = useState(null);
     // Holds the MapsIndoors DisplayRule for the destination
     const [destinationDisplayRule, setDestinationDisplayRule] = useState(null);
 
@@ -37,7 +35,7 @@ function Directions({ isOpen, onBack, directions }) {
 
     useEffect(() => {
         setDestinationDisplayRule(null);
-        setOriginDisplayRule(null);
+
         if (isOpen && directions) {
             setTotalDistance(directions.totalDistance);
             setTotalTime(directions.totalTime);
@@ -63,7 +61,6 @@ function Directions({ isOpen, onBack, directions }) {
 
             originInfoElement.current.location = directions.originLocation;
             destinationInfoElement.current.location = directions.destinationLocation;
-            setOriginDisplayRule(mapsIndoorsInstance.getDisplayRule(directions.originLocation));
             setDestinationDisplayRule(mapsIndoorsInstance.getDisplayRule(directions.destinationLocation));
         }
 
@@ -165,14 +162,12 @@ function Directions({ isOpen, onBack, directions }) {
                         </label>
                         {directions?.originLocation &&
                             <div className="directions__info">
-                                <div className="directions__icon">
-                                    {originDisplayRule && <img alt="" src={originDisplayRule.icon.src ? originDisplayRule.icon.src : originDisplayRule.icon} />}
-                                </div>
                                 <div className="directions__content">
                                     <div className='directions__name'>
                                         {directions?.originLocation.properties.name}
+                                        <div>·</div>
+                                        <mi-location-info ref={originInfoElement} />
                                     </div>
-                                    <mi-location-info ref={originInfoElement} />
                                 </div>
                             </div>
                         }
