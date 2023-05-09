@@ -17,9 +17,10 @@ import Search from '../Search/Search';
  * @param {function} props.pushAppView - Function to push to app view to browser history.
  * @param {string} props.currentAppView - Holds the current view/state of the Map Template.
  * @param {array} props.appViews - Array of all possible views.
+ * @param {string} props.selectedMapType - The currently selected map type.
  *
  */
-function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, currentVenueName, directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews }) {
+function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, currentVenueName, directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews, selectedMapType }) {
     const [directions, setDirections] = useState();
 
     /*
@@ -67,6 +68,7 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
                 onDirections={result => setDirections(result)}
                 onBack={() => pushAppView(currentLocation ? appViews.LOCATION_DETAILS : appViews.SEARCH)}
                 isActive={currentAppView === appViews.WAYFINDING}
+                selectedMapType={selectedMapType}
             />
         </Modal>,
         <Modal isOpen={currentAppView === appViews.DIRECTIONS} key="D">
