@@ -9,8 +9,10 @@ const apiKey = params.get('apiKey');
 const venue = params.get('venue');
 const locationId = params.get('locationId');
 const logo = params.get('logo');
-const mapboxAccessToken = params.get('mapboxAccessToken');
+const directionsFrom = params.get('directionsFrom');
+const directionsTo = params.get('directionsTo');
 const gmApiKey = params.get('gmApiKey');
+const mapboxAccessToken = params.get('mapboxAccessToken');
 
 // Append the hashtag symbol to the color code (i.e. ffffff)
 const primaryColor = params.get('primaryColor');
@@ -30,6 +32,8 @@ function App() {
                 primaryColor={hexPrimaryColor}
                 logo={logo ? logo : undefined}
                 appUserRoles={appUserRoles}
+                directionsFrom={directionsFrom}
+                directionsTo={directionsTo}
                 mapboxAccessToken={mapboxAccessToken ? mapboxAccessToken : process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
                 gmApiKey={gmApiKey ? gmApiKey : process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
             />
