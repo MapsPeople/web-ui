@@ -44,7 +44,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [directionsService, setDirectionsService] = useState();
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
     const [userPosition, setUserPosition] = useState();
- 	const [appConfigResult, setAppConfigResult] = useState();
+    const [appConfigResult, setAppConfigResult] = useState();
+    const [selectedMapType, setSelectedMapType] = useState();
 
     // The filtered locations that the user sets when selecting a category/location.
     const [filteredLocations, setFilteredLocations] = useState();
@@ -68,13 +69,14 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     }, [currentAppView]);
 
     /**
-     * When venue is fitted while initializing the data, set map to be ready.
+     * When venue is fitted while initializing the data,
+     * set map to be ready and get the venue categories.
      */
-    function venueChangedOnMap() {
+    function venueChangedOnMap(venue) {
         if (isMapReady === false) {
             setMapReady(true);
         }
-        getVenueCategories(currentVenueName);
+        getVenueCategories(venue.name);
     }
 
     /**
@@ -233,6 +235,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                                 pushAppView={pushAppView}
                                 currentAppView={currentAppView}
                                 appViews={appStates}
+                                selectedMapType={selectedMapType}
                             />
                             :
                             <BottomSheet
@@ -244,6 +247,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                                 pushAppView={pushAppView}
                                 currentAppView={currentAppView}
                                 appViews={appStates}
+                                selectedMapType={selectedMapType}
                             />
                         }
                         <MIMap
@@ -252,11 +256,12 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             mapboxAccessToken={mapboxAccessToken}
                             venues={venues}
                             venueName={currentVenueName}
-                            onVenueChangedOnMap={() => venueChangedOnMap()}
+                            onVenueChangedOnMap={(venue) => venueChangedOnMap(venue)}
                             onMapsIndoorsInstance={(instance) => setMapsIndoorsInstance(instance)}
                             onDirectionsService={(instance) => setDirectionsService(instance)}
                             onLocationClick={(location) => locationClicked(location)}
                             onUserPosition={position => setUserPosition(position)}
+                            onMapTypeChanged={(mapType) => setSelectedMapType(mapType)}
                             filteredLocationIds={filteredLocations?.map(location => location.id)} />
                     </div>
                 </UserPositionContext.Provider>

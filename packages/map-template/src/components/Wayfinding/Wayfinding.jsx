@@ -12,11 +12,16 @@ import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemL
 import SearchField from '../WebComponentWrappers/Search/Search';
 import { snapPoints } from '../../constants/snapPoints';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
+import addGooglePlaceGeometry from "../Map/GoogleMapsMap/GooglePlacesHandler";
+import GooglePlaces from '../../assets/google-places.png';
+import { mapTypes } from "../../constants/mapTypes";
 
 const searchFieldIdentifiers = {
     TO: 'TO',
     FROM: 'FROM'
 };
+
+const googlePlacesIcon = "data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 14 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 0C3.13 0 0 3.13 0 7C0 12.25 7 20 7 20C7 20 14 12.25 14 7C14 3.13 10.87 0 7 0ZM7 9.5C5.62 9.5 4.5 8.38 4.5 7C4.5 5.62 5.62 4.5 7 4.5C8.38 4.5 9.5 5.62 9.5 7C9.5 8.38 8.38 9.5 7 9.5Z' fill='black' fill-opacity='0.88'/%3E%3C/svg%3E%0A"
 
 /**
  * Show the wayfinding view.
@@ -26,9 +31,10 @@ const searchFieldIdentifiers = {
  * @param {function} props.onBack - Function that is run when the user navigates to the previous page.
  * @param {string} props.location - The location that the user selected before starting the wayfinding.
  * @param {function} props.onSetSize - Callback that is fired when the component has loaded.
+ * @param {string} props.selectedMapType - The currently selected map type.
  * @returns
  */
-function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, onDirections }) {
+function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, onDirections, selectedMapType }) {
 
     const wayfindingRef = useRef();
 
@@ -68,18 +74,41 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
 
     const scrollableContentSwipePrevent = usePreventSwipe();
 
+    const [hasGooglePlaces, setHasGooglePlaces] = useState(false);
+
+    /**
+     * Decorates location with data that is required for wayfinding to work.
+     * Specifically, adds geometry to a google_places location.
+     *
+     * @param {object} location
+     */
+    function decorateLocation(location) {
+        if (selectedMapType === mapTypes.Google && location.properties.type === 'google_places') {
+            return addGooglePlaceGeometry(location);
+        } else {
+            return Promise.resolve(location);
+        }
+    }
+
     /**
      * Click event handler function that sets the display text of the input field,
      * and clears out the results list.
+     *
+     * @param {object} location
      */
     function locationClickHandler(location) {
         if (activeSearchField === searchFieldIdentifiers.TO) {
-            toFieldRef.current.setDisplayText(location.properties.name);
-            setDestinationLocation(location);
+            decorateLocation(location).then(location => {
+                setDestinationLocation(location);
+                toFieldRef.current.setDisplayText(location.properties.name);
+            }, () => setHasFoundRoute(false));
         } else if (activeSearchField === searchFieldIdentifiers.FROM) {
-            fromFieldRef.current.setDisplayText(location.properties.name);
-            setOriginLocation(location);
+            decorateLocation(location).then(location => {
+                setOriginLocation(location);
+                fromFieldRef.current.setDisplayText(location.properties.name);
+            }, () => setHasFoundRoute(false));
         }
+        setHasGooglePlaces(false);
         setSearchTriggered(false);
         setSearchResults([]);
     }
@@ -92,12 +121,14 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
      */
     function searchResultsReceived(results, searchFieldIdentifier) {
         setActiveSearchField(searchFieldIdentifier);
-
         if (results.length === 0) {
             setHasSearchResults(false);
+            setHasGooglePlaces(false);
         } else {
             setHasSearchResults(true);
             setSearchResults(results);
+            const resultsHaveGooglePlaces = results.filter(result => result.properties.type === 'google_places').length > 0;
+            setHasGooglePlaces(resultsHaveGooglePlaces);
         }
     }
 
@@ -157,6 +188,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
         triggerSearch(searchFieldIdentifier);
         setHasError(false);
         setHasFoundRoute(true);
+        setHasGooglePlaces(false);
     }
 
     /**
@@ -170,6 +202,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
         setSearchResults([]);
         setHasError(false);
         setHasFoundRoute(true);
+        setHasGooglePlaces(false);
     }
 
     /**
@@ -294,6 +327,13 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
         }
     }, [originLocation, destinationLocation, directionsService, accessibilityOn]);
 
+    useEffect(() => {
+        if (selectedMapType === mapTypes.Mapbox) {
+            setHasGooglePlaces(false);
+            setSearchResults(searchResults.filter(result => result.properties.type !== 'google_places'));
+        }
+    }, [selectedMapType]);
+
     return (
         <div className="wayfinding" ref={wayfindingRef}>
             <div className="wayfinding__directions">
@@ -309,6 +349,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                         <SearchField
                             ref={fromFieldRef}
                             mapsindoors={true}
+                            google={selectedMapType === mapTypes.Google}
                             placeholder="Search by name, category, building..."
                             results={locations => searchResultsReceived(locations, searchFieldIdentifiers.FROM)}
                             clicked={() => onSearchClicked(searchFieldIdentifiers.FROM)}
@@ -325,6 +366,7 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                         <SearchField
                             ref={toFieldRef}
                             mapsindoors={true}
+                            google={selectedMapType === mapTypes.Google}
                             placeholder="Search by name, category, building..."
                             results={locations => searchResultsReceived(locations, searchFieldIdentifiers.TO)}
                             clicked={() => onSearchClicked(searchFieldIdentifiers.TO)}
@@ -344,9 +386,11 @@ function Wayfinding({ onStartDirections, onBack, location, onSetSize, isActive, 
                     {searchResults.map(location =>
                         <ListItemLocation
                             key={location.id}
+                            icon={location.properties.type === 'google_places' ? googlePlacesIcon : undefined}
                             location={location}
                             locationClicked={e => locationClickHandler(e)} />
                     )}
+                    {hasGooglePlaces && <img className="wayfinding__google" alt="Powered by Google" src={GooglePlaces} />}
                 </div>
             </div>
             {!searchTriggered && hasFoundRoute && !hasError && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>

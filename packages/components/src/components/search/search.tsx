@@ -304,6 +304,7 @@ export class Search implements ComponentInterface {
 
             this.googleAutocompleteService.getPlacePredictions(params, (results): void => {
                 const places: object[] = (results || []).map((result): object => ({
+                    id: result.place_id,
                     type: 'Feature',
                     properties: {
                         type: 'google_places',
