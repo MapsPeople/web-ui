@@ -64,3 +64,5 @@ To have any Stencil component changes be reflected in this project, you need to 
 |`primaryColor`|`string`|The primary color to use throughout the app. |
 |`logo`|`string`|The logo to show during initial load. |
 |`appUserRoles`|`array`|A list of App User Roles to apply when loading data. Used like so: `appUserRoles={["App User Role"]}`|
+|`directionsFrom`|`string`|Set a MapsIndoors Location ID to be used as origin to instantly show directions. Must be used together with `directionsTo`|
+|`directionsTo`|`string`|Set a MapsIndoors Location ID to be used as destination to instantly show directions. Must be used together with `directionsFrom`|
