@@ -3,6 +3,8 @@ import './LocationsList.scss';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import ListItemLocation from "../WebComponentWrappers/ListItemLocation/ListItemLocation";
 import { usePreventSwipe } from "../../hooks/usePreventSwipe";
+import { snapPoints } from "../../constants/snapPoints";
+import { useEffect } from "react";
 
 /**
  * Show list of locations.
@@ -11,11 +13,32 @@ import { usePreventSwipe } from "../../hooks/usePreventSwipe";
  * @param {function} props.onLocationClick - Function that is run when a location is clicked.
  * @param {function} props.onBack - Function that is run when the user navigates to the previous page.
  * @param {array} props.locations - Array of locations to be shown on the list.
+ *  * @param {function} props.onSetSize - Callback that is fired when the search field takes focus.
+
  *
  */
-function LocationsList({ onBack, onLocationClick, locations }) {
+function LocationsList({ onBack, onLocationClick, locations, onSetSize }) {
 
     const scrollableContentSwipePrevent = usePreventSwipe();
+
+    /**
+     * Communicate size change to parent component.
+     * @param {number} size
+     */
+    function setSize(size) {
+        if (typeof onSetSize === 'function') {
+            onSetSize(size);
+        }
+    }
+
+    /*
+     * React on changes in the venue prop.
+     * Deselect category and clear results list.
+     */
+    useEffect(() => {
+        setSize(snapPoints.FIT);
+    }, []);
+
 
     return (
         <div className="locations-list">

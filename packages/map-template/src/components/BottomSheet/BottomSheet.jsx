@@ -25,7 +25,7 @@ import LocationsList from '../LocationsList/LocationsList';
  * @param {array} props.filteredLocationsByExternalIDs - Array of locations filtered based on the external ID.
  * @param {function} props.onLocationsFilteredByExternalIDs - The list of locations after filtering based on external ID.
  */
-function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, currentVenueName, directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews, selectedMapType, filteredLocationsByExternalIDs, onLocationsFilteredByExternalIDs}) {
+function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, currentVenueName, directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews, selectedMapType, filteredLocationsByExternalIDs, onLocationsFilteredByExternalIDs }) {
 
     const bottomSheetRef = useRef();
 
@@ -35,6 +35,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
     const [directions, setDirections] = useState();
     const [wayfindingSheetSize, setWayfindingSheetSize] = useState();
     const [searchSheetSize, setSearchSheetSize] = useState();
+    const [locationsListSheetSize, setLocationsListSheetSize] = useState();
 
 
     /*
@@ -91,8 +92,10 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
         <Sheet
             minHeight="200"
             isOpen={currentAppView === appViews.EXTERNALIDS}
+            preferredSizeSnapPoint={locationsListSheetSize}
             key="B">
             <LocationsList
+                onSetSize={size => setLocationsListSheetSize(size)}
                 onBack={() => closeLocationsList()}
                 locations={filteredLocationsByExternalIDs}
                 onLocationClick={(location) => setCurrentLocation(location)}
@@ -126,7 +129,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
                 onDirections={result => setDirections(result)}
                 onBack={() => pushAppView(currentLocation ? appViews.LOCATION_DETAILS : appViews.SEARCH)}
                 isActive={currentAppView === appViews.WAYFINDING}
-                 selectedMapType={selectedMapType}
+                selectedMapType={selectedMapType}
             />
         </Sheet>,
         <Sheet
