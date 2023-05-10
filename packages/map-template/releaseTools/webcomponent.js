@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import reactToWebComponent from 'react-to-webcomponent';
 import PropTypes from 'prop-types';
-import MapsIndoorsMap from './components/MapsIndoorsMap/MapsIndoorsMap';
+import MapsIndoorsMap from '../src/components/MapsIndoorsMap/MapsIndoorsMap';
 
 /*
  * Exports the MapsIndoorsMap React component as a web component.
