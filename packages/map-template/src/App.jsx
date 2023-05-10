@@ -26,16 +26,16 @@ function App() {
         <div className="app">
             {/* This is the Map Template component */}
             <MapsIndoorsMap
-                apiKey={apiKey ? apiKey : 'demo'}
+                apiKey={apiKey ? apiKey : '3ddemo'}
                 venue={venue}
                 locationId={`${locationId}`}
                 primaryColor={hexPrimaryColor}
                 logo={logo ? logo : undefined}
                 appUserRoles={appUserRoles}
-                directionsFrom={directionsFrom}
+ 				directionsFrom={directionsFrom}
                 directionsTo={directionsTo}
-                mapboxAccessToken={mapboxAccessToken ? mapboxAccessToken : process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
-                gmApiKey={gmApiKey ? gmApiKey : process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
+                mapboxAccessToken={mapboxAccessToken ? mapboxAccessToken : import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
+                gmApiKey={gmApiKey ? gmApiKey : import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
             />
         </div>
     );
