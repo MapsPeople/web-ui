@@ -18,8 +18,11 @@ const mapboxAccessToken = params.get('mapboxAccessToken');
 const primaryColor = params.get('primaryColor');
 const hexPrimaryColor = primaryColor ? '#'.concat(primaryColor) : undefined;
 
-// Create an array of elements based on the comma separated values
+// Create an array of app user roles based on the comma separated values
 const appUserRoles = params.get('appUserRoles')?.split(',')
+
+// Create an array of external IDs based on the comma separated values
+const externalIDs = params.get('externalIDs')?.split(',')
 
 function App() {
     return (
@@ -34,6 +37,7 @@ function App() {
                 appUserRoles={appUserRoles}
  				directionsFrom={directionsFrom}
                 directionsTo={directionsTo}
+                externalIDs={externalIDs}
                 mapboxAccessToken={mapboxAccessToken ? mapboxAccessToken : import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
                 gmApiKey={gmApiKey ? gmApiKey : import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
             />
