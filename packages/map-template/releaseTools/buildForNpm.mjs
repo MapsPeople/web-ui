@@ -14,7 +14,7 @@ const libraries = [
             outDir: './dist',
             lib: {
                 entry: path.resolve(__dirname, 'webcomponent.js'),
-                name: 'MapTemplate',
+                name: 'MapTemplate', // unused, but required
                 fileName: format => `mapsindoors-webcomponent.${format}.js`,
                 formats: ['es', 'umd']
             },
@@ -33,7 +33,7 @@ const libraries = [
             outDir: './dist',
             lib: {
                 entry: path.resolve(__dirname, 'reactcomponent.js'),
-                name: 'MapTemplateReact',
+                name: 'MapTemplateReact', // unused, but required
                 fileName: format => `mapsindoors-react.${format}.js`,
                 formats: ['es', 'umd']
             },
