@@ -13,7 +13,7 @@ import { useEffect } from "react";
  * @param {function} props.onLocationClick - Function that is run when a location is clicked.
  * @param {function} props.onBack - Function that is run when the user navigates to the previous page.
  * @param {array} props.locations - Array of locations to be shown on the list.
- *  * @param {function} props.onSetSize - Callback that is fired when the search field takes focus.
+ * @param {function} props.onSetSize - Callback that is fired when the search field takes focus.
 
  *
  */
