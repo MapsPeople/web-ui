@@ -2,20 +2,6 @@
 
 .locations-list {
 
-    // A drag indicator as pseudo element
-    &::before {
-        position: absolute;
-        content: ' ';
-        top: var(--spacing-xx-small);
-        left: 50%;
-        transform: translateX(-50%);
-        width: 28px;
-        height: var(--spacing-xx-small);
-        border-radius: var(--spacing-xx-small);
-        background-color: var(--color-gray-20);
-        z-index: 1000;
-    }
-
     &__header {
         padding: var(--spacing-medium);
         position: sticky;
@@ -54,5 +40,19 @@
 
     @media (max-width: $desktop-breakpoint) {
         min-height: 200px;
+
+        // A drag indicator as pseudo element
+        &::before {
+            position: absolute;
+            content: ' ';
+            top: var(--spacing-xx-small);
+            left: 50%;
+            transform: translateX(-50%);
+            width: 28px;
+            height: var(--spacing-xx-small);
+            border-radius: var(--spacing-xx-small);
+            background-color: var(--color-gray-20);
+            z-index: 1000;
+        }
     }
 }
