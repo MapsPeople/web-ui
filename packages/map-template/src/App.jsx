@@ -8,8 +8,9 @@ function App() {
             <MapsIndoorsMap
                 apiKey="mapspeople"
                 venue="Stigsborgvej"
-                mapboxAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
-                // gmApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
+                mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
+                // externalIDs={["0.32.05", "0.41.01", "0.47.04"]}
+                // gmApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
             />
         </div>
     );
