@@ -61,7 +61,13 @@ function Directions({ isOpen, onBack, directions }) {
 
             originInfoElement.current.location = directions.originLocation;
             destinationInfoElement.current.location = directions.destinationLocation;
-            setDestinationDisplayRule(mapsIndoorsInstance.getDisplayRule(directions.destinationLocation));
+
+            // If the destination is My Position, then set the display rule to null.
+            if (directions.destinationLocation.properties.name === 'My Position') {
+                setDestinationDisplayRule(null)
+            } else {
+                setDestinationDisplayRule(mapsIndoorsInstance.getDisplayRule(directions.destinationLocation));
+            }
         }
 
 
@@ -178,14 +184,15 @@ function Directions({ isOpen, onBack, directions }) {
                         </label>
                         {directions?.destinationLocation &&
                             <div className="directions__info">
-                                <div className="directions__icon">
-                                    {destinationDisplayRule && <img alt="" src={destinationDisplayRule.icon.src ? destinationDisplayRule.icon.src : destinationDisplayRule.icon} />}
-                                </div>
+                                {destinationDisplayRule && directions.originLocation.name !== 'My Position' &&
+                                    <div className="directions__icon">
+                                        <img alt="" src={destinationDisplayRule.icon.src ? destinationDisplayRule.icon.src : destinationDisplayRule.icon} />
+                                    </div>}
                                 <div className="directions__content">
                                     <div className='directions__name'>
                                         {directions?.destinationLocation.properties.name}
                                     </div>
-                                    <mi-location-info ref={destinationInfoElement} />
+                                    {directions?.originLocation.properties.name !== 'My Position' && <mi-location-info ref={destinationInfoElement} />}
                                 </div>
                             </div>
                         }
