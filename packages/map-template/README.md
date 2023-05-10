@@ -1,71 +1,104 @@
 # Map Template
 
-This app is built on React, with our Web Components used where applicable.
+# Web component: Installation and usage
 
-## Running the app
+## Using NPM
 
-To get the app up and running, clone this repo, install everything using [Lerna](https://lerna.js.org), and start the app:
+Install the package:
 
-```zsh
-$ git clone git@github.com:MapsPeople/web-ui.git
-$ cd web-ui && npm install && npx lerna run build
-$ cd packages/map-template && npm run start
+`npm install @mapsindoors/map-template`
+
+In your script:
+
+```javascript
+import MapsIndoorsMap from '@mapspeople/map-template/dist/mapsindoors-webcomponent.es';
+window.customElements.define('mapsindoors-map', MapsIndoorsMap);
 ```
 
-Now open the app served on [http://localhost:3000/](http://localhost:3000/).
+In your styles make sure to give it a size:
 
-The Map Template has a main `MapsIndoorsMap` React component. It wraps the whole app inside of it. It's used in a function in `App.jsx` which is imported into `index.jsx` where it's defined that an HTML element with `id="root"` will render the app. We show how that is done in `packages/map-template/index.html`.
-
-### Adding Google Maps API Keys or Mapbox Access Tokens
-
-Rename `.env.example`, to `.env` and add either of the keys (or both) to that file, and the maps will load properly.
-
-### React Components
-
-We follow [the React convention](https://reactjs.org/docs/faq-structure.html#avoid-too-much-nesting) with one level of depth in the Components' folder. We still import React components into each other (even in multiple levels), but the folder structure is flat.
-
-### Web Components
-
-We use our own Web Components ([Custom Elements](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements)) from `packages/components` inside of the Map Template. To illustrate the relation between the React app, its React Components and our Web Components, here's a drawing of how this works in the Route Instructions part of the app:
-
-```
-// public/index.html
-
-- App.js
- - MapsIndoorsMap
-  - BottomSheet
-   - Directions
-    - RouteInstructions
-     - mi-route-instructions-step
-      - mi-icon
-      - mi-time
-      - mi-distance
+```css
+mapsindoors-map {
+    display: block;
+    width: 100vw;
+    height: 100vh;
+}
 ```
 
-The `mi-route-instructions-step` Web Component uses `mi-route-instructions-maneuver` to render sub steps, `mi-icon` for icons, and `mi-time` and `mi-distance` to show estimated time and distance.
+Use it in your HTML:
 
-We use `mi-route-instructions-step` in the React Component `RouteInstructions` to show, well, route instructions. This is used inside of an "umbrella" component for all directions (including searching for where to go) called `Directions`.
+```html
+<mapsindoors-map api-key="mapspeople"></mapsindoors-map>
+```
 
-Everything in the app is displayed in the `BottomSheet` (on mobile viewports), and the main app component is named `MapsIndoorsMap`.
+Replace the `api-key` value with your MapsPeople API key.
 
-If you have a React app, you can use any of these React Components in your own app. If you want to not use a bottom sheet for instance, you could import the `Directions` component and work with that in your app.
+## Using just the browser
 
-#### Working on Components used in Map Template
+```html
+<script src="https://app.mapsindoors.com/mapsindoors/js/sdk/4.21.4/mapsindoors-4.21.4.js.gz"></script>
+<script type="module">
+    import MapsindoorsMap from 'https://www.unpkg.com/@mapspeople/map-template/dist/mapsindoors-webcomponent.es.js';
+    window.customElements.define('mapsindoors-map', MapsIndoorsMap)
+</script>
+<style>
+      body {
+            margin: 0;
+      }
+      mapsindoors-map {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+      }
+</style>
 
-To have any Stencil component changes be reflected in this project, you need to run  `npx lerna run build` from the root folder. There are no watch scripts yet.
+<mapsindoors-map api-key="mapspeople"></mapsindoors-map>
+```
 
-## Supported properties on the MapsIndoors Map component
+Replace the `api-key` value with your MapsPeople API key.
+
+# React component: Installation and usage
+
+## Using NPM
+
+Install the package:
+
+`npm install @mapsindoors/map-template`
+
+In a React component:
+
+```javascript
+import MapsIndoorsMap from '@mapspeople/map-template/dist/mapsindoors-react.es';
+
+// Somewhere in your JSX:
+<div style={{
+      display: 'block',
+      width: '100vw',
+      height: '100vh'
+}}>
+      <MapsIndoorsMap
+      apiKey="mapspeople"
+      ></MapsIndoorsMap>
+</div>
+
+```
+
+Replace the `api-key` value with your MapsPeople API key.
+
+# Supported properties on the MapsIndoors Map components
+
+Note that when using the React component, the properties should conform to JSX prop naming, eg. `api-key` becomes `apiKey`.
 
 |Property|Type|Description|
 |:--|:--|:--|
-|`apiKey`|`string`|The MapsIndoors Solution you want to load. Takes both API key as string and "App alias". |
-|`gmApiKey`|`string`|Your Google Maps API key. |
-|`mapboxAccessToken`|`string`|Your Mapbox Access Token. Setting it will load a Mapbox map. If you set both a Mapbox Access Token and Google Maps API key, the Mapbox Access Token takes precedence. |
+|`api-key`|`string`|The MapsIndoors Solution you want to load. Takes both API key as string and "App alias". |
+|`gm-api-key`|`string`|Your Google Maps API key. |
+|`mapbox-access-token`|`string`|Your Mapbox Access Token. Setting it will load a Mapbox map. If you set both a Mapbox Access Token and Google Maps API key, the Mapbox Access Token takes precedence. |
 |`venue`|`string`|The Venue to load from your MapsIndoors Solution. |
-|`locationId`|`string`|Set a MapsIndoors Location ID to show it on the map and its details in the sheet. |
-|`primaryColor`|`string`|The primary color to use throughout the app. |
+|`location-id`|`string`|Set a MapsIndoors Location ID to show it on the map and its details in the sheet. |
+|`primary-color`|`string`|The primary color to use throughout the app. |
 |`logo`|`string`|The logo to show during initial load. |
-|`appUserRoles`|`array`|A list of App User Roles to apply when loading data. Used like so: `appUserRoles={["App User Role"]}`|
-|`directionsFrom`|`string`|Set a MapsIndoors Location ID to be used as origin to instantly show directions. Must be used together with `directionsTo`|
-|`directionsTo`|`string`|Set a MapsIndoors Location ID to be used as destination to instantly show directions. Must be used together with `directionsFrom`|
-|`externalIDs`|`array`|Array of external IDs which filters the map and shows a list of locations. |
+|`app-user-roles`|`array`|A list of App User Roles to apply when loading data. Used like so: `app-user-roles={["App User Role"]}`|
+|`directions-from`|`string`|Set a MapsIndoors Location ID to be used as origin to instantly show directions. Must be used together with `directions-to`|
+|`directions-to`|`string`|Set a MapsIndoors Location ID to be used as destination to instantly show directions. Must be used together with `directions-from`|
+|`external-ids`|`array`|Array of external IDs which filters the map and shows a list of locations. |
