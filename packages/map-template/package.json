@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": false,
   "files": ["dist/*.js"],
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
     "@googlemaps/js-api-loader": "^1.15.1",
     "@mapsindoors/components": "*",
     "@mapsindoors/css": "^3.0.0",
