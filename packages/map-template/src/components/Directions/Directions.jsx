@@ -184,7 +184,7 @@ function Directions({ isOpen, onBack, directions }) {
                         </label>
                         {directions?.destinationLocation &&
                             <div className="directions__info">
-                                {destinationDisplayRule && directions.originLocation.name !== 'My Position' &&
+                                {destinationDisplayRule && directions.destinationLocation.name !== 'My Position' &&
                                     <div className="directions__icon">
                                         <img alt="" src={destinationDisplayRule.icon.src ? destinationDisplayRule.icon.src : destinationDisplayRule.icon} />
                                     </div>}
