@@ -62,6 +62,10 @@ The Google Maps API is required with Google Places library enabled.
 
 A `value` attribute is available on the `<mi-search>` element, which can be used to a) Read the currently entered input field value, b) set the value of the search field (thus initializing search with that value).
 
+## `disabled` attribute
+
+A `disabled` attribute is available on the `<mi-search>` element, which can be use to make the search field disabled.
+
 ## `idAttribute` attribute
 
 A `idAttribute` attribute is available on the `<mi-search>` element, which can be used to set a `id` attribute on the `<mi-search>` components input element.
@@ -188,6 +192,20 @@ A `clear` method can be called on the `<mi-search>` element to clear the input f
 const miSearch = document.querySelector("mi-search");
 miSearch.clear();
 ```
+
+## `focusInput` method
+
+A `focusInput` method can be called on the `<mi-search>` element to apply focus to the input element.
+
+## `setDisplayText` method
+
+A `setDisplayText` method can be called on the `<mi-search>` element to override the text in the input field.
+
+## `triggerSearch` method
+
+A `triggerSearch` method can be called on the `<mi-search>` element to programatically trigger a search.
+
+
 
 <!-- markdownlint-disable -->
 <!-- Auto Generated Below -->
