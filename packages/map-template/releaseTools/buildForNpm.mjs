@@ -47,7 +47,10 @@ const libraries = [
                     }
                 }
             }
-        }
+        },
+        plugins: [
+            cssInjectedByJsPlugin()
+        ]
     }
 ]
 
