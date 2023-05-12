@@ -69,6 +69,7 @@ To have any Stencil component changes be reflected in this project, you need to 
 |`directionsFrom`|`string`|Set a MapsIndoors Location ID to be used as origin to instantly show directions. Must be used together with `directionsTo`|
 |`directionsTo`|`string`|Set a MapsIndoors Location ID to be used as destination to instantly show directions. Must be used together with `directionsFrom`|
 |`externalIDs`|`array`|Array of external IDs which filters the map and shows a list of locations. |
+|`tileStyle`|`string`|Name of Tile Style to display on the map. |
 
 ## Deploying Map Template to a cloud storage provider
 
