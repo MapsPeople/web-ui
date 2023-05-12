@@ -30,10 +30,12 @@ let _tileStyle;
  * @param {function} props.onUserPosition - Function that is run when (if) the user position updates. Sends position as payload.
  * @param {array} props.filteredLocationIds - Array of IDs of the filtered locations.
  * @param {function} props.onMapTypeChanged - Function that is run when the map type is changed.
+ * @param {array} props.filteredLocationsByExternalIDs - Array of IDs of the filtered locations based on external ID.
  * @param {string} props.tileStyle - Tile style name to change the interface of the map.
+
  * @returns
  */
-function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onMapsIndoorsInstance, onDirectionsService, onVenueChangedOnMap, onUserPosition, filteredLocationIds, onMapTypeChanged, tileStyle }) {
+function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onMapsIndoorsInstance, onDirectionsService, onVenueChangedOnMap, onUserPosition, filteredLocationIds, onMapTypeChanged, filteredLocationsByExternalIDs, tileStyle }) {
     const [mapType, setMapType] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState(null);
 
@@ -67,13 +69,17 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
     // We ignore eslint warnings about missing dependencies because mapsIndoorsInstance should never change runtime anyway.
 
     /*
-     * Show the filtered locations on the map based on their IDs.
+     * Show the filtered locations on the map based on their IDs or external IDs if present.
      */
     useEffect(() => {
-        if (filteredLocationIds && mapsIndoorsInstance) {
-            mapsIndoorsInstance.filter(filteredLocationIds);
+        if (mapsIndoorsInstance) {
+            if (filteredLocationIds) {
+                mapsIndoorsInstance.filter(filteredLocationIds);
+            } else if (filteredLocationsByExternalIDs) {
+                mapsIndoorsInstance.filter(filteredLocationsByExternalIDs);
+            }
         }
-    }, [filteredLocationIds, mapsIndoorsInstance]);
+    }, [filteredLocationIds, filteredLocationsByExternalIDs, mapsIndoorsInstance]);
 
     /**
      * Set the venue to show on the map.
