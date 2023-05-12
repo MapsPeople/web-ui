@@ -69,3 +69,20 @@ To have any Stencil component changes be reflected in this project, you need to 
 |`directionsFrom`|`string`|Set a MapsIndoors Location ID to be used as origin to instantly show directions. |
 |`directionsTo`|`string`|Set a MapsIndoors Location ID to be used as destination to instantly show directions. |
 |`externalIDs`|`array`|Array of external IDs which filters the map and shows a list of locations. |
+|`tileStyle`|`string`|Name of Tile Style to display on the map. |
+
+## Deploying Map Template to a cloud storage provider
+
+We often use Google Cloud Storage (GCS) for deploying small useful apps for demo purposes. This guide refers to GCS, but many of the steps are identical for AWS, Azure Blob, and the like.
+
+Running the regular build command (`npm run build`), it's assumed that all links refer to the root of a domain. When you deploy to a storage bucket, you need to build the app with the bucket name preprended to all links. Vite has a build option to take care of this:
+
+```zsh
+$ vite build --base=/YOUR_BUCKET_NAME
+```
+
+At this point you can upload the files manually to your bucket, or use the helpful CLI [`gsutil`](https://cloud.google.com/storage/docs/gsutil) for the purpose. This command uploads the complete `build` folder, and prevents the files from being cached:
+
+```zsh
+$ gsutil -m -h "Cache-Control:public, max-age=0, no-store, no-cache" cp -r build gs://YOUR_BUCKET_NAME
+```
