@@ -11,6 +11,7 @@ const locationId = params.get('locationId');
 const logo = params.get('logo');
 const directionsFrom = params.get('directionsFrom');
 const directionsTo = params.get('directionsTo');
+const tileStyle = params.get('tileStyle');
 const gmApiKey = params.get('gmApiKey');
 const mapboxAccessToken = params.get('mapboxAccessToken');
 
@@ -38,6 +39,7 @@ function App() {
  				directionsFrom={directionsFrom}
                 directionsTo={directionsTo}
                 externalIDs={externalIDs}
+                tileStyle={tileStyle}
                 mapboxAccessToken={mapboxAccessToken ? mapboxAccessToken : import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
                 gmApiKey={gmApiKey ? gmApiKey : import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
             />
