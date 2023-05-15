@@ -36,7 +36,7 @@ function App() {
                 primaryColor={hexPrimaryColor}
                 logo={logo ? logo : undefined}
                 appUserRoles={appUserRoles}
- 				directionsFrom={directionsFrom}
+                directionsFrom={directionsFrom}
                 directionsTo={directionsTo}
                 externalIDs={externalIDs}
                 tileStyle={tileStyle}
