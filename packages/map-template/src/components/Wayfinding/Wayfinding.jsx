@@ -29,13 +29,14 @@ const googlePlacesIcon = "data:image/svg+xml,%3Csvg width='10' height='10' viewB
  * @param {Object} props
  * @param {function} props.onStartDirections - Function that is run when the user navigates to the directions page.
  * @param {function} props.onBack - Function that is run when the user navigates to the previous page.
- * @param {object} props.to - The location to navigate to.
- * @param {object} [props.from] - Optional location to navigate from. If omitted, the user has to choose in the search field.
+ * @param {object} props.currentLocation - The currently selected MapsIndoors Location.
+ * @param {object} props.directionsToLocation - Optional location to navigate to.
+ * @param {object} [props.directionsFromLocation] - Optional location to navigate from. If omitted, the user has to choose in the search field.
  * @param {function} props.onSetSize - Callback that is fired when the component has loaded.
  * @param {string} props.selectedMapType - The currently selected map type.
  * @returns
  */
-function Wayfinding({ onStartDirections, onBack, to, from, onSetSize, isActive, onDirections, selectedMapType }) {
+function Wayfinding({ onStartDirections, onBack, currentLocation, directionsToLocation, directionsFromLocation, onSetSize, isActive, onDirections, selectedMapType }) {
 
     const wayfindingRef = useRef();
 
@@ -264,9 +265,9 @@ function Wayfinding({ onStartDirections, onBack, to, from, onSetSize, isActive, 
      * Either set user position to "from field" or focus the "from" field.
      */
     function setPositionOrSetFocus() {
-        if (userPosition && !from) {
+        if (userPosition && !directionsFromLocation) {
             setMyPositionAsOrigin();
-        } else if (!from) {
+        } else if (!directionsFromLocation) {
             fromFieldRef.current.focusInput();
         }
     }
@@ -274,16 +275,16 @@ function Wayfinding({ onStartDirections, onBack, to, from, onSetSize, isActive, 
     useEffect(() => {
         setSize(snapPoints.MAX);
 
-        // If there is a "to" location, use that as the "to" field.
-        if (to) {
-            toFieldRef.current.setDisplayText(to.properties.name);
-            setDestinationLocation(to);
+        // If there is a directionsToLocation and no currentLocation (otherwise the user had actively selected something else), use that as the "to" field.
+        if (directionsToLocation && !currentLocation) {
+            toFieldRef.current.setDisplayText(directionsToLocation.properties.name);
+            setDestinationLocation(directionsToLocation);
         }
 
-        // If there is a "from" location, use that as the 'from' field. Otherwise trigger focus on search field.
-        if (from) {
-            fromFieldRef.current.setDisplayText(from.properties.name);
-            setOriginLocation(from);
+        // If there is a directionsFromLocation, use that as the 'from' field. Otherwise trigger focus on search field.
+        if (directionsFromLocation) {
+            fromFieldRef.current.setDisplayText(directionsFromLocation.properties.name);
+            setOriginLocation(directionsFromLocation);
         } else {
             setActiveSearchField(searchFieldIdentifiers.FROM);
         }
@@ -300,9 +301,9 @@ function Wayfinding({ onStartDirections, onBack, to, from, onSetSize, isActive, 
                 setPositionOrSetFocus();
             }
         }
-    }, [isActive, to, from]);
+    }, [isActive, directionsToLocation, directionsFromLocation]);
 
-    /**
+    /*
      * When both origin location and destination location are selected, call the MapsIndoors SDK
      * to get information about the route.
      */
@@ -345,6 +346,16 @@ function Wayfinding({ onStartDirections, onBack, to, from, onSetSize, isActive, 
             setSearchResults(searchResults.filter(result => result.properties.type !== 'google_places'));
         }
     }, [selectedMapType]);
+
+    /*
+     * When current location is set, make sure to set that as the destination.
+     */
+    useEffect(() => {
+        if (currentLocation) {
+            setDestinationLocation(currentLocation);
+            toFieldRef.current.setDisplayText(currentLocation.properties.name);
+        }
+    }, [currentLocation]);
 
     return (
         <div className="wayfinding" ref={wayfindingRef}>

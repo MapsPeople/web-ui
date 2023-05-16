@@ -90,8 +90,9 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
         <Modal isOpen={currentAppView === appViews.WAYFINDING} key="D">
             <Wayfinding
                 onStartDirections={() => pushAppView(appViews.DIRECTIONS)}
-                to={currentLocation || directionsToLocation}
-                from={directionsFromLocation}
+                currentLocation={currentLocation}
+                directionsToLocation={directionsToLocation}
+                directionsFromLocation={directionsFromLocation}
                 onDirections={result => setDirections(result)}
                 onBack={() => pushAppView(currentLocation ? appViews.LOCATION_DETAILS : appViews.SEARCH)}
                 isActive={currentAppView === appViews.WAYFINDING}
