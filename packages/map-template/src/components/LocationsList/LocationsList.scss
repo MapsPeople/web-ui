@@ -1,0 +1,42 @@
+@import '../../variables.scss';
+
+.locations-list {
+    display: grid;
+    grid-template-rows: 50px 1fr;
+    height: 100%;
+
+    &__header {
+        padding: var(--spacing-medium);
+    }
+
+    &__title {
+        font-size: var(--font-size-medium);
+        text-align: center;
+        font-weight: var(--font-weight-large);
+        color: var(--color-gray-90);
+    }
+
+    &__close {
+        position: absolute;
+        top: var(--spacing-x-small);
+        right: var(--spacing-x-small);
+        background: none;
+        border: none;
+    }
+
+    &__list {
+        display: grid;
+        gap: var(--spacing-x-small);
+        overflow: auto;
+        grid-auto-rows: min-content;
+        padding: var(--spacing-x-small);
+    }
+
+    &__scrollable {
+        overflow: auto;
+    }
+
+    @media (max-width: $desktop-breakpoint) {
+        min-height: 200px;
+    }
+}

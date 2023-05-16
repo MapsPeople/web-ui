@@ -8,7 +8,7 @@ import { Component, ComponentInterface, Prop, JSX } from '@stencil/core';
 export class LocationInfo implements ComponentInterface {
 
     /**
-     * @description MI location.
+     * @description Location object.
      */
     @Prop() location;
 
@@ -41,6 +41,11 @@ export class LocationInfo implements ComponentInterface {
         // Venue
         if (this.location.properties.venue) {
             details.push(this.location.properties.venue);
+        }
+
+        // Subtitle
+        if (this.location.properties.subtitle) {
+            details.push(this.location.properties.subtitle);
         }
 
         return details.join(' · ');

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 const appViews = {
     SEARCH: undefined, // undefined as the initial "app state" is easier to work with
+    EXTERNALIDS: 'EXTERNALIDS',
     VENUE_SELECTOR: 'VENUE_SELECTOR',
     LOCATION_DETAILS: 'LOCATION_DETAILS',
     WAYFINDING: 'WAYFINDING',

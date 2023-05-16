@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 
-
 /**
  * Media query hook for determining the device's viewport size.
  *

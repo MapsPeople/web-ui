@@ -12,7 +12,9 @@ $ cd web-ui && npm install && npx lerna run build
 $ cd packages/map-template && npm run start
 ```
 
-The Map Template has a main `MapsIndoorsMap` React component. It wraps the whole app inside of it. It's used in a function in `App.js` which is imported into `index.js` where it's defined that an HTML element with `id="root"` will render the app. We show how that is done in `packages/map-template/public/index.html`.
+Now open the app served on [http://localhost:3000/](http://localhost:3000/).
+
+The Map Template has a main `MapsIndoorsMap` React component. It wraps the whole app inside of it. It's used in a function in `App.jsx` which is imported into `index.jsx` where it's defined that an HTML element with `id="root"` will render the app. We show how that is done in `packages/map-template/index.html`.
 
 ### Adding Google Maps API Keys or Mapbox Access Tokens
 
@@ -63,5 +65,24 @@ To have any Stencil component changes be reflected in this project, you need to 
 |`locationId`|`string`|Set a MapsIndoors Location ID to show it on the map and its details in the sheet. |
 |`primaryColor`|`string`|The primary color to use throughout the app. |
 |`logo`|`string`|The logo to show during initial load. |
-|`directionsFrom`|`string`|Set a MapsIndoors Location ID or the string `USER_POSITION` to be used as origin when showing directions. To instantly show directions, use it together with `directionsTo`|
-|`directionsTo`|`string`|Set a MapsIndoors Location ID or the string `USER_POSITION` to be used as destination when showing directions. To instantly show directions, use it together with `directionsFrom`|
+|`appUserRoles`|`array`|A list of App User Roles to apply when loading data. Used like so: `appUserRoles={["App User Role"]}`|
+|`directionsFrom`|`string`|Set a MapsIndoors Location ID or the string `USER_POSITION` to be used as origin to instantly show directions. |
+|`directionsTo`|`string`|Set a MapsIndoors Location ID or the string `USER_POSITION` to be used as destination to instantly show directions. |
+|`externalIDs`|`array`|Array of external IDs which filters the map and shows a list of locations. Because of the way browsers work, you can not use External IDs with the `,`, `&`, `#` and `+`, character in them, as they are interpreted by the browser in a particular way. |
+|`tileStyle`|`string`|Name of Tile Style to display on the map. |
+
+## Deploying Map Template to a cloud storage provider
+
+We often use Google Cloud Storage (GCS) for deploying small useful apps for demo purposes. This guide refers to GCS, but many of the steps are identical for AWS, Azure Blob, and the like.
+
+Running the regular build command (`npm run build`), it's assumed that all links refer to the root of a domain. When you deploy to a storage bucket, you need to build the app with the bucket name preprended to all links. Vite has a build option to take care of this:
+
+```zsh
+$ vite build --base=/YOUR_BUCKET_NAME
+```
+
+At this point you can upload the files manually to your bucket, or use the helpful CLI [`gsutil`](https://cloud.google.com/storage/docs/gsutil) for the purpose. This command uploads the complete `build` folder, and prevents the files from being cached:
+
+```zsh
+$ gsutil -m -h "Cache-Control:public, max-age=0, no-store, no-cache" cp -r build gs://YOUR_BUCKET_NAME
+```

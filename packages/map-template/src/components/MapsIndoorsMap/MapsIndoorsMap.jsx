@@ -33,10 +33,12 @@ let _locationsDisabled;
  * @param {string} [props.primaryColor] - If you want the splash screen to have a custom primary color, provide the value here.
  * @param {string} [props.logo] - If you want the splash screen to have a custom logo, provide the image path or address here.
  * @param {array} [props.appUserRoles] - If you want the map to behave differently for specific users, set one or more app user roles here.
- * @param {string} [props.directionsFrom] - Set a MapsIndoors Location ID or the string "USER_POSITION" to be used as origin when showing directions. To instantly show directions, use it together with "directionsTo".
- * @param {string} [props.directionsTo] - Set a MapsIndoors Location ID or the string "USER_POSITION" to be used as destination when showing directions. To instantly show directions, use it together with "directionsFrom".
+ * @param {string} [props.directionsFrom] - If you want to show directions instantly, provide a MapsIndoors Location ID or the string "USER_POSITION" here to be used as the origin.
+ * @param {string} [props.directionsTo] - If you want to show directions instantly, provide a MapsIndoors Location ID or the string "USER_POSITION" here to be used as the destination.
+ * @param {array} [props.externalIDs] - Filter locations shown on the map based on the external IDs.
+ * @param {string} [props.tileStyle] - Tile style name to change the interface of the map.
  */
-function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo }) {
+function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle }) {
 
     const [isMapReady, setMapReady] = useState(false);
     const [venues, setVenues] = useState([]);
@@ -48,10 +50,14 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
     const [positionControl, setPositionControl] = useState();
     const [userPosition, setUserPosition] = useState();
- 	const [appConfigResult, setAppConfigResult] = useState();
+    const [appConfigResult, setAppConfigResult] = useState();
+    const [selectedMapType, setSelectedMapType] = useState();
 
     const directionsFromLocation = useLocationForWayfinding(directionsFrom, userPosition, positionControl);
     const directionsToLocation = useLocationForWayfinding(directionsTo, userPosition, positionControl);
+
+    // The filtered locations by external id, if present.
+    const [filteredLocationsByExternalID, setFilteredLocationsByExternalID] = useState();
 
     // The filtered locations that the user sets when selecting a category/location.
     const [filteredLocations, setFilteredLocations] = useState();
@@ -75,13 +81,14 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     }, [currentAppView]);
 
     /**
-     * When venue is fitted while initializing the data, set map to be ready.
+     * When venue is fitted while initializing the data,
+     * set map to be ready and get the venue categories.
      */
-    function venueChangedOnMap() {
+    function venueChangedOnMap(venue) {
         if (isMapReady === false) {
             setMapReady(true);
         }
-        getVenueCategories(currentVenueName);
+        getVenueCategories(venue.name);
     }
 
     /**
@@ -161,6 +168,20 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     }, [appUserRoles]);
 
 
+    /*
+     * React on changes in the externalIDs prop.
+     * Get the locations by external IDs, if present.
+     */
+    useEffect(() => {
+        if (externalIDs) {
+            mapsindoors.services.LocationsService.getLocationsByExternalId(externalIDs).then(locations => {
+                setFilteredLocationsByExternalID(locations);
+            });
+        } else {
+            setFilteredLocationsByExternalID([]);
+        }
+    }, [externalIDs]);
+
     /**
      * React on changes to the locationId prop: Set as current location and make the map center on it.
      */
@@ -196,6 +217,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             setAppConfigResult(appConfigResult);
             setVenues(venuesResult);
         });
+        setMapReady(false);
+
     }, [apiKey]);
 
 
@@ -235,13 +258,15 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                                 currentVenueName={currentVenueName}
                                 setCurrentLocation={setCurrentLocation}
                                 currentCategories={currentCategories}
-                                onClose={() => setCurrentLocation(null)}
                                 onLocationsFiltered={(locations) => setFilteredLocations(locations)}
                                 directionsFromLocation={directionsFromLocation}
                                 directionsToLocation={directionsToLocation}
                                 pushAppView={pushAppView}
                                 currentAppView={currentAppView}
                                 appViews={appStates}
+                                selectedMapType={selectedMapType}
+                                filteredLocationsByExternalIDs={filteredLocationsByExternalID}
+                                onLocationsFilteredByExternalIDs={(locations) => setFilteredLocationsByExternalID(locations)}
                             />
                             :
                             <BottomSheet
@@ -255,6 +280,9 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                                 pushAppView={pushAppView}
                                 currentAppView={currentAppView}
                                 appViews={appStates}
+                                selectedMapType={selectedMapType}
+                                filteredLocationsByExternalIDs={filteredLocationsByExternalID}
+                                onLocationsFilteredByExternalIDs={(locations) => setFilteredLocationsByExternalID(locations)}
                             />
                         }
                         <MIMap
@@ -263,13 +291,17 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             mapboxAccessToken={mapboxAccessToken}
                             venues={venues}
                             venueName={currentVenueName}
-                            onVenueChangedOnMap={() => venueChangedOnMap()}
+                            onVenueChangedOnMap={(venue) => venueChangedOnMap(venue)}
                             onMapsIndoorsInstance={(instance) => setMapsIndoorsInstance(instance)}
                             onDirectionsService={(instance) => setDirectionsService(instance)}
                             onLocationClick={(location) => locationClicked(location)}
                             onPositionControl={positionControl => setPositionControl(positionControl)}
                             onUserPosition={position => setUserPosition(position)}
-                            filteredLocationIds={filteredLocations?.map(location => location.id)} />
+                            onMapTypeChanged={(mapType) => setSelectedMapType(mapType)}
+                            filteredLocationIds={filteredLocations?.map(location => location.id)}
+                            filteredLocationsByExternalIDs={filteredLocationsByExternalID?.map(location => location.id)}
+							tileStyle={tileStyle}
+                        />
                     </div>
                 </UserPositionContext.Provider>
             </DirectionsServiceContext.Provider>

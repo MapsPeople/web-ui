@@ -150,7 +150,7 @@ function LocationDetails({ location, onBack, onStartWayfinding, onSetSize, snapP
         {location && <>
             <div className="location-info">
                 <div className="location-info__icon">
-                    {locationDisplayRule && <img alt="" src={locationDisplayRule.icon} />}
+                    {locationDisplayRule && <img alt="" src={locationDisplayRule.icon.src ? locationDisplayRule.icon.src : locationDisplayRule.icon} />}
                 </div>
                 <div className="location-info__content">
                     <div className='location-info__name'>

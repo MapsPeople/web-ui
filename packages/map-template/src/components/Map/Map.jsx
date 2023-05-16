@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
+import { mapTypes } from "../../constants/mapTypes";
 import useLiveData from '../../hooks/useLivedata';
 import GoogleMapsMap from "./GoogleMapsMap/GoogleMapsMap";
 import MapboxMap from "./MapboxMap/MapboxMap";
 
 const mapsindoors = window.mapsindoors;
 
-const MAP_TYPES = {
-    GOOGLE: 'google',
-    MAPBOX: 'mapbox'
-};
-
 const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
+
+/**
+ * Private variable used for storing the tile style.
+ * Implemented due to the impossibility to use the React useState hook.
+ */
+let _tileStyle;
 
 /**
  * Shows a map.
@@ -28,9 +30,13 @@ const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
  * @param {function} props.onPositionControl -  A function that is called when the MapsIndoors PositionControl is constructed. Will send the PositionControl instance as payload.
  * @param {function} props.onUserPosition - Function that is run when (if) the user position updates. Sends position as payload.
  * @param {array} props.filteredLocationIds - Array of IDs of the filtered locations.
+ * @param {function} props.onMapTypeChanged - Function that is run when the map type is changed.
+ * @param {array} props.filteredLocationsByExternalIDs - Array of IDs of the filtered locations based on external ID.
+ * @param {string} props.tileStyle - Tile style name to change the interface of the map.
+
  * @returns
  */
-function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onMapsIndoorsInstance, onDirectionsService, onVenueChangedOnMap, onPositionControl, onUserPosition, filteredLocationIds }) {
+function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onMapsIndoorsInstance, onDirectionsService, onVenueChangedOnMap, onPositionControl, onUserPosition, filteredLocationIds, onMapTypeChanged, filteredLocationsByExternalIDs, tileStyle }) {
     const [mapType, setMapType] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState(null);
 
@@ -38,10 +44,12 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
 
     useEffect(() => {
         if (mapboxAccessToken) {
-            setMapType(MAP_TYPES.MAPBOX);
+            setMapType(mapTypes.Mapbox);
+            onMapTypeChanged(mapTypes.Mapbox)
         } else {
             // A Google Maps map will have precedense if no keys or keys for both providers are set.
-            setMapType(MAP_TYPES.GOOGLE);
+            setMapType(mapTypes.Google);
+            onMapTypeChanged(mapTypes.Google)
         }
     }, [gmApiKey, mapboxAccessToken]);
 
@@ -54,7 +62,7 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
             const venueToShow = getVenueToShow(venueName, venues);
             if (venueToShow) {
                 setVenue(venueToShow, mapsIndoorsInstance).then(() => {
-                    onVenueChangedOnMap();
+                    onVenueChangedOnMap(venueToShow);
                 });
             };
         }
@@ -62,13 +70,17 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
     // We ignore eslint warnings about missing dependencies because mapsIndoorsInstance should never change runtime anyway.
 
     /*
-     * Show the filtered locations on the map based on their IDs.
+     * Show the filtered locations on the map based on their IDs or external IDs if present.
      */
     useEffect(() => {
-        if (filteredLocationIds && mapsIndoorsInstance) {
-            mapsIndoorsInstance.filter(filteredLocationIds);
+        if (mapsIndoorsInstance) {
+            if (filteredLocationIds) {
+                mapsIndoorsInstance.filter(filteredLocationIds);
+            } else if (filteredLocationsByExternalIDs) {
+                mapsIndoorsInstance.filter(filteredLocationsByExternalIDs);
+            }
         }
-    }, [filteredLocationIds, mapsIndoorsInstance]);
+    }, [filteredLocationIds, filteredLocationsByExternalIDs, mapsIndoorsInstance]);
 
     /**
      * Set the venue to show on the map.
@@ -81,6 +93,22 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
         return mapsIndoorsInstance.fitVenue(venue);
     }
 
+    /**
+     * Replace the default tile URL style to the incoming tile style.
+     */
+    const onTileStyleChanged = (miInstance) => {
+        if (miInstance && _tileStyle) {
+            let tileURL = miInstance.getTileURL();
+            if (tileURL) {
+                tileURL = miInstance.getTileURL().replace('default', _tileStyle);
+
+                // Replace the floor placeholder with the actual floor and set the tile URL on the MapView.
+                const tileStyleWithFloor = tileURL?.replace('{floor}', miInstance.getFloor());
+                miInstance.getMapView().setMapsIndoorsTileURL(tileStyleWithFloor);
+            }
+        }
+    }
+
     const onMapView = async (mapView, externalDirectionsProvider) => {
         // Instantiate MapsIndoors instance
         const miInstance = new mapsindoors.MapsIndoors({
@@ -88,9 +116,11 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
         });
 
         // TODO: This overrides the pink building outline color from the SDK. It's added here for demo purposes until the SDK supports Display Rules for Buildings too.
-        miInstance.setDisplayRule('MI_BUILDING_OUTLINE', {visible: false});
+        miInstance.setDisplayRule('MI_BUILDING_OUTLINE', { visible: false });
 
         miInstance.on('click', location => onLocationClick(location));
+        miInstance.once('building_changed', () => onTileStyleChanged(miInstance))
+        miInstance.on('floor_changed', () => onTileStyleChanged(miInstance));
 
         setMapsIndoorsInstance(miInstance);
         onMapsIndoorsInstance(miInstance);
@@ -119,9 +149,18 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
         onPositionControl(positionControl);
     }
 
+    /*
+     * React on changes in the tile style prop.
+     */
+    useEffect(() => {
+        _tileStyle = tileStyle || 'default';
+        onTileStyleChanged(mapsIndoorsInstance);
+    }, [tileStyle]);
+
+
     return (<>
-        {mapType === MAP_TYPES.GOOGLE && <GoogleMapsMap gmApiKey={gmApiKey} onMapView={onMapView} onPositionControl={onPositionControlCreated} mapsIndoorsInstance={mapsIndoorsInstance} />}
-        {mapType === MAP_TYPES.MAPBOX && <MapboxMap mapboxAccessToken={mapboxAccessToken} onMapView={onMapView} onPositionControl={onPositionControlCreated} mapsIndoorsInstance={mapsIndoorsInstance} />}
+        {mapType === mapTypes.Google && <GoogleMapsMap gmApiKey={gmApiKey} onMapView={onMapView} onPositionControl={onPositionControlCreated} mapsIndoorsInstance={mapsIndoorsInstance} />}
+        {mapType === mapTypes.Mapbox && <MapboxMap mapboxAccessToken={mapboxAccessToken} onMapView={onMapView} onPositionControl={onPositionControlCreated} mapsIndoorsInstance={mapsIndoorsInstance} />}
     </>)
 }
 
