@@ -253,6 +253,11 @@ function Wayfinding({ onStartDirections, onBack, currentLocation, directionsToLo
     useEffect(() => {
         setSize(snapPoints.MAX);
 
+        // In case both the from and to locations are the user's position, unset the directionsToLocation. We don't want the user to be able to navigate to and from the user's position.
+        if (directionsFromLocation?.id === 'USER_POSITION' && directionsToLocation?.id === 'USER_POSITION') {
+            directionsToLocation = undefined; // FIXME: Antipattern. Will be fixed by global state management.
+        }
+
         // If there is a directionsToLocation and no currentLocation (otherwise the user had actively selected something else), use that as the "to" field.
         if (directionsToLocation?.properties && !currentLocation) {
             toFieldRef.current.setDisplayText(directionsToLocation.properties.name);
