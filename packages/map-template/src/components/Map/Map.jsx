@@ -32,10 +32,11 @@ let _tileStyle;
  * @param {function} props.onMapTypeChanged - Function that is run when the map type is changed.
  * @param {array} props.filteredLocationsByExternalIDs - Array of IDs of the filtered locations based on external ID.
  * @param {string} props.tileStyle - Tile style name to change the interface of the map.
+ * @param {string} props.locationId
 
  * @returns
  */
-function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onMapsIndoorsInstance, onDirectionsService, onVenueChangedOnMap, onUserPosition, filteredLocationIds, onMapTypeChanged, filteredLocationsByExternalIDs, tileStyle }) {
+function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onMapsIndoorsInstance, onDirectionsService, onVenueChangedOnMap, onUserPosition, filteredLocationIds, onMapTypeChanged, filteredLocationsByExternalIDs, tileStyle, locationId }) {
     const [mapType, setMapType] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState(null);
 

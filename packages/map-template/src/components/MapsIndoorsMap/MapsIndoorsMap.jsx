@@ -187,6 +187,10 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
         if (locationId) {
             mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
                 if (location) {
+                    setCurrentVenueName(location.properties.venueId)
+                    const locationGeometry = location.geometry.type === 'Point' ? location.geometry.coordinates : location.properties.anchor.coordinates;
+                    mapsIndoorsInstance?.getMapView().setCenter({ lat: locationGeometry[1], lng: locationGeometry[0]})
+                    // mapsIndoorsInstance?.setZoom(21);
                     setCurrentLocation(location);
                 }
             });
@@ -312,6 +316,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             filteredLocationIds={filteredLocations?.map(location => location.id)}
                             filteredLocationsByExternalIDs={filteredLocationsByExternalID?.map(location => location.id)}
 							tileStyle={tileStyle}
+                            locationId={locationId}
                         />
                     </div>
                 </UserPositionContext.Provider>
