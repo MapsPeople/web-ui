@@ -30,7 +30,7 @@
     }
 
     &__label {
-        font-size: 14px;
+        font-size: var(--font-size-small);
         color: var(--color-gray-70);
         font-weight: var(--font-weight-large);
         text-transform: uppercase;
@@ -40,7 +40,7 @@
         padding: var(--spacing-medium);
     }
 
-    &__info {
+    &__metrics {
         display: grid;
         gap: var(--spacing-x-small);
     }
@@ -81,4 +81,39 @@
         height: 1px;
     }
 
+
+    &__info {
+        display: flex;
+        align-items: center;
+        font-size: var(--font-size-small);
+    }
+
+    &__icon {
+        margin-right: var(--spacing-medium);
+
+        img {
+            height: var(--spacing-x-large);
+            display: block;
+            /* to avoid spacing below */
+        }
+    }
+
+    &__name {
+        display: grid;
+        grid-auto-flow: column;
+        gap: var(--spacing-xx-small);
+        font-size: var(--font-size-small);
+    }
+
+    mi-location-info {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 100%;
+    }
+
+    &__content {
+        display: grid;
+        gap: var(--spacing-xx-small);
+    }
 }
