@@ -125,8 +125,8 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
                 onSetSize={size => setWayfindingSheetSize(size)}
                 onStartDirections={() => pushAppView(appViews.DIRECTIONS)}
                 currentLocation={currentLocation}
-                to={directionsToLocation}
-                from={directionsFromLocation}
+                directionsToLocation={directionsToLocation}
+                directionsFromLocation={directionsFromLocation}
                 onDirections={result => setDirections(result)}
                 onBack={() => pushAppView(currentLocation ? appViews.LOCATION_DETAILS : appViews.SEARCH)}
                 isActive={currentAppView === appViews.WAYFINDING}
