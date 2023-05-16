@@ -16,8 +16,12 @@ MapsIndoorsMap.propTypes = {
     locationId: PropTypes.string,
     primaryColor: PropTypes.string,
     logo: PropTypes.string,
-    appUserRoles: PropTypes.string
-}
+    appUserRoles: PropTypes.string,
+    directionsFrom: PropTypes.string,
+    directionsTo: PropTypes.string,
+    externalIDs: PropTypes.array,
+    tileStyle: PropTypes.string
+};
 
 const WebMapsIndoorsMap = reactToWebComponent(MapsIndoorsMap, React, ReactDOM);
 
