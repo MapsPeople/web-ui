@@ -91,14 +91,31 @@ Note that when using the React component, the properties should conform to JSX p
 
 |Property|Type|Description|
 |:--|:--|:--|
-|`api-key`|`string`|The MapsIndoors Solution you want to load. Takes both API key as string and "App alias". |
-|`gm-api-key`|`string`|Your Google Maps API key. |
-|`mapbox-access-token`|`string`|Your Mapbox Access Token. Setting it will load a Mapbox map. If you set both a Mapbox Access Token and Google Maps API key, the Mapbox Access Token takes precedence. |
+|`apiKey`|`string`|The MapsIndoors Solution you want to load. Takes both API key as string and "App alias". |
+|`gmApiKey`|`string`|Your Google Maps API key. |
+|`mapboxAccessToken`|`string`|Your Mapbox Access Token. Setting it will load a Mapbox map. If you set both a Mapbox Access Token and Google Maps API key, the Mapbox Access Token takes precedence. |
 |`venue`|`string`|The Venue to load from your MapsIndoors Solution. |
-|`location-id`|`string`|Set a MapsIndoors Location ID to show it on the map and its details in the sheet. |
-|`primary-color`|`string`|The primary color to use throughout the app. |
+|`locationId`|`string`|Set a MapsIndoors Location ID to show it on the map and its details in the sheet. |
+|`primaryColor`|`string`|The primary color to use throughout the app. |
 |`logo`|`string`|The logo to show during initial load. |
-|`app-user-roles`|`array`|A list of App User Roles to apply when loading data. Used like so: `app-user-roles={["App User Role"]}`|
-|`directions-from`|`string`|Set a MapsIndoors Location ID to be used as origin to instantly show directions. Must be used together with `directions-to`|
-|`directions-to`|`string`|Set a MapsIndoors Location ID to be used as destination to instantly show directions. Must be used together with `directions-from`|
-|`external-ids`|`array`|Array of external IDs which filters the map and shows a list of locations. |
+|`appUserRoles`|`array`|A list of App User Roles to apply when loading data. Used like so: `appUserRoles={["App User Role"]}`|
+|`directionsFrom`|`string`|Set a MapsIndoors Location ID to be used as origin to instantly show directions. |
+|`directionsTo`|`string`|Set a MapsIndoors Location ID to be used as destination to instantly show directions. |
+|`externalIDs`|`array`|Array of external IDs which filters the map and shows a list of locations. Because of the way browsers work, you can not use External IDs with the `,`, `&`, `#` and `+`, character in them, as they are interpreted by the browser in a particular way. |
+|`tileStyle`|`string`|Name of Tile Style to display on the map. |
+
+## Deploying Map Template to a cloud storage provider
+
+We often use Google Cloud Storage (GCS) for deploying small useful apps for demo purposes. This guide refers to GCS, but many of the steps are identical for AWS, Azure Blob, and the like.
+
+Running the regular build command (`npm run build`), it's assumed that all links refer to the root of a domain. When you deploy to a storage bucket, you need to build the app with the bucket name preprended to all links. Vite has a build option to take care of this:
+
+```zsh
+$ vite build --base=/YOUR_BUCKET_NAME
+```
+
+At this point you can upload the files manually to your bucket, or use the helpful CLI [`gsutil`](https://cloud.google.com/storage/docs/gsutil) for the purpose. This command uploads the complete `build` folder, and prevents the files from being cached:
+
+```zsh
+$ gsutil -m -h "Cache-Control:public, max-age=0, no-store, no-cache" cp -r build gs://YOUR_BUCKET_NAME
+```
