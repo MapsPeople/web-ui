@@ -119,7 +119,7 @@ function Directions({ isOpen, onBack, directions }) {
 
     // FIXME: investigate if we can handle the height and width with hooks
     /**
-     * Get the preferred bottom padding for directions on mobile.
+     * Get bottom padding for directions on mobile.
      */
     function getMobilePaddingBottom() {
         const bottomSheet = document.querySelector('.sheet--active');
@@ -129,7 +129,7 @@ function Directions({ isOpen, onBack, directions }) {
     }
 
     /**
-     * Get the preferred left padding for directions on desktop.
+     * Get left padding for directions on desktop.
      */
     function getDesktopPaddingLeft() {
         // The width of the sidebar plus adequate padding
