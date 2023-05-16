@@ -381,7 +381,7 @@ function Wayfinding({ onStartDirections, onBack, currentLocation, directionsToLo
                             cleared={() => onSearchCleared(searchFieldIdentifiers.TO)}
                         />
                     </label>
-                    {userPosition && originLocation?.properties.name !== 'My Position' && <p className="wayfinding__use-current-position">
+                    {userPosition && originLocation?.id !== 'USER_POSITION' && <p className="wayfinding__use-current-position">
                         <button onClick={() => setMyPositionAsOrigin()}>Use My Position</button>
                     </p>}
                 </div>
