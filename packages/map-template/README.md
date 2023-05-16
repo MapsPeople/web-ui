@@ -15,7 +15,7 @@ import MapsIndoorsMap from '@mapspeople/map-template/dist/mapsindoors-webcompone
 window.customElements.define('mapsindoors-map', MapsIndoorsMap);
 ```
 
-In your styles make sure to give it a size:
+In your styles make sure to give it a size. For example:
 
 ```css
 mapsindoors-map {
@@ -25,13 +25,19 @@ mapsindoors-map {
 }
 ```
 
-Use it in your HTML:
+Make sure the MapsIndoors JavaScript SDK is loaded by having this somewhere in your HTML:
 
 ```html
-<mapsindoors-map api-key="mapspeople"></mapsindoors-map>
+<script src="https://app.mapsindoors.com/mapsindoors/js/sdk/4.21.4/mapsindoors-4.21.4.js.gz"></script>
 ```
 
-Replace the `api-key` value with your MapsPeople API key.
+Use the web component in your HTML:
+
+```html
+<mapsindoors-map></mapsindoors-map>
+```
+
+Add attributes to the web component as needed (see supported properties below).
 
 ## Using just the browser
 
@@ -52,10 +58,10 @@ Replace the `api-key` value with your MapsPeople API key.
       }
 </style>
 
-<mapsindoors-map api-key="mapspeople"></mapsindoors-map>
+<mapsindoors-map></mapsindoors-map>
 ```
 
-Replace the `api-key` value with your MapsPeople API key.
+Add attributes to the web component as needed (see supported properties below).
 
 # React component: Installation and usage
 
@@ -65,7 +71,13 @@ Install the package:
 
 `npm install @mapsindoors/map-template`
 
-In a React component:
+Make sure the MapsIndoors JavaScript SDK is loaded by having this somewhere in your HTML:
+
+```html
+<script src="https://app.mapsindoors.com/mapsindoors/js/sdk/4.21.4/mapsindoors-4.21.4.js.gz"></script>
+```
+
+Use the `MapsIndoorsMap` component in a React component:
 
 ```javascript
 import MapsIndoorsMap from '@mapspeople/map-template/dist/mapsindoors-react.es';
@@ -76,46 +88,27 @@ import MapsIndoorsMap from '@mapspeople/map-template/dist/mapsindoors-react.es';
       width: '100vw',
       height: '100vh'
 }}>
-      <MapsIndoorsMap
-      apiKey="mapspeople"
-      ></MapsIndoorsMap>
+      <MapsIndoorsMap></MapsIndoorsMap>
 </div>
-
 ```
 
-Replace the `api-key` value with your MapsPeople API key.
+Add properties to the MapsIndoorsMap component as needed (see list below).
 
-# Supported properties on the MapsIndoors Map components
+# Supported attributes on the MapsIndoors Map components
 
 Note that when using the React component, the properties should conform to JSX prop naming, eg. `api-key` becomes `apiKey`.
 
-|Property|Type|Description|
-|:--|:--|:--|
-|`apiKey`|`string`|The MapsIndoors Solution you want to load. Takes both API key as string and "App alias". |
-|`gmApiKey`|`string`|Your Google Maps API key. |
-|`mapboxAccessToken`|`string`|Your Mapbox Access Token. Setting it will load a Mapbox map. If you set both a Mapbox Access Token and Google Maps API key, the Mapbox Access Token takes precedence. |
-|`venue`|`string`|The Venue to load from your MapsIndoors Solution. |
-|`locationId`|`string`|Set a MapsIndoors Location ID to show it on the map and its details in the sheet. |
-|`primaryColor`|`string`|The primary color to use throughout the app. |
-|`logo`|`string`|The logo to show during initial load. |
-|`appUserRoles`|`array`|A list of App User Roles to apply when loading data. Used like so: `appUserRoles={["App User Role"]}`|
-|`directionsFrom`|`string`|Set a MapsIndoors Location ID to be used as origin to instantly show directions. |
-|`directionsTo`|`string`|Set a MapsIndoors Location ID to be used as destination to instantly show directions. |
-|`externalIDs`|`array`|Array of external IDs which filters the map and shows a list of locations. Because of the way browsers work, you can not use External IDs with the `,`, `&`, `#` and `+`, character in them, as they are interpreted by the browser in a particular way. |
-|`tileStyle`|`string`|Name of Tile Style to display on the map. |
-
-## Deploying Map Template to a cloud storage provider
-
-We often use Google Cloud Storage (GCS) for deploying small useful apps for demo purposes. This guide refers to GCS, but many of the steps are identical for AWS, Azure Blob, and the like.
-
-Running the regular build command (`npm run build`), it's assumed that all links refer to the root of a domain. When you deploy to a storage bucket, you need to build the app with the bucket name preprended to all links. Vite has a build option to take care of this:
-
-```zsh
-$ vite build --base=/YOUR_BUCKET_NAME
-```
-
-At this point you can upload the files manually to your bucket, or use the helpful CLI [`gsutil`](https://cloud.google.com/storage/docs/gsutil) for the purpose. This command uploads the complete `build` folder, and prevents the files from being cached:
-
-```zsh
-$ gsutil -m -h "Cache-Control:public, max-age=0, no-store, no-cache" cp -r build gs://YOUR_BUCKET_NAME
-```
+|Attribute|React prop name|Type|Description|
+|:--|:--|:--|:--|
+|`api-key`|`apiKey`|`string`|The MapsIndoors Solution you want to load. Takes both API key as string and "App alias". |
+|`gm-api-key`|`gmApiKey`|`string`|Your Google Maps API key. |
+|`mapbox-access-token`|`mapboxAccessToken`|`string`|Your Mapbox Access Token. Setting it will load a Mapbox map. If you set both a Mapbox Access Token and Google Maps API key, the Mapbox Access Token takes precedence. |
+|`venue`|`venue`|`string`|The Venue to load from your MapsIndoors Solution. |
+|`location-id`|`locationId`|`string`|Set a MapsIndoors Location ID to show it on the map and its details in the sheet. |
+|`primary-color`|`primaryColor`|`string`|The primary color to use throughout the app. |
+|`logo`|`logo`|`string`|The logo to show during initial load. |
+|`app-user-roles`|`appUserRoles`|`array`|A list of App User Roles to apply when loading data. Used like so: `appUserRoles={["App User Role"]}`|
+|`directions-from`|`directionsFrom`|`string`|Set a MapsIndoors Location ID to be used as origin to instantly show directions. |
+|`directions-to`|`directionsTo`|`string`|Set a MapsIndoors Location ID to be used as destination to instantly show directions. |
+|`external-IDs`|`etxternalIDs`|`array`|Array of external IDs which filters the map and shows a list of locations. Because of the way browsers work, you can not use External IDs with the `,`, `&`, `#` and `+`, character in them, as they are interpreted by the browser in a particular way. |
+|`tile-style`|`tileStyle`|`string`|Name of Tile Style to display on the map. |
