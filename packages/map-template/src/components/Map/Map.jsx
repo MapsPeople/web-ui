@@ -32,7 +32,7 @@ let _tileStyle;
  * @param {function} props.onMapTypeChanged - Function that is run when the map type is changed.
  * @param {array} props.filteredLocationsByExternalIDs - Array of IDs of the filtered locations based on external ID.
  * @param {string} props.tileStyle - Tile style name to change the interface of the map.
- * @param {string} props.locationId
+ * @param {string} props.locationId - Location Id property used to handle the centering and zooming of the map.
 
  * @returns
  */
