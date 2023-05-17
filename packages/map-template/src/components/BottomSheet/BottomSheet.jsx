@@ -42,6 +42,8 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
      * React on changes on the current location and directions locations and set relevant bottom sheet.
      */
     useEffect(() => {
+        if (directionsFromLocation && directionsToLocation && currentAppView === appViews.DIRECTIONS) return; // Never change sheet when dependencies change within Directions.
+
         if (directionsFromLocation && directionsToLocation) {
             pushAppView(appViews.WAYFINDING);
         } else if (currentLocation && currentAppView !== appViews.LOCATION_DETAILS) {
