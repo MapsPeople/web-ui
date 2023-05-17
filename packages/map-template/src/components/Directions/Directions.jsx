@@ -47,11 +47,10 @@ function Directions({ isOpen, onBack, directions }) {
                 mapsIndoors: mapsIndoorsInstance,
                 fitBoundsPadding: {
                     top: padding,
-                    bottom: isDesktop ? padding : getBottomSheetHeight(),
-                    left: isDesktop ? getSidebarWidth() : padding,
+                    bottom: isDesktop ? padding : getMobilePaddingBottom(),
+                    left: isDesktop ? getDesktopPaddingLeft() : padding,
                     right: padding
                 }
-
             });
 
             directionsRenderer.setRoute(directions.directionsResult);
@@ -120,9 +119,9 @@ function Directions({ isOpen, onBack, directions }) {
 
     // FIXME: investigate if we can handle the height and width with hooks
     /**
-     * Get the height of the bottom sheet in pixels.
+     * Get bottom padding for directions on mobile.
      */
-    function getBottomSheetHeight() {
+    function getMobilePaddingBottom() {
         const bottomSheet = document.querySelector('.sheet--active');
         const mapContainer = document.querySelector('.mapsindoors-map');
         // Subtract the top padding from the height of the map container element.
@@ -130,13 +129,12 @@ function Directions({ isOpen, onBack, directions }) {
     }
 
     /**
-     * Get the width of the sidebar in pixels
+     * Get left padding for directions on desktop.
      */
-    function getSidebarWidth() {
+    function getDesktopPaddingLeft() {
+        // The width of the sidebar plus adequate padding
         const sidebar = document.querySelector('.modal--open');
-        const mapContainer = document.querySelector('.mapsindoors-map');
-        // Subtract the sum of the sidebar's width and the left padding from the width of the map container element.
-        return mapContainer.offsetWidth - (sidebar.offsetWidth + sidebar.offsetLeft);
+        return sidebar.offsetWidth + sidebar.offsetLeft * 2;
     }
 
     /**
