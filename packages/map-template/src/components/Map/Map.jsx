@@ -61,7 +61,7 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
         if (mapsIndoorsInstance) {
             window.localStorage.clear(localStorageKeyForVenue);
             const venueToShow = getVenueToShow(venueName, venues);
-            if (venueToShow) {
+            if (venueToShow && !locationId) {
                 setVenue(venueToShow, mapsIndoorsInstance).then(() => {
                     onVenueChangedOnMap(venueToShow);
                 });
@@ -92,11 +92,7 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
      */
     const setVenue = (venue, mapsIndoorsInstance) => {
         window.localStorage.setItem(localStorageKeyForVenue, venue.name);
-        if (locationId) {
-            return Promise.resolve();
-        } else {
-            return mapsIndoorsInstance.fitVenue(venue);
-        }
+        return mapsIndoorsInstance.fitVenue(venue);
     }
 
     /**
@@ -172,7 +168,7 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
         onDirectionsService(directionsService);
 
         const venueToShow = getVenueToShow(venueName, venues);
-        if (venueToShow) {
+        if (venueToShow && !locationId) {
             setVenue(venueToShow, miInstance);
         }
     };
