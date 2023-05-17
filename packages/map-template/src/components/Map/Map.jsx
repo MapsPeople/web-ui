@@ -65,7 +65,9 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
                 setVenue(venueToShow, mapsIndoorsInstance).then(() => {
                     onVenueChangedOnMap(venueToShow);
                 });
-            };
+            } else if (venueToShow) {
+                onVenueChangedOnMap(venueToShow);
+            }
         }
     }, [venueName, venues]); // eslint-disable-line react-hooks/exhaustive-deps
     // We ignore eslint warnings about missing dependencies because mapsIndoorsInstance should never change runtime anyway.
@@ -97,20 +99,14 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
 
     /**
      * Handle the tile style changes and the locationId property.
+     * If the locationId property is present, set the correct floor, center and zoom the map.
      *
      * @param {object} miInstance
      */
     const onBuildingChanged = (miInstance) => {
-        onTileStyleChanged(miInstance);
-        onLocationIdSet(miInstance)
-    }
 
-    /**
-     * Set the correct floor, center and zoom the map.
-     *
-     * @param {object} miInstance
-     */
-    const onLocationIdSet = (miInstance) => {
+        onTileStyleChanged(miInstance);
+
         if (locationId && miInstance) {
             mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
                 if (location) {
@@ -130,10 +126,10 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
     }
 
     /**
-     * Replace the default tile URL style to the incoming tile style.
-     *
-     * @param {object} miInstance
-     */
+    * Replace the default tile URL style to the incoming tile style.
+    *
+    * @param {object} miInstance
+    */
     const onTileStyleChanged = (miInstance) => {
         if (miInstance && _tileStyle) {
             let tileURL = miInstance.getTileURL();
