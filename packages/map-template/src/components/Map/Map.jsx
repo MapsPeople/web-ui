@@ -84,18 +84,50 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
 
     /**
      * Set the venue to show on the map.
+     * If locationId property is present, resolve the promise without fitting the venue.
      *
      * @param {object} venue
      * @param {object} mapsIndoorsInstance
      */
     const setVenue = (venue, mapsIndoorsInstance) => {
         window.localStorage.setItem(localStorageKeyForVenue, venue.name);
-        return mapsIndoorsInstance.fitVenue(venue);
+        if (locationId) {
+            return Promise.resolve();
+        } else {
+            return mapsIndoorsInstance.fitVenue(venue);
+        }
     }
 
     /**
-     * Replace the default tile URL style to the incoming tile style.
+     * Handle the tile style changes and the locationId property.
+     * If the locationId property is present, set the correct floor, center and zoom the map.
+     *
+     * @param {object} miInstance
      */
+    const onBuildingChanged = (miInstance) => {
+
+        onTileStyleChanged(miInstance);
+
+        if (locationId && miInstance) {
+            mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
+                if (location) {
+                    const locationFloor = location.properties.floor;
+                    miInstance.setFloor(locationFloor);
+
+                    const locationGeometry = location.geometry.type === 'Point' ? location.geometry.coordinates : location.properties.anchor.coordinates;
+                    miInstance.getMapView().setCenter({ lat: locationGeometry[1], lng: locationGeometry[0] });
+
+                    miInstance?.setZoom(21);
+                }
+            });
+        }
+    }
+
+    /**
+    * Replace the default tile URL style to the incoming tile style.
+    *
+    * @param {object} miInstance
+    */
     const onTileStyleChanged = (miInstance) => {
         if (miInstance && _tileStyle) {
             let tileURL = miInstance.getTileURL();
@@ -119,7 +151,7 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
         miInstance.setDisplayRule('MI_BUILDING_OUTLINE', { visible: false });
 
         miInstance.on('click', location => onLocationClick(location));
-        miInstance.once('building_changed', () => onTileStyleChanged(miInstance))
+        miInstance.once('building_changed', () => onBuildingChanged(miInstance))
         miInstance.on('floor_changed', () => onTileStyleChanged(miInstance));
 
         setMapsIndoorsInstance(miInstance);

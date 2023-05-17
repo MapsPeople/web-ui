@@ -180,23 +180,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
         }
     }, [externalIDs]);
 
-    /**
-     * React on changes to the locationId prop: Set as current location and make the map center on it.
-     */
-    useEffect(() => {
-        if (locationId) {
-            mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
-                if (location) {
-                    setCurrentVenueName(location.properties.venueId)
-                    const locationGeometry = location.geometry.type === 'Point' ? location.geometry.coordinates : location.properties.anchor.coordinates;
-                    mapsIndoorsInstance?.getMapView().setCenter({ lat: locationGeometry[1], lng: locationGeometry[0]})
-                    // mapsIndoorsInstance?.setZoom(21);
-                    setCurrentLocation(location);
-                }
-            });
-        }
-    }, [locationId]);
-
     /*
      * React on changes to the directionsFrom and directionsTo props. When both are set, wayfinding should be shown.
      * Setting the directionsFromLocation and directionsToLocation make that happen.
@@ -236,6 +219,21 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
         setMapReady(false);
 
     }, [apiKey]);
+
+    /**
+    * React on changes to the locationId prop.
+    * Set as current location and change the venue according to the venue that the location belongs to.
+    */
+    useEffect(() => {
+        if (locationId) {
+            mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
+                if (location) {
+                    setCurrentVenueName(location.properties.venueId);
+                    setCurrentLocation(location);
+                }
+            });
+        }
+    }, [locationId]);
 
 
     /*
@@ -315,7 +313,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             onMapTypeChanged={(mapType) => setSelectedMapType(mapType)}
                             filteredLocationIds={filteredLocations?.map(location => location.id)}
                             filteredLocationsByExternalIDs={filteredLocationsByExternalID?.map(location => location.id)}
-							tileStyle={tileStyle}
+                            tileStyle={tileStyle}
                             locationId={locationId}
                         />
                     </div>
