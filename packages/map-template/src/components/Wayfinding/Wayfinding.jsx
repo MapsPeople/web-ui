@@ -12,6 +12,7 @@ import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemL
 import SearchField from '../WebComponentWrappers/Search/Search';
 import { snapPoints } from '../../constants/snapPoints';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
+import generateMyPositionLocation from '../../helpers/MyPositionLocation';
 import addGooglePlaceGeometry from "../Map/GoogleMapsMap/GooglePlacesHandler";
 import GooglePlaces from '../../assets/google-places.png';
 import { mapTypes } from "../../constants/mapTypes";
@@ -29,13 +30,14 @@ const googlePlacesIcon = "data:image/svg+xml,%3Csvg width='10' height='10' viewB
  * @param {Object} props
  * @param {function} props.onStartDirections - Function that is run when the user navigates to the directions page.
  * @param {function} props.onBack - Function that is run when the user navigates to the previous page.
- * @param {object} props.to - The location to navigate to.
- * @param {object} [props.from] - Optional location to navigate from. If omitted, the user has to choose in the search field.
+ * @param {object} props.currentLocation - The currently selected MapsIndoors Location.
+ * @param {object} props.directionsToLocation - Optional location to navigate to.
+ * @param {object} [props.directionsFromLocation] - Optional location to navigate from. If omitted, the user has to choose in the search field.
  * @param {function} props.onSetSize - Callback that is fired when the component has loaded.
  * @param {string} props.selectedMapType - The currently selected map type.
  * @returns
  */
-function Wayfinding({ onStartDirections, onBack, to, from, onSetSize, isActive, onDirections, selectedMapType }) {
+function Wayfinding({ onStartDirections, onBack, currentLocation, directionsToLocation, directionsFromLocation, onSetSize, isActive, onDirections, selectedMapType }) {
 
     const wayfindingRef = useRef();
 
@@ -157,23 +159,11 @@ function Wayfinding({ onStartDirections, onBack, to, from, onSetSize, isActive, 
     /**
      * Set the user's current position as the origin.
      *
-     * This is done by mocking a MapsIndoors Location with the geometry
-     * corresponding to the user's position.
+     * This is done by having a GeoJSON Feature with geometry corresponding to
+     * the user's position.
      */
     function setMyPositionAsOrigin() {
-        const myPositionGeometry = {
-            type: 'Point',
-            coordinates: [userPosition.coords.longitude, userPosition.coords.latitude]
-        };
-        const myPositionLocation = {
-            geometry: myPositionGeometry,
-            properties: {
-                name: 'My Position',
-                anchor: myPositionGeometry,
-            },
-            type: 'Feature'
-        };
-
+        const myPositionLocation = generateMyPositionLocation(userPosition);
         fromFieldRef.current.setDisplayText(myPositionLocation.properties.name);
         setOriginLocation(myPositionLocation);
         setHasFoundRoute(true);
@@ -260,30 +250,24 @@ function Wayfinding({ onStartDirections, onBack, to, from, onSetSize, isActive, 
         }
     }
 
-    /**
-     * Either set user position to "from field" or focus the "from" field.
-     */
-    function setPositionOrSetFocus() {
-        if (userPosition && !from) {
-            setMyPositionAsOrigin();
-        } else if (!from) {
-            fromFieldRef.current.focusInput();
-        }
-    }
-
     useEffect(() => {
         setSize(snapPoints.MAX);
 
-        // If there is a "to" location, use that as the "to" field.
-        if (to) {
-            toFieldRef.current.setDisplayText(to.properties.name);
-            setDestinationLocation(to);
+        // In case both the from and to locations are the user's position, unset the directionsToLocation. We don't want the user to be able to navigate to and from the user's position.
+        if (directionsFromLocation?.id === 'USER_POSITION' && directionsToLocation?.id === 'USER_POSITION') {
+            directionsToLocation = undefined; // FIXME: Antipattern. Will be fixed by global state management.
         }
 
-        // If there is a "from" location, use that as the 'from' field. Otherwise trigger focus on search field.
-        if (from) {
-            fromFieldRef.current.setDisplayText(from.properties.name);
-            setOriginLocation(from);
+        // If there is a directionsToLocation and no currentLocation (otherwise the user had actively selected something else), use that as the "to" field.
+        if (directionsToLocation?.properties && !currentLocation) {
+            toFieldRef.current.setDisplayText(directionsToLocation.properties.name);
+            setDestinationLocation(directionsToLocation);
+        }
+
+        // If there is a directionsFromLocation, use that as the 'from' field. Otherwise trigger focus on search field.
+        if (directionsFromLocation?.properties) {
+            fromFieldRef.current.setDisplayText(directionsFromLocation.properties.name);
+            setOriginLocation(directionsFromLocation);
         } else {
             setActiveSearchField(searchFieldIdentifiers.FROM);
         }
@@ -294,20 +278,27 @@ function Wayfinding({ onStartDirections, onBack, to, from, onSetSize, isActive, 
             const sheet = wayfindingRef.current.closest('.sheet');
             if (sheet) {
                 sheet.addEventListener('transitionend', () => {
-                    setPositionOrSetFocus();
+                    if (directionsFromLocation !== 'USER_POSITION_PENDING' && directionsToLocation?.id !== 'USER_POSITION') {
+                        fromFieldRef.current.focusInput();
+                    }
                 }, { once: true });
-            } else {
-                setPositionOrSetFocus();
+            } else if (directionsFromLocation !== 'USER_POSITION_PENDING' && directionsToLocation?.id !== 'USER_POSITION') {
+                fromFieldRef.current.focusInput();
+            }
+
+            if (userPosition && !originLocation && directionsToLocation?.id !== 'USER_POSITION') {
+                // If the user's position is known and no origin location is set, use the position as Origin.
+                setMyPositionAsOrigin();
             }
         }
-    }, [isActive, to, from]);
+    }, [isActive, directionsToLocation, directionsFromLocation]);
 
-    /**
-     * When both origin location and destination location are selected, call the MapsIndoors SDK
+    /*
+     * When both origin location and destination location are selected, and have geometry, call the MapsIndoors SDK
      * to get information about the route.
      */
     useEffect(() => {
-        if (originLocation && destinationLocation) {
+        if (originLocation?.geometry && destinationLocation?.geometry) {
             directionsService.getRoute({
                 origin: getLocationPoint(originLocation),
                 destination: getLocationPoint(destinationLocation),
@@ -345,6 +336,16 @@ function Wayfinding({ onStartDirections, onBack, to, from, onSetSize, isActive, 
             setSearchResults(searchResults.filter(result => result.properties.type !== 'google_places'));
         }
     }, [selectedMapType]);
+
+    /*
+     * When current location is set, make sure to set that as the destination.
+     */
+    useEffect(() => {
+        if (currentLocation) {
+            setDestinationLocation(currentLocation);
+            toFieldRef.current.setDisplayText(currentLocation.properties.name);
+        }
+    }, [currentLocation]);
 
     return (
         <div className="wayfinding" ref={wayfindingRef}>
@@ -385,7 +386,7 @@ function Wayfinding({ onStartDirections, onBack, to, from, onSetSize, isActive, 
                             cleared={() => onSearchCleared(searchFieldIdentifiers.TO)}
                         />
                     </label>
-                    {userPosition && originLocation?.properties.name !== 'My Position' && <p className="wayfinding__use-current-position">
+                    {userPosition && originLocation?.id !== 'USER_POSITION' && <p className="wayfinding__use-current-position">
                         <button onClick={() => setMyPositionAsOrigin()}>Use My Position</button>
                     </p>}
                 </div>

@@ -42,6 +42,8 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
      * React on changes on the current location and directions locations and set relevant bottom sheet.
      */
     useEffect(() => {
+        if (directionsFromLocation && directionsToLocation && currentAppView === appViews.DIRECTIONS) return; // Never change sheet when dependencies change within Directions.
+
         if (directionsFromLocation && directionsToLocation) {
             pushAppView(appViews.WAYFINDING);
         } else if (currentLocation && currentAppView !== appViews.LOCATION_DETAILS) {
@@ -124,8 +126,9 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
             <Wayfinding
                 onSetSize={size => setWayfindingSheetSize(size)}
                 onStartDirections={() => pushAppView(appViews.DIRECTIONS)}
-                to={currentLocation || directionsToLocation}
-                from={directionsFromLocation}
+                currentLocation={currentLocation}
+                directionsToLocation={directionsToLocation}
+                directionsFromLocation={directionsFromLocation}
                 onDirections={result => setDirections(result)}
                 onBack={() => pushAppView(currentLocation ? appViews.LOCATION_DETAILS : appViews.SEARCH)}
                 isActive={currentAppView === appViews.WAYFINDING}
