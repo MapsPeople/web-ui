@@ -209,9 +209,9 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     }, [apiKey]);
 
     /**
-    * React on changes to the locationId prop.
-    * Set as current location and change the venue according to the venue that the location belongs to.
-    */
+     * React on changes to the locationId prop.
+     * Set as current location and change the venue according to the venue that the location belongs to.
+     */
     useEffect(() => {
         if (locationId) {
             mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
@@ -222,7 +222,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             });
         }
     }, [locationId]);
-
 
     /*
      * React on changes in directions opened state.
