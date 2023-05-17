@@ -11,7 +11,7 @@ Install the package:
 In your script:
 
 ```javascript
-import MapsIndoorsMap from '@mapspeople/map-template/dist/mapsindoors-webcomponent.es';
+import MapsIndoorsMap from '@mapspeople/map-template/dist/mapsindoors-webcomponent.es.js';
 window.customElements.define('mapsindoors-map', MapsIndoorsMap);
 ```
 
@@ -80,7 +80,7 @@ Make sure the MapsIndoors JavaScript SDK is loaded by having this somewhere in y
 Use the `MapsIndoorsMap` component in a React component:
 
 ```javascript
-import MapsIndoorsMap from '@mapspeople/map-template/dist/mapsindoors-react.es';
+import MapsIndoorsMap from '@mapspeople/map-template/dist/mapsindoors-react.es.js';
 
 // Somewhere in your JSX:
 <div style={{
