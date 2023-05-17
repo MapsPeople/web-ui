@@ -208,7 +208,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
 
     }, [apiKey]);
 
-    /**
+    /*
      * React on changes to the locationId prop.
      * Set as current location and change the venue according to the venue that the location belongs to.
      */
