@@ -112,12 +112,15 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
         if (locationId && miInstance) {
             mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
                 if (location) {
+                    // Set the floor to the one that the location belongs to.
                     const locationFloor = location.properties.floor;
                     miInstance.setFloor(locationFloor);
 
+                    // Center the map to the location coordinates.
                     const locationGeometry = location.geometry.type === 'Point' ? location.geometry.coordinates : location.properties.anchor.coordinates;
                     miInstance.getMapView().setCenter({ lat: locationGeometry[1], lng: locationGeometry[0] });
 
+                    // Set the zoom level in order to see the location closer on the map.
                     miInstance?.setZoom(21);
                 }
             });
