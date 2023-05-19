@@ -25,6 +25,7 @@ import LocationsList from '../LocationsList/LocationsList';
  */
 function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, currentVenueName, directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews, selectedMapType, filteredLocationsByExternalIDs, onLocationsFilteredByExternalIDs }) {
     const [directions, setDirections] = useState();
+    const [travelMode, setTravelMode] = useState();
 
     /*
      * React on changes on the current location and directions locations and set relevant bottom sheet.
@@ -96,6 +97,7 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
                 onBack={() => pushAppView(currentLocation ? appViews.LOCATION_DETAILS : appViews.SEARCH)}
                 isActive={currentAppView === appViews.WAYFINDING}
                 selectedMapType={selectedMapType}
+                travelMode={travelMode}
             />
         </Modal>,
         <Modal isOpen={currentAppView === appViews.DIRECTIONS} key="E">
@@ -103,6 +105,7 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
                 isOpen={currentAppView === appViews.DIRECTIONS}
                 directions={directions}
                 onBack={() => pushAppView(appViews.WAYFINDING)}
+                setTravelMode={selectedTravelMode => setTravelMode(selectedTravelMode)}
             />
         </Modal>
     ]

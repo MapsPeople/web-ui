@@ -35,7 +35,7 @@ const googlePlacesIcon = "data:image/svg+xml,%3Csvg width='10' height='10' viewB
  * @param {string} props.selectedMapType - The currently selected map type.
  * @returns
  */
-function Wayfinding({ onStartDirections, onBack, to, from, onSetSize, isActive, onDirections, selectedMapType }) {
+function Wayfinding({ onStartDirections, onBack, to, from, onSetSize, isActive, onDirections, selectedMapType, travelMode }) {
 
     const wayfindingRef = useRef();
 
@@ -311,6 +311,7 @@ function Wayfinding({ onStartDirections, onBack, to, from, onSetSize, isActive, 
             directionsService.getRoute({
                 origin: getLocationPoint(originLocation),
                 destination: getLocationPoint(destinationLocation),
+                travelMode: travelMode,
                 avoidStairs: accessibilityOn
             }).then(directionsResult => {
                 if (directionsResult && directionsResult.legs) {
@@ -337,7 +338,7 @@ function Wayfinding({ onStartDirections, onBack, to, from, onSetSize, isActive, 
                 setHasFoundRoute(false);
             });
         }
-    }, [originLocation, destinationLocation, directionsService, accessibilityOn]);
+    }, [originLocation, destinationLocation, directionsService, accessibilityOn, travelMode]);
 
     useEffect(() => {
         if (selectedMapType === mapTypes.Mapbox) {

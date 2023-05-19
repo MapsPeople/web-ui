@@ -36,7 +36,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
     const [wayfindingSheetSize, setWayfindingSheetSize] = useState();
     const [searchSheetSize, setSearchSheetSize] = useState();
     const [locationsListSheetSize, setLocationsListSheetSize] = useState();
-
+    const [travelMode, setTravelMode] = useState();
 
     /*
      * React on changes on the current location and directions locations and set relevant bottom sheet.
@@ -130,6 +130,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
                 onBack={() => pushAppView(currentLocation ? appViews.LOCATION_DETAILS : appViews.SEARCH)}
                 isActive={currentAppView === appViews.WAYFINDING}
                 selectedMapType={selectedMapType}
+                travelMode={travelMode}
             />
         </Sheet>,
         <Sheet
@@ -141,6 +142,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
                 directions={directions}
                 onBack={() => pushAppView(appViews.WAYFINDING)}
                 isActive={currentAppView === appViews.DIRECTIONS}
+                setTravelMode={selectedTravelMode => setTravelMode(selectedTravelMode)}
             />
         </Sheet>
     ]

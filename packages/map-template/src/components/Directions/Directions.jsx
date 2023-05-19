@@ -11,7 +11,7 @@ const mapsindoors = window.mapsindoors;
 
 let directionsRenderer;
 
-function Directions({ isOpen, onBack, directions }) {
+function Directions({ isOpen, onBack, directions, setTravelMode }) {
 
     const [totalDistance, setTotalDistance] = useState();
     const [totalTime, setTotalTime] = useState();
@@ -63,7 +63,7 @@ function Directions({ isOpen, onBack, directions }) {
             return [];
         }
 
-        return directions.directionsResult.legs.reduce((accummulator, leg, legIndex) => {
+        return directions.directionsResult.legs.reduce((accummulator, leg) => {
             for (const stepIndex in leg.steps) {
                 const step = leg.steps[stepIndex];
 
@@ -128,6 +128,14 @@ function Directions({ isOpen, onBack, directions }) {
         onBack();
     }
 
+    /**
+     * Set new travel mode.
+     */
+    function setNewTravelMode(selectedTravelMode) {
+        stopRendering();
+        setTravelMode(selectedTravelMode)
+    }
+
     return (
         <div className="directions">
             <div className="directions__details">
@@ -161,6 +169,13 @@ function Directions({ isOpen, onBack, directions }) {
                         <div>Estimated time:</div>
                         <div className="directions__minutes">{totalTime && <mi-time seconds={totalTime} />}</div>
                     </div>
+                </div>
+                <hr></hr>
+                <div>
+                    <button onClick={() => setNewTravelMode('WALKING')}>Walk</button>
+                    <button onClick={() => setNewTravelMode('DRIVING')}>Drive</button>
+                    <button onClick={() => setNewTravelMode('BICYCLING')}>Bike</button>
+                    <button onClick={() => setNewTravelMode('TRANSIT')}>Transit</button>
                 </div>
                 <hr></hr>
                 <div className="directions__steps">
