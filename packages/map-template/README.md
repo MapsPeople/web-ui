@@ -70,6 +70,7 @@ To have any Stencil component changes be reflected in this project, you need to 
 |`directionsTo`|`string`|Set a MapsIndoors Location ID or the string `USER_POSITION` to be used as destination to instantly show directions. |
 |`externalIDs`|`array`|Array of external IDs which filters the map and shows a list of locations. Because of the way browsers work, you can not use External IDs with the `,`, `&`, `#` and `+`, character in them, as they are interpreted by the browser in a particular way. |
 |`tileStyle`|`string`|Name of Tile Style to display on the map. |
+|`startZoomLevel`|`number`|The initial zoom level of the map. |
 
 ## Deploying Map Template to a cloud storage provider
 
