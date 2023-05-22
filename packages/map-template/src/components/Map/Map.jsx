@@ -87,7 +87,6 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
 
     /**
      * Set the venue to show on the map.
-     * If locationId property is present, resolve the promise without fitting the venue.
      *
      * @param {object} venue
      * @param {object} mapsIndoorsInstance
