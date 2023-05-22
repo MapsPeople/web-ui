@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useState } from 'react';
+import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
 import './MapsIndoorsMap.scss';
 import MIMap from "../Map/Map";
 import SplashScreen from '../SplashScreen/SplashScreen';
@@ -14,6 +15,7 @@ import useMediaQuery from '../../hooks/useMediaQuery';
 import Sidebar from '../Sidebar/Sidebar';
 import useLocationForWayfinding from '../../hooks/useLocationForWayfinding';
 
+defineCustomElements();
 const mapsindoors = window.mapsindoors;
 
 /**
