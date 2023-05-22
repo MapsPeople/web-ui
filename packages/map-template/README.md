@@ -103,7 +103,7 @@ import MapsIndoorsMap from '@mapspeople/map-template/dist/mapsindoors-react.es.j
 
 Add properties to the MapsIndoorsMap component as needed (see list below).
 
-# Supported attributes on the MapsIndoors Map components
+## Supported attributes on the MapsIndoors Map components
 
 Note that when using the React component, the properties should conform to JSX prop naming, eg. `api-key` becomes `apiKey`.
 
