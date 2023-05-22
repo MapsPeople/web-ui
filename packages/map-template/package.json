@@ -2,7 +2,7 @@
   "name": "@mapsindoors/map-template",
   "version": "0.1.0",
   "private": false,
-  "files": ["dist/*.js"],
+  "files": ["dist/*.js", "dist/*.mjs"],
   "dependencies": {},
   "devDependencies": {
     "@googlemaps/js-api-loader": "^1.15.1",
