@@ -5,9 +5,46 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [13.0.0] - 2023-05-11
+
+### Changed
+
+- **mi-route-instructions-step** was changed to a simpler layout. The old layout was moved to **mi-route-instructions-step-legacy**.
+
+### Added
+
+- **mi-chip** is a new component for showing a "chip".
+- **mi-location-info** will now show subtitle property if available on the location.
+- **mi-list-item-location** `icon` property that can be used to explicitly set the icon.
+- **mi-search** now has a `disabled` prop, a `focusInput` method to focus the input field, a `setDisplayText` to override the text content and a `triggerSearch` method to programatically trigger the search.
+
+## [12.2.2] - 2023-02-14
+
+### Added
+
+- **mi-combo-box**: Clicking inside the input field will highlight the text inside.
+
+## [12.2.1] - 2023-02-08
+
+### Added
+
+- **mi-combo-box**: Arrow will open/close dropdown. After a hard refresh, the combo box will not be in focus.
+
+## [12.2] - 2023-02-07
+
+### Added
+
+- **mi-combo-box**: Implemented a new Combo Box component.
+
+## [12.1] - 2023-01-25
+
+### Added
+
+- Support for French (AZERTY) and German (QWERTZ) layout keyboards.
+
 ## [12.0.1] - 2022-12-12
 
-## Changed
+### Changed
 
 - Upgrading various dependencies to the latest versions.
 
