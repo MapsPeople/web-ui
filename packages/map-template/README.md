@@ -11,7 +11,7 @@ Install the package:
 In your script:
 
 ```javascript
-import MapsIndoorsMap from '@mapspeople/map-template/dist/mapsindoors-webcomponent.es.js';
+import MapsIndoorsMap from '@mapsindoors/map-template/dist/mapsindoors-webcomponent.es.js';
 window.customElements.define('mapsindoors-map', MapsIndoorsMap);
 ```
 
@@ -51,17 +51,17 @@ Add attributes to the web component as needed (see supported properties below).
     <title>My Map</title>
     <script src="https://app.mapsindoors.com/mapsindoors/js/sdk/4.21.5/mapsindoors-4.21.5.js.gz"></script>
     <script type="module">
-        import MapsindoorsMap from 'https://www.unpkg.com/@mapspeople/map-template/dist/mapsindoors-webcomponent.es.js';
+        import MapsindoorsMap from 'https://www.unpkg.com/@mapsindoors/map-template/dist/mapsindoors-webcomponent.es.js';
         window.customElements.define('mapsindoors-map', MapsIndoorsMap)
     </script>
     <style>
         body {
-                margin: 0;
+            margin: 0;
         }
         mapsindoors-map {
-                display: block;
-                width: 100vw;
-                height: 100vh;
+            display: block;
+            width: 100vw;
+            height: 100vh;
         }
     </style>
 </head>
@@ -69,6 +69,7 @@ Add attributes to the web component as needed (see supported properties below).
     <mapsindoors-map></mapsindoors-map>
 </body>
 </html>
+```
 
 Add attributes to the web component as needed (see supported properties below).
 
@@ -89,7 +90,7 @@ Make sure the MapsIndoors JavaScript SDK is loaded by having this somewhere in y
 Use the `MapsIndoorsMap` component in a React component:
 
 ```javascript
-import MapsIndoorsMap from '@mapspeople/map-template/dist/mapsindoors-react.es.js';
+import MapsIndoorsMap from '@mapsindoors/map-template/dist/mapsindoors-react.es.js';
 
 // Somewhere in your JSX:
 <div style={{
