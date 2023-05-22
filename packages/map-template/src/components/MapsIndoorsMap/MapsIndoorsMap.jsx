@@ -12,6 +12,7 @@ import { useAppHistory } from '../../hooks/useAppHistory';
 import { UserPositionContext } from '../../UserPositionContext';
 import useMediaQuery from '../../hooks/useMediaQuery';
 import Sidebar from '../Sidebar/Sidebar';
+import useLocationForWayfinding from '../../hooks/useLocationForWayfinding';
 
 const mapsindoors = window.mapsindoors;
 
@@ -32,8 +33,8 @@ let _locationsDisabled;
  * @param {string} [props.primaryColor] - If you want the splash screen to have a custom primary color, provide the value here.
  * @param {string} [props.logo] - If you want the splash screen to have a custom logo, provide the image path or address here.
  * @param {array} [props.appUserRoles] - If you want the map to behave differently for specific users, set one or more app user roles here.
- * @param {string} [props.directionsFrom] - If you want to show directions instantly, provide a MapsIndoors Location ID here to be used as the origin.
- * @param {string} [props.directionsTo] - If you want to show directions instantly, provide a MapsIndoors Location ID here to be used as the destination.
+ * @param {string} [props.directionsFrom] - If you want to show directions instantly, provide a MapsIndoors Location ID or the string "USER_POSITION" here to be used as the origin.
+ * @param {string} [props.directionsTo] - If you want to show directions instantly, provide a MapsIndoors Location ID or the string "USER_POSITION" here to be used as the destination.
  * @param {array} [props.externalIDs] - Filter locations shown on the map based on the external IDs.
  * @param {string} [props.tileStyle] - Tile style name to change the interface of the map.
  */
@@ -47,12 +48,13 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const [directionsService, setDirectionsService] = useState();
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
+    const [positionControl, setPositionControl] = useState();
     const [userPosition, setUserPosition] = useState();
     const [appConfigResult, setAppConfigResult] = useState();
     const [selectedMapType, setSelectedMapType] = useState();
 
-    const [directionsFromLocation, setDirectionsFromLocation] = useState(null);
-    const [directionsToLocation, setDirectionsToLocation] = useState(null);
+    const directionsFromLocation = useLocationForWayfinding(directionsFrom, userPosition, positionControl);
+    const directionsToLocation = useLocationForWayfinding(directionsTo, userPosition, positionControl);
 
     // The filtered locations by external id, if present.
     const [filteredLocationsByExternalID, setFilteredLocationsByExternalID] = useState();
@@ -194,20 +196,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     }, [locationId]);
 
     /*
-     * React on changes to the directionsFrom and directionsTo props. When both are set, wayfinding should be shown.
-     * Setting the directionsFromLocation and directionsToLocation make that happen.
-     */
-    useEffect(() => {
-        if (directionsFrom && directionsTo) {
-            mapsindoors.services.LocationsService.getLocation(directionsFrom).then(location => setDirectionsFromLocation(location));
-            mapsindoors.services.LocationsService.getLocation(directionsTo).then(location => setDirectionsToLocation(location));
-        } else {
-            setDirectionsFromLocation(null);
-            setDirectionsToLocation(null);
-        }
-    }, [directionsFrom, directionsTo]);
-
-    /*
      * React on changes in the MapsIndoors API key by fetching the required data.
      */
     useEffect(() => {
@@ -307,6 +295,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             onMapsIndoorsInstance={(instance) => setMapsIndoorsInstance(instance)}
                             onDirectionsService={(instance) => setDirectionsService(instance)}
                             onLocationClick={(location) => locationClicked(location)}
+                            onPositionControl={positionControl => setPositionControl(positionControl)}
                             onUserPosition={position => setUserPosition(position)}
                             onMapTypeChanged={(mapType) => setSelectedMapType(mapType)}
                             filteredLocationIds={filteredLocations?.map(location => location.id)}
