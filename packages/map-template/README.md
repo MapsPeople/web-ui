@@ -1,8 +1,8 @@
 # Map Template
 
-# Web component: Installation and usage
+## Web component: Installation and usage
 
-## Using NPM
+### Using NPM
 
 Install the package:
 
