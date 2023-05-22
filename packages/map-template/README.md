@@ -42,24 +42,33 @@ Add attributes to the web component as needed (see supported properties below).
 ## Using just the browser
 
 ```html
-<script src="https://app.mapsindoors.com/mapsindoors/js/sdk/4.21.5/mapsindoors-4.21.5.js.gz"></script>
-<script type="module">
-    import MapsindoorsMap from 'https://www.unpkg.com/@mapspeople/map-template/dist/mapsindoors-webcomponent.es.js';
-    window.customElements.define('mapsindoors-map', MapsIndoorsMap)
-</script>
-<style>
-      body {
-            margin: 0;
-      }
-      mapsindoors-map {
-            display: block;
-            width: 100vw;
-            height: 100vh;
-      }
-</style>
-
-<mapsindoors-map></mapsindoors-map>
-```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Map</title>
+    <script src="https://app.mapsindoors.com/mapsindoors/js/sdk/4.21.5/mapsindoors-4.21.5.js.gz"></script>
+    <script type="module">
+        import MapsindoorsMap from 'https://www.unpkg.com/@mapspeople/map-template/dist/mapsindoors-webcomponent.es.js';
+        window.customElements.define('mapsindoors-map', MapsIndoorsMap)
+    </script>
+    <style>
+        body {
+                margin: 0;
+        }
+        mapsindoors-map {
+                display: block;
+                width: 100vw;
+                height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <mapsindoors-map></mapsindoors-map>
+</body>
+</html>
 
 Add attributes to the web component as needed (see supported properties below).
 
