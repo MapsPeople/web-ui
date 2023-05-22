@@ -72,7 +72,7 @@ Add attributes to the web component as needed (see supported properties below).
 
 Add attributes to the web component as needed (see supported properties below).
 
-# React component: Installation and usage
+## React component: Installation and usage
 
 ## Using NPM
 
