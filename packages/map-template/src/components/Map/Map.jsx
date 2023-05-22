@@ -64,10 +64,6 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
             if (venueToShow) {
                 setVenue(venueToShow, mapsIndoorsInstance).then(() => {
                     onVenueChangedOnMap(venueToShow);
-                    // Set the map zoom level if the property is provided.
-                    if (startZoomLevel) {
-                        mapsIndoorsInstance.setZoom(startZoomLevel);
-                    }
                 });
             };
         }
@@ -95,7 +91,12 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
      */
     const setVenue = (venue, mapsIndoorsInstance) => {
         window.localStorage.setItem(localStorageKeyForVenue, venue.name);
-        return mapsIndoorsInstance.fitVenue(venue);
+        return mapsIndoorsInstance.fitVenue(venue).then(() => {
+            // Set the map zoom level if the property is provided.
+            if (startZoomLevel) {
+                mapsIndoorsInstance.setZoom(startZoomLevel);
+            }
+        });
     }
 
     /**
