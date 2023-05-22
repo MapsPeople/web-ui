@@ -131,10 +131,10 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
     }
 
     /**
-    * Replace the default tile URL style to the incoming tile style.
-    *
-    * @param {object} miInstance
-    */
+     * Replace the default tile URL style to the incoming tile style.
+     *
+     * @param {object} miInstance
+     */
     const onTileStyleChanged = (miInstance) => {
         if (miInstance && _tileStyle) {
             let tileURL = miInstance.getTileURL();

@@ -32,7 +32,7 @@ function App() {
             <MapsIndoorsMap
                 apiKey={apiKey ? apiKey : '3ddemo'}
                 venue={venue}
-                locationId={`${locationId}`}
+                locationId={locationId}
                 primaryColor={hexPrimaryColor}
                 logo={logo ? logo : undefined}
                 appUserRoles={appUserRoles}
