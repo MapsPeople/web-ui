@@ -74,7 +74,7 @@ Add attributes to the web component as needed (see supported properties below).
 
 ## React component: Installation and usage
 
-## Using NPM
+### Using NPM
 
 Install the package:
 
