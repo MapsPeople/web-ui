@@ -99,14 +99,20 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
 
     /**
      * Handle the tile style changes and the locationId property.
-     * If the locationId property is present, set the correct floor, center and zoom the map.
      *
      * @param {object} miInstance
      */
     const onBuildingChanged = (miInstance) => {
-
         onTileStyleChanged(miInstance);
+        onLocationIdChanged(miInstance)
+    }
 
+    /**
+     * If the locationId property is present, set the correct floor, center and zoom the map.
+     *
+     * @param {object} miInstance
+     */
+    const onLocationIdChanged = (miInstance) => {
         if (locationId && miInstance) {
             mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
                 if (location) {
