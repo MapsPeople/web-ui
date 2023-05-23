@@ -10,7 +10,7 @@ on:
       - packages/components/**
 
 jobs:
-  bump-version:
+  bump_version:
     name: "Bump Version on Pull Request Merge"
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
@@ -47,7 +47,7 @@ jobs:
         if: contains(github.event.pull_request.labels.*.name, 'prerelease')
         run: npm --tag-version-prefix="test-v" --preid=rc version prerelease -m 'Release prerelease version %s' && git push --tags origin main
 
-  release-to-npm:
+  release_to_npm:
     name: "Release to npm"
     needs: bump-version
     runs-on: ubuntu-latest

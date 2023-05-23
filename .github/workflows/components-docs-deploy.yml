@@ -9,7 +9,7 @@ on:
     paths:
       - packages/components/**
 jobs:
-  build-deploy-components-docs:
+  build_deploy_components_docs:
     name: "Build & Deploy Components Docs"
     runs-on: ubuntu-latest
     steps:
