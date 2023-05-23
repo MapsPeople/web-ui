@@ -1,11 +1,9 @@
-import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 
-defineCustomElements();
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
         <App />
