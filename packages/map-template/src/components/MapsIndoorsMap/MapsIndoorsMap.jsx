@@ -192,19 +192,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
         }
     }, [externalIDs]);
 
-    /**
-     * React on changes to the locationId prop: Set as current location and make the map center on it.
-     */
-    useEffect(() => {
-        if (locationId) {
-            mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
-                if (location) {
-                    setCurrentLocation(location);
-                }
-            });
-        }
-    }, [locationId]);
-
     /*
      * React on changes in the MapsIndoors API key by fetching the required data.
      */
@@ -230,6 +217,21 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
         setMapReady(false);
 
     }, [apiKey]);
+
+    /*
+     * React on changes to the locationId prop.
+     * Set as current location and change the venue according to the venue that the location belongs to.
+     */
+    useEffect(() => {
+        if (locationId) {
+            mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
+                if (location) {
+                    setCurrentVenueName(location.properties.venueId);
+                    setCurrentLocation(location);
+                }
+            });
+        }
+    }, [locationId]);
 
     /*
      * React on changes in directions opened state.
@@ -311,6 +313,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             filteredLocationsByExternalIDs={filteredLocationsByExternalID?.map(location => location.id)}
                             tileStyle={tileStyle}
                             startZoomLevel={selectedZoomLevel}
+                            locationId={locationId}
                         />
                     </div>
                 </UserPositionContext.Provider>
