@@ -1,5 +1,8 @@
-name: Deploy Component Docs to GCloud Bucket
+name: "Components: Deploy Docs to GCloud Bucket"
+
 on:
+  workflow_run:
+    workflows: ["Bump Components version"]
   push:
     branches:
       - main
@@ -7,7 +10,7 @@ on:
       - packages/components/**
 jobs:
   build-deploy-components-docs:
-    name: Build & Deploy
+    name: "Build & Deploy Components Docs"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -20,7 +23,7 @@ jobs:
       - run: npm ci
       - run: CI= npx lerna run build
       - run: cd packages/components && npm run build && npm run docs.build && npm run docs.sass
-      - name: Authenticate on Google Cloud Storage
+      - name: "Authenticate on Google Cloud Storage"
         uses: google-github-actions/auth@v1
         with:
           service_account: ${{ secrets.GCP_SA_EMAIL }}

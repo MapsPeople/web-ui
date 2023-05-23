@@ -1,0 +1,64 @@
+name: "Components: Bump version"
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+    paths:
+      - packages/components/**
+
+jobs:
+  bump-version:
+    name: "Bump Version on Pull Request Merge"
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    env:
+      token: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+      - name: Build
+        run: npm run build
+      - name: Set git config
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+      - name: Major version bump
+        if: contains(github.event.pull_request.labels.*.name, 'major')
+        run: npm --tag-version-prefix="test-v" version major -m 'Release major version %s' && git push --tags origin main
+      - name: Minor version bump
+        if: contains(github.event.pull_request.labels.*.name, 'minor')
+        run: npm --tag-version-prefix="test-v" version minor -m 'Release minor version %s' && git push --tags origin main
+      - name: Patch version bump
+        if: contains(github.event.pull_request.labels.*.name, 'patch')
+        run: npm --tag-version-prefix="test-v" version patch -m 'Release patch version %s' && git push --tags origin main
+      - name: Premajor version bump
+        if: contains(github.event.pull_request.labels.*.name, 'premajor')
+        run: npm --tag-version-prefix="test-v" version patch -m 'Release premajor version %s' && git push --tags origin main
+      - name: Preminor version bump
+        if: contains(github.event.pull_request.labels.*.name, 'preminor')
+        run: npm --tag-version-prefix="test-v" version preminor -m 'Release preminor version %s' && git push --tags origin main
+      - name: Prepatch version bump
+        if: contains(github.event.pull_request.labels.*.name, 'prepatch')
+        run: npm --tag-version-prefix="test-v" version prepatch -m 'Release preatch version %s' && git push --tags origin main
+      - name: Prerelease version bump
+        if: contains(github.event.pull_request.labels.*.name, 'prerelease')
+        run: npm --tag-version-prefix="test-v" --preid=rc version prerelease -m 'Release prerelease version %s' && git push --tags origin main
+
+  release-to-npm:
+    name: "Release to npm"
+    needs: bump-version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org/
+          scope: "@mapsindoors"
+      - run: npm ci
+      - run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
