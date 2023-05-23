@@ -60,6 +60,7 @@ jobs:
           scope: "@mapsindoors"
       - run: npm ci
       - run: npm run build
+      - run: npm run docs.build
       - run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}

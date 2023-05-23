@@ -23,8 +23,6 @@
         "docs.sass": "sass src/docs/_sass:docs --no-source-map",
         "docs.start": "eleventy --serve --port=3000 & npm run sass.watch",
         "generate": "stencil generate",
-        "postversion": "git push -u origin --tags && npm publish --access public",
-        "preversion": "npm run build",
         "sass.watch": "sass --watch src/docs/_sass:docs --no-source-map",
         "start": "stencil build --dev --watch --serve",
         "test.watch": "stencil test --spec --e2e --watchAll",
