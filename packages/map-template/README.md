@@ -122,3 +122,4 @@ Note that when using the React component, the properties should conform to JSX p
 |`directions-to`|`directionsTo`|`string`|Set a MapsIndoors Location ID to be used as destination to instantly show directions. |
 |`external-IDs`|`etxternalIDs`|`array`|Array of external IDs which filters the map and shows a list of locations. Because of the way browsers work, you can not use External IDs with the `,`, `&`, `#` and `+`, character in them, as they are interpreted by the browser in a particular way. |
 |`tile-style`|`tileStyle`|`string`|Name of Tile Style to display on the map. |
+|`start-zoom-level`|`startZoomLevel`|`number`|The initial zoom level of the map. |
