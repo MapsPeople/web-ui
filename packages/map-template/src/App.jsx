@@ -12,6 +12,7 @@ const logo = params.get('logo');
 const directionsFrom = params.get('directionsFrom');
 const directionsTo = params.get('directionsTo');
 const tileStyle = params.get('tileStyle');
+const startZoomLevel = params.get('startZoomLevel');
 const gmApiKey = params.get('gmApiKey');
 const mapboxAccessToken = params.get('mapboxAccessToken');
 
@@ -32,7 +33,7 @@ function App() {
             <MapsIndoorsMap
                 apiKey={apiKey ? apiKey : '3ddemo'}
                 venue={venue}
-                locationId={`${locationId}`}
+                locationId={locationId}
                 primaryColor={hexPrimaryColor}
                 logo={logo ? logo : undefined}
                 appUserRoles={appUserRoles}
@@ -40,6 +41,7 @@ function App() {
                 directionsTo={directionsTo}
                 externalIDs={externalIDs}
                 tileStyle={tileStyle}
+                startZoomLevel={startZoomLevel}
                 mapboxAccessToken={mapboxAccessToken ? mapboxAccessToken : import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
                 gmApiKey={gmApiKey ? gmApiKey : import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
             />

@@ -33,10 +33,12 @@ let _tileStyle;
  * @param {function} props.onMapTypeChanged - Function that is run when the map type is changed.
  * @param {array} props.filteredLocationsByExternalIDs - Array of IDs of the filtered locations based on external ID.
  * @param {string} props.tileStyle - Tile style name to change the interface of the map.
+ * @param {number} props.startZoomLevel - The initial zoom level of the map.
+ * @param {string} props.locationId - Location Id property used to handle the centering and zooming of the map.
 
  * @returns
  */
-function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onMapsIndoorsInstance, onDirectionsService, onVenueChangedOnMap, onPositionControl, onUserPosition, filteredLocationIds, onMapTypeChanged, filteredLocationsByExternalIDs, tileStyle }) {
+function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onMapsIndoorsInstance, onDirectionsService, onVenueChangedOnMap, onPositionControl, onUserPosition, filteredLocationIds, onMapTypeChanged, filteredLocationsByExternalIDs, tileStyle, startZoomLevel, locationId }) {
     const [mapType, setMapType] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState(null);
 
@@ -60,13 +62,15 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
         if (mapsIndoorsInstance) {
             window.localStorage.clear(localStorageKeyForVenue);
             const venueToShow = getVenueToShow(venueName, venues);
-            if (venueToShow) {
+            if (venueToShow && !locationId) {
                 setVenue(venueToShow, mapsIndoorsInstance).then(() => {
                     onVenueChangedOnMap(venueToShow);
                 });
-            };
+            } else if (venueToShow) {
+                onVenueChangedOnMap(venueToShow);
+            }
         }
-    }, [venueName, venues]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [venueName, venues, startZoomLevel]); // eslint-disable-line react-hooks/exhaustive-deps
     // We ignore eslint warnings about missing dependencies because mapsIndoorsInstance should never change runtime anyway.
 
     /*
@@ -90,11 +94,56 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
      */
     const setVenue = (venue, mapsIndoorsInstance) => {
         window.localStorage.setItem(localStorageKeyForVenue, venue.name);
-        return mapsIndoorsInstance.fitVenue(venue);
+        return mapsIndoorsInstance.fitVenue(venue).then(() => {
+            // Set the map zoom level if the property is provided.
+            if (startZoomLevel) {
+                mapsIndoorsInstance.setZoom(startZoomLevel);
+            }
+        });
+    }
+
+    /**
+     * Handle the tile style changes and the locationId property.
+     *
+     * @param {object} miInstance
+     */
+    const onBuildingChanged = (miInstance) => {
+        onTileStyleChanged(miInstance);
+        onLocationIdChanged(miInstance)
+    }
+
+    /**
+     * If the locationId property is present, set the correct floor, center and zoom the map.
+     *
+     * @param {object} miInstance
+     */
+    const onLocationIdChanged = (miInstance) => {
+        if (locationId && miInstance) {
+            mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
+                if (location) {
+                    // Set the floor to the one that the location belongs to.
+                    const locationFloor = location.properties.floor;
+                    miInstance.setFloor(locationFloor);
+
+                    // Center the map to the location coordinates.
+                    const locationGeometry = location.geometry.type === 'Point' ? location.geometry.coordinates : location.properties.anchor.coordinates;
+                    miInstance.getMapView().setCenter({ lat: locationGeometry[1], lng: locationGeometry[0] });
+
+                    // Check if the solution allows the zoom level to be 22.
+                    // If yes, set the zoom level to 22, otherwise set it to 21.
+                    mapsindoors.services.SolutionsService.getSolution().then(solution => {
+                        const hasZoom22 = Object.values(solution.modules).find(zoomLevel => zoomLevel === 'z22')
+                        miInstance?.setZoom(hasZoom22 ? 22 : 21);
+                    });
+                }
+            });
+        }
     }
 
     /**
      * Replace the default tile URL style to the incoming tile style.
+     *
+     * @param {object} miInstance
      */
     const onTileStyleChanged = (miInstance) => {
         if (miInstance && _tileStyle) {
@@ -119,7 +168,7 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
         miInstance.setDisplayRule('MI_BUILDING_OUTLINE', { visible: false });
 
         miInstance.on('click', location => onLocationClick(location));
-        miInstance.once('building_changed', () => onTileStyleChanged(miInstance))
+        miInstance.once('building_changed', () => onBuildingChanged(miInstance))
         miInstance.on('floor_changed', () => onTileStyleChanged(miInstance));
 
         setMapsIndoorsInstance(miInstance);
@@ -130,7 +179,7 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
         onDirectionsService(directionsService);
 
         const venueToShow = getVenueToShow(venueName, venues);
-        if (venueToShow) {
+        if (venueToShow && !locationId) {
             setVenue(venueToShow, miInstance);
         }
     };
@@ -156,7 +205,6 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
         _tileStyle = tileStyle || 'default';
         onTileStyleChanged(mapsIndoorsInstance);
     }, [tileStyle]);
-
 
     return (<>
         {mapType === mapTypes.Google && <GoogleMapsMap gmApiKey={gmApiKey} onMapView={onMapView} onPositionControl={onPositionControlCreated} mapsIndoorsInstance={mapsIndoorsInstance} />}
