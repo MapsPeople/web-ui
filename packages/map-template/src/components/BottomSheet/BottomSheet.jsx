@@ -46,7 +46,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
 
         if (directionsFromLocation && directionsToLocation) {
             pushAppView(appViews.WAYFINDING);
-        } else if (currentLocation && currentAppView !== appViews.LOCATION_DETAILS) {
+        } else if (currentLocation) {
             pushAppView(appViews.LOCATION_DETAILS, currentLocation);
         } else if (filteredLocationsByExternalIDs?.length > 0) {
             pushAppView(appViews.EXTERNALIDS);
