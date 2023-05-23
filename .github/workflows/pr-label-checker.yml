@@ -1,5 +1,6 @@
 name: "Pull Request Label Checker"
 
+# Run the workflow when a Pull Request targeting the main branch is opened with or without labels, or reopened.
 on:
   pull_request:
     branches:
@@ -18,6 +19,7 @@ jobs:
       - uses: mheap/github-action-required-labels@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # This workflow fails if there is not exactly one label of the ones listed here (both zero and multiple will cause a failure).
         with:
           mode: exactly
           count: 1

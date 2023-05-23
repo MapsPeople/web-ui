@@ -1,6 +1,9 @@
-name: "Components: Bump version"
+name: "Components: Bump version and release to npm"
 
+# Run only when the workflow checking labels on Pull Requests is successful, and the Pull Request is targeting the main branch, is closed, and has changes in files or folders in the Components package.
 on:
+  workflow_run:
+    workflows: ["Pull Request Label Checker"]
   pull_request:
     branches:
       - main
@@ -12,19 +15,27 @@ on:
 jobs:
   bump_version:
     name: "Bump Version on Pull Request Merge"
+    # This ensures the job only runs for Pull Requests that are merged.
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     env:
       token: ${{ secrets.GITHUB_TOKEN }}
     steps:
+      # Check out the repository code.
       - uses: actions/checkout@v3
+      # Set up a node environment in the container.
       - uses: actions/setup-node@v3
+      # Build the project to ensure it's up to date. If this steps fails, the job fails.
       - name: Build
         run: npm run build
+      # You need to set the git config or you can't commit the changes later.
+      # The name and email here is for the GitHub Actions user.
       - name: Set git config
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+      # The following steps will determine, based on a label, what version to bump to.
+      # The "%s" will output the version number in the commit message.
       - name: Major version bump
         if: contains(github.event.pull_request.labels.*.name, 'major')
         run: npm --tag-version-prefix="test-v" version major -m 'Release major version %s' && git push --tags origin main
@@ -45,10 +56,13 @@ jobs:
         run: npm --tag-version-prefix="test-v" version prepatch -m 'Release preatch version %s' && git push --tags origin main
       - name: Prerelease version bump
         if: contains(github.event.pull_request.labels.*.name, 'prerelease')
+        # The "preid" part will determine what to put in the "rc"-part of this example version: 1.2.3-rc.0.
         run: npm --tag-version-prefix="test-v" --preid=rc version prerelease -m 'Release prerelease version %s' && git push --tags origin main
 
+  # This job will release the updated version to npm
   release_to_npm:
     name: "Release to npm"
+    # This step makes this job dependent on the previous job being successful
     needs: bump-version
     runs-on: ubuntu-latest
     steps:
@@ -57,8 +71,10 @@ jobs:
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org/
+          # Despite the package name including this scope, it's also necessary to set here
           scope: "@mapsindoors"
       - run: npm ci
+      - run: cd packages/components
       - run: npm run build
       - run: npm run docs.build
       - run: npm publish --access public
