@@ -70,6 +70,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [initialFilteredLocations, setInitialFilteredLocations] = useState();
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
+    const isMobile = useMediaQuery('(max-width: 991px)');
+
     const [pushAppView, goBack, currentAppView, currentAppViewPayload, appStates] = useAppHistory();
 
     /*
@@ -262,39 +264,43 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             onClose={() => goBack()}
                             active={currentAppView === appStates.VENUE_SELECTOR}
                         />}
-                        {isMapReady && isDesktop
-                            ?
-                            <Sidebar
-                                currentLocation={currentLocation}
-                                currentVenueName={currentVenueName}
-                                setCurrentLocation={setCurrentLocation}
-                                currentCategories={currentCategories}
-                                onLocationsFiltered={(locations) => setFilteredLocations(locations)}
-                                directionsFromLocation={directionsFromLocation}
-                                directionsToLocation={directionsToLocation}
-                                pushAppView={pushAppView}
-                                currentAppView={currentAppView}
-                                appViews={appStates}
-                                selectedMapType={selectedMapType}
-                                filteredLocationsByExternalIDs={filteredLocationsByExternalID}
-                                onLocationsFilteredByExternalIDs={(locations) => setFilteredLocationsByExternalID(locations)}
-                            />
-                            :
-                            <BottomSheet
-                                currentLocation={currentLocation}
-                                currentVenueName={currentVenueName}
-                                setCurrentLocation={setCurrentLocation}
-                                currentCategories={currentCategories}
-                                onLocationsFiltered={(locations) => setFilteredLocations(locations)}
-                                directionsFromLocation={directionsFromLocation}
-                                directionsToLocation={directionsToLocation}
-                                pushAppView={pushAppView}
-                                currentAppView={currentAppView}
-                                appViews={appStates}
-                                selectedMapType={selectedMapType}
-                                filteredLocationsByExternalIDs={filteredLocationsByExternalID}
-                                onLocationsFilteredByExternalIDs={(locations) => setFilteredLocationsByExternalID(locations)}
-                            />
+                        {isMapReady &&
+                            <>
+                                {isDesktop &&
+                                    <Sidebar
+                                        currentLocation={currentLocation}
+                                        currentVenueName={currentVenueName}
+                                        setCurrentLocation={setCurrentLocation}
+                                        currentCategories={currentCategories}
+                                        onLocationsFiltered={(locations) => setFilteredLocations(locations)}
+                                        directionsFromLocation={directionsFromLocation}
+                                        directionsToLocation={directionsToLocation}
+                                        pushAppView={pushAppView}
+                                        currentAppView={currentAppView}
+                                        appViews={appStates}
+                                        selectedMapType={selectedMapType}
+                                        filteredLocationsByExternalIDs={filteredLocationsByExternalID}
+                                        onLocationsFilteredByExternalIDs={(locations) => setFilteredLocationsByExternalID(locations)}
+                                    />
+                                }
+                                {isMobile &&
+                                    <BottomSheet
+                                        currentLocation={currentLocation}
+                                        currentVenueName={currentVenueName}
+                                        setCurrentLocation={setCurrentLocation}
+                                        currentCategories={currentCategories}
+                                        onLocationsFiltered={(locations) => setFilteredLocations(locations)}
+                                        directionsFromLocation={directionsFromLocation}
+                                        directionsToLocation={directionsToLocation}
+                                        pushAppView={pushAppView}
+                                        currentAppView={currentAppView}
+                                        appViews={appStates}
+                                        selectedMapType={selectedMapType}
+                                        filteredLocationsByExternalIDs={filteredLocationsByExternalID}
+                                        onLocationsFilteredByExternalIDs={(locations) => setFilteredLocationsByExternalID(locations)}
+                                    />
+                                }
+                            </>
                         }
                         <MIMap
                             apiKey={apiKey}
