@@ -33,10 +33,11 @@ let _tileStyle;
  * @param {function} props.onMapTypeChanged - Function that is run when the map type is changed.
  * @param {array} props.filteredLocationsByExternalIDs - Array of IDs of the filtered locations based on external ID.
  * @param {string} props.tileStyle - Tile style name to change the interface of the map.
+ * @param {number} props.startZoomLevel - The initial zoom level of the map.
 
  * @returns
  */
-function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onMapsIndoorsInstance, onDirectionsService, onVenueChangedOnMap, onPositionControl, onUserPosition, filteredLocationIds, onMapTypeChanged, filteredLocationsByExternalIDs, tileStyle }) {
+function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onMapsIndoorsInstance, onDirectionsService, onVenueChangedOnMap, onPositionControl, onUserPosition, filteredLocationIds, onMapTypeChanged, filteredLocationsByExternalIDs, tileStyle, startZoomLevel }) {
     const [mapType, setMapType] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState(null);
 
@@ -66,7 +67,7 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
                 });
             };
         }
-    }, [venueName, venues]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [venueName, venues, startZoomLevel]); // eslint-disable-line react-hooks/exhaustive-deps
     // We ignore eslint warnings about missing dependencies because mapsIndoorsInstance should never change runtime anyway.
 
     /*
@@ -90,7 +91,12 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
      */
     const setVenue = (venue, mapsIndoorsInstance) => {
         window.localStorage.setItem(localStorageKeyForVenue, venue.name);
-        return mapsIndoorsInstance.fitVenue(venue);
+        return mapsIndoorsInstance.fitVenue(venue).then(() => {
+            // Set the map zoom level if the property is provided.
+            if (startZoomLevel) {
+                mapsIndoorsInstance.setZoom(startZoomLevel);
+            }
+        });
     }
 
     /**
@@ -156,7 +162,6 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
         _tileStyle = tileStyle || 'default';
         onTileStyleChanged(mapsIndoorsInstance);
     }, [tileStyle]);
-
 
     return (<>
         {mapType === mapTypes.Google && <GoogleMapsMap gmApiKey={gmApiKey} onMapView={onMapView} onPositionControl={onPositionControlCreated} mapsIndoorsInstance={mapsIndoorsInstance} />}
