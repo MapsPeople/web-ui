@@ -1,5 +1,6 @@
-import { useContext, useEffect, useRef, useState } from 'react';
-import { MapsIndoorsContext } from '../MapsIndoorsContext';
+import { useEffect, useRef, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import mapsIndoorsInstanceState from '../atoms/mapsIndoorsInstanceState';
 
 const mapsindoors = window.mapsindoors;
 
@@ -9,7 +10,7 @@ const mapsindoors = window.mapsindoors;
  * @param {string} apiKey
  */
 const useLiveData = (apiKey) => {
-    const mapsIndoorsInstance = useContext(MapsIndoorsContext);
+    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const liveDataManager = useRef();
 
     const [enabledLiveDataDomainTypes, setEnabledLiveDataDomainTypes] = useState([]);

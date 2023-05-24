@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import mapsIndoorsInstanceState from '../../../atoms/mapsIndoorsInstanceState';
 import { Loader as GoogleMapsApiLoader } from '@googlemaps/js-api-loader';
 
 // Make the global MapsIndoors JavaScript SDK available here
@@ -11,14 +13,14 @@ const mapsindoors = window.mapsindoors;
  * @param {string} props.gmApiKey - A Google Maps JS API key required for loading the Google Maps JS API.
  * @param {function} props.onMapView - A function that is called when the MapView is constructed. Sends the MapView instance and External Directions Provider as payload.
  * @param {function} props.onPositionControl - A function that is called when the MapsIndoors PositionControl is contructed. Will send the PositionControl instance as payload.
- * @param {object} props.mapsIndoorsInstance - Instance of the mapsindoors.MapsIndoors
  */
-function GoogleMapsMap({ gmApiKey, onMapView, onPositionControl, mapsIndoorsInstance }) {
+function GoogleMapsMap({ gmApiKey, onMapView, onPositionControl }) {
 
     const [google, setGoogle] = useState();
     const [mapView, setMapView] = useState();
     const [hasFloorSelector, setHasFloorSelector] = useState(false);
     const [hasPositionControl, setHasPositionControl] = useState(false);
+    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
 
     useEffect(() => {
         const loader = new GoogleMapsApiLoader({

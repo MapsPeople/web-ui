@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { useRecoilState } from 'recoil';
 import { mapTypes } from "../../constants/mapTypes";
 import useLiveData from '../../hooks/useLivedata';
 import GoogleMapsMap from "./GoogleMapsMap/GoogleMapsMap";
 import MapboxMap from "./MapboxMap/MapboxMap";
+import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 
 const mapsindoors = window.mapsindoors;
 
@@ -24,7 +26,6 @@ let _tileStyle;
  * @param {array} [props.venues] - Array of Venues in the current solution.
  * @param {string} [props.venueName] - If you want the map to show a specific Venue, provide the Venue name here.
  * @param {function} [props.onLocationClick] - Function that is run when a MapsIndoors Location is clicked. the Location will be sent along as first argument.
- * @param {function} props.onMapsIndoorsInstance - Function that is run when a MapsIndoors instance is created. The instance will be sent along as first argument.
  * @param {function} props.onDirectionsService - Function that is run when a DirectionsService instance is created. The instance will be sent along as first argument.
  * @param {function} props.onVenueChangedOnMap - Function that is run when the map bounds was changed due to fitting to a venue.
  * @param {function} props.onPositionControl -  A function that is called when the MapsIndoors PositionControl is constructed. Will send the PositionControl instance as payload.
@@ -38,9 +39,9 @@ let _tileStyle;
 
  * @returns
  */
-function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onMapsIndoorsInstance, onDirectionsService, onVenueChangedOnMap, onPositionControl, onUserPosition, filteredLocationIds, onMapTypeChanged, filteredLocationsByExternalIDs, tileStyle, startZoomLevel, locationId }) {
+function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onDirectionsService, onVenueChangedOnMap, onPositionControl, onUserPosition, filteredLocationIds, onMapTypeChanged, filteredLocationsByExternalIDs, tileStyle, startZoomLevel, locationId }) {
     const [mapType, setMapType] = useState();
-    const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState(null);
+    const [mapsIndoorsInstance, setMapsIndoorsInstance] = useRecoilState(mapsIndoorsInstanceState);
 
     useLiveData(apiKey);
 
@@ -172,7 +173,6 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
         miInstance.on('floor_changed', () => onTileStyleChanged(miInstance));
 
         setMapsIndoorsInstance(miInstance);
-        onMapsIndoorsInstance(miInstance);
 
         // Initialize a Directions Service
         const directionsService = new mapsindoors.services.DirectionsService(externalDirectionsProvider);
@@ -207,8 +207,8 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
     }, [tileStyle]);
 
     return (<>
-        {mapType === mapTypes.Google && <GoogleMapsMap gmApiKey={gmApiKey} onMapView={onMapView} onPositionControl={onPositionControlCreated} mapsIndoorsInstance={mapsIndoorsInstance} />}
-        {mapType === mapTypes.Mapbox && <MapboxMap mapboxAccessToken={mapboxAccessToken} onMapView={onMapView} onPositionControl={onPositionControlCreated} mapsIndoorsInstance={mapsIndoorsInstance} />}
+        {mapType === mapTypes.Google && <GoogleMapsMap gmApiKey={gmApiKey} onMapView={onMapView} onPositionControl={onPositionControlCreated} />}
+        {mapType === mapTypes.Mapbox && <MapboxMap mapboxAccessToken={mapboxAccessToken} onMapView={onMapView} onPositionControl={onPositionControlCreated} />}
     </>)
 }
 

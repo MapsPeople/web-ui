@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import mapsIndoorsInstanceState from '../../../atoms/mapsIndoorsInstanceState';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
@@ -12,13 +14,13 @@ const mapsindoors = window.mapsindoors;
  * @param {string} props.mapboxAccessToken - A Mapbox Access Token required for showing the map.
  * @param {function} props.onMapView - A function that is called when the MapView is constructed. Sends the MapView instance and External Directions Provider as payload.
  * @param {function} props.onPositionControl - A function that is called when the MapsIndoors PositionControl is contructed. Will send the PositionControl instance as payload.
- * @param {object} props.mapsIndoorsInstance - Instance of the mapsindoors.MapsIndoors
  */
-function MapboxMap({ mapboxAccessToken, onMapView, onPositionControl, mapsIndoorsInstance }) {
+function MapboxMap({ mapboxAccessToken, onMapView, onPositionControl }) {
 
     const [mapView, setMapView] = useState();
     const [hasFloorSelector, setHasFloorSelector] = useState(false);
     const [hasPositionControl, setHasPositionControl] = useState(false);
+    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
 
     useEffect(() => {
         // Initialize MapboxView MapView

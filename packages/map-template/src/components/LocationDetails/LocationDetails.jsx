@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState, useRef } from 'react';
 import './LocationDetails.scss';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
-import { MapsIndoorsContext } from '../../MapsIndoorsContext';
+import { useRecoilValue } from 'recoil';
+import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import { useIsVerticalOverflow } from '../../hooks/useIsVerticalOverflow';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import { snapPoints } from '../../constants/snapPoints';
@@ -29,7 +30,7 @@ function LocationDetails({ location, onBack, onStartWayfinding, onSetSize, snapP
     // Holds the MapsIndoors DisplayRule for the location
     const [locationDisplayRule, setLocationDisplayRule] = useState(null);
 
-    const mapsIndoorsInstance = useContext(MapsIndoorsContext);
+    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
 
     // Check if the content of the Location details is overflowing
     const [isOverflowing, initialOverflow] = useIsVerticalOverflow(location, locationDetailsElement);

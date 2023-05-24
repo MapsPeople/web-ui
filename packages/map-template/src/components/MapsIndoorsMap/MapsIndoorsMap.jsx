@@ -8,7 +8,6 @@ import SplashScreen from '../SplashScreen/SplashScreen';
 import VenueSelector from '../VenueSelector/VenueSelector';
 import BottomSheet from '../BottomSheet/BottomSheet';
 import isMapReadyState from '../../atoms/isMapReadyState.js';
-import { MapsIndoorsContext } from '../../MapsIndoorsContext';
 import { DirectionsServiceContext } from '../../DirectionsServiceContext';
 import { useAppHistory } from '../../hooks/useAppHistory';
 import { UserPositionContext } from '../../UserPositionContext';
@@ -49,7 +48,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [currentVenueName, setCurrentVenueName] = useState();
     const [currentLocation, setCurrentLocation] = useState();
     const [currentCategories, setCurrentCategories] = useState([]);
-    const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const [directionsService, setDirectionsService] = useState();
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
     const [positionControl, setPositionControl] = useState();
@@ -251,7 +249,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
         }
     }, [hasDirectionsOpen]);
 
-    return (<MapsIndoorsContext.Provider value={mapsIndoorsInstance}>
+    return (
         <DirectionsServiceContext.Provider value={directionsService}>
             <UserPositionContext.Provider value={userPosition}>
                 <div className={`mapsindoors-map ${hasDirectionsOpen ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}`}>
@@ -309,7 +307,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                         venues={venues}
                         venueName={currentVenueName}
                         onVenueChangedOnMap={(venue) => venueChangedOnMap(venue)}
-                        onMapsIndoorsInstance={(instance) => setMapsIndoorsInstance(instance)}
                         onDirectionsService={(instance) => setDirectionsService(instance)}
                         onLocationClick={(location) => locationClicked(location)}
                         onPositionControl={positionControl => setPositionControl(positionControl)}
@@ -324,7 +321,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                 </div>
             </UserPositionContext.Provider>
         </DirectionsServiceContext.Provider>
-    </MapsIndoorsContext.Provider>)
+    )
 }
 
 export default MapsIndoorsMap;

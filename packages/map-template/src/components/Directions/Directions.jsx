@@ -1,6 +1,7 @@
-import React, { useContext, useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import './Directions.scss';
-import { MapsIndoorsContext } from '../../MapsIndoorsContext';
+import { useRecoilValue } from 'recoil';
+import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
 import { ReactComponent as WalkingIcon } from '../../assets/walking.svg';
@@ -29,7 +30,7 @@ function Directions({ isOpen, onBack, directions }) {
     const [totalDistance, setTotalDistance] = useState();
     const [totalTime, setTotalTime] = useState();
 
-    const mapsIndoorsInstance = useContext(MapsIndoorsContext);
+    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
 

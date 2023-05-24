@@ -1,6 +1,6 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { MapsIndoorsContext } from '../MapsIndoorsContext';
+import mapsIndoorsInstanceState from '../atoms/mapsIndoorsInstanceState';
 import isMapReadyState from '../atoms/isMapReadyState';
 
 /**
@@ -9,7 +9,7 @@ import isMapReadyState from '../atoms/isMapReadyState';
 const useNear = () => {
     const [near, setNear] = useState();
 
-    const mapsIndoorsInstance = useContext(MapsIndoorsContext);
+    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const mapReady = useRecoilValue(isMapReadyState);
 
     useEffect(() => {
