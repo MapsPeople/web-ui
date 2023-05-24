@@ -9,6 +9,7 @@ on:
       - closed
     paths:
       - packages/components/**
+      - .github/workflows/components-bump-version-release.yml
 
 jobs:
   bump_version:
@@ -39,26 +40,38 @@ jobs:
       # The "%s" will output the version number in the commit message.
       - name: Major version bump
         if: contains(github.event.pull_request.labels.*.name, 'major')
-        run: npm --tag-version-prefix="test-v" version major -m 'Release major version %s' && git push --tags origin main --force
+        run: |
+          cd packages/components
+          npm --tag-version-prefix="components-v" version major -m 'Release major version %s' && git push --tags origin main --force
       - name: Minor version bump
         if: contains(github.event.pull_request.labels.*.name, 'minor')
-        run: npm --tag-version-prefix="test-v" version minor -m 'Release minor version %s' && git push --tags origin main --force
+        run: |
+          cd packages/components
+          npm --tag-version-prefix="components-v" version minor -m 'Release minor version %s' && git push --tags origin main --force
       - name: Patch version bump
         if: contains(github.event.pull_request.labels.*.name, 'patch')
-        run: npm --tag-version-prefix="test-v" version patch -m 'Release patch version %s' && git push --tags origin main --force
+        run: |
+          cd packages/components
+          npm --tag-version-prefix="components-v" version patch -m 'Release patch version %s' && git push --tags origin main --force
       - name: Premajor version bump
         if: contains(github.event.pull_request.labels.*.name, 'premajor')
-        run: npm --tag-version-prefix="test-v" version patch -m 'Release premajor version %s' && git push --tags origin main --force
+        run: |
+          cd packages/components
+          npm --tag-version-prefix="components-v" version patch -m 'Release premajor version %s' && git push --tags origin main --force
       - name: Preminor version bump
         if: contains(github.event.pull_request.labels.*.name, 'preminor')
-        run: npm --tag-version-prefix="test-v" version preminor -m 'Release preminor version %s' && git push --tags origin main --force
+        run: |
+          cd packages/components
+          npm --tag-version-prefix="components-v" version preminor -m 'Release preminor version %s' && git push --tags origin main --force
       - name: Prepatch version bump
         if: contains(github.event.pull_request.labels.*.name, 'prepatch')
-        run: npm --tag-version-prefix="test-v" version prepatch -m 'Release preatch version %s' && git push --tags origin main --force
+        run: |
+          cd packages/components
+          npm --tag-version-prefix="components-v" version prepatch -m 'Release preatch version %s' && git push --tags origin main --force
       - name: Prerelease version bump
         if: contains(github.event.pull_request.labels.*.name, 'prerelease')
         # The "preid" part will determine what to put in the "rc"-part of this example version: 1.2.3-rc.0.
-        run: npm --tag-version-prefix="test-v" --preid=rc version prerelease -m 'Release prerelease version %s' && git push --tags origin main --force
+        run: npm --tag-version-prefix="components-v" --preid=rc version prerelease -m 'Release prerelease version %s' && git push --tags origin main --force
 
   # This job will release the updated version to npm
   release_to_npm:
