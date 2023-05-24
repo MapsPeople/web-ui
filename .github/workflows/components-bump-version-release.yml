@@ -18,7 +18,7 @@ jobs:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     env:
-      token: ${{ secrets.GITHUB_TOKEN }}
+      token: ${{ secrets.REPO_TOKEN }}
       NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
     steps:
       # Check out the repository code.
