@@ -25,7 +25,9 @@ jobs:
       - uses: actions/setup-node@v3
       # Build the project to ensure it's up to date. If this steps fails, the job fails.
       - name: Build
-        run: npm run build
+        run: |
+          cd packages/components
+          npm run build
       # You need to set the git config or you can't commit the changes later.
       # The name and email here is for the GitHub Actions user.
       - name: Set git config
