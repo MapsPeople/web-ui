@@ -51,13 +51,13 @@ jobs:
       # The "preid" part will determine what to put in the "rc"-part of this example version: 1.2.3-rc.0.
       - name: Prerelease of Major version bump
         if: contains(github.event.pull_request.labels.*.name, 'premajor')
-        run: cd packages/components && npm ci && npm run build && npm run docs.build && npm --tag-version-prefix="components-v" --dist-tag=next-major --preid=rc version major -m 'Release premajor version %s' && git push --tags origin main && npm publish --access public
+        run: cd packages/components && npm ci && npm run build && npm run docs.build && npm --tag-version-prefix="components-v" --dist-tag=next-major --preid=rc version premajor -m 'Release premajor version %s' && git push --tags origin main && npm publish --access public
       - name: Prerelease of Minor version bump
         if: contains(github.event.pull_request.labels.*.name, 'preminor')
-        run: cd packages/components && npm ci && npm run build && npm run docs.build && npm --tag-version-prefix="components-v" --dist-tag=next-minor --preid=rc version minor -m 'Release preminor version %s' && git push --tags origin main && npm publish --access public
+        run: cd packages/components && npm ci && npm run build && npm run docs.build && npm --tag-version-prefix="components-v" --dist-tag=next-minor --preid=rc version preminor -m 'Release preminor version %s' && git push --tags origin main && npm publish --access public
       - name: Prerelease of Patch version bump
         if: contains(github.event.pull_request.labels.*.name, 'prepatch')
-        run: cd packages/components && npm ci && npm run build && npm run docs.build && npm --tag-version-prefix="components-v" --dist-tag=next-patch --preid=rc version patch -m 'Release prepatch version %s' && git push --tags origin main && npm publish --access public
+        run: cd packages/components && npm ci && npm run build && npm run docs.build && npm --tag-version-prefix="components-v" --dist-tag=next-patch --preid=rc version prepatch -m 'Release prepatch version %s' && git push --tags origin main && npm publish --access public
       - name: Prerelease version bump
         if: contains(github.event.pull_request.labels.*.name, 'prerelease')
         run: cd packages/components && npm ci && npm run build && npm run docs.build && npm --tag-version-prefix="components-v" --dist-tag=next --preid=rc version prerelease -m 'Release prerelease version %s' && git push --tags origin main && npm publish --access public
