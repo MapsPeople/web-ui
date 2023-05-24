@@ -26,79 +26,49 @@ jobs:
           token: ${{ secrets.REPO_TOKEN }}
       # Set up a node environment in the container.
       - uses: actions/setup-node@v3
-      # Build the project to ensure it's up to date. If this steps fails, the job fails.
-      - name: Build
-        run: |
-          cd packages/components
-          npm ci
-          npm run build
-      # You need to set the git config or you can't commit the changes later.
-      # The name and email here is for the GitHub Actions user.
-      - name: Set git config
-        run: |
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-      # The following steps will determine, based on a label, what version to bump to.
-      # The "%s" will output the version number in the commit message.
-      - name: Major version bump
-        if: contains(github.event.pull_request.labels.*.name, 'major')
-        run: |
-          cd packages/components
-          npm --tag-version-prefix="components-v" version major -m 'Release major version %s' && git push --tags origin main
-      - name: Minor version bump
-        if: contains(github.event.pull_request.labels.*.name, 'minor')
-        run: |
-          cd packages/components
-          npm --tag-version-prefix="components-v" version minor -m 'Release minor version %s' && git push --tags origin main
-      - name: Patch version bump
-        if: contains(github.event.pull_request.labels.*.name, 'patch')
-        run: |
-          cd packages/components
-          npm --tag-version-prefix="components-v" version patch -m 'Release patch version %s' && git push --tags origin main
-      - name: Premajor version bump
-        if: contains(github.event.pull_request.labels.*.name, 'premajor')
-        run: |
-          cd packages/components
-          npm --tag-version-prefix="components-v" version patch -m 'Release premajor version %s' && git push --tags origin main
-      - name: Preminor version bump
-        if: contains(github.event.pull_request.labels.*.name, 'preminor')
-        run: |
-          cd packages/components
-          npm --tag-version-prefix="components-v" version preminor -m 'Release preminor version %s' && git push --tags origin main
-      - name: Prepatch version bump
-        if: contains(github.event.pull_request.labels.*.name, 'prepatch')
-        run: |
-          cd packages/components
-          npm --tag-version-prefix="components-v" version prepatch -m 'Release preatch version %s' && git push --tags origin main
-      - name: Prerelease version bump
-        if: contains(github.event.pull_request.labels.*.name, 'prerelease')
-        # The "preid" part will determine what to put in the "rc"-part of this example version: 1.2.3-rc.0.
-        run: |
-          cd packages/components
-          npm --tag-version-prefix="components-v" --preid=rc version prerelease -m 'Release prerelease version %s' && git push --tags origin main
-
-  # This job will release the updated version to npm
-  release_to_npm:
-    name: "Release Components to npm"
-    # This step makes this job dependent on the previous job being successful
-    needs: bump_version
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org/
           # Despite the package name including this scope, it's also necessary to set here
           scope: "@mapsindoors"
-      - run: cd packages/components && npm ci && npm run build && npm run docs.build && npm publish --access public
+      # Build the project to ensure it's up to date. If this steps fails, the job fails.
+      - name: Build
+        run: cd packages/components && npm ci && npm run build
+      # You need to set the git config or you can't commit the changes later.
+      # The name and email here is for the GitHub Actions user.
+      - name: Set git config
+        run: git config user.name github-actions[bot] && git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+      # The following steps will determine, based on a label, what version to bump to.
+      # The "%s" will output the version number in the commit message.
+      - name: Major version bump
+        if: contains(github.event.pull_request.labels.*.name, 'major')
+        run: cd packages/components && npm ci && npm run build && npm run docs.build && npm --tag-version-prefix="components-v" version major -m 'Release major version %s' && git push --tags origin main && npm publish --access public
+      - name: Minor version bump
+        if: contains(github.event.pull_request.labels.*.name, 'minor')
+        run: cd packages/components && npm ci && npm run build && npm run docs.build && npm --tag-version-prefix="components-v" version minor -m 'Release minor version %s' && git push --tags origin main && npm publish --access public
+      - name: Patch version bump
+        if: contains(github.event.pull_request.labels.*.name, 'patch')
+        run: cd packages/components && npm ci && npm run build && npm run docs.build && npm --tag-version-prefix="components-v" version patch -m 'Release patch version %s' && git push --tags origin main && npm publish --access public
+      - name: Premajor version bump
+        if: contains(github.event.pull_request.labels.*.name, 'premajor')
+        run: cd packages/components && npm ci && npm run build && npm run docs.build && npm --tag-version-prefix="components-v" version patch -m 'Release premajor version %s' && git push --tags origin main && npm publish --access public
+      - name: Preminor version bump
+        if: contains(github.event.pull_request.labels.*.name, 'preminor')
+        run: cd packages/components && npm ci && npm run build && npm run docs.build && npm --tag-version-prefix="components-v" version preminor -m 'Release preminor version %s' && git push --tags origin main && npm publish --access public
+      - name: Prepatch version bump
+        if: contains(github.event.pull_request.labels.*.name, 'prepatch')
+        run: cd packages/components && npm ci && npm run build && npm run docs.build && npm --tag-version-prefix="components-v" version prepatch -m 'Release preatch version %s' && git push --tags origin main && npm publish --access public
+      - name: Prerelease version bump
+        if: contains(github.event.pull_request.labels.*.name, 'prerelease')
+        # The "preid" part will determine what to put in the "rc"-part of this example version: 1.2.3-rc.0.
+        run: cd packages/components && npm ci && npm run build && npm run docs.build && npm --tag-version-prefix="components-v" --preid=rc version prerelease -m 'Release prerelease version %s' && git push --tags origin main && npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
 
   # This job will release the Component documentation
   build_deploy_components_docs:
     name: "Build & Deploy Components Docs"
-    needs: release_to_npm
+    needs: bump_version
     runs-on: ubuntu-latest
     # Check out the repository code, but only the latest version.
     steps:
@@ -112,11 +82,7 @@ jobs:
           node-version: 16.x
       - run: npm ci
       # It is absolutely essential to use "CI=" as the first part of the lerna command, or it won't build properly.
-      - run: |
-          CI= npx lerna run build
-          cd packages/components
-          npm run build
-          npm run docs.build
+      - run: CI= npx lerna run build && cd packages/components && npm run build && npm run docs.build
       - name: "Authenticate on Google Cloud Storage"
         uses: google-github-actions/auth@v1
         with:
