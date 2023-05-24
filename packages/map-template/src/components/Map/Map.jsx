@@ -5,6 +5,7 @@ import useLiveData from '../../hooks/useLivedata';
 import GoogleMapsMap from "./GoogleMapsMap/GoogleMapsMap";
 import MapboxMap from "./MapboxMap/MapboxMap";
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
+import userPositionState from '../../atoms/userPositionState';
 
 const mapsindoors = window.mapsindoors;
 
@@ -29,7 +30,6 @@ let _tileStyle;
  * @param {function} props.onDirectionsService - Function that is run when a DirectionsService instance is created. The instance will be sent along as first argument.
  * @param {function} props.onVenueChangedOnMap - Function that is run when the map bounds was changed due to fitting to a venue.
  * @param {function} props.onPositionControl -  A function that is called when the MapsIndoors PositionControl is constructed. Will send the PositionControl instance as payload.
- * @param {function} props.onUserPosition - Function that is run when (if) the user position updates. Sends position as payload.
  * @param {array} props.filteredLocationIds - Array of IDs of the filtered locations.
  * @param {function} props.onMapTypeChanged - Function that is run when the map type is changed.
  * @param {array} props.filteredLocationsByExternalIDs - Array of IDs of the filtered locations based on external ID.
@@ -39,9 +39,10 @@ let _tileStyle;
 
  * @returns
  */
-function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onDirectionsService, onVenueChangedOnMap, onPositionControl, onUserPosition, filteredLocationIds, onMapTypeChanged, filteredLocationsByExternalIDs, tileStyle, startZoomLevel, locationId }) {
+function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onDirectionsService, onVenueChangedOnMap, onPositionControl, filteredLocationIds, onMapTypeChanged, filteredLocationsByExternalIDs, tileStyle, startZoomLevel, locationId }) {
     const [mapType, setMapType] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useRecoilState(mapsIndoorsInstanceState);
+    const [userPositition, setUserPosition] = useRecoilState(userPositionState)
 
     useLiveData(apiKey);
 
@@ -192,7 +193,7 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
     const onPositionControlCreated = positionControl => {
         positionControl.on('position_received', positionInfo => {
             if (positionInfo.accurate === true) {
-                onUserPosition(positionInfo.position);
+                setUserPosition(positionInfo.position);
             }
         });
         onPositionControl(positionControl);

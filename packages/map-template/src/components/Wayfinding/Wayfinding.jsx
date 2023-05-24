@@ -5,8 +5,9 @@ import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
 import { ReactComponent as WalkingIcon } from '../../assets/walking.svg';
 import { ReactComponent as SwitchIcon } from '../../assets/switch.svg';
+import { useRecoilValue } from 'recoil';
+import userPositionState from '../../atoms/userPositionState';
 import { DirectionsServiceContext } from '../../DirectionsServiceContext';
-import { UserPositionContext } from '../../UserPositionContext';
 import Tooltip from '../Tooltip/Tooltip';
 import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
 import SearchField from '../WebComponentWrappers/Search/Search';
@@ -48,7 +49,7 @@ function Wayfinding({ onStartDirections, onBack, currentLocation, directionsToLo
     const fromFieldRef = useRef();
 
     const directionsService = useContext(DirectionsServiceContext);
-    const userPosition = useContext(UserPositionContext);
+    const userPosition = useRecoilValue(userPositionState);
 
     const [activeSearchField, setActiveSearchField] = useState();
 

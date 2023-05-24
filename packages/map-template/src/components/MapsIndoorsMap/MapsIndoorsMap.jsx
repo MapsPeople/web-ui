@@ -10,7 +10,6 @@ import BottomSheet from '../BottomSheet/BottomSheet';
 import isMapReadyState from '../../atoms/isMapReadyState.js';
 import { DirectionsServiceContext } from '../../DirectionsServiceContext';
 import { useAppHistory } from '../../hooks/useAppHistory';
-import { UserPositionContext } from '../../UserPositionContext';
 import useMediaQuery from '../../hooks/useMediaQuery';
 import Sidebar from '../Sidebar/Sidebar';
 import useLocationForWayfinding from '../../hooks/useLocationForWayfinding';
@@ -51,13 +50,12 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [directionsService, setDirectionsService] = useState();
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
     const [positionControl, setPositionControl] = useState();
-    const [userPosition, setUserPosition] = useState();
     const [appConfigResult, setAppConfigResult] = useState();
     const [selectedMapType, setSelectedMapType] = useState();
     const [selectedZoomLevel, setSelectedZoomLevel] = useState();
 
-    const directionsFromLocation = useLocationForWayfinding(directionsFrom, userPosition, positionControl);
-    const directionsToLocation = useLocationForWayfinding(directionsTo, userPosition, positionControl);
+    const directionsFromLocation = useLocationForWayfinding(directionsFrom, positionControl);
+    const directionsToLocation = useLocationForWayfinding(directionsTo, positionControl);
 
     // The filtered locations by external id, if present.
     const [filteredLocationsByExternalID, setFilteredLocationsByExternalID] = useState();
@@ -251,7 +249,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
 
     return (
         <DirectionsServiceContext.Provider value={directionsService}>
-            <UserPositionContext.Provider value={userPosition}>
+
                 <div className={`mapsindoors-map ${hasDirectionsOpen ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}`}>
                     {!isMapReady && <SplashScreen logo={logo} primaryColor={primaryColor} />}
                     {venues.length > 1 && <VenueSelector
@@ -310,7 +308,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                         onDirectionsService={(instance) => setDirectionsService(instance)}
                         onLocationClick={(location) => locationClicked(location)}
                         onPositionControl={positionControl => setPositionControl(positionControl)}
-                        onUserPosition={position => setUserPosition(position)}
                         onMapTypeChanged={(mapType) => setSelectedMapType(mapType)}
                         filteredLocationIds={filteredLocations?.map(location => location.id)}
                         filteredLocationsByExternalIDs={filteredLocationsByExternalID?.map(location => location.id)}
@@ -319,7 +316,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                         locationId={locationId}
                     />
                 </div>
-            </UserPositionContext.Provider>
         </DirectionsServiceContext.Provider>
     )
 }
