@@ -91,11 +91,7 @@ jobs:
           registry-url: https://registry.npmjs.org/
           # Despite the package name including this scope, it's also necessary to set here
           scope: "@mapsindoors"
-      - run: cd packages/components
-      - run: npm ci
-      - run: npm run build
-      - run: npm run docs.build
-      - run: npm publish --access public
+      - run: cd packages/components && npm ci && npm run build && npm run docs.build && npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
 
