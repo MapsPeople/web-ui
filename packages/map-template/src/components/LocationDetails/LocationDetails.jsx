@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import './LocationDetails.scss';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import { useRecoilValue } from 'recoil';
