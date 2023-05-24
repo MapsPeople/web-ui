@@ -22,8 +22,6 @@ jobs:
     steps:
       # Check out the repository code.
       - uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.REPO_TOKEN }}
       # Set up a node environment in the container.
       - uses: actions/setup-node@v3
         with:
