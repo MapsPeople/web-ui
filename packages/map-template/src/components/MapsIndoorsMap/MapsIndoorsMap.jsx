@@ -1,13 +1,14 @@
 import { useEffect } from 'react';
 import { useState } from 'react';
+import { useRecoilState } from 'recoil';
 import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
 import './MapsIndoorsMap.scss';
 import MIMap from "../Map/Map";
 import SplashScreen from '../SplashScreen/SplashScreen';
 import VenueSelector from '../VenueSelector/VenueSelector';
 import BottomSheet from '../BottomSheet/BottomSheet';
+import isMapReadyState from '../../atoms/isMapReadyState.js';
 import { MapsIndoorsContext } from '../../MapsIndoorsContext';
-import { MapReadyContext } from '../../MapReadyContext';
 import { DirectionsServiceContext } from '../../DirectionsServiceContext';
 import { useAppHistory } from '../../hooks/useAppHistory';
 import { UserPositionContext } from '../../UserPositionContext';
@@ -43,7 +44,7 @@ let _locationsDisabled;
  */
 function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel }) {
 
-    const [isMapReady, setMapReady] = useState(false);
+    const [isMapReady, setMapReady] = useRecoilState(isMapReadyState);
     const [venues, setVenues] = useState([]);
     const [currentVenueName, setCurrentVenueName] = useState();
     const [currentLocation, setCurrentLocation] = useState();
@@ -251,80 +252,78 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     }, [hasDirectionsOpen]);
 
     return (<MapsIndoorsContext.Provider value={mapsIndoorsInstance}>
-        <MapReadyContext.Provider value={isMapReady}>
-            <DirectionsServiceContext.Provider value={directionsService}>
-                <UserPositionContext.Provider value={userPosition}>
-                    <div className={`mapsindoors-map ${hasDirectionsOpen ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}`}>
-                        {!isMapReady && <SplashScreen logo={logo} primaryColor={primaryColor} />}
-                        {venues.length > 1 && <VenueSelector
-                            onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)}
-                            venues={venues}
-                            currentVenueName={currentVenueName}
-                            onOpen={() => pushAppView(appStates.VENUE_SELECTOR)}
-                            onClose={() => goBack()}
-                            active={currentAppView === appStates.VENUE_SELECTOR}
-                        />}
-                        {isMapReady &&
-                            <>
-                                {isDesktop &&
-                                    <Sidebar
-                                        currentLocation={currentLocation}
-                                        currentVenueName={currentVenueName}
-                                        setCurrentLocation={setCurrentLocation}
-                                        currentCategories={currentCategories}
-                                        onLocationsFiltered={(locations) => setFilteredLocations(locations)}
-                                        directionsFromLocation={directionsFromLocation}
-                                        directionsToLocation={directionsToLocation}
-                                        pushAppView={pushAppView}
-                                        currentAppView={currentAppView}
-                                        appViews={appStates}
-                                        selectedMapType={selectedMapType}
-                                        filteredLocationsByExternalIDs={filteredLocationsByExternalID}
-                                        onLocationsFilteredByExternalIDs={(locations) => setFilteredLocationsByExternalID(locations)}
-                                    />
-                                }
-                                {isMobile &&
-                                    <BottomSheet
-                                        currentLocation={currentLocation}
-                                        currentVenueName={currentVenueName}
-                                        setCurrentLocation={setCurrentLocation}
-                                        currentCategories={currentCategories}
-                                        onLocationsFiltered={(locations) => setFilteredLocations(locations)}
-                                        directionsFromLocation={directionsFromLocation}
-                                        directionsToLocation={directionsToLocation}
-                                        pushAppView={pushAppView}
-                                        currentAppView={currentAppView}
-                                        appViews={appStates}
-                                        selectedMapType={selectedMapType}
-                                        filteredLocationsByExternalIDs={filteredLocationsByExternalID}
-                                        onLocationsFilteredByExternalIDs={(locations) => setFilteredLocationsByExternalID(locations)}
-                                    />
-                                }
-                            </>
-                        }
-                        <MIMap
-                            apiKey={apiKey}
-                            gmApiKey={gmApiKey}
-                            mapboxAccessToken={mapboxAccessToken}
-                            venues={venues}
-                            venueName={currentVenueName}
-                            onVenueChangedOnMap={(venue) => venueChangedOnMap(venue)}
-                            onMapsIndoorsInstance={(instance) => setMapsIndoorsInstance(instance)}
-                            onDirectionsService={(instance) => setDirectionsService(instance)}
-                            onLocationClick={(location) => locationClicked(location)}
-                            onPositionControl={positionControl => setPositionControl(positionControl)}
-                            onUserPosition={position => setUserPosition(position)}
-                            onMapTypeChanged={(mapType) => setSelectedMapType(mapType)}
-                            filteredLocationIds={filteredLocations?.map(location => location.id)}
-                            filteredLocationsByExternalIDs={filteredLocationsByExternalID?.map(location => location.id)}
-                            tileStyle={tileStyle}
-                            startZoomLevel={selectedZoomLevel}
-                            locationId={locationId}
-                        />
-                    </div>
-                </UserPositionContext.Provider>
-            </DirectionsServiceContext.Provider>
-        </MapReadyContext.Provider>
+        <DirectionsServiceContext.Provider value={directionsService}>
+            <UserPositionContext.Provider value={userPosition}>
+                <div className={`mapsindoors-map ${hasDirectionsOpen ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}`}>
+                    {!isMapReady && <SplashScreen logo={logo} primaryColor={primaryColor} />}
+                    {venues.length > 1 && <VenueSelector
+                        onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)}
+                        venues={venues}
+                        currentVenueName={currentVenueName}
+                        onOpen={() => pushAppView(appStates.VENUE_SELECTOR)}
+                        onClose={() => goBack()}
+                        active={currentAppView === appStates.VENUE_SELECTOR}
+                    />}
+                    {isMapReady &&
+                        <>
+                            {isDesktop &&
+                                <Sidebar
+                                    currentLocation={currentLocation}
+                                    currentVenueName={currentVenueName}
+                                    setCurrentLocation={setCurrentLocation}
+                                    currentCategories={currentCategories}
+                                    onLocationsFiltered={(locations) => setFilteredLocations(locations)}
+                                    directionsFromLocation={directionsFromLocation}
+                                    directionsToLocation={directionsToLocation}
+                                    pushAppView={pushAppView}
+                                    currentAppView={currentAppView}
+                                    appViews={appStates}
+                                    selectedMapType={selectedMapType}
+                                    filteredLocationsByExternalIDs={filteredLocationsByExternalID}
+                                    onLocationsFilteredByExternalIDs={(locations) => setFilteredLocationsByExternalID(locations)}
+                                />
+                            }
+                            {isMobile &&
+                                <BottomSheet
+                                    currentLocation={currentLocation}
+                                    currentVenueName={currentVenueName}
+                                    setCurrentLocation={setCurrentLocation}
+                                    currentCategories={currentCategories}
+                                    onLocationsFiltered={(locations) => setFilteredLocations(locations)}
+                                    directionsFromLocation={directionsFromLocation}
+                                    directionsToLocation={directionsToLocation}
+                                    pushAppView={pushAppView}
+                                    currentAppView={currentAppView}
+                                    appViews={appStates}
+                                    selectedMapType={selectedMapType}
+                                    filteredLocationsByExternalIDs={filteredLocationsByExternalID}
+                                    onLocationsFilteredByExternalIDs={(locations) => setFilteredLocationsByExternalID(locations)}
+                                />
+                            }
+                        </>
+                    }
+                    <MIMap
+                        apiKey={apiKey}
+                        gmApiKey={gmApiKey}
+                        mapboxAccessToken={mapboxAccessToken}
+                        venues={venues}
+                        venueName={currentVenueName}
+                        onVenueChangedOnMap={(venue) => venueChangedOnMap(venue)}
+                        onMapsIndoorsInstance={(instance) => setMapsIndoorsInstance(instance)}
+                        onDirectionsService={(instance) => setDirectionsService(instance)}
+                        onLocationClick={(location) => locationClicked(location)}
+                        onPositionControl={positionControl => setPositionControl(positionControl)}
+                        onUserPosition={position => setUserPosition(position)}
+                        onMapTypeChanged={(mapType) => setSelectedMapType(mapType)}
+                        filteredLocationIds={filteredLocations?.map(location => location.id)}
+                        filteredLocationsByExternalIDs={filteredLocationsByExternalID?.map(location => location.id)}
+                        tileStyle={tileStyle}
+                        startZoomLevel={selectedZoomLevel}
+                        locationId={locationId}
+                    />
+                </div>
+            </UserPositionContext.Provider>
+        </DirectionsServiceContext.Provider>
     </MapsIndoorsContext.Provider>)
 }
 
