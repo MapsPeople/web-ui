@@ -54,4 +54,4 @@ npm run docs.start
 
 Open the browser on <http://localhost:8000> to see the site running.
 
-If you just want to build the Docs folder, run this command: `npm run build && npm run docs.build`
+If you just want to build the Docs folder, run this command: `npm run build && npm run docs.build`.
