@@ -13,7 +13,7 @@ on:
 
 jobs:
   bump_version:
-    name: "Bump Version on Pull Request Merge"
+    name: "Bump Version on Pull Request Merges"
     # This ensures the job only runs for Pull Requests that are merged.
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
