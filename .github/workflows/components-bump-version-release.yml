@@ -2,8 +2,6 @@ name: "Components: Bump version and release to npm"
 
 # Run only when the workflow checking labels on Pull Requests is successful, and the Pull Request is targeting the main branch, is closed, and has changes in files or folders in the Components package.
 on:
-  workflow_run:
-    workflows: ["Pull Request Label Checker"]
   pull_request:
     branches:
       - main
@@ -61,7 +59,7 @@ jobs:
 
   # This job will release the updated version to npm
   release_to_npm:
-    name: "Release to npm"
+    name: "Release Components to npm"
     # This step makes this job dependent on the previous job being successful
     needs: bump_version
     runs-on: ubuntu-latest
@@ -80,3 +78,43 @@ jobs:
       - run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
+
+  # This job will release the Component documentation
+  build_deploy_components_docs:
+    name: "Build & Deploy Components Docs"
+    needs: release_to_npm
+    runs-on: ubuntu-latest
+    # Check out the repository code, but only the latest version.
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: refs/heads/main
+          fetch-depth: 1
+      # Set up a node environment in the container.
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+      - run: npm ci
+      # It is absolutely essential to use "CI=" as the first part of the lerna command, or it won't build properly.
+      - run: |
+          CI= npx lerna run build
+          cd packages/components
+          npm run build
+          npm run docs.build
+      - name: "Authenticate on Google Cloud Storage"
+        uses: google-github-actions/auth@v1
+        with:
+          service_account: ${{ secrets.GCP_SA_EMAIL }}
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+      - name: "Set up Cloud SDK"
+        uses: "google-github-actions/setup-gcloud@v1"
+      # This command uses gsutil CLI to sync the local folder with the one on the bucket.
+      # "-m" ensures parallel upload of files, "-d" mirrors the folders, "-c" compares checksums to avoid unnecessary uploads, "-r" is for a recursive sync into all folders.
+      - run: gsutil -m rsync -d -c -r packages/components/docs gs://mi-components-documentation
+      # This is to control cache and set it as low as possible so new changes are instantly available.
+      - run: gsutil -m setmeta -h "Cache-Control:public, max-age=0"
+          gs://mi-components-documentation/**/*.html
+      - run: gsutil -m setmeta -h "Cache-Control:public, max-age=0"
+          gs://mi-components-documentation/**/*.js
+      - run: gsutil -m setmeta -h "Cache-Control:public, max-age=0"
+          gs://mi-components-documentation/**/*.css
