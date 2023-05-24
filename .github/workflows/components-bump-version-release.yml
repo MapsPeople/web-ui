@@ -22,6 +22,8 @@ jobs:
     steps:
       # Check out the repository code.
       - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.REPO_TOKEN }}
       # Set up a node environment in the container.
       - uses: actions/setup-node@v3
       # Build the project to ensure it's up to date. If this steps fails, the job fails.
@@ -42,36 +44,38 @@ jobs:
         if: contains(github.event.pull_request.labels.*.name, 'major')
         run: |
           cd packages/components
-          npm --tag-version-prefix="components-v" version major -m 'Release major version %s' && git push --tags origin main --force
+          npm --tag-version-prefix="components-v" version major -m 'Release major version %s' && git push --tags origin main
       - name: Minor version bump
         if: contains(github.event.pull_request.labels.*.name, 'minor')
         run: |
           cd packages/components
-          npm --tag-version-prefix="components-v" version minor -m 'Release minor version %s' && git push --tags origin main --force
+          npm --tag-version-prefix="components-v" version minor -m 'Release minor version %s' && git push --tags origin main
       - name: Patch version bump
         if: contains(github.event.pull_request.labels.*.name, 'patch')
         run: |
           cd packages/components
-          npm --tag-version-prefix="components-v" version patch -m 'Release patch version %s' && git push --tags origin main --force
+          npm --tag-version-prefix="components-v" version patch -m 'Release patch version %s' && git push --tags origin main
       - name: Premajor version bump
         if: contains(github.event.pull_request.labels.*.name, 'premajor')
         run: |
           cd packages/components
-          npm --tag-version-prefix="components-v" version patch -m 'Release premajor version %s' && git push --tags origin main --force
+          npm --tag-version-prefix="components-v" version patch -m 'Release premajor version %s' && git push --tags origin main
       - name: Preminor version bump
         if: contains(github.event.pull_request.labels.*.name, 'preminor')
         run: |
           cd packages/components
-          npm --tag-version-prefix="components-v" version preminor -m 'Release preminor version %s' && git push --tags origin main --force
+          npm --tag-version-prefix="components-v" version preminor -m 'Release preminor version %s' && git push --tags origin main
       - name: Prepatch version bump
         if: contains(github.event.pull_request.labels.*.name, 'prepatch')
         run: |
           cd packages/components
-          npm --tag-version-prefix="components-v" version prepatch -m 'Release preatch version %s' && git push --tags origin main --force
+          npm --tag-version-prefix="components-v" version prepatch -m 'Release preatch version %s' && git push --tags origin main
       - name: Prerelease version bump
         if: contains(github.event.pull_request.labels.*.name, 'prerelease')
         # The "preid" part will determine what to put in the "rc"-part of this example version: 1.2.3-rc.0.
-        run: npm --tag-version-prefix="components-v" --preid=rc version prerelease -m 'Release prerelease version %s' && git push --tags origin main --force
+        run: |
+          cd packages/components
+          npm --tag-version-prefix="components-v" --preid=rc version prerelease -m 'Release prerelease version %s' && git push --tags origin main
 
   # This job will release the updated version to npm
   release_to_npm:
