@@ -1,5 +1,5 @@
 import './App.css';
-import MapsIndoorsMap from './components/MapsIndoorsMap/MapsIndoorsMap';
+import MapTemplate from './components/MapTemplate/MapTemplate';
 
 // The current query string
 const queryString = window.location.search;
@@ -30,7 +30,7 @@ function App() {
     return (
         <div className="app">
             {/* This is the Map Template component */}
-            <MapsIndoorsMap
+            <MapTemplate
                 apiKey={apiKey ? apiKey : '3ddemo'}
                 venue={venue}
                 locationId={locationId}

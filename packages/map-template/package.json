@@ -2,8 +2,13 @@
   "name": "@mapsindoors/map-template",
   "version": "1.0.0-rc.2",
   "private": false,
-  "files": ["dist/*.js", "dist/*.mjs"],
-  "dependencies": {},
+  "files": [
+    "dist/*.js",
+    "dist/*.mjs"
+  ],
+  "dependencies": {
+    "recoil": "^0.7.7"
+  },
   "devDependencies": {
     "@googlemaps/js-api-loader": "^1.15.1",
     "@mapsindoors/components": "*",
