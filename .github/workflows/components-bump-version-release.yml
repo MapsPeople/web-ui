@@ -63,7 +63,7 @@ jobs:
   release_to_npm:
     name: "Release to npm"
     # This step makes this job dependent on the previous job being successful
-    needs: bump-version
+    needs: bump_version
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
