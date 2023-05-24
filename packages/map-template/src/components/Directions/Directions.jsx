@@ -136,6 +136,16 @@ function Directions({ isOpen, onBack, directions, setTravelMode }) {
         setTravelMode(selectedTravelMode)
     }
 
+    const miDropdownElement = document.querySelector("mi-dropdown");
+
+    miDropdownElement?.addEventListener("change", (event) => {
+        const selectedValues = event.detail.map((item) => {
+            setNewTravelMode(item.value)
+        });
+        console.log(event)
+        console.log(selectedValues);
+    });
+
     return (
         <div className="directions">
             <div className="directions__details">
@@ -171,11 +181,16 @@ function Directions({ isOpen, onBack, directions, setTravelMode }) {
                     </div>
                 </div>
                 <hr></hr>
+                <mi-dropdown>
+                    <mi-dropdown-item selected value="WALKING" text="WALKING"></mi-dropdown-item>
+                    <mi-dropdown-item value="DRIVING" text="DRIVING"></mi-dropdown-item>
+                    <mi-dropdown-item value="BICYCLING" text="BICYCLING"></mi-dropdown-item>
+                </mi-dropdown>
                 <div>
                     <button onClick={() => setNewTravelMode('WALKING')}>Walk</button>
                     <button onClick={() => setNewTravelMode('DRIVING')}>Drive</button>
                     <button onClick={() => setNewTravelMode('BICYCLING')}>Bike</button>
-                    <button onClick={() => setNewTravelMode('TRANSIT')}>Transit</button>
+                    {/* <button onClick={() => setNewTravelMode('TRANSIT')}>Transit</button> */}
                 </div>
                 <hr></hr>
                 <div className="directions__steps">
