@@ -22,11 +22,10 @@ import LocationsList from '../LocationsList/LocationsList';
  * @param {function} props.pushAppView - Function to push to app view to browser history.
  * @param {string} props.currentAppView - Holds the current view/state of the Map Template.
  * @param {array} props.appViews - Array of all possible views.
- * @param {string} props.selectedMapType - The currently selected map type.
  * @param {array} props.filteredLocationsByExternalIDs - Array of locations filtered based on the external ID.
  * @param {function} props.onLocationsFilteredByExternalIDs - The list of locations after filtering based on external ID.
  */
-function BottomSheet({ setCurrentLocation, currentCategories, onLocationsFiltered, currentVenueName, directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews, selectedMapType, filteredLocationsByExternalIDs, onLocationsFilteredByExternalIDs }) {
+function BottomSheet({ setCurrentLocation, currentCategories, onLocationsFiltered, currentVenueName, directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews, filteredLocationsByExternalIDs, onLocationsFilteredByExternalIDs }) {
 
     const bottomSheetRef = useRef();
 
@@ -132,7 +131,6 @@ function BottomSheet({ setCurrentLocation, currentCategories, onLocationsFiltere
                 onDirections={result => setDirections(result)}
                 onBack={() => pushAppView(currentLocation ? appViews.LOCATION_DETAILS : appViews.SEARCH)}
                 isActive={currentAppView === appViews.WAYFINDING}
-                selectedMapType={selectedMapType}
             />
         </Sheet>,
         <Sheet

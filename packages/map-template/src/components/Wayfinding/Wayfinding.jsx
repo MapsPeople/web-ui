@@ -9,6 +9,7 @@ import { useRecoilValue } from 'recoil';
 import userPositionState from '../../atoms/userPositionState';
 import directionsServiceState from '../../atoms/directionsServiceState';
 import currentLocationState from '../../atoms/currentLocationState';
+import mapTypeState from '../../atoms/mapTypeState';
 import Tooltip from '../Tooltip/Tooltip';
 import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
 import SearchField from '../WebComponentWrappers/Search/Search';
@@ -35,10 +36,9 @@ const googlePlacesIcon = "data:image/svg+xml,%3Csvg width='10' height='10' viewB
  * @param {object} props.directionsToLocation - Optional location to navigate to.
  * @param {object} [props.directionsFromLocation] - Optional location to navigate from. If omitted, the user has to choose in the search field.
  * @param {function} props.onSetSize - Callback that is fired when the component has loaded.
- * @param {string} props.selectedMapType - The currently selected map type.
  * @returns
  */
-function Wayfinding({ onStartDirections, onBack, directionsToLocation, directionsFromLocation, onSetSize, isActive, onDirections, selectedMapType }) {
+function Wayfinding({ onStartDirections, onBack, directionsToLocation, directionsFromLocation, onSetSize, isActive, onDirections }) {
 
     const wayfindingRef = useRef();
 
@@ -51,6 +51,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     const directionsService = useRecoilValue(directionsServiceState);
     const userPosition = useRecoilValue(userPositionState);
     const currentLocation = useRecoilValue(currentLocationState);
+    const selectedMapType = useRecoilValue(mapTypeState);
 
     const [activeSearchField, setActiveSearchField] = useState();
 

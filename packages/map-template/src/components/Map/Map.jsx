@@ -8,6 +8,7 @@ import MapboxMap from "./MapboxMap/MapboxMap";
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import userPositionState from '../../atoms/userPositionState';
 import directionsServiceState from '../../atoms/directionsServiceState';
+import mapTypeState from '../../atoms/mapTypeState';
 
 const mapsindoors = window.mapsindoors;
 
@@ -31,16 +32,14 @@ let _tileStyle;
  * @param {function} props.onVenueChangedOnMap - Function that is run when the map bounds was changed due to fitting to a venue.
  * @param {function} props.onPositionControl -  A function that is called when the MapsIndoors PositionControl is constructed. Will send the PositionControl instance as payload.
  * @param {array} props.filteredLocationIds - Array of IDs of the filtered locations.
- * @param {function} props.onMapTypeChanged - Function that is run when the map type is changed.
  * @param {array} props.filteredLocationsByExternalIDs - Array of IDs of the filtered locations based on external ID.
  * @param {string} props.tileStyle - Tile style name to change the interface of the map.
  * @param {number} props.startZoomLevel - The initial zoom level of the map.
  * @param {string} props.locationId - Location Id property used to handle the centering and zooming of the map.
-
  * @returns
  */
-function Map({ apiKey, gmApiKey, mapboxAccessToken, venueName, onLocationClick, onVenueChangedOnMap, onPositionControl, filteredLocationIds, onMapTypeChanged, filteredLocationsByExternalIDs, tileStyle, startZoomLevel, locationId }) {
-    const [mapType, setMapType] = useState();
+function Map({ apiKey, gmApiKey, mapboxAccessToken, venueName, onLocationClick, onVenueChangedOnMap, onPositionControl, filteredLocationIds, filteredLocationsByExternalIDs, tileStyle, startZoomLevel, locationId }) {
+    const [mapType, setMapType] = useRecoilState(mapTypeState);
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useRecoilState(mapsIndoorsInstanceState);
     const [, setUserPosition] = useRecoilState(userPositionState);
     const [, setDirectionsService] = useRecoilState(directionsServiceState);
@@ -51,11 +50,9 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venueName, onLocationClick, 
     useEffect(() => {
         if (mapboxAccessToken) {
             setMapType(mapTypes.Mapbox);
-            onMapTypeChanged(mapTypes.Mapbox)
         } else {
             // A Google Maps map will have precedense if no keys or keys for both providers are set.
             setMapType(mapTypes.Google);
-            onMapTypeChanged(mapTypes.Google)
         }
     }, [gmApiKey, mapboxAccessToken]);
 

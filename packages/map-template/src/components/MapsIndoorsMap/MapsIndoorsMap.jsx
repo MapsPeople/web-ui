@@ -51,7 +51,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
     const [positionControl, setPositionControl] = useState();
     const [appConfigResult, setAppConfigResult] = useState();
-    const [selectedMapType, setSelectedMapType] = useState();
     const [selectedZoomLevel, setSelectedZoomLevel] = useState();
 
     const directionsFromLocation = useLocationForWayfinding(directionsFrom, positionControl);
@@ -269,7 +268,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                         pushAppView={pushAppView}
                         currentAppView={currentAppView}
                         appViews={appStates}
-                        selectedMapType={selectedMapType}
                         filteredLocationsByExternalIDs={filteredLocationsByExternalID}
                         onLocationsFilteredByExternalIDs={(locations) => setFilteredLocationsByExternalID(locations)}
                     />
@@ -285,7 +283,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                         pushAppView={pushAppView}
                         currentAppView={currentAppView}
                         appViews={appStates}
-                        selectedMapType={selectedMapType}
                         filteredLocationsByExternalIDs={filteredLocationsByExternalID}
                         onLocationsFilteredByExternalIDs={(locations) => setFilteredLocationsByExternalID(locations)}
                     />
@@ -300,7 +297,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             onVenueChangedOnMap={(venue) => venueChangedOnMap(venue)}
             onLocationClick={(location) => locationClicked(location)}
             onPositionControl={positionControl => setPositionControl(positionControl)}
-            onMapTypeChanged={(mapType) => setSelectedMapType(mapType)}
             filteredLocationIds={filteredLocations?.map(location => location.id)}
             filteredLocationsByExternalIDs={filteredLocationsByExternalID?.map(location => location.id)}
             tileStyle={tileStyle}
