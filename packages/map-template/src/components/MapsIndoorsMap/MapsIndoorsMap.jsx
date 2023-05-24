@@ -8,6 +8,7 @@ import SplashScreen from '../SplashScreen/SplashScreen';
 import VenueSelector from '../VenueSelector/VenueSelector';
 import BottomSheet from '../BottomSheet/BottomSheet';
 import isMapReadyState from '../../atoms/isMapReadyState.js';
+import venuesState from '../../atoms/venuesState';
 import { useAppHistory } from '../../hooks/useAppHistory';
 import useMediaQuery from '../../hooks/useMediaQuery';
 import Sidebar from '../Sidebar/Sidebar';
@@ -42,7 +43,7 @@ let _locationsDisabled;
 function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel }) {
 
     const [isMapReady, setMapReady] = useRecoilState(isMapReadyState);
-    const [venues, setVenues] = useState([]);
+    const [venues, setVenues] = useRecoilState(venuesState);
     const [currentVenueName, setCurrentVenueName] = useState();
     const [currentLocation, setCurrentLocation] = useState();
     const [currentCategories, setCurrentCategories] = useState([]);
@@ -249,7 +250,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
         {!isMapReady && <SplashScreen logo={logo} primaryColor={primaryColor} />}
         {venues.length > 1 && <VenueSelector
             onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)}
-            venues={venues}
             currentVenueName={currentVenueName}
             onOpen={() => pushAppView(appStates.VENUE_SELECTOR)}
             onClose={() => goBack()}
@@ -297,7 +297,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             apiKey={apiKey}
             gmApiKey={gmApiKey}
             mapboxAccessToken={mapboxAccessToken}
-            venues={venues}
             venueName={currentVenueName}
             onVenueChangedOnMap={(venue) => venueChangedOnMap(venue)}
             onLocationClick={(location) => locationClicked(location)}
