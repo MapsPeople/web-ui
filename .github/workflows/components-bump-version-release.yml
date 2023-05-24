@@ -39,27 +39,28 @@ jobs:
       # The following steps will determine, based on a label, what version to bump to.
       # The "%s" will output the version number in the commit message.
       - name: Major version bump
-        if: contains(github.event.pull_request.labels.*.name, 'major')
+        if: contains(github.event.pull_request.labels.*.name, 'premajor')
         run: cd packages/components && npm ci && npm run build && npm run docs.build && npm --tag-version-prefix="components-v" version major -m 'Release major version %s' && git push --tags origin main && npm publish --access public
       - name: Minor version bump
-        if: contains(github.event.pull_request.labels.*.name, 'minor')
+        if: contains(github.event.pull_request.labels.*.name, 'preminor')
         run: cd packages/components && npm ci && npm run build && npm run docs.build && npm --tag-version-prefix="components-v" version minor -m 'Release minor version %s' && git push --tags origin main && npm publish --access public
       - name: Patch version bump
-        if: contains(github.event.pull_request.labels.*.name, 'patch')
-        run: cd packages/components && npm ci && npm run build && npm run docs.build && npm --tag-version-prefix="components-v" version patch -m 'Release patch version %s' && git push --tags origin main && npm publish --access public
-      - name: Premajor version bump
-        if: contains(github.event.pull_request.labels.*.name, 'premajor')
-        run: cd packages/components && npm ci && npm run build && npm run docs.build && npm --tag-version-prefix="components-v" version patch -m 'Release premajor version %s' && git push --tags origin main && npm publish --access public
-      - name: Preminor version bump
-        if: contains(github.event.pull_request.labels.*.name, 'preminor')
-        run: cd packages/components && npm ci && npm run build && npm run docs.build && npm --tag-version-prefix="components-v" version preminor -m 'Release preminor version %s' && git push --tags origin main && npm publish --access public
-      - name: Prepatch version bump
         if: contains(github.event.pull_request.labels.*.name, 'prepatch')
-        run: cd packages/components && npm ci && npm run build && npm run docs.build && npm --tag-version-prefix="components-v" version prepatch -m 'Release preatch version %s' && git push --tags origin main && npm publish --access public
+        run: cd packages/components && npm ci && npm run build && npm run docs.build && npm --tag-version-prefix="components-v" version patch -m 'Release patch version %s' && git push --tags origin main && npm publish --access public
+      # The "dist-tag" part will tag the release on npm so it doesn't install when using the "@latest" version.
+      # The "preid" part will determine what to put in the "rc"-part of this example version: 1.2.3-rc.0.
+      - name: Prerelease of Major version bump
+        if: contains(github.event.pull_request.labels.*.name, 'premajor')
+        run: cd packages/components && npm ci && npm run build && npm run docs.build && npm --tag-version-prefix="components-v" --dist-tag=next-major --preid=rc version major -m 'Release premajor version %s' && git push --tags origin main && npm publish --access public
+      - name: Prerelease of Minor version bump
+        if: contains(github.event.pull_request.labels.*.name, 'preminor')
+        run: cd packages/components && npm ci && npm run build && npm run docs.build && npm --tag-version-prefix="components-v" --dist-tag=next-minor --preid=rc version minor -m 'Release preminor version %s' && git push --tags origin main && npm publish --access public
+      - name: Prerelease of Patch version bump
+        if: contains(github.event.pull_request.labels.*.name, 'prepatch')
+        run: cd packages/components && npm ci && npm run build && npm run docs.build && npm --tag-version-prefix="components-v" --dist-tag=next-patch --preid=rc version patch -m 'Release prepatch version %s' && git push --tags origin main && npm publish --access public
       - name: Prerelease version bump
         if: contains(github.event.pull_request.labels.*.name, 'prerelease')
-        # The "preid" part will determine what to put in the "rc"-part of this example version: 1.2.3-rc.0.
-        run: cd packages/components && npm ci && npm run build && npm run docs.build && npm --tag-version-prefix="components-v" --preid=rc version prerelease -m 'Release prerelease version %s' && git push --tags origin main && npm publish --access public
+        run: cd packages/components && npm ci && npm run build && npm run docs.build && npm --tag-version-prefix="components-v" --dist-tag=next --preid=rc version prerelease -m 'Release prerelease version %s' && git push --tags origin main && npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
 
