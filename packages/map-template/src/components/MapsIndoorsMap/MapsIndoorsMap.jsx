@@ -8,6 +8,7 @@ import SplashScreen from '../SplashScreen/SplashScreen';
 import VenueSelector from '../VenueSelector/VenueSelector';
 import BottomSheet from '../BottomSheet/BottomSheet';
 import isMapReadyState from '../../atoms/isMapReadyState.js';
+import currentLocationState from '../../atoms/currentLocationState';
 import venuesState from '../../atoms/venuesState';
 import { useAppHistory } from '../../hooks/useAppHistory';
 import useMediaQuery from '../../hooks/useMediaQuery';
@@ -45,7 +46,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [isMapReady, setMapReady] = useRecoilState(isMapReadyState);
     const [venues, setVenues] = useRecoilState(venuesState);
     const [currentVenueName, setCurrentVenueName] = useState();
-    const [currentLocation, setCurrentLocation] = useState();
+    const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const [currentCategories, setCurrentCategories] = useState([]);
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
     const [positionControl, setPositionControl] = useState();
@@ -259,7 +260,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             <>
                 {isDesktop &&
                     <Sidebar
-                        currentLocation={currentLocation}
                         currentVenueName={currentVenueName}
                         setCurrentLocation={setCurrentLocation}
                         currentCategories={currentCategories}
@@ -276,7 +276,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                 }
                 {isMobile &&
                     <BottomSheet
-                        currentLocation={currentLocation}
                         currentVenueName={currentVenueName}
                         setCurrentLocation={setCurrentLocation}
                         currentCategories={currentCategories}

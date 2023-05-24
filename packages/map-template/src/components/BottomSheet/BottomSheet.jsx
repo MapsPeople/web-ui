@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { useState } from 'react';
 import { ContainerContext } from './ContainerContext';
+import { useRecoilValue } from 'recoil';
+import currentLocationState from '../../atoms/currentLocationState';
 import Sheet from './Sheet/Sheet';
 import './BottomSheet.scss';
 import LocationDetails from '../LocationDetails/LocationDetails';
@@ -11,7 +13,6 @@ import LocationsList from '../LocationsList/LocationsList';
 
 /**
  * @param {Object} props
- * @param {Object} props.currentLocation - The currently selected MapsIndoors Location.
  * @param {Object} props.setCurrentLocation - The setter for the currently selected MapsIndoors Location.
  * @param {Object} props.currentCategories - The unique categories displayed based on the existing locations.
  * @param {function} props.onLocationsFiltered - The list of locations after filtering through the categories.
@@ -25,7 +26,7 @@ import LocationsList from '../LocationsList/LocationsList';
  * @param {array} props.filteredLocationsByExternalIDs - Array of locations filtered based on the external ID.
  * @param {function} props.onLocationsFilteredByExternalIDs - The list of locations after filtering based on external ID.
  */
-function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, currentVenueName, directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews, selectedMapType, filteredLocationsByExternalIDs, onLocationsFilteredByExternalIDs }) {
+function BottomSheet({ setCurrentLocation, currentCategories, onLocationsFiltered, currentVenueName, directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews, selectedMapType, filteredLocationsByExternalIDs, onLocationsFilteredByExternalIDs }) {
 
     const bottomSheetRef = useRef();
 
@@ -37,6 +38,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
     const [searchSheetSize, setSearchSheetSize] = useState();
     const [locationsListSheetSize, setLocationsListSheetSize] = useState();
 
+    const currentLocation = useRecoilValue(currentLocationState);
 
     /*
      * React on changes on the current location and directions locations and set relevant bottom sheet.
@@ -113,7 +115,6 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
             <LocationDetails
                 onSetSize={size => setLocationDetailsSheetSize(size)}
                 onStartWayfinding={() => pushAppView(appViews.WAYFINDING)}
-                location={currentLocation}
                 onBack={() => closeLocationDetails()}
                 snapPointSwiped={locationDetailsSheetSwiped}
             />
@@ -126,7 +127,6 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
             <Wayfinding
                 onSetSize={size => setWayfindingSheetSize(size)}
                 onStartDirections={() => pushAppView(appViews.DIRECTIONS)}
-                currentLocation={currentLocation}
                 directionsToLocation={directionsToLocation}
                 directionsFromLocation={directionsFromLocation}
                 onDirections={result => setDirections(result)}

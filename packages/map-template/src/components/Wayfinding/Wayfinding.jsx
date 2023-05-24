@@ -8,6 +8,7 @@ import { ReactComponent as SwitchIcon } from '../../assets/switch.svg';
 import { useRecoilValue } from 'recoil';
 import userPositionState from '../../atoms/userPositionState';
 import directionsServiceState from '../../atoms/directionsServiceState';
+import currentLocationState from '../../atoms/currentLocationState';
 import Tooltip from '../Tooltip/Tooltip';
 import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
 import SearchField from '../WebComponentWrappers/Search/Search';
@@ -31,14 +32,13 @@ const googlePlacesIcon = "data:image/svg+xml,%3Csvg width='10' height='10' viewB
  * @param {Object} props
  * @param {function} props.onStartDirections - Function that is run when the user navigates to the directions page.
  * @param {function} props.onBack - Function that is run when the user navigates to the previous page.
- * @param {object} props.currentLocation - The currently selected MapsIndoors Location.
  * @param {object} props.directionsToLocation - Optional location to navigate to.
  * @param {object} [props.directionsFromLocation] - Optional location to navigate from. If omitted, the user has to choose in the search field.
  * @param {function} props.onSetSize - Callback that is fired when the component has loaded.
  * @param {string} props.selectedMapType - The currently selected map type.
  * @returns
  */
-function Wayfinding({ onStartDirections, onBack, currentLocation, directionsToLocation, directionsFromLocation, onSetSize, isActive, onDirections, selectedMapType }) {
+function Wayfinding({ onStartDirections, onBack, directionsToLocation, directionsFromLocation, onSetSize, isActive, onDirections, selectedMapType }) {
 
     const wayfindingRef = useRef();
 
@@ -50,6 +50,7 @@ function Wayfinding({ onStartDirections, onBack, currentLocation, directionsToLo
 
     const directionsService = useRecoilValue(directionsServiceState);
     const userPosition = useRecoilValue(userPositionState);
+    const currentLocation = useRecoilValue(currentLocationState);
 
     const [activeSearchField, setActiveSearchField] = useState();
 
