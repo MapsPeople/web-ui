@@ -39,13 +39,13 @@ jobs:
       # The following steps will determine, based on a label, what version to bump to.
       # The "%s" will output the version number in the commit message.
       - name: Major version bump
-        if: contains(github.event.pull_request.labels.*.name, 'premajor')
+        if: contains(github.event.pull_request.labels.*.name, 'major')
         run: cd packages/components && npm ci && npm run build && npm run docs.build && npm --tag-version-prefix="components-v" version major -m 'Release major version %s' && git push --tags origin main && npm publish --access public
       - name: Minor version bump
-        if: contains(github.event.pull_request.labels.*.name, 'preminor')
+        if: contains(github.event.pull_request.labels.*.name, 'minor')
         run: cd packages/components && npm ci && npm run build && npm run docs.build && npm --tag-version-prefix="components-v" version minor -m 'Release minor version %s' && git push --tags origin main && npm publish --access public
       - name: Patch version bump
-        if: contains(github.event.pull_request.labels.*.name, 'prepatch')
+        if: contains(github.event.pull_request.labels.*.name, 'patch')
         run: cd packages/components && npm ci && npm run build && npm run docs.build && npm --tag-version-prefix="components-v" version patch -m 'Release patch version %s' && git push --tags origin main && npm publish --access public
       # The "dist-tag" part will tag the release on npm so it doesn't install when using the "@latest" version.
       # The "preid" part will determine what to put in the "rc"-part of this example version: 1.2.3-rc.0.
