@@ -27,6 +27,7 @@ jobs:
       - name: Build
         run: |
           cd packages/components
+          npm ci
           npm run build
       # You need to set the git config or you can't commit the changes later.
       # The name and email here is for the GitHub Actions user.
