@@ -11,6 +11,7 @@ import directionsServiceState from '../../atoms/directionsServiceState';
 import mapTypeState from '../../atoms/mapTypeState';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
 import apiKeyState from '../../atoms/apiKeyState';
+import gmApiKeyState from '../../atoms/gmApiKeyState';
 
 const mapsindoors = window.mapsindoors;
 
@@ -26,7 +27,6 @@ let _tileStyle;
  * Shows a map.
  *
  * @param {Object} props
- * @param {string} [props.gmApiKey] - Google Maps API key if you want to show a Google Maps map.
  * @param {string} [props.mapboxAccessToken] - Mapbox Access Token if you want to show a Mapbox map.
  * @param {function} [props.onLocationClick] - Function that is run when a MapsIndoors Location is clicked. the Location will be sent along as first argument.
  * @param {function} props.onVenueChangedOnMap - Function that is run when the map bounds was changed due to fitting to a venue.
@@ -38,8 +38,9 @@ let _tileStyle;
  * @param {string} props.locationId - Location Id property used to handle the centering and zooming of the map.
  * @returns
  */
-function Map({ gmApiKey, mapboxAccessToken, onLocationClick, onVenueChangedOnMap, onPositionControl, filteredLocationIds, filteredLocationsByExternalIDs, tileStyle, startZoomLevel, locationId }) {
+function Map({ mapboxAccessToken, onLocationClick, onVenueChangedOnMap, onPositionControl, filteredLocationIds, filteredLocationsByExternalIDs, tileStyle, startZoomLevel, locationId }) {
     const apiKey = useRecoilValue(apiKeyState);
+    const gmApiKey = useRecoilValue(gmApiKeyState);
     const [mapType, setMapType] = useRecoilState(mapTypeState);
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useRecoilState(mapsIndoorsInstanceState);
     const [, setUserPosition] = useRecoilState(userPositionState);
@@ -209,7 +210,7 @@ function Map({ gmApiKey, mapboxAccessToken, onLocationClick, onVenueChangedOnMap
     }, [tileStyle]);
 
     return (<>
-        {mapType === mapTypes.Google && <GoogleMapsMap gmApiKey={gmApiKey} onMapView={onMapView} onPositionControl={onPositionControlCreated} />}
+        {mapType === mapTypes.Google && <GoogleMapsMap onMapView={onMapView} onPositionControl={onPositionControlCreated} />}
         {mapType === mapTypes.Mapbox && <MapboxMap mapboxAccessToken={mapboxAccessToken} onMapView={onMapView} onPositionControl={onPositionControlCreated} />}
     </>)
 }
