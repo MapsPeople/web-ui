@@ -38,16 +38,17 @@ jobs:
       - name: Set git config
         run: git config user.name github-actions[bot] && git config user.email 41898282+github-actions[bot]@users.noreply.github.com
       # The following steps will determine, based on a label, what version to bump to.
-      # The "%s" will output the version number in the commit message.
       - name: Major version bump
         if: contains(github.event.pull_request.labels.*.name, 'major')
-        run: cd packages/components && npm ci && npm run build && npm run docs.build && npm --tag-version-prefix="components-v" version major -m 'Release major version %s' && git push && git push --tags && npm publish --access public
+        run: npm -w components run release -- major
       - name: Minor version bump
         if: contains(github.event.pull_request.labels.*.name, 'minor')
-        run: cd packages/components && npm ci && npm run build && npm run docs.build && npm --tag-version-prefix="components-v" version minor -m 'Release minor version %s' && git push && git push --tags && npm publish --access public
+        run: npm -w components run release -- minor
       - name: Patch version bump
         if: contains(github.event.pull_request.labels.*.name, 'patch')
-        run: cd packages/components && npm ci && npm run build && npm run docs.build && npm --tag-version-prefix="components-v" version patch -m 'Release patch version %s' && git push && git push --tags && npm publish --access public
+        run: npm -w components run release -- patch
+      - name: Publish to npm
+        run: npm -w components publish --access public --dry-run
 
   # This job will release the Component documentation
   build_deploy_components_docs:
