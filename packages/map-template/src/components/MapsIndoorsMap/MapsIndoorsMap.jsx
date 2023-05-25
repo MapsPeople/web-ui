@@ -11,6 +11,7 @@ import isMapReadyState from '../../atoms/isMapReadyState.js';
 import currentLocationState from '../../atoms/currentLocationState';
 import categoriesState from '../../atoms/categoriesState';
 import venuesState from '../../atoms/venuesState';
+import currentVenueNameState from '../../atoms/currentVenueNameState';
 import { useAppHistory } from '../../hooks/useAppHistory';
 import useMediaQuery from '../../hooks/useMediaQuery';
 import Sidebar from '../Sidebar/Sidebar';
@@ -46,7 +47,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
 
     const [isMapReady, setMapReady] = useRecoilState(isMapReadyState);
     const [venues, setVenues] = useRecoilState(venuesState);
-    const [currentVenueName, setCurrentVenueName] = useState();
+    const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const [, setCategories] = useRecoilState(categoriesState);
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
@@ -250,8 +251,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     return <div className={`mapsindoors-map ${hasDirectionsOpen ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}`}>
         {!isMapReady && <SplashScreen logo={logo} primaryColor={primaryColor} />}
         {venues.length > 1 && <VenueSelector
-            onVenueSelected={selectedVenue => setCurrentVenueName(selectedVenue.name)}
-            currentVenueName={currentVenueName}
             onOpen={() => pushAppView(appStates.VENUE_SELECTOR)}
             onClose={() => goBack()}
             active={currentAppView === appStates.VENUE_SELECTOR}
@@ -260,7 +259,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             <>
                 {isDesktop &&
                     <Sidebar
-                        currentVenueName={currentVenueName}
                         setCurrentLocation={setCurrentLocation}
                         onLocationsFiltered={(locations) => setFilteredLocations(locations)}
                         directionsFromLocation={directionsFromLocation}
@@ -274,7 +272,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                 }
                 {isMobile &&
                     <BottomSheet
-                        currentVenueName={currentVenueName}
                         setCurrentLocation={setCurrentLocation}
                         onLocationsFiltered={(locations) => setFilteredLocations(locations)}
                         directionsFromLocation={directionsFromLocation}
@@ -292,7 +289,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             apiKey={apiKey}
             gmApiKey={gmApiKey}
             mapboxAccessToken={mapboxAccessToken}
-            venueName={currentVenueName}
             onVenueChangedOnMap={(venue) => venueChangedOnMap(venue)}
             onLocationClick={(location) => locationClicked(location)}
             onPositionControl={positionControl => setPositionControl(positionControl)}

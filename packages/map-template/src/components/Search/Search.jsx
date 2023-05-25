@@ -2,6 +2,7 @@ import './Search.scss';
 import { useRef, useState, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import categoriesState from '../../atoms/categoriesState';
+import currentVenueNameState from '../../atoms/currentVenueNameState';
 import { snapPoints } from '../../constants/snapPoints';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
@@ -18,10 +19,9 @@ const mapsindoors = window.mapsindoors;
  * @param {[[string, number]]} props.categories - All the unique categories that users can filter through.
  * @param {function} props.onLocationsFiltered - Function that is run when the user performs a filter through any category.
  * @param {function} props.onSetSize - Callback that is fired when the search field takes focus.
- * @param {string} props.currentVenueName - The currently selected venue.
  * @returns
  */
-function Search({ onLocationClick, onLocationsFiltered, onSetSize, currentVenueName }) {
+function Search({ onLocationClick, onLocationsFiltered, onSetSize }) {
 
     const searchRef = useRef();
 
@@ -31,6 +31,7 @@ function Search({ onLocationClick, onLocationsFiltered, onSetSize, currentVenueN
     const [searchDisabled, setSearchDisabled] = useState(true);
     const [searchResults, setSearchResults] = useState([]);
     const categories = useRecoilValue(categoriesState);
+    const currentVenueName = useRecoilValue(currentVenueNameState);
 
     /** Indicate if search results have been found */
     const [showNotFoundMessage, setShowNotFoundMessage] = useState(false);

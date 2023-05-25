@@ -9,6 +9,7 @@ import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import userPositionState from '../../atoms/userPositionState';
 import directionsServiceState from '../../atoms/directionsServiceState';
 import mapTypeState from '../../atoms/mapTypeState';
+import currentVenueNameState from '../../atoms/currentVenueNameState';
 
 const mapsindoors = window.mapsindoors;
 
@@ -27,7 +28,6 @@ let _tileStyle;
  * @param {string} [props.apiKey] - MapsIndoors API key or solution alias.
  * @param {string} [props.gmApiKey] - Google Maps API key if you want to show a Google Maps map.
  * @param {string} [props.mapboxAccessToken] - Mapbox Access Token if you want to show a Mapbox map.
- * @param {string} [props.venueName] - If you want the map to show a specific Venue, provide the Venue name here.
  * @param {function} [props.onLocationClick] - Function that is run when a MapsIndoors Location is clicked. the Location will be sent along as first argument.
  * @param {function} props.onVenueChangedOnMap - Function that is run when the map bounds was changed due to fitting to a venue.
  * @param {function} props.onPositionControl -  A function that is called when the MapsIndoors PositionControl is constructed. Will send the PositionControl instance as payload.
@@ -38,12 +38,13 @@ let _tileStyle;
  * @param {string} props.locationId - Location Id property used to handle the centering and zooming of the map.
  * @returns
  */
-function Map({ apiKey, gmApiKey, mapboxAccessToken, venueName, onLocationClick, onVenueChangedOnMap, onPositionControl, filteredLocationIds, filteredLocationsByExternalIDs, tileStyle, startZoomLevel, locationId }) {
+function Map({ apiKey, gmApiKey, mapboxAccessToken, onLocationClick, onVenueChangedOnMap, onPositionControl, filteredLocationIds, filteredLocationsByExternalIDs, tileStyle, startZoomLevel, locationId }) {
     const [mapType, setMapType] = useRecoilState(mapTypeState);
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useRecoilState(mapsIndoorsInstanceState);
     const [, setUserPosition] = useRecoilState(userPositionState);
     const [, setDirectionsService] = useRecoilState(directionsServiceState);
     const venues = useRecoilValue(venuesState);
+    const venueName = useRecoilValue(currentVenueNameState);
 
     useLiveData(apiKey);
 

@@ -1,24 +1,25 @@
 import { useRef } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import './VenueSelector.scss';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import venuesState from '../../atoms/venuesState';
 import { ReactComponent as BuildingIcon } from '../../assets/building.svg';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import Venue from './Venue/Venue';
+import currentVenueNameState from '../../atoms/currentVenueNameState';
 
 /**
  * Show a list of Venues. The user can click on a Venue to select it.
  *
  * @param {object} props
- * @param {string} props.currentVenueName - The name of the current venue.
- * @param {function} props.onVenueSelected - Callback to execute when a Venue is selected.
  * @param {function} props.onOpen - Callback to execute when the Venue Selector is opened.
  * @returns
  */
-function VenueSelector({ currentVenueName, onVenueSelected, onOpen, onClose, active }) {
+function VenueSelector({ onOpen, onClose, active }) {
     const venueSelectorContentRef = useRef(null);
     const venues = useRecoilValue(venuesState);
+
+    const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
 
     /**
      * When a Venue is selected, close the list of Venues and do the callback.
@@ -26,7 +27,7 @@ function VenueSelector({ currentVenueName, onVenueSelected, onOpen, onClose, act
      * @param {object} venue
      */
     const selectVenue = venue => {
-        onVenueSelected(venue);
+        setCurrentVenueName(venue.name);
         toggle();
     };
 
