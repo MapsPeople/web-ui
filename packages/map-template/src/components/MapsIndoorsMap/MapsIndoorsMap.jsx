@@ -19,6 +19,7 @@ import useMediaQuery from '../../hooks/useMediaQuery';
 import Sidebar from '../Sidebar/Sidebar';
 import useLocationForWayfinding from '../../hooks/useLocationForWayfinding';
 import mapboxAccessTokenState from '../../atoms/mapboxAccessTokenState';
+import filteredLocationsState from '../../atoms/filteredLocationsState';
 
 defineCustomElements();
 const mapsindoors = window.mapsindoors;
@@ -68,7 +69,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [filteredLocationsByExternalID, setFilteredLocationsByExternalID] = useState();
 
     // The filtered locations that the user sets when selecting a category/location.
-    const [filteredLocations, setFilteredLocations] = useState();
+    const [filteredLocations, setFilteredLocations] = useRecoilState(filteredLocationsState);
 
     // Holds a copy of the initially filtered locations.
     const [initialFilteredLocations, setInitialFilteredLocations] = useState();
@@ -275,7 +276,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                 {isDesktop &&
                     <Sidebar
                         setCurrentLocation={setCurrentLocation}
-                        onLocationsFiltered={(locations) => setFilteredLocations(locations)}
                         directionsFromLocation={directionsFromLocation}
                         directionsToLocation={directionsToLocation}
                         pushAppView={pushAppView}
@@ -288,7 +288,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                 {isMobile &&
                     <BottomSheet
                         setCurrentLocation={setCurrentLocation}
-                        onLocationsFiltered={(locations) => setFilteredLocations(locations)}
                         directionsFromLocation={directionsFromLocation}
                         directionsToLocation={directionsToLocation}
                         pushAppView={pushAppView}
@@ -304,7 +303,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             onVenueChangedOnMap={(venue) => venueChangedOnMap(venue)}
             onLocationClick={(location) => locationClicked(location)}
             onPositionControl={positionControl => setPositionControl(positionControl)}
-            filteredLocationIds={filteredLocations?.map(location => location.id)}
             filteredLocationsByExternalIDs={filteredLocationsByExternalID?.map(location => location.id)}
             tileStyle={tileStyle}
             startZoomLevel={selectedZoomLevel}

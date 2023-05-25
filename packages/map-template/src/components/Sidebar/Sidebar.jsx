@@ -11,7 +11,6 @@ import LocationsList from '../LocationsList/LocationsList';
 /**
  * @param {Object} props
  * @param {Object} props.setCurrentLocation - The setter for the currently selected MapsIndoors Location.
- * @param {function} props.onLocationsFiltered - The list of locations after filtering through the categories.
  * @param {string} props.directionsFromLocation - Origin Location to be used to instantly show directions.
  * @param {string} props.directionsToLocation - Destination Location to be used to instantly show directions.
  * @param {function} props.pushAppView - Function to push to app view to browser history.
@@ -21,7 +20,7 @@ import LocationsList from '../LocationsList/LocationsList';
  * @param {function} props.onLocationsFilteredByExternalIDs - The list of locations after filtering based on external ID.
  *
  */
-function Sidebar({ setCurrentLocation, onLocationsFiltered, directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews, filteredLocationsByExternalIDs, onLocationsFilteredByExternalIDs }) {
+function Sidebar({ setCurrentLocation, directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews, filteredLocationsByExternalIDs, onLocationsFilteredByExternalIDs }) {
     const [directions, setDirections] = useState();
     const currentLocation = useRecoilValue(currentLocationState);
 
@@ -68,7 +67,6 @@ function Sidebar({ setCurrentLocation, onLocationsFiltered, directionsFromLocati
         <Modal isOpen={currentAppView === appViews.SEARCH} key="A">
             <Search
                 onLocationClick={(location) => setCurrentLocation(location)}
-                onLocationsFiltered={(locations) => onLocationsFiltered(locations)}
             />
         </Modal>,
         <Modal isOpen={currentAppView === appViews.EXTERNALIDS} key="B">
