@@ -7,6 +7,7 @@ import MIMap from "../Map/Map";
 import SplashScreen from '../SplashScreen/SplashScreen';
 import VenueSelector from '../VenueSelector/VenueSelector';
 import BottomSheet from '../BottomSheet/BottomSheet';
+import apiKeyState from '../../atoms/apiKeyState';
 import isMapReadyState from '../../atoms/isMapReadyState.js';
 import currentLocationState from '../../atoms/currentLocationState';
 import categoriesState from '../../atoms/categoriesState';
@@ -45,6 +46,7 @@ let _locationsDisabled;
  */
 function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel }) {
 
+    const [, setApiKey] = useRecoilState(apiKeyState);
     const [isMapReady, setMapReady] = useRecoilState(isMapReadyState);
     const [venues, setVenues] = useRecoilState(venuesState);
     const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
@@ -196,6 +198,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
      * React on changes in the MapsIndoors API key by fetching the required data.
      */
     useEffect(() => {
+        setApiKey(apiKey);
         setMapReady(false);
         mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKey);
 
@@ -286,7 +289,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             </>
         }
         <MIMap
-            apiKey={apiKey}
             gmApiKey={gmApiKey}
             mapboxAccessToken={mapboxAccessToken}
             onVenueChangedOnMap={(venue) => venueChangedOnMap(venue)}
