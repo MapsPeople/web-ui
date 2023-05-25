@@ -48,7 +48,7 @@ jobs:
         if: contains(github.event.pull_request.labels.*.name, 'patch')
         run: npm -w components run release -- patch
       - name: Publish to npm
-        run: npm -w components publish --access public --dry-run
+        run: npm -w components publish --access public
 
   # This job will release the Component documentation
   build_deploy_components_docs:
