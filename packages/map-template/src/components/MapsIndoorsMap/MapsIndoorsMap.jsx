@@ -9,6 +9,7 @@ import VenueSelector from '../VenueSelector/VenueSelector';
 import BottomSheet from '../BottomSheet/BottomSheet';
 import isMapReadyState from '../../atoms/isMapReadyState.js';
 import currentLocationState from '../../atoms/currentLocationState';
+import categoriesState from '../../atoms/categoriesState';
 import venuesState from '../../atoms/venuesState';
 import { useAppHistory } from '../../hooks/useAppHistory';
 import useMediaQuery from '../../hooks/useMediaQuery';
@@ -47,7 +48,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [venues, setVenues] = useRecoilState(venuesState);
     const [currentVenueName, setCurrentVenueName] = useState();
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
-    const [currentCategories, setCurrentCategories] = useState([]);
+    const [, setCategories] = useRecoilState(categoriesState);
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
     const [positionControl, setPositionControl] = useState();
     const [appConfigResult, setAppConfigResult] = useState();
@@ -149,7 +150,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
         // Sort the categories with most locations associated.
         uniqueCategories = Array.from(uniqueCategories).sort((a, b) => b[1].count - a[1].count);
 
-        setCurrentCategories(uniqueCategories);
+        setCategories(uniqueCategories);
     }
 
     /*
@@ -261,7 +262,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                     <Sidebar
                         currentVenueName={currentVenueName}
                         setCurrentLocation={setCurrentLocation}
-                        currentCategories={currentCategories}
                         onLocationsFiltered={(locations) => setFilteredLocations(locations)}
                         directionsFromLocation={directionsFromLocation}
                         directionsToLocation={directionsToLocation}
@@ -276,7 +276,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                     <BottomSheet
                         currentVenueName={currentVenueName}
                         setCurrentLocation={setCurrentLocation}
-                        currentCategories={currentCategories}
                         onLocationsFiltered={(locations) => setFilteredLocations(locations)}
                         directionsFromLocation={directionsFromLocation}
                         directionsToLocation={directionsToLocation}

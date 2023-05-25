@@ -1,5 +1,7 @@
 import './Search.scss';
 import { useRef, useState, useEffect } from 'react';
+import { useRecoilValue } from 'recoil';
+import categoriesState from '../../atoms/categoriesState';
 import { snapPoints } from '../../constants/snapPoints';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
@@ -19,7 +21,7 @@ const mapsindoors = window.mapsindoors;
  * @param {string} props.currentVenueName - The currently selected venue.
  * @returns
  */
-function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, currentVenueName }) {
+function Search({ onLocationClick, onLocationsFiltered, onSetSize, currentVenueName }) {
 
     const searchRef = useRef();
 
@@ -28,6 +30,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, c
 
     const [searchDisabled, setSearchDisabled] = useState(true);
     const [searchResults, setSearchResults] = useState([]);
+    const categories = useRecoilValue(categoriesState);
 
     /** Indicate if search results have been found */
     const [showNotFoundMessage, setShowNotFoundMessage] = useState(false);
