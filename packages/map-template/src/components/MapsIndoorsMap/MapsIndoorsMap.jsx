@@ -18,6 +18,7 @@ import { useAppHistory } from '../../hooks/useAppHistory';
 import useMediaQuery from '../../hooks/useMediaQuery';
 import Sidebar from '../Sidebar/Sidebar';
 import useLocationForWayfinding from '../../hooks/useLocationForWayfinding';
+import mapboxAccessTokenState from '../../atoms/mapboxAccessTokenState';
 
 defineCustomElements();
 const mapsindoors = window.mapsindoors;
@@ -49,6 +50,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
 
     const [, setApiKey] = useRecoilState(apiKeyState);
     const [, setGmApyKey] = useRecoilState(gmApiKeyState);
+    const [, setMapboxAccessToken] = useRecoilState(mapboxAccessTokenState);
     const [isMapReady, setMapReady] = useRecoilState(isMapReadyState);
     const [venues, setVenues] = useRecoilState(venuesState);
     const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
@@ -159,11 +161,12 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     }
 
     /*
-     * React to changes in the gmApiKey prop.
+     * React to changes in the gmApiKey and mapboxAccessToken props.
      */
     useEffect(() => {
+        setMapboxAccessToken(mapboxAccessToken);
         setGmApyKey(gmApiKey);
-    }, [gmApiKey]);
+    }, [gmApiKey, mapboxAccessToken]);
 
     /*
      * React on changes in the venue prop.
@@ -298,7 +301,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             </>
         }
         <MIMap
-            mapboxAccessToken={mapboxAccessToken}
             onVenueChangedOnMap={(venue) => venueChangedOnMap(venue)}
             onLocationClick={(location) => locationClicked(location)}
             onPositionControl={positionControl => setPositionControl(positionControl)}

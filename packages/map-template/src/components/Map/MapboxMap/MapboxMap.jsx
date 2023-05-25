@@ -3,6 +3,7 @@ import { useRecoilValue } from 'recoil';
 import mapsIndoorsInstanceState from '../../../atoms/mapsIndoorsInstanceState';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import mapboxAccessTokenState from '../../../atoms/mapboxAccessTokenState';
 
 // Make the global MapsIndoors JavaScript SDK available here
 const mapsindoors = window.mapsindoors;
@@ -11,12 +12,12 @@ const mapsindoors = window.mapsindoors;
  * Takes care of instantiating a MapsIndoors Mapbox MapView.
  *
  * @param {object} props
- * @param {string} props.mapboxAccessToken - A Mapbox Access Token required for showing the map.
  * @param {function} props.onMapView - A function that is called when the MapView is constructed. Sends the MapView instance and External Directions Provider as payload.
  * @param {function} props.onPositionControl - A function that is called when the MapsIndoors PositionControl is contructed. Will send the PositionControl instance as payload.
  */
-function MapboxMap({ mapboxAccessToken, onMapView, onPositionControl }) {
+function MapboxMap({ onMapView, onPositionControl }) {
 
+    const mapboxAccessToken = useRecoilValue(mapboxAccessTokenState);
     const [mapView, setMapView] = useState();
     const [hasFloorSelector, setHasFloorSelector] = useState(false);
     const [hasPositionControl, setHasPositionControl] = useState(false);

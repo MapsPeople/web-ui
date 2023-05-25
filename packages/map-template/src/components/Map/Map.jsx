@@ -12,6 +12,7 @@ import mapTypeState from '../../atoms/mapTypeState';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
 import apiKeyState from '../../atoms/apiKeyState';
 import gmApiKeyState from '../../atoms/gmApiKeyState';
+import mapboxAccessTokenState from '../../atoms/mapboxAccessTokenState';
 
 const mapsindoors = window.mapsindoors;
 
@@ -27,7 +28,6 @@ let _tileStyle;
  * Shows a map.
  *
  * @param {Object} props
- * @param {string} [props.mapboxAccessToken] - Mapbox Access Token if you want to show a Mapbox map.
  * @param {function} [props.onLocationClick] - Function that is run when a MapsIndoors Location is clicked. the Location will be sent along as first argument.
  * @param {function} props.onVenueChangedOnMap - Function that is run when the map bounds was changed due to fitting to a venue.
  * @param {function} props.onPositionControl -  A function that is called when the MapsIndoors PositionControl is constructed. Will send the PositionControl instance as payload.
@@ -38,9 +38,10 @@ let _tileStyle;
  * @param {string} props.locationId - Location Id property used to handle the centering and zooming of the map.
  * @returns
  */
-function Map({ mapboxAccessToken, onLocationClick, onVenueChangedOnMap, onPositionControl, filteredLocationIds, filteredLocationsByExternalIDs, tileStyle, startZoomLevel, locationId }) {
+function Map({ onLocationClick, onVenueChangedOnMap, onPositionControl, filteredLocationIds, filteredLocationsByExternalIDs, tileStyle, startZoomLevel, locationId }) {
     const apiKey = useRecoilValue(apiKeyState);
     const gmApiKey = useRecoilValue(gmApiKeyState);
+    const mapboxAccessToken = useRecoilValue(mapboxAccessTokenState);
     const [mapType, setMapType] = useRecoilState(mapTypeState);
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useRecoilState(mapsIndoorsInstanceState);
     const [, setUserPosition] = useRecoilState(userPositionState);
@@ -51,6 +52,8 @@ function Map({ mapboxAccessToken, onLocationClick, onVenueChangedOnMap, onPositi
     useLiveData(apiKey);
 
     useEffect(() => {
+        if (gmApiKey === null && mapboxAccessToken === null) return;
+
         if (mapboxAccessToken) {
             setMapType(mapTypes.Mapbox);
         } else {
@@ -211,7 +214,7 @@ function Map({ mapboxAccessToken, onLocationClick, onVenueChangedOnMap, onPositi
 
     return (<>
         {mapType === mapTypes.Google && <GoogleMapsMap onMapView={onMapView} onPositionControl={onPositionControlCreated} />}
-        {mapType === mapTypes.Mapbox && <MapboxMap mapboxAccessToken={mapboxAccessToken} onMapView={onMapView} onPositionControl={onPositionControlCreated} />}
+        {mapType === mapTypes.Mapbox && <MapboxMap onMapView={onMapView} onPositionControl={onPositionControlCreated} />}
     </>)
 }
 
