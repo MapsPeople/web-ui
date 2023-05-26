@@ -23,4 +23,4 @@ jobs:
         with:
           mode: exactly
           count: 1
-          labels: "major, minor, patch, premajor, preminor, prepatch, prerelease"
+          labels: "major, minor, patch"
