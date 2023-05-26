@@ -1,0 +1,51 @@
+name: "Map Template: Bump version and release to npm"
+
+# Run only when the workflow checking labels on Pull Requests is successful, and the Pull Request is targeting the main branch, is closed, and has changes in files or folders in the Map Template package.
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+    paths:
+      - packages/map-template/**
+      - .github/workflows/map-template-bump-version-release.yml
+
+jobs:
+  bump_version:
+    name: "Bump Version on Pull Request Merges"
+    # This ensures the job only runs for Pull Requests that are merged.
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    env:
+      token: ${{ secrets.GITHUB_TOKEN }}
+      NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
+    steps:
+      # Check out the repository code.
+      - uses: actions/checkout@v3
+      # Set up a node environment in the container.
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org/
+          # Despite the package name including this scope, it's also necessary to set here
+          scope: "@mapsindoors"
+      # Build the project to ensure it's up to date. If this steps fails, the job fails.
+      - name: Build
+        run: cd packages/map-template && npm ci && npm run build
+      # You need to set the git config or you can't commit the changes later.
+      # The name and email here is for the GitHub Actions user.
+      - name: Set git config
+        run: git config user.name github-actions[bot] && git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+      # The following steps will determine, based on a label, what version to bump to.
+      - name: Major version bump
+        if: contains(github.event.pull_request.labels.*.name, 'major')
+        run: npm -w @mapsindoors/map-template run release -- major
+      - name: Minor version bump
+        if: contains(github.event.pull_request.labels.*.name, 'minor')
+        run: npm -w @mapsindoors/map-template run release -- minor
+      - name: Patch version bump
+        if: contains(github.event.pull_request.labels.*.name, 'patch')
+        run: npm -w @mapsindoors/map-template run release -- patch
+      - name: Publish to npm
+        run: npm -w @mapsindoors/map-template publish --access public
