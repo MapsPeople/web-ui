@@ -1,8 +1,12 @@
 {
   "name": "@mapsindoors/map-template",
+  "description": "Get a MapsIndoors map up and running in less than 10 mins.",
   "version": "1.0.0-rc.2",
   "private": false,
-  "files": ["dist/*.js", "dist/*.mjs"],
+  "files": [
+    "dist/*.js",
+    "dist/*.mjs"
+  ],
   "dependencies": {},
   "devDependencies": {
     "@googlemaps/js-api-loader": "^1.15.1",
