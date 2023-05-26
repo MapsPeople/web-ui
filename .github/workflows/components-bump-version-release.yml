@@ -40,15 +40,15 @@ jobs:
       # The following steps will determine, based on a label, what version to bump to.
       - name: Major version bump
         if: contains(github.event.pull_request.labels.*.name, 'major')
-        run: npm -w components run release -- major
+        run: npm -w @mapsindoors/components run release -- major
       - name: Minor version bump
         if: contains(github.event.pull_request.labels.*.name, 'minor')
-        run: npm -w components run release -- minor
+        run: npm -w @mapsindoors/components run release -- minor
       - name: Patch version bump
         if: contains(github.event.pull_request.labels.*.name, 'patch')
-        run: npm -w components run release -- patch
+        run: npm -w @mapsindoors/components run release -- patch
       - name: Publish to npm
-        run: npm -w components publish --access public
+        run: npm -w @mapsindoors/components publish --access public
 
   # This job will release the Component documentation
   build_deploy_components_docs:
