@@ -7,7 +7,7 @@ This monorepo contains all UI projects for the MapsIndoors platform for Web. It 
 The most interesting part of this repository is the Map Template. Get it up and running like so:
 
 ```
-$ git clone git@github.com:MapsPeople/web-ui && cd web-ui
+$ git clone https://github.com/MapsPeople/web-ui.git && cd web-ui
 $ npm ci
 $ npx lerna run build && cd packages/map-template
 $ npm run start

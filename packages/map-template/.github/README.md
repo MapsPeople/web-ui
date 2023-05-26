@@ -7,7 +7,7 @@ This app is built on React, with our Web Components used where applicable.
 To get the app up and running, clone this repo, install everything using [Lerna](https://lerna.js.org), and start the app:
 
 ```zsh
-$ git clone git@github.com:MapsPeople/web-ui.git
+$ git clone https://github.com/MapsPeople/web-ui.git
 $ cd web-ui && npm install && npx lerna run build
 $ cd packages/map-template && npm run start
 ```
