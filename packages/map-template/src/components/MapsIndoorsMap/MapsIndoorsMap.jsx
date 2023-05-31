@@ -22,6 +22,7 @@ import useLocationForWayfinding from '../../hooks/useLocationForWayfinding';
 import mapboxAccessTokenState from '../../atoms/mapboxAccessTokenState';
 import filteredLocationsState from '../../atoms/filteredLocationsState';
 import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
+import startZoomLevelState from '../../atoms/startZoomLevelState';
 
 defineCustomElements();
 const mapsindoors = window.mapsindoors;
@@ -62,7 +63,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
     const [positionControl, setPositionControl] = useState();
     const [appConfigResult, setAppConfigResult] = useState();
-    const [selectedZoomLevel, setSelectedZoomLevel] = useState();
 
     const directionsFromLocation = useLocationForWayfinding(directionsFrom, positionControl);
     const directionsToLocation = useLocationForWayfinding(directionsTo, positionControl);
@@ -77,6 +77,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [initialFilteredLocations, setInitialFilteredLocations] = useState();
 
     const [, setTileStyle] = useRecoilState(tileStyleState);
+    const [, setStartZoomLevel] = useRecoilState(startZoomLevelState);
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
     const isMobile = useMediaQuery('(max-width: 991px)');
@@ -188,7 +189,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
      * React on changes in the start zoom level prop.
      */
     useEffect(() => {
-        setSelectedZoomLevel(startZoomLevel);
+        setStartZoomLevel(startZoomLevel);
     }, [startZoomLevel]);
 
     /*
@@ -311,7 +312,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             onVenueChangedOnMap={(venue) => venueChangedOnMap(venue)}
             onLocationClick={(location) => locationClicked(location)}
             onPositionControl={positionControl => setPositionControl(positionControl)}
-            startZoomLevel={selectedZoomLevel}
             locationId={locationId}
         />
     </div>
