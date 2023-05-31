@@ -11,6 +11,7 @@ import apiKeyState from '../../atoms/apiKeyState';
 import gmApiKeyState from '../../atoms/gmApiKeyState';
 import isMapReadyState from '../../atoms/isMapReadyState.js';
 import currentLocationState from '../../atoms/currentLocationState';
+import tileStyleState from '../../atoms/tileStyleState';
 import categoriesState from '../../atoms/categoriesState';
 import venuesState from '../../atoms/venuesState';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
@@ -74,6 +75,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
 
     // Holds a copy of the initially filtered locations.
     const [initialFilteredLocations, setInitialFilteredLocations] = useState();
+
+    const [, setTileStyle] = useRecoilState(tileStyleState);
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
     const isMobile = useMediaQuery('(max-width: 991px)');
@@ -176,6 +179,10 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     useEffect(() => {
         setCurrentVenueName(venue);
     }, [venue]);
+
+    useEffect(() => {
+        setTileStyle(tileStyle)
+    }, [tileStyle]);
 
     /*
      * React on changes in the start zoom level prop.
@@ -304,7 +311,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             onVenueChangedOnMap={(venue) => venueChangedOnMap(venue)}
             onLocationClick={(location) => locationClicked(location)}
             onPositionControl={positionControl => setPositionControl(positionControl)}
-            tileStyle={tileStyle}
             startZoomLevel={selectedZoomLevel}
             locationId={locationId}
         />

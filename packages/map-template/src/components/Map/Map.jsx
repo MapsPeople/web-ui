@@ -15,6 +15,7 @@ import gmApiKeyState from '../../atoms/gmApiKeyState';
 import mapboxAccessTokenState from '../../atoms/mapboxAccessTokenState';
 import filteredLocationsState from '../../atoms/filteredLocationsState';
 import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
+import tileStyleState from '../../atoms/tileStyleState';
 
 const mapsindoors = window.mapsindoors;
 
@@ -33,12 +34,11 @@ let _tileStyle;
  * @param {function} [props.onLocationClick] - Function that is run when a MapsIndoors Location is clicked. the Location will be sent along as first argument.
  * @param {function} props.onVenueChangedOnMap - Function that is run when the map bounds was changed due to fitting to a venue.
  * @param {function} props.onPositionControl -  A function that is called when the MapsIndoors PositionControl is constructed. Will send the PositionControl instance as payload.
- * @param {string} props.tileStyle - Tile style name to change the interface of the map.
  * @param {number} props.startZoomLevel - The initial zoom level of the map.
  * @param {string} props.locationId - Location Id property used to handle the centering and zooming of the map.
  * @returns
  */
-function Map({ onLocationClick, onVenueChangedOnMap, onPositionControl, tileStyle, startZoomLevel, locationId }) {
+function Map({ onLocationClick, onVenueChangedOnMap, onPositionControl, startZoomLevel, locationId }) {
     const apiKey = useRecoilValue(apiKeyState);
     const gmApiKey = useRecoilValue(gmApiKeyState);
     const mapboxAccessToken = useRecoilValue(mapboxAccessTokenState);
@@ -50,6 +50,7 @@ function Map({ onLocationClick, onVenueChangedOnMap, onPositionControl, tileStyl
     const venueName = useRecoilValue(currentVenueNameState);
     const filteredLocations = useRecoilValue(filteredLocationsState);
     const filteredLocationsByExternalIDs = useRecoilValue(filteredLocationsByExternalIDState);
+    const tileStyle = useRecoilValue(tileStyleState);
 
     useLiveData(apiKey);
 
