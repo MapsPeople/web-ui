@@ -4,6 +4,9 @@ import { MapsIndoorsContext } from '../../MapsIndoorsContext';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
 import { ReactComponent as WalkingIcon } from '../../assets/walking.svg';
+import { ReactComponent as WalkIcon } from '../../assets/walk.svg';
+import { ReactComponent as DriveIcon } from '../../assets/drive.svg';
+import { ReactComponent as BikeIcon } from '../../assets/bike.svg';
 import RouteInstructions from "../RouteInstructions/RouteInstructions";
 import useMediaQuery from '../../hooks/useMediaQuery';
 
@@ -15,6 +18,7 @@ function Directions({ isOpen, onBack, directions, setTravelMode }) {
 
     const [totalDistance, setTotalDistance] = useState();
     const [totalTime, setTotalTime] = useState();
+    const [transportationModeClicked, setTransportationModeClicked] = useState();
 
     const mapsIndoorsInstance = useContext(MapsIndoorsContext);
 
@@ -146,6 +150,10 @@ function Directions({ isOpen, onBack, directions, setTravelMode }) {
         console.log(selectedValues);
     });
 
+    function onTransportationModeClicked() {
+        setTransportationModeClicked(!transportationModeClicked);
+    }
+
     return (
         <div className="directions">
             <div className="directions__details">
@@ -181,13 +189,28 @@ function Directions({ isOpen, onBack, directions, setTravelMode }) {
                     </div>
                 </div>
                 <hr></hr>
-                <span>
-                    <mi-dropdown items-order="asc">
-                        <mi-dropdown-item selected value="WALKING" text="WALKING"></mi-dropdown-item>
-                        <mi-dropdown-item value="DRIVING" text="DRIVING"></mi-dropdown-item>
-                        <mi-dropdown-item value="BICYCLING" text="BICYCLING"></mi-dropdown-item>
-                    </mi-dropdown>
-                </span>
+                <div className={`transportation ${transportationModeClicked ? 'yes' : 'no'}`}
+                    onClick={() => onTransportationModeClicked()}
+                    style={{ maxWidth: transportationModeClicked ? '290px' : '108px' }}>
+                    <span className="transportation__mode" onClick={() => setNewTravelMode('WALKING')}>
+                        <div onClick={() => setNewTravelMode('WALKING')}>
+                            <WalkIcon />
+                            Walk
+                        </div>
+                    </span>
+                    <span className="transportation__mode" onClick={() => setNewTravelMode('DRIVING')}>
+                        <div onClick={() => setNewTravelMode('DRIVING')}>
+                            <DriveIcon />
+                            Drive
+                        </div>
+                    </span>
+                    <span className="transportation__mode" onClick={() => setNewTravelMode('BICYCLING')}>
+                        <div onClick={() => setNewTravelMode('BICYCLING')}>
+                            <BikeIcon />
+                            Bike
+                        </div>
+                    </span>
+                </div>
                 <hr></hr>
                 <div className="directions__steps">
                     <RouteInstructions

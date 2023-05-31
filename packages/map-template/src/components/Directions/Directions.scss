@@ -89,4 +89,30 @@
         top: unset;
         bottom: unset;
     }
+
+    .transportation {
+        background-color: white;
+        color: black;
+        box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.3);
+        text-decoration: none;
+        border-radius: 60px;
+        display: inline-flex;
+        align-items: center;
+        overflow: hidden;
+        width: auto;
+        -webkit-transition: max-width 0.5s;
+        transition: max-width 0.5s;
+        padding: 10px 24px;
+        display: grid;
+        grid-auto-flow: column;
+        gap: 24px;
+
+        &__mode {
+            display: grid;
+            grid-auto-flow: column;
+            gap: 10px;
+            align-items: center;
+            width: fit-content;
+        }
+    }
 }
