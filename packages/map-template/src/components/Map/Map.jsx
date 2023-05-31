@@ -14,6 +14,7 @@ import apiKeyState from '../../atoms/apiKeyState';
 import gmApiKeyState from '../../atoms/gmApiKeyState';
 import mapboxAccessTokenState from '../../atoms/mapboxAccessTokenState';
 import filteredLocationsState from '../../atoms/filteredLocationsState';
+import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
 
 const mapsindoors = window.mapsindoors;
 
@@ -32,13 +33,12 @@ let _tileStyle;
  * @param {function} [props.onLocationClick] - Function that is run when a MapsIndoors Location is clicked. the Location will be sent along as first argument.
  * @param {function} props.onVenueChangedOnMap - Function that is run when the map bounds was changed due to fitting to a venue.
  * @param {function} props.onPositionControl -  A function that is called when the MapsIndoors PositionControl is constructed. Will send the PositionControl instance as payload.
- * @param {array} props.filteredLocationsByExternalIDs - Array of IDs of the filtered locations based on external ID.
  * @param {string} props.tileStyle - Tile style name to change the interface of the map.
  * @param {number} props.startZoomLevel - The initial zoom level of the map.
  * @param {string} props.locationId - Location Id property used to handle the centering and zooming of the map.
  * @returns
  */
-function Map({ onLocationClick, onVenueChangedOnMap, onPositionControl, filteredLocationsByExternalIDs, tileStyle, startZoomLevel, locationId }) {
+function Map({ onLocationClick, onVenueChangedOnMap, onPositionControl, tileStyle, startZoomLevel, locationId }) {
     const apiKey = useRecoilValue(apiKeyState);
     const gmApiKey = useRecoilValue(gmApiKeyState);
     const mapboxAccessToken = useRecoilValue(mapboxAccessTokenState);
@@ -49,6 +49,7 @@ function Map({ onLocationClick, onVenueChangedOnMap, onPositionControl, filtered
     const venues = useRecoilValue(venuesState);
     const venueName = useRecoilValue(currentVenueNameState);
     const filteredLocations = useRecoilValue(filteredLocationsState);
+    const filteredLocationsByExternalIDs = useRecoilValue(filteredLocationsByExternalIDState);
 
     useLiveData(apiKey);
 
@@ -89,7 +90,7 @@ function Map({ onLocationClick, onVenueChangedOnMap, onPositionControl, filtered
             if (filteredLocations) {
                 mapsIndoorsInstance.filter(filteredLocations.map(location => location.id));
             } else if (filteredLocationsByExternalIDs) {
-                mapsIndoorsInstance.filter(filteredLocationsByExternalIDs);
+                mapsIndoorsInstance.filter(filteredLocationsByExternalIDs.map(location => location.id));
             }
         }
     }, [filteredLocations, filteredLocationsByExternalIDs, mapsIndoorsInstance]);

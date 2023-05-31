@@ -1,8 +1,9 @@
 import { useEffect, useRef } from 'react';
 import { useState } from 'react';
 import { ContainerContext } from './ContainerContext';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import currentLocationState from '../../atoms/currentLocationState';
+import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
 import Sheet from './Sheet/Sheet';
 import './BottomSheet.scss';
 import LocationDetails from '../LocationDetails/LocationDetails';
@@ -19,10 +20,8 @@ import LocationsList from '../LocationsList/LocationsList';
  * @param {function} props.pushAppView - Function to push to app view to browser history.
  * @param {string} props.currentAppView - Holds the current view/state of the Map Template.
  * @param {array} props.appViews - Array of all possible views.
- * @param {array} props.filteredLocationsByExternalIDs - Array of locations filtered based on the external ID.
- * @param {function} props.onLocationsFilteredByExternalIDs - The list of locations after filtering based on external ID.
  */
-function BottomSheet({ setCurrentLocation, directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews, filteredLocationsByExternalIDs, onLocationsFilteredByExternalIDs }) {
+function BottomSheet({ setCurrentLocation, directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews }) {
 
     const bottomSheetRef = useRef();
 
@@ -35,6 +34,7 @@ function BottomSheet({ setCurrentLocation, directionsFromLocation, directionsToL
     const [locationsListSheetSize, setLocationsListSheetSize] = useState();
 
     const currentLocation = useRecoilValue(currentLocationState);
+    const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
 
     /*
      * React on changes on the current location and directions locations and set relevant bottom sheet.
@@ -72,7 +72,7 @@ function BottomSheet({ setCurrentLocation, directionsFromLocation, directionsToL
     function closeLocationsList() {
         pushAppView(appViews.SEARCH);
         setCurrentLocation();
-        onLocationsFilteredByExternalIDs([]);
+        setFilteredLocationsByExternalID([]);
     }
 
     const bottomSheets = [
@@ -96,7 +96,7 @@ function BottomSheet({ setCurrentLocation, directionsFromLocation, directionsToL
                 onBack={() => closeLocationsList()}
                 locations={filteredLocationsByExternalIDs}
                 onLocationClick={(location) => setCurrentLocation(location)}
-                onLocationsFiltered={(locations) => onLocationsFilteredByExternalIDs(locations)}
+                onLocationsFiltered={(locations) => setFilteredLocationsByExternalID(locations)}
             />
         </Sheet>,
         <Sheet

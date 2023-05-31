@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import currentLocationState from '../../atoms/currentLocationState';
+import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
 import Modal from './Modal/Modal';
 import LocationDetails from "../LocationDetails/LocationDetails";
 import Wayfinding from '../Wayfinding/Wayfinding';
@@ -20,9 +21,10 @@ import LocationsList from '../LocationsList/LocationsList';
  * @param {function} props.onLocationsFilteredByExternalIDs - The list of locations after filtering based on external ID.
  *
  */
-function Sidebar({ setCurrentLocation, directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews, filteredLocationsByExternalIDs, onLocationsFilteredByExternalIDs }) {
+function Sidebar({ setCurrentLocation, directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews }) {
     const [directions, setDirections] = useState();
     const currentLocation = useRecoilValue(currentLocationState);
+    const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
 
     /*
      * React on changes on the current location and directions locations and set relevant bottom sheet.
@@ -60,7 +62,7 @@ function Sidebar({ setCurrentLocation, directionsFromLocation, directionsToLocat
     function closeLocationsList() {
         pushAppView(appViews.SEARCH);
         setCurrentLocation();
-        onLocationsFilteredByExternalIDs([]);
+        setFilteredLocationsByExternalID([]);
     }
 
     const pages = [
@@ -74,7 +76,7 @@ function Sidebar({ setCurrentLocation, directionsFromLocation, directionsToLocat
                 onBack={() => closeLocationsList()}
                 locations={filteredLocationsByExternalIDs}
                 onLocationClick={(location) => setCurrentLocation(location)}
-                onLocationsFiltered={(locations) => onLocationsFilteredByExternalIDs(locations)}
+                onLocationsFiltered={(locations) => setFilteredLocationsByExternalID(locations)}
             />
         </Modal>,
         <Modal isOpen={currentAppView === appViews.LOCATION_DETAILS} key="C">

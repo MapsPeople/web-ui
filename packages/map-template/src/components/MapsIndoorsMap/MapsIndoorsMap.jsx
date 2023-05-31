@@ -20,6 +20,7 @@ import Sidebar from '../Sidebar/Sidebar';
 import useLocationForWayfinding from '../../hooks/useLocationForWayfinding';
 import mapboxAccessTokenState from '../../atoms/mapboxAccessTokenState';
 import filteredLocationsState from '../../atoms/filteredLocationsState';
+import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
 
 defineCustomElements();
 const mapsindoors = window.mapsindoors;
@@ -66,7 +67,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const directionsToLocation = useLocationForWayfinding(directionsTo, positionControl);
 
     // The filtered locations by external id, if present.
-    const [filteredLocationsByExternalID, setFilteredLocationsByExternalID] = useState();
+    const [filteredLocationsByExternalID, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
 
     // The filtered locations that the user sets when selecting a category/location.
     const [filteredLocations, setFilteredLocations] = useRecoilState(filteredLocationsState);
@@ -303,7 +304,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             onVenueChangedOnMap={(venue) => venueChangedOnMap(venue)}
             onLocationClick={(location) => locationClicked(location)}
             onPositionControl={positionControl => setPositionControl(positionControl)}
-            filteredLocationsByExternalIDs={filteredLocationsByExternalID?.map(location => location.id)}
             tileStyle={tileStyle}
             startZoomLevel={selectedZoomLevel}
             locationId={locationId}
