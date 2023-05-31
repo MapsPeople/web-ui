@@ -181,17 +181,13 @@ function Directions({ isOpen, onBack, directions, setTravelMode }) {
                     </div>
                 </div>
                 <hr></hr>
-                <mi-dropdown>
-                    <mi-dropdown-item selected value="WALKING" text="WALKING"></mi-dropdown-item>
-                    <mi-dropdown-item value="DRIVING" text="DRIVING"></mi-dropdown-item>
-                    <mi-dropdown-item value="BICYCLING" text="BICYCLING"></mi-dropdown-item>
-                </mi-dropdown>
-                <div>
-                    <button onClick={() => setNewTravelMode('WALKING')}>Walk</button>
-                    <button onClick={() => setNewTravelMode('DRIVING')}>Drive</button>
-                    <button onClick={() => setNewTravelMode('BICYCLING')}>Bike</button>
-                    {/* <button onClick={() => setNewTravelMode('TRANSIT')}>Transit</button> */}
-                </div>
+                <span>
+                    <mi-dropdown items-order="asc">
+                        <mi-dropdown-item selected value="WALKING" text="WALKING"></mi-dropdown-item>
+                        <mi-dropdown-item value="DRIVING" text="DRIVING"></mi-dropdown-item>
+                        <mi-dropdown-item value="BICYCLING" text="BICYCLING"></mi-dropdown-item>
+                    </mi-dropdown>
+                </span>
                 <hr></hr>
                 <div className="directions__steps">
                     <RouteInstructions

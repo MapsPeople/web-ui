@@ -81,4 +81,12 @@
         height: 1px;
     }
 
+    mi-dropdown::part(dropdown-container) {
+        max-height: 320px;
+        overflow-y: auto;
+        left: unset;
+        right: unset;
+        top: unset;
+        bottom: unset;
+    }
 }
