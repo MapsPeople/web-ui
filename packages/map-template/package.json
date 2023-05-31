@@ -41,7 +41,7 @@
     "build-for-npm": "node releaseTools/buildForNpm.mjs",
     "serve": "vite preview",
     "test": "",
-    "release": "standard-version"
+    "release": "sh ./release.sh"
   },
   "browserslist": {
     "production": [
