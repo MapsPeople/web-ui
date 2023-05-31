@@ -1,7 +1,7 @@
 {
   "name": "@mapsindoors/map-template",
   "description": "Get a MapsIndoors map up and running in less than 10 mins.",
-  "version": "1.0.0-rc.2",
+  "version": "1.0.0",
   "private": false,
   "files": [
     "dist/*.js",
@@ -41,7 +41,7 @@
     "build-for-npm": "node releaseTools/buildForNpm.mjs",
     "serve": "vite preview",
     "test": "",
-    "release": "standard-version"
+    "release": "sh ./release.sh"
   },
   "browserslist": {
     "production": [
