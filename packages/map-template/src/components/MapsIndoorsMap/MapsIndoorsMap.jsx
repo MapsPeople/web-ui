@@ -290,8 +290,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                         pushAppView={pushAppView}
                         currentAppView={currentAppView}
                         appViews={appStates}
-                        filteredLocationsByExternalIDs={filteredLocationsByExternalID}
-                        onLocationsFilteredByExternalIDs={(locations) => setFilteredLocationsByExternalID(locations)}
                     />
                 }
                 {isMobile &&
@@ -302,8 +300,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                         pushAppView={pushAppView}
                         currentAppView={currentAppView}
                         appViews={appStates}
-                        filteredLocationsByExternalIDs={filteredLocationsByExternalID}
-                        onLocationsFilteredByExternalIDs={(locations) => setFilteredLocationsByExternalID(locations)}
                     />
                 }
             </>

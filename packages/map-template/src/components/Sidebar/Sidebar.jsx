@@ -18,7 +18,6 @@ import LocationsList from '../LocationsList/LocationsList';
  * @param {string} props.currentAppView - Holds the current view/state of the Map Template.
  * @param {array} props.appViews - Array of all possible views.
  * @param {array} props.filteredLocationsByExternalIDs - Array of locations filtered based on the external ID.
- * @param {function} props.onLocationsFilteredByExternalIDs - The list of locations after filtering based on external ID.
  *
  */
 function Sidebar({ setCurrentLocation, directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews }) {
