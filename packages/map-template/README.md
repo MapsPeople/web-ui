@@ -52,7 +52,7 @@ Add attributes to the web component as needed (see supported properties below).
     <script src="https://app.mapsindoors.com/mapsindoors/js/sdk/4.21.5/mapsindoors-4.21.5.js.gz"></script>
     <script type="module">
         import MapsindoorsMap from 'https://www.unpkg.com/@mapsindoors/map-template/dist/mapsindoors-webcomponent.es.js';
-        window.customElements.define('mapsindoors-map', MapsIndoorsMap)
+        window.customElements.define('mapsindoors-map', MapsindoorsMap)
     </script>
     <style>
         body {
