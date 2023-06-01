@@ -81,16 +81,7 @@
         height: 1px;
     }
 
-    mi-dropdown::part(dropdown-container) {
-        max-height: 320px;
-        overflow-y: auto;
-        left: unset;
-        right: unset;
-        top: unset;
-        bottom: unset;
-    }
-
-    .transportation {
+    .travel {
         background-color: white;
         color: black;
         box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.3);
@@ -103,9 +94,9 @@
         -webkit-transition: max-width 0.5s;
         transition: max-width 0.5s;
         padding: 10px 24px;
-        display: grid;
-        grid-auto-flow: column;
         gap: 24px;
+        display: flex;
+        flex-direction: row;
 
         &__mode {
             display: grid;
@@ -113,6 +104,11 @@
             gap: 10px;
             align-items: center;
             width: fit-content;
+
+            &.active {
+                order: -1;
+            }
         }
+
     }
 }
