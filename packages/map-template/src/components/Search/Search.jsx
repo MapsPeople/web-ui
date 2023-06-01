@@ -8,8 +8,6 @@ import SearchField from '../WebComponentWrappers/Search/Search';
 /** Initialize the MapsIndoors instance. */
 const mapsindoors = window.mapsindoors;
 
-let _hasCategories;
-
 /**
  * Show the search results.
  *
@@ -148,18 +146,21 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, c
         }
     }, [currentVenueName]);
 
+    /*
+     * React on changes in categories prop.
+     */
     useEffect(() => {
         if (categories.length > 0) {
             setHasCategories(true);
-            _hasCategories = true;
         } else {
             setHasCategories(false);
-            _hasCategories = false;
         }
     }, [categories]);
 
     return (
-        <div className={`search ${_hasCategories === true ? "search--with-categories" : "search--no-categories"}`} ref={searchRef}>
+        <div className="search"
+            ref={searchRef}
+            style={{ minHeight: hasCategories ? '136px' : '80px' }}>
             <SearchField
                 ref={searchFieldRef}
                 mapsindoors={true}
@@ -183,16 +184,18 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, c
                             </mi-chip>
                         )}
                     </div>}
-                <div className="search__results">
-                    {showNotFoundMessage && <p>Nothing was found</p>}
-                    {searchResults.map(location =>
-                        <ListItemLocation
-                            key={location.id}
-                            location={location}
-                            locationClicked={e => onLocationClick(e)}
-                        />
-                    )}
-                </div>
+                {searchResults.length > 0 &&
+                    <div className="search__results">
+                        {showNotFoundMessage && <p>Nothing was found</p>}
+                        {searchResults.map(location =>
+                            <ListItemLocation
+                                key={location.id}
+                                location={location}
+                                locationClicked={e => onLocationClick(e)}
+                            />
+                        )}
+                    </div>
+                }
             </div>
         </div >
     )

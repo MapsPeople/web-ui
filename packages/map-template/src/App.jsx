@@ -31,7 +31,7 @@ function App() {
         <div className="app">
             {/* This is the Map Template component */}
             <MapsIndoorsMap
-                apiKey={apiKey ? apiKey : '3ddemo'}
+                apiKey={apiKey ? apiKey : 'c6260c238cee496b8a0453e9'}
                 venue={venue}
                 locationId={locationId}
                 primaryColor={hexPrimaryColor}

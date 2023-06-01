@@ -79,7 +79,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
 
     const bottomSheets = [
         <Sheet
-            minHeight={currentCategories.length > 0 ? "144" : "100"}
+            minHeight={currentCategories.length > 0 ? "136" : "80"}
             preferredSizeSnapPoint={searchSheetSize}
             isOpen={currentAppView === appViews.SEARCH}
             key="A">
