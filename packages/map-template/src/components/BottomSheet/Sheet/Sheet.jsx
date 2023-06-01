@@ -91,8 +91,9 @@ function Sheet({ children, isOpen, minHeight, preferredSizeSnapPoint, onSwipedTo
      * the sheet to be set to a certain snap point.
      */
     useEffect(() => {
+        // Do not set the height of the sheet if the preferredSizeSnapPoint is undefined.
         if (preferredSizeSnapPoint === undefined) {
-            return
+            return;
         }
 
         sheetRef.current.style.height = `${sheetRef.current.clientHeight}px`;
