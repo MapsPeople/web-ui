@@ -23,6 +23,7 @@ import mapboxAccessTokenState from '../../atoms/mapboxAccessTokenState';
 import filteredLocationsState from '../../atoms/filteredLocationsState';
 import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
 import startZoomLevelState from '../../atoms/startZoomLevelState';
+import positionControlState from '../../atoms/positionControlState';
 
 defineCustomElements();
 const mapsindoors = window.mapsindoors;
