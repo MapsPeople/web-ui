@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
 import './MapsIndoorsMap.scss';
 import MIMap from "../Map/Map";
@@ -23,6 +23,7 @@ import mapboxAccessTokenState from '../../atoms/mapboxAccessTokenState';
 import filteredLocationsState from '../../atoms/filteredLocationsState';
 import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
 import startZoomLevelState from '../../atoms/startZoomLevelState';
+import positionControlState from '../../atoms/positionControlState';
 
 defineCustomElements();
 const mapsindoors = window.mapsindoors;
@@ -61,11 +62,10 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const [, setCategories] = useRecoilState(categoriesState);
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
-    const [positionControl, setPositionControl] = useState();
     const [appConfigResult, setAppConfigResult] = useState();
 
-    const directionsFromLocation = useLocationForWayfinding(directionsFrom, positionControl);
-    const directionsToLocation = useLocationForWayfinding(directionsTo, positionControl);
+    const directionsFromLocation = useLocationForWayfinding(directionsFrom);
+    const directionsToLocation = useLocationForWayfinding(directionsTo);
 
     // The filtered locations by external id, if present.
     const [filteredLocationsByExternalID, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
@@ -305,7 +305,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
         <MIMap
             onVenueChangedOnMap={(venue) => venueChangedOnMap(venue)}
             onLocationClick={(location) => locationClicked(location)}
-            onPositionControl={positionControl => setPositionControl(positionControl)}
             locationId={locationId}
         />
     </div>
