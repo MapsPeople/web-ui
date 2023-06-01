@@ -64,10 +64,10 @@ function Sheet({ children, isOpen, minHeight, preferredSizeSnapPoint, onSwipedTo
         requestAnimationFrame(() => {
             switch (targetSize) {
                 case snapPoints.MAX:
-                    setStyle({ height: `${container.current.clientHeight}px`});
+                    setStyle({ height: `${container.current.clientHeight}px` });
                     break;
                 case snapPoints.FIT:
-                    setStyle({ height: `${contentHeight}px`});
+                    setStyle({ height: `${contentHeight}px` });
                     break;
                 case snapPoints.MIN:
                     setStyle({ height: `${minHeight}px` });
@@ -91,6 +91,10 @@ function Sheet({ children, isOpen, minHeight, preferredSizeSnapPoint, onSwipedTo
      * the sheet to be set to a certain snap point.
      */
     useEffect(() => {
+        if (preferredSizeSnapPoint === undefined) {
+            return
+        }
+
         sheetRef.current.style.height = `${sheetRef.current.clientHeight}px`;
 
         requestAnimationFrame(() => {
@@ -164,7 +168,7 @@ function Sheet({ children, isOpen, minHeight, preferredSizeSnapPoint, onSwipedTo
         sheetRef.current = el;
     };
 
-    return <div {...swipeHandler} ref={refPassthrough} style={style} className={`sheet ${isOpen ? 'sheet--active' : ''} ${isDragging ? 'sheet--dragging': ''}`}>
+    return <div {...swipeHandler} ref={refPassthrough} style={style} className={`sheet ${isOpen ? 'sheet--active' : ''} ${isDragging ? 'sheet--dragging' : ''}`}>
         <div ref={contentRef} className="sheet__content" style={style}>
             {children}
         </div>

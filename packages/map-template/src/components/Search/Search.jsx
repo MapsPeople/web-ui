@@ -8,6 +8,8 @@ import SearchField from '../WebComponentWrappers/Search/Search';
 /** Initialize the MapsIndoors instance. */
 const mapsindoors = window.mapsindoors;
 
+let _hasCategories;
+
 /**
  * Show the search results.
  *
@@ -28,6 +30,8 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, c
 
     const [searchDisabled, setSearchDisabled] = useState(true);
     const [searchResults, setSearchResults] = useState([]);
+
+    const [hasCategories, setHasCategories] = useState(false);
 
     /** Indicate if search results have been found */
     const [showNotFoundMessage, setShowNotFoundMessage] = useState(false);
@@ -144,8 +148,18 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, c
         }
     }, [currentVenueName]);
 
+    useEffect(() => {
+        if (categories.length > 0) {
+            setHasCategories(true);
+            _hasCategories = true;
+        } else {
+            setHasCategories(false);
+            _hasCategories = false;
+        }
+    }, [categories]);
+
     return (
-        <div className="search" ref={searchRef}>
+        <div className={`search ${_hasCategories === true ? "search--with-categories" : "search--no-categories"}`} ref={searchRef}>
             <SearchField
                 ref={searchFieldRef}
                 mapsindoors={true}
@@ -157,18 +171,18 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, c
                 disabled={searchDisabled} // Disabled initially to prevent content jumping when clicking and changing sheet size.
             />
             <div className="search__scrollable prevent-scroll" {...scrollableContentSwipePrevent}>
-                <div ref={categoriesListRef} className="search__categories">
-                    {categories?.map(([category, categoryInfo]) =>
-                        <mi-chip
-                            icon={categoryInfo.iconUrl}
-                            content={categoryInfo.displayName}
-                            active={selectedCategory === category}
-                            onClick={() => categoryClicked(category)}
-                            key={category}>
-                        </mi-chip>
-                    )
-                    }
-                </div>
+                {categories.length > 0 &&
+                    <div ref={categoriesListRef} className="search__categories">
+                        {categories?.map(([category, categoryInfo]) =>
+                            <mi-chip
+                                icon={categoryInfo.iconUrl}
+                                content={categoryInfo.displayName}
+                                active={selectedCategory === category}
+                                onClick={() => categoryClicked(category)}
+                                key={category}>
+                            </mi-chip>
+                        )}
+                    </div>}
                 <div className="search__results">
                     {showNotFoundMessage && <p>Nothing was found</p>}
                     {searchResults.map(location =>
@@ -180,7 +194,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, c
                     )}
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
 

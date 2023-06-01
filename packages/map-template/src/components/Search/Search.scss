@@ -6,7 +6,14 @@
     gap: var(--spacing-x-small);
     grid-auto-rows: min-content;
     overflow: auto;
-    min-height: 144px;
+
+    &--with-categories {
+        min-height: 144px;
+    }
+
+    &--no-categories {
+        min-height: 99px;
+    }
 
     &__scrollable {
         overflow: auto;
