@@ -9,6 +9,7 @@ import { ReactComponent as DriveIcon } from '../../assets/drive.svg';
 import { ReactComponent as BikeIcon } from '../../assets/bike.svg';
 import RouteInstructions from "../RouteInstructions/RouteInstructions";
 import useMediaQuery from '../../hooks/useMediaQuery';
+import { travelModes } from "../../constants/travelModes";
 
 const mapsindoors = window.mapsindoors;
 
@@ -18,6 +19,8 @@ function Directions({ isOpen, onBack, directions, setTravelMode }) {
 
     const [totalDistance, setTotalDistance] = useState();
     const [totalTime, setTotalTime] = useState();
+
+    const [travelModeClicked, setTravelModeClicked] = useState();
     const [selectedTravelMode, setSelectedTravelMode] = useState();
 
     const mapsIndoorsInstance = useContext(MapsIndoorsContext);
@@ -136,14 +139,14 @@ function Directions({ isOpen, onBack, directions, setTravelMode }) {
      * Set new travel mode.
      */
     function setNewTravelMode(travelMode) {
-        stopRendering();
+        directionsRenderer.setRoute(null);
         setTravelMode(travelMode);
         setSelectedTravelMode(travelMode);
     }
 
-    // function onTravelModeClicked() {
-    //     setTravelModeClicked(!travelModeClicked);
-    // }
+    function onTravelModeClicked() {
+        setTravelModeClicked(!travelModeClicked);
+    }
 
     return (
         <div className="directions">
@@ -181,24 +184,20 @@ function Directions({ isOpen, onBack, directions, setTravelMode }) {
                 </div>
                 <hr></hr>
                 <div className="travel"
-                    // onClick={() => onTravelModeClicked()}
-                    style={{ maxWidth: '300' }}>
-                    {/* style={{ maxWidth: travelModeClicked ? '290px' : '108px' }}> */}
-                    <span className={`travel__mode ${selectedTravelMode === 'WALKING' ? 'active' : ''}`}
-                        onClick={() => setNewTravelMode('WALKING')}
-                        id='WALKING'>
+                    onClick={() => onTravelModeClicked()}
+                    style={{ maxWidth: travelModeClicked ? '290px' : '108px' }}>
+                    <span className={`travel__mode ${selectedTravelMode === travelModes.WALKING ? 'active' : ''}`}
+                        onClick={() => setNewTravelMode(travelModes.WALKING)}>
                         <WalkIcon />
                         Walk
                     </span>
-                    <span className={`travel__mode ${selectedTravelMode === 'DRIVING' ? 'active' : ''}`}
-                        onClick={() => setNewTravelMode('DRIVING')}
-                        id='DRIVING'>
+                    <span className={`travel__mode ${selectedTravelMode === travelModes.DRIVING ? 'active' : ''}`}
+                        onClick={() => setNewTravelMode(travelModes.DRIVING)}>
                         <DriveIcon />
                         Drive
                     </span>
-                    <span className={`travel__mode ${selectedTravelMode === 'BICYCLING' ? 'active' : ''}`}
-                        onClick={() => setNewTravelMode('BICYCLING')}
-                        id='BICYCLING'>
+                    <span className={`travel__mode ${selectedTravelMode === travelModes.BICYCLING ? 'active' : ''}`}
+                        onClick={() => setNewTravelMode(travelModes.BICYCLING)}>
                         <BikeIcon />
                         Bike
                     </span>

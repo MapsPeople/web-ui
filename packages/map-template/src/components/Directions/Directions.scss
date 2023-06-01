@@ -84,7 +84,6 @@
     .travel {
         background-color: white;
         color: black;
-        box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.3);
         text-decoration: none;
         border-radius: 60px;
         display: inline-flex;
@@ -97,6 +96,7 @@
         gap: 24px;
         display: flex;
         flex-direction: row;
+        border: 1px solid var(--color-gray-30);
 
         &__mode {
             display: grid;
