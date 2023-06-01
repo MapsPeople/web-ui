@@ -19,11 +19,11 @@ import { useAppHistory } from '../../hooks/useAppHistory';
 import useMediaQuery from '../../hooks/useMediaQuery';
 import Sidebar from '../Sidebar/Sidebar';
 import useLocationForWayfinding from '../../hooks/useLocationForWayfinding';
+import locationIdState from '../../atoms/locationIdState';
 import mapboxAccessTokenState from '../../atoms/mapboxAccessTokenState';
 import filteredLocationsState from '../../atoms/filteredLocationsState';
 import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
 import startZoomLevelState from '../../atoms/startZoomLevelState';
-import positionControlState from '../../atoms/positionControlState';
 
 defineCustomElements();
 const mapsindoors = window.mapsindoors;
@@ -61,6 +61,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const [, setCategories] = useRecoilState(categoriesState);
+    const [, setLocationId] = useRecoilState(locationIdState);
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
     const [appConfigResult, setAppConfigResult] = useState();
 
@@ -248,6 +249,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
      * Set as current location and change the venue according to the venue that the location belongs to.
      */
     useEffect(() => {
+        setLocationId(locationId);
         if (locationId) {
             mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
                 if (location) {
@@ -305,7 +307,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
         <MIMap
             onVenueChangedOnMap={(venue) => venueChangedOnMap(venue)}
             onLocationClick={(location) => locationClicked(location)}
-            locationId={locationId}
         />
     </div>
 }
