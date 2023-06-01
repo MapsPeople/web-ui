@@ -17,6 +17,7 @@ import filteredLocationsState from '../../atoms/filteredLocationsState';
 import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
 import tileStyleState from '../../atoms/tileStyleState';
 import startZoomLevelState from '../../atoms/startZoomLevelState';
+import positionControlState from '../../atoms/positionControlState';
 
 const mapsindoors = window.mapsindoors;
 
@@ -34,11 +35,10 @@ let _tileStyle;
  * @param {Object} props
  * @param {function} [props.onLocationClick] - Function that is run when a MapsIndoors Location is clicked. the Location will be sent along as first argument.
  * @param {function} props.onVenueChangedOnMap - Function that is run when the map bounds was changed due to fitting to a venue.
- * @param {function} props.onPositionControl -  A function that is called when the MapsIndoors PositionControl is constructed. Will send the PositionControl instance as payload.
  * @param {string} props.locationId - Location Id property used to handle the centering and zooming of the map.
  * @returns
  */
-function Map({ onLocationClick, onVenueChangedOnMap, onPositionControl, locationId }) {
+function Map({ onLocationClick, onVenueChangedOnMap, locationId }) {
     const apiKey = useRecoilValue(apiKeyState);
     const gmApiKey = useRecoilValue(gmApiKeyState);
     const mapboxAccessToken = useRecoilValue(mapboxAccessTokenState);
@@ -52,6 +52,7 @@ function Map({ onLocationClick, onVenueChangedOnMap, onPositionControl, location
     const filteredLocationsByExternalIDs = useRecoilValue(filteredLocationsByExternalIDState);
     const tileStyle = useRecoilValue(tileStyleState);
     const startZoomLevel = useRecoilValue(startZoomLevelState);
+    const [, setPositionControl] = useRecoilState(positionControlState);
 
     useLiveData(apiKey);
 
@@ -205,7 +206,7 @@ function Map({ onLocationClick, onVenueChangedOnMap, onPositionControl, location
                 setUserPosition(positionInfo.position);
             }
         });
-        onPositionControl(positionControl);
+        setPositionControl(positionControl);
     }
 
     /*
