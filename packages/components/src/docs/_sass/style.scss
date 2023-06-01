@@ -14,10 +14,6 @@
 @use "../../../../../node_modules/@mapsindoors/midt/build/scss/variables" as *;
 @use "../../../../../node_modules/@mapsindoors/css/buttons.css";
 
-// * {
-//   border: 1px solid gold;
-// }
-
 body {
     @include font.family(sans-serif);
     @include font.size(medium);
@@ -131,16 +127,6 @@ header {
     text-align: center;
     max-width: 20%;
     float: left;
-}
-
-.beta {
-    @include font.size(xx-small);
-    text-transform: uppercase;
-    @include color.white(base);
-    @include background-color.bronze(60);
-    @include border.radius(medium);
-    @include padding.horizontal(small);
-    @include padding.vertical(xx-small);
 }
 
 // Text styles

@@ -1,6 +1,6 @@
 {
     "name": "@mapsindoors/components",
-    "version": "13.0.0",
+    "version": "13.0.6",
     "description": "Web components for MapsIndoors",
     "main": "dist/index.js",
     "module": "dist/index.mjs",
@@ -23,8 +23,7 @@
         "docs.sass": "sass src/docs/_sass:docs --no-source-map",
         "docs.start": "eleventy --serve --port=3000 & npm run sass.watch",
         "generate": "stencil generate",
-        "postversion": "git push -u origin --tags && npm publish --access public",
-        "preversion": "npm run build",
+        "release": "sh ./release.sh",
         "sass.watch": "sass --watch src/docs/_sass:docs --no-source-map",
         "start": "stencil build --dev --watch --serve",
         "test.watch": "stencil test --spec --e2e --watchAll",

@@ -105,13 +105,3 @@ If you want to watch for changes to the `properties` folder, you can use `npm ru
 
 You can read more about how Style Dictionary handles the merging and compilation of the JSON-files in the [Style Dictionary repository](https://github.com/amzn/style-dictionary).
 </details>
-
-## Release a new version
-
-To release a new version:
-
-1. Make your changes
-2. Update the version number in `package.json`
-3. Commit the changes
-4. Run `npm login` to authenticate with npmjs.org
-5. Run `npm publish` and follow the guide to publish your changes to `npm` (try it out safely with `npm publish --dry-run`)
