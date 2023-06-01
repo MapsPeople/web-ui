@@ -284,7 +284,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             <>
                 {isDesktop &&
                     <Sidebar
-                        setCurrentLocation={setCurrentLocation}
                         directionsFromLocation={directionsFromLocation}
                         directionsToLocation={directionsToLocation}
                         pushAppView={pushAppView}
@@ -294,7 +293,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                 }
                 {isMobile &&
                     <BottomSheet
-                        setCurrentLocation={setCurrentLocation}
                         directionsFromLocation={directionsFromLocation}
                         directionsToLocation={directionsToLocation}
                         pushAppView={pushAppView}

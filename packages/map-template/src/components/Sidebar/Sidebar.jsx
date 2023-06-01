@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import currentLocationState from '../../atoms/currentLocationState';
 import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
 import Modal from './Modal/Modal';
@@ -11,7 +11,6 @@ import LocationsList from '../LocationsList/LocationsList';
 
 /**
  * @param {Object} props
- * @param {Object} props.setCurrentLocation - The setter for the currently selected MapsIndoors Location.
  * @param {string} props.directionsFromLocation - Origin Location to be used to instantly show directions.
  * @param {string} props.directionsToLocation - Destination Location to be used to instantly show directions.
  * @param {function} props.pushAppView - Function to push to app view to browser history.
@@ -20,9 +19,9 @@ import LocationsList from '../LocationsList/LocationsList';
  * @param {array} props.filteredLocationsByExternalIDs - Array of locations filtered based on the external ID.
  *
  */
-function Sidebar({ setCurrentLocation, directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews }) {
+function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews }) {
     const [directions, setDirections] = useState();
-    const currentLocation = useRecoilValue(currentLocationState);
+    const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
 
     /*

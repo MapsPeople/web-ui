@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useState } from 'react';
 import { ContainerContext } from './ContainerContext';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import currentLocationState from '../../atoms/currentLocationState';
 import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
 import Sheet from './Sheet/Sheet';
@@ -14,14 +14,13 @@ import LocationsList from '../LocationsList/LocationsList';
 
 /**
  * @param {Object} props
- * @param {Object} props.setCurrentLocation - The setter for the currently selected MapsIndoors Location.
  * @param {string} props.directionsFromLocation - Origin Location to be used to instantly show directions.
  * @param {string} props.directionsToLocation - Destination Location to be used to instantly show directions.
  * @param {function} props.pushAppView - Function to push to app view to browser history.
  * @param {string} props.currentAppView - Holds the current view/state of the Map Template.
  * @param {array} props.appViews - Array of all possible views.
  */
-function BottomSheet({ setCurrentLocation, directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews }) {
+function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews }) {
 
     const bottomSheetRef = useRef();
 
@@ -33,7 +32,7 @@ function BottomSheet({ setCurrentLocation, directionsFromLocation, directionsToL
     const [searchSheetSize, setSearchSheetSize] = useState();
     const [locationsListSheetSize, setLocationsListSheetSize] = useState();
 
-    const currentLocation = useRecoilValue(currentLocationState);
+    const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
 
     /*
