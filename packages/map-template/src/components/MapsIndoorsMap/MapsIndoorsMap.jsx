@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
 import './MapsIndoorsMap.scss';
 import MIMap from "../Map/Map";
@@ -58,7 +58,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [, setMapboxAccessToken] = useRecoilState(mapboxAccessTokenState);
     const [isMapReady, setMapReady] = useRecoilState(isMapReadyState);
     const [venues, setVenues] = useRecoilState(venuesState);
-    const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
+    const [, setCurrentVenueName] = useRecoilState(currentVenueNameState);
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const [, setCategories] = useRecoilState(categoriesState);
     const [, setLocationId] = useRecoilState(locationIdState);
@@ -69,7 +69,7 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const directionsToLocation = useLocationForWayfinding(directionsTo);
 
     // The filtered locations by external id, if present.
-    const [filteredLocationsByExternalID, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
+    const [, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
 
     // The filtered locations that the user sets when selecting a category/location.
     const [filteredLocations, setFilteredLocations] = useRecoilState(filteredLocationsState);

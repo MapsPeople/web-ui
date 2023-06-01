@@ -2,7 +2,7 @@ import { atom } from 'recoil';
 
 const tileStyleState = atom({
     key: 'tileStyle',
-    default: []
+    default: null
 });
 
 export default tileStyleState;
