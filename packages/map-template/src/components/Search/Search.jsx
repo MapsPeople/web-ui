@@ -197,7 +197,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, c
                     </div>
                 }
             </div>
-        </div >
+        </div>
     )
 }
 
