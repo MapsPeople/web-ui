@@ -150,11 +150,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, c
      * React on changes in categories prop.
      */
     useEffect(() => {
-        if (categories.length > 0) {
-            setHasCategories(true);
-        } else {
-            setHasCategories(false);
-        }
+        setHasCategories(categories.length > 0);
     }, [categories]);
 
     return (
