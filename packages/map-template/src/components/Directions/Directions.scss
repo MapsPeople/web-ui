@@ -21,7 +21,7 @@
         display: grid;
         gap: var(--spacing-medium);
         position: relative;
-        width: fit-content;
+        width: calc(100% - 36px);
     }
 
     &__container {
