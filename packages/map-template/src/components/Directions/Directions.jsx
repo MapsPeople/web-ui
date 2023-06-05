@@ -3,25 +3,18 @@ import './Directions.scss';
 import { MapsIndoorsContext } from '../../MapsIndoorsContext';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
-import { ReactComponent as WalkingIcon } from '../../assets/walking.svg';
-import { ReactComponent as WalkIcon } from '../../assets/walk.svg';
-import { ReactComponent as DriveIcon } from '../../assets/drive.svg';
-import { ReactComponent as BikeIcon } from '../../assets/bike.svg';
+import { ReactComponent as WalkingIcon } from '../../assets/walk.svg';
 import RouteInstructions from "../RouteInstructions/RouteInstructions";
 import useMediaQuery from '../../hooks/useMediaQuery';
-import { travelModes } from "../../constants/travelModes";
 
 const mapsindoors = window.mapsindoors;
 
 let directionsRenderer;
 
-function Directions({ isOpen, onBack, directions, setTravelMode }) {
+function Directions({ isOpen, onBack, directions }) {
 
     const [totalDistance, setTotalDistance] = useState();
     const [totalTime, setTotalTime] = useState();
-
-    const [travelModeClicked, setTravelModeClicked] = useState();
-    const [selectedTravelMode, setSelectedTravelMode] = useState();
 
     const mapsIndoorsInstance = useContext(MapsIndoorsContext);
 
@@ -135,19 +128,6 @@ function Directions({ isOpen, onBack, directions, setTravelMode }) {
         onBack();
     }
 
-    /**
-     * Set new travel mode.
-     */
-    function setNewTravelMode(travelMode) {
-        directionsRenderer.setRoute(null);
-        setTravelMode(travelMode);
-        setSelectedTravelMode(travelMode);
-    }
-
-    function onTravelModeClicked() {
-        setTravelModeClicked(!travelModeClicked);
-    }
-
     return (
         <div className="directions">
             <div className="directions__details">
@@ -181,26 +161,6 @@ function Directions({ isOpen, onBack, directions, setTravelMode }) {
                         <div>Estimated time:</div>
                         <div className="directions__minutes">{totalTime && <mi-time seconds={totalTime} />}</div>
                     </div>
-                </div>
-                <hr></hr>
-                <div className="travel"
-                    onClick={() => onTravelModeClicked()}
-                    style={{ maxWidth: travelModeClicked ? '290px' : '108px' }}>
-                    <span className={`travel__mode ${selectedTravelMode === travelModes.WALKING ? 'active' : ''}`}
-                        onClick={() => setNewTravelMode(travelModes.WALKING)}>
-                        <WalkIcon />
-                        Walk
-                    </span>
-                    <span className={`travel__mode ${selectedTravelMode === travelModes.DRIVING ? 'active' : ''}`}
-                        onClick={() => setNewTravelMode(travelModes.DRIVING)}>
-                        <DriveIcon />
-                        Drive
-                    </span>
-                    <span className={`travel__mode ${selectedTravelMode === travelModes.BICYCLING ? 'active' : ''}`}
-                        onClick={() => setNewTravelMode(travelModes.BICYCLING)}>
-                        <BikeIcon />
-                        Bike
-                    </span>
                 </div>
                 <hr></hr>
                 <div className="directions__steps">

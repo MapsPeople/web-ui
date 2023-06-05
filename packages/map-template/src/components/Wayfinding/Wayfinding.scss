@@ -160,4 +160,33 @@
         justify-self: center;
         width: 110px;
     }
+
+    &__travel-details {
+        display: grid;
+        grid-auto-flow: column;
+        justify-content: space-between;
+        width: 100%;
+        align-items: center;
+    }
+
+    mi-dropdown::part(dropdown-container) {
+        overflow-y: auto;
+        left: unset;
+        right: var(--spacing-medium);
+        top: unset;
+        bottom: unset;
+        min-width: 160px;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    mi-dropdown::part(button) {
+       border-radius: var(--spacing-x-small);
+       padding: 0 var(--spacing-small);
+       height: 36px;
+    }
+
+    mi-dropdown::part(button-label) {
+        padding: var(--spacing-x-small);
+     }
 }

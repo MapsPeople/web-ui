@@ -3,7 +3,7 @@ import './Wayfinding.scss';
 import { useRef, useEffect } from 'react';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
-import { ReactComponent as WalkingIcon } from '../../assets/walking.svg';
+import { ReactComponent as WalkingIcon } from '../../assets/walk.svg';
 import { ReactComponent as SwitchIcon } from '../../assets/switch.svg';
 import { DirectionsServiceContext } from '../../DirectionsServiceContext';
 import { UserPositionContext } from '../../UserPositionContext';
@@ -15,6 +15,10 @@ import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import addGooglePlaceGeometry from "../Map/GoogleMapsMap/GooglePlacesHandler";
 import GooglePlaces from '../../assets/google-places.png';
 import { mapTypes } from "../../constants/mapTypes";
+import { ReactComponent as WalkIcon } from '../../assets/walk.svg';
+import { ReactComponent as DriveIcon } from '../../assets/drive.svg';
+import { ReactComponent as BikeIcon } from '../../assets/bike.svg';
+import { travelModes } from "../../constants/travelModes";
 
 const searchFieldIdentifiers = {
     TO: 'TO',
@@ -35,7 +39,7 @@ const googlePlacesIcon = "data:image/svg+xml,%3Csvg width='10' height='10' viewB
  * @param {string} props.selectedMapType - The currently selected map type.
  * @returns
  */
-function Wayfinding({ onStartDirections, onBack, to, from, onSetSize, isActive, onDirections, selectedMapType, travelMode }) {
+function Wayfinding({ onStartDirections, onBack, to, from, onSetSize, isActive, onDirections, selectedMapType }) {
 
     const wayfindingRef = useRef();
 
@@ -76,6 +80,8 @@ function Wayfinding({ onStartDirections, onBack, to, from, onSetSize, isActive, 
     const scrollableContentSwipePrevent = usePreventSwipe();
 
     const [hasGooglePlaces, setHasGooglePlaces] = useState(false);
+
+    const [travelMode, setTravelMode] = useState();
 
     /**
      * Decorates location with data that is required for wayfinding to work.
@@ -347,6 +353,12 @@ function Wayfinding({ onStartDirections, onBack, to, from, onSetSize, isActive, 
         }
     }, [selectedMapType]);
 
+    const miDropdownElement = document.querySelector("mi-dropdown");
+
+    miDropdownElement?.addEventListener("change", (event) => {
+        event.detail.map((item) => setTravelMode(item.value));
+    });
+
     return (
         <div className="wayfinding" ref={wayfindingRef}>
             <div className="wayfinding__directions">
@@ -394,23 +406,42 @@ function Wayfinding({ onStartDirections, onBack, to, from, onSetSize, isActive, 
             {!hasFoundRoute && <p className="wayfinding__error">No route has been found</p>}
             {hasError && <p className="wayfinding__error">Something went wrong. Please try again.</p>}
             {!hasSearchResults && <p className="wayfinding__error">Nothing was found</p>}
-            <div className="wayfinding__scrollable" {...scrollableContentSwipePrevent}>
-                <div className="wayfinding__results">
-                    {searchResults.map(location =>
-                        <ListItemLocation
-                            key={location.id}
-                            icon={location.properties.type === 'google_places' ? googlePlacesIcon : undefined}
-                            location={location}
-                            locationClicked={e => locationClickHandler(e)} />
-                    )}
-                    {hasGooglePlaces && <img className="wayfinding__google" alt="Powered by Google" src={GooglePlaces} />}
-                </div>
-            </div>
+            {searchResults.length > 0 &&
+                <div className="wayfinding__scrollable" {...scrollableContentSwipePrevent}>
+                    <div className="wayfinding__results">
+                        {searchResults.map(location =>
+                            <ListItemLocation
+                                key={location.id}
+                                icon={location.properties.type === 'google_places' ? googlePlacesIcon : undefined}
+                                location={location}
+                                locationClicked={e => locationClickHandler(e)} />
+                        )}
+                        {hasGooglePlaces && <img className="wayfinding__google" alt="Powered by Google" src={GooglePlaces} />}
+                    </div>
+                </div>}
             {!searchTriggered && hasFoundRoute && !hasError && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
-                <div className="wayfinding__accessibility">
-                    <input className="mi-toggle" type="checkbox" checked={accessibilityOn} onChange={e => setAccessibilityOn(e.target.checked)} />
-                    <div>Accessibility</div>
-                    <Tooltip text="Turn on Accessibility to get directions that avoids stairs and escalators."></Tooltip>
+                <div className="wayfinding__travel-details">
+                    <div className="wayfinding__accessibility">
+                        <input className="mi-toggle" type="checkbox" checked={accessibilityOn} onChange={e => setAccessibilityOn(e.target.checked)} />
+                        <div>Accessibility</div>
+                        <Tooltip text="Turn on Accessibility to get directions that avoids stairs and escalators."></Tooltip>
+                    </div>
+                    <div className="wayfinding__travel">
+                        <mi-dropdown>
+                            <mi-dropdown-item selected value={travelModes.WALKING}>
+                                <WalkIcon></WalkIcon>
+                                Walk
+                            </mi-dropdown-item>
+                            <mi-dropdown-item value={travelModes.DRIVING}>
+                                <DriveIcon></DriveIcon>
+                                Drive
+                            </mi-dropdown-item>
+                            <mi-dropdown-item value={travelModes.BICYCLING}>
+                                <BikeIcon></BikeIcon>
+                                Bike
+                            </mi-dropdown-item>
+                        </mi-dropdown>
+                    </div>
                 </div>
                 <hr></hr>
                 <div className="wayfinding__info">

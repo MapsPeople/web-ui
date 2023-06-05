@@ -40,10 +40,9 @@ mi-dropdown-item {
 :host(.open) {
     section {
         display: flex;
-
     }
 
-    svg {
+    svg.arrow {
         transform: rotate(180deg);
     }
 }
@@ -57,10 +56,8 @@ mi-dropdown-item {
     width: 100%;
 
     font-family: inherit;
-    background: linear-gradient(
-        variables.$color-gray-10,
-        variables.$color-gray-20
-    );
+    background: linear-gradient(variables.$color-gray-10,
+            variables.$color-gray-20 );
 
     padding: 0;
     @include padding.horizontal(medium);
@@ -93,10 +90,13 @@ mi-dropdown-item {
         text-overflow: ellipsis;
 
         &--from-inner-html {
-            display: flex;
+            display: grid;
             flex-direction: row;
             align-items: center;
+            grid-auto-flow: column;
+            grid-template-columns: variables.$spacing-large 1fr;
             gap: variables.$spacing-x-small;
+            justify-items: center;
         }
     }
 
@@ -142,7 +142,8 @@ mi-dropdown-item {
             align-items: center;
             justify-content: center;
             position: absolute;
-            right: 14px; /* relates to input field height and button size: button should be placed with equal distance to top, right and bottom */
+            right: 14px;
+            /* relates to input field height and button size: button should be placed with equal distance to top, right and bottom */
             top: 50%;
             transform: translateY(-50%);
             @include background-color.gray(90);
@@ -213,7 +214,7 @@ mi-dropdown-item {
 }
 
 .empty-page {
-    > * {
+    >* {
         margin: 0;
     }
 
