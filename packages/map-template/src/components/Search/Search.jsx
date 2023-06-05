@@ -29,8 +29,6 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, c
     const [searchDisabled, setSearchDisabled] = useState(true);
     const [searchResults, setSearchResults] = useState([]);
 
-    const [hasCategories, setHasCategories] = useState(false);
-
     /** Indicate if search results have been found */
     const [showNotFoundMessage, setShowNotFoundMessage] = useState(false);
 
@@ -146,17 +144,10 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, c
         }
     }, [currentVenueName]);
 
-    /*
-     * React on changes in categories prop.
-     */
-    useEffect(() => {
-        setHasCategories(categories.length > 0);
-    }, [categories]);
-
     return (
         <div className="search"
             ref={searchRef}
-            style={{ minHeight: hasCategories ? '136px' : '80px' }}>
+            style={{ minHeight: categories.length > 0 ? '136px' : '80px' }}>
             <SearchField
                 ref={searchFieldRef}
                 mapsindoors={true}
