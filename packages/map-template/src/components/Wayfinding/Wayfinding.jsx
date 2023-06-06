@@ -39,9 +39,10 @@ const googlePlacesIcon = "data:image/svg+xml,%3Csvg width='10' height='10' viewB
  * @param {object} [props.directionsFromLocation] - Optional location to navigate from. If omitted, the user has to choose in the search field.
  * @param {function} props.onSetSize - Callback that is fired when the component has loaded.
  * @param {string} props.selectedMapType - The currently selected map type.
+ * @param {function} props.setSelectedTravelMode
  * @returns
  */
-function Wayfinding({ onStartDirections, onBack, currentLocation, directionsToLocation, directionsFromLocation, onSetSize, isActive, onDirections, selectedMapType }) {
+function Wayfinding({ onStartDirections, onBack, currentLocation, directionsToLocation, directionsFromLocation, onSetSize, isActive, onDirections, selectedMapType, setSelectedTravelMode }) {
 
     const wayfindingRef = useRef();
 
@@ -83,7 +84,7 @@ function Wayfinding({ onStartDirections, onBack, currentLocation, directionsToLo
 
     const [hasGooglePlaces, setHasGooglePlaces] = useState(false);
 
-    const [travelMode, setTravelMode] = useState();
+    const [travelMode, setTravelMode] = useState(travelModes.WALKING);
 
     /**
      * Decorates location with data that is required for wayfinding to work.
@@ -363,7 +364,10 @@ function Wayfinding({ onStartDirections, onBack, currentLocation, directionsToLo
     const miDropdownElement = document.querySelector("mi-dropdown");
 
     miDropdownElement?.addEventListener("change", (event) => {
-        event.detail.map((item) => setTravelMode(item.value));
+        event.detail.map((item) => {
+            setTravelMode(item.value)
+            setSelectedTravelMode(item.value);
+        });
     });
 
     return (
@@ -453,7 +457,9 @@ function Wayfinding({ onStartDirections, onBack, currentLocation, directionsToLo
                 <hr></hr>
                 <div className="wayfinding__info">
                     <div className="wayfinding__distance">
-                        <WalkingIcon />
+                        {travelMode === travelModes.WALKING && <WalkingIcon />}
+                        {travelMode === travelModes.DRIVING && <DriveIcon />}
+                        {travelMode === travelModes.BICYCLING && <BikeIcon />}
                         <div>Distance:</div>
                         <div className="wayfinding__meters">{totalDistance && <mi-distance meters={totalDistance} />}</div>
                     </div>
