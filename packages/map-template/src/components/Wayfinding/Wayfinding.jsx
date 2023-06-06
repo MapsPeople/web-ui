@@ -337,6 +337,9 @@ function Wayfinding({ onStartDirections, onBack, currentLocation, directionsToLo
         }
     }, [originLocation, destinationLocation, directionsService, accessibilityOn, travelMode]);
 
+    /*
+     * React on changes on the selected map type.
+     */
     useEffect(() => {
         if (selectedMapType === mapTypes.Mapbox) {
             setHasGooglePlaces(false);
@@ -354,7 +357,10 @@ function Wayfinding({ onStartDirections, onBack, currentLocation, directionsToLo
         }
     }, [currentLocation]);
 
-  const miDropdownElement = document.querySelector("mi-dropdown");
+    /*
+     * Add event listener to the dropdown element which handles the change in the travel mode.
+     */
+    const miDropdownElement = document.querySelector("mi-dropdown");
 
     miDropdownElement?.addEventListener("change", (event) => {
         event.detail.map((item) => setTravelMode(item.value));
