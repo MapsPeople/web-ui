@@ -59,7 +59,9 @@ function Directions({ isOpen, onBack, directions }) {
             directionsRenderer.setStepIndex(0);
 
             originInfoElement.current.location = directions.originLocation;
-            destinationInfoElement.current.location = directions.destinationLocation;
+            if (destinationInfoElement.current !== null) {
+                destinationInfoElement.current.location = directions.destinationLocation;
+            }
 
             // If the destination is My Position, then set the display rule to null.
             if (directions.destinationLocation.properties.name === 'My Position') {
