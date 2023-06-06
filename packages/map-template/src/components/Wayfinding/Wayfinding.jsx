@@ -20,6 +20,7 @@ import { ReactComponent as WalkIcon } from '../../assets/walk.svg';
 import { ReactComponent as DriveIcon } from '../../assets/drive.svg';
 import { ReactComponent as BikeIcon } from '../../assets/bike.svg';
 import { travelModes } from "../../constants/travelModes";
+import Dropdown from "../WebComponentWrappers/Dropdown/Dropdown";
 
 const searchFieldIdentifiers = {
     TO: 'TO',
@@ -358,17 +359,15 @@ function Wayfinding({ onStartDirections, onBack, currentLocation, directionsToLo
         }
     }, [currentLocation]);
 
-    /*
-     * Add event listener to the dropdown element which handles the change in the travel mode.
+    /**
+     * Handle changes in the travel mode.
+     *
+     * @param {string} travelMode
      */
-    const miDropdownElement = document.querySelector("mi-dropdown");
-
-    miDropdownElement?.addEventListener("change", (event) => {
-        event.detail.map((item) => {
-            setTravelMode(item.value)
-            setSelectedTravelMode(item.value);
-        });
-    });
+    function onTravelModeChanged(travelMode) {
+        setTravelMode(travelMode)
+        setSelectedTravelMode(travelMode);
+    }
 
     return (
         <div className="wayfinding" ref={wayfindingRef}>
@@ -438,7 +437,7 @@ function Wayfinding({ onStartDirections, onBack, currentLocation, directionsToLo
                         <Tooltip text="Turn on Accessibility to get directions that avoids stairs and escalators."></Tooltip>
                     </div>
                     <div className="wayfinding__travel">
-                        <mi-dropdown>
+                        <Dropdown travelModeChanged={travelMode => onTravelModeChanged(travelMode[0].value)}>
                             <mi-dropdown-item selected value={travelModes.WALKING}>
                                 <WalkIcon></WalkIcon>
                                 Walk
@@ -451,7 +450,7 @@ function Wayfinding({ onStartDirections, onBack, currentLocation, directionsToLo
                                 <BikeIcon></BikeIcon>
                                 Bike
                             </mi-dropdown-item>
-                        </mi-dropdown>
+                        </Dropdown>
                     </div>
                 </div>
                 <hr></hr>
