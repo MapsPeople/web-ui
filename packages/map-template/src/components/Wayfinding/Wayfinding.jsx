@@ -39,7 +39,7 @@ const googlePlacesIcon = "data:image/svg+xml,%3Csvg width='10' height='10' viewB
  * @param {object} [props.directionsFromLocation] - Optional location to navigate from. If omitted, the user has to choose in the search field.
  * @param {function} props.onSetSize - Callback that is fired when the component has loaded.
  * @param {string} props.selectedMapType - The currently selected map type.
- * @param {function} props.setSelectedTravelMode
+ * @param {function} props.setSelectedTravelMode - The selected travel mode chosen by the user.
  * @returns
  */
 function Wayfinding({ onStartDirections, onBack, currentLocation, directionsToLocation, directionsFromLocation, onSetSize, isActive, onDirections, selectedMapType, setSelectedTravelMode }) {

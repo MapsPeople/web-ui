@@ -21,7 +21,7 @@ let directionsRenderer;
  * @param {boolean} props.isOpen - Indicates if the directions view is open.
  * @param {function} props.onBack - Callback that fires when the directions view is closed by the user.
  * @param {function} props.directions - The directions information based on the origin and destination.
- * @param {string} props.selectedTravelMode - The directions information based on the origin and destination.
+ * @param {string} props.selectedTravelMode - The selected travel mode chosen by the user.
  */
 function Directions({ isOpen, onBack, directions, selectedTravelMode }) {
     // Holds the MapsIndoors DisplayRule for the destination
