@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useState } from 'react';
+import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
 import './MapsIndoorsMap.scss';
 import MIMap from "../Map/Map";
 import SplashScreen from '../SplashScreen/SplashScreen';
@@ -12,7 +13,9 @@ import { useAppHistory } from '../../hooks/useAppHistory';
 import { UserPositionContext } from '../../UserPositionContext';
 import useMediaQuery from '../../hooks/useMediaQuery';
 import Sidebar from '../Sidebar/Sidebar';
+import useLocationForWayfinding from '../../hooks/useLocationForWayfinding';
 
+defineCustomElements();
 const mapsindoors = window.mapsindoors;
 
 /**
@@ -32,12 +35,13 @@ let _locationsDisabled;
  * @param {string} [props.primaryColor] - If you want the splash screen to have a custom primary color, provide the value here.
  * @param {string} [props.logo] - If you want the splash screen to have a custom logo, provide the image path or address here.
  * @param {array} [props.appUserRoles] - If you want the map to behave differently for specific users, set one or more app user roles here.
- * @param {string} [props.directionsFrom] - If you want to show directions instantly, provide a MapsIndoors Location ID here to be used as the origin.
- * @param {string} [props.directionsTo] - If you want to show directions instantly, provide a MapsIndoors Location ID here to be used as the destination.
+ * @param {string} [props.directionsFrom] - If you want to show directions instantly, provide a MapsIndoors Location ID or the string "USER_POSITION" here to be used as the origin.
+ * @param {string} [props.directionsTo] - If you want to show directions instantly, provide a MapsIndoors Location ID or the string "USER_POSITION" here to be used as the destination.
  * @param {array} [props.externalIDs] - Filter locations shown on the map based on the external IDs.
  * @param {string} [props.tileStyle] - Tile style name to change the interface of the map.
+ * @param {number} [props.startZoomLevel] - The initial zoom level of the map.
  */
-function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle }) {
+function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel }) {
 
     const [isMapReady, setMapReady] = useState(false);
     const [venues, setVenues] = useState([]);
@@ -47,12 +51,14 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const [directionsService, setDirectionsService] = useState();
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
+    const [positionControl, setPositionControl] = useState();
     const [userPosition, setUserPosition] = useState();
     const [appConfigResult, setAppConfigResult] = useState();
     const [selectedMapType, setSelectedMapType] = useState();
+    const [selectedZoomLevel, setSelectedZoomLevel] = useState();
 
-    const [directionsFromLocation, setDirectionsFromLocation] = useState(null);
-    const [directionsToLocation, setDirectionsToLocation] = useState(null);
+    const directionsFromLocation = useLocationForWayfinding(directionsFrom, userPosition, positionControl);
+    const directionsToLocation = useLocationForWayfinding(directionsTo, userPosition, positionControl);
 
     // The filtered locations by external id, if present.
     const [filteredLocationsByExternalID, setFilteredLocationsByExternalID] = useState();
@@ -64,6 +70,8 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     const [initialFilteredLocations, setInitialFilteredLocations] = useState();
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
+    const isMobile = useMediaQuery('(max-width: 991px)');
+
     const [pushAppView, goBack, currentAppView, currentAppViewPayload, appStates] = useAppHistory();
 
     /*
@@ -156,6 +164,13 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
     }, [venue]);
 
     /*
+     * React on changes in the start zoom level prop.
+     */
+    useEffect(() => {
+        setSelectedZoomLevel(startZoomLevel);
+    }, [startZoomLevel]);
+
+    /*
      * React on changes in the app user roles prop.
      */
     useEffect(() => {
@@ -164,7 +179,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             mapsindoors.MapsIndoors.setUserRoles(roles);
         });
     }, [appUserRoles]);
-
 
     /*
      * React on changes in the externalIDs prop.
@@ -179,33 +193,6 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
             setFilteredLocationsByExternalID([]);
         }
     }, [externalIDs]);
-
-    /**
-     * React on changes to the locationId prop: Set as current location and make the map center on it.
-     */
-    useEffect(() => {
-        if (locationId) {
-            mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
-                if (location) {
-                    setCurrentLocation(location);
-                }
-            });
-        }
-    }, [locationId]);
-
-    /*
-     * React on changes to the directionsFrom and directionsTo props. When both are set, wayfinding should be shown.
-     * Setting the directionsFromLocation and directionsToLocation make that happen.
-     */
-    useEffect(() => {
-        if (directionsFrom && directionsTo) {
-            mapsindoors.services.LocationsService.getLocation(directionsFrom).then(location => setDirectionsFromLocation(location));
-            mapsindoors.services.LocationsService.getLocation(directionsTo).then(location => setDirectionsToLocation(location));
-        } else {
-            setDirectionsFromLocation(null);
-            setDirectionsToLocation(null);
-        }
-    }, [directionsFrom, directionsTo]);
 
     /*
      * React on changes in the MapsIndoors API key by fetching the required data.
@@ -233,6 +220,20 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
 
     }, [apiKey]);
 
+    /*
+     * React on changes to the locationId prop.
+     * Set as current location and change the venue according to the venue that the location belongs to.
+     */
+    useEffect(() => {
+        if (locationId) {
+            mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
+                if (location) {
+                    setCurrentVenueName(location.properties.venueId);
+                    setCurrentLocation(location);
+                }
+            });
+        }
+    }, [locationId]);
 
     /*
      * React on changes in directions opened state.
@@ -263,39 +264,43 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             onClose={() => goBack()}
                             active={currentAppView === appStates.VENUE_SELECTOR}
                         />}
-                        {isMapReady && isDesktop
-                            ?
-                            <Sidebar
-                                currentLocation={currentLocation}
-                                currentVenueName={currentVenueName}
-                                setCurrentLocation={setCurrentLocation}
-                                currentCategories={currentCategories}
-                                onLocationsFiltered={(locations) => setFilteredLocations(locations)}
-                                directionsFromLocation={directionsFromLocation}
-                                directionsToLocation={directionsToLocation}
-                                pushAppView={pushAppView}
-                                currentAppView={currentAppView}
-                                appViews={appStates}
-                                selectedMapType={selectedMapType}
-                                filteredLocationsByExternalIDs={filteredLocationsByExternalID}
-                                onLocationsFilteredByExternalIDs={(locations) => setFilteredLocationsByExternalID(locations)}
-                            />
-                            :
-                            <BottomSheet
-                                currentLocation={currentLocation}
-                                currentVenueName={currentVenueName}
-                                setCurrentLocation={setCurrentLocation}
-                                currentCategories={currentCategories}
-                                onLocationsFiltered={(locations) => setFilteredLocations(locations)}
-                                directionsFromLocation={directionsFromLocation}
-                                directionsToLocation={directionsToLocation}
-                                pushAppView={pushAppView}
-                                currentAppView={currentAppView}
-                                appViews={appStates}
-                                selectedMapType={selectedMapType}
-                                filteredLocationsByExternalIDs={filteredLocationsByExternalID}
-                                onLocationsFilteredByExternalIDs={(locations) => setFilteredLocationsByExternalID(locations)}
-                            />
+                        {isMapReady &&
+                            <>
+                                {isDesktop &&
+                                    <Sidebar
+                                        currentLocation={currentLocation}
+                                        currentVenueName={currentVenueName}
+                                        setCurrentLocation={setCurrentLocation}
+                                        currentCategories={currentCategories}
+                                        onLocationsFiltered={(locations) => setFilteredLocations(locations)}
+                                        directionsFromLocation={directionsFromLocation}
+                                        directionsToLocation={directionsToLocation}
+                                        pushAppView={pushAppView}
+                                        currentAppView={currentAppView}
+                                        appViews={appStates}
+                                        selectedMapType={selectedMapType}
+                                        filteredLocationsByExternalIDs={filteredLocationsByExternalID}
+                                        onLocationsFilteredByExternalIDs={(locations) => setFilteredLocationsByExternalID(locations)}
+                                    />
+                                }
+                                {isMobile &&
+                                    <BottomSheet
+                                        currentLocation={currentLocation}
+                                        currentVenueName={currentVenueName}
+                                        setCurrentLocation={setCurrentLocation}
+                                        currentCategories={currentCategories}
+                                        onLocationsFiltered={(locations) => setFilteredLocations(locations)}
+                                        directionsFromLocation={directionsFromLocation}
+                                        directionsToLocation={directionsToLocation}
+                                        pushAppView={pushAppView}
+                                        currentAppView={currentAppView}
+                                        appViews={appStates}
+                                        selectedMapType={selectedMapType}
+                                        filteredLocationsByExternalIDs={filteredLocationsByExternalID}
+                                        onLocationsFilteredByExternalIDs={(locations) => setFilteredLocationsByExternalID(locations)}
+                                    />
+                                }
+                            </>
                         }
                         <MIMap
                             apiKey={apiKey}
@@ -307,11 +312,14 @@ function MapsIndoorsMap({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId
                             onMapsIndoorsInstance={(instance) => setMapsIndoorsInstance(instance)}
                             onDirectionsService={(instance) => setDirectionsService(instance)}
                             onLocationClick={(location) => locationClicked(location)}
+                            onPositionControl={positionControl => setPositionControl(positionControl)}
                             onUserPosition={position => setUserPosition(position)}
                             onMapTypeChanged={(mapType) => setSelectedMapType(mapType)}
                             filteredLocationIds={filteredLocations?.map(location => location.id)}
                             filteredLocationsByExternalIDs={filteredLocationsByExternalID?.map(location => location.id)}
-							tileStyle={tileStyle}
+                            tileStyle={tileStyle}
+                            startZoomLevel={selectedZoomLevel}
+                            locationId={locationId}
                         />
                     </div>
                 </UserPositionContext.Provider>

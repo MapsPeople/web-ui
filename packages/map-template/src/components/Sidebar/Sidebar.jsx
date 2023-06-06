@@ -30,9 +30,11 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
      * React on changes on the current location and directions locations and set relevant bottom sheet.
      */
     useEffect(() => {
+        if (directionsFromLocation && directionsToLocation && currentAppView === appViews.DIRECTIONS) return; // Never change modal when dependencies change within Directions.
+
         if (directionsFromLocation && directionsToLocation) {
             pushAppView(appViews.WAYFINDING);
-        } else if (currentLocation && currentAppView !== appViews.LOCATION_DETAILS) {
+        } else if (currentLocation) {
             pushAppView(appViews.LOCATION_DETAILS, currentLocation);
         } else if (filteredLocationsByExternalIDs?.length > 0) {
   			pushAppView(appViews.EXTERNALIDS);
@@ -90,8 +92,9 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
         <Modal isOpen={currentAppView === appViews.WAYFINDING} key="D">
             <Wayfinding
                 onStartDirections={() => pushAppView(appViews.DIRECTIONS)}
-                to={currentLocation || directionsToLocation}
-                from={directionsFromLocation}
+                currentLocation={currentLocation}
+                directionsToLocation={directionsToLocation}
+                directionsFromLocation={directionsFromLocation}
                 onDirections={result => setDirections(result)}
                 onBack={() => pushAppView(currentLocation ? appViews.LOCATION_DETAILS : appViews.SEARCH)}
                 isActive={currentAppView === appViews.WAYFINDING}

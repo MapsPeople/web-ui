@@ -33,7 +33,11 @@ function GoogleMapsMap({ gmApiKey, onMapView, onPositionControl, mapsIndoorsInst
             // Initialize Google Maps MapView
             const mapViewOptions = {
                 element: document.getElementById('map'),
-                disableDefaultUI: true // Disable Map Type control, Street view control and Zoom controls.
+                disableDefaultUI: true, // Disable Map Type control, Street view control and Zoom controls.
+                // Always set a center so the map so the bounds or center can be read from the start.
+                center: { lat: 0, lng: 0 },
+                // Set a large zoom so we prevent a "zoom 0 glitch" (showing the whole globe temporarily)
+                zoom: 21
             };
 
             const mapViewInstance = new mapsindoors.mapView.GoogleMapsView(mapViewOptions);

@@ -1,0 +1,26 @@
+name: "Pull Request Label Checker"
+
+# Run the workflow when a Pull Request targeting the main branch is opened with or without labels, or reopened.
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - reopened
+      - labeled
+      - unlabeled
+
+jobs:
+  check_labels:
+    name: "Check Pull Requst Labels"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: mheap/github-action-required-labels@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # This workflow fails if there is not exactly one label of the ones listed here (both zero and multiple will cause a failure).
+        with:
+          mode: exactly
+          count: 1
+          labels: "major, minor, patch"

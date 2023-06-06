@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import './Directions.scss';
 import { MapsIndoorsContext } from '../../MapsIndoorsContext';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
@@ -11,7 +11,20 @@ const mapsindoors = window.mapsindoors;
 
 let directionsRenderer;
 
+/**
+ * Show the directions view.
+ *
+ * @param {object} props
+ * @param {boolean} props.isOpen - Indicates if the directions view is open.
+ * @param {function} props.onBack - Callback that fires when the directions view is closed by the user.
+ * @param {function} props.directions - The directions information based on the origin and destination.
+ */
 function Directions({ isOpen, onBack, directions }) {
+    // Holds the MapsIndoors DisplayRule for the destination
+    const [destinationDisplayRule, setDestinationDisplayRule] = useState(null);
+
+    const destinationInfoElement = useRef(null);
+    const originInfoElement = useRef(null);
 
     const [totalDistance, setTotalDistance] = useState();
     const [totalTime, setTotalTime] = useState();
@@ -21,6 +34,8 @@ function Directions({ isOpen, onBack, directions }) {
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
     useEffect(() => {
+        setDestinationDisplayRule(null);
+
         if (isOpen && directions) {
             setTotalDistance(directions.totalDistance);
             setTotalTime(directions.totalTime);
@@ -32,18 +47,29 @@ function Directions({ isOpen, onBack, directions }) {
                 mapsIndoors: mapsIndoorsInstance,
                 fitBoundsPadding: {
                     top: padding,
-                    bottom: isDesktop ? padding : getBottomSheetHeight(),
-                    left: isDesktop ? getSidebarWidth() : padding,
+                    bottom: isDesktop ? padding : getMobilePaddingBottom(),
+                    left: isDesktop ? getDesktopPaddingLeft() : padding,
                     right: padding
                 }
-
             });
 
             directionsRenderer.setRoute(directions.directionsResult);
 
             // Set the step index to be 0 in order to display the correct instruction on the map.
             directionsRenderer.setStepIndex(0);
+
+            originInfoElement.current.location = directions.originLocation;
+            destinationInfoElement.current.location = directions.destinationLocation;
+
+            // If the destination is My Position, then set the display rule to null.
+            if (directions.destinationLocation.properties.name === 'My Position') {
+                setDestinationDisplayRule(null)
+            } else {
+                setDestinationDisplayRule(mapsIndoorsInstance.getDisplayRule(directions.destinationLocation));
+            }
         }
+
+
     }, [isOpen, directions, mapsIndoorsInstance]);
 
     /*
@@ -93,9 +119,9 @@ function Directions({ isOpen, onBack, directions }) {
 
     // FIXME: investigate if we can handle the height and width with hooks
     /**
-     * Get the height of the bottom sheet in pixels.
+     * Get bottom padding for directions on mobile.
      */
-    function getBottomSheetHeight() {
+    function getMobilePaddingBottom() {
         const bottomSheet = document.querySelector('.sheet--active');
         const mapContainer = document.querySelector('.mapsindoors-map');
         // Subtract the top padding from the height of the map container element.
@@ -103,13 +129,12 @@ function Directions({ isOpen, onBack, directions }) {
     }
 
     /**
-     * Get the width of the sidebar in pixels
+     * Get left padding for directions on desktop.
      */
-    function getSidebarWidth() {
+    function getDesktopPaddingLeft() {
+        // The width of the sidebar plus adequate padding
         const sidebar = document.querySelector('.modal--open');
-        const mapContainer = document.querySelector('.mapsindoors-map');
-        // Subtract the sum of the sidebar's width and the left padding from the width of the map container element.
-        return mapContainer.offsetWidth - (sidebar.offsetWidth + sidebar.offsetLeft);
+        return sidebar.offsetWidth + sidebar.offsetLeft * 2;
     }
 
     /**
@@ -139,18 +164,41 @@ function Directions({ isOpen, onBack, directions }) {
                         <label className="directions__label">
                             From
                         </label>
-                        {directions?.originLocation && <div>{directions.originLocation.properties.name}</div>}
+                        {directions?.originLocation &&
+                            <div className="directions__info">
+                                <div className="directions__content">
+                                    <div className='directions__name'>
+                                        {directions?.originLocation.properties.name}
+                                        {directions?.originLocation.properties.name !== 'My Position' && <div>·</div>}
+                                        <mi-location-info ref={originInfoElement} />
+                                    </div>
+                                </div>
+                            </div>
+                        }
                     </div>
                     <div className="directions__container">
                         <label className="directions__label">
                             To
                         </label>
-                        {directions?.destinationLocation && <div>{directions.destinationLocation.properties.name}</div>}
+                        {directions?.destinationLocation &&
+                            <div className="directions__info">
+                                {destinationDisplayRule && directions.destinationLocation.name !== 'My Position' &&
+                                    <div className="directions__icon">
+                                        <img alt="" src={destinationDisplayRule.icon.src ? destinationDisplayRule.icon.src : destinationDisplayRule.icon} />
+                                    </div>}
+                                <div className="directions__content">
+                                    <div className='directions__name'>
+                                        {directions?.destinationLocation.properties.name}
+                                    </div>
+                                    {directions?.originLocation.properties.name !== 'My Position' && <mi-location-info ref={destinationInfoElement} />}
+                                </div>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
             <div className="directions__guide">
-                <div className="directions__info">
+                <div className="directions__metrics">
                     <div className="directions__distance">
                         <WalkingIcon />
                         <div>Distance:</div>
