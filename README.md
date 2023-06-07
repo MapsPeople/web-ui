@@ -11,6 +11,7 @@ $ git clone https://github.com/MapsPeople/web-ui.git
 $ cd web-ui && npm install && npx lerna run build
 $ cd packages/map-template && npm run start
 ```
+
 Open your browser on [http://localhost:3000/](http://localhost:3000/) to check it out.
 
 ## How the repo is set up
