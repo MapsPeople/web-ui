@@ -430,7 +430,7 @@ function Wayfinding({ onStartDirections, onBack, currentLocation, directionsToLo
                     </div>
                 </div>}
             {!searchTriggered && hasFoundRoute && !hasError && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
-                <div className="wayfinding__travel-details">
+                <div className="wayfinding__settings">
                     <div className="wayfinding__accessibility">
                         <input className="mi-toggle" type="checkbox" checked={accessibilityOn} onChange={e => setAccessibilityOn(e.target.checked)} />
                         <div>Accessibility</div>
