@@ -91,11 +91,10 @@ mi-dropdown-item {
 
         &--from-inner-html {
             display: grid;
-            align-items: center;
             grid-auto-flow: column;
             grid-template-columns: variables.$spacing-large 1fr;
             gap: variables.$spacing-x-small;
-            justify-items: center;
+            place-items: center;
         }
     }
 
@@ -248,11 +247,10 @@ mi-dropdown-item {
 
         &--from-inner-html {
             display: grid;
-            align-items: center;
             grid-auto-flow: column;
             grid-template-columns: variables.$spacing-large 1fr;
             gap: variables.$spacing-x-small;
-            justify-items: center;
+            place-items: center;
         }
     }
 
