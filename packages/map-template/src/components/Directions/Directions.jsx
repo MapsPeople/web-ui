@@ -33,8 +33,6 @@ function Directions({ isOpen, onBack, directions, selectedTravelMode }) {
     const [totalDistance, setTotalDistance] = useState();
     const [totalTime, setTotalTime] = useState();
 
-    const [travelMode, setTravelMode] = useState();
-
     const mapsIndoorsInstance = useContext(MapsIndoorsContext);
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
@@ -73,13 +71,7 @@ function Directions({ isOpen, onBack, directions, selectedTravelMode }) {
             } else {
                 setDestinationDisplayRule(mapsIndoorsInstance.getDisplayRule(directions.destinationLocation));
             }
-
-            // Set the selected travel mode in order to render the correct icon.
-            setTravelMode(selectedTravelMode);
         }
-
-
-
     }, [isOpen, directions, mapsIndoorsInstance, selectedTravelMode]);
 
     /*
@@ -210,9 +202,9 @@ function Directions({ isOpen, onBack, directions, selectedTravelMode }) {
             <div className="directions__guide">
                 <div className="directions__metrics">
                     <div className="directions__distance">
-                        {travelMode === travelModes.WALKING && <WalkingIcon />}
-                        {travelMode === travelModes.DRIVING && <DriveIcon />}
-                        {travelMode === travelModes.BICYCLING && <BikeIcon />}
+                        {selectedTravelMode === travelModes.WALKING && <WalkingIcon />}
+                        {selectedTravelMode === travelModes.DRIVING && <DriveIcon />}
+                        {selectedTravelMode === travelModes.BICYCLING && <BikeIcon />}
                         <div>Distance:</div>
                         <div className="directions__meters">{totalDistance && <mi-distance meters={totalDistance} />}</div>
                     </div>

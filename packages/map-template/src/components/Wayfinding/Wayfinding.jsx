@@ -437,7 +437,7 @@ function Wayfinding({ onStartDirections, onBack, currentLocation, directionsToLo
                         <Tooltip text="Turn on Accessibility to get directions that avoids stairs and escalators."></Tooltip>
                     </div>
                     <div className="wayfinding__travel">
-                        <Dropdown travelModeChanged={travelMode => onTravelModeChanged(travelMode[0].value)}>
+                        <Dropdown selectionChanged={travelMode => onTravelModeChanged(travelMode[0].value)}>
                             <mi-dropdown-item selected value={travelModes.WALKING}>
                                 <WalkIcon></WalkIcon>
                                 Walk
