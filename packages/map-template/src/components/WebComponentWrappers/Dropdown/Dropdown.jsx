@@ -4,13 +4,13 @@ import { useEffect, useRef } from 'react';
  * React wrapper around the custom element <mi-dropdown>.
  *
  * @param {object} props
- * @param {function} travelModeChanged - Function that is called when the travel mode is changed.
+ * @param {function} selectionChanged - Triggers an event when the selection is changed.
  */
-function Dropdown({ travelModeChanged, children }) {
+function Dropdown({ selectionChanged, children }) {
     const elementRef = useRef();
 
     useEffect(() => {
-        const clickHandler = customEvent => travelModeChanged(customEvent.detail);
+        const clickHandler = customEvent => selectionChanged(customEvent.detail);
 
         const { current } = elementRef;
 
@@ -18,7 +18,7 @@ function Dropdown({ travelModeChanged, children }) {
 
         return () => current.removeEventListener('change', clickHandler);
 
-    }, [travelModeChanged]);
+    }, [selectionChanged]);
 
 
     return <mi-dropdown ref={elementRef}>{children}</mi-dropdown>
