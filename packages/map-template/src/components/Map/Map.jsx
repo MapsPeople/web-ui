@@ -131,10 +131,14 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
 
                     // Check if the solution allows the zoom level to be 22.
                     // If yes, set the zoom level to 22, otherwise set it to 21.
-                    mapsindoors.services.SolutionsService.getSolution().then(solution => {
-                        const hasZoom22 = Object.values(solution.modules).find(zoomLevel => zoomLevel === 'z22')
-                        miInstance?.setZoom(hasZoom22 ? 22 : 21);
-                    });
+                    if (startZoomLevel) {
+                        miInstance?.setZoom(startZoomLevel);
+                    } else {
+                        mapsindoors.services.SolutionsService.getSolution().then(solution => {
+                            const hasZoom22 = Object.values(solution.modules).find(zoomLevel => zoomLevel === 'z22')
+                            miInstance?.setZoom(hasZoom22 ? 22 : 21);
+                        });
+                    }
                 }
             });
         }
