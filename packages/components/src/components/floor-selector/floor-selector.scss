@@ -4,6 +4,7 @@
 @use "~@mapsindoors/midt/font";
 @use "~@mapsindoors/midt/margin";
 @use "~@mapsindoors/midt/padding";
+@use "~@mapsindoors/midt/opacity";
 
 @use "~@mapsindoors/midt/build/scss/variables";
 
@@ -11,14 +12,14 @@ $max-list-height: 300px; // The floor-selector.tsx: maxListHeight variable needs
 
 .mi-floor-selector {
     width: min-content;
-    animation-duration: .15s;
     display: flex;
     align-items: flex-start;
     position: relative;
+    margin: 10px;
+    overflow: hidden;
+    animation-duration: .15s;
     user-select: none;
     pointer-events: auto;
-    overflow: hidden;
-    margin: 10px;
     font-family: Roboto, Arial, sans-serif;
     border-radius: 56px;
     border-width: 1px;
@@ -32,13 +33,13 @@ $max-list-height: 300px; // The floor-selector.tsx: maxListHeight variable needs
     }
 
     &__button {
+        width: 40px;
+        height: 40px;
         position: absolute;
+        z-index: 4;
         top: variables.$spacing-xx-small;
         right: variables.$spacing-xx-small;
         left: variables.$spacing-xx-small;
-        z-index: 4;
-        width: 40px;
-        height: 40px;
         background-position: center;
         background-repeat: no-repeat;
         border-width: 1px;
@@ -71,8 +72,6 @@ $max-list-height: 300px; // The floor-selector.tsx: maxListHeight variable needs
     }
 
     &__list {
-        @include padding.all(xx-small);
-        @include padding.top(xxx-large);
         max-height: 40px;
         display: flex;
         flex-direction: column;
@@ -80,22 +79,24 @@ $max-list-height: 300px; // The floor-selector.tsx: maxListHeight variable needs
         overflow-y: hidden;
         transition: max-height .25s;
         scroll-behavior: smooth;
+        @include padding.all(xx-small);
+        @include padding.top(xxx-large);
 
         &::before,
         &::after {
             content: '';
+            height: 100%;
             position: absolute;
             pointer-events: none;
             z-index: 3;
             left: -1px;
             right: -1px;
-            height: 100%;
             transition: opacity .1s;
-            opacity: 0;
+            opacity: variables.$opacity-xx-small;
         }
 
         &--fade-top::before {
-            opacity: 1;
+            opacity: variables.$opacity-xxx-large;
             top: -1px;
             background: linear-gradient(180deg,
                     white 39px,
@@ -103,7 +104,7 @@ $max-list-height: 300px; // The floor-selector.tsx: maxListHeight variable needs
         }
 
         &--fade-bottom::after {
-            opacity: 1;
+            opacity: variables.$opacity-xxx-large;
             bottom: -1px;
             background: linear-gradient(0deg,
                     white 4px,
@@ -112,21 +113,21 @@ $max-list-height: 300px; // The floor-selector.tsx: maxListHeight variable needs
     }
 
     &__floor {
-        order: 1;
-        position: relative;
-        z-index: 0;
-        float: none;
         width: 40px;
         height: 40px;
+        position: relative;
+        order: 1;
+        flex-shrink: 0;
         margin-top: -1px;
+        z-index: 0;
+        float: none;
         text-align: center;
         background: none;
-        color: #666666;
-        border: none;
-        border-radius: 50%;
-        flex-shrink: 0;
         transition: translateY .25s;
         transform: translateY(0px);
+        color: variables.$brand-colors-black-60;
+        border-radius: 50%;
+        @include border.style(none);
 
         &:hover {
             z-index: 2;
@@ -136,22 +137,20 @@ $max-list-height: 300px; // The floor-selector.tsx: maxListHeight variable needs
 
         &--active {
             z-index: 2;
-            background: #005655;
-            // background: variables.$brand-colors-dark-pine-100;
-            @include color.white(base);
             transform: translateY(0px);
+            @include background-color.dark-pine(100);
+            @include color.white(base);
         }
 
         &--active:hover {
-            background: #005655;
-            // background: variables.$brand-colors-dark-pine-100;
+            @include background-color.dark-pine(100);
         }
     }
 
     &__floor-text {
+        display: block;
         overflow: hidden;
         white-space: nowrap;
-        display: block;
         text-overflow: ellipsis;
         @include padding.horizontal(xx-small);
     }
