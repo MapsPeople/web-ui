@@ -211,6 +211,13 @@ export class FloorSelector {
      * Called after every render().
      */
     componentDidRender(): void {
+        const floorSelectorElement = this.el.shadowRoot.querySelector('.mi-floor-selector') as HTMLElement;
+        if (!this.mapsindoors.getBuilding()) {
+            floorSelectorElement.classList.add('mi-floor-selector--hidden');
+        } else {
+            floorSelectorElement.classList.remove('mi-floor-selector--hidden');
+        }
+
         this.currentFloorElement = this.el.shadowRoot.querySelector('.mi-floor-selector__floor--active');
         this.currentFloor = this.currentFloorElement?.getAttribute('data-floor');
 

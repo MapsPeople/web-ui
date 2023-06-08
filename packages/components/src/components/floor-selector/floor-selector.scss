@@ -28,6 +28,10 @@ $max-list-height: 150px;
     @include border.style(solid);
     @include background-color.white(base);
 
+    &--hidden {
+        display: none;
+    }
+
     &__button {
         position: absolute;
         top: variables.$spacing-xx-small;
