@@ -17,8 +17,7 @@ export class FloorSelector {
     @Element() el: HTMLDivElement;
 
     private currentFloorElement: HTMLElement;
-    private maxListHeight: number = 150; // The floor-selector.scss: $max-list-height variable needs to be synced with this value
-    // private maxListHeight: number = 350; // The floor-selector.scss: $max-list-height variable needs to be synced with this value
+    private maxListHeight: number = 300; // The floor-selector.scss: $max-list-height variable needs to be synced with this value
 
     /**
      * Scrolling the floorList element to the selected floor.

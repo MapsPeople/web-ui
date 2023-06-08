@@ -7,8 +7,7 @@
 
 @use "~@mapsindoors/midt/build/scss/variables";
 
-$max-list-height: 150px;
-// $max-list-height: 350px;
+$max-list-height: 300px; // The floor-selector.tsx: maxListHeight variable needs to be synced with this value
 
 .mi-floor-selector {
     width: min-content;
