@@ -261,19 +261,17 @@ export class RouteInstructionsStep implements ComponentInterface {
      */
     renderDrivingStep(): JSX.Element {
         return <div class="step" onClick={e => this.stepClickHandler(e)}>
-            {this.isInternetExplorer ? null :
-                <span class="step__action-icon step__action-icon--circled">
-                    <mi-icon icon-name="car"></mi-icon>
-                </span>
-            }
-            <h3 part="step-heading" class="step__heading">{this.getStepHeading()}</h3>
-            {this.renderTravelMode()}
             <div part="step-description" class="step__description">
-                {this.translationsData.drive}<br />
                 {this.renderDistance()}
             </div>
-            {this.renderToggleButton()}
-            {this.renderSubsteps()}
+            <div class="step__info">
+                {this.isInternetExplorer ? null :
+                    <span class="step__action-icon step__action-icon--circled">
+                        <mi-icon icon-name="car"></mi-icon>
+                    </span>
+                }
+                <div part="step-heading" class="step__heading">{this.getStepHeading()}</div>
+            </div>
         </div>;
     }
 
@@ -398,19 +396,17 @@ export class RouteInstructionsStep implements ComponentInterface {
      */
     renderBicyclingStep(): JSX.Element {
         return <div class="step" onClick={e => this.stepClickHandler(e)}>
-            {this.isInternetExplorer ? null :
-                <span class="step__action-icon step__action-icon--circled">
-                    <mi-icon icon-name="bike"></mi-icon>
-                </span>
-            }
-            <h3 part="step-heading" class="step__heading">{this.getStepHeading()}</h3>
-            {this.renderTravelMode()}
             <div part="step-description" class="step__description">
-                {this.translationsData.bike}<br />
                 {this.renderDistance()}
             </div>
-            {this.renderToggleButton()}
-            {this.renderSubsteps()}
+            <div class="step__info">
+                {this.isInternetExplorer ? null :
+                    <span class="step__action-icon step__action-icon--circled">
+                        <mi-icon icon-name="bike"></mi-icon>
+                    </span>
+                }
+                <div part="step-heading" class="step__heading">{this.getStepHeading()}</div>
+            </div>
         </div>;
     }
 

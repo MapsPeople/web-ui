@@ -5,6 +5,7 @@ import Wayfinding from '../Wayfinding/Wayfinding';
 import Directions from '../Directions/Directions';
 import Search from '../Search/Search';
 import LocationsList from '../LocationsList/LocationsList';
+import { travelModes } from '../../constants/travelModes';
 
 /**
  * @param {Object} props
@@ -26,6 +27,9 @@ import LocationsList from '../LocationsList/LocationsList';
 function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, currentVenueName, directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews, selectedMapType, filteredLocationsByExternalIDs, onLocationsFilteredByExternalIDs }) {
     const [directions, setDirections] = useState();
 
+    const [travelMode, setTravelMode] = useState(travelModes.WALKING);
+
+
     /*
      * React on changes on the current location and directions locations and set relevant bottom sheet.
      */
@@ -37,7 +41,7 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
         } else if (currentLocation) {
             pushAppView(appViews.LOCATION_DETAILS, currentLocation);
         } else if (filteredLocationsByExternalIDs?.length > 0) {
-  			pushAppView(appViews.EXTERNALIDS);
+            pushAppView(appViews.EXTERNALIDS);
         } else {
             pushAppView(appViews.SEARCH);
         }
@@ -99,6 +103,7 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
                 onBack={() => pushAppView(currentLocation ? appViews.LOCATION_DETAILS : appViews.SEARCH)}
                 isActive={currentAppView === appViews.WAYFINDING}
                 selectedMapType={selectedMapType}
+                setSelectedTravelMode={travelMode => setTravelMode(travelMode)}
             />
         </Modal>,
         <Modal isOpen={currentAppView === appViews.DIRECTIONS} key="E">
@@ -106,6 +111,7 @@ function Sidebar({ currentLocation, setCurrentLocation, currentCategories, onLoc
                 isOpen={currentAppView === appViews.DIRECTIONS}
                 directions={directions}
                 onBack={() => pushAppView(appViews.WAYFINDING)}
+                selectedTravelMode={travelMode}
             />
         </Modal>
     ]
