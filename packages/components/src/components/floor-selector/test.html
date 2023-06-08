@@ -29,7 +29,6 @@
     <div id="map"></div>
 
     <script>
-        //The MapsIndoors API key, and the language code is set before the SDK is initialized
         mapsindoors.MapsIndoors.setMapsIndoorsApiKey('173386a6ff5e43cead3e396b');
         mapsindoors.MapsIndoors.setLanguage('en');
 
@@ -42,7 +41,6 @@
             maxZoom: 21
         });
         
-        //Then the MapsIndoors SDK is initialized
         const mi = new mapsindoors.MapsIndoors({
             mapView: mapView,
             labelOptions: {
