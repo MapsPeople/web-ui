@@ -8,7 +8,6 @@ import Wayfinding from '../Wayfinding/Wayfinding';
 import Directions from '../Directions/Directions';
 import Search from '../Search/Search';
 import LocationsList from '../LocationsList/LocationsList';
-import { travelModes } from '../../constants/travelModes';
 
 /**
  * @param {Object} props
@@ -24,9 +23,6 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
     const [directions, setDirections] = useState();
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
-
-    const [travelMode, setTravelMode] = useState(travelModes.WALKING);
-
 
     /*
      * React on changes on the current location and directions locations and set relevant bottom sheet.
@@ -95,7 +91,6 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
                 onDirections={result => setDirections(result)}
                 onBack={() => pushAppView(currentLocation ? appViews.LOCATION_DETAILS : appViews.SEARCH)}
                 isActive={currentAppView === appViews.WAYFINDING}
-                setSelectedTravelMode={travelMode => setTravelMode(travelMode)}
             />
         </Modal>,
         <Modal isOpen={currentAppView === appViews.DIRECTIONS} key="E">
@@ -103,7 +98,6 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
                 isOpen={currentAppView === appViews.DIRECTIONS}
                 directions={directions}
                 onBack={() => pushAppView(appViews.WAYFINDING)}
-                selectedTravelMode={travelMode}
             />
         </Modal>
     ]

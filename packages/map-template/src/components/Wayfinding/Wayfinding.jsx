@@ -5,10 +5,11 @@ import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
 import { ReactComponent as WalkingIcon } from '../../assets/walk.svg';
 import { ReactComponent as SwitchIcon } from '../../assets/switch.svg';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import userPositionState from '../../atoms/userPositionState';
 import directionsServiceState from '../../atoms/directionsServiceState';
 import currentLocationState from '../../atoms/currentLocationState';
+import travelModeState from '../../atoms/travelModeState';
 import mapTypeState from '../../atoms/mapTypeState';
 import Tooltip from '../Tooltip/Tooltip';
 import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
@@ -41,10 +42,9 @@ const googlePlacesIcon = "data:image/svg+xml,%3Csvg width='10' height='10' viewB
  * @param {object} props.directionsToLocation - Optional location to navigate to.
  * @param {object} [props.directionsFromLocation] - Optional location to navigate from. If omitted, the user has to choose in the search field.
  * @param {function} props.onSetSize - Callback that is fired when the component has loaded.
- * @param {function} props.setSelectedTravelMode - The selected travel mode chosen by the user.
  * @returns
  */
-function Wayfinding({ onStartDirections, onBack, directionsToLocation, directionsFromLocation, onSetSize, isActive, onDirections, setSelectedTravelMode }) {
+function Wayfinding({ onStartDirections, onBack, directionsToLocation, directionsFromLocation, onSetSize, isActive, onDirections }) {
 
     const wayfindingRef = useRef();
 
@@ -88,7 +88,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
 
     const [hasGooglePlaces, setHasGooglePlaces] = useState(false);
 
-    const [travelMode, setTravelMode] = useState(travelModes.WALKING);
+    const [travelMode, setTravelMode] = useRecoilState(travelModeState);
 
     /**
      * Decorates location with data that is required for wayfinding to work.
@@ -362,16 +362,6 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         }
     }, [currentLocation]);
 
-    /**
-     * Handle changes in the travel mode.
-     *
-     * @param {string} travelMode
-     */
-    function onTravelModeChanged(travelMode) {
-        setTravelMode(travelMode)
-        setSelectedTravelMode(travelMode);
-    }
-
     return (
         <div className="wayfinding" ref={wayfindingRef}>
             <div className="wayfinding__directions">
@@ -440,7 +430,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                         <Tooltip text="Turn on Accessibility to get directions that avoids stairs and escalators."></Tooltip>
                     </div>
                     <div className="wayfinding__travel">
-                        <Dropdown selectionChanged={travelMode => onTravelModeChanged(travelMode[0].value)}>
+                        <Dropdown selectionChanged={travelMode => setTravelMode(travelMode[0].value)}>
                             <mi-dropdown-item selected value={travelModes.WALKING}>
                                 <WalkIcon></WalkIcon>
                                 Walk
