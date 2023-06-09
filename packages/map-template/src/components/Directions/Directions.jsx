@@ -59,9 +59,7 @@ function Directions({ isOpen, onBack, directions }) {
             directionsRenderer.setStepIndex(0);
 
             originInfoElement.current.location = directions.originLocation;
-            if (destinationInfoElement.current !== null) {
-                destinationInfoElement.current.location = directions.destinationLocation;
-            }
+            destinationInfoElement.current.location = directions.destinationLocation;
 
             // If the destination is My Position, then set the display rule to null.
             if (directions.destinationLocation.properties.name === 'My Position') {
@@ -192,7 +190,7 @@ function Directions({ isOpen, onBack, directions }) {
                                     <div className='directions__name'>
                                         {directions?.destinationLocation.properties.name}
                                     </div>
-                                    {directions?.originLocation.properties.name !== 'My Position' && <mi-location-info ref={destinationInfoElement} />}
+                                    <mi-location-info ref={destinationInfoElement} />
                                 </div>
                             </div>
                         }
