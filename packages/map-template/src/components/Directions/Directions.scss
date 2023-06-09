@@ -21,7 +21,7 @@
         display: grid;
         gap: var(--spacing-medium);
         position: relative;
-        width: fit-content;
+        width: calc(100% - 36px);
     }
 
     &__container {
@@ -49,6 +49,7 @@
     &__time {
         display: grid;
         grid-auto-flow: column;
+        grid-template-columns: 20px 1fr 1fr;
         gap: var(--spacing-x-small);
         align-items: center;
         color: var(--color-gray-70);

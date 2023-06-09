@@ -1,9 +1,10 @@
 import { useEffect, useRef } from 'react';
 import { useState } from 'react';
 import { ContainerContext } from './ContainerContext';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import currentLocationState from '../../atoms/currentLocationState';
 import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
+import categoriesState from '../../atoms/categoriesState';
 import Sheet from './Sheet/Sheet';
 import './BottomSheet.scss';
 import LocationDetails from '../LocationDetails/LocationDetails';
@@ -11,6 +12,7 @@ import Wayfinding from '../Wayfinding/Wayfinding';
 import Directions from '../Directions/Directions';
 import Search from '../Search/Search';
 import LocationsList from '../LocationsList/LocationsList';
+import { travelModes } from '../../constants/travelModes';
 
 /**
  * @param {Object} props
@@ -31,9 +33,10 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
     const [wayfindingSheetSize, setWayfindingSheetSize] = useState();
     const [searchSheetSize, setSearchSheetSize] = useState();
     const [locationsListSheetSize, setLocationsListSheetSize] = useState();
-
+    const categories = useRecoilValue(categoriesState);
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
+    const [travelMode, setTravelMode] = useState(travelModes.WALKING);
 
     /*
      * React on changes on the current location and directions locations and set relevant bottom sheet.
@@ -76,7 +79,7 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
 
     const bottomSheets = [
         <Sheet
-            minHeight="144"
+            minHeight={categories.length > 0 ? "136" : "80"}
             preferredSizeSnapPoint={searchSheetSize}
             isOpen={currentAppView === appViews.SEARCH}
             key="A">
@@ -124,6 +127,7 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
                 onDirections={result => setDirections(result)}
                 onBack={() => pushAppView(currentLocation ? appViews.LOCATION_DETAILS : appViews.SEARCH)}
                 isActive={currentAppView === appViews.WAYFINDING}
+                setSelectedTravelMode={travelMode => setTravelMode(travelMode)}
             />
         </Sheet>,
         <Sheet
@@ -135,6 +139,7 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
                 directions={directions}
                 onBack={() => pushAppView(appViews.WAYFINDING)}
                 isActive={currentAppView === appViews.DIRECTIONS}
+                selectedTravelMode={travelMode}
             />
         </Sheet>
     ]

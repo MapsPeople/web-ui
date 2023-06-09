@@ -8,6 +8,7 @@ then
 fi
 
 npm version $1
+git pull origin main
 git add .
 export NPM_VERSION=$(npm pkg get version --workspaces=false | tr -d \")
 git commit -m "Release @mapsindoors/map-template@$NPM_VERSION"

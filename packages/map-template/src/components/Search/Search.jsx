@@ -150,7 +150,9 @@ function Search({ onLocationClick, onSetSize }) {
     }, [currentVenueName]);
 
     return (
-        <div className="search" ref={searchRef}>
+        <div className="search"
+            ref={searchRef}
+            style={{ minHeight: categories.length > 0 ? '136px' : '80px' }}>
             <SearchField
                 ref={searchFieldRef}
                 mapsindoors={true}
@@ -162,28 +164,30 @@ function Search({ onLocationClick, onSetSize }) {
                 disabled={searchDisabled} // Disabled initially to prevent content jumping when clicking and changing sheet size.
             />
             <div className="search__scrollable prevent-scroll" {...scrollableContentSwipePrevent}>
-                <div ref={categoriesListRef} className="search__categories">
-                    {categories?.map(([category, categoryInfo]) =>
-                        <mi-chip
-                            icon={categoryInfo.iconUrl}
-                            content={categoryInfo.displayName}
-                            active={selectedCategory === category}
-                            onClick={() => categoryClicked(category)}
-                            key={category}>
-                        </mi-chip>
-                    )
-                    }
-                </div>
-                <div className="search__results">
-                    {showNotFoundMessage && <p>Nothing was found</p>}
-                    {searchResults.map(location =>
-                        <ListItemLocation
-                            key={location.id}
-                            location={location}
-                            locationClicked={e => onLocationClick(e)}
-                        />
-                    )}
-                </div>
+                {categories.length > 0 &&
+                    <div ref={categoriesListRef} className="search__categories">
+                        {categories?.map(([category, categoryInfo]) =>
+                            <mi-chip
+                                icon={categoryInfo.iconUrl}
+                                content={categoryInfo.displayName}
+                                active={selectedCategory === category}
+                                onClick={() => categoryClicked(category)}
+                                key={category}>
+                            </mi-chip>
+                        )}
+                    </div>}
+                {searchResults.length > 0 &&
+                    <div className="search__results">
+                        {showNotFoundMessage && <p>Nothing was found</p>}
+                        {searchResults.map(location =>
+                            <ListItemLocation
+                                key={location.id}
+                                location={location}
+                                locationClicked={e => onLocationClick(e)}
+                            />
+                        )}
+                    </div>
+                }
             </div>
         </div>
     )
