@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - The Map Template now uses [Recoil](https://recoiljs.org/) to manage state.
 
+### Fixed
+
+- Fix crash in the Wayfinding component when having `My Position` enabled.
+
 ## [1.1.1] - 2023-06-08
 
 ### Fixed
