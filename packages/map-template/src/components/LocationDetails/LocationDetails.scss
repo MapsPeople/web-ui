@@ -10,6 +10,7 @@
 
     &--content-below {
         position: relative;
+
         &::before {
             content: '';
             position: absolute;
@@ -23,6 +24,7 @@
 
     &--content-above {
         position: relative;
+
         &::after {
             content: '';
             position: absolute;
@@ -40,7 +42,7 @@
         gap: var(--spacing-medium);
         overflow-y: auto;
 
-        > *:first-child {
+        >*:first-child {
             margin-top: var(--spacing-medium);
         }
     }
@@ -59,7 +61,8 @@
     }
 
     &__description {
-        white-space: pre-wrap; /* make sure line breaks in the description text are shown as such */
+        white-space: pre-wrap;
+        /* make sure line breaks in the description text are shown as such */
         overflow-wrap: break-word;
 
         div {
@@ -67,7 +70,8 @@
             color: var(--color-gray-70);
             line-height: 1.5;
             overflow-y: hidden;
-            max-height: var(--spacing-xxxx-large); /* corresponding to approx. 3 lines of description text */
+            max-height: var(--spacing-xxxx-large);
+            /* corresponding to approx. 3 lines of description text */
         }
 
         button {
@@ -96,6 +100,11 @@
         height: var(--spacing-xxx-large);
         position: relative;
         font-weight: var(--font-weight-x-large);
+
+        &:hover {
+            filter: brightness(90%);
+            cursor: pointer;
+        }
     }
 }
 
@@ -109,14 +118,26 @@
 
         img {
             height: var(--spacing-x-large);
-            display: block; /* to avoid spacing below */
+            display: block;
+            /* to avoid spacing below */
         }
     }
 
     &__close {
         background: none;
-        border: none;
+        border: 1px solid var(--tailwind-colors-gray-200);
         margin-left: auto;
+        width: var(--spacing-xx-large);
+        height: var(--spacing-xx-large);
+        border-radius: var(--rounding-large);
+        display: grid;
+        justify-content: center;
+        align-items: center;
+
+        &:hover {
+            background-color: var(--tailwind-colors-gray-50);
+            cursor: pointer;
+        }
     }
 
     &__name {

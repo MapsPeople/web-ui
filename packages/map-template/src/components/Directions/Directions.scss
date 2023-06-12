@@ -13,8 +13,20 @@
         position: absolute;
         top: var(--spacing-x-small);
         right: var(--spacing-x-small);
-        background: none;
-        border: none;
+        background-color: var(--tailwind-colors-gray-100);
+        border: 1px solid var(--tailwind-colors-gray-200);
+        margin-left: auto;
+        width: var(--spacing-xx-large);
+        height: var(--spacing-xx-large);
+        border-radius: var(--rounding-large);
+        display: grid;
+        justify-content: center;
+        align-items: center;
+
+        &:hover {
+            background-color: var(--tailwind-colors-gray-200);
+            cursor: pointer;
+        }
     }
 
     &__locations {

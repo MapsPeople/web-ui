@@ -27,7 +27,7 @@
 }
 
 :host(:hover) {
-    @include background-color.white(base);
+    background-color: var(--tailwind-colors-gray-100);
 }
 
 .img-container {

@@ -26,8 +26,20 @@
         position: absolute;
         top: var(--spacing-x-small);
         right: var(--spacing-x-small);
-        background: none;
-        border: none;
+        background-color: var(--tailwind-colors-gray-100);
+        border: 1px solid var(--tailwind-colors-gray-200);
+        margin-left: auto;
+        width: var(--spacing-xx-large);
+        height: var(--spacing-xx-large);
+        border-radius: var(--rounding-large);
+        display: grid;
+        justify-content: center;
+        align-items: center;
+
+        &:hover {
+            background-color: var(--tailwind-colors-gray-200);
+            cursor: pointer;
+        }
     }
 
     &__locations {
@@ -139,6 +151,11 @@
         position: relative;
         margin-top: var(--spacing-medium);
         font-weight: var(--font-weight-x-large);
+
+        &:hover {
+            filter: brightness(90%);
+            cursor: pointer;
+        }
     }
 
     &__scrollable {
@@ -155,6 +172,11 @@
         position: absolute;
         right: 0;
         top: 80px;
+
+        &:hover {
+            opacity: .8;
+            cursor: pointer;
+        }
     }
 
     &__google {
@@ -182,10 +204,10 @@
     }
 
     mi-dropdown::part(button) {
-       border-radius: var(--spacing-x-small);
-       padding: 0 var(--spacing-small);
-       height: 36px;
-       background: var(--color-gray-10);
-       border: 1px solid var(--color-gray-30);
+        border-radius: var(--spacing-x-small);
+        padding: 0 var(--spacing-small);
+        height: 36px;
+        background: var(--color-gray-10);
+        border: 1px solid var(--color-gray-30);
     }
 }
