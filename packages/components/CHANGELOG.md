@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [13.3.0] - 2023-06-12
+
+### Added
+
+- **mi-chip** hover effects.
+- **mi-list-item-location** hover effects.
+- **mi-search** show clear button only when the input has a value.
+
 ## [13.2.0] - 2023-06-12
 
 ### Changed
