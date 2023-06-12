@@ -1,5 +1,6 @@
-import { useContext, useEffect, useRef } from 'react';
-import { MapsIndoorsContext } from '../../../MapsIndoorsContext';
+import { useEffect, useRef } from 'react';
+import { useRecoilValue } from 'recoil';
+import mapsIndoorsInstanceState from '../../../atoms/mapsIndoorsInstanceState';
 
 /**
  * React wrapper around the custom element <mi-list-item-location>.
@@ -12,7 +13,7 @@ import { MapsIndoorsContext } from '../../../MapsIndoorsContext';
 function ListItemLocation({ location, locationClicked, icon }) {
     const elementRef = useRef();
 
-    const mapsIndoorsInstance = useContext(MapsIndoorsContext);
+    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
 
     useEffect(() => {
         const clickHandler = customEvent => locationClicked(customEvent.detail);

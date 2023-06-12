@@ -1,4 +1,7 @@
 import { useState, useEffect } from 'react';
+import { useRecoilValue } from 'recoil';
+import userPositionState from '../atoms/userPositionState';
+import positionControlState from '../atoms/positionControlState';
 import generateMyPositionLocation from '../helpers/MyPositionLocation';
 
 const mapsindoors = window.mapsindoors;
@@ -9,11 +12,12 @@ const mapsindoors = window.mapsindoors;
  * that contains the user's position.
  *
  * @param {string} locationID - MapsIndoors Location ID or the keyword "USER_POSITION"
- * @param {GeolocationPosition} userPosition - A GeolocationPosition object
  * @param {object} positionControl - A MapsIndoors PositionControl object.
  */
-const useLocationForWayfinding = (locationID, userPosition, positionControl) => {
+const useLocationForWayfinding = (locationID) => {
     const [location, setLocation] = useState();
+    const userPosition = useRecoilValue(userPositionState);
+    const positionControl = useRecoilValue(positionControlState);
 
     useEffect(() => {
         if (positionControl && locationID) {
