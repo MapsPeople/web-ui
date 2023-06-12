@@ -61,8 +61,7 @@
     }
 
     &__description {
-        white-space: pre-wrap;
-        /* make sure line breaks in the description text are shown as such */
+        white-space: pre-wrap; /* make sure line breaks in the description text are shown as such */
         overflow-wrap: break-word;
 
         div {
