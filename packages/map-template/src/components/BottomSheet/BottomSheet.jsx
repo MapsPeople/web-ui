@@ -1,6 +1,10 @@
 import { useEffect, useRef } from 'react';
 import { useState } from 'react';
 import { ContainerContext } from './ContainerContext';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import currentLocationState from '../../atoms/currentLocationState';
+import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
+import categoriesState from '../../atoms/categoriesState';
 import Sheet from './Sheet/Sheet';
 import './BottomSheet.scss';
 import LocationDetails from '../LocationDetails/LocationDetails';
@@ -11,21 +15,13 @@ import LocationsList from '../LocationsList/LocationsList';
 
 /**
  * @param {Object} props
- * @param {Object} props.currentLocation - The currently selected MapsIndoors Location.
- * @param {Object} props.setCurrentLocation - The setter for the currently selected MapsIndoors Location.
- * @param {Object} props.currentCategories - The unique categories displayed based on the existing locations.
- * @param {function} props.onLocationsFiltered - The list of locations after filtering through the categories.
- * @param {string} props.currentVenueName - The currently selected venue.
  * @param {string} props.directionsFromLocation - Origin Location to be used to instantly show directions.
  * @param {string} props.directionsToLocation - Destination Location to be used to instantly show directions.
  * @param {function} props.pushAppView - Function to push to app view to browser history.
  * @param {string} props.currentAppView - Holds the current view/state of the Map Template.
  * @param {array} props.appViews - Array of all possible views.
- * @param {string} props.selectedMapType - The currently selected map type.
- * @param {array} props.filteredLocationsByExternalIDs - Array of locations filtered based on the external ID.
- * @param {function} props.onLocationsFilteredByExternalIDs - The list of locations after filtering based on external ID.
  */
-function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, onLocationsFiltered, currentVenueName, directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews, selectedMapType, filteredLocationsByExternalIDs, onLocationsFilteredByExternalIDs }) {
+function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews }) {
 
     const bottomSheetRef = useRef();
 
@@ -36,7 +32,9 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
     const [wayfindingSheetSize, setWayfindingSheetSize] = useState();
     const [searchSheetSize, setSearchSheetSize] = useState();
     const [locationsListSheetSize, setLocationsListSheetSize] = useState();
-
+    const categories = useRecoilValue(categoriesState);
+    const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
+    const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
 
     /*
      * React on changes on the current location and directions locations and set relevant bottom sheet.
@@ -74,21 +72,18 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
     function closeLocationsList() {
         pushAppView(appViews.SEARCH);
         setCurrentLocation();
-        onLocationsFilteredByExternalIDs([]);
+        setFilteredLocationsByExternalID([]);
     }
 
     const bottomSheets = [
         <Sheet
-            minHeight="144"
+            minHeight={categories.length > 0 ? "136" : "80"}
             preferredSizeSnapPoint={searchSheetSize}
             isOpen={currentAppView === appViews.SEARCH}
             key="A">
             <Search
                 onSetSize={size => setSearchSheetSize(size)}
                 onLocationClick={(location) => setCurrentLocation(location)}
-                categories={currentCategories}
-                onLocationsFiltered={(locations) => onLocationsFiltered(locations)}
-                currentVenueName={currentVenueName}
             />
         </Sheet>,
         <Sheet
@@ -101,7 +96,7 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
                 onBack={() => closeLocationsList()}
                 locations={filteredLocationsByExternalIDs}
                 onLocationClick={(location) => setCurrentLocation(location)}
-                onLocationsFiltered={(locations) => onLocationsFilteredByExternalIDs(locations)}
+                onLocationsFiltered={(locations) => setFilteredLocationsByExternalID(locations)}
             />
         </Sheet>,
         <Sheet
@@ -113,7 +108,6 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
             <LocationDetails
                 onSetSize={size => setLocationDetailsSheetSize(size)}
                 onStartWayfinding={() => pushAppView(appViews.WAYFINDING)}
-                location={currentLocation}
                 onBack={() => closeLocationDetails()}
                 snapPointSwiped={locationDetailsSheetSwiped}
             />
@@ -126,13 +120,11 @@ function BottomSheet({ currentLocation, setCurrentLocation, currentCategories, o
             <Wayfinding
                 onSetSize={size => setWayfindingSheetSize(size)}
                 onStartDirections={() => pushAppView(appViews.DIRECTIONS)}
-                currentLocation={currentLocation}
                 directionsToLocation={directionsToLocation}
                 directionsFromLocation={directionsFromLocation}
                 onDirections={result => setDirections(result)}
                 onBack={() => pushAppView(currentLocation ? appViews.LOCATION_DETAILS : appViews.SEARCH)}
                 isActive={currentAppView === appViews.WAYFINDING}
-                selectedMapType={selectedMapType}
             />
         </Sheet>,
         <Sheet

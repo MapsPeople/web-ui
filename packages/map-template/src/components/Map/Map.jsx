@@ -1,8 +1,24 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { mapTypes } from "../../constants/mapTypes";
 import useLiveData from '../../hooks/useLivedata';
+import venuesState from '../../atoms/venuesState';
 import GoogleMapsMap from "./GoogleMapsMap/GoogleMapsMap";
 import MapboxMap from "./MapboxMap/MapboxMap";
+import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
+import userPositionState from '../../atoms/userPositionState';
+import directionsServiceState from '../../atoms/directionsServiceState';
+import mapTypeState from '../../atoms/mapTypeState';
+import currentVenueNameState from '../../atoms/currentVenueNameState';
+import apiKeyState from '../../atoms/apiKeyState';
+import gmApiKeyState from '../../atoms/gmApiKeyState';
+import mapboxAccessTokenState from '../../atoms/mapboxAccessTokenState';
+import filteredLocationsState from '../../atoms/filteredLocationsState';
+import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
+import tileStyleState from '../../atoms/tileStyleState';
+import startZoomLevelState from '../../atoms/startZoomLevelState';
+import positionControlState from '../../atoms/positionControlState';
+import locationIdState from '../../atoms/locationIdState';
 
 const mapsindoors = window.mapsindoors;
 
@@ -18,40 +34,37 @@ let _tileStyle;
  * Shows a map.
  *
  * @param {Object} props
- * @param {string} [props.apiKey] - MapsIndoors API key or solution alias.
- * @param {string} [props.gmApiKey] - Google Maps API key if you want to show a Google Maps map.
- * @param {string} [props.mapboxAccessToken] - Mapbox Access Token if you want to show a Mapbox map.
- * @param {array} [props.venues] - Array of Venues in the current solution.
- * @param {string} [props.venueName] - If you want the map to show a specific Venue, provide the Venue name here.
  * @param {function} [props.onLocationClick] - Function that is run when a MapsIndoors Location is clicked. the Location will be sent along as first argument.
- * @param {function} props.onMapsIndoorsInstance - Function that is run when a MapsIndoors instance is created. The instance will be sent along as first argument.
- * @param {function} props.onDirectionsService - Function that is run when a DirectionsService instance is created. The instance will be sent along as first argument.
  * @param {function} props.onVenueChangedOnMap - Function that is run when the map bounds was changed due to fitting to a venue.
- * @param {function} props.onPositionControl -  A function that is called when the MapsIndoors PositionControl is constructed. Will send the PositionControl instance as payload.
- * @param {function} props.onUserPosition - Function that is run when (if) the user position updates. Sends position as payload.
- * @param {array} props.filteredLocationIds - Array of IDs of the filtered locations.
- * @param {function} props.onMapTypeChanged - Function that is run when the map type is changed.
- * @param {array} props.filteredLocationsByExternalIDs - Array of IDs of the filtered locations based on external ID.
- * @param {string} props.tileStyle - Tile style name to change the interface of the map.
- * @param {number} props.startZoomLevel - The initial zoom level of the map.
- * @param {string} props.locationId - Location Id property used to handle the centering and zooming of the map.
-
  * @returns
  */
-function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocationClick, onMapsIndoorsInstance, onDirectionsService, onVenueChangedOnMap, onPositionControl, onUserPosition, filteredLocationIds, onMapTypeChanged, filteredLocationsByExternalIDs, tileStyle, startZoomLevel, locationId }) {
-    const [mapType, setMapType] = useState();
-    const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState(null);
+function Map({ onLocationClick, onVenueChangedOnMap }) {
+    const apiKey = useRecoilValue(apiKeyState);
+    const gmApiKey = useRecoilValue(gmApiKeyState);
+    const mapboxAccessToken = useRecoilValue(mapboxAccessTokenState);
+    const [mapType, setMapType] = useRecoilState(mapTypeState);
+    const [mapsIndoorsInstance, setMapsIndoorsInstance] = useRecoilState(mapsIndoorsInstanceState);
+    const [, setUserPosition] = useRecoilState(userPositionState);
+    const [, setDirectionsService] = useRecoilState(directionsServiceState);
+    const venues = useRecoilValue(venuesState);
+    const venueName = useRecoilValue(currentVenueNameState);
+    const filteredLocations = useRecoilValue(filteredLocationsState);
+    const filteredLocationsByExternalIDs = useRecoilValue(filteredLocationsByExternalIDState);
+    const tileStyle = useRecoilValue(tileStyleState);
+    const startZoomLevel = useRecoilValue(startZoomLevelState);
+    const [, setPositionControl] = useRecoilState(positionControlState);
+    const locationId = useRecoilValue(locationIdState);
 
     useLiveData(apiKey);
 
     useEffect(() => {
+        if (gmApiKey === null && mapboxAccessToken === null) return;
+
         if (mapboxAccessToken) {
             setMapType(mapTypes.Mapbox);
-            onMapTypeChanged(mapTypes.Mapbox)
         } else {
             // A Google Maps map will have precedense if no keys or keys for both providers are set.
             setMapType(mapTypes.Google);
-            onMapTypeChanged(mapTypes.Google)
         }
     }, [gmApiKey, mapboxAccessToken]);
 
@@ -78,13 +91,13 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
      */
     useEffect(() => {
         if (mapsIndoorsInstance) {
-            if (filteredLocationIds) {
-                mapsIndoorsInstance.filter(filteredLocationIds);
+            if (filteredLocations) {
+                mapsIndoorsInstance.filter(filteredLocations.map(location => location.id));
             } else if (filteredLocationsByExternalIDs) {
-                mapsIndoorsInstance.filter(filteredLocationsByExternalIDs);
+                mapsIndoorsInstance.filter(filteredLocationsByExternalIDs.map(location => location.id));
             }
         }
-    }, [filteredLocationIds, filteredLocationsByExternalIDs, mapsIndoorsInstance]);
+    }, [filteredLocations, filteredLocationsByExternalIDs, mapsIndoorsInstance]);
 
     /**
      * Set the venue to show on the map.
@@ -131,10 +144,14 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
 
                     // Check if the solution allows the zoom level to be 22.
                     // If yes, set the zoom level to 22, otherwise set it to 21.
-                    mapsindoors.services.SolutionsService.getSolution().then(solution => {
-                        const hasZoom22 = Object.values(solution.modules).find(zoomLevel => zoomLevel === 'z22')
-                        miInstance?.setZoom(hasZoom22 ? 22 : 21);
-                    });
+                    if (startZoomLevel) {
+                        miInstance?.setZoom(startZoomLevel);
+                    } else {
+                        mapsindoors.services.SolutionsService.getSolution().then(solution => {
+                            const hasZoom22 = Object.values(solution.modules).find(zoomLevel => zoomLevel === 'z22')
+                            miInstance?.setZoom(hasZoom22 ? 22 : 21);
+                        });
+                    }
                 }
             });
         }
@@ -172,11 +189,10 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
         miInstance.on('floor_changed', () => onTileStyleChanged(miInstance));
 
         setMapsIndoorsInstance(miInstance);
-        onMapsIndoorsInstance(miInstance);
 
         // Initialize a Directions Service
         const directionsService = new mapsindoors.services.DirectionsService(externalDirectionsProvider);
-        onDirectionsService(directionsService);
+        setDirectionsService(directionsService);
 
         const venueToShow = getVenueToShow(venueName, venues);
         if (venueToShow && !locationId) {
@@ -192,10 +208,10 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
     const onPositionControlCreated = positionControl => {
         positionControl.on('position_received', positionInfo => {
             if (positionInfo.accurate === true) {
-                onUserPosition(positionInfo.position);
+                setUserPosition(positionInfo.position);
             }
         });
-        onPositionControl(positionControl);
+        setPositionControl(positionControl);
     }
 
     /*
@@ -207,8 +223,8 @@ function Map({ apiKey, gmApiKey, mapboxAccessToken, venues, venueName, onLocatio
     }, [tileStyle]);
 
     return (<>
-        {mapType === mapTypes.Google && <GoogleMapsMap gmApiKey={gmApiKey} onMapView={onMapView} onPositionControl={onPositionControlCreated} mapsIndoorsInstance={mapsIndoorsInstance} />}
-        {mapType === mapTypes.Mapbox && <MapboxMap mapboxAccessToken={mapboxAccessToken} onMapView={onMapView} onPositionControl={onPositionControlCreated} mapsIndoorsInstance={mapsIndoorsInstance} />}
+        {mapType === mapTypes.Google && <GoogleMapsMap onMapView={onMapView} onPositionControl={onPositionControlCreated} />}
+        {mapType === mapTypes.Mapbox && <MapboxMap onMapView={onMapView} onPositionControl={onPositionControlCreated} />}
     </>)
 }
 
@@ -248,5 +264,5 @@ function getVenueToShow(preferredVenueName, venues) {
     }
 
     // Else take first venue sorted alphabetically
-    return venues.sort(function (a, b) { return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0); })[0];
+    return [...venues].sort(function (a, b) { return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0); })[0];
 }

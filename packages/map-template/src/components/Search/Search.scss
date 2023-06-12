@@ -1,17 +1,14 @@
 @import '../../variables.scss';
 
 .search {
-    padding: var(--spacing-large) var(--spacing-x-small) var(--spacing-x-small) var(--spacing-x-small);
+    padding: var(--spacing-medium);
     display: grid;
-    gap: var(--spacing-x-small);
     grid-auto-rows: min-content;
     overflow: auto;
-    min-height: 144px;
 
     &__scrollable {
         overflow: auto;
         display: grid;
-        gap: var(--spacing-x-small);
     }
 
     &__categories {
@@ -20,6 +17,7 @@
         gap: var(--spacing-x-small);
         overflow: auto hidden;
         grid-auto-columns: min-content;
+        margin-top: var(--spacing-x-small);
     }
 
     &__results {
@@ -27,9 +25,14 @@
         gap: var(--spacing-x-small);
         overflow: auto;
         grid-auto-rows: min-content;
+        margin-top: var(--spacing-x-small);
 
         p {
             text-align: center;
         }
+    }
+
+    @media (max-width: $desktop-breakpoint) {
+        padding: var(--spacing-medium) var(--spacing-x-small) var(--spacing-medium) var(--spacing-x-small);
     }
 }

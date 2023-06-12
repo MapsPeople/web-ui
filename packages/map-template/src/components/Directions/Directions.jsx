@@ -1,11 +1,16 @@
-import React, { useContext, useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import './Directions.scss';
-import { MapsIndoorsContext } from '../../MapsIndoorsContext';
+import { useRecoilValue } from 'recoil';
+import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
+import travelModeState from '../../atoms/travelModeState';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
-import { ReactComponent as WalkingIcon } from '../../assets/walking.svg';
+import { ReactComponent as WalkingIcon } from '../../assets/walk.svg';
+import { ReactComponent as DriveIcon } from '../../assets/drive.svg';
+import { ReactComponent as BikeIcon } from '../../assets/bike.svg';
 import RouteInstructions from "../RouteInstructions/RouteInstructions";
 import useMediaQuery from '../../hooks/useMediaQuery';
+import { travelModes } from "../../constants/travelModes";
 
 const mapsindoors = window.mapsindoors;
 
@@ -29,7 +34,8 @@ function Directions({ isOpen, onBack, directions }) {
     const [totalDistance, setTotalDistance] = useState();
     const [totalTime, setTotalTime] = useState();
 
-    const mapsIndoorsInstance = useContext(MapsIndoorsContext);
+    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
+    const travelMode = useRecoilValue(travelModeState);
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
@@ -68,9 +74,7 @@ function Directions({ isOpen, onBack, directions }) {
                 setDestinationDisplayRule(mapsIndoorsInstance.getDisplayRule(directions.destinationLocation));
             }
         }
-
-
-    }, [isOpen, directions, mapsIndoorsInstance]);
+    }, [isOpen, directions, mapsIndoorsInstance, travelMode]);
 
     /*
      * Make sure directions stop rendering on the map when the Directions view is not active anymore.
@@ -89,7 +93,7 @@ function Directions({ isOpen, onBack, directions }) {
             return [];
         }
 
-        return directions.directionsResult.legs.reduce((accummulator, leg, legIndex) => {
+        return directions.directionsResult.legs.reduce((accummulator, leg) => {
             for (const stepIndex in leg.steps) {
                 const step = leg.steps[stepIndex];
 
@@ -200,7 +204,9 @@ function Directions({ isOpen, onBack, directions }) {
             <div className="directions__guide">
                 <div className="directions__metrics">
                     <div className="directions__distance">
-                        <WalkingIcon />
+                        {travelMode === travelModes.WALKING && <WalkingIcon />}
+                        {travelMode === travelModes.DRIVING && <DriveIcon />}
+                        {travelMode === travelModes.BICYCLING && <BikeIcon />}
                         <div>Distance:</div>
                         <div className="directions__meters">{totalDistance && <mi-distance meters={totalDistance} />}</div>
                     </div>
