@@ -6,7 +6,7 @@
     display: grid;
     height: 100%;
     overflow-y: hidden;
-    grid-template-rows: 40px 1fr 64px;
+    grid-template-rows: min-content 1fr 64px;
 
     &--content-below {
         position: relative;
@@ -109,9 +109,11 @@
 }
 
 .location-info {
-    display: flex;
+    display: grid;
     align-items: center;
     font-size: var(--font-size-small);
+    grid-template-columns: min-content 1fr var(--spacing-xx-large);
+    gap: var(--spacing-x-small);
 
     &__icon {
         margin-right: var(--spacing-medium);
@@ -133,6 +135,7 @@
         display: grid;
         justify-content: center;
         align-items: center;
+        align-self: start;
 
         &:hover {
             background-color: var(--tailwind-colors-gray-50);
