@@ -20,16 +20,16 @@
         margin-top: var(--spacing-x-small);
     }
 
+    &__error {
+        text-align: center;
+    }
+
     &__results {
         display: grid;
         gap: var(--spacing-x-small);
         overflow: auto;
         grid-auto-rows: min-content;
         margin-top: var(--spacing-x-small);
-
-        p {
-            text-align: center;
-        }
     }
 
     @media (max-width: $desktop-breakpoint) {
