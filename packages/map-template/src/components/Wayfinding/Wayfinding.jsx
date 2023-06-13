@@ -25,6 +25,7 @@ import { ReactComponent as DriveIcon } from '../../assets/drive.svg';
 import { ReactComponent as BikeIcon } from '../../assets/bike.svg';
 import { travelModes } from "../../constants/travelModes";
 import Dropdown from "../WebComponentWrappers/Dropdown/Dropdown";
+import directionsResponseState from "../../atoms/directionsResponseState";
 
 const searchFieldIdentifiers = {
     TO: 'TO',
@@ -44,7 +45,7 @@ const googlePlacesIcon = "data:image/svg+xml,%3Csvg width='10' height='10' viewB
  * @param {function} props.onSetSize - Callback that is fired when the component has loaded.
  * @returns
  */
-function Wayfinding({ onStartDirections, onBack, directionsToLocation, directionsFromLocation, onSetSize, isActive, onDirections }) {
+function Wayfinding({ onStartDirections, onBack, directionsToLocation, directionsFromLocation, onSetSize, isActive }) {
 
     const wayfindingRef = useRef();
 
@@ -54,6 +55,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     const toFieldRef = useRef();
     const fromFieldRef = useRef();
 
+    const [, setDirectionsResponse] = useRecoilState(directionsResponseState);
     const directionsService = useRecoilValue(directionsServiceState);
     const userPosition = useRecoilValue(userPositionState);
     const currentLocation = useRecoilValue(currentLocationState);
@@ -326,7 +328,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                     setTotalDistance(totalDistance);
                     setTotalTime(totalTime);
 
-                    onDirections({
+                    setDirectionsResponse({
                         originLocation,
                         destinationLocation,
                         totalDistance,

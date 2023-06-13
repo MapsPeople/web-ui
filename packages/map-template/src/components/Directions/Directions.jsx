@@ -11,6 +11,7 @@ import { ReactComponent as BikeIcon } from '../../assets/bike.svg';
 import RouteInstructions from "../RouteInstructions/RouteInstructions";
 import useMediaQuery from '../../hooks/useMediaQuery';
 import { travelModes } from "../../constants/travelModes";
+import directionsResponseState from "../../atoms/directionsResponseState";
 
 const mapsindoors = window.mapsindoors;
 
@@ -22,14 +23,15 @@ let directionsRenderer;
  * @param {object} props
  * @param {boolean} props.isOpen - Indicates if the directions view is open.
  * @param {function} props.onBack - Callback that fires when the directions view is closed by the user.
- * @param {function} props.directions - The directions information based on the origin and destination.
  */
-function Directions({ isOpen, onBack, directions }) {
+function Directions({ isOpen, onBack }) {
     // Holds the MapsIndoors DisplayRule for the destination
     const [destinationDisplayRule, setDestinationDisplayRule] = useState(null);
 
     const destinationInfoElement = useRef(null);
     const originInfoElement = useRef(null);
+
+    const directions = useRecoilValue(directionsResponseState);
 
     const [totalDistance, setTotalDistance] = useState();
     const [totalTime, setTotalTime] = useState();
