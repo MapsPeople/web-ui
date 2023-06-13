@@ -69,8 +69,7 @@
             color: var(--color-gray-70);
             line-height: 1.5;
             overflow-y: hidden;
-            max-height: var(--spacing-xxxx-large);
-            /* corresponding to approx. 3 lines of description text */
+            max-height: var(--spacing-xxxx-large); /* corresponding to approx. 3 lines of description text */
         }
 
         button {
@@ -119,8 +118,7 @@
 
         img {
             height: var(--spacing-x-large);
-            display: block;
-            /* to avoid spacing below */
+            display: block; /* to avoid spacing below */
         }
     }
 
