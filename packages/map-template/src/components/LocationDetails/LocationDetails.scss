@@ -152,13 +152,5 @@
     &__content {
         display: grid;
         gap: var(--spacing-xx-small);
-
-        mi-location-info {
-            overflow: hidden;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            line-clamp: 3;
-            -webkit-box-orient: vertical;
-        }
     }
 }
