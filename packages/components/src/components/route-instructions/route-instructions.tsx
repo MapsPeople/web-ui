@@ -98,6 +98,7 @@ export class RouteInstructions implements ComponentInterface {
         bike: 'Bike',
         transit: 'Transit',
         drive: 'Drive',
+        destination: 'Destination',
         leave: 'Leave',
         from: 'From',
         park: 'Park',
@@ -124,8 +125,7 @@ export class RouteInstructions implements ComponentInterface {
         turnAround: 'Turn around',
         days: 'd',
         hours: 'h',
-        minutes: 'min',
-        destination: 'Destination'
+        minutes: 'min'
     };
 
     miStepElements: HTMLMiRouteInstructionsStepElement[] = [];

@@ -221,6 +221,7 @@ function Directions({ isOpen, onBack, directions }) {
                     <RouteInstructions
                         steps={getRouteSteps()}
                         originLocation={directions?.originLocation}
+                        destinationLocation={directions?.destinationLocation}
                         onNextStep={() => onNext()}
                         onPreviousStep={() => onPrevious()}>
                     </RouteInstructions>
