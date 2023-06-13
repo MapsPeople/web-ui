@@ -56,6 +56,12 @@ export class RouteInstructionsStep implements ComponentInterface {
     @Prop() fromTransitStop: string;
 
     /**
+     * The destination location.
+     * @type {string}
+     */
+    @Prop() destinationLocation?: string;
+
+    /**
      * Set imperial or metric as default unit system. Default is Metric unless the browser is running US English. In that case Imperial.
      * @type {UnitSystem}
      */
@@ -133,6 +139,8 @@ export class RouteInstructionsStep implements ComponentInterface {
                 return this.renderBicyclingStep();
             case 'TRANSIT':
                 return this.renderTransitStep();
+            case 'DESTINATION':
+                return this.renderDestinationStep();
             default:
                 return <div>Unknown travel mode: {this.stepData.travel_mode}</div>;
         }
@@ -161,6 +169,9 @@ export class RouteInstructionsStep implements ComponentInterface {
                 break;
             case 'TRANSIT':
                 travelModeIcon = this.getTransitVehicleIconName();
+                break;
+            case 'DESTINATION':
+                travelModeIcon = 'logo';
                 break;
         }
 
@@ -284,7 +295,7 @@ export class RouteInstructionsStep implements ComponentInterface {
         const defaultHeadings = {
             'driving': this.translationsData.drive,
             'walking': this.translationsData.walk,
-            'bicycling': this.translationsData.bike
+            'bicycling': this.translationsData.bike,
         };
 
         return this.stepData.steps[0]?.instructions ?
@@ -406,6 +417,27 @@ export class RouteInstructionsStep implements ComponentInterface {
                     </span>
                 }
                 <div part="step-heading" class="step__heading">{this.getStepHeading()}</div>
+            </div>
+        </div>;
+    }
+
+    /**
+     * Render the destination step.
+     *
+     * @returns {JSX.Element}
+     */
+    renderDestinationStep(): JSX.Element {
+        return <div class="step" onClick={e => this.stepClickHandler(e)}>
+            <div class="step__info destination">
+                <div class="step__destination">
+                    {this.isInternetExplorer ? null :
+                        <span class="step__action-icon step__action-icon--circled">
+                            <mi-icon icon-name="logo"></mi-icon>
+                        </span>
+                    }
+                    <div part="step-heading" class="step__heading">You have arrived</div>
+                </div>
+                <div part="step-location" class="step__location">{this.destinationLocation}</div>
             </div>
         </div>;
     }

@@ -25,6 +25,14 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }
      */
     useEffect(() => {
         setActiveStep(0);
+
+        const lastStep = steps[steps.length - 1];
+        const finalStep = { ...lastStep }
+        console.log(lastStep)
+
+        finalStep.travel_mode = 'DESTINATION'
+        steps.push(finalStep);
+
     }, [steps]);
 
     /**
@@ -91,6 +99,7 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }
                     <mi-route-instructions-step
                         step={JSON.stringify(steps[activeStep])}
                         translations={JSON.stringify(translations)}
+                        destination-location={'Test'}
                         from-travel-mode={previous?.travel_mode ?? ""}
                         from-route-context={previous?.route_context ?? originLocation?.properties?.name ?? ""}>
                     </mi-route-instructions-step>

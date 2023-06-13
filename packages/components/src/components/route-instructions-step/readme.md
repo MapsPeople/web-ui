@@ -343,15 +343,16 @@ mi-route-instructions-step::part(step-toggle) {
 
 ## Properties
 
-| Property             | Attribute              | Description                                                                                                                       | Type                                       | Default                                                                    |
-| -------------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ | -------------------------------------------------------------------------- |
-| `fromRouteContext`   | `from-route-context`   | The route context of previous step, if any.                                                                                       | `string`                                   | `''`                                                                       |
-| `fromTransitStop`    | `from-transit-stop`    | The transit stop of previous step if any.                                                                                         | `string`                                   | `undefined`                                                                |
-| `fromTravelMode`     | `from-travel-mode`     | The travel mode of previous step, if any.                                                                                         | `string`                                   | `undefined`                                                                |
-| `hideIndoorSubsteps` | `hide-indoor-substeps` | If indoor substeps/maneuvers should be hidden.                                                                                    | `boolean`                                  | `true`                                                                     |
-| `step`               | `step`                 | The step data object to render from. Must be passed as stringified JSON.                                                          | `string`                                   | `undefined`                                                                |
-| `translations`       | `translations`         | Object with translation strings as stringified JSON.                                                                              | `string`                                   | `undefined`                                                                |
-| `unit`               | `unit`                 | Set imperial or metric as default unit system. Default is Metric unless the browser is running US English. In that case Imperial. | `UnitSystem.Imperial \| UnitSystem.Metric` | `navigator.language === 'en-US' ? UnitSystem.Imperial : UnitSystem.Metric` |
+| Property              | Attribute              | Description                                                                                                                       | Type                                       | Default                                                                    |
+| --------------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ | -------------------------------------------------------------------------- |
+| `destinationLocation` | `destination-location` | The destination location.                                                                                                         | `string`                                   | `undefined`                                                                |
+| `fromRouteContext`    | `from-route-context`   | The route context of previous step, if any.                                                                                       | `string`                                   | `''`                                                                       |
+| `fromTransitStop`     | `from-transit-stop`    | The transit stop of previous step if any.                                                                                         | `string`                                   | `undefined`                                                                |
+| `fromTravelMode`      | `from-travel-mode`     | The travel mode of previous step, if any.                                                                                         | `string`                                   | `undefined`                                                                |
+| `hideIndoorSubsteps`  | `hide-indoor-substeps` | If indoor substeps/maneuvers should be hidden.                                                                                    | `boolean`                                  | `true`                                                                     |
+| `step`                | `step`                 | The step data object to render from. Must be passed as stringified JSON.                                                          | `string`                                   | `undefined`                                                                |
+| `translations`        | `translations`         | Object with translation strings as stringified JSON.                                                                              | `string`                                   | `undefined`                                                                |
+| `unit`                | `unit`                 | Set imperial or metric as default unit system. Default is Metric unless the browser is running US English. In that case Imperial. | `UnitSystem.Imperial \| UnitSystem.Metric` | `navigator.language === 'en-US' ? UnitSystem.Imperial : UnitSystem.Metric` |
 
 
 ## Events
@@ -368,6 +369,7 @@ mi-route-instructions-step::part(step-toggle) {
 | `"step-description"`      |             |
 | `"step-heading"`          |             |
 | `"step-info"`             |             |
+| `"step-location"`         |             |
 | `"step-toggle"`           |             |
 | `"step-travel-mode"`      |             |
 | `"step-travel-mode-icon"` |             |
