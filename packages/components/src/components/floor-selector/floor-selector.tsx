@@ -70,9 +70,9 @@ export class FloorSelector {
         if (this.floorSelectorClosed) {
             const listScrollTop = this.floorListElement.scrollTop;
             const listPaddingTop: number = parseInt(window.getComputedStyle(this.floorListElement).getPropertyValue('padding-top'));
-            const seletedElementDistanceFromTop = this.currentFloorElement.offsetTop - this.floorListElement.offsetTop;
-            const distance: number = -(seletedElementDistanceFromTop - listScrollTop - listPaddingTop);
-            this.animateTranslateY(this.currentFloorElement, distance, 250);
+            const selectedElementDistanceFromTop = this.currentFloorElement.offsetTop - this.floorListElement.offsetTop;
+            const newElementDistanceFromTop: number = -(selectedElementDistanceFromTop - listScrollTop - listPaddingTop);
+            this.animateTranslateY(this.currentFloorElement, newElementDistanceFromTop, 250);
 
             // If the floor selector has been scrolled, all floors need to be pushed down.
             if (this.floorListElement.scrollTop > 0) {
