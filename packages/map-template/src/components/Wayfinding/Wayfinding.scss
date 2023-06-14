@@ -38,7 +38,6 @@
 
         &:hover {
             background-color: var(--tailwind-colors-gray-200);
-            cursor: pointer;
         }
     }
 
@@ -66,7 +65,6 @@
             font-size: var(--font-size-small);
             color: var(--color-blue-base);
             margin-top: var(--spacing-x-small);
-            cursor: pointer;
         }
     }
 
@@ -154,7 +152,6 @@
 
         &:hover {
             filter: brightness(90%);
-            cursor: pointer;
         }
     }
 
@@ -175,7 +172,6 @@
 
         &:hover {
             opacity: .8;
-            cursor: pointer;
         }
     }
 
