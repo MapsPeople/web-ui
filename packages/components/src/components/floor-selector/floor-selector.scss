@@ -139,12 +139,7 @@ $max-list-height: 300px; // The floor-selector.tsx: maxListHeight variable needs
         &--active {
             z-index: 2;
             transform: translateY(0px);
-            @include background-color.dark-pine(100);
             @include color.white(base);
-        }
-
-        &--active:hover {
-            @include background-color.dark-pine(100);
         }
     }
 

@@ -84,7 +84,7 @@ A `mapsindoors` attribute is available on the `<mi-floor-selector>` element, whi
 
 ## `primaryColor` attribute
 
-A `primaryColor` attribute is available on the `<mi-floor-selector>` element, which can be used to set the background color of the selected floor inside the floor-selector.
+A `primaryColor` attribute is available on the `<mi-floor-selector>` element, which can be used to set the background color of the selected floor inside the floor-selector. Dafult value is '#005655'.
 
 <!-- Auto Generated Below -->
 

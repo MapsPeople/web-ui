@@ -17,7 +17,7 @@ export class FloorSelector {
      *
      * @type {string}
      */
-    @Prop() primaryColor?: string;
+    @Prop() primaryColor?: string = '#005655';
 
     @State() floors = new Array();
     @State() currentFloor: string;
