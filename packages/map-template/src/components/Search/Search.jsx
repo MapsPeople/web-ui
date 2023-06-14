@@ -176,9 +176,9 @@ function Search({ onLocationClick, onSetSize }) {
                             </mi-chip>
                         )}
                     </div>}
+                {showNotFoundMessage && <p className="search__error">Nothing was found</p>}
                 {searchResults.length > 0 &&
                     <div className="search__results">
-                        {showNotFoundMessage && <p>Nothing was found</p>}
                         {searchResults.map(location =>
                             <ListItemLocation
                                 key={location.id}
