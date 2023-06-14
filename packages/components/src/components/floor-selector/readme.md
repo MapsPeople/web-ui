@@ -80,7 +80,7 @@ Example usage:
 
 ## `mapsindoors` attribute
 
-A `mapsindoors` attribute is available on the `<mi-floor-selector>` element, which is used to generate the floor-selector.
+A `mapsindoors` attribute is available on the `<mi-floor-selector>` element, which is required to generate the floor-selector.
 
 ## `primaryColor` attribute
 
