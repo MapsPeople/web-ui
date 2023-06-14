@@ -20,9 +20,9 @@ $max-list-height: 300px; // The floor-selector.tsx: maxListHeight variable needs
     animation-duration: .15s;
     user-select: none;
     pointer-events: auto;
-    font-family: Roboto, Arial, sans-serif;
     border-radius: 56px;
     border-width: 1px;
+    @include font.family(sans-serif);
     @include font.size(small);
     @include border.gray(30);
     @include border.style(solid);
