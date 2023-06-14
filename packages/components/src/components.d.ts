@@ -231,7 +231,14 @@ export namespace Components {
         "value": string;
     }
     interface MiFloorSelector {
+        /**
+          * MapsIndoors instance.
+         */
         "mapsindoors": any;
+        /**
+          * The color to use as the primary color (as background color of the selected floor in the list).
+          * @type {string}
+         */
         "primaryColor"?: string;
     }
     interface MiIcon {
@@ -1482,7 +1489,14 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     interface MiFloorSelector {
+        /**
+          * MapsIndoors instance.
+         */
         "mapsindoors"?: any;
+        /**
+          * The color to use as the primary color (as background color of the selected floor in the list).
+          * @type {string}
+         */
         "primaryColor"?: string;
     }
     interface MiIcon {

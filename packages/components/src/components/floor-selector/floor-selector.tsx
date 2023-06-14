@@ -7,7 +7,16 @@ import { Component, Element, Host, JSX, Prop, State, h } from '@stencil/core';
     shadow: true
 })
 export class FloorSelector {
+    /**
+     * MapsIndoors instance.
+     */
     @Prop() mapsindoors;
+
+    /**
+     * The color to use as the primary color (as background color of the selected floor in the list).
+     *
+     * @type {string}
+     */
     @Prop() primaryColor?: string;
 
     @State() floors = new Array();
