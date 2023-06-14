@@ -25,6 +25,8 @@ export class FloorSelector {
 
     @Element() el: HTMLDivElement;
 
+    private floorSelectorElement: HTMLDivElement;
+    private floorListElement: HTMLDivElement;
     private currentFloorElement: HTMLElement;
     private maxListHeight: number = 300; // The floor-selector.scss: $max-list-height variable needs to be synced with this value
 
@@ -32,11 +34,8 @@ export class FloorSelector {
      * Scrolling the floorList element to the selected floor.
      */
     private scrollToSelectedFloor(): void {
-        const floorSelectorElement = this.el.querySelector('.mi-floor-selector') as HTMLElement;
-        const floorListElement = this.el.querySelector('.mi-floor-selector__list') as HTMLElement;
-
-        if (this.currentFloorElement && floorSelectorElement.clientHeight / 2 < this.currentFloorElement.offsetTop) {
-            floorListElement.scrollTop = this.currentFloorElement.offsetTop - floorSelectorElement.clientHeight;
+        if (this.currentFloorElement && this.floorSelectorElement.clientHeight / 2 < this.currentFloorElement.offsetTop) {
+            this.floorListElement.scrollTop = this.currentFloorElement.offsetTop - this.floorSelectorElement.clientHeight;
         }
     }
 
@@ -56,7 +55,6 @@ export class FloorSelector {
      * Calls the animation for the needed elements with the calculated animation values.
      */
     private animateFloorSelector(): void {
-        const floorListElement = this.el.querySelector('.mi-floor-selector__list') as HTMLElement;
         const floorElements = this.el.querySelectorAll('.mi-floor-selector__floor');
 
         // Elements that are placed before the selected element in the markup.
@@ -70,21 +68,21 @@ export class FloorSelector {
         }
 
         if (this.floorSelectorClosed) {
-            const listScrollTop = floorListElement.scrollTop;
-            const listPaddingTop: number = parseInt(window.getComputedStyle(floorListElement).getPropertyValue('padding-top'));
-            const seletedElementDistanceFromTop = this.currentFloorElement.offsetTop - floorListElement.offsetTop;
+            const listScrollTop = this.floorListElement.scrollTop;
+            const listPaddingTop: number = parseInt(window.getComputedStyle(this.floorListElement).getPropertyValue('padding-top'));
+            const seletedElementDistanceFromTop = this.currentFloorElement.offsetTop - this.floorListElement.offsetTop;
             const distance: number = -(seletedElementDistanceFromTop - listScrollTop - listPaddingTop);
             this.animateTranslateY(this.currentFloorElement, distance, 250);
 
             // If the floor selector has been scrolled, all floors need to be pushed down.
-            if (floorListElement.scrollTop > 0) {
+            if (this.floorListElement.scrollTop > 0) {
                 floorElements.forEach(floorElement => {
                     if (floorElement.getAttribute('data-floor') !== this.currentFloor) {
                         // Floors placed before the first floor need to be pushed further down.
                         if (elementsBeforeSelected.indexOf(floorElement) > -1) {
-                            this.animateTranslateY(floorElement as HTMLElement, (floorElement as HTMLElement).offsetTop + floorListElement.scrollTop, 250);
+                            this.animateTranslateY(floorElement as HTMLElement, (floorElement as HTMLElement).offsetTop + this.floorListElement.scrollTop, 250);
                         } else {
-                            this.animateTranslateY(floorElement as HTMLElement, floorListElement.scrollTop, 250);
+                            this.animateTranslateY(floorElement as HTMLElement, this.floorListElement.scrollTop, 250);
                         }
                     }
                 });
@@ -124,29 +122,28 @@ export class FloorSelector {
      * Adding/removing classes to the floorlist to fade-in/out the top/bottom part of the container..
      */
     private onScrollStyle(): void {
-        const floorListElement = this.el.querySelector('.mi-floor-selector__list') as HTMLElement;
-        const maxScrollTop = floorListElement.scrollHeight - floorListElement.clientHeight;
+        const maxScrollTop = this.floorListElement.scrollHeight - this.floorListElement.clientHeight;
 
         if (this.floorSelectorClosed) {
-            floorListElement.classList.remove('mi-floor-selector__list--fade-top');
-            floorListElement.classList.remove('mi-floor-selector__list--fade-bottom');
+            this.floorListElement.classList.remove('mi-floor-selector__list--fade-top');
+            this.floorListElement.classList.remove('mi-floor-selector__list--fade-bottom');
             return;
         }
 
-        if (this.maxListHeight > floorListElement.clientHeight - 48) {
+        if (this.maxListHeight > this.floorListElement.clientHeight - 48) {
             return;
         }
 
-        if (floorListElement.scrollTop > 0) {
-            floorListElement.classList.add('mi-floor-selector__list--fade-top');
+        if (this.floorListElement.scrollTop > 0) {
+            this.floorListElement.classList.add('mi-floor-selector__list--fade-top');
         } else {
-            floorListElement.classList.remove('mi-floor-selector__list--fade-top');
+            this.floorListElement.classList.remove('mi-floor-selector__list--fade-top');
         }
 
-        if (floorListElement.scrollTop === maxScrollTop) {
-            floorListElement.classList.remove('mi-floor-selector__list--fade-bottom');
+        if (this.floorListElement.scrollTop === maxScrollTop) {
+            this.floorListElement.classList.remove('mi-floor-selector__list--fade-bottom');
         } else {
-            floorListElement.classList.add('mi-floor-selector__list--fade-bottom');
+            this.floorListElement.classList.add('mi-floor-selector__list--fade-bottom');
         }
     }
 
@@ -193,13 +190,18 @@ export class FloorSelector {
     render(): JSX.Element {
         return (
             <Host>
-                <div class='mi-floor-selector'>
+                <div
+                    class='mi-floor-selector'
+                    ref={(element): HTMLDivElement => this.floorSelectorElement = element as HTMLDivElement}>
                     <button
                         class={`mi-floor-selector__button mi-floor-selector__button--${this.floorSelectorClosed ? 'closed' : 'open'}`}
                         onClick={(): void => this.onToggleFloorSelector()}>
                     </button>
 
-                    <div class='mi-floor-selector__list' onScroll={(): void => this.onScrollStyle()}>
+                    <div
+                        class='mi-floor-selector__list'
+                        ref={(element): HTMLDivElement => this.floorListElement = element as HTMLDivElement}
+                        onScroll={(): void => this.onScrollStyle()}>
                         {this.floors.map((floor) => (
                             <button
                                 data-floor={floor.index}
@@ -219,11 +221,10 @@ export class FloorSelector {
      * Called after every render().
      */
     componentDidRender(): void {
-        const floorSelectorElement = this.el.querySelector('.mi-floor-selector') as HTMLElement;
-        if (!this.mapsindoors.getBuilding()) {
-            floorSelectorElement.classList.add('mi-floor-selector--hidden');
+        if (!this.mapsindoors.getBuilding() || !this.mapsindoors.getFloor()) {
+            this.floorSelectorElement.classList.add('mi-floor-selector--hidden');
         } else {
-            floorSelectorElement.classList.remove('mi-floor-selector--hidden');
+            this.floorSelectorElement.classList.remove('mi-floor-selector--hidden');
         }
 
         this.currentFloorElement = this.el.querySelector('.mi-floor-selector__floor--active');
