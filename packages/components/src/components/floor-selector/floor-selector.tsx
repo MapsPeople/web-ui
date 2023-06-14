@@ -32,8 +32,8 @@ export class FloorSelector {
      * Scrolling the floorList element to the selected floor.
      */
     private scrollToSelectedFloor(): void {
-        const floorSelectorElement = this.el.shadowRoot.querySelector('.mi-floor-selector') as HTMLElement;
-        const floorListElement = this.el.shadowRoot.querySelector('.mi-floor-selector__list') as HTMLElement;
+        const floorSelectorElement = this.el.querySelector('.mi-floor-selector') as HTMLElement;
+        const floorListElement = this.el.querySelector('.mi-floor-selector__list') as HTMLElement;
 
         if (this.currentFloorElement && floorSelectorElement.clientHeight / 2 < this.currentFloorElement.offsetTop) {
             floorListElement.scrollTop = this.currentFloorElement.offsetTop - floorSelectorElement.clientHeight;
@@ -56,8 +56,8 @@ export class FloorSelector {
      * Calls the animation for the needed elements with the calculated animation values.
      */
     private animateFloorSelector(): void {
-        const floorListElement = this.el.shadowRoot.querySelector('.mi-floor-selector__list') as HTMLElement;
-        const floorElements = this.el.shadowRoot.querySelectorAll('.mi-floor-selector__floor');
+        const floorListElement = this.el.querySelector('.mi-floor-selector__list') as HTMLElement;
+        const floorElements = this.el.querySelectorAll('.mi-floor-selector__floor');
 
         // Elements that are placed before the selected element in the markup.
         const elementsBeforeSelected = [];
@@ -124,7 +124,7 @@ export class FloorSelector {
      * Adding/removing classes to the floorlist to fade-in/out the top/bottom part of the container..
      */
     private onScrollStyle(): void {
-        const floorListElement = this.el.shadowRoot.querySelector('.mi-floor-selector__list') as HTMLElement;
+        const floorListElement = this.el.querySelector('.mi-floor-selector__list') as HTMLElement;
         const maxScrollTop = floorListElement.scrollHeight - floorListElement.clientHeight;
 
         if (this.floorSelectorClosed) {
@@ -219,14 +219,14 @@ export class FloorSelector {
      * Called after every render().
      */
     componentDidRender(): void {
-        const floorSelectorElement = this.el.shadowRoot.querySelector('.mi-floor-selector') as HTMLElement;
+        const floorSelectorElement = this.el.querySelector('.mi-floor-selector') as HTMLElement;
         if (!this.mapsindoors.getBuilding()) {
             floorSelectorElement.classList.add('mi-floor-selector--hidden');
         } else {
             floorSelectorElement.classList.remove('mi-floor-selector--hidden');
         }
 
-        this.currentFloorElement = this.el.shadowRoot.querySelector('.mi-floor-selector__floor--active');
+        this.currentFloorElement = this.el.querySelector('.mi-floor-selector__floor--active');
         this.currentFloor = this.currentFloorElement?.getAttribute('data-floor');
 
         if (this.currentFloorElement && this.currentFloor) {
