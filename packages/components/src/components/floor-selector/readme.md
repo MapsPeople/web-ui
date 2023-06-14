@@ -36,7 +36,7 @@ Working example:
     floorSelectorElement.mapsindoors = mi;
     floorSelectorElement.primaryColor = '#FFC0CB';
 
-    document.body.appendChild(floorSelectorElement);
+    mapBox.addControl({ onAdd: function () { return floorSelectorElement }, onRemove: function () { } });
 </script>
 
 Example usage:
@@ -75,7 +75,7 @@ Example usage:
     floorSelectorElement.mapsindoors = mi;
     floorSelectorElement.primaryColor = '#FFC0CB';
 
-    document.body.appendChild(floorSelectorElement);
+    mapBox.addControl({ onAdd: function () { return floorSelectorElement }, onRemove: function () { } });
 ```
 
 ## `mapsindoors` attribute

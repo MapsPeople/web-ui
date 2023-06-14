@@ -19,7 +19,7 @@
         }
 
         #map {
-            width: 500px;
+            width: 100%;
             height: 500px;
         }
     </style>
@@ -54,7 +54,7 @@
         floorSelectorElement.mapsindoors = mi;
         floorSelectorElement.primaryColor = '#FFC0CB';
 
-        document.body.appendChild(floorSelectorElement);
+        mapBox.addControl({ onAdd: function () { return floorSelectorElement }, onRemove: function () { } });
     </script>
 </body>
 
