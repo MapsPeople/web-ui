@@ -4,7 +4,7 @@ import { Component, Element, Host, JSX, Prop, State, h } from '@stencil/core';
 @Component({
     tag: 'mi-floor-selector',
     styleUrl: 'floor-selector.scss',
-    shadow: true
+    shadow: false
 })
 export class FloorSelector {
     /**
