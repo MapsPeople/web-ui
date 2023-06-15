@@ -178,6 +178,23 @@ export class FloorSelector {
     }
 
     /**
+     * Called after every render().
+     */
+    componentDidRender(): void {
+        if (!this.mapsindoors.getBuilding() || !this.mapsindoors.getFloor()) {
+            this.floorSelectorElement.classList.add('mi-floor-selector--hidden');
+        } else {
+            this.floorSelectorElement.classList.remove('mi-floor-selector--hidden');
+        }
+
+        this.currentFloorElement = this.el.querySelector('.mi-floor-selector__floor--active');
+
+        if (this.currentFloorElement && this.currentFloor) {
+            this.animateFloorSelector();
+        }
+    }
+
+    /**
      * Renders the floor selector.
      *
      * @returns {JSX.Element}
@@ -210,22 +227,5 @@ export class FloorSelector {
                 </div>
             </Host>
         );
-    }
-
-    /**
-     * Called after every render().
-     */
-    componentDidRender(): void {
-        if (!this.mapsindoors.getBuilding() || !this.mapsindoors.getFloor()) {
-            this.floorSelectorElement.classList.add('mi-floor-selector--hidden');
-        } else {
-            this.floorSelectorElement.classList.remove('mi-floor-selector--hidden');
-        }
-
-        this.currentFloorElement = this.el.querySelector('.mi-floor-selector__floor--active');
-
-        if (this.currentFloorElement && this.currentFloor) {
-            this.animateFloorSelector();
-        }
     }
 }
