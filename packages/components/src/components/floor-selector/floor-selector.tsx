@@ -147,8 +147,8 @@ export class FloorSelector {
      *
      * @param {PointerEvent} event
      */
-    private onSelectFloor(event: PointerEvent): void {
-        this.mapsindoors.setFloor((event.currentTarget as HTMLElement).getAttribute('data-floor'));
+    private onSelectFloor(event: PointerEvent, floorIndex: string): void {
+        this.mapsindoors.setFloor(floorIndex);
         this.currentFloor = this.mapsindoors.getFloor().toString();
         this.currentFloorElement = event.currentTarget as HTMLElement;
     }
@@ -202,7 +202,7 @@ export class FloorSelector {
                                 data-floor={floor.index}
                                 style={this.currentFloor === floor.index ? { backgroundColor: this.primaryColor } : {}}
                                 class={`mi-floor-selector__floor ${this.currentFloor === floor.index ? 'mi-floor-selector__floor--active' : ''}`}
-                                onClick={(event: PointerEvent): void => this.onSelectFloor(event)}>
+                                onClick={(event: PointerEvent): void => this.onSelectFloor(event, floor.index)}>
                                 <span>{floor.name}</span>
                             </button>
                         ))}
@@ -223,7 +223,6 @@ export class FloorSelector {
         }
 
         this.currentFloorElement = this.el.querySelector('.mi-floor-selector__floor--active');
-        this.currentFloor = this.currentFloorElement?.getAttribute('data-floor');
 
         if (this.currentFloorElement && this.currentFloor) {
             this.animateFloorSelector();
