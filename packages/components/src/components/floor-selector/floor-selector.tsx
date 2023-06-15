@@ -22,6 +22,8 @@ export class FloorSelector {
     @State() floors = new Array();
     @State() currentFloor: string;
     @State() floorSelectorClosed: boolean = true;
+    @State() fadeFloorSelectorOnTop: boolean = false;
+    @State() fadeFloorSelectorOnBottom: boolean = false;
 
     @Element() el: HTMLDivElement;
 
@@ -111,11 +113,13 @@ export class FloorSelector {
         this.floorSelectorClosed = !this.floorSelectorClosed;
         this.animateFloorSelector();
 
-        if (!this.floorSelectorClosed) {
-            this.scrollToSelectedFloor();
-        }
+        this.floorListElement.addEventListener('transitionend', () => {
+            if (!this.floorSelectorClosed) {
+                this.scrollToSelectedFloor();
+            }
 
-        this.onScrollStyle();
+            this.onScrollStyle();
+        }, { once: true });
     }
 
     /**
@@ -125,8 +129,8 @@ export class FloorSelector {
         const maxScrollTop = this.floorListElement.scrollHeight - this.floorListElement.clientHeight;
 
         if (this.floorSelectorClosed) {
-            this.floorListElement.classList.remove('mi-floor-selector__list--fade-top');
-            this.floorListElement.classList.remove('mi-floor-selector__list--fade-bottom');
+            this.fadeFloorSelectorOnTop = false;
+            this.fadeFloorSelectorOnBottom = false;
             return;
         }
 
@@ -134,17 +138,8 @@ export class FloorSelector {
             return;
         }
 
-        if (this.floorListElement.scrollTop > 0) {
-            this.floorListElement.classList.add('mi-floor-selector__list--fade-top');
-        } else {
-            this.floorListElement.classList.remove('mi-floor-selector__list--fade-top');
-        }
-
-        if (this.floorListElement.scrollTop === maxScrollTop) {
-            this.floorListElement.classList.remove('mi-floor-selector__list--fade-bottom');
-        } else {
-            this.floorListElement.classList.add('mi-floor-selector__list--fade-bottom');
-        }
+        this.fadeFloorSelectorOnTop = this.floorListElement.scrollTop > 0 ? true : false;
+        this.fadeFloorSelectorOnBottom = this.floorListElement.scrollTop === maxScrollTop ? false : true;
     }
 
     /**
@@ -199,7 +194,7 @@ export class FloorSelector {
                     </button>
 
                     <div
-                        class='mi-floor-selector__list'
+                        class={`mi-floor-selector__list ${this.fadeFloorSelectorOnTop ? 'mi-floor-selector__list--fade-top' : ''} ${this.fadeFloorSelectorOnBottom ? 'mi-floor-selector__list--fade-bottom' : ''}`}
                         ref={(element): HTMLDivElement => this.floorListElement = element as HTMLDivElement}
                         onScroll={(): void => this.onScrollStyle()}>
                         {this.floors.map((floor) => (
