@@ -126,6 +126,9 @@ $max-list-height: 300px; // The floor-selector.tsx: maxListHeight variable needs
         transform: translateY(0px);
         color: variables.$brand-colors-black-60;
         border-radius: 50%;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;    
         @include border.style(none);
         @include sizing.width(xx-large);
         @include sizing.height(xx-large);
