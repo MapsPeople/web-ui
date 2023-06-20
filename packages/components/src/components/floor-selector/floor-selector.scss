@@ -79,6 +79,8 @@ $max-list-height: 300px; // The floor-selector.tsx: maxListHeight variable needs
         overflow-y: hidden;
         transition: max-height .25s;
         scroll-behavior: smooth;
+        z-index: 0;
+        @include border.radius(pill);
         @include padding.all(xx-small);
         @include padding.top(xxx-large);
         @include sizing.max-height(xx-large);
