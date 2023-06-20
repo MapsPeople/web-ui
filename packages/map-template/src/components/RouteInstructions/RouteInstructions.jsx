@@ -26,6 +26,10 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
 
     const [totalSteps, setTotalSteps] = useState();
 
+    const [lastStepZoom, setLastStepZoom] = useState();
+
+    const [lastStepCenter, setLastStepCenter] = useState();
+
     const directionsResponse = useRecoilValue(directionsResponseState);
 
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
@@ -53,6 +57,12 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
     }, [steps]);
 
     useEffect(() => {
+        if (activeStep === totalSteps?.length - 1) {
+            const lastStepZoom = mapsIndoorsInstance.getZoom();
+            const lastStepCenter = mapsIndoorsInstance.getMapView().getCenter();
+            setLastStepZoom(lastStepZoom);
+            setLastStepCenter(lastStepCenter);
+        }
         if (activeStep === totalSteps?.length - 1 && destinationLocation) {
             const destinationLocation = directionsResponse?.destinationLocation;
             const destinationLocationGeometry = destinationLocation?.geometry.type === 'Point' ? destinationLocation?.geometry.coordinates : destinationLocation?.properties.anchor.coordinates;
@@ -80,7 +90,13 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
     function previousStep() {
         setPrevious(totalSteps[activeStep - 2]);
         setActiveStep(activeStep - 1);
-        onPreviousStep();
+
+        if (activeStep === totalSteps?.length - 1) {
+            mapsIndoorsInstance.getMapView().setCenter(lastStepCenter);
+            mapsIndoorsInstance.setZoom(lastStepZoom);
+        } else {
+            onPreviousStep();
+        }
     }
 
     // Translations required for the mi-route-instructions-step component
