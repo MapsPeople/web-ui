@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import './Directions.scss';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import travelModeState from '../../atoms/travelModeState';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
@@ -12,6 +12,7 @@ import RouteInstructions from "../RouteInstructions/RouteInstructions";
 import useMediaQuery from '../../hooks/useMediaQuery';
 import { travelModes } from "../../constants/travelModes";
 import directionsResponseState from "../../atoms/directionsResponseState";
+import activeStepState from "../../atoms/activeStep";
 
 const mapsindoors = window.mapsindoors;
 
@@ -38,6 +39,8 @@ function Directions({ isOpen, onBack }) {
 
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const travelMode = useRecoilValue(travelModeState);
+
+    const [, setActiveStep] = useRecoilState(activeStepState);
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
@@ -155,6 +158,7 @@ function Directions({ isOpen, onBack }) {
      * Close the directions.
      */
     function onDirectionsClosed() {
+        setActiveStep(0);
         stopRendering();
         onBack();
     }
@@ -223,7 +227,6 @@ function Directions({ isOpen, onBack }) {
                     <RouteInstructions
                         steps={getRouteSteps()}
                         originLocation={directions?.originLocation}
-                        destinationLocation={directions?.destinationLocation}
                         onNextStep={() => onNext()}
                         onPreviousStep={() => onPrevious()}>
                     </RouteInstructions>

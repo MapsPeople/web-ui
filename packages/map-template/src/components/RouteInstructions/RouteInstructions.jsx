@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react'
 import './RouteInstructions.scss';
 import { ReactComponent as ArrowRight } from '../../assets/arrow-right.svg';
 import { ReactComponent as ArrowLeft } from '../../assets/arrow-left.svg';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import directionsResponseState from '../../atoms/directionsResponseState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
+import activeStepState from '../../atoms/activeStep';
 
 /**
  * Route instructions step by step component.
@@ -14,15 +15,14 @@ import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
  * @param {function} props.onNextStep - Function handling the navigation to the next step.
  * @param {function} props.onPreviousStep - Function handling the navigation to the previous step.
  * @param {object} props.originLocation - The initial location where the route starts from.
- * @param {object} props.destinationLocation - The destination location where the route ends.
  *
  * @returns
  */
-function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, destinationLocation }) {
+function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }) {
     /** Referencing the previous step of each active step */
     const [previous, setPrevious] = useState();
 
-    const [activeStep, setActiveStep] = useState(0);
+    const [activeStep, setActiveStep] = useRecoilState(activeStepState);
 
     const [totalSteps, setTotalSteps] = useState();
 
@@ -30,32 +30,27 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
 
     const [lastStepCenter, setLastStepCenter] = useState();
 
-    const directionsResponse = useRecoilValue(directionsResponseState);
+    const directions = useRecoilValue(directionsResponseState);
 
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
 
-    /*
-     * Make sure to reset active step whenever the steps change.
+    /**
+     * Clone the last step in the directions in order to create a destination step.
+     * Assign the specific travel mode to the destination step and push the destination step at the end of the steps array.
+     *
      */
     useEffect(() => {
-        setActiveStep(0);
-
-        // Get the last step from the directions
         const lastStep = steps[steps.length - 1];
-
-        // Create a clone of the last step to create a destination step
         const destinationStep = { ...lastStep }
-
-        // Assign the specific travel mode to the destination step
         destinationStep.travel_mode = 'DESTINATION'
-
-        // Push the destination step at the end of the steps array
         steps.push(destinationStep);
-
         setTotalSteps(steps);
-
     }, [steps]);
 
+    /**
+     * Get the zoom and the center of the last step in the directions.
+     * If the destination location is present, zoom the map to 22 and center the location.
+     */
     useEffect(() => {
         if (activeStep === totalSteps?.length - 1) {
             const lastStepZoom = mapsIndoorsInstance.getZoom();
@@ -63,13 +58,13 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
             setLastStepZoom(lastStepZoom);
             setLastStepCenter(lastStepCenter);
         }
-        if (activeStep === totalSteps?.length - 1 && destinationLocation) {
-            const destinationLocation = directionsResponse?.destinationLocation;
+        if (activeStep === totalSteps?.length - 1 && directions?.destinationLocation) {
+            const destinationLocation = directions?.destinationLocation;
             const destinationLocationGeometry = destinationLocation?.geometry.type === 'Point' ? destinationLocation?.geometry.coordinates : destinationLocation?.properties.anchor.coordinates;
             mapsIndoorsInstance.getMapView().setCenter({ lat: destinationLocationGeometry[1], lng: destinationLocationGeometry[0] });
             mapsIndoorsInstance.setZoom(22);
         }
-    }, [totalSteps, activeStep]);
+    }, [activeStep]);
 
     /**
      * Navigate to the next step.
@@ -142,7 +137,7 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
                     <mi-route-instructions-step
                         step={JSON.stringify(totalSteps[activeStep])}
                         translations={JSON.stringify(translations)}
-                        destination-location={destinationLocation?.properties.name}
+                        destination-location={directions?.destinationLocation.properties.name}
                         from-travel-mode={previous?.travel_mode ?? ""}
                         from-route-context={previous?.route_context ?? originLocation?.properties?.name ?? ""}>
                     </mi-route-instructions-step>
