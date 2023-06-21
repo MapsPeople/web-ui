@@ -7,6 +7,8 @@ import directionsResponseState from '../../atoms/directionsResponseState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import activeStepState from '../../atoms/activeStep';
 
+const mapsindoors = window.mapsindoors;
+
 /**
  * Route instructions step by step component.
  *
@@ -22,13 +24,13 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }
     /** Referencing the previous step of each active step */
     const [previous, setPrevious] = useState();
 
-    const [activeStep, setActiveStep] = useRecoilState(activeStepState);
-
     const [totalSteps, setTotalSteps] = useState();
 
     const [lastStepZoom, setLastStepZoom] = useState();
 
     const [lastStepCenter, setLastStepCenter] = useState();
+
+    const [activeStep, setActiveStep] = useRecoilState(activeStepState);
 
     const directions = useRecoilValue(directionsResponseState);
 
@@ -48,8 +50,8 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }
     }, [steps]);
 
     /**
-     * Get the zoom and the center of the last step in the directions.
-     * If the destination location is present, zoom the map to 22 and center the location.
+     * Get the zoom and the center of the last step and the destination step in the directions.
+     *
      */
     useEffect(() => {
         if (activeStep === totalSteps?.length - 1) {
@@ -59,10 +61,19 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }
             setLastStepCenter(lastStepCenter);
         }
         if (activeStep === totalSteps?.length - 1 && directions?.destinationLocation) {
+            // Get the destination location
             const destinationLocation = directions?.destinationLocation;
+
+            // Center the map to the location coordinates.
             const destinationLocationGeometry = destinationLocation?.geometry.type === 'Point' ? destinationLocation?.geometry.coordinates : destinationLocation?.properties.anchor.coordinates;
             mapsIndoorsInstance.getMapView().setCenter({ lat: destinationLocationGeometry[1], lng: destinationLocationGeometry[0] });
-            mapsIndoorsInstance.setZoom(22);
+
+            // Check if the solution allows the zoom level to be 22.
+            // If yes, set the zoom level to 22, otherwise set it to 21.
+            mapsindoors.services.SolutionsService.getSolution().then(solution => {
+                const hasZoom22 = Object.values(solution.modules).find(zoomLevel => zoomLevel === 'z22')
+                mapsIndoorsInstance?.setZoom(hasZoom22 ? 22 : 21);
+            });
         }
     }, [activeStep]);
 
