@@ -114,6 +114,19 @@ $max-list-height: 300px; // The floor-selector.tsx: maxListHeight variable needs
                     white 4px,
                     rgba(255, 255, 255, 0) 40px);
         }
+
+        &::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: none;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: #8D98AA;
+            border-radius: 5px;
+        }
     }
 
     &__floor {
@@ -131,7 +144,7 @@ $max-list-height: 300px; // The floor-selector.tsx: maxListHeight variable needs
         border-radius: 50%;
         text-overflow: ellipsis;
         overflow: hidden;
-        white-space: nowrap;    
+        white-space: nowrap;
         @include border.style(none);
         @include sizing.width(xx-large);
         @include sizing.height(xx-large);
