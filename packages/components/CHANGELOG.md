@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **mi-route-instructions-step** support `destination` type.
+- **mi-route-instructions-step** support for `destination` type.
 
 ## [13.3.0] - 2023-06-12
 

@@ -24,13 +24,11 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }
     /** Referencing the previous step of each active step */
     const [previous, setPrevious] = useState();
 
+    const [activeStep, setActiveStep] = useRecoilState(activeStepState);
     const [totalSteps, setTotalSteps] = useState();
 
     const [lastStepZoom, setLastStepZoom] = useState();
-
     const [lastStepCenter, setLastStepCenter] = useState();
-
-    const [activeStep, setActiveStep] = useRecoilState(activeStepState);
 
     const directions = useRecoilValue(directionsResponseState);
 

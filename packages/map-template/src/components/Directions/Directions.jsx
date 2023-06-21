@@ -32,13 +32,14 @@ function Directions({ isOpen, onBack }) {
     const destinationInfoElement = useRef(null);
     const originInfoElement = useRef(null);
 
-    const directions = useRecoilValue(directionsResponseState);
-
     const [totalDistance, setTotalDistance] = useState();
     const [totalTime, setTotalTime] = useState();
 
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
+
     const travelMode = useRecoilValue(travelModeState);
+
+    const directions = useRecoilValue(directionsResponseState);
 
     const [, setActiveStep] = useRecoilState(activeStepState);
 
