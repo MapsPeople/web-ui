@@ -162,10 +162,16 @@ export class FloorSelector {
             this.floors = [];
             const building = this.mapsindoors.getBuilding();
             if (building) {
+                const floorChangedListener = (): void => {
+                    this.currentFloor = this.mapsindoors.getFloor().toString();
+                    this.mapsindoors.removeListener('floor_changed', floorChangedListener);
+                };
+
                 if (!this.mapsindoors.getFloor()) {
-                    return;
+                    this.mapsindoors.addListener('floor_changed', floorChangedListener);
+                } else {
+                    this.currentFloor = this.mapsindoors.getFloor().toString();
                 }
-                this.currentFloor = this.mapsindoors.getFloor().toString();
 
                 Object.keys(building.floors)
                     .sort((a, b): any => (b as any) - (a as any))
