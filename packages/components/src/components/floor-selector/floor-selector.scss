@@ -73,6 +73,7 @@ $max-list-height: 300px; // The floor-selector.tsx: maxListHeight variable needs
     }
 
     &__list {
+        box-sizing: unset;
         display: flex;
         flex-direction: column;
         gap: variables.$spacing-xx-small;
