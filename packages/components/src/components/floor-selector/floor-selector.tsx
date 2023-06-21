@@ -223,6 +223,41 @@ export class FloorSelector {
                                 <span>{floor.name}</span>
                             </button>
                         ))}
+
+                        <button
+                            data-floor='1'
+                            class='mi-floor-selector__floor'
+                            onClick={(event: PointerEvent): void => this.onSelectFloor(event, '1')}>
+                            <span>A</span>
+                        </button>
+
+                        <button
+                            data-floor='1'
+                            class='mi-floor-selector__floor'
+                            onClick={(event: PointerEvent): void => this.onSelectFloor(event, '1')}>
+                            <span>B</span>
+                        </button>
+
+                        <button
+                            data-floor='1'
+                            class='mi-floor-selector__floor'
+                            onClick={(event: PointerEvent): void => this.onSelectFloor(event, '1')}>
+                            <span>C</span>
+                        </button>
+
+                        <button
+                            data-floor='1'
+                            class='mi-floor-selector__floor'
+                            onClick={(event: PointerEvent): void => this.onSelectFloor(event, '1')}>
+                            <span>D</span>
+                        </button>
+
+                        <button
+                            data-floor='1'
+                            class='mi-floor-selector__floor'
+                            onClick={(event: PointerEvent): void => this.onSelectFloor(event, '1')}>
+                            <span>E</span>
+                        </button>
                     </div>
                 </div>
             </Host>
