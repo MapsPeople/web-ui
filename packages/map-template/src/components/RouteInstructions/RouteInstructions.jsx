@@ -79,7 +79,7 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }
     }, [activeStep]);
 
     /**
-     * Navigate to the next step.s
+     * Navigate to the next step.
      * Set the previous step in order to show the correct
      * instruction and travel mode.
      */
