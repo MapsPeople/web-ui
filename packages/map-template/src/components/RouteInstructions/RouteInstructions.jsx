@@ -76,7 +76,6 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }
                 });
             }
         }
-
     }, [activeStep]);
 
     /**

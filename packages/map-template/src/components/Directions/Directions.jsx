@@ -156,6 +156,7 @@ function Directions({ isOpen, onBack }) {
 
     /**
      * Close the directions.
+     * Reset the active steps and stop rendering directions.
      */
     function onDirectionsClosed() {
         setActiveStep(0);
