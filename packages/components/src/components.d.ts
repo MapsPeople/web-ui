@@ -685,6 +685,22 @@ export namespace Components {
          */
         "unit": UnitSystem;
     }
+    interface MiRouteInstructionsManeuverLegacy {
+        /**
+          * Maneuver to display given as stringified JSON.
+          * @type {string} - Maneuver/substep object passed as stringified JSON.
+         */
+        "maneuver": string;
+        /**
+          * Object with translation strings as stringified JSON.
+         */
+        "translations": string;
+        /**
+          * Set imperial or metric as default unit system.
+          * @type {UnitSystem} 'imperial' or 'metric'
+         */
+        "unit": UnitSystem;
+    }
     interface MiRouteInstructionsStep {
         /**
           * The route context of previous step, if any.
@@ -1131,6 +1147,12 @@ declare global {
         prototype: HTMLMiRouteInstructionsManeuverElement;
         new (): HTMLMiRouteInstructionsManeuverElement;
     };
+    interface HTMLMiRouteInstructionsManeuverLegacyElement extends Components.MiRouteInstructionsManeuverLegacy, HTMLStencilElement {
+    }
+    var HTMLMiRouteInstructionsManeuverLegacyElement: {
+        prototype: HTMLMiRouteInstructionsManeuverLegacyElement;
+        new (): HTMLMiRouteInstructionsManeuverLegacyElement;
+    };
     interface HTMLMiRouteInstructionsStepElement extends Components.MiRouteInstructionsStep, HTMLStencilElement {
     }
     var HTMLMiRouteInstructionsStepElement: {
@@ -1221,6 +1243,7 @@ declare global {
         "mi-route-instructions": HTMLMiRouteInstructionsElement;
         "mi-route-instructions-heading": HTMLMiRouteInstructionsHeadingElement;
         "mi-route-instructions-maneuver": HTMLMiRouteInstructionsManeuverElement;
+        "mi-route-instructions-maneuver-legacy": HTMLMiRouteInstructionsManeuverLegacyElement;
         "mi-route-instructions-step": HTMLMiRouteInstructionsStepElement;
         "mi-route-instructions-step-legacy": HTMLMiRouteInstructionsStepLegacyElement;
         "mi-scroll-buttons": HTMLMiScrollButtonsElement;
@@ -1913,6 +1936,22 @@ declare namespace LocalJSX {
          */
         "unit"?: UnitSystem;
     }
+    interface MiRouteInstructionsManeuverLegacy {
+        /**
+          * Maneuver to display given as stringified JSON.
+          * @type {string} - Maneuver/substep object passed as stringified JSON.
+         */
+        "maneuver"?: string;
+        /**
+          * Object with translation strings as stringified JSON.
+         */
+        "translations"?: string;
+        /**
+          * Set imperial or metric as default unit system.
+          * @type {UnitSystem} 'imperial' or 'metric'
+         */
+        "unit"?: UnitSystem;
+    }
     interface MiRouteInstructionsStep {
         /**
           * The route context of previous step, if any.
@@ -2206,6 +2245,7 @@ declare namespace LocalJSX {
         "mi-route-instructions": MiRouteInstructions;
         "mi-route-instructions-heading": MiRouteInstructionsHeading;
         "mi-route-instructions-maneuver": MiRouteInstructionsManeuver;
+        "mi-route-instructions-maneuver-legacy": MiRouteInstructionsManeuverLegacy;
         "mi-route-instructions-step": MiRouteInstructionsStep;
         "mi-route-instructions-step-legacy": MiRouteInstructionsStepLegacy;
         "mi-scroll-buttons": MiScrollButtons;
@@ -2246,6 +2286,7 @@ declare module "@stencil/core" {
             "mi-route-instructions": LocalJSX.MiRouteInstructions & JSXBase.HTMLAttributes<HTMLMiRouteInstructionsElement>;
             "mi-route-instructions-heading": LocalJSX.MiRouteInstructionsHeading & JSXBase.HTMLAttributes<HTMLMiRouteInstructionsHeadingElement>;
             "mi-route-instructions-maneuver": LocalJSX.MiRouteInstructionsManeuver & JSXBase.HTMLAttributes<HTMLMiRouteInstructionsManeuverElement>;
+            "mi-route-instructions-maneuver-legacy": LocalJSX.MiRouteInstructionsManeuverLegacy & JSXBase.HTMLAttributes<HTMLMiRouteInstructionsManeuverLegacyElement>;
             "mi-route-instructions-step": LocalJSX.MiRouteInstructionsStep & JSXBase.HTMLAttributes<HTMLMiRouteInstructionsStepElement>;
             "mi-route-instructions-step-legacy": LocalJSX.MiRouteInstructionsStepLegacy & JSXBase.HTMLAttributes<HTMLMiRouteInstructionsStepLegacyElement>;
             "mi-scroll-buttons": LocalJSX.MiScrollButtons & JSXBase.HTMLAttributes<HTMLMiScrollButtonsElement>;

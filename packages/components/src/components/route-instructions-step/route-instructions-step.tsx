@@ -369,6 +369,10 @@ export class RouteInstructionsStep implements ComponentInterface {
                 }
                 <div part="step-heading" class="step__heading">{heading}</div>
             </div>
+            <div class="step__details">
+                {this.renderToggleButton()}
+                {this.renderSubsteps()}
+            </div>
         </div>;
     }
 
