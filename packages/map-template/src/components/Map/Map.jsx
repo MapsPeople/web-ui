@@ -19,6 +19,7 @@ import tileStyleState from '../../atoms/tileStyleState';
 import startZoomLevelState from '../../atoms/startZoomLevelState';
 import positionControlState from '../../atoms/positionControlState';
 import locationIdState from '../../atoms/locationIdState';
+import SetMapZoomLevel from "../../helpers/SetMapZoomLevel";
 
 const mapsindoors = window.mapsindoors;
 
@@ -142,15 +143,12 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
                     const locationGeometry = location.geometry.type === 'Point' ? location.geometry.coordinates : location.properties.anchor.coordinates;
                     miInstance.getMapView().setCenter({ lat: locationGeometry[1], lng: locationGeometry[0] });
 
-                    // Check if the solution allows the zoom level to be 22.
-                    // If yes, set the zoom level to 22, otherwise set it to 21.
+                    // If there is a startZoomLevel, set the map zoom to that
+                    // Else call the function to check the max zoom level supported on the solution
                     if (startZoomLevel) {
                         miInstance?.setZoom(startZoomLevel);
                     } else {
-                        mapsindoors.services.SolutionsService.getSolution().then(solution => {
-                            const hasZoom22 = Object.values(solution.modules).find(zoomLevel => zoomLevel === 'z22')
-                            miInstance?.setZoom(hasZoom22 ? 22 : 21);
-                        });
+                        SetMapZoomLevel(miInstance);
                     }
                 }
             });

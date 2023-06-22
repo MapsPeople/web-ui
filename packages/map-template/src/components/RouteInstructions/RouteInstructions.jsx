@@ -6,8 +6,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import directionsResponseState from '../../atoms/directionsResponseState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import activeStepState from '../../atoms/activeStep';
-
-const mapsindoors = window.mapsindoors;
+import SetMapZoomLevel from '../../helpers/SetMapZoomLevel';
 
 /**
  * Route instructions step by step component.
@@ -66,12 +65,8 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }
                 const destinationLocationGeometry = destinationLocation?.geometry.type === 'Point' ? destinationLocation?.geometry.coordinates : destinationLocation?.properties.anchor.coordinates;
                 mapsIndoorsInstance.getMapView().setCenter({ lat: destinationLocationGeometry[1], lng: destinationLocationGeometry[0] });
 
-                // Check if the solution allows the zoom level to be 22.
-                // If yes, set the zoom level to 22, otherwise set it to 21.
-                mapsindoors.services.SolutionsService.getSolution().then(solution => {
-                    const hasZoom22 = Object.values(solution.modules).find(zoomLevel => zoomLevel === 'z22')
-                    mapsIndoorsInstance?.setZoom(hasZoom22 ? 22 : 21);
-                });
+                // Call function to set the map zoom level depeding on the max zoom supported on the solution
+                SetMapZoomLevel(mapsIndoorsInstance);
             }
         }
     }, [activeStep]);
