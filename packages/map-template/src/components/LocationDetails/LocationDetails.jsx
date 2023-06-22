@@ -7,6 +7,7 @@ import currentLocationState from '../../atoms/currentLocationState';
 import { useIsVerticalOverflow } from '../../hooks/useIsVerticalOverflow';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import { snapPoints } from '../../constants/snapPoints';
+import primaryColorState from '../../atoms/primaryColorState';
 
 /**
  * Shows details for a MapsIndoors Location.
@@ -16,10 +17,9 @@ import { snapPoints } from '../../constants/snapPoints';
  * @param {function} props.onStartWayfinding - Callback that fires when user clicks the Start Wayfinding button.
  * @param {function} props.onSetSize - Callback that is fired when the toggle full description button is clicked and the Sheet size changes.
  * @param {function} props.snapPointSwiped - Changes value when user has swiped a Bottom sheet to a new snap point.
- * @param {string} props.primaryColor - The primary color of the application.
  *
  */
-function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped, primaryColor }) {
+function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped }) {
 
     const locationInfoElement = useRef(null);
     const locationDetailsContainer = useRef(null);
@@ -39,6 +39,8 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
     const [isOverflowing, initialOverflow] = useIsVerticalOverflow(location, locationDetailsElement);
 
     const scrollableContentSwipePrevent = usePreventSwipe();
+
+    const primaryColor = useRecoilValue(primaryColorState);
 
     useEffect(() => {
         // Reset state

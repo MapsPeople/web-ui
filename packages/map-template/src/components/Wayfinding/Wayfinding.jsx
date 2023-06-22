@@ -25,6 +25,7 @@ import { ReactComponent as DriveIcon } from '../../assets/drive.svg';
 import { ReactComponent as BikeIcon } from '../../assets/bike.svg';
 import { travelModes } from "../../constants/travelModes";
 import Dropdown from "../WebComponentWrappers/Dropdown/Dropdown";
+import primaryColorState from "../../atoms/primaryColorState";
 
 const searchFieldIdentifiers = {
     TO: 'TO',
@@ -42,11 +43,10 @@ const googlePlacesIcon = "data:image/svg+xml,%3Csvg width='10' height='10' viewB
  * @param {object} props.directionsToLocation - Optional location to navigate to.
  * @param {object} [props.directionsFromLocation] - Optional location to navigate from. If omitted, the user has to choose in the search field.
  * @param {function} props.onSetSize - Callback that is fired when the component has loaded.
- * @param {string} props.primaryColor - The primary color of the application.
  *
  * @returns
  */
-function Wayfinding({ onStartDirections, onBack, directionsToLocation, directionsFromLocation, onSetSize, isActive, onDirections, primaryColor }) {
+function Wayfinding({ onStartDirections, onBack, directionsToLocation, directionsFromLocation, onSetSize, isActive, onDirections }) {
 
     const wayfindingRef = useRef();
 
@@ -60,6 +60,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     const userPosition = useRecoilValue(userPositionState);
     const currentLocation = useRecoilValue(currentLocationState);
     const selectedMapType = useRecoilValue(mapTypeState);
+    const primaryColor = useRecoilValue(primaryColorState);
 
     const [activeSearchField, setActiveSearchField] = useState();
 

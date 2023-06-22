@@ -20,10 +20,9 @@ import LocationsList from '../LocationsList/LocationsList';
  * @param {function} props.pushAppView - Function to push to app view to browser history.
  * @param {string} props.currentAppView - Holds the current view/state of the Map Template.
  * @param {array} props.appViews - Array of all possible views.
- * @param {string} props.primaryColor - The primary color of the application.
  *
  */
-function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews, primaryColor }) {
+function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews }) {
 
     const bottomSheetRef = useRef();
 
@@ -86,7 +85,6 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
             <Search
                 onSetSize={size => setSearchSheetSize(size)}
                 onLocationClick={(location) => setCurrentLocation(location)}
-                primaryColor={primaryColor}
             />
         </Sheet>,
         <Sheet
@@ -113,7 +111,6 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
                 onStartWayfinding={() => pushAppView(appViews.WAYFINDING)}
                 onBack={() => closeLocationDetails()}
                 snapPointSwiped={locationDetailsSheetSwiped}
-                primaryColor={primaryColor}
             />
         </Sheet>,
         <Sheet
@@ -129,7 +126,6 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
                 onDirections={result => setDirections(result)}
                 onBack={() => pushAppView(currentLocation ? appViews.LOCATION_DETAILS : appViews.SEARCH)}
                 isActive={currentAppView === appViews.WAYFINDING}
-                primaryColor={primaryColor}
             />
         </Sheet>,
         <Sheet

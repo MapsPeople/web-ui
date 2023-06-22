@@ -1,5 +1,7 @@
 import React from "react";
+import { useRecoilValue } from "recoil";
 import logo from "../../assets/logo.svg";
+import primaryColorState from "../../atoms/primaryColorState";
 import './SplashScreen.scss';
 
 const defaultLogo = logo;
@@ -11,10 +13,11 @@ const defaultLogo = logo;
  * along with the width and the height of the logo.
  *
  * @param {object} props
- * @param {string} props.primaryColor - The primary color of the application.
  * @param {string} props.logo - The logo that appears on the splash screen.
  */
-function SplashScreen({ primaryColor, logo = defaultLogo }) {
+function SplashScreen({ logo = defaultLogo }) {
+    const primaryColor = useRecoilValue(primaryColorState);
+
     return (
         <div className="splash-screen">
             <div className="splash-screen__container">
