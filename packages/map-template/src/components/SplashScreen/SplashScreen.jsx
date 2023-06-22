@@ -3,8 +3,6 @@ import logo from "../../assets/logo.svg";
 import './SplashScreen.scss';
 
 const defaultLogo = logo;
-// The HEX value refers to the --brand-colors-dark-pine-100 from MIDT
-const defaultColor = "#005655";
 
 /**
  * Creates the splash screen loading initially in the app.
@@ -16,7 +14,7 @@ const defaultColor = "#005655";
  * @param {string} props.primaryColor - The primary color of the application.
  * @param {string} props.logo - The logo that appears on the splash screen.
  */
-function SplashScreen({ primaryColor = defaultColor, logo = defaultLogo }) {
+function SplashScreen({ primaryColor, logo = defaultLogo }) {
     return (
         <div className="splash-screen">
             <div className="splash-screen__container">
