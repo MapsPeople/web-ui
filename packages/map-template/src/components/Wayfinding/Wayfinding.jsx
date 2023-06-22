@@ -42,9 +42,11 @@ const googlePlacesIcon = "data:image/svg+xml,%3Csvg width='10' height='10' viewB
  * @param {object} props.directionsToLocation - Optional location to navigate to.
  * @param {object} [props.directionsFromLocation] - Optional location to navigate from. If omitted, the user has to choose in the search field.
  * @param {function} props.onSetSize - Callback that is fired when the component has loaded.
+ * @param {string} props.primaryColor - The primary color of the application.
+ *
  * @returns
  */
-function Wayfinding({ onStartDirections, onBack, directionsToLocation, directionsFromLocation, onSetSize, isActive, onDirections }) {
+function Wayfinding({ onStartDirections, onBack, directionsToLocation, directionsFromLocation, onSetSize, isActive, onDirections, primaryColor }) {
 
     const wayfindingRef = useRef();
 
@@ -425,7 +427,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
             {!searchTriggered && hasFoundRoute && !hasError && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
                 <div className="wayfinding__settings">
                     <div className="wayfinding__accessibility">
-                        <input className="mi-toggle" type="checkbox" checked={accessibilityOn} onChange={e => setAccessibilityOn(e.target.checked)} />
+                        <input className="mi-toggle" type="checkbox" checked={accessibilityOn} onChange={e => setAccessibilityOn(e.target.checked)} style={{backgroundColor: accessibilityOn ? primaryColor : ''}}/>
                         <div>Accessibility</div>
                         <Tooltip text="Turn on Accessibility to get directions that avoids stairs and escalators."></Tooltip>
                     </div>
@@ -461,7 +463,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                         <div className="wayfinding__minutes">{totalTime && <mi-time seconds={totalTime} />}</div>
                     </div>
                 </div>
-                <button className="wayfinding__button" onClick={() => onStartDirections()}>
+                <button className="wayfinding__button" style={{background: primaryColor}} onClick={() => onStartDirections()}>
                     Go!
                 </button>
             </div>}

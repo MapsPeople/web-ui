@@ -24,7 +24,7 @@ function SplashScreen({ primaryColor = defaultColor, logo = defaultLogo }) {
                     src={logo}
                     alt="logo"
                 />
-                {/* The border value is set based on the #rrggbbaa and includes an 
+                {/* The border value is set based on the #rrggbbaa and includes an
                         opacity level of around 20%, which translates to the value of 33. */}
                 <div className="splash-screen__loader"
                     style={{

@@ -19,9 +19,11 @@ const mapsindoors = window.mapsindoors;
  * @param {function} props.onLocationClick - Function that is run when a location from the search results is clicked.
  * @param {[[string, number]]} props.categories - All the unique categories that users can filter through.
  * @param {function} props.onSetSize - Callback that is fired when the search field takes focus.
+ * @param {string} props.primaryColor - The primary color of the application.
+ *
  * @returns
  */
-function Search({ onLocationClick, onSetSize }) {
+function Search({ onLocationClick, onSetSize, primaryColor }) {
 
     const searchRef = useRef();
 
@@ -169,6 +171,7 @@ function Search({ onLocationClick, onSetSize }) {
                         {categories?.map(([category, categoryInfo]) =>
                             <mi-chip
                                 icon={categoryInfo.iconUrl}
+                                primary-color={primaryColor}
                                 content={categoryInfo.displayName}
                                 active={selectedCategory === category}
                                 onClick={() => categoryClicked(category)}

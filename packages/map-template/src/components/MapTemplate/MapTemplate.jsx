@@ -291,6 +291,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                         pushAppView={pushAppView}
                         currentAppView={currentAppView}
                         appViews={appStates}
+                        primaryColor={primaryColor}
                     />
                 }
                 {isMobile &&
@@ -300,6 +301,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                         pushAppView={pushAppView}
                         currentAppView={currentAppView}
                         appViews={appStates}
+                        primaryColor={primaryColor}
                     />
                 }
             </>

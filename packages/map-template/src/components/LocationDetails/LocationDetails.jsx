@@ -16,8 +16,10 @@ import { snapPoints } from '../../constants/snapPoints';
  * @param {function} props.onStartWayfinding - Callback that fires when user clicks the Start Wayfinding button.
  * @param {function} props.onSetSize - Callback that is fired when the toggle full description button is clicked and the Sheet size changes.
  * @param {function} props.snapPointSwiped - Changes value when user has swiped a Bottom sheet to a new snap point.
+ * @param {string} props.primaryColor - The primary color of the application.
+ *
  */
-function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped }) {
+function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped, primaryColor }) {
 
     const locationInfoElement = useRef(null);
     const locationDetailsContainer = useRef(null);
@@ -195,7 +197,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                 </section>}
             </div>
 
-            <button onClick={() => startWayfinding()} className="location-details__wayfinding">
+            <button onClick={() => startWayfinding()} style={{background: primaryColor}} className="location-details__wayfinding">
                 Start wayfinding
             </button>
         </>}

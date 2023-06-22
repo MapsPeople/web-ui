@@ -17,9 +17,10 @@ import LocationsList from '../LocationsList/LocationsList';
  * @param {string} props.currentAppView - Holds the current view/state of the Map Template.
  * @param {array} props.appViews - Array of all possible views.
  * @param {array} props.filteredLocationsByExternalIDs - Array of locations filtered based on the external ID.
+ * @param {string} props.primaryColor - The primary color of the application.
  *
  */
-function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews }) {
+function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews, primaryColor }) {
     const [directions, setDirections] = useState();
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
@@ -67,6 +68,7 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
         <Modal isOpen={currentAppView === appViews.SEARCH} key="A">
             <Search
                 onLocationClick={(location) => setCurrentLocation(location)}
+                primaryColor={primaryColor}
             />
         </Modal>,
         <Modal isOpen={currentAppView === appViews.EXTERNALIDS} key="B">
@@ -81,6 +83,7 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
             <LocationDetails
                 onStartWayfinding={() => pushAppView(appViews.WAYFINDING)}
                 onBack={() => closeLocationDetails()}
+                primaryColor={primaryColor}
             />
         </Modal>,
         <Modal isOpen={currentAppView === appViews.WAYFINDING} key="D">
@@ -91,6 +94,7 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
                 onDirections={result => setDirections(result)}
                 onBack={() => pushAppView(currentLocation ? appViews.LOCATION_DETAILS : appViews.SEARCH)}
                 isActive={currentAppView === appViews.WAYFINDING}
+                primaryColor={primaryColor}
             />
         </Modal>,
         <Modal isOpen={currentAppView === appViews.DIRECTIONS} key="E">
