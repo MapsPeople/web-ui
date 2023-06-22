@@ -39,6 +39,11 @@ export namespace Components {
           * @type {string}
          */
         "icon"?: string;
+        /**
+          * The primary color of the chip.
+          * @type {string}
+         */
+        "primaryColor"?: string;
     }
     interface MiColumn {
         /**
@@ -1258,6 +1263,11 @@ declare namespace LocalJSX {
           * @type {string}
          */
         "icon"?: string;
+        /**
+          * The primary color of the chip.
+          * @type {string}
+         */
+        "primaryColor"?: string;
     }
     interface MiColumn {
         /**

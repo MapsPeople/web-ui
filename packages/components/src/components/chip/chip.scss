@@ -19,11 +19,10 @@
   }
 
   &--active {
-    background-color: var(--brand-colors-dark-pine-100);
     color: var(--brand-colors-white-100);
 
     &:hover {
-      background-color: var(--brand-colors-dark-pine-100);
+      filter: brightness(90%);
     }
   }
 

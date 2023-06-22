@@ -22,11 +22,12 @@ Example usage:
 
 ## Properties
 
-| Property  | Attribute | Description                                                                  | Type      | Default     |
-| --------- | --------- | ---------------------------------------------------------------------------- | --------- | ----------- |
-| `active`  | `active`  | Checks if the chip is active and applies different styling to the component. | `boolean` | `false`     |
-| `content` | `content` | The chip content that is displayed in the component.                         | `string`  | `undefined` |
-| `icon`    | `icon`    | The icon source.                                                             | `string`  | `undefined` |
+| Property       | Attribute       | Description                                                                  | Type      | Default     |
+| -------------- | --------------- | ---------------------------------------------------------------------------- | --------- | ----------- |
+| `active`       | `active`        | Checks if the chip is active and applies different styling to the component. | `boolean` | `false`     |
+| `content`      | `content`       | The chip content that is displayed in the component.                         | `string`  | `undefined` |
+| `icon`         | `icon`          | The icon source.                                                             | `string`  | `undefined` |
+| `primaryColor` | `primary-color` | The primary color of the chip.                                               | `string`  | `undefined` |
 
 
 ----------------------------------------------
