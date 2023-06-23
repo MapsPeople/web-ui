@@ -192,10 +192,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         setTileStyle(tileStyle)
     }, [tileStyle]);
 
-     /*
+    /*
      * React on changes in the primary color prop.
      */
-     useEffect(() => {
+    useEffect(() => {
         setPrimaryColor(primaryColor)
     }, [primaryColor]);
 
