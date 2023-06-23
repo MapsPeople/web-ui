@@ -25,7 +25,7 @@ export class Chip implements ComponentInterface {
 
     /**
      * The background color of the chip.
-     * The default HEX value refers to the --brand-colors-dark-pine-100 from MIDT
+     * The default #005655 HEX value refers to the --brand-colors-dark-pine-100 from MIDT
      *
      * @type {string}
      */
