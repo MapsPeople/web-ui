@@ -20,7 +20,6 @@ import LocationsList from '../LocationsList/LocationsList';
  * @param {function} props.pushAppView - Function to push to app view to browser history.
  * @param {string} props.currentAppView - Holds the current view/state of the Map Template.
  * @param {array} props.appViews - Array of all possible views.
- *
  */
 function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews }) {
 
