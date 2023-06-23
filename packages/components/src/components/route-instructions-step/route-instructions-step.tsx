@@ -56,7 +56,7 @@ export class RouteInstructionsStep implements ComponentInterface {
     @Prop() fromTransitStop: string;
 
     /**
-     * The destination location.
+     * The final step when the user has arrived to the destination location.
      * @type {string}
      */
     @Prop() destinationLocation?: string;
