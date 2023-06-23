@@ -435,7 +435,7 @@ export class RouteInstructionsStep implements ComponentInterface {
                             <mi-icon icon-name="logo"></mi-icon>
                         </span>
                     }
-                    <div part="step-heading" class="step__heading">You have arrived</div>
+                    <div part="step-heading" class="step__heading">{this.translationsData.destination}</div>
                 </div>
                 <div part="step-location" class="step__location">{this.destinationLocation}</div>
             </div>

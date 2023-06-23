@@ -105,7 +105,7 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }
         bike: 'Bike',
         transit: 'Transit',
         drive: 'Drive',
-        destination: 'Destination',
+        destination: 'You have arrived',
         leave: 'Leave',
         from: 'From',
         park: 'Park',
