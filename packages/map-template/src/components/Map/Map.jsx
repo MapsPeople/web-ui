@@ -19,7 +19,7 @@ import tileStyleState from '../../atoms/tileStyleState';
 import startZoomLevelState from '../../atoms/startZoomLevelState';
 import positionControlState from '../../atoms/positionControlState';
 import locationIdState from '../../atoms/locationIdState';
-import SetMapZoomLevel from "../../helpers/SetMapZoomLevel";
+import setMapZoomLevel from "../../helpers/SetMapZoomLevel";
 
 const mapsindoors = window.mapsindoors;
 
@@ -148,7 +148,7 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
                     if (startZoomLevel) {
                         miInstance?.setZoom(startZoomLevel);
                     } else {
-                        SetMapZoomLevel(miInstance);
+                        setMapZoomLevel(miInstance);
                     }
                 }
             });

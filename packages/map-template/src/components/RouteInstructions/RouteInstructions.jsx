@@ -6,7 +6,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import directionsResponseState from '../../atoms/directionsResponseState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import activeStepState from '../../atoms/activeStep';
-import SetMapZoomLevel from '../../helpers/SetMapZoomLevel';
+import setMapZoomLevel from '../../helpers/SetMapZoomLevel';
 
 /**
  * Route instructions step by step component.
@@ -66,7 +66,7 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }
                 mapsIndoorsInstance.getMapView().setCenter({ lat: destinationLocationGeometry[1], lng: destinationLocationGeometry[0] });
 
                 // Call function to set the map zoom level depeding on the max zoom supported on the solution
-                SetMapZoomLevel(mapsIndoorsInstance);
+                setMapZoomLevel(mapsIndoorsInstance);
             }
         }
     }, [activeStep]);
