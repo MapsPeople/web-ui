@@ -199,7 +199,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                 </section>}
             </div>
 
-            <button onClick={() => startWayfinding()} style={{background: primaryColor}} className="location-details__wayfinding">
+            <button onClick={() => startWayfinding()} style={{ background: primaryColor }} className="location-details__wayfinding">
                 Start wayfinding
             </button>
         </>}
