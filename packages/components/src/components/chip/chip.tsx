@@ -24,11 +24,12 @@ export class Chip implements ComponentInterface {
     @Prop() content: string;
 
     /**
-     * The primary color of the chip.
+     * The background color of the chip.
+     * The default HEX value refers to the --brand-colors-dark-pine-100 from MIDT
      *
      * @type {string}
      */
-    @Prop() primaryColor?: string;
+    @Prop() backgroundColor?: string = '#005655';
 
     /**
      * Checks if the chip is active and applies different styling to the component.
@@ -39,7 +40,7 @@ export class Chip implements ComponentInterface {
 
     render(): JSX.Element {
         const style = {
-            background: this.active ? this.primaryColor : '',
+            background: this.active ? this.backgroundColor : '',
         };
 
         return (

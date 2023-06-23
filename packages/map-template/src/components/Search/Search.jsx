@@ -173,7 +173,7 @@ function Search({ onLocationClick, onSetSize }) {
                         {categories?.map(([category, categoryInfo]) =>
                             <mi-chip
                                 icon={categoryInfo.iconUrl}
-                                primary-color={primaryColor}
+                                background-color={primaryColor}
                                 content={categoryInfo.displayName}
                                 active={selectedCategory === category}
                                 onClick={() => categoryClicked(category)}

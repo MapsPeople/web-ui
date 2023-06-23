@@ -30,6 +30,11 @@ export namespace Components {
          */
         "active": boolean;
         /**
+          * The background color of the chip. The default HEX value refers to the --brand-colors-dark-pine-100 from MIDT
+          * @type {string}
+         */
+        "backgroundColor"?: string;
+        /**
           * The chip content that is displayed in the component.
           * @type {string}
          */
@@ -39,11 +44,6 @@ export namespace Components {
           * @type {string}
          */
         "icon"?: string;
-        /**
-          * The primary color of the chip.
-          * @type {string}
-         */
-        "primaryColor"?: string;
     }
     interface MiColumn {
         /**
@@ -1254,6 +1254,11 @@ declare namespace LocalJSX {
          */
         "active"?: boolean;
         /**
+          * The background color of the chip. The default HEX value refers to the --brand-colors-dark-pine-100 from MIDT
+          * @type {string}
+         */
+        "backgroundColor"?: string;
+        /**
           * The chip content that is displayed in the component.
           * @type {string}
          */
@@ -1263,11 +1268,6 @@ declare namespace LocalJSX {
           * @type {string}
          */
         "icon"?: string;
-        /**
-          * The primary color of the chip.
-          * @type {string}
-         */
-        "primaryColor"?: string;
     }
     interface MiColumn {
         /**
