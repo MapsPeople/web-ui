@@ -18,6 +18,8 @@ const mapboxAccessToken = params.get('mapboxAccessToken');
 
 // Append the hashtag symbol to the color code (i.e. ffffff)
 const primaryColor = params.get('primaryColor');
+
+// The HEX value refers to the --brand-colors-dark-pine-100 from MIDT
 const hexPrimaryColor = primaryColor ? '#'.concat(primaryColor) : '#005655';
 
 // Create an array of app user roles based on the comma separated values
