@@ -22,11 +22,12 @@ Example usage:
 
 ## Properties
 
-| Property  | Attribute | Description                                                                  | Type      | Default     |
-| --------- | --------- | ---------------------------------------------------------------------------- | --------- | ----------- |
-| `active`  | `active`  | Checks if the chip is active and applies different styling to the component. | `boolean` | `false`     |
-| `content` | `content` | The chip content that is displayed in the component.                         | `string`  | `undefined` |
-| `icon`    | `icon`    | The icon source.                                                             | `string`  | `undefined` |
+| Property          | Attribute          | Description                                                                                                  | Type      | Default     |
+| ----------------- | ------------------ | ------------------------------------------------------------------------------------------------------------ | --------- | ----------- |
+| `active`          | `active`           | Checks if the chip is active and applies different styling to the component.                                 | `boolean` | `false`     |
+| `backgroundColor` | `background-color` | The background color of the chip. The default HEX value refers to the --brand-colors-dark-pine-100 from MIDT | `string`  | `'#005655'` |
+| `content`         | `content`          | The chip content that is displayed in the component.                                                         | `string`  | `undefined` |
+| `icon`            | `icon`             | The icon source.                                                                                             | `string`  | `undefined` |
 
 
 ----------------------------------------------

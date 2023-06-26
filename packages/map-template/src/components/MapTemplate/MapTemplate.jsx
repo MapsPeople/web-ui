@@ -24,6 +24,7 @@ import mapboxAccessTokenState from '../../atoms/mapboxAccessTokenState';
 import filteredLocationsState from '../../atoms/filteredLocationsState';
 import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
 import startZoomLevelState from '../../atoms/startZoomLevelState';
+import primaryColorState from '../../atoms/primaryColorState';
 
 defineCustomElements();
 const mapsindoors = window.mapsindoors;
@@ -64,6 +65,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setLocationId] = useRecoilState(locationIdState);
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
     const [appConfigResult, setAppConfigResult] = useState();
+    const [, setPrimaryColor] = useRecoilState(primaryColorState);
+
 
     const directionsFromLocation = useLocationForWayfinding(directionsFrom);
     const directionsToLocation = useLocationForWayfinding(directionsTo);
@@ -182,9 +185,19 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         setCurrentVenueName(venue);
     }, [venue]);
 
+    /*
+     * React on changes in the tile style prop.
+     */
     useEffect(() => {
         setTileStyle(tileStyle)
     }, [tileStyle]);
+
+    /*
+     * React on changes in the primary color prop.
+     */
+    useEffect(() => {
+        setPrimaryColor(primaryColor)
+    }, [primaryColor]);
 
     /*
      * React on changes in the start zoom level prop.
@@ -276,7 +289,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [hasDirectionsOpen]);
 
     return <div className={`mapsindoors-map ${hasDirectionsOpen ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}`}>
-        {!isMapReady && <SplashScreen logo={logo} primaryColor={primaryColor} />}
+        {!isMapReady && <SplashScreen logo={logo} />}
         {venues.length > 1 && <VenueSelector
             onOpen={() => pushAppView(appStates.VENUE_SELECTOR)}
             onClose={() => goBack()}
