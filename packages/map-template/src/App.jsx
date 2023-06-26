@@ -34,7 +34,7 @@ function App() {
             {/* This is the Map Template component */}
             <MapsIndoorsMap
                 apiKey={apiKey ? apiKey : '3ddemo'}
-                venue={venue}
+                venue={venue ? venue : 'WEWORK'}
                 locationId={locationId}
                 primaryColor={hexPrimaryColor}
                 logo={logo ? logo : undefined}
