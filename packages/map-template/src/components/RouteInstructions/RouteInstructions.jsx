@@ -145,10 +145,10 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
                 <>
                     <RouteInstructionsStep
                         translations={translations}
-                        steps={steps}
+                        totalSteps={totalSteps}
                         activeStep={activeStep}
                         previous={previous}
- 						destination-location={directions?.destinationLocation.properties.name}
+ 						directions={directions}
                         originLocation={originLocation}
                         substepsToggled={() => onSubstepsToggled()}
                         >
