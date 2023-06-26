@@ -1,10 +1,10 @@
 import React from "react";
+import { useRecoilValue } from "recoil";
 import logo from "../../assets/logo.svg";
+import primaryColorState from "../../atoms/primaryColorState";
 import './SplashScreen.scss';
 
 const defaultLogo = logo;
-// The HEX value refers to the --brand-colors-dark-pine-100 from MIDT
-const defaultColor = "#005655";
 
 /**
  * Creates the splash screen loading initially in the app.
@@ -13,10 +13,11 @@ const defaultColor = "#005655";
  * along with the width and the height of the logo.
  *
  * @param {object} props
- * @param {string} props.primaryColor - The primary color of the application.
  * @param {string} props.logo - The logo that appears on the splash screen.
  */
-function SplashScreen({ primaryColor = defaultColor, logo = defaultLogo }) {
+function SplashScreen({ logo = defaultLogo }) {
+    const primaryColor = useRecoilValue(primaryColorState);
+
     return (
         <div className="splash-screen">
             <div className="splash-screen__container">
@@ -24,7 +25,7 @@ function SplashScreen({ primaryColor = defaultColor, logo = defaultLogo }) {
                     src={logo}
                     alt="logo"
                 />
-                {/* The border value is set based on the #rrggbbaa and includes an 
+                {/* The border value is set based on the #rrggbbaa and includes an
                         opacity level of around 20%, which translates to the value of 33. */}
                 <div className="splash-screen__loader"
                     style={{
