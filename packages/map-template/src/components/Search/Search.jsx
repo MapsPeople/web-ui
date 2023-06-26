@@ -8,6 +8,7 @@ import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
 import SearchField from '../WebComponentWrappers/Search/Search';
 import filteredLocationsState from '../../atoms/filteredLocationsState';
+import primaryColorState from '../../atoms/primaryColorState';
 
 /** Initialize the MapsIndoors instance. */
 const mapsindoors = window.mapsindoors;
@@ -19,6 +20,7 @@ const mapsindoors = window.mapsindoors;
  * @param {function} props.onLocationClick - Function that is run when a location from the search results is clicked.
  * @param {[[string, number]]} props.categories - All the unique categories that users can filter through.
  * @param {function} props.onSetSize - Callback that is fired when the search field takes focus.
+ *
  * @returns
  */
 function Search({ onLocationClick, onSetSize }) {
@@ -44,6 +46,8 @@ function Search({ onLocationClick, onSetSize }) {
     const [selectedCategory, setSelectedCategory] = useState();
 
     const scrollableContentSwipePrevent = usePreventSwipe();
+
+    const primaryColor = useRecoilValue(primaryColorState);
 
     /**
      * Get the locations and filter through them based on categories selected.
@@ -169,6 +173,7 @@ function Search({ onLocationClick, onSetSize }) {
                         {categories?.map(([category, categoryInfo]) =>
                             <mi-chip
                                 icon={categoryInfo.iconUrl}
+                                background-color={primaryColor}
                                 content={categoryInfo.displayName}
                                 active={selectedCategory === category}
                                 onClick={() => categoryClicked(category)}
