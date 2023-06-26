@@ -18,7 +18,9 @@ const mapboxAccessToken = params.get('mapboxAccessToken');
 
 // Append the hashtag symbol to the color code (i.e. ffffff)
 const primaryColor = params.get('primaryColor');
-const hexPrimaryColor = primaryColor ? '#'.concat(primaryColor) : undefined;
+
+// The HEX value refers to the --brand-colors-dark-pine-100 from MIDT
+const hexPrimaryColor = primaryColor ? '#'.concat(primaryColor) : '#005655';
 
 // Create an array of app user roles based on the comma separated values
 const appUserRoles = params.get('appUserRoles')?.split(',')
@@ -32,7 +34,7 @@ function App() {
             {/* This is the Map Template component */}
             <MapsIndoorsMap
                 apiKey={apiKey ? apiKey : '3ddemo'}
-                venue={venue}
+                venue={venue ? venue : 'WEWORK'}
                 locationId={locationId}
                 primaryColor={hexPrimaryColor}
                 logo={logo ? logo : undefined}
