@@ -28,7 +28,6 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
     const [locationDetailsSheetSize, setLocationDetailsSheetSize] = useState();
     const [locationDetailsSheetSwiped, setLocationDetailsSheetSwiped] = useState();
 
-    const [directions, setDirections] = useState();
     const [wayfindingSheetSize, setWayfindingSheetSize] = useState();
     const [directionsSheetSize, setDirectionsSheetSize] = useState();
     const [searchSheetSize, setSearchSheetSize] = useState();
@@ -123,7 +122,6 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
                 onStartDirections={() => pushAppView(appViews.DIRECTIONS)}
                 directionsToLocation={directionsToLocation}
                 directionsFromLocation={directionsFromLocation}
-                onDirections={result => setDirections(result)}
                 onBack={() => pushAppView(currentLocation ? appViews.LOCATION_DETAILS : appViews.SEARCH)}
                 isActive={currentAppView === appViews.WAYFINDING}
             />
@@ -136,7 +134,6 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
             <Directions
                 onSetSize={size => setDirectionsSheetSize(size)}
                 isOpen={currentAppView === appViews.DIRECTIONS}
-                directions={directions}
                 onBack={() => pushAppView(appViews.WAYFINDING)}
                 isActive={currentAppView === appViews.DIRECTIONS}
             />

@@ -2,7 +2,13 @@ import React, { useEffect, useState } from 'react'
 import './RouteInstructions.scss';
 import { ReactComponent as ArrowRight } from '../../assets/arrow-right.svg';
 import { ReactComponent as ArrowLeft } from '../../assets/arrow-left.svg';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import directionsResponseState from '../../atoms/directionsResponseState';
+import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
+import activeStepState from '../../atoms/activeStep';
+import setMapZoomLevel from '../../helpers/SetMapZoomLevel';
 import RouteInstructionsStep from '../WebComponentWrappers/RouteInstructionsStep/RouteInstructionsStep';
+
 
 /**
  * Route instructions step by step component.
@@ -20,14 +26,54 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
     /** Referencing the previous step of each active step */
     const [previous, setPrevious] = useState();
 
-    const [activeStep, setActiveStep] = useState(0);
+    const [activeStep, setActiveStep] = useRecoilState(activeStepState);
+    const [totalSteps, setTotalSteps] = useState();
 
-    /*
-     * Make sure to reset active step whenever the steps change.
+    const [lastStep, setLastStep] = useState({ zoom: "", center: "" });
+
+    const directions = useRecoilValue(directionsResponseState);
+
+    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
+
+    /**
+     * Clone the last step in the directions in order to create a destination step.
+     * Assign the specific travel mode to the destination step and push the destination step at the end of the steps array.
      */
     useEffect(() => {
-        setActiveStep(0);
+        const lastStep = steps[steps.length - 1];
+        const destinationStep = { ...lastStep }
+        destinationStep.travel_mode = 'DESTINATION'
+        steps.push(destinationStep);
+        setTotalSteps(steps);
     }, [steps]);
+
+    /**
+     * Get the zoom and the center of the last step when the map instance is idle.
+     * Get the zoom and the center of the destination step.
+     */
+    useEffect(() => {
+        if (activeStep === totalSteps?.length - 2) {
+            function getCenter() {
+                const zoom = mapsIndoorsInstance.getMapView().getZoom();
+                const center = mapsIndoorsInstance.getMapView().getCenter();
+                setLastStep({ zoom, center });
+            }
+            mapsIndoorsInstance.getMapView().once('idle', getCenter);
+        }
+
+        if (activeStep === totalSteps?.length - 1 && directions?.destinationLocation) {
+            // Get the destination location
+            const destinationLocation = directions?.destinationLocation;
+
+            // Center the map to the location coordinates.
+            const destinationLocationGeometry = destinationLocation?.geometry.type === 'Point' ? destinationLocation?.geometry.coordinates : destinationLocation?.properties.anchor.coordinates;
+            mapsIndoorsInstance.getMapView().setCenter({ lat: destinationLocationGeometry[1], lng: destinationLocationGeometry[0] });
+
+            // Call function to set the map zoom level depeding on the max zoom supported on the solution
+            setMapZoomLevel(mapsIndoorsInstance);
+
+        }
+    }, [activeStep]);
 
     /**
      * Navigate to the next step.
@@ -35,7 +81,7 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
      * instruction and travel mode.
      */
     function nextStep() {
-        setPrevious(steps[activeStep]);
+        setPrevious(totalSteps[activeStep]);
         setActiveStep(activeStep + 1);
         onNextStep();
     }
@@ -46,9 +92,15 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
      * instruction and travel mode.
      */
     function previousStep() {
-        setPrevious(steps[activeStep - 2]);
+        setPrevious(totalSteps[activeStep - 2]);
         setActiveStep(activeStep - 1);
-        onPreviousStep();
+
+        if (activeStep === totalSteps?.length - 1) {
+            mapsIndoorsInstance.getMapView().setZoom(lastStep.zoom);
+            mapsIndoorsInstance.getMapView().setCenter(lastStep.center);
+        } else {
+            onPreviousStep();
+        }
     }
 
     // Translations required for the mi-route-instructions-step component
@@ -57,6 +109,7 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
         bike: 'Bike',
         transit: 'Transit',
         drive: 'Drive',
+        destination: 'You have arrived',
         leave: 'Leave',
         from: 'From',
         park: 'Park',
@@ -88,20 +141,21 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
 
     return (
         <div className="route-instructions">
-            {steps &&
+            {totalSteps &&
                 <>
                     <RouteInstructionsStep
                         translations={translations}
                         steps={steps}
                         activeStep={activeStep}
                         previous={previous}
+ 						destination-location={directions?.destinationLocation.properties.name}
                         originLocation={originLocation}
                         substepsToggled={() => onSubstepsToggled()}
                         >
                     </RouteInstructionsStep>
                     <div className='route-instructions__footer'>
                         <div className="route-instructions__progress">
-                            {steps.map((_, index) => (
+                            {totalSteps.map((_, index) => (
                                 <div className={`route-instructions__step ${(activeStep) >= index ? "completed" : ""}`} key={index}>
                                     <div className="step-counter"></div>
                                 </div>
@@ -114,11 +168,11 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
                                 disabled={activeStep === 0}>
                                 <ArrowLeft></ArrowLeft>
                             </button>
-                            <div className="route-instructions__overview">Step {activeStep + 1} of {steps.length}</div>
+                            <div className="route-instructions__overview">Step {activeStep + 1} of {totalSteps.length}</div>
                             <button className="route-instructions__button"
                                 onClick={() => nextStep()}
                                 aria-label="Next"
-                                disabled={activeStep === steps.length - 1}>
+                                disabled={activeStep === totalSteps.length - 1}>
                                 <ArrowRight></ArrowRight>
                             </button>
                         </div>

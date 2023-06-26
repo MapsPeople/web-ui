@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import './Directions.scss';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import travelModeState from '../../atoms/travelModeState';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
@@ -11,6 +11,8 @@ import { ReactComponent as BikeIcon } from '../../assets/bike.svg';
 import RouteInstructions from "../RouteInstructions/RouteInstructions";
 import useMediaQuery from '../../hooks/useMediaQuery';
 import { travelModes } from "../../constants/travelModes";
+import directionsResponseState from "../../atoms/directionsResponseState";
+import activeStepState from "../../atoms/activeStep";
 import { snapPoints } from "../../constants/snapPoints";
 
 const mapsindoors = window.mapsindoors;
@@ -37,7 +39,12 @@ function Directions({ isOpen, onBack, directions, onSetSize }) {
     const [totalTime, setTotalTime] = useState();
 
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
+
     const travelMode = useRecoilValue(travelModeState);
+
+    const directions = useRecoilValue(directionsResponseState);
+
+    const [, setActiveStep] = useRecoilState(activeStepState);
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
@@ -153,8 +160,10 @@ function Directions({ isOpen, onBack, directions, onSetSize }) {
 
     /**
      * Close the directions.
+     * Reset the active steps and stop rendering directions.
      */
     function onDirectionsClosed() {
+        setActiveStep(0);
         stopRendering();
         onBack();
     }
