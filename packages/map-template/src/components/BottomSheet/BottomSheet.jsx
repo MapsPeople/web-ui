@@ -30,6 +30,7 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
 
     const [directions, setDirections] = useState();
     const [wayfindingSheetSize, setWayfindingSheetSize] = useState();
+    const [directionsSheetSize, setDirectionsSheetSize] = useState();
     const [searchSheetSize, setSearchSheetSize] = useState();
     const [locationsListSheetSize, setLocationsListSheetSize] = useState();
     const categories = useRecoilValue(categoriesState);
@@ -130,8 +131,10 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
         <Sheet
             minHeight="220"
             isOpen={currentAppView === appViews.DIRECTIONS}
+            preferredSizeSnapPoint={directionsSheetSize}
             key="E">
             <Directions
+                onSetSize={size => setDirectionsSheetSize(size)}
                 isOpen={currentAppView === appViews.DIRECTIONS}
                 directions={directions}
                 onBack={() => pushAppView(appViews.WAYFINDING)}

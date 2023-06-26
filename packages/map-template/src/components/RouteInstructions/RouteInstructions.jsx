@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import './RouteInstructions.scss';
 import { ReactComponent as ArrowRight } from '../../assets/arrow-right.svg';
 import { ReactComponent as ArrowLeft } from '../../assets/arrow-left.svg';
+import RouteInstructionsStep from '../WebComponentWrappers/RouteInstructionsStep/RouteInstructionsStep';
 
 /**
  * Route instructions step by step component.
@@ -11,10 +12,11 @@ import { ReactComponent as ArrowLeft } from '../../assets/arrow-left.svg';
  * @param {function} props.onNextStep - Function handling the navigation to the next step.
  * @param {function} props.onPreviousStep - Function handling the navigation to the previous step.
  * @param {object} props.originLocation - The initial location where the route starts from.
+ * @param {function} props.onSubstepsToggled - Function handling the navigation to the previous step.
  *
  * @returns
  */
-function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }) {
+function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, onSubstepsToggled }) {
     /** Referencing the previous step of each active step */
     const [previous, setPrevious] = useState();
 
@@ -88,13 +90,16 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }
         <div className="route-instructions">
             {steps &&
                 <>
-                    <mi-route-instructions-step
-                        step={JSON.stringify(steps[activeStep])}
-                        translations={JSON.stringify(translations)}
-                        from-travel-mode={previous?.travel_mode ?? ""}
-                        from-route-context={previous?.route_context ?? originLocation?.properties?.name ?? ""}>
-                    </mi-route-instructions-step>
-                    <div className='test'>
+                    <RouteInstructionsStep
+                        translations={translations}
+                        steps={steps}
+                        activeStep={activeStep}
+                        previous={previous}
+                        originLocation={originLocation}
+                        substepsToggled={() => onSubstepsToggled()}
+                        >
+                    </RouteInstructionsStep>
+                    <div className='route-instructions__footer'>
                         <div className="route-instructions__progress">
                             {steps.map((_, index) => (
                                 <div className={`route-instructions__step ${(activeStep) >= index ? "completed" : ""}`} key={index}>

@@ -9,9 +9,11 @@
         display: flex;
     }
 
-    .test {
+    &__footer {
         position: sticky;
         bottom: 0;
+        background: white;
+        padding: 16px 0;
     }
 
     &__step {

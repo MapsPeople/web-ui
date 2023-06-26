@@ -53,8 +53,7 @@
     }
 
     &__guide {
-        padding: var(--spacing-medium);
-        padding: var(--spacing-medium);
+        padding: var(--spacing-medium) var(--spacing-medium) 0 var(--spacing-medium);
         height: 100%;
         overflow: scroll;
         display: grid;

@@ -11,6 +11,7 @@ import { ReactComponent as BikeIcon } from '../../assets/bike.svg';
 import RouteInstructions from "../RouteInstructions/RouteInstructions";
 import useMediaQuery from '../../hooks/useMediaQuery';
 import { travelModes } from "../../constants/travelModes";
+import { snapPoints } from "../../constants/snapPoints";
 
 const mapsindoors = window.mapsindoors;
 
@@ -23,8 +24,9 @@ let directionsRenderer;
  * @param {boolean} props.isOpen - Indicates if the directions view is open.
  * @param {function} props.onBack - Callback that fires when the directions view is closed by the user.
  * @param {function} props.directions - The directions information based on the origin and destination.
- */
-function Directions({ isOpen, onBack, directions }) {
+ * @param {function} props.onSetSize - Callback that is fired when the component has loaded.
+*/
+function Directions({ isOpen, onBack, directions, onSetSize }) {
     // Holds the MapsIndoors DisplayRule for the destination
     const [destinationDisplayRule, setDestinationDisplayRule] = useState(null);
 
@@ -157,6 +159,16 @@ function Directions({ isOpen, onBack, directions }) {
         onBack();
     }
 
+    /**
+     * Communicate size change to parent component.
+     * @param {number} size
+     */
+    function setSize(size) {
+        if (typeof onSetSize === 'function') {
+            onSetSize(size);
+        }
+    }
+
     return (
         <div className="directions">
             <div className="directions__details">
@@ -218,12 +230,14 @@ function Directions({ isOpen, onBack, directions }) {
                 </div>
                 <hr></hr>
                 {/* <div className="directions__steps"> */}
-                    <RouteInstructions
-                        steps={getRouteSteps()}
-                        originLocation={directions?.originLocation}
-                        onNextStep={() => onNext()}
-                        onPreviousStep={() => onPrevious()}>
-                    </RouteInstructions>
+                <RouteInstructions
+                    steps={getRouteSteps()}
+                    originLocation={directions?.originLocation}
+                    onNextStep={() => onNext()}
+                    onPreviousStep={() => onPrevious()}
+                    onSubstepsToggled={() => setSize(snapPoints.MAX)}
+                    >
+                </RouteInstructions>
                 {/* </div> */}
             </div>
         </div>
