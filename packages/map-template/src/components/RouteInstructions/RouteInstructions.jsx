@@ -27,7 +27,7 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }
     const [activeStep, setActiveStep] = useRecoilState(activeStepState);
     const [totalSteps, setTotalSteps] = useState();
 
-    const [lastStep, setLastStep] = useState({ zoom: "", center: "" });
+    const [lastStepMapState, setLastStepMapState] = useState({ zoom: "", center: "" });
 
     const directions = useRecoilValue(directionsResponseState);
 
