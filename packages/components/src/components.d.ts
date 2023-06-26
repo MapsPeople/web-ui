@@ -2000,6 +2000,9 @@ declare namespace LocalJSX {
           * @properties Object
          */
         "onStepClicked"?: (event: MiRouteInstructionsStepCustomEvent<object>) => void;
+        /**
+          * Event emitted when substeps are toggled.
+         */
         "onSubstepsToggled"?: (event: MiRouteInstructionsStepCustomEvent<void>) => void;
         /**
           * The step data object to render from. Must be passed as stringified JSON.

@@ -1,5 +1,5 @@
 import { Component, ComponentInterface, h, Prop, State, Watch, Event, EventEmitter } from '@stencil/core';
-import { JSX, Method } from '@stencil/core/internal';
+import { JSX } from '@stencil/core/internal';
 import { UnitSystem } from '../../enums/unit-system.enum';
 import { DirectionsTranslations } from '../../types/directions-translations.interface';
 import { Step, StepContext } from '../../types/step.interface';
@@ -92,6 +92,9 @@ export class RouteInstructionsStep implements ComponentInterface {
      */
     @State() substepsAreOpen: boolean = false;
 
+    /**
+     * Event emitted when substeps are toggled.
+     */
     @Event() substepsToggled: EventEmitter<void>;
 
     isInternetExplorer: boolean = isInternetExplorer();
@@ -238,12 +241,14 @@ export class RouteInstructionsStep implements ComponentInterface {
     renderToggleButton(): JSX.Element {
         // Return null if none substeps/maneuvers is provided
         if (this.stepData.steps.length <= 0) {
+            console.log('no steps');
             return null;
         }
         // Return null if indoor substeps/maneuvers should be hidden and if the step context corresponds to being inside a building
-        if (this.hideIndoorSubsteps === true && this.stepData.route_context.toLowerCase() === 'insidebuilding') {
-            return null;
-        }
+        // if (this.hideIndoorSubsteps === true && this.stepData.route_context.toLowerCase() === 'insidebuilding') {
+        //     console.log('inside building');
+        //     return null;
+        // }
 
         return (
             <span class='step__toggle' onClick={() => this.toggleSubsteps()}>
