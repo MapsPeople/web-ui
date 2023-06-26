@@ -687,7 +687,7 @@ export namespace Components {
     }
     interface MiRouteInstructionsStep {
         /**
-          * The destination location.
+          * The final step when the user has arrived to the destination location.
           * @type {string}
          */
         "destinationLocation"?: string;
@@ -1920,7 +1920,7 @@ declare namespace LocalJSX {
     }
     interface MiRouteInstructionsStep {
         /**
-          * The destination location.
+          * The final step when the user has arrived to the destination location.
           * @type {string}
          */
         "destinationLocation"?: string;

@@ -36,7 +36,6 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }
     /**
      * Clone the last step in the directions in order to create a destination step.
      * Assign the specific travel mode to the destination step and push the destination step at the end of the steps array.
-     *
      */
     useEffect(() => {
         const lastStep = steps[steps.length - 1];
@@ -47,27 +46,31 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }
     }, [steps]);
 
     /**
-     * Get the zoom and the center of the last step and the destination step in the directions.
-     *
+     * Get the zoom and the center of the last step when the map instance is idle.
+     * Get the zoom and the center of the destination step.
      */
     useEffect(() => {
-        if (activeStep === totalSteps?.length - 1) {
-            const lastStepZoom = mapsIndoorsInstance.getZoom();
-            const lastStepCenter = mapsIndoorsInstance.getMapView().getCenter();
-            setLastStepZoom(lastStepZoom);
-            setLastStepCenter(lastStepCenter);
-
-            if (directions?.destinationLocation) {
-                // Get the destination location
-                const destinationLocation = directions?.destinationLocation;
-
-                // Center the map to the location coordinates.
-                const destinationLocationGeometry = destinationLocation?.geometry.type === 'Point' ? destinationLocation?.geometry.coordinates : destinationLocation?.properties.anchor.coordinates;
-                mapsIndoorsInstance.getMapView().setCenter({ lat: destinationLocationGeometry[1], lng: destinationLocationGeometry[0] });
-
-                // Call function to set the map zoom level depeding on the max zoom supported on the solution
-                setMapZoomLevel(mapsIndoorsInstance);
+        if (activeStep === totalSteps?.length - 2) {
+            function getCenter() {
+                const center = mapsIndoorsInstance.getMapView().getCenter();
+                const zoom = mapsIndoorsInstance.getMapView().getZoom();
+                setLastStepCenter(center);
+                setLastStepZoom(zoom);
             }
+            mapsIndoorsInstance.getMapView().once('idle', getCenter);
+        }
+
+        if (activeStep === totalSteps?.length - 1 && directions?.destinationLocation) {
+            // Get the destination location
+            const destinationLocation = directions?.destinationLocation;
+
+            // Center the map to the location coordinates.
+            const destinationLocationGeometry = destinationLocation?.geometry.type === 'Point' ? destinationLocation?.geometry.coordinates : destinationLocation?.properties.anchor.coordinates;
+            mapsIndoorsInstance.getMapView().setCenter({ lat: destinationLocationGeometry[1], lng: destinationLocationGeometry[0] });
+
+            // Call function to set the map zoom level depeding on the max zoom supported on the solution
+            setMapZoomLevel(mapsIndoorsInstance);
+
         }
     }, [activeStep]);
 
@@ -93,7 +96,7 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }
 
         if (activeStep === totalSteps?.length - 1) {
             mapsIndoorsInstance.getMapView().setCenter(lastStepCenter);
-            mapsIndoorsInstance.setZoom(lastStepZoom);
+            mapsIndoorsInstance.getMapView().setZoom(lastStepZoom);
         } else {
             onPreviousStep();
         }
