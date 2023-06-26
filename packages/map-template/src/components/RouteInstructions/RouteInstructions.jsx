@@ -54,7 +54,7 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }
             function getCenter() {
                 const zoom = mapsIndoorsInstance.getMapView().getZoom();
                 const center = mapsIndoorsInstance.getMapView().getCenter();
-                setLastStep({ zoom, center });
+                setLastStepMapState({ zoom, center });
             }
             mapsIndoorsInstance.getMapView().once('idle', getCenter);
         }
@@ -94,8 +94,8 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }
         setActiveStep(activeStep - 1);
 
         if (activeStep === totalSteps?.length - 1) {
-            mapsIndoorsInstance.getMapView().setZoom(lastStep.zoom);
-            mapsIndoorsInstance.getMapView().setCenter(lastStep.center);
+            mapsIndoorsInstance.getMapView().setZoom(lastStepMapState.zoom);
+            mapsIndoorsInstance.getMapView().setCenter(lastStepMapState.center);
         } else {
             onPreviousStep();
         }
