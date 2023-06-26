@@ -217,14 +217,14 @@ function Directions({ isOpen, onBack, directions }) {
                     </div>
                 </div>
                 <hr></hr>
-                <div className="directions__steps">
+                {/* <div className="directions__steps"> */}
                     <RouteInstructions
                         steps={getRouteSteps()}
                         originLocation={directions?.originLocation}
                         onNextStep={() => onNext()}
                         onPreviousStep={() => onPrevious()}>
                     </RouteInstructions>
-                </div>
+                {/* </div> */}
             </div>
         </div>
     )

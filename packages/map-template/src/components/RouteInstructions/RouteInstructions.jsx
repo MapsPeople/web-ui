@@ -94,27 +94,29 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }
                         from-travel-mode={previous?.travel_mode ?? ""}
                         from-route-context={previous?.route_context ?? originLocation?.properties?.name ?? ""}>
                     </mi-route-instructions-step>
-                    <div className="route-instructions__progress">
-                        {steps.map((_, index) => (
-                            <div className={`route-instructions__step ${(activeStep) >= index ? "completed" : ""}`} key={index}>
-                                <div className="step-counter"></div>
-                            </div>
-                        ))}
-                    </div>
-                    <div className="route-instructions__actions">
-                        <button className="route-instructions__button"
-                            onClick={() => previousStep()}
-                            aria-label="Previous"
-                            disabled={activeStep === 0}>
-                            <ArrowLeft></ArrowLeft>
-                        </button>
-                        <div className="route-instructions__overview">Step {activeStep + 1} of {steps.length}</div>
-                        <button className="route-instructions__button"
-                            onClick={() => nextStep()}
-                            aria-label="Next"
-                            disabled={activeStep === steps.length - 1}>
-                            <ArrowRight></ArrowRight>
-                        </button>
+                    <div className='test'>
+                        <div className="route-instructions__progress">
+                            {steps.map((_, index) => (
+                                <div className={`route-instructions__step ${(activeStep) >= index ? "completed" : ""}`} key={index}>
+                                    <div className="step-counter"></div>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="route-instructions__actions">
+                            <button className="route-instructions__button"
+                                onClick={() => previousStep()}
+                                aria-label="Previous"
+                                disabled={activeStep === 0}>
+                                <ArrowLeft></ArrowLeft>
+                            </button>
+                            <div className="route-instructions__overview">Step {activeStep + 1} of {steps.length}</div>
+                            <button className="route-instructions__button"
+                                onClick={() => nextStep()}
+                                aria-label="Next"
+                                disabled={activeStep === steps.length - 1}>
+                                <ArrowRight></ArrowRight>
+                            </button>
+                        </div>
                     </div>
                 </>
             }

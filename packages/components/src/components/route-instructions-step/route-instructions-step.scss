@@ -50,7 +50,6 @@
     }
 
     &__travel-mode {
-        grid-area: modeicon;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -113,26 +112,22 @@
     }
 
     &__toggle {
-        grid-area: toggle;
-        display: flex;
+        display: grid;
         justify-content: center;
-        align-items: center;
-        transition: transform 300ms;
-        cursor: pointer;
-
-        &--open {
-            transform: rotate(180deg);
-        }
 
         mi-icon {
-            @include icons.size(small);
+            @include icons.size(medium);
             display: block;
-            @include background-color.blue(60);
         }
     }
 
     &__substeps {
         display: grid;
         gap: 32px;
+    }
+
+    &__details {
+        display: grid;
+        gap: 24px;
     }
 }

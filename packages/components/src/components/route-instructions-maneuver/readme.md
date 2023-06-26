@@ -123,12 +123,10 @@ mi-route-instructions-maneuver::part(maneuver-icon) {
 
 ## Shadow Parts
 
-| Part                                     | Description |
-| ---------------------------------------- | ----------- |
-| `"maneuver-description"`                 |             |
-| `"maneuver-description-distance"`        |             |
-| `"maneuver-description-distance-border"` |             |
-| `"maneuver-icon"`                        |             |
+| Part                              | Description |
+| --------------------------------- | ----------- |
+| `"maneuver-description-distance"` |             |
+| `"maneuver-icon"`                 |             |
 
 
 ----------------------------------------------

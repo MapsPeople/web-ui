@@ -356,9 +356,10 @@ mi-route-instructions-step::part(step-toggle) {
 
 ## Events
 
-| Event         | Description                                           | Type                  |
-| ------------- | ----------------------------------------------------- | --------------------- |
-| `stepClicked` | Event emitted when clicking on a step (not sub step). | `CustomEvent<object>` |
+| Event             | Description                                           | Type                  |
+| ----------------- | ----------------------------------------------------- | --------------------- |
+| `stepClicked`     | Event emitted when clicking on a step (not sub step). | `CustomEvent<object>` |
+| `substepsToggled` |                                                       | `CustomEvent<void>`   |
 
 
 ## Shadow Parts

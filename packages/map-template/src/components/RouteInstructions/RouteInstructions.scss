@@ -1,10 +1,17 @@
 .route-instructions {
     width: 100%;
-    display: grid;
     gap: var(--spacing-medium);
+    height: 100%;
+    display: grid;
+    grid-template-rows: 1fr min-content;
 
     &__progress {
         display: flex;
+    }
+
+    .test {
+        position: sticky;
+        bottom: 0;
     }
 
     &__step {
@@ -95,5 +102,7 @@
 
     mi-route-instructions-step {
         padding: var(--spacing-medium) 0;
+        overflow: scroll;
+        height: 100%;
     }
 }
