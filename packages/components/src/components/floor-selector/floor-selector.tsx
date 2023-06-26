@@ -36,9 +36,29 @@ export class FloorSelector {
      * Scrolling the floorList element to the selected floor.
      */
     private scrollToSelectedFloor(): void {
-        if (this.currentFloorElement && this.floorSelectorElement.clientHeight / 2 < this.currentFloorElement.offsetTop) {
-            this.floorListElement.scrollTop = this.currentFloorElement.offsetTop - this.floorSelectorElement.clientHeight;
+        // Get the container and list heights
+        const containerHeight = this.floorSelectorElement.clientHeight;
+        const listHeight = this.floorListElement.scrollHeight;
+
+        // Get the selected list item's position relative to the list
+        const currentFloorOffsetTop = this.currentFloorElement.offsetTop;
+        const currentFloorHeight = this.currentFloorElement.offsetHeight;
+
+        // Calculate the scrollTop value for the selected list item
+        let scrollTopValue: number;
+        if (listHeight > containerHeight) {
+            // Center the selected list item within the container
+            scrollTopValue = currentFloorOffsetTop - (containerHeight / 2) + (currentFloorHeight / 2);
+            scrollTopValue = Math.max(0, scrollTopValue); // Prevent negative values
+            scrollTopValue = Math.min(scrollTopValue, listHeight - containerHeight); // Limit within valid range
+        } else {
+            // If the list is smaller than the container, scroll to the top
+            scrollTopValue = 0;
         }
+
+        // Set the scrollTop property on the list element
+        this.floorListElement.scrollTop = scrollTopValue;
+
     }
 
     /**
