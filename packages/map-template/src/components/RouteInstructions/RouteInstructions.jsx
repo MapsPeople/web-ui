@@ -20,14 +20,14 @@ import setMapZoomLevel from '../../helpers/SetMapZoomLevel';
  * @returns
  */
 function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }) {
+
     /** Referencing the previous step of each active step */
     const [previous, setPrevious] = useState();
 
     const [activeStep, setActiveStep] = useRecoilState(activeStepState);
     const [totalSteps, setTotalSteps] = useState();
 
-    const [lastStepZoom, setLastStepZoom] = useState();
-    const [lastStepCenter, setLastStepCenter] = useState();
+    const [lastStep, setLastStep] = useState({ zoom: "", center: "" });
 
     const directions = useRecoilValue(directionsResponseState);
 
@@ -52,10 +52,9 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }
     useEffect(() => {
         if (activeStep === totalSteps?.length - 2) {
             function getCenter() {
-                const center = mapsIndoorsInstance.getMapView().getCenter();
                 const zoom = mapsIndoorsInstance.getMapView().getZoom();
-                setLastStepCenter(center);
-                setLastStepZoom(zoom);
+                const center = mapsIndoorsInstance.getMapView().getCenter();
+                setLastStep({ zoom, center });
             }
             mapsIndoorsInstance.getMapView().once('idle', getCenter);
         }
@@ -95,8 +94,8 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }
         setActiveStep(activeStep - 1);
 
         if (activeStep === totalSteps?.length - 1) {
-            mapsIndoorsInstance.getMapView().setCenter(lastStepCenter);
-            mapsIndoorsInstance.getMapView().setZoom(lastStepZoom);
+            mapsIndoorsInstance.getMapView().setZoom(lastStep.zoom);
+            mapsIndoorsInstance.getMapView().setCenter(lastStep.center);
         } else {
             onPreviousStep();
         }
