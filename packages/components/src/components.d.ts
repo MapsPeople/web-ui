@@ -30,7 +30,7 @@ export namespace Components {
          */
         "active": boolean;
         /**
-          * The background color of the chip. The default HEX value refers to the --brand-colors-dark-pine-100 from MIDT
+          * The background color of the chip. The default #005655 HEX value refers to the --brand-colors-dark-pine-100 from MIDT
           * @type {string}
          */
         "backgroundColor"?: string;
@@ -1254,7 +1254,7 @@ declare namespace LocalJSX {
          */
         "active"?: boolean;
         /**
-          * The background color of the chip. The default HEX value refers to the --brand-colors-dark-pine-100 from MIDT
+          * The background color of the chip. The default #005655 HEX value refers to the --brand-colors-dark-pine-100 from MIDT
           * @type {string}
          */
         "backgroundColor"?: string;
