@@ -9,6 +9,12 @@ import activeStepState from '../../atoms/activeStep';
 import setMapZoomLevel from '../../helpers/SetMapZoomLevel';
 
 /**
+ * Private variable used for checking if the next button should be enabled.
+ * Implemented due to the impossibility to use the React useState hook.
+ */
+let _allowNextStep;
+
+/**
  * Route instructions step by step component.
  *
  * @param {Object} props
@@ -33,6 +39,9 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }
 
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
 
+    // Indicate if the next step action is active.
+    const [isNextStep, setIsNextStep] = useState(true);
+
     /**
      * Clone the last step in the directions in order to create a destination step.
      * Assign the specific travel mode to the destination step and push the destination step at the end of the steps array.
@@ -47,14 +56,32 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }
 
     /**
      * Get the zoom and the center of the last step when the map instance is idle.
+     * Wait until getting the zoom and center, then allow the user to go to the next step.
      */
     function getZoomAndCenter() {
-        function getCenter() {
-            const zoom = mapsIndoorsInstance.getMapView().getZoom();
-            const center = mapsIndoorsInstance.getMapView().getCenter();
-            setLastStepMapState({ zoom, center });
+        return new Promise(resolve => {
+            function getCenter() {
+                const zoom = mapsIndoorsInstance.getMapView().getZoom();
+                const center = mapsIndoorsInstance.getMapView().getCenter();
+                setLastStepMapState({ zoom, center });
+
+                if (isNextStep === true) {
+                    _allowNextStep = true;
+                }
+                resolve();
+            }
+            mapsIndoorsInstance.getMapView().once('idle', getCenter);
+        });
+    }
+
+    /**
+     * Disable the next step and get the zoom and center of the map.
+     */
+    async function asyncCall() {
+        if (isNextStep === true) {
+            _allowNextStep = false;
         }
-        mapsIndoorsInstance.getMapView().once('idle', getCenter);
+        getZoomAndCenter();
     }
 
     /**
@@ -64,10 +91,10 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }
         // Check if the directions have more than 2 steps, else take the first step.
         if (totalSteps?.length > 2) {
             if (activeStep === totalSteps?.length - 2) {
-                getZoomAndCenter();
+                asyncCall();
             }
         } else if (activeStep === 0) {
-            getZoomAndCenter();
+            asyncCall();
         }
 
         if (activeStep === totalSteps?.length - 1 && directions?.destinationLocation) {
@@ -93,6 +120,7 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }
         setPrevious(totalSteps[activeStep]);
         setActiveStep(activeStep + 1);
         onNextStep();
+        setIsNextStep(true);
     }
 
     /**
@@ -103,6 +131,7 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }
     function previousStep() {
         setPrevious(totalSteps[activeStep - 2]);
         setActiveStep(activeStep - 1);
+        setIsNextStep(false);
 
         if (activeStep === totalSteps?.length - 1) {
             mapsIndoorsInstance.getMapView().setZoom(lastStepMapState.zoom);
@@ -177,7 +206,7 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }
                         <button className="route-instructions__button"
                             onClick={() => nextStep()}
                             aria-label="Next"
-                            disabled={activeStep === totalSteps.length - 1}>
+                            disabled={activeStep === totalSteps.length - 1 || _allowNextStep === false}>
                             <ArrowRight></ArrowRight>
                         </button>
                     </div>
