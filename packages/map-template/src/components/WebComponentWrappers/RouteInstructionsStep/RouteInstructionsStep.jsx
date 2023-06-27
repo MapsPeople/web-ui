@@ -1,7 +1,9 @@
 import { useEffect, useRef } from 'react';
+import { useRecoilState } from 'recoil';
+import substepsToggledState from '../../../atoms/substepsToggledState';
 
 /**
- * React wrapper around the custom element <mi-search>.
+ * React wrapper around the custom element <mi-route-instructions-step>.
  *
  * @param {object} props
  * @param {object} translations - The text to be displayed on the instructions steps.
@@ -10,24 +12,27 @@ import { useEffect, useRef } from 'react';
  * @param {object} previous - The previous step.
  * @param {object} originLocation - The origin location when starting the directions.
  * @param {object} directions - The directions object.
- * @param {function} substepsToggled - Callback function triggered when the substeps button is toggled.
  *
  */
-function RouteInstructionsStep({ translations, totalSteps, activeStep, previous, originLocation, substepsToggled, directions }) {
+function RouteInstructionsStep({ translations, totalSteps, activeStep, previous, originLocation, directions }) {
     const elementRef = useRef();
 
-    useEffect(() => {
-        const clickHandler = customEvent => substepsToggled(customEvent.detail);
+    const [substeps, setSubsteps] = useRecoilState(substepsToggledState);
 
+    useEffect(() => {
         const { current } = elementRef;
 
-        current.addEventListener('substepsToggled', clickHandler);
-
-        return () => {
-            current.removeEventListener('substepsToggled', clickHandler);
+        function onSubstepsToggled() {
+            current.substepsAreOpen = !current.substepsAreOpen
+            setSubsteps(current.substepsAreOpen);
         }
 
-    }, [substepsToggled]);
+        current.addEventListener('substepsToggled', onSubstepsToggled);
+
+        return () => {
+            current.removeEventListener('substepsToggled', onSubstepsToggled);
+        }
+    }, []);
 
     return <mi-route-instructions-step
         ref={elementRef}
@@ -35,6 +40,7 @@ function RouteInstructionsStep({ translations, totalSteps, activeStep, previous,
         translations={JSON.stringify(translations)}
         destination-location={directions?.destinationLocation.properties.name}
         from-travel-mode={previous?.travel_mode ?? ""}
+        substeps-are-open={substeps}
         from-route-context={previous?.route_context ?? originLocation?.properties?.name ?? ""}>
     </mi-route-instructions-step>
 

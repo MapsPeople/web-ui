@@ -1,9 +1,8 @@
 .directions {
     color: var(--brand-colors-black-100);
-    color: var(--brand-colors-black-100);
+    min-height: 475px;
     display: grid;
     grid-auto-rows: min-content 1fr;
-    overflow: scroll;
     height: 100%;
 
     &__details {

@@ -14,6 +14,7 @@ import { travelModes } from "../../constants/travelModes";
 import directionsResponseState from "../../atoms/directionsResponseState";
 import activeStepState from "../../atoms/activeStep";
 import { snapPoints } from "../../constants/snapPoints";
+import substepsToggledState from "../../atoms/substepsToggledState";
 
 const mapsindoors = window.mapsindoors;
 
@@ -44,6 +45,8 @@ function Directions({ isOpen, onBack, onSetSize }) {
     const directions = useRecoilValue(directionsResponseState);
 
     const [, setActiveStep] = useRecoilState(activeStepState);
+
+    const substeps = useRecoilValue(substepsToggledState);
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
@@ -177,6 +180,14 @@ function Directions({ isOpen, onBack, onSetSize }) {
         }
     }
 
+    useEffect(() => {
+        if (substeps) {
+            setSize(snapPoints.MAX);
+        } else {
+            setSize(snapPoints.FIT);
+        }
+    }, [substeps])
+
     return (
         <div className="directions">
             <div className="directions__details">
@@ -243,8 +254,7 @@ function Directions({ isOpen, onBack, onSetSize }) {
                     originLocation={directions?.originLocation}
                     onNextStep={() => onNext()}
                     onPreviousStep={() => onPrevious()}
-                    onSubstepsToggled={() => setSize(snapPoints.MAX)}
-                    >
+                >
                 </RouteInstructions>
                 {/* </div> */}
             </div>
