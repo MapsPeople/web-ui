@@ -90,10 +90,6 @@
         gap: var(--spacing-x-small);
         align-items: center;
         width: fit-content;
-
-        .mi-toggle:checked {
-            background-color: var(--color-teal-90);
-        }
     }
 
     &__info {
@@ -139,7 +135,6 @@
     }
 
     &__button {
-        background-color: var(--color-teal-90);
         color: var(--color-white-white);
         border-radius: var(--rounding-large);
         border: none;
