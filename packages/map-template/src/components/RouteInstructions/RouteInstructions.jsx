@@ -47,16 +47,27 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }
 
     /**
      * Get the zoom and the center of the last step when the map instance is idle.
+     */
+    function getZoomAndCenter() {
+        function getCenter() {
+            const zoom = mapsIndoorsInstance.getMapView().getZoom();
+            const center = mapsIndoorsInstance.getMapView().getCenter();
+            setLastStepMapState({ zoom, center });
+        }
+        mapsIndoorsInstance.getMapView().once('idle', getCenter);
+    }
+
+    /**
      * Get the zoom and the center of the destination step.
      */
     useEffect(() => {
-        if (activeStep === totalSteps?.length - 2) {
-            function getCenter() {
-                const zoom = mapsIndoorsInstance.getMapView().getZoom();
-                const center = mapsIndoorsInstance.getMapView().getCenter();
-                setLastStepMapState({ zoom, center });
+        // Check if the directions have more than 2 steps, else take the first step.
+        if (totalSteps?.length > 2) {
+            if (activeStep === totalSteps?.length - 2) {
+                getZoomAndCenter();
             }
-            mapsIndoorsInstance.getMapView().once('idle', getCenter);
+        } else if (activeStep === 0) {
+            getZoomAndCenter();
         }
 
         if (activeStep === totalSteps?.length - 1 && directions?.destinationLocation) {
@@ -71,7 +82,7 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }
             setMapZoomLevel(mapsIndoorsInstance);
 
         }
-    }, [activeStep]);
+    }, [activeStep, totalSteps]);
 
     /**
      * Navigate to the next step.
