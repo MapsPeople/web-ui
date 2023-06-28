@@ -209,7 +209,7 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }
                             <button className="route-instructions__button"
                                 onClick={() => nextStep()}
                                 aria-label="Next"
-                                disabled={activeStep === totalSteps.length - 1 || _allowNextStep === false}}>
+                                disabled={activeStep === totalSteps.length - 1 || _allowNextStep === false}>
                                 <ArrowRight></ArrowRight>
                             </button>
                         </div>
