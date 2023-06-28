@@ -9,7 +9,6 @@ import activeStepState from '../../atoms/activeStep';
 import setMapZoomLevel from '../../helpers/SetMapZoomLevel';
 import RouteInstructionsStep from '../WebComponentWrappers/RouteInstructionsStep/RouteInstructionsStep';
 
-
 /**
  * Route instructions step by step component.
  *
@@ -18,11 +17,10 @@ import RouteInstructionsStep from '../WebComponentWrappers/RouteInstructionsStep
  * @param {function} props.onNextStep - Function handling the navigation to the next step.
  * @param {function} props.onPreviousStep - Function handling the navigation to the previous step.
  * @param {object} props.originLocation - The initial location where the route starts from.
- * @param {function} props.onSubstepsToggled - Function handling the navigation to the previous step.
  *
  * @returns
  */
-function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, onSubstepsToggled }) {
+function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }) {
     /** Referencing the previous step of each active step */
     const [previous, setPrevious] = useState();
 
@@ -150,7 +148,6 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
                         previous={previous}
  						directions={directions}
                         originLocation={originLocation}
-                        substepsToggled={() => onSubstepsToggled()}
                         >
                     </RouteInstructionsStep>
                     <div className='route-instructions__footer'>

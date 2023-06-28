@@ -466,6 +466,10 @@ export class RouteInstructionsStep implements ComponentInterface {
                 </div>
                 <div part="step-location" class="step__location">{this.destinationLocation}</div>
             </div>
+            {/* <div class="step__details">
+                {this.renderToggleButton()}
+                {this.renderSubsteps()}
+            </div> */}
         </div>;
     }
 

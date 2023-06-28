@@ -40,10 +40,9 @@ function RouteInstructionsStep({ translations, totalSteps, activeStep, previous,
         translations={JSON.stringify(translations)}
         destination-location={directions?.destinationLocation.properties.name}
         from-travel-mode={previous?.travel_mode ?? ""}
-        substeps-are-open={substeps}
+        // substeps-are-open={substeps}
         from-route-context={previous?.route_context ?? originLocation?.properties?.name ?? ""}>
     </mi-route-instructions-step>
-
 };
 
 export default RouteInstructionsStep;

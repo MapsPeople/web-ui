@@ -14,6 +14,16 @@
         bottom: 0;
         background: white;
         padding: 16px 0;
+
+        &::before {
+            content: '';
+            position: absolute;
+            bottom: calc(64px + var(--spacing-medium));
+            left: 0;
+            right: 0;
+            height: var(--spacing-xx-large);
+            background: linear-gradient(rgba(255, 255, 255, 0), white);
+        }
     }
 
     &__step {
