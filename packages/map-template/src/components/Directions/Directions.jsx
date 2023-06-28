@@ -230,6 +230,7 @@ function Directions({ isOpen, onBack }) {
                         steps={getRouteSteps()}
                         originLocation={directions?.originLocation}
                         onNextStep={() => onNext()}
+                        isOpen={isOpen}
                         onPreviousStep={() => onPrevious()}>
                     </RouteInstructions>
                 </div>

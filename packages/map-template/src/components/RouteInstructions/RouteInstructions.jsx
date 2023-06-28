@@ -22,10 +22,11 @@ let _allowNextStep;
  * @param {function} props.onNextStep - Function handling the navigation to the next step.
  * @param {function} props.onPreviousStep - Function handling the navigation to the previous step.
  * @param {object} props.originLocation - The initial location where the route starts from.
+ * @param {boolean} props.isOpen - Indicates if the directions view is open.
  *
  * @returns
  */
-function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }) {
+function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, isOpen }) {
 
     /** Referencing the previous step of each active step */
     const [previous, setPrevious] = useState();
@@ -65,6 +66,8 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }
                 const center = mapsIndoorsInstance.getMapView().getCenter();
                 setLastStepMapState({ zoom, center });
 
+                console.log('zoom and center', zoom, center)
+
                 if (isNextStep === true) {
                     _allowNextStep = true;
                 }
@@ -88,28 +91,30 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation }
      * Get the zoom and the center of the destination step.
      */
     useEffect(() => {
-        // Check if the directions have more than 2 steps, else take the first step.
-        if (totalSteps?.length > 2) {
-            if (activeStep === totalSteps?.length - 2) {
+        if (isOpen) {
+            // Check if the directions have more than 2 steps, else take the first step.
+            if (totalSteps?.length > 2) {
+                if (activeStep === totalSteps?.length - 2) {
+                    asyncCall();
+                }
+            } else if (activeStep === 0) {
                 asyncCall();
             }
-        } else if (activeStep === 0) {
-            asyncCall();
+
+            if (activeStep === totalSteps?.length - 1 && directions?.destinationLocation) {
+                // Get the destination location
+                const destinationLocation = directions?.destinationLocation;
+
+                // Center the map to the location coordinates.
+                const destinationLocationGeometry = destinationLocation?.geometry.type === 'Point' ? destinationLocation?.geometry.coordinates : destinationLocation?.properties.anchor.coordinates;
+                mapsIndoorsInstance.getMapView().setCenter({ lat: destinationLocationGeometry[1], lng: destinationLocationGeometry[0] });
+
+                // Call function to set the map zoom level depeding on the max zoom supported on the solution
+                setMapZoomLevel(mapsIndoorsInstance);
+
+            }
         }
-
-        if (activeStep === totalSteps?.length - 1 && directions?.destinationLocation) {
-            // Get the destination location
-            const destinationLocation = directions?.destinationLocation;
-
-            // Center the map to the location coordinates.
-            const destinationLocationGeometry = destinationLocation?.geometry.type === 'Point' ? destinationLocation?.geometry.coordinates : destinationLocation?.properties.anchor.coordinates;
-            mapsIndoorsInstance.getMapView().setCenter({ lat: destinationLocationGeometry[1], lng: destinationLocationGeometry[0] });
-
-            // Call function to set the map zoom level depeding on the max zoom supported on the solution
-            setMapZoomLevel(mapsIndoorsInstance);
-
-        }
-    }, [activeStep, totalSteps]);
+    }, [isOpen, activeStep, totalSteps]);
 
     /**
      * Navigate to the next step.
