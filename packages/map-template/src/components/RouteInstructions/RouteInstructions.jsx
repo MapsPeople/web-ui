@@ -95,7 +95,7 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
                 if (activeStep === totalSteps?.length - 2) {
                     asyncCall();
                 }
-            } else if (activeStep === 0) {
+            } else if (activeStep === 0 && lastStepMapState.zoom === "" && lastStepMapState.center === "") {
                 asyncCall();
             }
 
