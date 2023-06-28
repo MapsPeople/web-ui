@@ -66,8 +66,6 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
                 const center = mapsIndoorsInstance.getMapView().getCenter();
                 setLastStepMapState({ zoom, center });
 
-                console.log('zoom and center', zoom, center)
-
                 if (isNextStep === true) {
                     _allowNextStep = true;
                 }
