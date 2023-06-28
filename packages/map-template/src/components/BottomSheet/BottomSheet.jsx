@@ -135,7 +135,6 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
                 onSetSize={size => setDirectionsSheetSize(size)}
                 isOpen={currentAppView === appViews.DIRECTIONS}
                 onBack={() => pushAppView(appViews.WAYFINDING)}
-                isActive={currentAppView === appViews.DIRECTIONS}
             />
         </Sheet>
     ]
