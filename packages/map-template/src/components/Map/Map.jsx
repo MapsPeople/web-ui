@@ -179,8 +179,9 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
             mapView
         });
 
-        // TODO: This overrides the pink building outline color from the SDK. It's added here for demo purposes until the SDK supports Display Rules for Buildings too.
-        miInstance.setDisplayRule('MI_BUILDING_OUTLINE', { visible: false });
+        // Turn off visibility for buildings and venues.
+        // TODO: outline color override is also added here for demo purposes until the SDK supports Display Rules for Buildings too.
+        miInstance.setDisplayRule(['MI_BUILDING_OUTLINE', 'MI_BUILDING', 'MI_VENUE'], { visible: false });
 
         miInstance.on('click', location => onLocationClick(location));
         miInstance.once('building_changed', () => onBuildingChanged(miInstance))
