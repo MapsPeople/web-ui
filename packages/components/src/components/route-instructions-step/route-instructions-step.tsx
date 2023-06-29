@@ -216,7 +216,7 @@ export class RouteInstructionsStep implements ComponentInterface {
      */
     renderSubsteps(): JSX.Element {
         return this.substepsAreOpen === true ? <div class="step__substeps">
-            {this.stepData.steps.map((maneuver, index) => {
+            {this.stepData.steps?.map((maneuver, index) => {
                 return <mi-route-instructions-maneuver
                     data-maneuver-index={index}
                     maneuver={JSON.stringify(maneuver)}
@@ -240,15 +240,9 @@ export class RouteInstructionsStep implements ComponentInterface {
      */
     renderToggleButton(): JSX.Element {
         // Return null if none substeps/maneuvers is provided
-        if (this.stepData.steps.length <= 0) {
-            console.log('no steps');
+        if (this.stepData.steps?.length <= 0) {
             return null;
         }
-        // Return null if indoor substeps/maneuvers should be hidden and if the step context corresponds to being inside a building
-        // if (this.hideIndoorSubsteps === true && this.stepData.route_context.toLowerCase() === 'insidebuilding') {
-        //     console.log('inside building');
-        //     return null;
-        // }
 
         return (
             <span class='step__toggle' onClick={() => this.toggleSubsteps()}>
@@ -257,11 +251,6 @@ export class RouteInstructionsStep implements ComponentInterface {
                     :
                     <mi-icon part="step-toggle" icon-name="maximize"></mi-icon>
                 }
-
-                {/* {this.isInternetExplorer ? <mi-icon part="step-toggle" icon-name="minimize"></mi-icon> :
-                    // <mi-icon part="step-toggle" icon-name="toggle"></mi-icon>
-                    <mi-icon part="step-toggle" icon-name="maximize"></mi-icon>
-                } */}
             </span>
         );
     }
@@ -466,10 +455,10 @@ export class RouteInstructionsStep implements ComponentInterface {
                 </div>
                 <div part="step-location" class="step__location">{this.destinationLocation}</div>
             </div>
-            {/* <div class="step__details">
+            <div class="step__details">
                 {this.renderToggleButton()}
                 {this.renderSubsteps()}
-            </div> */}
+            </div>
         </div>;
     }
 

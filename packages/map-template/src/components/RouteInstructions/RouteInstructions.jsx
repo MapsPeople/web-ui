@@ -50,7 +50,8 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
     useEffect(() => {
         const lastStep = steps[steps.length - 1];
         const destinationStep = { ...lastStep }
-        destinationStep.travel_mode = 'DESTINATION'
+        destinationStep.travel_mode = 'DESTINATION';
+        destinationStep.steps = null;
         steps.push(destinationStep);
         setTotalSteps(steps);
     }, [steps]);
