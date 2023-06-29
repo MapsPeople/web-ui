@@ -3,6 +3,16 @@ import merge from 'deepmerge';
 import midtColors from '@mapsindoors/midt/tokens/color.json';
 import midtOpacity from '@mapsindoors/midt/tokens/opacity.json';
 
+enum PositionStateTypes {
+    POSITION_UNKNOWN = 'POSITION_UNKNOWN',
+    POSITION_REQUESTING = 'POSITION_REQUESTING',
+    POSITION_INACCURATE = 'POSITION_INACCURATE',
+    POSITION_KNOWN = 'POSITION_KNOWN',
+    POSITION_CENTERED = 'POSITION_CENTERED',
+    POSITION_TRACKED = 'POSITION_TRACKED',
+    POSITION_UNTRACKED = 'POSITION_UNTRACKED'
+}
+
 @Component({
     tag: 'mi-my-position',
     styleUrl: 'my-position.scss',
@@ -15,17 +25,19 @@ export class MyPositionComponent {
     @Prop() mapsindoors;
     @Prop() myPositionOptions?;
 
-    private map;
+    /**
+     * The current state of device positioning.
+     */
+    @State() positionState: PositionStateTypes;
+
+    private mapView;
     private options;
-    private canBeTracked: boolean;
-    private orientation: number;
     private compassButton: HTMLButtonElement;
-    private readonly isWebComponent: boolean = true;
 
     /**
-     * The current state of device positioning. One of {@link PositionState}.
+     * Wether the MyPositionComponent is a Web Componenet or not.
      */
-    @State() positionState;
+    private readonly isWebComponent: boolean = true;
 
     /**
      * The current position of the device if received ({@link https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition GeolocationPosition}).
@@ -37,26 +49,58 @@ export class MyPositionComponent {
      */
     private positionIsAccurate: boolean;
 
-    private PositionStateTypes = Object.freeze({
-        POSITION_UNKNOWN: 'POSITION_UNKNOWN',
-        POSITION_REQUESTING: 'POSITION_REQUESTING',
-        POSITION_INACCURATE: 'POSITION_INACCURATE',
-        POSITION_KNOWN: 'POSITION_KNOWN',
-        POSITION_CENTERED: 'POSITION_CENTERED',
-        POSITION_TRACKED: 'POSITION_TRACKED',
-        POSITION_UNTRACKED: 'POSITION_UNTRACKED'
-    });
+    /**
+     * Wether the currently used device's position can be tracked.
+     */
+    private canBeTracked: boolean;
+
+    /**
+     * The device orientation/rotation.
+     */
+    private orientation: number;
 
     /**
      * Removes the event listener for the device's orientation and resets the position button.
      */
     private resetPositionState(): void {
         window.removeEventListener('deviceorientation', this.handleDeviceOrientation);
-        if (this.positionState === this.PositionStateTypes.POSITION_TRACKED) {
-            this.setPositionState(this.PositionStateTypes.POSITION_UNTRACKED);
-        } else if (this.positionState === this.PositionStateTypes.POSITION_CENTERED) {
-            this.setPositionState(this.PositionStateTypes.POSITION_KNOWN);
-            this.map.tilt(0);
+        if (this.positionState === PositionStateTypes.POSITION_TRACKED) {
+            this.setPositionState(PositionStateTypes.POSITION_UNTRACKED);
+        } else if (this.positionState === PositionStateTypes.POSITION_CENTERED) {
+            this.setPositionState(PositionStateTypes.POSITION_KNOWN);
+            this.mapView.tilt(0);
+        }
+    }
+
+    /**
+     * Returns if position is known and accurate.
+     *
+     * @returns {boolean}
+     */
+    private hasValidPosition(): boolean {
+        return [PositionStateTypes.POSITION_KNOWN, PositionStateTypes.POSITION_CENTERED, PositionStateTypes.POSITION_INACCURATE, PositionStateTypes.POSITION_TRACKED, PositionStateTypes.POSITION_UNTRACKED].includes(this.positionState);
+    }
+
+    /**
+     * Sets position to unknown and emits error about it.
+     *
+     * @param {object} error
+     */
+    private setPositionUnknown(error: object): void {
+        this.setPositionState(PositionStateTypes.POSITION_UNKNOWN);
+        this.position_error.emit(error);
+    }
+
+    /**
+     * Sets the PositionControl as PositionProvider on the MapView.
+     */
+    private setPositionProviderOnMapView(): void {
+        if (this.mapView.isReady) {
+            this.mapView.setPositionProvider(this);
+        } else {
+            this.mapView.once('ready', () => {
+                this.mapView.setPositionProvider(this);
+            });
         }
     }
 
@@ -71,53 +115,39 @@ export class MyPositionComponent {
         // Whenever the map viewport changes again, set position state from centered to known.
         // The outer event listener catches idle caused by the panTo.
         // The inner event listeners catch any subsequent viewport changes caused by user interactions.
-        this.map.once('idle', () => {
-            this.map.on('user_interaction', () => this.resetPositionState());
+        this.mapView.once('idle', () => {
+            this.mapView.on('user_interaction', () => this.resetPositionState());
         });
 
-        this.map.panTo({ lat: this.currentPosition.coords.latitude, lng: this.currentPosition.coords.longitude });
+        this.mapView.panTo({ lat: this.currentPosition.coords.latitude, lng: this.currentPosition.coords.longitude });
 
-        if (this.positionState !== this.PositionStateTypes.POSITION_TRACKED) {
-            this.setPositionState(this.PositionStateTypes.POSITION_CENTERED);
+        if (this.positionState !== PositionStateTypes.POSITION_TRACKED) {
+            this.setPositionState(PositionStateTypes.POSITION_CENTERED);
         }
 
         if (!this.canBeTracked) return;
 
-        if (this.positionState === this.PositionStateTypes.POSITION_TRACKED) {
+        if (this.positionState === PositionStateTypes.POSITION_TRACKED) {
             window.addEventListener('deviceorientation', this.handleDeviceOrientation);
         } else {
             window.removeEventListener('deviceorientation', this.handleDeviceOrientation);
         }
     }
 
-    private positionButtonClicked(event): void {
-        event.stopPropagation();
-        switch (this.positionState) {
-            case this.PositionStateTypes.POSITION_UNKNOWN:
-                this.map.tilt(0);
-                this.watchPosition(true);
-                break;
-            case this.PositionStateTypes.POSITION_KNOWN:
-                this.map.tilt(0);
-                this.panToCurrentPosition();
-                break;
-            case this.PositionStateTypes.POSITION_CENTERED:
-                if (this.canBeTracked) {
-                    this.setPositionState(this.PositionStateTypes.POSITION_TRACKED);
-                }
-                this.panToCurrentPosition();
-                break;
-            case this.PositionStateTypes.POSITION_TRACKED:
-                this.map.tilt(0);
-                this.map.rotate(0);
-                this.setBearingState(0);
-                this.setPositionState(this.PositionStateTypes.POSITION_CENTERED);
-                this.panToCurrentPosition();
-                break;
-            case this.PositionStateTypes.POSITION_UNTRACKED:
-                this.setPositionState(this.PositionStateTypes.POSITION_TRACKED);
-                this.panToCurrentPosition();
-                break;
+    /**
+     * Rotates and tilts the map.
+     *
+     * @param {any} e
+     */
+    private handleDeviceOrientation(e: any): void {
+        if (!this.orientation || this.orientation - (360 - e.alpha) > 1 || this.orientation - (360 - e.alpha) < -1) {
+            this.orientation = 360 - e.alpha;
+            this.mapView.easeTo({
+                center: [this.currentPosition.coords.longitude, this.currentPosition.coords.latitude],
+                rotation: this.orientation,
+                tilt: 60,
+                easing: (t: number) => t * (2 - t)
+            });
         }
     }
 
@@ -130,58 +160,6 @@ export class MyPositionComponent {
         this.compassButton.style.transform = `rotate(${bearing}deg)`;
     }
 
-    private compassButtonClicked(): void {
-        console.log('compassButtonClicked');
-    }
-
-    /**
-     * Returns if position is known and accurate.
-     *
-     * @returns {boolean}
-     */
-    private hasValidPosition(): boolean {
-        return [this.PositionStateTypes.POSITION_KNOWN, this.PositionStateTypes.POSITION_CENTERED, this.PositionStateTypes.POSITION_INACCURATE, this.PositionStateTypes.POSITION_TRACKED, this.PositionStateTypes.POSITION_UNTRACKED].includes(this.positionState);
-    }
-
-    /**
-     * Sets the PositionControl as PositionProvider on the MapView.
-     */
-    private setPositionProviderOnMapView(): void {
-        if (this.map.isReady) {
-            this.map.setPositionProvider(this);
-        } else {
-            this.map.once('ready', () => {
-                this.map.setPositionProvider(this);
-            });
-        }
-    }
-
-    private setPositionState(state: string): void {
-        this.positionState = state;
-    }
-
-    /**
-     * Sets position to unknown and emits error about it.
-     *
-     * @param {object} error
-     */
-    private setPositionUnknown(error: object): void {
-        this.setPositionState(this.PositionStateTypes.POSITION_UNKNOWN);
-        this.position_error.emit(error);
-    }
-
-    private handleDeviceOrientation(e): void {
-        if (!this.orientation || this.orientation - (360 - e.alpha) > 1 || orientation - (360 - e.alpha) < -1) {
-            this.orientation = 360 - e.alpha;
-            this.map.easeTo({
-                center: [this.currentPosition.coords.longitude, this.currentPosition.coords.latitude],
-                rotation: this.orientation,
-                tilt: 60,
-                easing: t => t * (2 - t)
-            });
-        }
-    }
-
     /**
      * Request for current position, emit events and show position on map based on result.
      *
@@ -192,7 +170,7 @@ export class MyPositionComponent {
             return;
         }
 
-        this.setPositionState(this.PositionStateTypes.POSITION_REQUESTING);
+        this.setPositionState(PositionStateTypes.POSITION_REQUESTING);
 
         this.setPositionProviderOnMapView();
 
@@ -215,15 +193,15 @@ export class MyPositionComponent {
                 this.positionIsAccurate = this.currentPosition.coords.accuracy <= this.options.maxAccuracy;
 
                 if (!this.positionIsAccurate) {
-                    this.setPositionState(this.PositionStateTypes.POSITION_INACCURATE);
+                    this.setPositionState(PositionStateTypes.POSITION_INACCURATE);
                     this.position_error.emit({ code: 11, message: 'Inaccurate position: ' + position.coords.accuracy });
                 } else {
-                    if (this.positionState === this.PositionStateTypes.POSITION_TRACKED) {
-                        this.setPositionState(this.PositionStateTypes.POSITION_UNTRACKED);
+                    if (this.positionState === PositionStateTypes.POSITION_TRACKED) {
+                        this.setPositionState(PositionStateTypes.POSITION_UNTRACKED);
                     }
-                    this.setPositionState(this.PositionStateTypes.POSITION_KNOWN);
+                    this.setPositionState(PositionStateTypes.POSITION_KNOWN);
                     window.removeEventListener('deviceorientation', this.handleDeviceOrientation);
-                    this.map.tilt(0);
+                    this.mapView.tilt(0);
                 }
 
                 this.position_received.emit({
@@ -242,9 +220,77 @@ export class MyPositionComponent {
             this.options.positionOptions
         );
     }
+    /**
+     * Sets position button state.
+     *
+     * @param {PositionStateTypes} state
+     */
+    private setPositionState(state: PositionStateTypes): void {
+        this.positionState = state;
+    }
 
-    private getNestedValue(pathArray, obj) {
+    /**
+     * Helper function to retreive nested value from object.
+     *
+     * @param {Array} pathArray - Array of nested properties, eg. ['user', 'name'] for object { user: { name: 'Peter' } }.
+     * @param {object} obj - Object to get value from.
+     * @returns {any}
+     */
+    private getNestedValue(pathArray: Array<any>, obj: object): any {
         return pathArray.reduce((xs, x) => (xs && xs[x]) ? xs[x] : null, obj);
+    }
+
+    /**
+     * Handle click on the compass button.
+     */
+    private onCompassButtonClicked(): void {
+        this.setBearingState(0);
+        this.mapView.rotate(0);
+        this.mapView.tilt(0);
+        window.removeEventListener('deviceorientation', this.handleDeviceOrientation);
+
+        if (this.positionState === PositionStateTypes.POSITION_TRACKED) {
+            this.setPositionState(PositionStateTypes.POSITION_CENTERED);
+        } else if (this.positionState === PositionStateTypes.POSITION_UNTRACKED) {
+            this.setPositionState(PositionStateTypes.POSITION_KNOWN);
+        }
+    }
+
+    /**
+     * Handle click on position button.
+     * Stops propagation to avoid any map click listeners to fire.
+     *
+     * @param {Event} event
+     */
+    private onPositionButtonClicked(event: Event): void {
+        event.stopPropagation();
+        switch (this.positionState) {
+            case PositionStateTypes.POSITION_UNKNOWN:
+                this.mapView.tilt(0);
+                this.watchPosition(true);
+                break;
+            case PositionStateTypes.POSITION_KNOWN:
+                this.mapView.tilt(0);
+                this.panToCurrentPosition();
+                break;
+            case PositionStateTypes.POSITION_CENTERED:
+                if (this.canBeTracked) {
+                    this.setPositionState(PositionStateTypes.POSITION_TRACKED);
+                }
+                this.panToCurrentPosition();
+                break;
+            case PositionStateTypes.POSITION_TRACKED:
+                this.mapView.tilt(0);
+                this.mapView.rotate(0);
+                this.setBearingState(0);
+                this.setPositionState(PositionStateTypes.POSITION_CENTERED);
+                this.panToCurrentPosition();
+                break;
+            case PositionStateTypes.POSITION_UNTRACKED:
+                this.setPositionState(PositionStateTypes.POSITION_TRACKED);
+                this.panToCurrentPosition();
+                break;
+        }
     }
 
     /**
@@ -256,7 +302,7 @@ export class MyPositionComponent {
             return;
         }
 
-        this.map = this.mapsindoors.getMapView();
+        this.mapView = this.mapsindoors.getMapView();
         this.options = merge({
             maxAccuracy: 200,
             positionOptions: {
@@ -277,29 +323,33 @@ export class MyPositionComponent {
             }
         }, this.myPositionOptions ?? {});
 
-        // TODO isTrackableDevice
-        const isTrackableDevice = /Mobile|Android|iPhone|iPod|BlackBerry|IEMobile|Opera Mini|Tablet|iPad/i.test(navigator.userAgent);
-        this.canBeTracked = (
-            typeof window.DeviceOrientationEvent === 'function' &&
-            isTrackableDevice &&
-            this.map.getRotatable() &&
-            this.map.getTiltable())
-            ? true : false;
-
         // Check if user has already granted permission to use the position.
         // In that case, show position right away.
         // Note that this feature only works in modern browsers due to using the Permissions API (https://caniuse.com/#feat=permissions-api),
         if ('permissions' in navigator === false || 'query' in navigator.permissions === false) {
-            this.setPositionState(this.PositionStateTypes.POSITION_UNKNOWN);
+            this.setPositionState(PositionStateTypes.POSITION_UNKNOWN);
         } else {
             navigator.permissions.query({ name: 'geolocation' }).then(result => {
                 if (result.state === 'granted') {
                     this.watchPosition();
                 } else {
-                    this.setPositionState(this.PositionStateTypes.POSITION_UNKNOWN);
+                    this.setPositionState(PositionStateTypes.POSITION_UNKNOWN);
                 }
             });
         }
+
+        this.mapView.on('rotateend', () => {
+            this.setBearingState(this.mapView.getBearing());
+        });
+
+        // TODO isTrackableDevice
+        const isTrackableDevice = /Mobile|Android|iPhone|iPod|BlackBerry|IEMobile|Opera Mini|Tablet|iPad/i.test(navigator.userAgent);
+        this.canBeTracked = (
+            typeof window.DeviceOrientationEvent === 'function' &&
+            isTrackableDevice &&
+            this.mapView.getRotatable() &&
+            this.mapView.getTiltable())
+            ? true : false;
     }
 
     /**
@@ -313,17 +363,17 @@ export class MyPositionComponent {
                 <div class='mi-my-position'>
                     <button
                         class={`mi-my-position__position-button 
-                            ${this.positionState === this.PositionStateTypes.POSITION_UNKNOWN || this.positionState === this.PositionStateTypes.POSITION_INACCURATE ? 'mi-my-position__position-button--unknown' : ''}
-                            ${this.positionState === this.PositionStateTypes.POSITION_REQUESTING ? 'mi-my-position__position-button--requesting' : ''}
-                            ${this.positionState === this.PositionStateTypes.POSITION_KNOWN ? 'mi-my-position__position-button--known' : ''}
-                            ${this.positionState === this.PositionStateTypes.POSITION_CENTERED ? 'mi-my-position__position-button--centered' : ''}
-                            ${this.positionState === this.PositionStateTypes.POSITION_TRACKED ? 'mi-my-position__position-button--tracked' : ''}
-                            ${this.positionState === this.PositionStateTypes.POSITION_UNTRACKED ? 'mi-my-position__position-button--untracked' : ''}`}
-                        onClick={(event): void => this.positionButtonClicked(event)}></button>
+                            ${this.positionState === PositionStateTypes.POSITION_UNKNOWN || this.positionState === PositionStateTypes.POSITION_INACCURATE ? 'mi-my-position__position-button--unknown' : ''}
+                            ${this.positionState === PositionStateTypes.POSITION_REQUESTING ? 'mi-my-position__position-button--requesting' : ''}
+                            ${this.positionState === PositionStateTypes.POSITION_KNOWN ? 'mi-my-position__position-button--known' : ''}
+                            ${this.positionState === PositionStateTypes.POSITION_CENTERED ? 'mi-my-position__position-button--centered' : ''}
+                            ${this.positionState === PositionStateTypes.POSITION_TRACKED ? 'mi-my-position__position-button--tracked' : ''}
+                            ${this.positionState === PositionStateTypes.POSITION_UNTRACKED ? 'mi-my-position__position-button--untracked' : ''}`}
+                        onClick={(event): void => this.onPositionButtonClicked(event)}></button>
                     <button
                         ref={(el): HTMLButtonElement => this.compassButton = el as HTMLButtonElement}
                         class={'mi-my-position__compass-button'}
-                        onClick={(): void => this.compassButtonClicked()}></button>
+                        onClick={(): void => this.onCompassButtonClicked()}></button>
                 </div>
             </Host>
         );
