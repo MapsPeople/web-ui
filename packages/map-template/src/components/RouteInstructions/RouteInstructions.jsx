@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import './RouteInstructions.scss';
 import { ReactComponent as ArrowRight } from '../../assets/arrow-right.svg';
 import { ReactComponent as ArrowLeft } from '../../assets/arrow-left.svg';
@@ -8,6 +8,7 @@ import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import activeStepState from '../../atoms/activeStep';
 import setMapZoomLevel from '../../helpers/SetMapZoomLevel';
 import RouteInstructionsStep from '../WebComponentWrappers/RouteInstructionsStep/RouteInstructionsStep';
+import substepsToggledState from '../../atoms/substepsToggledState';
 
 /**
  * Private variable used for checking if the next button should be enabled.
@@ -28,10 +29,13 @@ let _allowNextStep;
  * @returns
  */
 function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, isOpen }) {
+    const routeInstructionsRef = useRef();
+
     /** Referencing the previous step of each active step */
     const [previous, setPrevious] = useState();
 
     const [activeStep, setActiveStep] = useRecoilState(activeStepState);
+
     const [totalSteps, setTotalSteps] = useState();
 
     const [lastStepMapState, setLastStepMapState] = useState({ zoom: "", center: "" });
@@ -40,12 +44,15 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
 
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
 
+    const substepsOpen = useRecoilValue(substepsToggledState);
+
     // Indicate if the next step action is active.
     const [isNextStep, setIsNextStep] = useState(true);
 
     /**
      * Clone the last step in the directions in order to create a destination step.
-     * Assign the specific travel mode to the destination step and push the destination step at the end of the steps array.
+     * Assign the specific travel mode to the destination step and set the steps to null.
+     * Push the destination step at the end of the steps array.
      */
     useEffect(() => {
         const lastStep = steps[steps.length - 1];
@@ -110,10 +117,16 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
 
                 // Call function to set the map zoom level depeding on the max zoom supported on the solution
                 setMapZoomLevel(mapsIndoorsInstance);
+            }
 
+            // Check if the substeps are closed, and trigger the method on the <route-instructions-step> component.
+            if (substepsOpen === false) {
+                routeInstructionsRef.current.closeSubsteps();
             }
         }
-    }, [isOpen, activeStep, totalSteps]);
+
+
+    }, [isOpen, activeStep, totalSteps, substepsOpen]);
 
     /**
      * Navigate to the next step.
@@ -190,9 +203,10 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
                         totalSteps={totalSteps}
                         activeStep={activeStep}
                         previous={previous}
- 						directions={directions}
+                        directions={directions}
                         originLocation={originLocation}
-                        >
+                        ref={routeInstructionsRef}
+                    >
                     </RouteInstructionsStep>
                     <div className='route-instructions__footer'>
                         <div className="route-instructions__progress">

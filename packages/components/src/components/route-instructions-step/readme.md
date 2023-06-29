@@ -363,6 +363,19 @@ mi-route-instructions-step::part(step-toggle) {
 | `substepsToggled` | Event emitted when substeps are toggled.              | `CustomEvent<void>`   |
 
 
+## Methods
+
+### `closeSubsteps() => Promise<void>`
+
+Programmatically close the substeps.
+
+#### Returns
+
+Type: `Promise<void>`
+
+
+
+
 ## Shadow Parts
 
 | Part                      | Description |

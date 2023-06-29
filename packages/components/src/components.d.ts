@@ -708,6 +708,10 @@ export namespace Components {
     }
     interface MiRouteInstructionsStep {
         /**
+          * Programmatically close the substeps.
+         */
+        "closeSubsteps": () => Promise<void>;
+        /**
           * The final step when the user has arrived to the destination location.
           * @type {string}
          */

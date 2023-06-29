@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import { useRecoilState } from 'recoil';
 import substepsToggledState from '../../../atoms/substepsToggledState';
 
@@ -14,17 +14,25 @@ import substepsToggledState from '../../../atoms/substepsToggledState';
  * @param {object} directions - The directions object.
  *
  */
-function RouteInstructionsStep({ translations, totalSteps, activeStep, previous, originLocation, directions }) {
+const RouteInstructionsStep = forwardRef(({ translations, totalSteps, activeStep, previous, originLocation, directions }, ref) => {
     const elementRef = useRef();
 
-    const [substeps, setSubsteps] = useRecoilState(substepsToggledState);
+    const [substepsOpen, setSubstepsOpen] = useRecoilState(substepsToggledState);
+
+    /**
+     * Method that can be triggered on the element.
+     */
+    useImperativeHandle(ref, () => ({
+        closeSubsteps() {
+            elementRef.current.closeSubsteps();
+        },
+    }));
 
     useEffect(() => {
         const { current } = elementRef;
 
         function onSubstepsToggled() {
-            current.substepsAreOpen = !current.substepsAreOpen
-            setSubsteps(current.substepsAreOpen);
+            setSubstepsOpen(!substepsOpen);
         }
 
         current.addEventListener('substepsToggled', onSubstepsToggled);
@@ -32,7 +40,7 @@ function RouteInstructionsStep({ translations, totalSteps, activeStep, previous,
         return () => {
             current.removeEventListener('substepsToggled', onSubstepsToggled);
         }
-    }, []);
+    }, [substepsOpen]);
 
     return <mi-route-instructions-step
         ref={elementRef}
@@ -40,9 +48,8 @@ function RouteInstructionsStep({ translations, totalSteps, activeStep, previous,
         translations={JSON.stringify(translations)}
         destination-location={directions?.destinationLocation.properties.name}
         from-travel-mode={previous?.travel_mode ?? ""}
-        // substeps-are-open={substeps}
         from-route-context={previous?.route_context ?? originLocation?.properties?.name ?? ""}>
     </mi-route-instructions-step>
-};
+});
 
 export default RouteInstructionsStep;

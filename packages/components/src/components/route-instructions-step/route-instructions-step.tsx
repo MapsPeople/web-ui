@@ -1,5 +1,5 @@
 import { Component, ComponentInterface, h, Prop, State, Watch, Event, EventEmitter } from '@stencil/core';
-import { JSX } from '@stencil/core/internal';
+import { JSX, Method } from '@stencil/core/internal';
 import { UnitSystem } from '../../enums/unit-system.enum';
 import { DirectionsTranslations } from '../../types/directions-translations.interface';
 import { Step, StepContext } from '../../types/step.interface';
@@ -96,6 +96,14 @@ export class RouteInstructionsStep implements ComponentInterface {
      * Event emitted when substeps are toggled.
      */
     @Event() substepsToggled: EventEmitter<void>;
+
+    /**
+     * Programmatically close the substeps.
+     */
+    @Method()
+    closeSubsteps(): void {
+        this.substepsAreOpen = false;
+    }
 
     isInternetExplorer: boolean = isInternetExplorer();
 

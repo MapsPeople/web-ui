@@ -46,7 +46,7 @@ function Directions({ isOpen, onBack, onSetSize }) {
 
     const [, setActiveStep] = useRecoilState(activeStepState);
 
-    const substeps = useRecoilValue(substepsToggledState);
+    const [substepsOpen, setSubstepsOpen] = useRecoilState(substepsToggledState);
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
@@ -161,11 +161,21 @@ function Directions({ isOpen, onBack, onSetSize }) {
     }
 
     /**
+     * Reset the substeps to 0 and close the substeps.
+     * Set the size of the bottom sheet to fit the content.
+     */
+    function resetSubsteps() {
+        setActiveStep(0);
+        setSubstepsOpen(false);
+        setSize(snapPoints.FIT);
+    }
+
+    /**
      * Close the directions.
      * Reset the active steps and stop rendering directions.
      */
     function onDirectionsClosed() {
-        setActiveStep(0);
+        resetSubsteps();
         stopRendering();
         onBack();
     }
@@ -181,12 +191,12 @@ function Directions({ isOpen, onBack, onSetSize }) {
     }
 
     useEffect(() => {
-        if (substeps) {
+        if (substepsOpen) {
             setSize(snapPoints.MAX);
         } else {
             setSize(snapPoints.FIT);
         }
-    }, [substeps])
+    }, [substepsOpen])
 
     return (
         <div className="directions">
@@ -253,7 +263,7 @@ function Directions({ isOpen, onBack, onSetSize }) {
                     steps={getRouteSteps()}
                     originLocation={directions?.originLocation}
                     onNextStep={() => onNext()}
-  					isOpen={isOpen}
+                    isOpen={isOpen}
                     onPreviousStep={() => onPrevious()}
                 >
                 </RouteInstructions>
