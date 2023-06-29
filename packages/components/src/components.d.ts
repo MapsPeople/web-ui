@@ -567,6 +567,7 @@ export namespace Components {
     }
     interface MiMyPosition {
         "mapsindoors": any;
+        "myPositionOptions"?: any;
     }
     interface MiNotification {
         /**
@@ -975,6 +976,10 @@ export interface MiMapGooglemapsCustomEvent<T> extends CustomEvent<T> {
 export interface MiMapMapboxCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLMiMapMapboxElement;
+}
+export interface MiMyPositionCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLMiMyPositionElement;
 }
 export interface MiRouteInstructionsCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -1814,6 +1819,9 @@ declare namespace LocalJSX {
     }
     interface MiMyPosition {
         "mapsindoors"?: any;
+        "myPositionOptions"?: any;
+        "onPosition_error"?: (event: MiMyPositionCustomEvent<object>) => void;
+        "onPosition_received"?: (event: MiMyPositionCustomEvent<object>) => void;
     }
     interface MiNotification {
         /**
