@@ -1,4 +1,5 @@
 import { Component, Host, JSX, Prop, h, Event, EventEmitter, State } from '@stencil/core';
+import { UAParser } from 'ua-parser-js';
 import merge from 'deepmerge';
 import midtColors from '@mapsindoors/midt/tokens/color.json';
 import midtOpacity from '@mapsindoors/midt/tokens/opacity.json';
@@ -11,6 +12,11 @@ enum PositionStateTypes {
     POSITION_CENTERED = 'POSITION_CENTERED',
     POSITION_TRACKED = 'POSITION_TRACKED',
     POSITION_UNTRACKED = 'POSITION_UNTRACKED'
+}
+
+enum DeviceType {
+    Phone = 'mobile',
+    Tablet = 'tablet'
 }
 
 @Component({
@@ -342,14 +348,15 @@ export class MyPositionComponent {
             this.setBearingState(this.mapView.getBearing());
         });
 
-        // TODO isTrackableDevice
-        const isTrackableDevice = /Mobile|Android|iPhone|iPod|BlackBerry|IEMobile|Opera Mini|Tablet|iPad/i.test(navigator.userAgent);
+        const parser = new UAParser();
+        const deviceType: DeviceType = parser.getDevice();
         this.canBeTracked = (
             typeof window.DeviceOrientationEvent === 'function' &&
-            isTrackableDevice &&
+            (deviceType === DeviceType.Phone || deviceType === DeviceType.Tablet) &&
             this.mapView.getRotatable() &&
             this.mapView.getTiltable())
             ? true : false;
+
     }
 
     /**

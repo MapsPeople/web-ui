@@ -58,7 +58,8 @@
         "postcss": "^8.4.19",
         "puppeteer": "^19.6.3",
         "sass": "^1.56.1",
-        "simple-keyboard": "^3.4.197"
+        "simple-keyboard": "^3.4.197",
+        "ua-parser-js": "^1.0.35"
     },
     "license": "MIT",
     "optionalDependencies": {
