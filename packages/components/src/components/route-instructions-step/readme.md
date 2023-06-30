@@ -375,6 +375,16 @@ Type: `Promise<void>`
 
 
 
+### `openSubsteps() => Promise<void>`
+
+Programmatically open the substeps.
+
+#### Returns
+
+Type: `Promise<void>`
+
+
+
 
 ## Shadow Parts
 

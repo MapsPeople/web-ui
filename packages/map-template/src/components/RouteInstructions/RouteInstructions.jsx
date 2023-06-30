@@ -119,9 +119,11 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
                 setMapZoomLevel(mapsIndoorsInstance);
             }
 
-            // Check if the substeps are closed, and trigger the method on the <route-instructions-step> component.
+            // Check if the substeps are closed or open, and trigger the method on the <route-instructions-step> component.
             if (substepsOpen === false) {
                 routeInstructionsRef.current.closeSubsteps();
+            } else if (substepsOpen === true) {
+                routeInstructionsRef.current.openSubsteps();
             }
         }
 

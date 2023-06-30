@@ -23,9 +23,12 @@ const RouteInstructionsStep = forwardRef(({ translations, totalSteps, activeStep
      * Method that can be triggered on the element.
      */
     useImperativeHandle(ref, () => ({
+        openSubsteps() {
+            elementRef.current.openSubsteps();
+        },
         closeSubsteps() {
             elementRef.current.closeSubsteps();
-        },
+        }
     }));
 
     useEffect(() => {

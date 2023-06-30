@@ -737,6 +737,10 @@ export namespace Components {
          */
         "hideIndoorSubsteps": boolean;
         /**
+          * Programmatically open the substeps.
+         */
+        "openSubsteps": () => Promise<void>;
+        /**
           * The step data object to render from. Must be passed as stringified JSON.
          */
         "step": string;

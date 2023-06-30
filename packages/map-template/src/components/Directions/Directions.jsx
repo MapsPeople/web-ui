@@ -27,8 +27,10 @@ let directionsRenderer;
  * @param {boolean} props.isOpen - Indicates if the directions view is open.
  * @param {function} props.onBack - Callback that fires when the directions view is closed by the user.
  * @param {function} props.onSetSize - Callback that is fired when the component has loaded.
+ * @param {function} props.snapPointSwiped - Changes value when user has swiped a Bottom sheet to a new snap point.
+ *
 */
-function Directions({ isOpen, onBack, onSetSize }) {
+function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
     // Holds the MapsIndoors DisplayRule for the destination
     const [destinationDisplayRule, setDestinationDisplayRule] = useState(null);
 
@@ -190,13 +192,23 @@ function Directions({ isOpen, onBack, onSetSize }) {
         }
     }
 
+    /**
+     * Set the size of the bottom sheet depending on the substepsOpen state.
+     */
     useEffect(() => {
-        if (substepsOpen) {
-            setSize(snapPoints.MAX);
-        } else {
-            setSize(snapPoints.FIT);
-        }
+        substepsOpen ? setSize(snapPoints.MAX) : setSize(snapPoints.FIT);
     }, [substepsOpen])
+
+
+    /**
+     * When user swipes the bottom sheet to a new snap point.
+     */
+    useEffect(() => {
+        if (isOpen) {
+            if (snapPointSwiped === undefined) return;
+            setSubstepsOpen(snapPointSwiped === snapPoints.MAX);
+        }
+    }, [isOpen, snapPointSwiped]); // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
         <div className="directions">
