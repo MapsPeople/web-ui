@@ -36,6 +36,12 @@ const mapsindoors = window.mapsindoors;
 let _locationsDisabled;
 
 /**
+ * Private variable used for setting the appConfigResult.
+ * Implemented due to the impossibility to use the React useState hook.
+ */
+let _appConfigResult;
+
+/**
  *
  * @param {Object} props
  * @param {string} props.apiKey - MapsIndoors API key or solution alias.
@@ -64,7 +70,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setCategories] = useRecoilState(categoriesState);
     const [, setLocationId] = useRecoilState(locationIdState);
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
-    const [appConfigResult, setAppConfigResult] = useState();
     const [, setPrimaryColor] = useRecoilState(primaryColorState);
 
 
@@ -153,7 +158,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             for (const key of keys) {
                 // Get the categories from the App Config that have a matching key.
-                const appConfigCategory = appConfigResult?.menuInfo.mainmenu.find(category => category.categoryKey === key);
+                const appConfigCategory = _appConfigResult?.menuInfo.mainmenu.find(category => category.categoryKey === key);
 
                 if (uniqueCategories.has(key)) {
                     let count = uniqueCategories.get(key).count;
@@ -250,7 +255,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 venue.image = appConfigResult.venueImages[venue.name.toLowerCase()];
                 return venue;
             });
-            setAppConfigResult(appConfigResult);
+            _appConfigResult = appConfigResult;
             setVenues(venuesResult);
         });
         setMapReady(false);
