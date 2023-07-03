@@ -356,14 +356,13 @@ export class MyPositionComponent {
             }
         }, this.myPositionOptions ?? {});
 
-
         const parser = new UAParser();
         const deviceType: DeviceType = parser.getDevice().type;
         this.canBeTracked = (
             typeof window.DeviceOrientationEvent === 'function' &&
             (deviceType === DeviceType.Phone || deviceType === DeviceType.Tablet) &&
-            this.mapView.getRotatable() &&
-            this.mapView.getTiltable())
+            this.mapView.rotatable &&
+            this.mapView.tiltable)
             ? true : false;
         this.canBeTrackedText = this.canBeTracked ? 'yes' : 'no';
 
