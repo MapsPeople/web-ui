@@ -59,6 +59,8 @@ export class MyPositionComponent {
      * Wether the currently used device's position can be tracked.
      */
     private canBeTracked: boolean;
+    @State() canBeTrackedText: string;
+    @State() testText: string | number;
 
     /**
      * The device orientation/rotation.
@@ -69,6 +71,7 @@ export class MyPositionComponent {
      * Removes the event listener for the device's orientation and resets the position button.
      */
     private resetPositionState(): void {
+        this.testText = 'e';
         window.removeEventListener('deviceorientation', this.handleDeviceOrientation);
         if (this.positionState === PositionStateTypes.POSITION_TRACKED) {
             this.setPositionState(PositionStateTypes.POSITION_UNTRACKED);
@@ -133,11 +136,31 @@ export class MyPositionComponent {
 
         if (!this.canBeTracked) return;
 
-        if (this.positionState === PositionStateTypes.POSITION_TRACKED) {
-            window.addEventListener('deviceorientation', this.handleDeviceOrientation);
+
+        if ((DeviceOrientationEvent as any).requestPermission) {
+            (DeviceOrientationEvent as any).requestPermission()
+                .then(permissionStatus => {
+                    if (permissionStatus === 'granted' && this.positionState === PositionStateTypes.POSITION_TRACKED) {
+                        this.testText = 'ADDING';
+                        window.addEventListener('deviceorientation', this.handleDeviceOrientation.bind(this));
+                    } else {
+                        this.testText = 'b';
+                        window.removeEventListener('deviceorientation', this.handleDeviceOrientation.bind(this));
+                    }
+                });
         } else {
-            window.removeEventListener('deviceorientation', this.handleDeviceOrientation);
+            if (this.positionState === PositionStateTypes.POSITION_TRACKED) {
+                window.addEventListener('deviceorientation', this.handleDeviceOrientation.bind(this));
+            } else {
+                this.testText = 'a';
+                window.removeEventListener('deviceorientation', this.handleDeviceOrientation.bind(this));
+            }
         }
+
+
+
+
+
     }
 
     /**
@@ -176,6 +199,8 @@ export class MyPositionComponent {
             return;
         }
 
+        this.testText = 'watchPosition';
+
         this.setPositionState(PositionStateTypes.POSITION_REQUESTING);
 
         this.setPositionProviderOnMapView();
@@ -206,6 +231,7 @@ export class MyPositionComponent {
                         this.setPositionState(PositionStateTypes.POSITION_UNTRACKED);
                     }
                     this.setPositionState(PositionStateTypes.POSITION_KNOWN);
+                    this.testText = 'c';
                     window.removeEventListener('deviceorientation', this.handleDeviceOrientation);
                     this.mapView.tilt(0);
                 }
@@ -253,6 +279,7 @@ export class MyPositionComponent {
         this.setBearingState(0);
         this.mapView.rotate(0);
         this.mapView.tilt(0);
+        this.testText = 'd';
         window.removeEventListener('deviceorientation', this.handleDeviceOrientation);
 
         if (this.positionState === PositionStateTypes.POSITION_TRACKED) {
@@ -329,6 +356,17 @@ export class MyPositionComponent {
             }
         }, this.myPositionOptions ?? {});
 
+
+        const parser = new UAParser();
+        const deviceType: DeviceType = parser.getDevice().type;
+        this.canBeTracked = (
+            typeof window.DeviceOrientationEvent === 'function' &&
+            (deviceType === DeviceType.Phone || deviceType === DeviceType.Tablet) &&
+            this.mapView.getRotatable() &&
+            this.mapView.getTiltable())
+            ? true : false;
+        this.canBeTrackedText = this.canBeTracked ? 'yes' : 'no';
+
         // Check if user has already granted permission to use the position.
         // In that case, show position right away.
         // Note that this feature only works in modern browsers due to using the Permissions API (https://caniuse.com/#feat=permissions-api),
@@ -336,6 +374,8 @@ export class MyPositionComponent {
             this.setPositionState(PositionStateTypes.POSITION_UNKNOWN);
         } else {
             navigator.permissions.query({ name: 'geolocation' }).then(result => {
+                this.testText = result.state;
+
                 if (result.state === 'granted') {
                     this.watchPosition();
                 } else {
@@ -347,16 +387,6 @@ export class MyPositionComponent {
         this.mapView.on('rotateend', () => {
             this.setBearingState(this.mapView.getBearing());
         });
-
-        const parser = new UAParser();
-        const deviceType: DeviceType = parser.getDevice();
-        this.canBeTracked = (
-            typeof window.DeviceOrientationEvent === 'function' &&
-            (deviceType === DeviceType.Phone || deviceType === DeviceType.Tablet) &&
-            this.mapView.getRotatable() &&
-            this.mapView.getTiltable())
-            ? true : false;
-
     }
 
     /**
@@ -368,6 +398,9 @@ export class MyPositionComponent {
         return (
             <Host>
                 <div class='mi-my-position'>
+                    <p><b>tetsing</b> {this.testText}</p>
+                    <p><b>positionState</b> {this.positionState}</p>
+                    <p><b>canBeTracked</b> {this.canBeTrackedText}</p>
                     <button
                         class={`mi-my-position__position-button 
                             ${this.positionState === PositionStateTypes.POSITION_UNKNOWN || this.positionState === PositionStateTypes.POSITION_INACCURATE ? 'mi-my-position__position-button--unknown' : ''}
