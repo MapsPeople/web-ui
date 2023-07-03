@@ -8,5 +8,4 @@ fi
 
 npx lerna run build
 vite build --base=/$1
-cd build
-gsutil -m -h "Cache-Control:public, max-age=0, no-store, no-cache" cp -r . gs://$1
+gsutil -m -h "Cache-Control:public, max-age=0, no-store, no-cache" cp -r build/* gs://$1
