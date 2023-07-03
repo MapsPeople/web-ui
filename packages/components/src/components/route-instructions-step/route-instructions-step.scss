@@ -136,12 +136,12 @@
 
     &__substeps {
         display: grid;
-        gap: 32px;
+        gap: variables.$spacing-x-large;
     }
 
     &__details {
         display: grid;
-        gap: 24px;
+        gap: variables.$spacing-large;
         width: 100%;
     }
 }

@@ -270,7 +270,6 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                     </div>
                 </div>
                 <hr></hr>
-                {/* <div className="directions__steps"> */}
                 <RouteInstructions
                     steps={getRouteSteps()}
                     originLocation={directions?.originLocation}
@@ -279,7 +278,6 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                     onPreviousStep={() => onPrevious()}
                 >
                 </RouteInstructions>
-                {/* </div> */}
             </div>
         </div>
     )

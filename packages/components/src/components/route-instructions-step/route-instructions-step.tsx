@@ -98,8 +98,8 @@ export class RouteInstructionsStep implements ComponentInterface {
     @Event() substepsToggled: EventEmitter<void>;
 
     /**
-    * Programmatically open the substeps.
-    */
+     * Programmatically open the substeps.
+     */
     @Method()
     openSubsteps(): void {
         this.substepsAreOpen = true;
