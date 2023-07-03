@@ -90,11 +90,9 @@
         }
 
         &-icon {
-            position: absolute;
-            /* To ensure it is placed above dots */
+            position: absolute; /* To ensure it is placed above dots */
             left: 50%;
-            top: variables.$spacing-large;
-            /* Halfway down uncollapsed (72px) */
+            top: variables.$spacing-large; /* Halfway down uncollapsed (72px) */
             transform: translateX(-50%);
 
             /* solid background and padding to hide the dots */
