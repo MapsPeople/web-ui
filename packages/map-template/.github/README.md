@@ -85,7 +85,7 @@ $ npx vite build --base=/YOUR_BUCKET_NAME
 At this point you can upload the files manually to your bucket, or use the helpful CLI [`gsutil`](https://cloud.google.com/storage/docs/gsutil) for the purpose. This command uploads the complete `build` folder, and prevents the files from being cached:
 
 ```zsh
-$ gsutil -m -h "Cache-Control:public, max-age=0, no-store, no-cache" cp -r build gs://YOUR_BUCKET_NAME
+$ gsutil -m -h "Cache-Control:public, max-age=0, no-store, no-cache" cp -r ./build gs://YOUR_BUCKET_NAME
 ```
 
 ### Using the `deploy-to-gcloud` npm script
