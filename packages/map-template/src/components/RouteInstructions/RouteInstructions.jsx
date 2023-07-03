@@ -9,7 +9,6 @@ import activeStepState from '../../atoms/activeStep';
 import setMapZoomLevel from '../../helpers/SetMapZoomLevel';
 import RouteInstructionsStep from '../WebComponentWrappers/RouteInstructionsStep/RouteInstructionsStep';
 import substepsToggledState from '../../atoms/substepsToggledState';
-import testState from '../../atoms/triggerSubstepsState';
 import triggerSubstepsState from '../../atoms/triggerSubstepsState';
 
 /**
