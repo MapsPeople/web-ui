@@ -42,7 +42,8 @@
     "build-for-npm": "node releaseTools/buildForNpm.mjs",
     "serve": "vite preview",
     "test": "",
-    "release": "sh ./release.sh"
+    "release": "sh ./release.sh",
+    "deploy-to-gcloud": "sh ./deploy-to-gcloud.sh"
   },
   "browserslist": {
     "production": [
