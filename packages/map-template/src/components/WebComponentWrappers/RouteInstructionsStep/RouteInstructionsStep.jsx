@@ -1,6 +1,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import { useRecoilState } from 'recoil';
 import substepsToggledState from '../../../atoms/substepsToggledState';
+import triggerSubstepsState from '../../../atoms/triggerSubstepsState';
 
 /**
  * React wrapper around the custom element <mi-route-instructions-step>.
@@ -18,6 +19,7 @@ const RouteInstructionsStep = forwardRef(({ translations, totalSteps, activeStep
     const elementRef = useRef();
 
     const [substepsOpen, setSubstepsOpen] = useRecoilState(substepsToggledState);
+    const [, setTriggerSubsteps] = useRecoilState(triggerSubstepsState);
 
     /**
      * Method that can be triggered on the element.
@@ -35,6 +37,7 @@ const RouteInstructionsStep = forwardRef(({ translations, totalSteps, activeStep
         const { current } = elementRef;
 
         function onSubstepsToggled() {
+            setTriggerSubsteps(true);
             setSubstepsOpen(!substepsOpen);
         }
 

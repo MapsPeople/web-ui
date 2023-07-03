@@ -9,12 +9,14 @@ import activeStepState from '../../atoms/activeStep';
 import setMapZoomLevel from '../../helpers/SetMapZoomLevel';
 import RouteInstructionsStep from '../WebComponentWrappers/RouteInstructionsStep/RouteInstructionsStep';
 import substepsToggledState from '../../atoms/substepsToggledState';
+import testState from '../../atoms/triggerSubstepsState';
+import triggerSubstepsState from '../../atoms/triggerSubstepsState';
 
 /**
  * Private variable used for checking if the next button should be enabled.
  * Implemented due to the impossibility to use the React useState hook.
  */
-let _allowNextStep;
+let _allowNextStep = true;
 
 /**
  * Route instructions step by step component.
@@ -45,6 +47,8 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
 
     const substepsOpen = useRecoilValue(substepsToggledState);
+
+    const triggerSubsteps = useRecoilValue(triggerSubstepsState);
 
     // Indicate if the next step action is active.
     const [isNextStep, setIsNextStep] = useState(true);
@@ -100,7 +104,7 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
         if (isOpen) {
             // Check if the directions have more than 2 steps, else take the first step.
             if (totalSteps?.length > 2) {
-                if (activeStep === totalSteps?.length - 2) {
+                if (activeStep === totalSteps?.length - 2 && !triggerSubsteps) {
                     asyncCall();
                 }
             } else if (activeStep === 0 && lastStepMapState.zoom === "" && lastStepMapState.center === "") {
@@ -126,8 +130,6 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
                 routeInstructionsRef.current.openSubsteps();
             }
         }
-
-
     }, [isOpen, activeStep, totalSteps, substepsOpen]);
 
     /**
