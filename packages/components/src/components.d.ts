@@ -280,6 +280,10 @@ export namespace Components {
     }
     interface MiListItemLocation {
         /**
+          * Whether to show the External ID.
+         */
+        "hideExternalID": boolean;
+        /**
           * @description Optional URL to icon to render for the Location. If not set, imageURL on the Location data will be used.
           * @type {string}
          */
@@ -344,6 +348,10 @@ export namespace Components {
     };
     }
     interface MiLocationInfo {
+        /**
+          * @description Whether to show the External ID.
+         */
+        "hideExternalID": boolean;
         /**
           * @description Location object.
          */
@@ -1535,6 +1543,10 @@ declare namespace LocalJSX {
     }
     interface MiListItemLocation {
         /**
+          * Whether to show the External ID.
+         */
+        "hideExternalID"?: boolean;
+        /**
           * @description Optional URL to icon to render for the Location. If not set, imageURL on the Location data will be used.
           * @type {string}
          */
@@ -1631,6 +1643,10 @@ declare namespace LocalJSX {
     };
     }
     interface MiLocationInfo {
+        /**
+          * @description Whether to show the External ID.
+         */
+        "hideExternalID"?: boolean;
         /**
           * @description Location object.
          */

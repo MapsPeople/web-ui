@@ -16,6 +16,7 @@ const mockLocation = {
     }
 }
 locationInfoComponent.location = mockLocation;
+locationInfoComponent.hideExternalID = false;
 </script>
 
 Example usage:
@@ -39,11 +40,16 @@ const mockLocation = {
     }
 }
 locationInfoComponent.location = mockLocation;
+locationInfoComponent.hideExternalID = false;
 ```
 
 ## `location` attribute
 
 A `location` attribute is available on the `<mi-location-info>` element which should be used to pass a MapsIndoors `Location`. When the `Building` and `Venue` names is alike only the name of the `Venue` is displayed. The attribute is required.
+
+## `hideExternalID` event
+
+If true, the component will not show the location's Extrenal ID. The attribute is not required.
 
 <!-- markdownlint-disable -->
 <!-- Auto Generated Below -->
@@ -51,9 +57,10 @@ A `location` attribute is available on the `<mi-location-info>` element which sh
 
 ## Properties
 
-| Property   | Attribute  | Description | Type  | Default     |
-| ---------- | ---------- | ----------- | ----- | ----------- |
-| `location` | `location` |             | `any` | `undefined` |
+| Property         | Attribute           | Description | Type      | Default     |
+| ---------------- | ------------------- | ----------- | --------- | ----------- |
+| `hideExternalID` | `hide-external-i-d` |             | `boolean` | `false`     |
+| `location`       | `location`          |             | `any`     | `undefined` |
 
 
 ----------------------------------------------

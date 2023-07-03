@@ -13,6 +13,7 @@ Working example:
         .then(location => {
             location.properties.imageURL = 'https://app.mapsindoors.com/mapsindoors/cms/assets/icons/building-icons/hall.png';
             document.querySelector('mi-list-item-location').location = location;
+            document.querySelector('mi-list-item-location').hideExternalID = false;
         });
 </script>
 
@@ -28,12 +29,17 @@ Example usage:
     .then(location => {
         location.properties.imageURL = 'https://app.mapsindoors.com/mapsindoors/cms/assets/icons/building-icons/hall.png';
         document.querySelector('mi-list-item-location').location = location;
+        document.querySelector('mi-list-item-location').hideExternalID = false;
     });
 ```
 
 ## `location` attribute
 
 A `location` attribute is available on the `<mi-list-item-location>` element, which should be used to set the MapsIndoors Location to display information for. The attribute is required.
+
+## `hideExternalID` event
+
+If true, the component will not show the location's Extrenal ID. The attribute is not required.
 
 ## `unit` attribute
 
@@ -75,13 +81,14 @@ A `listItemDidRender` event is emitted from the `<mi-list-item-location>` elemen
 
 ## Properties
 
-| Property         | Attribute          | Description | Type                                       | Default     |
-| ---------------- | ------------------ | ----------- | ------------------------------------------ | ----------- |
-| `icon`           | `icon`             |             | `string`                                   | `undefined` |
-| `iconBadge`      | `icon-badge`       |             | `string`                                   | `undefined` |
-| `iconBadgeValue` | `icon-badge-value` |             | `string`                                   | `undefined` |
-| `location`       | `location`         |             | `any`                                      | `undefined` |
-| `unit`           | `unit`             |             | `UnitSystem.Imperial \| UnitSystem.Metric` | `undefined` |
+| Property         | Attribute           | Description                      | Type                                       | Default     |
+| ---------------- | ------------------- | -------------------------------- | ------------------------------------------ | ----------- |
+| `hideExternalID` | `hide-external-i-d` | Whether to show the External ID. | `boolean`                                  | `false`     |
+| `icon`           | `icon`              |                                  | `string`                                   | `undefined` |
+| `iconBadge`      | `icon-badge`        |                                  | `string`                                   | `undefined` |
+| `iconBadgeValue` | `icon-badge-value`  |                                  | `string`                                   | `undefined` |
+| `location`       | `location`          |                                  | `any`                                      | `undefined` |
+| `unit`           | `unit`              |                                  | `UnitSystem.Imperial \| UnitSystem.Metric` | `undefined` |
 
 
 ## Events
