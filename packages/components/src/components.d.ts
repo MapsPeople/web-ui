@@ -294,7 +294,7 @@ export namespace Components {
          */
         "iconBadge": string;
         /**
-          * @description The value of the badge
+          * @description The value of the badge.
           * @type {string} For availability, use "true" or "false".
          */
         "iconBadgeValue": string;
@@ -1557,7 +1557,7 @@ declare namespace LocalJSX {
          */
         "iconBadge"?: string;
         /**
-          * @description The value of the badge
+          * @description The value of the badge.
           * @type {string} For availability, use "true" or "false".
          */
         "iconBadgeValue"?: string;

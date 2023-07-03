@@ -51,7 +51,7 @@ export class ListItemLocation {
     }
 
     /**
-     * @description The value of the badge
+     * @description The value of the badge.
      * @type {string} For availability, use "true" or "false".
      */
     @Prop() iconBadgeValue: string;
@@ -81,6 +81,8 @@ export class ListItemLocation {
     private iconDisplaySize = parseInt(midtIcon.icon.size.medium.value);
 
     /**
+     * Emits the location to event listeners.
+     *
      * @description Emits the location to event listeners.
      * @param {*} location - Location object.
      * @memberof List
@@ -89,11 +91,17 @@ export class ListItemLocation {
         this.locationClicked.emit(location);
     }
 
+    /**
+     * Called once just after the component is first connected to the DOM.
+     */
     componentWillLoad(): void {
         this.iconURLToRender = this.icon ? this.icon : this.location?.properties.imageURL;
         this.updateBadge();
     }
 
+    /**
+     * Called after every render().
+     */
     componentDidRender(): void {
         if (!this.location) {
             return;
@@ -109,7 +117,7 @@ export class ListItemLocation {
     }
 
     /**
-     * Apply badge to location icon
+     * Apply badge to location icon.
      */
     updateBadge(): void {
         if (this.iconBadge && this.iconBadgeValue && this.iconURLToRender) {
@@ -118,6 +126,8 @@ export class ListItemLocation {
     }
 
     /**
+     * Set image as background image.
+     *
      * @description Set image as background image.
      * @param {HTMLImageElement} image
      */
@@ -171,6 +181,7 @@ export class ListItemLocation {
 
     /**
      * Create and return an Image from URL.
+     *
      * @param {string} url
      * @returns {Image}
      */
@@ -191,6 +202,8 @@ export class ListItemLocation {
     }
 
     /**
+     * Render location list-item.
+     *
      * @description Render location list-item.
      * @returns {JSX.Element}
      */
@@ -210,6 +223,8 @@ export class ListItemLocation {
     }
 
     /**
+     * Get JSX template for icon.
+     *
      * @description Get JSX template for icon.
      * @returns {JSX.Element}
      */
@@ -223,6 +238,8 @@ export class ListItemLocation {
     }
 
     /**
+     * Get JSX template for distance.
+     *
      * @description Get JSX template for distance.
      * @returns {JSX.Element}
      */
