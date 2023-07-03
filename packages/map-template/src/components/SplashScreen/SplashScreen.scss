@@ -1,4 +1,5 @@
 .splash-screen {
+    will-change: transform, rotate;
     display: grid;
     width: 100%;
     height: 100%;
@@ -35,20 +36,20 @@
 
 @keyframes loader {
     0% {
-        transform: rotate(0deg);
+        rotate: 0deg;
     }
 
     100% {
-        transform: rotate(360deg);
+        rotate: 360deg;
     }
 }
 
 @keyframes slideIn {
     from {
-        margin-top: 100%;
+        transform: translateY(100%);
     }
 
     to {
-        margin-top: 0%;
+        transform: translateY(0);
     }
 }
