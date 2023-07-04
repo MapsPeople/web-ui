@@ -27,5 +27,6 @@
     "chokidar-cli": "^3.0.0",
     "np": "^7.6.3",
     "style-dictionary": "^3.7.2"
-  }
+  },
+  "homepage": "https://github.com/MapsPeople/web-ui"
 }
