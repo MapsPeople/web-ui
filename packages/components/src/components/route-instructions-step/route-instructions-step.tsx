@@ -286,6 +286,18 @@ export class RouteInstructionsStep implements ComponentInterface {
     }
 
     /**
+     * Render toggle and substeps.
+     *
+     * @returns {JSX.Element}
+     */
+    renderToggleAndSubsteps(): JSX.Element {
+        return <div class="step__details">
+            {this.renderToggleButton()}
+            {this.renderSubsteps()}
+        </div>;
+    }
+
+    /**
      * Render a driving step.
      *
      * @returns {JSX.Element}
@@ -303,10 +315,7 @@ export class RouteInstructionsStep implements ComponentInterface {
                 }
                 <div part="step-heading" class="step__heading">{this.getStepHeading()}</div>
             </div>
-            <div class="step__details">
-                {this.renderToggleButton()}
-                {this.renderSubsteps()}
-            </div>
+            {this.renderToggleAndSubsteps()}
         </div>;
     }
 
@@ -404,10 +413,7 @@ export class RouteInstructionsStep implements ComponentInterface {
                 }
                 <div part="step-heading" class="step__heading">{heading}</div>
             </div>
-            <div class="step__details">
-                {this.renderToggleButton()}
-                {this.renderSubsteps()}
-            </div>
+            {this.renderToggleAndSubsteps()}
         </div>;
     }
 
@@ -446,10 +452,7 @@ export class RouteInstructionsStep implements ComponentInterface {
                 }
                 <div part="step-heading" class="step__heading">{this.getStepHeading()}</div>
             </div>
-            <div class="step__details">
-                {this.renderToggleButton()}
-                {this.renderSubsteps()}
-            </div>
+            {this.renderToggleAndSubsteps()}
         </div>;
     }
 
@@ -471,10 +474,7 @@ export class RouteInstructionsStep implements ComponentInterface {
                 </div>
                 <div part="step-location" class="step__location">{this.destinationLocation}</div>
             </div>
-            <div class="step__details">
-                {this.renderToggleButton()}
-                {this.renderSubsteps()}
-            </div>
+            {this.renderToggleAndSubsteps()}
         </div>;
     }
 
@@ -512,8 +512,7 @@ export class RouteInstructionsStep implements ComponentInterface {
                     {this.stepData.transit_information.num_stops ? this.stepData.transit_information.num_stops : null} {this.translationsData.stops ? this.translationsData.stops : null}
                 </span>
             </div>
-            {this.renderToggleButton()}
-            {this.renderSubsteps()}
+            {this.renderToggleAndSubsteps()}
         </div>;
     }
 }
