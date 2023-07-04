@@ -28,5 +28,5 @@
     "np": "^7.6.3",
     "style-dictionary": "^3.7.2"
   },
-  "homepage": "https://github.com/MapsPeople/web-ui"
+  "homepage": "https://github.com/MapsPeople/web-ui/tree/main/packages/midt"
 }
