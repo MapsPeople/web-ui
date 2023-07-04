@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
@@ -36,12 +36,6 @@ const mapsindoors = window.mapsindoors;
 let _locationsDisabled;
 
 /**
- * Private variable used for setting the appConfigResult.
- * Implemented due to the impossibility to use the React useState hook.
- */
-let _appConfigResult;
-
-/**
  *
  * @param {Object} props
  * @param {string} props.apiKey - MapsIndoors API key or solution alias.
@@ -72,7 +66,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
     const [, setPrimaryColor] = useRecoilState(primaryColorState);
 
-
     const directionsFromLocation = useLocationForWayfinding(directionsFrom);
     const directionsToLocation = useLocationForWayfinding(directionsTo);
 
@@ -92,6 +85,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const isMobile = useMediaQuery('(max-width: 991px)');
 
     const [pushAppView, goBack, currentAppView, currentAppViewPayload, appStates] = useAppHistory();
+
+    // Declare the reference to the App Config
+    const appConfigRef = useRef();
 
     /*
      * Add Location to history payload to make it possible to re-enter location details with that Location.
@@ -158,7 +154,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             for (const key of keys) {
                 // Get the categories from the App Config that have a matching key.
-                const appConfigCategory = _appConfigResult?.menuInfo.mainmenu.find(category => category.categoryKey === key);
+                const appConfigCategory = appConfigRef.current?.menuInfo.mainmenu.find(category => category.categoryKey === key);
 
                 if (uniqueCategories.has(key)) {
                     let count = uniqueCategories.get(key).count;
@@ -255,7 +251,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 venue.image = appConfigResult.venueImages[venue.name.toLowerCase()];
                 return venue;
             });
-            _appConfigResult = appConfigResult;
+            appConfigRef.current = appConfigResult;
             setVenues(venuesResult);
         });
         setMapReady(false);
