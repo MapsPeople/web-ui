@@ -81,8 +81,6 @@ export class ListItemLocation {
     private iconDisplaySize = parseInt(midtIcon.icon.size.medium.value);
 
     /**
-     * Emits the location to event listeners.
-     *
      * @description Emits the location to event listeners.
      * @param {*} location - Location object.
      * @memberof List
@@ -126,8 +124,6 @@ export class ListItemLocation {
     }
 
     /**
-     * Set image as background image.
-     *
      * @description Set image as background image.
      * @param {HTMLImageElement} image
      */
@@ -223,8 +219,6 @@ export class ListItemLocation {
     }
 
     /**
-     * Get JSX template for icon.
-     *
      * @description Get JSX template for icon.
      * @returns {JSX.Element}
      */
@@ -238,8 +232,6 @@ export class ListItemLocation {
     }
 
     /**
-     * Get JSX template for distance.
-     *
      * @description Get JSX template for distance.
      * @returns {JSX.Element}
      */

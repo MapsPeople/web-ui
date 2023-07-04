@@ -58,8 +58,6 @@ export class LocationInfo implements ComponentInterface {
     }
 
     /**
-     * Render location list-info.
-     *
      * @description Render location list-info.
      * @returns {JSX.Element}
      */
