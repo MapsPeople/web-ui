@@ -60,7 +60,6 @@ export class MyPositionComponent {
      */
     private canBeTracked: boolean;
     @State() canBeTrackedText: string;
-    @State() testText: string | number;
 
     /**
      * The device orientation/rotation.
@@ -68,11 +67,15 @@ export class MyPositionComponent {
     private orientation: number;
 
     /**
+     * Reference to the handleDeviceOrientation function.
+     */
+    private handleDeviceOrientationReference = this.handleDeviceOrientation.bind(this);
+
+    /**
      * Removes the event listener for the device's orientation and resets the position button.
      */
     private resetPositionState(): void {
-        this.testText = 'e';
-        window.removeEventListener('deviceorientation', this.handleDeviceOrientation);
+        window.removeEventListener('deviceorientation', this.handleDeviceOrientationReference);
         if (this.positionState === PositionStateTypes.POSITION_TRACKED) {
             this.setPositionState(PositionStateTypes.POSITION_UNTRACKED);
         } else if (this.positionState === PositionStateTypes.POSITION_CENTERED) {
@@ -136,31 +139,22 @@ export class MyPositionComponent {
 
         if (!this.canBeTracked) return;
 
-
         if ((DeviceOrientationEvent as any).requestPermission) {
             (DeviceOrientationEvent as any).requestPermission()
                 .then(permissionStatus => {
                     if (permissionStatus === 'granted' && this.positionState === PositionStateTypes.POSITION_TRACKED) {
-                        this.testText = 'ADDING';
-                        window.addEventListener('deviceorientation', this.handleDeviceOrientation.bind(this));
+                        window.addEventListener('deviceorientation', this.handleDeviceOrientationReference);
                     } else {
-                        this.testText = 'b';
-                        window.removeEventListener('deviceorientation', this.handleDeviceOrientation.bind(this));
+                        window.removeEventListener('deviceorientation', this.handleDeviceOrientationReference);
                     }
                 });
         } else {
             if (this.positionState === PositionStateTypes.POSITION_TRACKED) {
-                window.addEventListener('deviceorientation', this.handleDeviceOrientation.bind(this));
+                window.addEventListener('deviceorientation', this.handleDeviceOrientationReference);
             } else {
-                this.testText = 'a';
-                window.removeEventListener('deviceorientation', this.handleDeviceOrientation.bind(this));
+                window.removeEventListener('deviceorientation', this.handleDeviceOrientationReference);
             }
         }
-
-
-
-
-
     }
 
     /**
@@ -199,8 +193,6 @@ export class MyPositionComponent {
             return;
         }
 
-        this.testText = 'watchPosition';
-
         this.setPositionState(PositionStateTypes.POSITION_REQUESTING);
 
         this.setPositionProviderOnMapView();
@@ -231,8 +223,7 @@ export class MyPositionComponent {
                         this.setPositionState(PositionStateTypes.POSITION_UNTRACKED);
                     }
                     this.setPositionState(PositionStateTypes.POSITION_KNOWN);
-                    this.testText = 'c';
-                    window.removeEventListener('deviceorientation', this.handleDeviceOrientation);
+                    window.removeEventListener('deviceorientation', this.handleDeviceOrientationReference);
                     this.mapView.tilt(0);
                 }
 
@@ -279,8 +270,7 @@ export class MyPositionComponent {
         this.setBearingState(0);
         this.mapView.rotate(0);
         this.mapView.tilt(0);
-        this.testText = 'd';
-        window.removeEventListener('deviceorientation', this.handleDeviceOrientation);
+        window.removeEventListener('deviceorientation', this.handleDeviceOrientationReference);
 
         if (this.positionState === PositionStateTypes.POSITION_TRACKED) {
             this.setPositionState(PositionStateTypes.POSITION_CENTERED);
@@ -373,8 +363,6 @@ export class MyPositionComponent {
             this.setPositionState(PositionStateTypes.POSITION_UNKNOWN);
         } else {
             navigator.permissions.query({ name: 'geolocation' }).then(result => {
-                this.testText = result.state;
-
                 if (result.state === 'granted') {
                     this.watchPosition();
                 } else {
@@ -397,9 +385,6 @@ export class MyPositionComponent {
         return (
             <Host>
                 <div class='mi-my-position'>
-                    <p><b>tetsing</b> {this.testText}</p>
-                    <p><b>positionState</b> {this.positionState}</p>
-                    <p><b>canBeTracked</b> {this.canBeTrackedText}</p>
                     <button
                         class={`mi-my-position__position-button 
                             ${this.positionState === PositionStateTypes.POSITION_UNKNOWN || this.positionState === PositionStateTypes.POSITION_INACCURATE ? 'mi-my-position__position-button--unknown' : ''}
