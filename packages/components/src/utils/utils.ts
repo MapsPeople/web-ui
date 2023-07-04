@@ -74,3 +74,14 @@ export function appendMapsIndoorsImageQueryParameters(imageURL: string, iconDisp
 
     return url.toString();
 }
+
+/**
+ * Helper function to retreive nested value from object.
+ *
+ * @param {Array} pathArray - Array of nested properties, eg. ['user', 'name'] for object { user: { name: 'Peter' } }.
+ * @param {object} obj - Object to get value from.
+ * @returns {any}
+ */
+export function getNestedValue(pathArray: Array<any>, obj: object): any {
+    return pathArray.reduce((xs, x) => (xs && xs[x]) ? xs[x] : null, obj);
+}
