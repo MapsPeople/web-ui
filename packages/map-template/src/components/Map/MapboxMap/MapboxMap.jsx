@@ -5,9 +5,6 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import mapboxAccessTokenState from '../../../atoms/mapboxAccessTokenState';
 
-// Make the global MapsIndoors JavaScript SDK available here
-const mapsindoors = window.mapsindoors;
-
 /**
  * Takes care of instantiating a MapsIndoors Mapbox MapView.
  *
@@ -31,12 +28,12 @@ function MapboxMap({ onMapView, onPositionControl }) {
             element: document.getElementById('map')
         };
 
-        const mapViewInstance = new mapsindoors.mapView.MapboxView(mapViewOptions);
+        const mapViewInstance = new window.mapsindoors.mapView.MapboxView(mapViewOptions);
         setMapView(mapViewInstance);
 
         // Setup an external directions provider that will be used to calculate directions
         // outside MapsIndoors venues.
-        const externalDirectionsProvider = new mapsindoors.directions.MapboxProvider(mapboxAccessToken);
+        const externalDirectionsProvider = new window.mapsindoors.directions.MapboxProvider(mapboxAccessToken);
 
         onMapView(mapViewInstance, externalDirectionsProvider);
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -46,7 +43,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
     useEffect(() => {
         if (mapsIndoorsInstance && mapView && !hasFloorSelector) {
             const floorSelectorDiv = document.createElement('div');
-            new mapsindoors.FloorSelector(floorSelectorDiv, mapsIndoorsInstance);
+            new window.mapsindoors.FloorSelector(floorSelectorDiv, mapsIndoorsInstance);
             mapView.getMap().addControl({
                 onAdd: () => floorSelectorDiv,
                 onRemove: () => {
@@ -58,7 +55,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
 
         if (mapsIndoorsInstance && mapView && !hasPositionControl) {
             const positionControlDiv = document.createElement('div');
-            const positionControl = new mapsindoors.PositionControl(positionControlDiv, { mapsIndoors: mapsIndoorsInstance });
+            const positionControl = new window.mapsindoors.PositionControl(positionControlDiv, { mapsIndoors: mapsIndoorsInstance });
             mapView.getMap().addControl({
                 onAdd: () => positionControlDiv,
                 onRemove: () => {
