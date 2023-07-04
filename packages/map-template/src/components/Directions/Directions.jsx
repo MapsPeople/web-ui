@@ -29,7 +29,7 @@ let directionsRenderer;
  * @param {function} props.onSetSize - Callback that is fired when the component has loaded.
  * @param {function} props.snapPointSwiped - Changes value when user has swiped a Bottom sheet to a new snap point.
  *
-*/
+ */
 function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
     // Holds the MapsIndoors DisplayRule for the destination
     const [destinationDisplayRule, setDestinationDisplayRule] = useState(null);
