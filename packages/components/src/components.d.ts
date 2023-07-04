@@ -565,6 +565,10 @@ export namespace Components {
          */
         "value": string;
     }
+    interface MiMyPosition {
+        "mapsindoors": any;
+        "myPositionOptions"?: any;
+    }
     interface MiNotification {
         /**
           * Clear all notifications.
@@ -973,6 +977,10 @@ export interface MiMapMapboxCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLMiMapMapboxElement;
 }
+export interface MiMyPositionCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLMiMyPositionElement;
+}
 export interface MiRouteInstructionsCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLMiRouteInstructionsElement;
@@ -1112,6 +1120,12 @@ declare global {
         prototype: HTMLMiMetricCardElement;
         new (): HTMLMiMetricCardElement;
     };
+    interface HTMLMiMyPositionElement extends Components.MiMyPosition, HTMLStencilElement {
+    }
+    var HTMLMiMyPositionElement: {
+        prototype: HTMLMiMyPositionElement;
+        new (): HTMLMiMyPositionElement;
+    };
     interface HTMLMiNotificationElement extends Components.MiNotification, HTMLStencilElement {
     }
     var HTMLMiNotificationElement: {
@@ -1222,6 +1236,7 @@ declare global {
         "mi-map-googlemaps": HTMLMiMapGooglemapsElement;
         "mi-map-mapbox": HTMLMiMapMapboxElement;
         "mi-metric-card": HTMLMiMetricCardElement;
+        "mi-my-position": HTMLMiMyPositionElement;
         "mi-notification": HTMLMiNotificationElement;
         "mi-route-instructions": HTMLMiRouteInstructionsElement;
         "mi-route-instructions-heading": HTMLMiRouteInstructionsHeadingElement;
@@ -1802,6 +1817,12 @@ declare namespace LocalJSX {
          */
         "value"?: string;
     }
+    interface MiMyPosition {
+        "mapsindoors"?: any;
+        "myPositionOptions"?: any;
+        "onPosition_error"?: (event: MiMyPositionCustomEvent<object>) => void;
+        "onPosition_received"?: (event: MiMyPositionCustomEvent<object>) => void;
+    }
     interface MiNotification {
         /**
           * Time the notification should be visible. Default value is 3.
@@ -2212,6 +2233,7 @@ declare namespace LocalJSX {
         "mi-map-googlemaps": MiMapGooglemaps;
         "mi-map-mapbox": MiMapMapbox;
         "mi-metric-card": MiMetricCard;
+        "mi-my-position": MiMyPosition;
         "mi-notification": MiNotification;
         "mi-route-instructions": MiRouteInstructions;
         "mi-route-instructions-heading": MiRouteInstructionsHeading;
@@ -2252,6 +2274,7 @@ declare module "@stencil/core" {
             "mi-map-googlemaps": LocalJSX.MiMapGooglemaps & JSXBase.HTMLAttributes<HTMLMiMapGooglemapsElement>;
             "mi-map-mapbox": LocalJSX.MiMapMapbox & JSXBase.HTMLAttributes<HTMLMiMapMapboxElement>;
             "mi-metric-card": LocalJSX.MiMetricCard & JSXBase.HTMLAttributes<HTMLMiMetricCardElement>;
+            "mi-my-position": LocalJSX.MiMyPosition & JSXBase.HTMLAttributes<HTMLMiMyPositionElement>;
             "mi-notification": LocalJSX.MiNotification & JSXBase.HTMLAttributes<HTMLMiNotificationElement>;
             "mi-route-instructions": LocalJSX.MiRouteInstructions & JSXBase.HTMLAttributes<HTMLMiRouteInstructionsElement>;
             "mi-route-instructions-heading": LocalJSX.MiRouteInstructionsHeading & JSXBase.HTMLAttributes<HTMLMiRouteInstructionsHeadingElement>;
