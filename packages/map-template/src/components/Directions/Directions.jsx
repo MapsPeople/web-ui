@@ -204,8 +204,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
      * When user swipes the bottom sheet to a new snap point.
      */
     useEffect(() => {
-        if (isOpen) {
-            if (snapPointSwiped === undefined) return;
+        if (isOpen && snapPointSwiped) {
             setSubstepsOpen(snapPointSwiped === snapPoints.MAX);
         }
     }, [isOpen, snapPointSwiped]); // eslint-disable-line react-hooks/exhaustive-deps
