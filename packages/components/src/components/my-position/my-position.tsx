@@ -1,8 +1,9 @@
-import { Component, Host, JSX, Prop, h, Event, EventEmitter, State } from '@stencil/core';
+import { Component, Host, JSX, Prop, Event, EventEmitter, State, h } from '@stencil/core';
 import { UAParser } from 'ua-parser-js';
 import merge from 'deepmerge';
 import midtColors from '@mapsindoors/midt/tokens/color.json';
 import midtOpacity from '@mapsindoors/midt/tokens/opacity.json';
+import { getNestedValue } from '../../utils/utils';
 
 enum PositionStateTypes {
     POSITION_UNKNOWN = 'POSITION_UNKNOWN',
@@ -41,6 +42,11 @@ export class MyPositionComponent {
     private compassButton: HTMLButtonElement;
 
     /**
+     * New UAParser instance.
+     */
+    private parser = new UAParser();
+
+    /**
      * Wether the MyPositionComponent is a Web Componenet or not.
      */
     private readonly isWebComponent: boolean = true;
@@ -59,7 +65,6 @@ export class MyPositionComponent {
      * Wether the currently used device's position can be tracked.
      */
     private canBeTracked: boolean;
-    @State() canBeTrackedText: string;
 
     /**
      * The device orientation/rotation.
@@ -70,6 +75,29 @@ export class MyPositionComponent {
      * Reference to the handleDeviceOrientation function.
      */
     private handleDeviceOrientationReference = this.handleDeviceOrientation.bind(this);
+
+    /**
+     * Default options.
+     */
+    private defaultOptions = {
+        maxAccuracy: 200,
+        positionOptions: {
+            timeout: 30000,
+            enableHighAccuracy: true,
+            maximumAge: 0
+        },
+        positionMarkerStyles: {
+            radius: '12px',
+            strokeWeight: '2px',
+            strokeColor: getNestedValue(['color', 'white', 'white', 'value'], midtColors) || 'white',
+            fillColor: getNestedValue(['color', 'blue', '60', 'value'], midtColors) || '#4169E1',
+            fillOpacity: 1
+        },
+        accuracyCircleStyles: {
+            fillColor: getNestedValue(['color', 'blue', '60', 'value'], midtColors) || '#4169E1',
+            fillOpacity: getNestedValue(['opacity', 'small', 'value'], midtOpacity) || 0.16
+        }
+    };
 
     /**
      * Removes the event listener for the device's orientation and resets the position button.
@@ -160,9 +188,9 @@ export class MyPositionComponent {
     /**
      * Rotates and tilts the map.
      *
-     * @param {any} e
+     * @param {DeviceOrientationEvent} e
      */
-    private handleDeviceOrientation(e: any): void {
+    private handleDeviceOrientation(e: DeviceOrientationEvent): void {
         if (!this.orientation || this.orientation - (360 - e.alpha) > 1 || this.orientation - (360 - e.alpha) < -1) {
             this.orientation = 360 - e.alpha;
             this.mapView.easeTo({
@@ -179,7 +207,7 @@ export class MyPositionComponent {
      *
      * @param {number} bearing
      */
-    private setBearingState(bearing: number): void {
+    private setCompassStyle(bearing: number): void {
         this.compassButton.style.transform = `rotate(${bearing}deg)`;
     }
 
@@ -253,21 +281,10 @@ export class MyPositionComponent {
     }
 
     /**
-     * Helper function to retreive nested value from object.
-     *
-     * @param {Array} pathArray - Array of nested properties, eg. ['user', 'name'] for object { user: { name: 'Peter' } }.
-     * @param {object} obj - Object to get value from.
-     * @returns {any}
-     */
-    private getNestedValue(pathArray: Array<any>, obj: object): any {
-        return pathArray.reduce((xs, x) => (xs && xs[x]) ? xs[x] : null, obj);
-    }
-
-    /**
      * Handle click on the compass button.
      */
     private onCompassButtonClicked(): void {
-        this.setBearingState(0);
+        this.setCompassStyle(0);
         this.mapView.rotate(0);
         this.mapView.tilt(0);
         window.removeEventListener('deviceorientation', this.handleDeviceOrientationReference);
@@ -305,7 +322,7 @@ export class MyPositionComponent {
             case PositionStateTypes.POSITION_TRACKED:
                 this.mapView.tilt(0);
                 this.mapView.rotate(0);
-                this.setBearingState(0);
+                this.setCompassStyle(0);
                 this.setPositionState(PositionStateTypes.POSITION_CENTERED);
                 this.panToCurrentPosition();
                 break;
@@ -320,41 +337,21 @@ export class MyPositionComponent {
      * Called every time the component is connected to the DOM.
      */
     connectedCallback(): void {
+        this.mapView = this.mapsindoors.getMapView();
+        this.options = merge(this.defaultOptions, this.myPositionOptions ?? {});
+
         if (!navigator.geolocation) {
             this.position_error.emit({ code: 10, message: 'Geolocation not available' });
             return;
         }
 
-        this.mapView = this.mapsindoors.getMapView();
-        this.options = merge({
-            maxAccuracy: 200,
-            positionOptions: {
-                timeout: 30000,
-                enableHighAccuracy: true,
-                maximumAge: 0
-            },
-            positionMarkerStyles: {
-                radius: '12px',
-                strokeWeight: '2px',
-                strokeColor: this.getNestedValue(['color', 'white', 'white', 'value'], midtColors) || 'white',
-                fillColor: this.getNestedValue(['color', 'blue', '60', 'value'], midtColors) || '#4169E1',
-                fillOpacity: 1
-            },
-            accuracyCircleStyles: {
-                fillColor: this.getNestedValue(['color', 'blue', '60', 'value'], midtColors) || '#4169E1',
-                fillOpacity: this.getNestedValue(['opacity', 'small', 'value'], midtOpacity) || 0.16
-            }
-        }, this.myPositionOptions ?? {});
-
-        const parser = new UAParser();
-        const deviceType: DeviceType = parser.getDevice().type;
+        const deviceType: DeviceType = this.parser.getDevice().type;
         this.canBeTracked = (
             typeof window.DeviceOrientationEvent === 'function' &&
             (deviceType === DeviceType.Phone || deviceType === DeviceType.Tablet) &&
             this.mapView.rotatable &&
             this.mapView.tiltable)
             ? true : false;
-        this.canBeTrackedText = this.canBeTracked ? 'yes' : 'no';
 
         // Check if user has already granted permission to use the position.
         // In that case, show position right away.
@@ -372,7 +369,7 @@ export class MyPositionComponent {
         }
 
         this.mapView.on('rotateend', () => {
-            this.setBearingState(this.mapView.getBearing());
+            this.setCompassStyle(this.mapView.getBearing());
         });
     }
 
