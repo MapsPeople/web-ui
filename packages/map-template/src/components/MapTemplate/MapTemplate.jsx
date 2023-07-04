@@ -105,13 +105,13 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         });
     }
 
-    /*
+    /**
+     * Wait for the MapsIndoors JS SDK to be initialized, then react on changes on the props.
      * React on changes in the MapsIndoors API key by fetching the required data.
      */
     useEffect(() => {
         initializeMapsIndoorsSDK().then(() => {
             const mapsindoors = window.mapsindoors;
-            // console.log('mapsindoors', mapsindoors);
 
             setApiKey(apiKey);
             setMapReady(false);
