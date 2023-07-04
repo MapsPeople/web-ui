@@ -39,7 +39,7 @@ A `location` attribute is available on the `<mi-list-item-location>` element, wh
 
 ## `hideExternalID` event
 
-If true, the component will not show the location's Extrenal ID. The attribute is not required.
+If true, the component will not show the location's Extrenal ID. The attribute is not required. If not set, it will default to false.
 
 ## `unit` attribute
 
