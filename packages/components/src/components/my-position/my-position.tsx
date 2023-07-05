@@ -337,7 +337,12 @@ export class MyPositionComponent {
     }
 
     /**
-     * Called every time the component is connected to the DOM.
+     * Called every time the component has connected to the DOM.
+     * 1. Assigning the mapView and options attributes.
+     * 2. Checking for the navigator's state.
+     * 3. Determining whether the device can be tracked.
+     * 4. Asking for permission to track the device.
+     * 5. Styling the compass button.
      */
     connectedCallback(): void {
         this.mapView = this.mapsindoors.getMapView();
