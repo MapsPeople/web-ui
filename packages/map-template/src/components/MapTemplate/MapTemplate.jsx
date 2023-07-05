@@ -170,12 +170,14 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * Get the locations by external IDs, if present.
      */
     useEffect(() => {
-        if (externalIDs && mapsindoorsSDKAvailable) {
-            window.mapsindoors.services.LocationsService.getLocationsByExternalId(externalIDs).then(locations => {
-                setFilteredLocationsByExternalID(locations);
-            });
-        } else {
-            setFilteredLocationsByExternalID([]);
+        if (mapsindoorsSDKAvailable) {
+            if (externalIDs) {
+                window.mapsindoors.services.LocationsService.getLocationsByExternalId(externalIDs).then(locations => {
+                    setFilteredLocationsByExternalID(locations);
+                });
+            } else {
+                setFilteredLocationsByExternalID([]);
+            }
         }
     }, [externalIDs, mapsindoorsSDKAvailable]);
 
