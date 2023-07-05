@@ -17,6 +17,10 @@
         background-size: cover;
         background-position: 50% 50%;
         border-radius: var(--rounding-x-large);
+
+        &:hover {
+            border: 2px solid var(--brand-colors-dark-pine-100);
+        }
     }
 
     &__content {

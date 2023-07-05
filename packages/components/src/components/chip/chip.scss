@@ -14,9 +14,16 @@
   width: fit-content;
   cursor: default;
 
+  &:hover {
+    background-color: var(--tailwind-colors-gray-100);
+  }
+
   &--active {
-    background-color: var(--brand-colors-dark-pine-100);
     color: var(--brand-colors-white-100);
+
+    &:hover {
+      filter: brightness(90%);
+    }
   }
 
   &__content {

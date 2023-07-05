@@ -1,7 +1,7 @@
 {
   "name": "@mapsindoors/map-template",
   "description": "Get a MapsIndoors map up and running in less than 10 mins.",
-  "version": "1.0.0",
+  "version": "1.4.3",
   "private": false,
   "files": [
     "dist/*.js",
@@ -26,6 +26,7 @@
     "react-swipeable": "^7.0.0",
     "react-to-webcomponent": "2.0.0-alpha.2",
     "react-transition-group": "^4.4.5",
+    "recoil": "^0.7.7",
     "sass": "^1.57.1",
     "standard-version": "^9.5.0",
     "vite": "^4.3.4",
@@ -41,7 +42,8 @@
     "build-for-npm": "node releaseTools/buildForNpm.mjs",
     "serve": "vite preview",
     "test": "",
-    "release": "sh ./release.sh"
+    "release": "sh ./release.sh",
+    "deploy-to-gcloud": "sh ./deploy-to-gcloud.sh"
   },
   "browserslist": {
     "production": [

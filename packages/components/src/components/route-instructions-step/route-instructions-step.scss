@@ -23,6 +23,19 @@
         grid-auto-flow: column;
         gap: variables.$spacing-x-small;
         align-items: center;
+
+        &.destination {
+            grid-auto-flow: row;
+            justify-items: center;
+        }
+    }
+
+    &__destination {
+        display: grid;
+        gap: variables.$spacing-x-small;
+        align-items: center;
+        justify-content: center;
+        grid-auto-flow: column;
     }
 
     &__action-icon {

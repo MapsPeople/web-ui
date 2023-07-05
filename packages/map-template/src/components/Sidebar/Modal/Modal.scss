@@ -2,8 +2,8 @@
     position: absolute;
     z-index: var(--z-index-modal);
     width: 568px;
-    left: var(--spacing-large);
-    bottom: var(--spacing-large);
+    left: var(--spacing-x-large);
+    bottom: var(--spacing-x-large);
     border-radius: var(--spacing-x-small);
     border: 1px solid var(--color-gray-30);
     background: var(--color-white-white);
@@ -11,9 +11,11 @@
     max-height: 80%; // UX spec
     min-height: fit-content;
     overflow: auto;
+    display: none;
 
     &--open {
         transform: translateY(0);
+        display: block;
     }
 
     &--full {

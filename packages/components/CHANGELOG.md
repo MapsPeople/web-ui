@@ -5,6 +5,48 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [13.5.0] - 2023-07-03
+
+### Added
+
+- **mi-route-instructions-step** support for `destination` type.
+
+## [13.4.0] - 2023-06-26
+
+### Added
+
+- **mi-chip** added suport for having background color property.
+
+## [13.3.0] - 2023-06-12
+
+### Added
+
+- **mi-chip** hover effects.
+- **mi-list-item-location** hover effects.
+- **mi-search** show clear button only when the input has a value.
+
+## [13.2.0] - 2023-06-12
+
+### Changed
+
+- **mi-keyboard** moved the backspace character from lower right to upper right corner.
+
+### Added
+
+- **mi-keyboard** now displays `.`, `-` and `&` characters.
+
+## [13.1.0] - 2023-06-08
+
+### Changed
+
+- **mi-route-instructions-step** now supports Biking and Driving transportations modes besides Walking.
+
+## [13.0.6] - 2023-05-26
+
+### Changed
+
+- Updated the reposity release workflow.
+
 ## [13.0.0] - 2023-05-11
 
 ### Changed

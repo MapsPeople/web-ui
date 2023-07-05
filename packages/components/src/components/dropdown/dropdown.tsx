@@ -500,7 +500,7 @@ export class Dropdown {
                     {/* The ts-ignore below is required, otherwise TS will complain about 'part' not being assignable to type 'SVGElement'. */}
                     { /*
                     // @ts-ignore */}
-                    <svg part="icon-down-arrow" width="12" height="6" viewBox="0 0 18 10" xmlns="http://www.w3.org/2000/svg">
+                    <svg class="arrow" part="icon-down-arrow" width="12" height="6" viewBox="0 0 18 10" xmlns="http://www.w3.org/2000/svg">
                         <path d="M9.37165 9.58706C9.17303 9.80775 8.82697 9.80775 8.62835 9.58706L0.751035 0.834484C0.46145 0.512722 0.689796 7.73699e-08 1.12268 1.25924e-07L16.8773 1.89302e-06C17.3102 1.94157e-06 17.5386 0.512723 17.249 0.834484L9.37165 9.58706Z" />
                     </svg>
                 </button>

@@ -1,9 +1,14 @@
 import './Search.scss';
 import { useRef, useState, useEffect } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import categoriesState from '../../atoms/categoriesState';
+import currentVenueNameState from '../../atoms/currentVenueNameState';
 import { snapPoints } from '../../constants/snapPoints';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
 import SearchField from '../WebComponentWrappers/Search/Search';
+import filteredLocationsState from '../../atoms/filteredLocationsState';
+import primaryColorState from '../../atoms/primaryColorState';
 
 /** Initialize the MapsIndoors instance. */
 const mapsindoors = window.mapsindoors;
@@ -14,12 +19,11 @@ const mapsindoors = window.mapsindoors;
  * @param {Object} props
  * @param {function} props.onLocationClick - Function that is run when a location from the search results is clicked.
  * @param {[[string, number]]} props.categories - All the unique categories that users can filter through.
- * @param {function} props.onLocationsFiltered - Function that is run when the user performs a filter through any category.
  * @param {function} props.onSetSize - Callback that is fired when the search field takes focus.
- * @param {string} props.currentVenueName - The currently selected venue.
+ *
  * @returns
  */
-function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, currentVenueName }) {
+function Search({ onLocationClick, onSetSize }) {
 
     const searchRef = useRef();
 
@@ -28,6 +32,9 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, c
 
     const [searchDisabled, setSearchDisabled] = useState(true);
     const [searchResults, setSearchResults] = useState([]);
+    const categories = useRecoilValue(categoriesState);
+    const currentVenueName = useRecoilValue(currentVenueNameState);
+    const [, setFilteredLocations] = useRecoilState(filteredLocationsState);
 
     /** Indicate if search results have been found */
     const [showNotFoundMessage, setShowNotFoundMessage] = useState(false);
@@ -39,6 +46,8 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, c
     const [selectedCategory, setSelectedCategory] = useState();
 
     const scrollableContentSwipePrevent = usePreventSwipe();
+
+    const primaryColor = useRecoilValue(primaryColorState);
 
     /**
      * Get the locations and filter through them based on categories selected.
@@ -66,7 +75,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, c
             setSelectedCategory(null);
 
             // Pass an empty array to the filtered locations in order to reset the locations.
-            onLocationsFiltered([]);
+            setFilteredLocations([]);
 
             // Check if the search field has a value and trigger the search again.
             if (searchFieldRef.current.getValue()) {
@@ -98,7 +107,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, c
      */
     function onResults(locations) {
         setSearchResults(locations);
-        onLocationsFiltered(locations);
+        setFilteredLocations(locations);
         setShowNotFoundMessage(locations.length === 0);
     }
 
@@ -112,7 +121,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, c
             getFilteredLocations(selectedCategory);
         }
 
-        onLocationsFiltered([]);
+        setFilteredLocations([]);
     }
 
     /**
@@ -164,6 +173,7 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, c
                         {categories?.map(([category, categoryInfo]) =>
                             <mi-chip
                                 icon={categoryInfo.iconUrl}
+                                background-color={primaryColor}
                                 content={categoryInfo.displayName}
                                 active={selectedCategory === category}
                                 onClick={() => categoryClicked(category)}
@@ -171,9 +181,9 @@ function Search({ onLocationClick, categories, onLocationsFiltered, onSetSize, c
                             </mi-chip>
                         )}
                     </div>}
+                {showNotFoundMessage && <p className="search__error">Nothing was found</p>}
                 {searchResults.length > 0 &&
                     <div className="search__results">
-                        {showNotFoundMessage && <p>Nothing was found</p>}
                         {searchResults.map(location =>
                             <ListItemLocation
                                 key={location.id}

@@ -26,8 +26,19 @@
         position: absolute;
         top: var(--spacing-x-small);
         right: var(--spacing-x-small);
-        background: none;
-        border: none;
+        background-color: var(--tailwind-colors-gray-100);
+        border: 1px solid var(--tailwind-colors-gray-200);
+        margin-left: auto;
+        width: var(--spacing-xx-large);
+        height: var(--spacing-xx-large);
+        border-radius: var(--rounding-large);
+        display: grid;
+        justify-content: center;
+        align-items: center;
+
+        &:hover {
+            background-color: var(--tailwind-colors-gray-200);
+        }
     }
 
     &__locations {
@@ -54,7 +65,6 @@
             font-size: var(--font-size-small);
             color: var(--color-blue-base);
             margin-top: var(--spacing-x-small);
-            cursor: pointer;
         }
     }
 
@@ -80,10 +90,6 @@
         gap: var(--spacing-x-small);
         align-items: center;
         width: fit-content;
-
-        .mi-toggle:checked {
-            background-color: var(--color-teal-90);
-        }
     }
 
     &__info {
@@ -95,6 +101,7 @@
     &__time {
         display: grid;
         grid-auto-flow: column;
+        grid-template-columns: 20px 1fr 1fr;
         gap: var(--spacing-x-small);
         align-items: center;
         color: var(--color-gray-70);
@@ -128,7 +135,6 @@
     }
 
     &__button {
-        background-color: var(--color-teal-90);
         color: var(--color-white-white);
         border-radius: var(--rounding-large);
         border: none;
@@ -138,6 +144,10 @@
         position: relative;
         margin-top: var(--spacing-medium);
         font-weight: var(--font-weight-x-large);
+
+        &:hover {
+            filter: brightness(90%);
+        }
     }
 
     &__scrollable {
@@ -154,10 +164,41 @@
         position: absolute;
         right: 0;
         top: 80px;
+
+        &:hover {
+            opacity: .8;
+        }
     }
 
     &__google {
         justify-self: center;
         width: 110px;
+    }
+
+    &__settings {
+        display: grid;
+        grid-auto-flow: column;
+        justify-content: space-between;
+        width: 100%;
+        align-items: center;
+    }
+
+    mi-dropdown::part(dropdown-container) {
+        overflow-y: auto;
+        left: unset;
+        right: var(--spacing-medium);
+        top: unset;
+        bottom: unset;
+        min-width: 160px;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    mi-dropdown::part(button) {
+        border-radius: var(--spacing-x-small);
+        padding: 0 var(--spacing-small);
+        height: 36px;
+        background: var(--color-gray-10);
+        border: 1px solid var(--color-gray-30);
     }
 }

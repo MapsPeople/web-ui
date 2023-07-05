@@ -1,12 +1,16 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import './Wayfinding.scss';
 import { useRef, useEffect } from 'react';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
-import { ReactComponent as WalkingIcon } from '../../assets/walking.svg';
+import { ReactComponent as WalkingIcon } from '../../assets/walk.svg';
 import { ReactComponent as SwitchIcon } from '../../assets/switch.svg';
-import { DirectionsServiceContext } from '../../DirectionsServiceContext';
-import { UserPositionContext } from '../../UserPositionContext';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import userPositionState from '../../atoms/userPositionState';
+import directionsServiceState from '../../atoms/directionsServiceState';
+import currentLocationState from '../../atoms/currentLocationState';
+import travelModeState from '../../atoms/travelModeState';
+import mapTypeState from '../../atoms/mapTypeState';
 import Tooltip from '../Tooltip/Tooltip';
 import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
 import SearchField from '../WebComponentWrappers/Search/Search';
@@ -16,6 +20,13 @@ import generateMyPositionLocation from '../../helpers/MyPositionLocation';
 import addGooglePlaceGeometry from "../Map/GoogleMapsMap/GooglePlacesHandler";
 import GooglePlaces from '../../assets/google-places.png';
 import { mapTypes } from "../../constants/mapTypes";
+import { ReactComponent as WalkIcon } from '../../assets/walk.svg';
+import { ReactComponent as DriveIcon } from '../../assets/drive.svg';
+import { ReactComponent as BikeIcon } from '../../assets/bike.svg';
+import { travelModes } from "../../constants/travelModes";
+import Dropdown from "../WebComponentWrappers/Dropdown/Dropdown";
+import primaryColorState from "../../atoms/primaryColorState";
+import directionsResponseState from "../../atoms/directionsResponseState";
 
 const searchFieldIdentifiers = {
     TO: 'TO',
@@ -30,14 +41,13 @@ const googlePlacesIcon = "data:image/svg+xml,%3Csvg width='10' height='10' viewB
  * @param {Object} props
  * @param {function} props.onStartDirections - Function that is run when the user navigates to the directions page.
  * @param {function} props.onBack - Function that is run when the user navigates to the previous page.
- * @param {object} props.currentLocation - The currently selected MapsIndoors Location.
  * @param {object} props.directionsToLocation - Optional location to navigate to.
  * @param {object} [props.directionsFromLocation] - Optional location to navigate from. If omitted, the user has to choose in the search field.
  * @param {function} props.onSetSize - Callback that is fired when the component has loaded.
- * @param {string} props.selectedMapType - The currently selected map type.
+ *
  * @returns
  */
-function Wayfinding({ onStartDirections, onBack, currentLocation, directionsToLocation, directionsFromLocation, onSetSize, isActive, onDirections, selectedMapType }) {
+function Wayfinding({ onStartDirections, onBack, directionsToLocation, directionsFromLocation, onSetSize, isActive }) {
 
     const wayfindingRef = useRef();
 
@@ -47,8 +57,12 @@ function Wayfinding({ onStartDirections, onBack, currentLocation, directionsToLo
     const toFieldRef = useRef();
     const fromFieldRef = useRef();
 
-    const directionsService = useContext(DirectionsServiceContext);
-    const userPosition = useContext(UserPositionContext);
+    const [, setDirectionsResponse] = useRecoilState(directionsResponseState);
+    const directionsService = useRecoilValue(directionsServiceState);
+    const userPosition = useRecoilValue(userPositionState);
+    const currentLocation = useRecoilValue(currentLocationState);
+    const selectedMapType = useRecoilValue(mapTypeState);
+    const primaryColor = useRecoilValue(primaryColorState);
 
     const [activeSearchField, setActiveSearchField] = useState();
 
@@ -57,9 +71,6 @@ function Wayfinding({ onStartDirections, onBack, currentLocation, directionsToLo
 
     /** Indicate if search results have been found */
     const [hasSearchResults, setHasSearchResults] = useState(true);
-
-    /** Indicate if the searched route throws errors */
-    const [hasError, setHasError] = useState(false);
 
     /** Indicate if the search has been triggered */
     const [searchTriggered, setSearchTriggered] = useState(false);
@@ -78,6 +89,8 @@ function Wayfinding({ onStartDirections, onBack, currentLocation, directionsToLo
     const scrollableContentSwipePrevent = usePreventSwipe();
 
     const [hasGooglePlaces, setHasGooglePlaces] = useState(false);
+
+    const [travelMode, setTravelMode] = useRecoilState(travelModeState);
 
     /**
      * Decorates location with data that is required for wayfinding to work.
@@ -177,7 +190,6 @@ function Wayfinding({ onStartDirections, onBack, currentLocation, directionsToLo
     function onSearchClicked(searchFieldIdentifier) {
         setActiveSearchField(searchFieldIdentifier);
         triggerSearch(searchFieldIdentifier);
-        setHasError(false);
         setHasFoundRoute(true);
         setHasGooglePlaces(false);
     }
@@ -191,7 +203,6 @@ function Wayfinding({ onStartDirections, onBack, currentLocation, directionsToLo
         setActiveSearchField(searchFieldIdentifier);
         resetSearchField(searchFieldIdentifier);
         setSearchResults([]);
-        setHasError(false);
         setHasFoundRoute(true);
         setHasGooglePlaces(false);
     }
@@ -302,10 +313,10 @@ function Wayfinding({ onStartDirections, onBack, currentLocation, directionsToLo
             directionsService.getRoute({
                 origin: getLocationPoint(originLocation),
                 destination: getLocationPoint(destinationLocation),
+                travelMode: travelMode,
                 avoidStairs: accessibilityOn
             }).then(directionsResult => {
                 if (directionsResult && directionsResult.legs) {
-                    setHasError(false);
                     setHasFoundRoute(true);
                     // Calculate total distance and time
                     const totalDistance = directionsResult.legs.reduce((accumulator, current) => accumulator + current.distance.value, 0);
@@ -314,7 +325,7 @@ function Wayfinding({ onStartDirections, onBack, currentLocation, directionsToLo
                     setTotalDistance(totalDistance);
                     setTotalTime(totalTime);
 
-                    onDirections({
+                    setDirectionsResponse({
                         originLocation,
                         destinationLocation,
                         totalDistance,
@@ -322,14 +333,17 @@ function Wayfinding({ onStartDirections, onBack, currentLocation, directionsToLo
                         directionsResult
                     });
                 } else {
-                    setHasError(true);
+                    setHasFoundRoute(false);
                 }
             }, () => {
                 setHasFoundRoute(false);
             });
         }
-    }, [originLocation, destinationLocation, directionsService, accessibilityOn]);
+    }, [originLocation, destinationLocation, directionsService, accessibilityOn, travelMode]);
 
+    /*
+     * React on changes on the selected map type.
+     */
     useEffect(() => {
         if (selectedMapType === mapTypes.Mapbox) {
             setHasGooglePlaces(false);
@@ -391,31 +405,51 @@ function Wayfinding({ onStartDirections, onBack, currentLocation, directionsToLo
                     </p>}
                 </div>
             </div>
-            {!hasFoundRoute && <p className="wayfinding__error">No route has been found</p>}
-            {hasError && <p className="wayfinding__error">Something went wrong. Please try again.</p>}
+            {!hasFoundRoute && <p className="wayfinding__error">No route found</p>}
             {!hasSearchResults && <p className="wayfinding__error">Nothing was found</p>}
-            <div className="wayfinding__scrollable" {...scrollableContentSwipePrevent}>
-                <div className="wayfinding__results">
-                    {searchResults.map(location =>
-                        <ListItemLocation
-                            key={location.id}
-                            icon={location.properties.type === 'google_places' ? googlePlacesIcon : undefined}
-                            location={location}
-                            locationClicked={e => locationClickHandler(e)} />
-                    )}
-                    {hasGooglePlaces && <img className="wayfinding__google" alt="Powered by Google" src={GooglePlaces} />}
-                </div>
-            </div>
-            {!searchTriggered && hasFoundRoute && !hasError && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
-                <div className="wayfinding__accessibility">
-                    <input className="mi-toggle" type="checkbox" checked={accessibilityOn} onChange={e => setAccessibilityOn(e.target.checked)} />
-                    <div>Accessibility</div>
-                    <Tooltip text="Turn on Accessibility to get directions that avoids stairs and escalators."></Tooltip>
+            {searchResults.length > 0 &&
+                <div className="wayfinding__scrollable" {...scrollableContentSwipePrevent}>
+                    <div className="wayfinding__results">
+                        {searchResults.map(location =>
+                            <ListItemLocation
+                                key={location.id}
+                                icon={location.properties.type === 'google_places' ? googlePlacesIcon : undefined}
+                                location={location}
+                                locationClicked={e => locationClickHandler(e)} />
+                        )}
+                        {hasGooglePlaces && <img className="wayfinding__google" alt="Powered by Google" src={GooglePlaces} />}
+                    </div>
+                </div>}
+            {!searchTriggered && hasFoundRoute && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
+                <div className="wayfinding__settings">
+                    <div className="wayfinding__accessibility">
+                        <input className="mi-toggle" type="checkbox" checked={accessibilityOn} onChange={e => setAccessibilityOn(e.target.checked)} style={{backgroundColor: accessibilityOn ? primaryColor : ''}}/>
+                        <div>Accessibility</div>
+                        <Tooltip text="Turn on Accessibility to get directions that avoids stairs and escalators."></Tooltip>
+                    </div>
+                    <div className="wayfinding__travel">
+                        <Dropdown selectionChanged={travelMode => setTravelMode(travelMode[0].value)}>
+                            <mi-dropdown-item selected value={travelModes.WALKING}>
+                                <WalkIcon></WalkIcon>
+                                Walk
+                            </mi-dropdown-item>
+                            <mi-dropdown-item value={travelModes.DRIVING}>
+                                <DriveIcon></DriveIcon>
+                                Drive
+                            </mi-dropdown-item>
+                            <mi-dropdown-item value={travelModes.BICYCLING}>
+                                <BikeIcon></BikeIcon>
+                                Bike
+                            </mi-dropdown-item>
+                        </Dropdown>
+                    </div>
                 </div>
                 <hr></hr>
                 <div className="wayfinding__info">
                     <div className="wayfinding__distance">
-                        <WalkingIcon />
+                        {travelMode === travelModes.WALKING && <WalkingIcon />}
+                        {travelMode === travelModes.DRIVING && <DriveIcon />}
+                        {travelMode === travelModes.BICYCLING && <BikeIcon />}
                         <div>Distance:</div>
                         <div className="wayfinding__meters">{totalDistance && <mi-distance meters={totalDistance} />}</div>
                     </div>
@@ -425,7 +459,7 @@ function Wayfinding({ onStartDirections, onBack, currentLocation, directionsToLo
                         <div className="wayfinding__minutes">{totalTime && <mi-time seconds={totalTime} />}</div>
                     </div>
                 </div>
-                <button className="wayfinding__button" onClick={() => onStartDirections()}>
+                <button className="wayfinding__button" style={{background: primaryColor}} onClick={() => onStartDirections()}>
                     Go!
                 </button>
             </div>}

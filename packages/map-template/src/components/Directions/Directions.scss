@@ -13,8 +13,19 @@
         position: absolute;
         top: var(--spacing-x-small);
         right: var(--spacing-x-small);
-        background: none;
-        border: none;
+        background-color: var(--tailwind-colors-gray-100);
+        border: 1px solid var(--tailwind-colors-gray-200);
+        margin-left: auto;
+        width: var(--spacing-xx-large);
+        height: var(--spacing-xx-large);
+        border-radius: var(--rounding-large);
+        display: grid;
+        justify-content: center;
+        align-items: center;
+
+        &:hover {
+            background-color: var(--tailwind-colors-gray-200);
+        }
     }
 
     &__locations {
@@ -49,6 +60,7 @@
     &__time {
         display: grid;
         grid-auto-flow: column;
+        grid-template-columns: 20px 1fr 1fr;
         gap: var(--spacing-x-small);
         align-items: center;
         color: var(--color-gray-70);

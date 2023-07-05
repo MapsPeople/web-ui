@@ -1,11 +1,18 @@
-import React, { useContext, useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import './Directions.scss';
-import { MapsIndoorsContext } from '../../MapsIndoorsContext';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
+import travelModeState from '../../atoms/travelModeState';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
-import { ReactComponent as WalkingIcon } from '../../assets/walking.svg';
+import { ReactComponent as WalkingIcon } from '../../assets/walk.svg';
+import { ReactComponent as DriveIcon } from '../../assets/drive.svg';
+import { ReactComponent as BikeIcon } from '../../assets/bike.svg';
 import RouteInstructions from "../RouteInstructions/RouteInstructions";
 import useMediaQuery from '../../hooks/useMediaQuery';
+import { travelModes } from "../../constants/travelModes";
+import directionsResponseState from "../../atoms/directionsResponseState";
+import activeStepState from "../../atoms/activeStep";
 
 const mapsindoors = window.mapsindoors;
 
@@ -17,9 +24,8 @@ let directionsRenderer;
  * @param {object} props
  * @param {boolean} props.isOpen - Indicates if the directions view is open.
  * @param {function} props.onBack - Callback that fires when the directions view is closed by the user.
- * @param {function} props.directions - The directions information based on the origin and destination.
  */
-function Directions({ isOpen, onBack, directions }) {
+function Directions({ isOpen, onBack }) {
     // Holds the MapsIndoors DisplayRule for the destination
     const [destinationDisplayRule, setDestinationDisplayRule] = useState(null);
 
@@ -29,7 +35,13 @@ function Directions({ isOpen, onBack, directions }) {
     const [totalDistance, setTotalDistance] = useState();
     const [totalTime, setTotalTime] = useState();
 
-    const mapsIndoorsInstance = useContext(MapsIndoorsContext);
+    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
+
+    const travelMode = useRecoilValue(travelModeState);
+
+    const directions = useRecoilValue(directionsResponseState);
+
+    const [, setActiveStep] = useRecoilState(activeStepState);
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
@@ -68,9 +80,7 @@ function Directions({ isOpen, onBack, directions }) {
                 setDestinationDisplayRule(mapsIndoorsInstance.getDisplayRule(directions.destinationLocation));
             }
         }
-
-
-    }, [isOpen, directions, mapsIndoorsInstance]);
+    }, [isOpen, directions, mapsIndoorsInstance, travelMode]);
 
     /*
      * Make sure directions stop rendering on the map when the Directions view is not active anymore.
@@ -89,7 +99,7 @@ function Directions({ isOpen, onBack, directions }) {
             return [];
         }
 
-        return directions.directionsResult.legs.reduce((accummulator, leg, legIndex) => {
+        return directions.directionsResult.legs.reduce((accummulator, leg) => {
             for (const stepIndex in leg.steps) {
                 const step = leg.steps[stepIndex];
 
@@ -147,8 +157,10 @@ function Directions({ isOpen, onBack, directions }) {
 
     /**
      * Close the directions.
+     * Reset the active steps and stop rendering directions.
      */
     function onDirectionsClosed() {
+        setActiveStep(0);
         stopRendering();
         onBack();
     }
@@ -190,7 +202,7 @@ function Directions({ isOpen, onBack, directions }) {
                                     <div className='directions__name'>
                                         {directions?.destinationLocation.properties.name}
                                     </div>
-                                    {directions?.originLocation.properties.name !== 'My Position' && <mi-location-info ref={destinationInfoElement} />}
+                                    <mi-location-info ref={destinationInfoElement} />
                                 </div>
                             </div>
                         }
@@ -200,7 +212,9 @@ function Directions({ isOpen, onBack, directions }) {
             <div className="directions__guide">
                 <div className="directions__metrics">
                     <div className="directions__distance">
-                        <WalkingIcon />
+                        {travelMode === travelModes.WALKING && <WalkingIcon />}
+                        {travelMode === travelModes.DRIVING && <DriveIcon />}
+                        {travelMode === travelModes.BICYCLING && <BikeIcon />}
                         <div>Distance:</div>
                         <div className="directions__meters">{totalDistance && <mi-distance meters={totalDistance} />}</div>
                     </div>
@@ -216,6 +230,7 @@ function Directions({ isOpen, onBack, directions }) {
                         steps={getRouteSteps()}
                         originLocation={directions?.originLocation}
                         onNextStep={() => onNext()}
+                        isOpen={isOpen}
                         onPreviousStep={() => onPrevious()}>
                     </RouteInstructions>
                 </div>

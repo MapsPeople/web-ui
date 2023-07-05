@@ -1,6 +1,7 @@
-import { useContext, useEffect, useState } from 'react';
-import { MapsIndoorsContext } from '../MapsIndoorsContext';
-import { MapReadyContext } from '../MapReadyContext';
+import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import mapsIndoorsInstanceState from '../atoms/mapsIndoorsInstanceState';
+import isMapReadyState from '../atoms/isMapReadyState';
 
 /**
  * Hook that updates coordinates (center of the map) whenever map changes.
@@ -8,8 +9,8 @@ import { MapReadyContext } from '../MapReadyContext';
 const useNear = () => {
     const [near, setNear] = useState();
 
-    const mapsIndoorsInstance = useContext(MapsIndoorsContext);
-    const mapReady = useContext(MapReadyContext);
+    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
+    const mapReady = useRecoilValue(isMapReadyState);
 
     useEffect(() => {
         function centerHandler() {

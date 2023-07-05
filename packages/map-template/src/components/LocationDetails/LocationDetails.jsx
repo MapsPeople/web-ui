@@ -1,22 +1,25 @@
-import React, { useContext, useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import './LocationDetails.scss';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
-import { MapsIndoorsContext } from '../../MapsIndoorsContext';
+import { useRecoilValue } from 'recoil';
+import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
+import currentLocationState from '../../atoms/currentLocationState';
 import { useIsVerticalOverflow } from '../../hooks/useIsVerticalOverflow';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import { snapPoints } from '../../constants/snapPoints';
+import primaryColorState from '../../atoms/primaryColorState';
 
 /**
  * Shows details for a MapsIndoors Location.
  *
  * @param {object} props
- * @param {object} props.location - The Location to show details for.
  * @param {function} props.onClose - Callback that fires when Location Details are closed by the user.
  * @param {function} props.onStartWayfinding - Callback that fires when user clicks the Start Wayfinding button.
  * @param {function} props.onSetSize - Callback that is fired when the toggle full description button is clicked and the Sheet size changes.
  * @param {function} props.snapPointSwiped - Changes value when user has swiped a Bottom sheet to a new snap point.
+ *
  */
-function LocationDetails({ location, onBack, onStartWayfinding, onSetSize, snapPointSwiped }) {
+function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped }) {
 
     const locationInfoElement = useRef(null);
     const locationDetailsContainer = useRef(null);
@@ -29,12 +32,15 @@ function LocationDetails({ location, onBack, onStartWayfinding, onSetSize, snapP
     // Holds the MapsIndoors DisplayRule for the location
     const [locationDisplayRule, setLocationDisplayRule] = useState(null);
 
-    const mapsIndoorsInstance = useContext(MapsIndoorsContext);
+    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
+    const location = useRecoilValue(currentLocationState);
 
     // Check if the content of the Location details is overflowing
     const [isOverflowing, initialOverflow] = useIsVerticalOverflow(location, locationDetailsElement);
 
     const scrollableContentSwipePrevent = usePreventSwipe();
+
+    const primaryColor = useRecoilValue(primaryColorState);
 
     useEffect(() => {
         // Reset state
@@ -193,7 +199,7 @@ function LocationDetails({ location, onBack, onStartWayfinding, onSetSize, snapP
                 </section>}
             </div>
 
-            <button onClick={() => startWayfinding()} className="location-details__wayfinding">
+            <button onClick={() => startWayfinding()} style={{ background: primaryColor }} className="location-details__wayfinding">
                 Start wayfinding
             </button>
         </>}
