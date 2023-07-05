@@ -187,7 +187,7 @@ export class FloorSelector {
                     this.mapsindoors.removeListener('floor_changed', floorChangedListener);
                 };
 
-                if (!this.mapsindoors.getFloor()) {
+                if (this.mapsindoors.getFloor() === null || this.mapsindoors.getFloor() === undefined) {
                     this.mapsindoors.addListener('floor_changed', floorChangedListener);
                 } else {
                     this.currentFloor = this.mapsindoors.getFloor().toString();
@@ -207,7 +207,7 @@ export class FloorSelector {
      * Called after every render().
      */
     componentDidRender(): void {
-        if (!this.mapsindoors.getBuilding() || !this.mapsindoors.getFloor()) {
+        if (!this.mapsindoors.getBuilding() || this.mapsindoors.getFloor() === null || this.mapsindoors.getFloor() === undefined) {
             this.floorSelectorElement.classList.add('mi-floor-selector--hidden');
         } else {
             this.floorSelectorElement.classList.remove('mi-floor-selector--hidden');
