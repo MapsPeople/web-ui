@@ -191,6 +191,9 @@ export class MyPositionComponent {
      * @param {DeviceOrientationEvent} e
      */
     private handleDeviceOrientation(e: DeviceOrientationEvent): void {
+        // Only rotate the map if:
+        // 1. No rotation has been applied before.
+        // 2. The new rotation would differ by more than on degree from the current rotation
         if (!this.orientation || this.orientation - (360 - e.alpha) > 1 || this.orientation - (360 - e.alpha) < -1) {
             this.orientation = 360 - e.alpha;
             this.mapView.easeTo({
