@@ -696,6 +696,11 @@ export namespace Components {
     }
     interface MiRouteInstructionsStep {
         /**
+          * The final step when the user has arrived to the destination location.
+          * @type {string}
+         */
+        "destinationLocation"?: string;
+        /**
           * The route context of previous step, if any.
           * @type {string}
          */
@@ -1945,6 +1950,11 @@ declare namespace LocalJSX {
         "unit"?: UnitSystem;
     }
     interface MiRouteInstructionsStep {
+        /**
+          * The final step when the user has arrived to the destination location.
+          * @type {string}
+         */
+        "destinationLocation"?: string;
         /**
           * The route context of previous step, if any.
           * @type {string}

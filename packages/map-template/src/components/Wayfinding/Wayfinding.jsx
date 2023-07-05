@@ -26,6 +26,7 @@ import { ReactComponent as BikeIcon } from '../../assets/bike.svg';
 import { travelModes } from "../../constants/travelModes";
 import Dropdown from "../WebComponentWrappers/Dropdown/Dropdown";
 import primaryColorState from "../../atoms/primaryColorState";
+import directionsResponseState from "../../atoms/directionsResponseState";
 
 const searchFieldIdentifiers = {
     TO: 'TO',
@@ -46,7 +47,7 @@ const googlePlacesIcon = "data:image/svg+xml,%3Csvg width='10' height='10' viewB
  *
  * @returns
  */
-function Wayfinding({ onStartDirections, onBack, directionsToLocation, directionsFromLocation, onSetSize, isActive, onDirections }) {
+function Wayfinding({ onStartDirections, onBack, directionsToLocation, directionsFromLocation, onSetSize, isActive }) {
 
     const wayfindingRef = useRef();
 
@@ -56,6 +57,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     const toFieldRef = useRef();
     const fromFieldRef = useRef();
 
+    const [, setDirectionsResponse] = useRecoilState(directionsResponseState);
     const directionsService = useRecoilValue(directionsServiceState);
     const userPosition = useRecoilValue(userPositionState);
     const currentLocation = useRecoilValue(currentLocationState);
@@ -69,9 +71,6 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
 
     /** Indicate if search results have been found */
     const [hasSearchResults, setHasSearchResults] = useState(true);
-
-    /** Indicate if the searched route throws errors */
-    const [hasError, setHasError] = useState(false);
 
     /** Indicate if the search has been triggered */
     const [searchTriggered, setSearchTriggered] = useState(false);
@@ -191,7 +190,6 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     function onSearchClicked(searchFieldIdentifier) {
         setActiveSearchField(searchFieldIdentifier);
         triggerSearch(searchFieldIdentifier);
-        setHasError(false);
         setHasFoundRoute(true);
         setHasGooglePlaces(false);
     }
@@ -205,7 +203,6 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         setActiveSearchField(searchFieldIdentifier);
         resetSearchField(searchFieldIdentifier);
         setSearchResults([]);
-        setHasError(false);
         setHasFoundRoute(true);
         setHasGooglePlaces(false);
     }
@@ -320,7 +317,6 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                 avoidStairs: accessibilityOn
             }).then(directionsResult => {
                 if (directionsResult && directionsResult.legs) {
-                    setHasError(false);
                     setHasFoundRoute(true);
                     // Calculate total distance and time
                     const totalDistance = directionsResult.legs.reduce((accumulator, current) => accumulator + current.distance.value, 0);
@@ -329,7 +325,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                     setTotalDistance(totalDistance);
                     setTotalTime(totalTime);
 
-                    onDirections({
+                    setDirectionsResponse({
                         originLocation,
                         destinationLocation,
                         totalDistance,
@@ -337,7 +333,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                         directionsResult
                     });
                 } else {
-                    setHasError(true);
+                    setHasFoundRoute(false);
                 }
             }, () => {
                 setHasFoundRoute(false);
@@ -409,8 +405,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                     </p>}
                 </div>
             </div>
-            {!hasFoundRoute && <p className="wayfinding__error">No route has been found</p>}
-            {hasError && <p className="wayfinding__error">Something went wrong. Please try again.</p>}
+            {!hasFoundRoute && <p className="wayfinding__error">No route found</p>}
             {!hasSearchResults && <p className="wayfinding__error">Nothing was found</p>}
             {searchResults.length > 0 &&
                 <div className="wayfinding__scrollable" {...scrollableContentSwipePrevent}>
@@ -425,7 +420,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                         {hasGooglePlaces && <img className="wayfinding__google" alt="Powered by Google" src={GooglePlaces} />}
                     </div>
                 </div>}
-            {!searchTriggered && hasFoundRoute && !hasError && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
+            {!searchTriggered && hasFoundRoute && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
                 <div className="wayfinding__settings">
                     <div className="wayfinding__accessibility">
                         <input className="mi-toggle" type="checkbox" checked={accessibilityOn} onChange={e => setAccessibilityOn(e.target.checked)} style={{backgroundColor: accessibilityOn ? primaryColor : ''}}/>
