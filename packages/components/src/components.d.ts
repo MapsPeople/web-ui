@@ -280,10 +280,6 @@ export namespace Components {
     }
     interface MiListItemLocation {
         /**
-          * Whether to show the External ID.
-         */
-        "hideExternalID": boolean;
-        /**
           * @description Optional URL to icon to render for the Location. If not set, imageURL on the Location data will be used.
           * @type {string}
          */
@@ -302,6 +298,10 @@ export namespace Components {
           * @description Location object.
          */
         "location": any;
+        /**
+          * Whether to show the External ID.
+         */
+        "showExternalId": boolean;
         /**
           * @description Set imperial or metric as unit for distance.
           * @type {UnitSystem}
@@ -349,13 +349,13 @@ export namespace Components {
     }
     interface MiLocationInfo {
         /**
-          * @description Whether to show the External ID.
-         */
-        "hideExternalID": boolean;
-        /**
           * @description Location object.
          */
         "location": any;
+        /**
+          * @description Whether to show the External ID.
+         */
+        "showExternalId": boolean;
     }
     interface MiMapGooglemaps {
         /**
@@ -1543,10 +1543,6 @@ declare namespace LocalJSX {
     }
     interface MiListItemLocation {
         /**
-          * Whether to show the External ID.
-         */
-        "hideExternalID"?: boolean;
-        /**
           * @description Optional URL to icon to render for the Location. If not set, imageURL on the Location data will be used.
           * @type {string}
          */
@@ -1575,6 +1571,10 @@ declare namespace LocalJSX {
           * @type {EventEmitter<Location>}
          */
         "onLocationClicked"?: (event: MiListItemLocationCustomEvent<any>) => void;
+        /**
+          * Whether to show the External ID.
+         */
+        "showExternalId"?: boolean;
         /**
           * @description Set imperial or metric as unit for distance.
           * @type {UnitSystem}
@@ -1644,13 +1644,13 @@ declare namespace LocalJSX {
     }
     interface MiLocationInfo {
         /**
-          * @description Whether to show the External ID.
-         */
-        "hideExternalID"?: boolean;
-        /**
           * @description Location object.
          */
         "location"?: any;
+        /**
+          * @description Whether to show the External ID.
+         */
+        "showExternalId"?: boolean;
     }
     interface MiMapGooglemaps {
         /**

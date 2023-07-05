@@ -20,7 +20,7 @@ export class ListItemLocation {
     /**
      * Whether to show the External ID.
      */
-    @Prop() hideExternalID: boolean = false;
+    @Prop() showExternalId: boolean = true;
 
     /**
      * @description Set imperial or metric as unit for distance.
@@ -210,7 +210,7 @@ export class ListItemLocation {
 
                 <div class="details">
                     <p class="details-title">{this.location.properties.name}</p>
-                    <mi-location-info ref={(el) => this.infoElement = el as HTMLMiLocationInfoElement} hideExternalID={this.hideExternalID}></mi-location-info>
+                    <mi-location-info ref={(el) => this.infoElement = el as HTMLMiLocationInfoElement} showExternalId={this.showExternalId}></mi-location-info>
                 </div>
 
                 {this.location.properties.geodesicDistance && this.renderDistance()}

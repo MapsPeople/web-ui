@@ -15,7 +15,7 @@ export class LocationInfo implements ComponentInterface {
     /**
      * @description Whether to show the External ID.
      */
-    @Prop() hideExternalID: boolean = false;
+    @Prop() showExternalId: boolean = true;
 
     /**
      * Get locations info as a string.
@@ -26,7 +26,7 @@ export class LocationInfo implements ComponentInterface {
         const details = [];
 
         // External Id
-        if (this.location.properties.externalId && !this.hideExternalID) {
+        if (this.location.properties.externalId && this.showExternalId) {
             details.push(this.location.properties.externalId);
         }
         // Floor name
