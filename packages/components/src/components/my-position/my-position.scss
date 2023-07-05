@@ -16,8 +16,7 @@
         &__compass-button {
             margin: 0;
             cursor: pointer;
-            -webkit-appearance: none;
-            -moz-appearance: none;
+            appearance: none;
             width: variables.$icon-size-x-large;
             height: variables.$icon-size-x-large;
             background-repeat: no-repeat;
