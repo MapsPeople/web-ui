@@ -86,6 +86,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     const [pushAppView, goBack, currentAppView, currentAppViewPayload, appStates] = useAppHistory();
 
+    const [mapsindoorsSDKAvailable, setMapsindoorsSDKAvailable] = useState();
+
     /**
      * Ensure that MapsIndoors Web SDK is available.
      *
@@ -94,6 +96,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     function initializeMapsIndoorsSDK() {
         return new Promise((resolve) => {
             if (window.mapsindoors !== undefined) {
+                setMapsindoorsSDKAvailable(true);
                 return resolve();
             }
 
@@ -101,7 +104,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             miSdkApiTag.setAttribute('type', 'text/javascript');
             miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.23.1/mapsindoors-4.23.1.js.gz');
             document.body.appendChild(miSdkApiTag);
-            miSdkApiTag.onload = () => resolve();
+            miSdkApiTag.onload = () => {
+                setMapsindoorsSDKAvailable(true);
+                resolve();
+            }
         });
     }
 
@@ -133,41 +139,78 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 setVenues(venuesResult);
             });
             setMapReady(false);
+        });
+    }, [apiKey]);
 
-            // React on changes in the app user roles prop.
-            mapsindoors.services.SolutionsService.getUserRoles().then(userRoles => {
+    /*
+     * React to changes in the gmApiKey and mapboxAccessToken props.
+     */
+    useEffect(() => {
+        if (mapsindoorsSDKAvailable) {
+            setMapboxAccessToken(mapboxAccessToken);
+            setGmApyKey(gmApiKey);
+        }
+    }, [gmApiKey, mapboxAccessToken, mapsindoorsSDKAvailable]);
+
+    /*
+     * React on changes in the app user roles prop.
+     */
+    useEffect(() => {
+        if (mapsindoorsSDKAvailable) {
+            window.mapsindoors.services.SolutionsService.getUserRoles().then(userRoles => {
                 const roles = userRoles.filter(role => appUserRoles?.includes(role.name));
-                mapsindoors.MapsIndoors.setUserRoles(roles);
+                window.mapsindoors.MapsIndoors.setUserRoles(roles);
             });
+        }
+    }, [appUserRoles, mapsindoorsSDKAvailable]);
 
-            // React on changes in the externalIDs prop.
-            // Get the locations by external IDs, if present.
-            if (externalIDs) {
-                mapsindoors.services.LocationsService.getLocationsByExternalId(externalIDs).then(locations => {
-                    setFilteredLocationsByExternalID(locations);
-                });
-            } else {
-                setFilteredLocationsByExternalID([]);
-            }
+    /*
+     * React on changes in the externalIDs prop.
+     * Get the locations by external IDs, if present.
+     */
+    useEffect(() => {
+        if (externalIDs && mapsindoorsSDKAvailable) {
+            window.mapsindoors.services.LocationsService.getLocationsByExternalId(externalIDs).then(locations => {
+                setFilteredLocationsByExternalID(locations);
+            });
+        } else {
+            setFilteredLocationsByExternalID([]);
+        }
+    }, [externalIDs, mapsindoorsSDKAvailable]);
 
-            // React on changes to the locationId prop.
-            // Set as current location and change the venue according to the venue that the location belongs to.
+
+    /*
+     * React on changes to the locationId prop.
+     * Set as current location and change the venue according to the venue that the location belongs to.
+     */
+    useEffect(() => {
+        if (mapsindoorsSDKAvailable) {
             setLocationId(locationId);
             if (locationId) {
-                mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
+                window.mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
                     if (location) {
                         setCurrentVenueName(location.properties.venueId);
                         setCurrentLocation(location);
                     }
                 });
             }
+        }
+    }, [locationId, mapsindoorsSDKAvailable]);
 
-            // React to changes in the gmApiKey and mapboxAccessToken props.
-            setMapboxAccessToken(mapboxAccessToken);
-            setGmApyKey(gmApiKey);
-        });
-    }, [apiKey, appUserRoles, externalIDs, locationId, mapboxAccessToken, gmApiKey]);
-
+    /*
+     * React on changes in directions opened state.
+     */
+    useEffect(() => {
+        // Reset all the filters when in directions mode.
+        // Store the filtered locations in another state, to be able to access them again.
+        if (hasDirectionsOpen) {
+            setInitialFilteredLocations(filteredLocations)
+            setFilteredLocations([]);
+        } else {
+            // Apply the previously filtered locations to the map when navigating outside the directions.
+            setFilteredLocations(initialFilteredLocations);
+        }
+    }, [hasDirectionsOpen]);
 
     /*
      * Add Location to history payload to make it possible to re-enter location details with that Location.
@@ -208,21 +251,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         setStartZoomLevel(startZoomLevel);
     }, [startZoomLevel]);
-
-    /*
-     * React on changes in directions opened state.
-     */
-    useEffect(() => {
-        // Reset all the filters when in directions mode.
-        // Store the filtered locations in another state, to be able to access them again.
-        if (hasDirectionsOpen) {
-            setInitialFilteredLocations(filteredLocations)
-            setFilteredLocations([]);
-        } else {
-            // Apply the previously filtered locations to the map when navigating outside the directions.
-            setFilteredLocations(initialFilteredLocations);
-        }
-    }, [hasDirectionsOpen]);
 
     /**
      * When venue is fitted while initializing the data,
