@@ -20,7 +20,6 @@ import LocationsList from '../LocationsList/LocationsList';
  *
  */
 function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews }) {
-    const [directions, setDirections] = useState();
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
 
@@ -88,7 +87,6 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
                 onStartDirections={() => pushAppView(appViews.DIRECTIONS)}
                 directionsToLocation={directionsToLocation}
                 directionsFromLocation={directionsFromLocation}
-                onDirections={result => setDirections(result)}
                 onBack={() => pushAppView(currentLocation ? appViews.LOCATION_DETAILS : appViews.SEARCH)}
                 isActive={currentAppView === appViews.WAYFINDING}
             />
@@ -96,7 +94,6 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
         <Modal isOpen={currentAppView === appViews.DIRECTIONS} key="E">
             <Directions
                 isOpen={currentAppView === appViews.DIRECTIONS}
-                directions={directions}
                 onBack={() => pushAppView(appViews.WAYFINDING)}
             />
         </Modal>
