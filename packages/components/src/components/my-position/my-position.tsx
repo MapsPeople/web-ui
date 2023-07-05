@@ -23,7 +23,7 @@ enum DeviceType {
 @Component({
     tag: 'mi-my-position',
     styleUrl: 'my-position.scss',
-    shadow: true,
+    shadow: false,
 })
 export class MyPositionComponent {
     @Event({ eventName: 'position_error' }) position_error: EventEmitter<object>;
