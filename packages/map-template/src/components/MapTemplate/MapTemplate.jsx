@@ -86,7 +86,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     const [pushAppView, goBack, currentAppView, currentAppViewPayload, appStates] = useAppHistory();
 
-    const [mapsindoorsSDKAvailable, setMapsindoorsSDKAvailable] = useState();
+    // Indicate if the MapsIndoors JavaScript SDK is available
+    const [mapsindoorsSDKAvailable, setMapsindoorsSDKAvailable] = useState(false);
 
     /**
      * Ensure that MapsIndoors Web SDK is available.
