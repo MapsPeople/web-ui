@@ -4,6 +4,7 @@ import mapsIndoorsInstanceState from '../../../atoms/mapsIndoorsInstanceState';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import mapboxAccessTokenState from '../../../atoms/mapboxAccessTokenState';
+import primaryColorState from '../../../atoms/primaryColorState';
 
 // Make the global MapsIndoors JavaScript SDK available here
 const mapsindoors = window.mapsindoors;
@@ -22,6 +23,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
     const [hasFloorSelector, setHasFloorSelector] = useState(false);
     const [hasPositionControl, setHasPositionControl] = useState(false);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
+    const primaryColor = useRecoilValue(primaryColorState);
 
     useEffect(() => {
         // Initialize MapboxView MapView
@@ -47,7 +49,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
         if (mapsIndoorsInstance && mapView && !hasFloorSelector) {
             const floorSelectorElement = document.createElement('mi-floor-selector');
             floorSelectorElement.mapsindoors = mapsIndoorsInstance;
-            floorSelectorElement.primaryColor = '#FFA500';
+            floorSelectorElement.primaryColor = primaryColor;
 
             mapView.getMap().addControl({
                 onAdd: () => floorSelectorElement,
