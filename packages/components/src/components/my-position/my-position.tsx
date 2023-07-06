@@ -23,7 +23,7 @@ enum DeviceType {
 @Component({
     tag: 'mi-my-position',
     styleUrl: 'my-position.scss',
-    shadow: false,
+    shadow: false
 })
 export class MyPositionComponent {
     @Event({ eventName: 'position_error' }) position_error: EventEmitter<object>;
@@ -45,11 +45,6 @@ export class MyPositionComponent {
      * New UAParser instance.
      */
     private parser = new UAParser();
-
-    /**
-     * Wether the MyPositionComponent is a Web Componenet or not.
-     */
-    private readonly isWebComponent: boolean = true;
 
     /**
      * The current position of the device if received ({@link https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition GeolocationPosition}).
