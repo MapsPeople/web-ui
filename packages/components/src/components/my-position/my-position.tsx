@@ -29,7 +29,14 @@ export class MyPositionComponent {
     @Event({ eventName: 'position_error' }) position_error: EventEmitter<object>;
     @Event({ eventName: 'position_received' }) position_received: EventEmitter<object>;
 
+    /**
+     * MapsIndoors instance.
+     */
     @Prop() mapsindoors;
+
+    /**
+     * Reference: https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/PositionControlOptions.html.
+     */
     @Prop() myPositionOptions?;
 
     /**

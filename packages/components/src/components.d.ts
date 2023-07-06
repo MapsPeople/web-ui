@@ -585,7 +585,13 @@ export namespace Components {
         "value": string;
     }
     interface MiMyPosition {
+        /**
+          * MapsIndoors instance.
+         */
         "mapsindoors": any;
+        /**
+          * Reference: https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/PositionControlOptions.html.
+         */
         "myPositionOptions"?: any;
     }
     interface MiNotification {
@@ -1868,7 +1874,13 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     interface MiMyPosition {
+        /**
+          * MapsIndoors instance.
+         */
         "mapsindoors"?: any;
+        /**
+          * Reference: https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/PositionControlOptions.html.
+         */
         "myPositionOptions"?: any;
         "onPosition_error"?: (event: MiMyPositionCustomEvent<object>) => void;
         "onPosition_received"?: (event: MiMyPositionCustomEvent<object>) => void;
