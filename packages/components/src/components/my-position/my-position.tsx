@@ -29,7 +29,14 @@ export class MyPositionComponent {
     @Event({ eventName: 'position_error' }) position_error: EventEmitter<object>;
     @Event({ eventName: 'position_received' }) position_received: EventEmitter<object>;
 
+    /**
+     * MapsIndoors instance.
+     */
     @Prop() mapsindoors;
+
+    /**
+     * Reference: https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/PositionControlOptions.html.
+     */
     @Prop() myPositionOptions?;
 
     /**
@@ -247,10 +254,11 @@ export class MyPositionComponent {
                 } else {
                     if (this.positionState === PositionStateTypes.POSITION_TRACKED) {
                         this.setPositionState(PositionStateTypes.POSITION_UNTRACKED);
+                    } else if (this.positionState !== PositionStateTypes.POSITION_UNTRACKED) {
+                        this.setPositionState(PositionStateTypes.POSITION_KNOWN);
+                        this.mapView.tilt(0);
                     }
-                    this.setPositionState(PositionStateTypes.POSITION_KNOWN);
                     window.removeEventListener('deviceorientation', this.handleDeviceOrientationReference);
-                    this.mapView.tilt(0);
                 }
 
                 this.position_received.emit({

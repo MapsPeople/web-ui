@@ -79,15 +79,19 @@ Example usage:
 
 A `mapsindoors` attribute is available on the `<mi-my-position>` element, which is required to generate the my-position element.
 
+## `myPositionOptions` attribute
+
+A `myPositionOptions` attribute is available on the `<mi-my-position>` element. Reference: https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/PositionControlOptions.html.
+
 <!-- Auto Generated Below -->
 
 
 ## Properties
 
-| Property            | Attribute             | Description | Type  | Default     |
-| ------------------- | --------------------- | ----------- | ----- | ----------- |
-| `mapsindoors`       | `mapsindoors`         |             | `any` | `undefined` |
-| `myPositionOptions` | `my-position-options` |             | `any` | `undefined` |
+| Property            | Attribute             | Description                                                                                        | Type  | Default     |
+| ------------------- | --------------------- | -------------------------------------------------------------------------------------------------- | ----- | ----------- |
+| `mapsindoors`       | `mapsindoors`         | MapsIndoors instance.                                                                              | `any` | `undefined` |
+| `myPositionOptions` | `my-position-options` | Reference: https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/PositionControlOptions.html. | `any` | `undefined` |
 
 
 ## Events
