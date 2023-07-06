@@ -71,6 +71,7 @@ You can change the MapsIndoors apiKey in start of the script below
 
             const listItemLocationComponent = document.createElement('mi-list-item-location');
             listItemLocationComponent.location = location;
+            listItemLocationComponent.showExternalId = true;
 
             if (unit) {
                 listItemLocationComponent.setAttribute('unit', unit);
