@@ -235,6 +235,17 @@ export namespace Components {
         "text": string;
         "value": string;
     }
+    interface MiFloorSelector {
+        /**
+          * MapsIndoors instance.
+         */
+        "mapsindoors": any;
+        /**
+          * The color to use as the primary color (as background color of the selected floor in the list).
+          * @type {string}
+         */
+        "primaryColor"?: string;
+    }
     interface MiIcon {
         /**
           * The icon name. A list of supported icons can be found in the documentation.
@@ -572,6 +583,16 @@ export namespace Components {
           * @memberof MetricCard
          */
         "value": string;
+    }
+    interface MiMyPosition {
+        /**
+          * MapsIndoors instance.
+         */
+        "mapsindoors": any;
+        /**
+          * Reference: https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/PositionControlOptions.html.
+         */
+        "myPositionOptions"?: any;
     }
     interface MiNotification {
         /**
@@ -986,6 +1007,10 @@ export interface MiMapMapboxCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLMiMapMapboxElement;
 }
+export interface MiMyPositionCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLMiMyPositionElement;
+}
 export interface MiRouteInstructionsCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLMiRouteInstructionsElement;
@@ -1065,6 +1090,12 @@ declare global {
         prototype: HTMLMiDropdownItemElement;
         new (): HTMLMiDropdownItemElement;
     };
+    interface HTMLMiFloorSelectorElement extends Components.MiFloorSelector, HTMLStencilElement {
+    }
+    var HTMLMiFloorSelectorElement: {
+        prototype: HTMLMiFloorSelectorElement;
+        new (): HTMLMiFloorSelectorElement;
+    };
     interface HTMLMiIconElement extends Components.MiIcon, HTMLStencilElement {
     }
     var HTMLMiIconElement: {
@@ -1124,6 +1155,12 @@ declare global {
     var HTMLMiMetricCardElement: {
         prototype: HTMLMiMetricCardElement;
         new (): HTMLMiMetricCardElement;
+    };
+    interface HTMLMiMyPositionElement extends Components.MiMyPosition, HTMLStencilElement {
+    }
+    var HTMLMiMyPositionElement: {
+        prototype: HTMLMiMyPositionElement;
+        new (): HTMLMiMyPositionElement;
     };
     interface HTMLMiNotificationElement extends Components.MiNotification, HTMLStencilElement {
     }
@@ -1225,6 +1262,7 @@ declare global {
         "mi-distance": HTMLMiDistanceElement;
         "mi-dropdown": HTMLMiDropdownElement;
         "mi-dropdown-item": HTMLMiDropdownItemElement;
+        "mi-floor-selector": HTMLMiFloorSelectorElement;
         "mi-icon": HTMLMiIconElement;
         "mi-keyboard": HTMLMiKeyboardElement;
         "mi-list": HTMLMiListElement;
@@ -1235,6 +1273,7 @@ declare global {
         "mi-map-googlemaps": HTMLMiMapGooglemapsElement;
         "mi-map-mapbox": HTMLMiMapMapboxElement;
         "mi-metric-card": HTMLMiMetricCardElement;
+        "mi-my-position": HTMLMiMyPositionElement;
         "mi-notification": HTMLMiNotificationElement;
         "mi-route-instructions": HTMLMiRouteInstructionsElement;
         "mi-route-instructions-heading": HTMLMiRouteInstructionsHeadingElement;
@@ -1492,6 +1531,17 @@ declare namespace LocalJSX {
         "selected"?: boolean;
         "text"?: string;
         "value"?: string;
+    }
+    interface MiFloorSelector {
+        /**
+          * MapsIndoors instance.
+         */
+        "mapsindoors"?: any;
+        /**
+          * The color to use as the primary color (as background color of the selected floor in the list).
+          * @type {string}
+         */
+        "primaryColor"?: string;
     }
     interface MiIcon {
         /**
@@ -1822,6 +1872,18 @@ declare namespace LocalJSX {
           * @memberof MetricCard
          */
         "value"?: string;
+    }
+    interface MiMyPosition {
+        /**
+          * MapsIndoors instance.
+         */
+        "mapsindoors"?: any;
+        /**
+          * Reference: https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/PositionControlOptions.html.
+         */
+        "myPositionOptions"?: any;
+        "onPosition_error"?: (event: MiMyPositionCustomEvent<object>) => void;
+        "onPosition_received"?: (event: MiMyPositionCustomEvent<object>) => void;
     }
     interface MiNotification {
         /**
@@ -2228,6 +2290,7 @@ declare namespace LocalJSX {
         "mi-distance": MiDistance;
         "mi-dropdown": MiDropdown;
         "mi-dropdown-item": MiDropdownItem;
+        "mi-floor-selector": MiFloorSelector;
         "mi-icon": MiIcon;
         "mi-keyboard": MiKeyboard;
         "mi-list": MiList;
@@ -2238,6 +2301,7 @@ declare namespace LocalJSX {
         "mi-map-googlemaps": MiMapGooglemaps;
         "mi-map-mapbox": MiMapMapbox;
         "mi-metric-card": MiMetricCard;
+        "mi-my-position": MiMyPosition;
         "mi-notification": MiNotification;
         "mi-route-instructions": MiRouteInstructions;
         "mi-route-instructions-heading": MiRouteInstructionsHeading;
@@ -2268,6 +2332,7 @@ declare module "@stencil/core" {
             "mi-distance": LocalJSX.MiDistance & JSXBase.HTMLAttributes<HTMLMiDistanceElement>;
             "mi-dropdown": LocalJSX.MiDropdown & JSXBase.HTMLAttributes<HTMLMiDropdownElement>;
             "mi-dropdown-item": LocalJSX.MiDropdownItem & JSXBase.HTMLAttributes<HTMLMiDropdownItemElement>;
+            "mi-floor-selector": LocalJSX.MiFloorSelector & JSXBase.HTMLAttributes<HTMLMiFloorSelectorElement>;
             "mi-icon": LocalJSX.MiIcon & JSXBase.HTMLAttributes<HTMLMiIconElement>;
             "mi-keyboard": LocalJSX.MiKeyboard & JSXBase.HTMLAttributes<HTMLMiKeyboardElement>;
             "mi-list": LocalJSX.MiList & JSXBase.HTMLAttributes<HTMLMiListElement>;
@@ -2278,6 +2343,7 @@ declare module "@stencil/core" {
             "mi-map-googlemaps": LocalJSX.MiMapGooglemaps & JSXBase.HTMLAttributes<HTMLMiMapGooglemapsElement>;
             "mi-map-mapbox": LocalJSX.MiMapMapbox & JSXBase.HTMLAttributes<HTMLMiMapMapboxElement>;
             "mi-metric-card": LocalJSX.MiMetricCard & JSXBase.HTMLAttributes<HTMLMiMetricCardElement>;
+            "mi-my-position": LocalJSX.MiMyPosition & JSXBase.HTMLAttributes<HTMLMiMyPositionElement>;
             "mi-notification": LocalJSX.MiNotification & JSXBase.HTMLAttributes<HTMLMiNotificationElement>;
             "mi-route-instructions": LocalJSX.MiRouteInstructions & JSXBase.HTMLAttributes<HTMLMiRouteInstructionsElement>;
             "mi-route-instructions-heading": LocalJSX.MiRouteInstructionsHeading & JSXBase.HTMLAttributes<HTMLMiRouteInstructionsHeadingElement>;
