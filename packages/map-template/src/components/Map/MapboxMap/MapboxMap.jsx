@@ -51,7 +51,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
 
             mapView.getMap().addControl({
                 onAdd: () => floorSelectorElement,
-                onRemove: function () { }
+                onRemove: function () { floorSelectorElement.parentNode.removeChild(floorSelectorElement); }
             }, 'top-right');
 
             setHasFloorSelector(true);
