@@ -205,11 +205,20 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
      * @param {object} positionControl - MapsIndoors PositionControl instance.
      */
     const onPositionControlCreated = positionControl => {
-        positionControl.on('position_received', positionInfo => {
-            if (positionInfo.accurate === true) {
-                setUserPosition(positionInfo.position);
-            }
-        });
+        if (document.querySelector('mi-my-position')) {
+            // The Web Component needs to set up the listener with addEventListener
+            positionControl.addEventListener('position_received', positionInfo => {
+                if (positionInfo.accurate === true) {
+                    setUserPosition(positionInfo.position);
+                }
+            });
+        } else {
+            positionControl.on('position_received', positionInfo => {
+                if (positionInfo.accurate === true) {
+                    setUserPosition(positionInfo.position);
+                }
+            });
+        }
         setPositionControl(positionControl);
     }
 
