@@ -235,6 +235,17 @@ export namespace Components {
         "text": string;
         "value": string;
     }
+    interface MiFloorSelector {
+        /**
+          * MapsIndoors instance.
+         */
+        "mapsindoors": any;
+        /**
+          * The color to use as the primary color (as background color of the selected floor in the list).
+          * @type {string}
+         */
+        "primaryColor"?: string;
+    }
     interface MiIcon {
         /**
           * The icon name. A list of supported icons can be found in the documentation.
@@ -290,7 +301,7 @@ export namespace Components {
          */
         "iconBadge": string;
         /**
-          * @description The value of the badge
+          * @description The value of the badge.
           * @type {string} For availability, use "true" or "false".
          */
         "iconBadgeValue": string;
@@ -298,6 +309,10 @@ export namespace Components {
           * @description Location object.
          */
         "location": any;
+        /**
+          * Whether to show the External ID.
+         */
+        "showExternalId": boolean;
         /**
           * @description Set imperial or metric as unit for distance.
           * @type {UnitSystem}
@@ -348,6 +363,10 @@ export namespace Components {
           * @description Location object.
          */
         "location": any;
+        /**
+          * @description Whether to show the External ID.
+         */
+        "showExternalId": boolean;
     }
     interface MiMapGooglemaps {
         /**
@@ -1065,6 +1084,12 @@ declare global {
         prototype: HTMLMiDropdownItemElement;
         new (): HTMLMiDropdownItemElement;
     };
+    interface HTMLMiFloorSelectorElement extends Components.MiFloorSelector, HTMLStencilElement {
+    }
+    var HTMLMiFloorSelectorElement: {
+        prototype: HTMLMiFloorSelectorElement;
+        new (): HTMLMiFloorSelectorElement;
+    };
     interface HTMLMiIconElement extends Components.MiIcon, HTMLStencilElement {
     }
     var HTMLMiIconElement: {
@@ -1231,6 +1256,7 @@ declare global {
         "mi-distance": HTMLMiDistanceElement;
         "mi-dropdown": HTMLMiDropdownElement;
         "mi-dropdown-item": HTMLMiDropdownItemElement;
+        "mi-floor-selector": HTMLMiFloorSelectorElement;
         "mi-icon": HTMLMiIconElement;
         "mi-keyboard": HTMLMiKeyboardElement;
         "mi-list": HTMLMiListElement;
@@ -1500,6 +1526,17 @@ declare namespace LocalJSX {
         "text"?: string;
         "value"?: string;
     }
+    interface MiFloorSelector {
+        /**
+          * MapsIndoors instance.
+         */
+        "mapsindoors"?: any;
+        /**
+          * The color to use as the primary color (as background color of the selected floor in the list).
+          * @type {string}
+         */
+        "primaryColor"?: string;
+    }
     interface MiIcon {
         /**
           * The icon name. A list of supported icons can be found in the documentation.
@@ -1565,7 +1602,7 @@ declare namespace LocalJSX {
          */
         "iconBadge"?: string;
         /**
-          * @description The value of the badge
+          * @description The value of the badge.
           * @type {string} For availability, use "true" or "false".
          */
         "iconBadgeValue"?: string;
@@ -1583,6 +1620,10 @@ declare namespace LocalJSX {
           * @type {EventEmitter<Location>}
          */
         "onLocationClicked"?: (event: MiListItemLocationCustomEvent<any>) => void;
+        /**
+          * Whether to show the External ID.
+         */
+        "showExternalId"?: boolean;
         /**
           * @description Set imperial or metric as unit for distance.
           * @type {UnitSystem}
@@ -1655,6 +1696,10 @@ declare namespace LocalJSX {
           * @description Location object.
          */
         "location"?: any;
+        /**
+          * @description Whether to show the External ID.
+         */
+        "showExternalId"?: boolean;
     }
     interface MiMapGooglemaps {
         /**
@@ -2233,6 +2278,7 @@ declare namespace LocalJSX {
         "mi-distance": MiDistance;
         "mi-dropdown": MiDropdown;
         "mi-dropdown-item": MiDropdownItem;
+        "mi-floor-selector": MiFloorSelector;
         "mi-icon": MiIcon;
         "mi-keyboard": MiKeyboard;
         "mi-list": MiList;
@@ -2274,6 +2320,7 @@ declare module "@stencil/core" {
             "mi-distance": LocalJSX.MiDistance & JSXBase.HTMLAttributes<HTMLMiDistanceElement>;
             "mi-dropdown": LocalJSX.MiDropdown & JSXBase.HTMLAttributes<HTMLMiDropdownElement>;
             "mi-dropdown-item": LocalJSX.MiDropdownItem & JSXBase.HTMLAttributes<HTMLMiDropdownItemElement>;
+            "mi-floor-selector": LocalJSX.MiFloorSelector & JSXBase.HTMLAttributes<HTMLMiFloorSelectorElement>;
             "mi-icon": LocalJSX.MiIcon & JSXBase.HTMLAttributes<HTMLMiIconElement>;
             "mi-keyboard": LocalJSX.MiKeyboard & JSXBase.HTMLAttributes<HTMLMiKeyboardElement>;
             "mi-list": LocalJSX.MiList & JSXBase.HTMLAttributes<HTMLMiListElement>;

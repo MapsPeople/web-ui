@@ -13,14 +13,20 @@ export class LocationInfo implements ComponentInterface {
     @Prop() location;
 
     /**
+     * @description Whether to show the External ID.
+     */
+    @Prop() showExternalId: boolean = true;
+
+    /**
      * Get locations info as a string.
+     *
      * @returns {string}
      */
     getInfoString(): string {
         const details = [];
 
         // External Id
-        if (this.location.properties.externalId) {
+        if (this.location.properties.externalId && this.showExternalId) {
             details.push(this.location.properties.externalId);
         }
         // Floor name
@@ -51,6 +57,10 @@ export class LocationInfo implements ComponentInterface {
         return details.join(' · ');
     }
 
+    /**
+     * @description Render location list-info.
+     * @returns {JSX.Element}
+     */
     render(): JSX.Element {
         return (
             this.location?.properties ? this.getInfoString() : null
