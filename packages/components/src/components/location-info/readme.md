@@ -60,7 +60,7 @@ If false, the component will not show the location's Extrenal ID. The attribute 
 | Property         | Attribute          | Description | Type      | Default     |
 | ---------------- | ------------------ | ----------- | --------- | ----------- |
 | `location`       | `location`         |             | `any`     | `undefined` |
-| `showExternalId` | `show-external-id` |             | `boolean` | `false`     |
+| `showExternalId` | `show-external-id` |             | `boolean` | `true`      |
 
 
 ----------------------------------------------

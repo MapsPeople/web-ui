@@ -87,7 +87,7 @@ A `listItemDidRender` event is emitted from the `<mi-list-item-location>` elemen
 | `iconBadge`      | `icon-badge`       |                                  | `string`                                   | `undefined` |
 | `iconBadgeValue` | `icon-badge-value` |                                  | `string`                                   | `undefined` |
 | `location`       | `location`         |                                  | `any`                                      | `undefined` |
-| `showExternalId` | `show-external-id` | Whether to show the External ID. | `boolean`                                  | `false`     |
+| `showExternalId` | `show-external-id` | Whether to show the External ID. | `boolean`                                  | `true`      |
 | `unit`           | `unit`             |                                  | `UnitSystem.Imperial \| UnitSystem.Metric` | `undefined` |
 
 
