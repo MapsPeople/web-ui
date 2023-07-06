@@ -301,7 +301,7 @@ export namespace Components {
          */
         "iconBadge": string;
         /**
-          * @description The value of the badge
+          * @description The value of the badge.
           * @type {string} For availability, use "true" or "false".
          */
         "iconBadgeValue": string;
@@ -309,6 +309,10 @@ export namespace Components {
           * @description Location object.
          */
         "location": any;
+        /**
+          * Whether to show the External ID.
+         */
+        "showExternalId": boolean;
         /**
           * @description Set imperial or metric as unit for distance.
           * @type {UnitSystem}
@@ -359,6 +363,10 @@ export namespace Components {
           * @description Location object.
          */
         "location": any;
+        /**
+          * @description Whether to show the External ID.
+         */
+        "showExternalId": boolean;
     }
     interface MiMapGooglemaps {
         /**
@@ -1579,7 +1587,7 @@ declare namespace LocalJSX {
          */
         "iconBadge"?: string;
         /**
-          * @description The value of the badge
+          * @description The value of the badge.
           * @type {string} For availability, use "true" or "false".
          */
         "iconBadgeValue"?: string;
@@ -1597,6 +1605,10 @@ declare namespace LocalJSX {
           * @type {EventEmitter<Location>}
          */
         "onLocationClicked"?: (event: MiListItemLocationCustomEvent<any>) => void;
+        /**
+          * Whether to show the External ID.
+         */
+        "showExternalId"?: boolean;
         /**
           * @description Set imperial or metric as unit for distance.
           * @type {UnitSystem}
@@ -1669,6 +1681,10 @@ declare namespace LocalJSX {
           * @description Location object.
          */
         "location"?: any;
+        /**
+          * @description Whether to show the External ID.
+         */
+        "showExternalId"?: boolean;
     }
     interface MiMapGooglemaps {
         /**
