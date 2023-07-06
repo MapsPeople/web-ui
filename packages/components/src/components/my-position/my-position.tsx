@@ -1,9 +1,6 @@
 import { Component, Host, JSX, Prop, Event, EventEmitter, State, h } from '@stencil/core';
 import { UAParser } from 'ua-parser-js';
 import merge from 'deepmerge';
-import midtColors from '@mapsindoors/midt/tokens/color.json';
-import midtOpacity from '@mapsindoors/midt/tokens/opacity.json';
-import { getNestedValue } from '../../utils/utils';
 
 enum PositionStateTypes {
     POSITION_UNKNOWN = 'POSITION_UNKNOWN',
@@ -91,13 +88,13 @@ export class MyPositionComponent {
         positionMarkerStyles: {
             radius: '12px',
             strokeWeight: '2px',
-            strokeColor: getNestedValue(['color', 'white', 'white', 'value'], midtColors) || 'white',
-            fillColor: getNestedValue(['color', 'blue', '60', 'value'], midtColors) || '#4169E1',
+            strokeColor: 'white',
+            fillColor: '#4169E1',
             fillOpacity: 1
         },
         accuracyCircleStyles: {
-            fillColor: getNestedValue(['color', 'blue', '60', 'value'], midtColors) || '#4169E1',
-            fillOpacity: getNestedValue(['opacity', 'small', 'value'], midtOpacity) || 0.16
+            fillColor: '#4169E1',
+            fillOpacity: 0.16
         }
     };
 
