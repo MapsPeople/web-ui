@@ -31,6 +31,10 @@
             display: none;
         }
     }
+
+    .mi-floor-selector__list {
+        box-sizing: unset;
+    }
 }
 
 .map-container {

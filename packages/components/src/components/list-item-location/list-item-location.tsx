@@ -18,6 +18,11 @@ export class ListItemLocation {
     @Prop() location;
 
     /**
+     * Whether to show the External ID.
+     */
+    @Prop() showExternalId: boolean = true;
+
+    /**
      * @description Set imperial or metric as unit for distance.
      * @type {UnitSystem}
      */
@@ -46,7 +51,7 @@ export class ListItemLocation {
     }
 
     /**
-     * @description The value of the badge
+     * @description The value of the badge.
      * @type {string} For availability, use "true" or "false".
      */
     @Prop() iconBadgeValue: string;
@@ -84,11 +89,17 @@ export class ListItemLocation {
         this.locationClicked.emit(location);
     }
 
+    /**
+     * Called once just after the component is first connected to the DOM.
+     */
     componentWillLoad(): void {
         this.iconURLToRender = this.icon ? this.icon : this.location?.properties.imageURL;
         this.updateBadge();
     }
 
+    /**
+     * Called after every render().
+     */
     componentDidRender(): void {
         if (!this.location) {
             return;
@@ -104,7 +115,7 @@ export class ListItemLocation {
     }
 
     /**
-     * Apply badge to location icon
+     * Apply badge to location icon.
      */
     updateBadge(): void {
         if (this.iconBadge && this.iconBadgeValue && this.iconURLToRender) {
@@ -166,6 +177,7 @@ export class ListItemLocation {
 
     /**
      * Create and return an Image from URL.
+     *
      * @param {string} url
      * @returns {Image}
      */
@@ -186,6 +198,8 @@ export class ListItemLocation {
     }
 
     /**
+     * Render location list-item.
+     *
      * @description Render location list-item.
      * @returns {JSX.Element}
      */
@@ -196,7 +210,7 @@ export class ListItemLocation {
 
                 <div class="details">
                     <p class="details-title">{this.location.properties.name}</p>
-                    <mi-location-info ref={(el) => this.infoElement = el as HTMLMiLocationInfoElement}></mi-location-info>
+                    <mi-location-info ref={(el) => this.infoElement = el as HTMLMiLocationInfoElement} showExternalId={this.showExternalId}></mi-location-info>
                 </div>
 
                 {this.location.properties.geodesicDistance && this.renderDistance()}
