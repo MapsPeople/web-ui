@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>mi-search test page</title>
+    <script type="module" src="/build/mi-components.esm.js"></script>
+    <script nomodule src="/build/mi-components.js"></script>
+    <script src="https://app.mapsindoors.com/mapsindoors/js/sdk/4.24.0/mapsindoors-4.24.0.js.gz?apiKey=mapspeople"></script>
+
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.3.0/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.3.0/mapbox-gl.css' rel='stylesheet' />
+
+    <style>
+        body {
+            display: flex;
+            margin: 0;
+        }
+
+        #map {
+            width: 100%;
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+
+    <script>
+        mapsindoors.MapsIndoors.setMapsIndoorsApiKey('173386a6ff5e43cead3e396b');
+        mapsindoors.MapsIndoors.setLanguage('en');
+
+        const accessToken = 'pk.eyJ1IjoiZW5lcHBlciIsImEiOiJjazVzNjB5a3EwODd0M2Ztb3FjYmZmbzJhIn0._fo_iTl7ZHPrl634-F2qYg';
+        const mapView = new mapsindoors.mapView.MapboxView({
+            accessToken: accessToken,
+            element: document.getElementById('map'),
+            center: { lat: 57.047912598086846, lng: 9.932579446029946 },
+            zoom: 18,
+            maxZoom: 21
+        });
+        
+        const mi = new mapsindoors.MapsIndoors({
+            mapView: mapView,
+            labelOptions: {
+                pixelOffset: { width: 0, height: 14 }
+            }
+        });
+
+        const mapBox = mapView.getMap();
+
+        const floorSelectorElement = document.createElement('mi-floor-selector');
+        floorSelectorElement.mapsindoors = mi;
+        floorSelectorElement.primaryColor = '#FFA500';
+
+        mapBox.addControl({ onAdd: function () { return floorSelectorElement }, onRemove: function () { } });
+
+        // Create element to hold the position control
+        const myPositionControlElm = document.createElement('div');
+        // Create position control
+        myPositionControl = new mapsindoors.PositionControl(myPositionControlElm, {
+            mapsIndoors: mi
+        });
+
+        mapBox.addControl({ onAdd: function () { return myPositionControlElm }, onRemove: function () { } });
+    </script>
+</body>
+
+</html>
