@@ -4,6 +4,7 @@ import mapsIndoorsInstanceState from '../../../atoms/mapsIndoorsInstanceState';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import mapboxAccessTokenState from '../../../atoms/mapboxAccessTokenState';
+import primaryColorState from '../../../atoms/primaryColorState';
 
 /**
  * Takes care of instantiating a MapsIndoors Mapbox MapView.
@@ -19,6 +20,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
     const [hasFloorSelector, setHasFloorSelector] = useState(false);
     const [hasPositionControl, setHasPositionControl] = useState(false);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
+    const primaryColor = useRecoilValue(primaryColorState);
 
     useEffect(() => {
         // Initialize MapboxView MapView
@@ -42,28 +44,28 @@ function MapboxMap({ onMapView, onPositionControl }) {
     // Add Floor Selector to the Map when ready.
     useEffect(() => {
         if (mapsIndoorsInstance && mapView && !hasFloorSelector) {
-            const floorSelectorDiv = document.createElement('div');
-            new window.mapsindoors.FloorSelector(floorSelectorDiv, mapsIndoorsInstance);
+            const floorSelectorElement = document.createElement('mi-floor-selector');
+            floorSelectorElement.mapsindoors = mapsIndoorsInstance;
+            floorSelectorElement.primaryColor = primaryColor;
+
             mapView.getMap().addControl({
-                onAdd: () => floorSelectorDiv,
-                onRemove: () => {
-                    floorSelectorDiv.parentNode.removeChild(floorSelectorDiv);
-                }
+                onAdd: () => floorSelectorElement,
+                onRemove: function () { floorSelectorElement.parentNode.removeChild(floorSelectorElement); }
             }, 'top-right');
+
             setHasFloorSelector(true);
         }
 
         if (mapsIndoorsInstance && mapView && !hasPositionControl) {
-            const positionControlDiv = document.createElement('div');
-            const positionControl = new window.mapsindoors.PositionControl(positionControlDiv, { mapsIndoors: mapsIndoorsInstance });
+            const myPositionButtonElement = document.createElement('mi-my-position');
+            myPositionButtonElement.mapsindoors = mapsIndoorsInstance;
+
             mapView.getMap().addControl({
-                onAdd: () => positionControlDiv,
-                onRemove: () => {
-                    positionControlDiv.parentNode.removeChild(positionControlDiv);
-                }
+                onAdd: () => myPositionButtonElement,
+                onRemove: function () { }
             }, 'top-right');
             setHasPositionControl(true);
-            onPositionControl(positionControl);
+            onPositionControl(myPositionButtonElement);
         }
     }, [mapsIndoorsInstance, mapView, hasFloorSelector, hasPositionControl]);
 
