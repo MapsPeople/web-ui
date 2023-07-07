@@ -11,9 +11,11 @@
     max-height: 80%; // UX spec
     min-height: fit-content;
     overflow: auto;
+    display: none;
 
     &--open {
         transform: translateY(0);
+        display: block;
     }
 
     &--full {
