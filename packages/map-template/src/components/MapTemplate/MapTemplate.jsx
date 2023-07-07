@@ -97,7 +97,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     function initializeMapsIndoorsSDK() {
         return new Promise((resolve) => {
             if (window.mapsindoors !== undefined) {
-                setMapsindoorsSDKAvailable(true);
                 return resolve();
             }
 
@@ -106,29 +105,34 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.23.1/mapsindoors-4.23.1.js.gz');
             document.body.appendChild(miSdkApiTag);
             miSdkApiTag.onload = () => {
-                setMapsindoorsSDKAvailable(true);
                 resolve();
             }
         });
     }
 
     /**
-     * Wait for the MapsIndoors JS SDK to be initialized, then react on changes on the props.
-     * React on changes in the MapsIndoors API key by fetching the required data.
+     * Wait for the MapsIndoors JS SDK to be initialized, then set the mapsindoorsSDKAvailable state to true.
      */
     useEffect(() => {
         initializeMapsIndoorsSDK().then(() => {
-            const mapsindoors = window.mapsindoors;
+            setMapsindoorsSDKAvailable(true);
+        });
+    }, [])
 
+    /**
+     * React on changes in the MapsIndoors API key by fetching the required data.
+     */
+    useEffect(() => {
+        if (mapsindoorsSDKAvailable) {
             setApiKey(apiKey);
             setMapReady(false);
-            mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKey);
+            window.mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKey);
 
             Promise.all([
                 // Fetch all Venues in the Solution
-                mapsindoors.services.VenuesService.getVenues(),
+                window.mapsindoors.services.VenuesService.getVenues(),
                 // Fixme: Venue Images are currently stored in the AppConfig object. So we will need to fetch the AppConfig as well.
-                mapsindoors.services.AppConfigService.getConfig(),
+                window.mapsindoors.services.AppConfigService.getConfig(),
                 // Ensure a minimum waiting time of 3 seconds
                 new Promise(resolve => setTimeout(resolve, 3000))
             ]).then(([venuesResult, appConfigResult]) => {
@@ -140,8 +144,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 setVenues(venuesResult);
             });
             setMapReady(false);
-        });
-    }, [apiKey]);
+        }
+    }, [apiKey, mapsindoorsSDKAvailable]);
 
     /*
      * React to changes in the gmApiKey and mapboxAccessToken props.
