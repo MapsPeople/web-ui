@@ -2,8 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import mapsIndoorsInstanceState from '../atoms/mapsIndoorsInstanceState';
 
-const mapsindoors = window.mapsindoors;
-
 /**
  * Custom hook for showing default Live Data badges on the map.
  *
@@ -31,7 +29,7 @@ const useLiveData = (apiKey) => {
                     liveDataManager.current.disableLiveData(domainType);
                 }
 
-                liveDataManager.current = new mapsindoors.LiveDataManager(mapsIndoorsInstance);
+                liveDataManager.current = new window.mapsindoors.LiveDataManager(mapsIndoorsInstance);
                 const activeDomainTypes = await liveDataManager.current.LiveDataInfo.activeDomainTypes();
                 for (const domainType of activeDomainTypes) {
                     await liveDataManager.current.enableLiveData(domainType);

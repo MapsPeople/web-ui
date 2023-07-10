@@ -4,9 +4,6 @@ import mapsIndoorsInstanceState from '../../../atoms/mapsIndoorsInstanceState';
 import { Loader as GoogleMapsApiLoader } from '@googlemaps/js-api-loader';
 import gmApiKeyState from '../../../atoms/gmApiKeyState';
 
-// Make the global MapsIndoors JavaScript SDK available here
-const mapsindoors = window.mapsindoors;
-
 /**
  * Takes care of instantiating a MapsIndoors Google Maps MapView.
  *
@@ -43,12 +40,12 @@ function GoogleMapsMap({ onMapView, onPositionControl }) {
                 zoom: 21
             };
 
-            const mapViewInstance = new mapsindoors.mapView.GoogleMapsView(mapViewOptions);
+            const mapViewInstance = new window.mapsindoors.mapView.GoogleMapsView(mapViewOptions);
             setMapView(mapViewInstance);
 
             // Setup an external directions provider that will be used to calculate directions
             // outside MapsIndoors venues.
-            const externalDirectionsProvider = new mapsindoors.directions.GoogleMapsProvider();
+            const externalDirectionsProvider = new window.mapsindoors.directions.GoogleMapsProvider();
 
             onMapView(mapViewInstance, externalDirectionsProvider);
         });
@@ -59,14 +56,14 @@ function GoogleMapsMap({ onMapView, onPositionControl }) {
     useEffect(() => {
         if (mapsIndoorsInstance && mapView && google && !hasFloorSelector) {
             const floorSelectorDiv = document.createElement('div');
-            new mapsindoors.FloorSelector(floorSelectorDiv, mapsIndoorsInstance);
+            new window.mapsindoors.FloorSelector(floorSelectorDiv, mapsIndoorsInstance);
             mapView.getMap().controls[google.maps.ControlPosition.RIGHT_TOP].push(floorSelectorDiv);
             setHasFloorSelector(true);
         }
 
         if (mapsIndoorsInstance && mapView && google && !hasPositionControl) {
             const positionControlDiv = document.createElement('div');
-            const positionControl = new mapsindoors.PositionControl(positionControlDiv, { mapsIndoors: mapsIndoorsInstance });
+            const positionControl = new window.mapsindoors.PositionControl(positionControlDiv, { mapsIndoors: mapsIndoorsInstance });
             mapView.getMap().controls[google.maps.ControlPosition.RIGHT_TOP].push(positionControlDiv);
             setHasPositionControl(true);
             onPositionControl(positionControl);

@@ -27,7 +27,6 @@ import startZoomLevelState from '../../atoms/startZoomLevelState';
 import primaryColorState from '../../atoms/primaryColorState';
 
 defineCustomElements();
-const mapsindoors = window.mapsindoors;
 
 /**
  * Private variable used for checking if the locations should be disabled.
@@ -67,7 +66,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [appConfigResult, setAppConfigResult] = useState();
     const [, setPrimaryColor] = useRecoilState(primaryColorState);
 
-
     const directionsFromLocation = useLocationForWayfinding(directionsFrom);
     const directionsToLocation = useLocationForWayfinding(directionsTo);
 
@@ -88,6 +86,139 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     const [pushAppView, goBack, currentAppView, currentAppViewPayload, appStates] = useAppHistory();
 
+    // Indicate if the MapsIndoors JavaScript SDK is available
+    const [mapsindoorsSDKAvailable, setMapsindoorsSDKAvailable] = useState(false);
+
+    /**
+     * Ensure that MapsIndoors Web SDK is available.
+     *
+     * @returns {Promise}
+     */
+    function initializeMapsIndoorsSDK() {
+        return new Promise((resolve) => {
+            if (window.mapsindoors !== undefined) {
+                return resolve();
+            }
+
+            const miSdkApiTag = document.createElement('script');
+            miSdkApiTag.setAttribute('type', 'text/javascript');
+            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.24.0/mapsindoors-4.24.0.js.gz');
+            document.body.appendChild(miSdkApiTag);
+            miSdkApiTag.onload = () => {
+                resolve();
+            }
+        });
+    }
+
+    /**
+     * Wait for the MapsIndoors JS SDK to be initialized, then set the mapsindoorsSDKAvailable state to true.
+     */
+    useEffect(() => {
+        initializeMapsIndoorsSDK().then(() => {
+            setMapsindoorsSDKAvailable(true);
+        });
+    }, [])
+
+    /**
+     * React on changes in the MapsIndoors API key by fetching the required data.
+     */
+    useEffect(() => {
+        if (mapsindoorsSDKAvailable) {
+            setApiKey(apiKey);
+            setMapReady(false);
+            window.mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKey);
+
+            Promise.all([
+                // Fetch all Venues in the Solution
+                window.mapsindoors.services.VenuesService.getVenues(),
+                // Fixme: Venue Images are currently stored in the AppConfig object. So we will need to fetch the AppConfig as well.
+                window.mapsindoors.services.AppConfigService.getConfig(),
+                // Ensure a minimum waiting time of 3 seconds
+                new Promise(resolve => setTimeout(resolve, 3000))
+            ]).then(([venuesResult, appConfigResult]) => {
+                venuesResult = venuesResult.map(venue => {
+                    venue.image = appConfigResult.venueImages[venue.name.toLowerCase()];
+                    return venue;
+                });
+                setAppConfigResult(appConfigResult);
+                setVenues(venuesResult);
+            });
+            setMapReady(false);
+        }
+    }, [apiKey, mapsindoorsSDKAvailable]);
+
+    /*
+     * React to changes in the gmApiKey and mapboxAccessToken props.
+     */
+    useEffect(() => {
+        if (mapsindoorsSDKAvailable) {
+            setMapboxAccessToken(mapboxAccessToken);
+            setGmApyKey(gmApiKey);
+        }
+    }, [gmApiKey, mapboxAccessToken, mapsindoorsSDKAvailable]);
+
+    /*
+     * React on changes in the app user roles prop.
+     */
+    useEffect(() => {
+        if (mapsindoorsSDKAvailable) {
+            window.mapsindoors.services.SolutionsService.getUserRoles().then(userRoles => {
+                const roles = userRoles.filter(role => appUserRoles?.includes(role.name));
+                window.mapsindoors.MapsIndoors.setUserRoles(roles);
+            });
+        }
+    }, [appUserRoles, mapsindoorsSDKAvailable]);
+
+    /*
+     * React on changes in the externalIDs prop.
+     * Get the locations by external IDs, if present.
+     */
+    useEffect(() => {
+        if (mapsindoorsSDKAvailable) {
+            if (externalIDs) {
+                window.mapsindoors.services.LocationsService.getLocationsByExternalId(externalIDs).then(locations => {
+                    setFilteredLocationsByExternalID(locations);
+                });
+            } else {
+                setFilteredLocationsByExternalID([]);
+            }
+        }
+    }, [externalIDs, mapsindoorsSDKAvailable]);
+
+
+    /*
+     * React on changes to the locationId prop.
+     * Set as current location and change the venue according to the venue that the location belongs to.
+     */
+    useEffect(() => {
+        if (mapsindoorsSDKAvailable) {
+            setLocationId(locationId);
+            if (locationId) {
+                window.mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
+                    if (location) {
+                        setCurrentVenueName(location.properties.venueId);
+                        setCurrentLocation(location);
+                    }
+                });
+            }
+        }
+    }, [locationId, mapsindoorsSDKAvailable]);
+
+    /*
+     * React on changes in directions opened state.
+     */
+    useEffect(() => {
+        // Reset all the filters when in directions mode.
+        // Store the filtered locations in another state, to be able to access them again.
+        if (hasDirectionsOpen) {
+            setInitialFilteredLocations(filteredLocations)
+            setFilteredLocations([]);
+        } else {
+            // Apply the previously filtered locations to the map when navigating outside the directions.
+            setFilteredLocations(initialFilteredLocations);
+        }
+    }, [hasDirectionsOpen]);
+
     /*
      * Add Location to history payload to make it possible to re-enter location details with that Location.
      */
@@ -99,6 +230,34 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         setHasDirectionsOpen(currentAppView === appStates.DIRECTIONS);
         _locationsDisabled = currentAppView === appStates.DIRECTIONS;
     }, [currentAppView]);
+
+    /*
+     * React on changes in the venue prop.
+     */
+    useEffect(() => {
+        setCurrentVenueName(venue);
+    }, [venue]);
+
+    /*
+     * React on changes in the tile style prop.
+     */
+    useEffect(() => {
+        setTileStyle(tileStyle)
+    }, [tileStyle]);
+
+    /*
+     * React on changes in the primary color prop.
+     */
+    useEffect(() => {
+        setPrimaryColor(primaryColor)
+    }, [primaryColor]);
+
+    /*
+     * React on changes in the start zoom level prop.
+     */
+    useEffect(() => {
+        setStartZoomLevel(startZoomLevel);
+    }, [startZoomLevel]);
 
     /**
      * When venue is fitted while initializing the data,
@@ -131,7 +290,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     function getVenueCategories(venue) {
         // Filter through the locations which have the venueId equal to the selected venue,
         // due to the impossibility to use the venue parameter in the getLocations().
-        mapsindoors.services.LocationsService.getLocations({}).then(locations => {
+        window.mapsindoors.services.LocationsService.getLocations({}).then(locations => {
             const filteredLocations = locations.filter(location => location.properties.venueId === venue);
             getCategories(filteredLocations);
         })
@@ -169,124 +328,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
         setCategories(uniqueCategories);
     }
-
-    /*
-     * React to changes in the gmApiKey and mapboxAccessToken props.
-     */
-    useEffect(() => {
-        setMapboxAccessToken(mapboxAccessToken);
-        setGmApyKey(gmApiKey);
-    }, [gmApiKey, mapboxAccessToken]);
-
-    /*
-     * React on changes in the venue prop.
-     */
-    useEffect(() => {
-        setCurrentVenueName(venue);
-    }, [venue]);
-
-    /*
-     * React on changes in the tile style prop.
-     */
-    useEffect(() => {
-        setTileStyle(tileStyle)
-    }, [tileStyle]);
-
-    /*
-     * React on changes in the primary color prop.
-     */
-    useEffect(() => {
-        setPrimaryColor(primaryColor)
-    }, [primaryColor]);
-
-    /*
-     * React on changes in the start zoom level prop.
-     */
-    useEffect(() => {
-        setStartZoomLevel(startZoomLevel);
-    }, [startZoomLevel]);
-
-    /*
-     * React on changes in the app user roles prop.
-     */
-    useEffect(() => {
-        mapsindoors.services.SolutionsService.getUserRoles().then(userRoles => {
-            const roles = userRoles.filter(role => appUserRoles?.includes(role.name));
-            mapsindoors.MapsIndoors.setUserRoles(roles);
-        });
-    }, [appUserRoles]);
-
-    /*
-     * React on changes in the externalIDs prop.
-     * Get the locations by external IDs, if present.
-     */
-    useEffect(() => {
-        if (externalIDs) {
-            mapsindoors.services.LocationsService.getLocationsByExternalId(externalIDs).then(locations => {
-                setFilteredLocationsByExternalID(locations);
-            });
-        } else {
-            setFilteredLocationsByExternalID([]);
-        }
-    }, [externalIDs]);
-
-    /*
-     * React on changes in the MapsIndoors API key by fetching the required data.
-     */
-    useEffect(() => {
-        setApiKey(apiKey);
-        setMapReady(false);
-        mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKey);
-
-        Promise.all([
-            // Fetch all Venues in the Solution
-            mapsindoors.services.VenuesService.getVenues(),
-            // Fixme: Venue Images are currently stored in the AppConfig object. So we will need to fetch the AppConfig as well.
-            mapsindoors.services.AppConfigService.getConfig(),
-            // Ensure a minimum waiting time of 3 seconds
-            new Promise(resolve => setTimeout(resolve, 3000))
-        ]).then(([venuesResult, appConfigResult]) => {
-            venuesResult = venuesResult.map(venue => {
-                venue.image = appConfigResult.venueImages[venue.name.toLowerCase()];
-                return venue;
-            });
-            setAppConfigResult(appConfigResult);
-            setVenues(venuesResult);
-        });
-        setMapReady(false);
-
-    }, [apiKey]);
-
-    /*
-     * React on changes to the locationId prop.
-     * Set as current location and change the venue according to the venue that the location belongs to.
-     */
-    useEffect(() => {
-        setLocationId(locationId);
-        if (locationId) {
-            mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
-                if (location) {
-                    setCurrentVenueName(location.properties.venueId);
-                    setCurrentLocation(location);
-                }
-            });
-        }
-    }, [locationId]);
-
-    /*
-     * React on changes in directions opened state.
-     */
-    useEffect(() => {
-        // Reset all the filters when in directions mode.
-        // Store the filtered locations in another state, to be able to access them again.
-        if (hasDirectionsOpen) {
-            setInitialFilteredLocations(filteredLocations)
-            setFilteredLocations([]);
-        } else {
-            // Apply the previously filtered locations to the map when navigating outside the directions.
-            setFilteredLocations(initialFilteredLocations);
-        }
-    }, [hasDirectionsOpen]);
 
     return <div className={`mapsindoors-map ${hasDirectionsOpen ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}`}>
         {!isMapReady && <SplashScreen logo={logo} />}

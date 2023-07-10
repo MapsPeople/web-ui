@@ -21,8 +21,6 @@ import positionControlState from '../../atoms/positionControlState';
 import locationIdState from '../../atoms/locationIdState';
 import setMapZoomLevel from "../../helpers/SetMapZoomLevel";
 
-const mapsindoors = window.mapsindoors;
-
 const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
 
 /**
@@ -133,7 +131,7 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
      */
     const onLocationIdChanged = (miInstance) => {
         if (locationId && miInstance) {
-            mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
+            window.mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
                 if (location) {
                     // Set the floor to the one that the location belongs to.
                     const locationFloor = location.properties.floor;
@@ -175,7 +173,7 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
 
     const onMapView = async (mapView, externalDirectionsProvider) => {
         // Instantiate MapsIndoors instance
-        const miInstance = new mapsindoors.MapsIndoors({
+        const miInstance = new window.mapsindoors.MapsIndoors({
             mapView
         });
 
@@ -190,7 +188,7 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
         setMapsIndoorsInstance(miInstance);
 
         // Initialize a Directions Service
-        const directionsService = new mapsindoors.services.DirectionsService(externalDirectionsProvider);
+        const directionsService = new window.mapsindoors.services.DirectionsService(externalDirectionsProvider);
         setDirectionsService(directionsService);
 
         const venueToShow = getVenueToShow(venueName, venues);
