@@ -14,8 +14,6 @@ import { travelModes } from "../../constants/travelModes";
 import directionsResponseState from "../../atoms/directionsResponseState";
 import activeStepState from "../../atoms/activeStep";
 
-const mapsindoors = window.mapsindoors;
-
 let directionsRenderer;
 
 /**
@@ -59,7 +57,7 @@ function Directions({ isOpen, onBack }) {
             directionsRenderer?.setRoute(null);
             directionsRenderer = null;
 
-            directionsRenderer = new mapsindoors.directions.DirectionsRenderer({
+            directionsRenderer = new window.mapsindoors.directions.DirectionsRenderer({
                 mapsIndoors: mapsIndoorsInstance,
                 fitBoundsPadding: {
                     top: padding,

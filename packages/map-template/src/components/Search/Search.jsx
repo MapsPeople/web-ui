@@ -10,9 +10,6 @@ import SearchField from '../WebComponentWrappers/Search/Search';
 import filteredLocationsState from '../../atoms/filteredLocationsState';
 import primaryColorState from '../../atoms/primaryColorState';
 
-/** Initialize the MapsIndoors instance. */
-const mapsindoors = window.mapsindoors;
-
 /**
  * Show the search results.
  *
@@ -55,7 +52,7 @@ function Search({ onLocationClick, onSetSize }) {
      * @param {string} category
      */
     function getFilteredLocations(category) {
-        mapsindoors.services.LocationsService.getLocations({
+        window.mapsindoors.services.LocationsService.getLocations({
             categories: category,
         }).then(onResults);
     }
