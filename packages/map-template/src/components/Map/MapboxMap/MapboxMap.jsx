@@ -6,9 +6,6 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import mapboxAccessTokenState from '../../../atoms/mapboxAccessTokenState';
 import primaryColorState from '../../../atoms/primaryColorState';
 
-// Make the global MapsIndoors JavaScript SDK available here
-const mapsindoors = window.mapsindoors;
-
 /**
  * Takes care of instantiating a MapsIndoors Mapbox MapView.
  *
@@ -33,12 +30,12 @@ function MapboxMap({ onMapView, onPositionControl }) {
             element: document.getElementById('map')
         };
 
-        const mapViewInstance = new mapsindoors.mapView.MapboxView(mapViewOptions);
+        const mapViewInstance = new window.mapsindoors.mapView.MapboxView(mapViewOptions);
         setMapView(mapViewInstance);
 
         // Setup an external directions provider that will be used to calculate directions
         // outside MapsIndoors venues.
-        const externalDirectionsProvider = new mapsindoors.directions.MapboxProvider(mapboxAccessToken);
+        const externalDirectionsProvider = new window.mapsindoors.directions.MapboxProvider(mapboxAccessToken);
 
         onMapView(mapViewInstance, externalDirectionsProvider);
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -46,6 +43,18 @@ function MapboxMap({ onMapView, onPositionControl }) {
 
     // Add Floor Selector to the Map when ready.
     useEffect(() => {
+        if (mapsIndoorsInstance && mapView && !hasPositionControl) {
+            const myPositionButtonElement = document.createElement('mi-my-position');
+            myPositionButtonElement.mapsindoors = mapsIndoorsInstance;
+
+            mapView.getMap().addControl({
+                onAdd: () => myPositionButtonElement,
+                onRemove: function () { }
+            }, 'top-right');
+            setHasPositionControl(true);
+            onPositionControl(myPositionButtonElement);
+        }
+    
         if (mapsIndoorsInstance && mapView && !hasFloorSelector) {
             const floorSelectorElement = document.createElement('mi-floor-selector');
             floorSelectorElement.mapsindoors = mapsIndoorsInstance;
@@ -57,18 +66,6 @@ function MapboxMap({ onMapView, onPositionControl }) {
             }, 'top-right');
 
             setHasFloorSelector(true);
-        }
-
-        if (mapsIndoorsInstance && mapView && !hasPositionControl) {
-            const myPositionButtonElement = document.createElement('mi-my-position');
-            myPositionButtonElement.mapsindoors = mapsIndoorsInstance;
-
-            mapView.getMap().addControl({
-                onAdd: () => myPositionButtonElement,
-                onRemove: function () { }
-            }, 'top-right');
-            setHasPositionControl(true);
-            onPositionControl(myPositionButtonElement);
         }
     }, [mapsIndoorsInstance, mapView, hasFloorSelector, hasPositionControl]);
 

@@ -423,7 +423,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
             {!searchTriggered && hasFoundRoute && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
                 <div className="wayfinding__settings">
                     <div className="wayfinding__accessibility">
-                        <input className="mi-toggle" type="checkbox" checked={accessibilityOn} onChange={e => setAccessibilityOn(e.target.checked)} style={{backgroundColor: accessibilityOn ? primaryColor : ''}}/>
+                        <input className="mi-toggle" type="checkbox" checked={accessibilityOn} onChange={e => setAccessibilityOn(e.target.checked)} style={{ backgroundColor: accessibilityOn ? primaryColor : '' }} />
                         <div>Accessibility</div>
                         <Tooltip text="Turn on Accessibility to get directions that avoids stairs and escalators."></Tooltip>
                     </div>
@@ -459,7 +459,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                         <div className="wayfinding__minutes">{totalTime && <mi-time seconds={totalTime} />}</div>
                     </div>
                 </div>
-                <button className="wayfinding__button" style={{background: primaryColor}} onClick={() => onStartDirections()}>
+                <button className="wayfinding__button" style={{ background: primaryColor }} onClick={() => onStartDirections()}>
                     Go!
                 </button>
             </div>}

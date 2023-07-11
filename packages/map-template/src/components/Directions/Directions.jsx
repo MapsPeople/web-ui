@@ -55,6 +55,10 @@ function Directions({ isOpen, onBack }) {
             // 6 percent of smallest of viewport height or width
             const padding = Math.min(window.innerHeight, window.innerWidth) * 0.06;
 
+            // Set the directions renderer and the route to null, in order to avoid multiple routes shown simultaneously.
+            directionsRenderer?.setRoute(null);
+            directionsRenderer = null;
+
             directionsRenderer = new mapsindoors.directions.DirectionsRenderer({
                 mapsIndoors: mapsIndoorsInstance,
                 fitBoundsPadding: {
