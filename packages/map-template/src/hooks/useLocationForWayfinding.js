@@ -4,9 +4,6 @@ import userPositionState from '../atoms/userPositionState';
 import positionControlState from '../atoms/positionControlState';
 import generateMyPositionLocation from '../helpers/MyPositionLocation';
 
-const mapsindoors = window.mapsindoors;
-
-
 /**
  * Hook for a Location that can be both a MapsIndoors Location or a GeoJSON feature
  * that contains the user's position.
@@ -26,7 +23,7 @@ const useLocationForWayfinding = (locationID) => {
                 setLocation('USER_POSITION_PENDING');
                 positionControl.watchPosition();
             } else if (locationID !== 'USER_POSITION') {
-                mapsindoors.services.LocationsService.getLocation(locationID)
+                window.mapsindoors.services.LocationsService.getLocation(locationID)
                     .then(mapsIndoorsLocation => setLocation(mapsIndoorsLocation));
             }
 

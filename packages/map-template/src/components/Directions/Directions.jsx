@@ -16,8 +16,6 @@ import activeStepState from "../../atoms/activeStep";
 import { snapPoints } from "../../constants/snapPoints";
 import substepsToggledState from "../../atoms/substepsToggledState";
 
-const mapsindoors = window.mapsindoors;
-
 let directionsRenderer;
 
 /**
@@ -62,7 +60,11 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
             // 6 percent of smallest of viewport height or width
             const padding = Math.min(window.innerHeight, window.innerWidth) * 0.06;
 
-            directionsRenderer = new mapsindoors.directions.DirectionsRenderer({
+            // Set the directions renderer and the route to null, in order to avoid multiple routes shown simultaneously.
+            directionsRenderer?.setRoute(null);
+            directionsRenderer = null;
+
+            directionsRenderer = new window.mapsindoors.directions.DirectionsRenderer({
                 mapsIndoors: mapsIndoorsInstance,
                 fitBoundsPadding: {
                     top: padding,

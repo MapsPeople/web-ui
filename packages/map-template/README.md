@@ -25,12 +25,6 @@ mapsindoors-map {
 }
 ```
 
-Make sure the MapsIndoors JavaScript SDK is loaded by having this somewhere in your HTML:
-
-```html
-<script src="https://app.mapsindoors.com/mapsindoors/js/sdk/4.21.5/mapsindoors-4.21.5.js.gz"></script>
-```
-
 Use the web component in your HTML:
 
 ```html
@@ -49,7 +43,6 @@ Add attributes to the web component as needed (see supported properties below).
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MapsIndoors Map Template</title>
-    <script src="https://app.mapsindoors.com/mapsindoors/js/sdk/4.21.5/mapsindoors-4.21.5.js.gz"></script>
     <script type="module">
         import MapsindoorsMap from 'https://www.unpkg.com/@mapsindoors/map-template/dist/mapsindoors-webcomponent.es.js';
         window.customElements.define('mapsindoors-map', MapsindoorsMap)
@@ -80,12 +73,6 @@ Add attributes to the web component as needed (see supported properties below).
 Install the package:
 
 `npm install @mapsindoors/map-template`
-
-Make sure the MapsIndoors JavaScript SDK is loaded by having this somewhere in your HTML:
-
-```html
-<script src="https://app.mapsindoors.com/mapsindoors/js/sdk/4.21.5/mapsindoors-4.21.5.js.gz"></script>
-```
 
 Use the `MapsIndoorsMap` component in a React component:
 
