@@ -10,6 +10,7 @@ import setMapZoomLevel from '../../helpers/SetMapZoomLevel';
 import RouteInstructionsStep from '../WebComponentWrappers/RouteInstructionsStep/RouteInstructionsStep';
 import substepsToggledState from '../../atoms/substepsToggledState';
 import triggerSubstepsState from '../../atoms/triggerSubstepsState';
+import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 
 /**
  * Private variable used for checking if the next button should be enabled.
@@ -30,6 +31,9 @@ let _allowNextStep = true;
  * @returns
  */
 function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, isOpen }) {
+
+    const scrollableContentSwipePrevent = usePreventSwipe();
+
     const routeInstructionsRef = useRef();
 
     /** Referencing the previous step of each active step */
@@ -198,7 +202,7 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
     }
 
     return (
-        <div className="route-instructions">
+        <div className="route-instructions prevent-scroll" {...scrollableContentSwipePrevent}>
             {totalSteps &&
                 <>
                     <RouteInstructionsStep
