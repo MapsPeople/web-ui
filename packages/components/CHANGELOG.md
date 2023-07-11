@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- **mi-my-position** is now positioned according to the normal flow of the document .
+- **mi-my-position** is now positioned according to the normal flow of the document.
 
 ## [13.7.1] - 2023-07-06
 
