@@ -3,6 +3,7 @@ import { useRecoilValue } from 'recoil';
 import mapsIndoorsInstanceState from '../../../atoms/mapsIndoorsInstanceState';
 import { Loader as GoogleMapsApiLoader } from '@googlemaps/js-api-loader';
 import gmApiKeyState from '../../../atoms/gmApiKeyState';
+import primaryColorState from '../../../atoms/primaryColorState';
 
 /**
  * Takes care of instantiating a MapsIndoors Google Maps MapView.
@@ -19,6 +20,7 @@ function GoogleMapsMap({ onMapView, onPositionControl }) {
     const [hasFloorSelector, setHasFloorSelector] = useState(false);
     const [hasPositionControl, setHasPositionControl] = useState(false);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
+    const primaryColor = useRecoilValue(primaryColorState);
 
     useEffect(() => {
         const loader = new GoogleMapsApiLoader({
@@ -54,21 +56,23 @@ function GoogleMapsMap({ onMapView, onPositionControl }) {
 
     // Add Floor Selector to the Map when ready.
     useEffect(() => {
+        if (mapsIndoorsInstance && mapView && google && !hasPositionControl) {
+            const myPositionButtonElement = document.createElement('mi-my-position');
+            myPositionButtonElement.mapsindoors = mapsIndoorsInstance;
+
+            mapView.getMap().controls[google.maps.ControlPosition.RIGHT_TOP].push(myPositionButtonElement);
+            setHasPositionControl(true);
+            onPositionControl(myPositionButtonElement);
+        }
+
         if (mapsIndoorsInstance && mapView && google && !hasFloorSelector) {
-            const floorSelectorDiv = document.createElement('div');
-            new window.mapsindoors.FloorSelector(floorSelectorDiv, mapsIndoorsInstance);
-            mapView.getMap().controls[google.maps.ControlPosition.RIGHT_TOP].push(floorSelectorDiv);
+            const floorSelectorElement = document.createElement('mi-floor-selector');
+            floorSelectorElement.mapsindoors = mapsIndoorsInstance;
+            floorSelectorElement.primaryColor = primaryColor;
+
+            mapView.getMap().controls[google.maps.ControlPosition.RIGHT_TOP].push(floorSelectorElement);
             setHasFloorSelector(true);
         }
-
-        if (mapsIndoorsInstance && mapView && google && !hasPositionControl) {
-            const positionControlDiv = document.createElement('div');
-            const positionControl = new window.mapsindoors.PositionControl(positionControlDiv, { mapsIndoors: mapsIndoorsInstance });
-            mapView.getMap().controls[google.maps.ControlPosition.RIGHT_TOP].push(positionControlDiv);
-            setHasPositionControl(true);
-            onPositionControl(positionControl);
-        }
-
     }, [mapsIndoorsInstance, mapView, google, hasFloorSelector, hasPositionControl])
 
     return <div className="map-container" id="map"></div>

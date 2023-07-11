@@ -43,6 +43,18 @@ function MapboxMap({ onMapView, onPositionControl }) {
 
     // Add Floor Selector to the Map when ready.
     useEffect(() => {
+        if (mapsIndoorsInstance && mapView && !hasPositionControl) {
+            const myPositionButtonElement = document.createElement('mi-my-position');
+            myPositionButtonElement.mapsindoors = mapsIndoorsInstance;
+
+            mapView.getMap().addControl({
+                onAdd: () => myPositionButtonElement,
+                onRemove: function () { }
+            }, 'top-right');
+            setHasPositionControl(true);
+            onPositionControl(myPositionButtonElement);
+        }
+    
         if (mapsIndoorsInstance && mapView && !hasFloorSelector) {
             const floorSelectorElement = document.createElement('mi-floor-selector');
             floorSelectorElement.mapsindoors = mapsIndoorsInstance;
@@ -54,18 +66,6 @@ function MapboxMap({ onMapView, onPositionControl }) {
             }, 'top-right');
 
             setHasFloorSelector(true);
-        }
-
-        if (mapsIndoorsInstance && mapView && !hasPositionControl) {
-            const myPositionButtonElement = document.createElement('mi-my-position');
-            myPositionButtonElement.mapsindoors = mapsIndoorsInstance;
-
-            mapView.getMap().addControl({
-                onAdd: () => myPositionButtonElement,
-                onRemove: function () { }
-            }, 'top-right');
-            setHasPositionControl(true);
-            onPositionControl(myPositionButtonElement);
         }
     }, [mapsIndoorsInstance, mapView, hasFloorSelector, hasPositionControl]);
 
