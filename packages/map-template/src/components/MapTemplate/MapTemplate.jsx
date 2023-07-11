@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
@@ -63,7 +63,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setCategories] = useRecoilState(categoriesState);
     const [, setLocationId] = useRecoilState(locationIdState);
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
-    const [appConfigResult, setAppConfigResult] = useState();
     const [, setPrimaryColor] = useRecoilState(primaryColorState);
 
     const directionsFromLocation = useLocationForWayfinding(directionsFrom);
@@ -85,6 +84,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const isMobile = useMediaQuery('(max-width: 991px)');
 
     const [pushAppView, goBack, currentAppView, currentAppViewPayload, appStates] = useAppHistory();
+
+    // Declare the reference to the App Config
+    const appConfigRef = useRef();
 
     // Indicate if the MapsIndoors JavaScript SDK is available
     const [mapsindoorsSDKAvailable, setMapsindoorsSDKAvailable] = useState(false);
@@ -140,7 +142,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                     venue.image = appConfigResult.venueImages[venue.name.toLowerCase()];
                     return venue;
                 });
-                setAppConfigResult(appConfigResult);
+                appConfigRef.current = appConfigResult;
                 setVenues(venuesResult);
             });
             setMapReady(false);
@@ -312,7 +314,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             for (const key of keys) {
                 // Get the categories from the App Config that have a matching key.
-                const appConfigCategory = appConfigResult?.menuInfo.mainmenu.find(category => category.categoryKey === key);
+                const appConfigCategory = appConfigRef.current?.menuInfo.mainmenu.find(category => category.categoryKey === key);
 
                 if (uniqueCategories.has(key)) {
                     let count = uniqueCategories.get(key).count;
