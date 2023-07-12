@@ -28,6 +28,34 @@ import primaryColorState from '../../atoms/primaryColorState';
 
 defineCustomElements();
 
+
+// The current query string
+const queryString = window.location.search;
+const params = new URLSearchParams(queryString);
+
+const apiKeyParameter = params.get('apiKey');
+const venueParameter = params.get('venue');
+const locationIdParameter = params.get('locationId');
+const logoParameter = params.get('logo');
+const directionsFromParameter = params.get('directionsFrom');
+const directionsToParameter = params.get('directionsTo');
+const tileStyleParameter = params.get('tileStyle');
+const startZoomLevelParameter = params.get('startZoomLevel');
+const gmApiKeyParameter = params.get('gmApiKey');
+const mapboxAccessTokenParameter = params.get('mapboxAccessToken');
+
+// Append the hashtag symbol to the color code (i.e. ffffff)
+const primaryColorParameter = params.get('primaryColor');
+
+// The HEX value refers to the --brand-colors-dark-pine-100 from MIDT
+const hexPrimaryColorParameter = primaryColorParameter ? '#'.concat(primaryColorParameter) : '#005655';
+
+// Create an array of app user roles based on the comma separated values
+const appUserRolesParameter = params.get('appUserRoles')?.split(',')
+
+// Create an array of external IDs based on the comma separated values
+const externalIDsParameter = params.get('externalIDs')?.split(',')
+
 /**
  * Private variable used for checking if the locations should be disabled.
  * Implemented due to the impossibility to use the React useState hook.
@@ -50,8 +78,9 @@ let _locationsDisabled;
  * @param {array} [props.externalIDs] - Filter locations shown on the map based on the external IDs.
  * @param {string} [props.tileStyle] - Tile style name to change the interface of the map.
  * @param {number} [props.startZoomLevel] - The initial zoom level of the map.
+ * @param {boolean} [props.hasURLParameters] - If you want to support URL Parameters.
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, hasURLParameters }) {
 
     const [, setApiKey] = useRecoilState(apiKeyState);
     const [, setGmApyKey] = useRecoilState(gmApiKeyState);
@@ -63,7 +92,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setCategories] = useRecoilState(categoriesState);
     const [, setLocationId] = useRecoilState(locationIdState);
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
-    const [, setPrimaryColor] = useRecoilState(primaryColorState);
+    const [defaultPrimaryColor, setPrimaryColor] = useRecoilState(primaryColorState);
 
     const directionsFromLocation = useLocationForWayfinding(directionsFrom);
     const directionsToLocation = useLocationForWayfinding(directionsTo);
@@ -126,9 +155,27 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
-            setApiKey(apiKey);
+
+            // Check if the Map Template has URL Parameters and handle each case
+            if (hasURLParameters) {
+                // 1. First case is if the Map Template has an apiKey and URL parameters
+                if (apiKey) {
+                    setApiKey(apiKeyParameter ? apiKeyParameter : apiKey)
+                    window.mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKeyParameter ? apiKeyParameter : apiKey);
+                }
+                // 2. Second case is if the Map Template does not have an apikey but has URL parameters
+                else {
+                    setApiKey(apiKeyParameter ? apiKeyParameter : '3ddemo')
+                    window.mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKeyParameter ? apiKeyParameter : '3ddemo');
+                }
+            }
+            // 3. Third case is if the Map Template does not have URL parameters but may/may not have an api key
+            else {
+                setApiKey(apiKey ? apiKey : '3ddemo');
+                window.mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKey ? apiKey : '3ddemo');
+            }
+
             setMapReady(false);
-            window.mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKey);
 
             Promise.all([
                 // Fetch all Venues in the Solution
@@ -147,17 +194,30 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             });
             setMapReady(false);
         }
-    }, [apiKey, mapsindoorsSDKAvailable]);
+    }, [apiKey, mapsindoorsSDKAvailable, hasURLParameters]);
 
     /*
      * React to changes in the gmApiKey and mapboxAccessToken props.
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
-            setMapboxAccessToken(mapboxAccessToken);
-            setGmApyKey(gmApiKey);
+            if (hasURLParameters) {
+                if (mapboxAccessToken) {
+                    setMapboxAccessToken(mapboxAccessTokenParameter ? mapboxAccessTokenParameter : mapboxAccessToken);
+                } else {
+                    setMapboxAccessToken(mapboxAccessTokenParameter ? mapboxAccessTokenParameter : import.meta.env.VITE_MAPBOX_ACCESS_TOKEN)
+                }
+                if (gmApiKey) {
+                    setGmApyKey(gmApiKeyParameter ? gmApiKeyParameter : gmApiKey);
+                } else {
+                    setGmApyKey(gmApiKeyParameter ? gmApiKeyParameter : import.meta.env.VITE_GOOGLE_MAPS_API_KEY)
+                }
+            } else {
+                setMapboxAccessToken(mapboxAccessToken ? mapboxAccessToken : import.meta.env.VITE_MAPBOX_ACCESS_TOKEN);
+                setGmApyKey(gmApiKey ? gmApiKey : import.meta.env.VITE_GOOGLE_MAPS_API_KEY);
+            }
         }
-    }, [gmApiKey, mapboxAccessToken, mapsindoorsSDKAvailable]);
+    }, [gmApiKey, mapboxAccessToken, mapsindoorsSDKAvailable, hasURLParameters]);
 
     /*
      * React on changes in the app user roles prop.
@@ -166,10 +226,15 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         if (mapsindoorsSDKAvailable) {
             window.mapsindoors.services.SolutionsService.getUserRoles().then(userRoles => {
                 const roles = userRoles.filter(role => appUserRoles?.includes(role.name));
-                window.mapsindoors.MapsIndoors.setUserRoles(roles);
+
+                if (hasURLParameters) {
+                    window.mapsindoors.MapsIndoors.setUserRoles(appUserRolesParameter ? appUserRolesParameter : []);
+                } else {
+                    window.mapsindoors.MapsIndoors.setUserRoles(roles);
+                }
             });
         }
-    }, [appUserRoles, mapsindoorsSDKAvailable]);
+    }, [appUserRoles, mapsindoorsSDKAvailable, hasURLParameters]);
 
     /*
      * React on changes in the externalIDs prop.
@@ -195,7 +260,15 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
             setLocationId(locationId);
-            if (locationId) {
+
+            if (hasURLParameters) {
+                window.mapsindoors.services.LocationsService.getLocation(locationIdParameter ? locationIdParameter : locationId).then(location => {
+                    if (location) {
+                        setCurrentVenueName(location.properties.venueId);
+                        setCurrentLocation(location);
+                    }
+                });
+            } else if (locationId) {
                 window.mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
                     if (location) {
                         setCurrentVenueName(location.properties.venueId);
@@ -204,7 +277,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 });
             }
         }
-    }, [locationId, mapsindoorsSDKAvailable]);
+    }, [locationId, mapsindoorsSDKAvailable, hasURLParameters]);
 
     /*
      * React on changes in directions opened state.
@@ -237,22 +310,46 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the venue prop.
      */
     useEffect(() => {
-        setCurrentVenueName(venue);
-    }, [venue]);
+        if (hasURLParameters) {
+            if (venue) {
+                setCurrentVenueName(venueParameter ? venueParameter : venue)
+            } else {
+                setCurrentVenueName(venueParameter ? venueParameter : 'WEWORK')
+            }
+        } else {
+            setCurrentVenueName(venue ? venue : 'WEWORK')
+        }
+    }, [venue, hasURLParameters]);
 
     /*
      * React on changes in the tile style prop.
      */
     useEffect(() => {
-        setTileStyle(tileStyle)
-    }, [tileStyle]);
+        if (hasURLParameters) {
+            if (tileStyle) {
+                setTileStyle(tileStyleParameter ? tileStyleParameter : tileStyle)
+            } else {
+                setTileStyle(tileStyleParameter ? tileStyleParameter : undefined)
+            }
+        } else {
+            setTileStyle(tileStyle ? tileStyle : undefined)
+        }
+    }, [tileStyle, hasURLParameters]);
 
     /*
      * React on changes in the primary color prop.
      */
     useEffect(() => {
-        setPrimaryColor(primaryColor)
-    }, [primaryColor]);
+        if (hasURLParameters) {
+            if (primaryColor) {
+                setPrimaryColor(primaryColorParameter ? hexPrimaryColorParameter : primaryColor)
+            } else {
+                setPrimaryColor(primaryColorParameter ? hexPrimaryColorParameter : '#005655')
+            }
+        } else {
+            setPrimaryColor(primaryColor ? primaryColor : '#005655')
+        }
+    }, [primaryColor, hasURLParameters]);
 
     /*
      * React on changes in the start zoom level prop.
