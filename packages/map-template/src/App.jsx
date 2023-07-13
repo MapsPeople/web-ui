@@ -34,17 +34,17 @@ function App() {
             {/* This is the Map Template component */}
             <MapsIndoorsMap
                 hasURLParameters={true}
-                // apiKey={'mapspeople'}
-                // venue='WEWORK'
-                // locationId={'296994c98023439eac1f20d4'}
-                // primaryColor={'#FF0000'}
+            // apiKey={'mapspeople'}
+            // venue='Stigsborgvej'
+            // locationId={'e4a22527f7a64b47b3efeff4'}
+            // primaryColor={'#FF0000'}
             // logo={logo ? logo : undefined}
             // appUserRoles={appUserRoles}
             // directionsFrom={directionsFrom}
             // directionsTo={directionsTo}
-            // externalIDs={externalIDs}
+            // externalIDs={['0.32.05', '0.47.06', '0.23.01', 'AAA2']}
             // tileStyle={'test'}
-            // startZoomLevel={startZoomLevel}
+            // startZoomLevel={'15'}
             // mapboxAccessToken={mapboxAccessToken ? mapboxAccessToken : import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
             // gmApiKey={gmApiKey ? gmApiKey : import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
             />

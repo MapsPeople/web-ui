@@ -92,7 +92,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setCategories] = useRecoilState(categoriesState);
     const [, setLocationId] = useRecoilState(locationIdState);
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
-    const [defaultPrimaryColor, setPrimaryColor] = useRecoilState(primaryColorState);
+    const [, setPrimaryColor] = useRecoilState(primaryColorState);
 
     const directionsFromLocation = useLocationForWayfinding(directionsFrom);
     const directionsToLocation = useLocationForWayfinding(directionsTo);
@@ -228,9 +228,13 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 const roles = userRoles.filter(role => appUserRoles?.includes(role.name));
 
                 if (hasURLParameters) {
-                    window.mapsindoors.MapsIndoors.setUserRoles(appUserRolesParameter ? appUserRolesParameter : []);
+                    if (appUserRoles) {
+                        window.mapsindoors.MapsIndoors.setUserRoles(appUserRolesParameter ? appUserRolesParameter : roles);
+                    } else {
+                        window.mapsindoors.MapsIndoors.setUserRoles(appUserRolesParameter ? appUserRolesParameter : []);
+                    }
                 } else {
-                    window.mapsindoors.MapsIndoors.setUserRoles(roles);
+                    window.mapsindoors.MapsIndoors.setUserRoles(appUserRoles ? roles : []);
                 }
             });
         }
@@ -242,16 +246,26 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
-            if (externalIDs) {
-                window.mapsindoors.services.LocationsService.getLocationsByExternalId(externalIDs).then(locations => {
+
+            if (hasURLParameters) {
+                if (externalIDs) {
+                    window.mapsindoors.services.LocationsService.getLocationsByExternalId(externalIDsParameter ? externalIDsParameter : externalIDs).then(locations => {
+                        setFilteredLocationsByExternalID(locations);
+                    });
+                } else {
+                    window.mapsindoors.services.LocationsService.getLocationsByExternalId(externalIDsParameter ? externalIDsParameter : []).then(locations => {
+                        setFilteredLocationsByExternalID(locations);
+                    });
+                }
+            } else if (!hasURLParameters) {
+                window.mapsindoors.services.LocationsService.getLocationsByExternalId(externalIDs ? externalIDs : []).then(locations => {
                     setFilteredLocationsByExternalID(locations);
                 });
             } else {
                 setFilteredLocationsByExternalID([]);
             }
         }
-    }, [externalIDs, mapsindoorsSDKAvailable]);
-
+    }, [externalIDs, mapsindoorsSDKAvailable, hasURLParameters]);
 
     /*
      * React on changes to the locationId prop.
@@ -259,17 +273,27 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
-            setLocationId(locationId);
-
             if (hasURLParameters) {
-                window.mapsindoors.services.LocationsService.getLocation(locationIdParameter ? locationIdParameter : locationId).then(location => {
-                    if (location) {
-                        setCurrentVenueName(location.properties.venueId);
-                        setCurrentLocation(location);
-                    }
-                });
-            } else if (locationId) {
-                window.mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
+                if (locationId) {
+                    setLocationId(locationIdParameter ? locationIdParameter : locationId);
+                    window.mapsindoors.services.LocationsService.getLocation(locationIdParameter ? locationIdParameter : locationId).then(location => {
+                        if (location) {
+                            setCurrentVenueName(location.properties.venueId);
+                            setCurrentLocation(location);
+                        }
+                    });
+                } else {
+                    setLocationId(locationIdParameter ? locationIdParameter : '');
+                    window.mapsindoors.services.LocationsService.getLocation(locationIdParameter ? locationIdParameter : '').then(location => {
+                        if (location) {
+                            setCurrentVenueName(location.properties.venueId);
+                            setCurrentLocation(location);
+                        }
+                    });
+                }
+            } else {
+                setLocationId(locationId ? locationId : '');
+                window.mapsindoors.services.LocationsService.getLocation(locationId ? locationId : '').then(location => {
                     if (location) {
                         setCurrentVenueName(location.properties.venueId);
                         setCurrentLocation(location);
@@ -355,8 +379,16 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the start zoom level prop.
      */
     useEffect(() => {
-        setStartZoomLevel(startZoomLevel);
-    }, [startZoomLevel]);
+        if (hasURLParameters) {
+            if (startZoomLevel) {
+                setStartZoomLevel(startZoomLevelParameter ? startZoomLevelParameter : startZoomLevel)
+            } else {
+                setStartZoomLevel(startZoomLevelParameter ? startZoomLevelParameter : '')
+            }
+        } else {
+            setStartZoomLevel(startZoomLevel ? startZoomLevel : '')
+        }
+    }, [startZoomLevel, hasURLParameters]);
 
     /**
      * When venue is fitted while initializing the data,
