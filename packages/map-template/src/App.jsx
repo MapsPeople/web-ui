@@ -33,12 +33,12 @@ function App() {
         <div className="app">
             {/* This is the Map Template component */}
             <MapsIndoorsMap
-                hasURLParameters={true}
+                hasURLParameters={false}
             // apiKey={'mapspeople'}
             // venue='Stigsborgvej'
             // locationId={'e4a22527f7a64b47b3efeff4'}
             // primaryColor={'#FF0000'}
-            // logo={logo ? logo : undefined}
+            // logo={''}
             // appUserRoles={appUserRoles}
             // directionsFrom={directionsFrom}
             // directionsTo={directionsTo}

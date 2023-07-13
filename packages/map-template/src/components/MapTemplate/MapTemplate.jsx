@@ -25,6 +25,8 @@ import filteredLocationsState from '../../atoms/filteredLocationsState';
 import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
 import startZoomLevelState from '../../atoms/startZoomLevelState';
 import primaryColorState from '../../atoms/primaryColorState';
+import logoState from '../../atoms/logoState';
+import defaultLogo from "../../assets/logo.svg";
 
 defineCustomElements();
 
@@ -93,6 +95,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setLocationId] = useRecoilState(locationIdState);
     const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
     const [, setPrimaryColor] = useRecoilState(primaryColorState);
+    const [, setLogo] = useRecoilState(logoState);
 
     const directionsFromLocation = useLocationForWayfinding(directionsFrom);
     const directionsToLocation = useLocationForWayfinding(directionsTo);
@@ -390,6 +393,21 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         }
     }, [startZoomLevel, hasURLParameters]);
 
+    /*
+     * React on changes in the logo prop.
+     */
+    useEffect(() => {
+        if (hasURLParameters) {
+            if (logo) {
+                setLogo(logoParameter ? logoParameter : logo)
+            } else {
+                setLogo(logoParameter ? logoParameter : defaultLogo)
+            }
+        } else {
+            setLogo(logo ? logo : defaultLogo)
+        }
+    }, [logo, hasURLParameters]);
+
     /**
      * When venue is fitted while initializing the data,
      * set map to be ready and get the venue categories.
@@ -402,11 +420,11 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }
 
     /**
-    * Handle the clicked location on the map.
-    * Set the current location if not in directions mode.
-    *
-    * @param {object} location
-    */
+     * Handle the clicked location on the map.
+     * Set the current location if not in directions mode.
+     *
+     * @param {object} location
+     */
     function locationClicked(location) {
         if (_locationsDisabled !== true) {
             setCurrentLocation(location);
@@ -461,7 +479,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }
 
     return <div className={`mapsindoors-map ${hasDirectionsOpen ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}`}>
-        {!isMapReady && <SplashScreen logo={logo} />}
+        {!isMapReady && <SplashScreen/>}
         {venues.length > 1 && <VenueSelector
             onOpen={() => pushAppView(appStates.VENUE_SELECTOR)}
             onClose={() => goBack()}

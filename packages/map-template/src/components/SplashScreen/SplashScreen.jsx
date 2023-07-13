@@ -1,22 +1,16 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
-import logo from "../../assets/logo.svg";
 import primaryColorState from "../../atoms/primaryColorState";
 import './SplashScreen.scss';
-
-const defaultLogo = logo;
+import logoState from "../../atoms/logoState";
 
 /**
  * Creates the splash screen loading initially in the app.
- * The default colors and logo are MapsIndoors' visual identity.
- * The component allows for customisation of these two properties according to each case,
- * along with the width and the height of the logo.
- *
- * @param {object} props
- * @param {string} props.logo - The logo that appears on the splash screen.
+ * The default color and logo are MapsIndoors' visual identity.
  */
-function SplashScreen({ logo = defaultLogo }) {
+function SplashScreen() {
     const primaryColor = useRecoilValue(primaryColorState);
+    const logo = useRecoilValue(logoState);
 
     return (
         <div className="splash-screen">
