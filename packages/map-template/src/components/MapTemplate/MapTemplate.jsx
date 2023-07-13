@@ -30,7 +30,6 @@ import defaultLogo from "../../assets/logo.svg";
 
 defineCustomElements();
 
-
 // The current query string
 const queryString = window.location.search;
 const params = new URLSearchParams(queryString);
@@ -99,6 +98,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     const directionsFromLocation = useLocationForWayfinding(directionsFrom);
     const directionsToLocation = useLocationForWayfinding(directionsTo);
+    const directionsFromLocationParameter = useLocationForWayfinding(directionsFromParameter);
+    const directionsToLocationParameter = useLocationForWayfinding(directionsToParameter);
 
     // The filtered locations by external id, if present.
     const [, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
@@ -408,6 +409,41 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         }
     }, [logo, hasURLParameters]);
 
+
+    /**
+     * Get directions to depending on URL Parameters.
+     * 
+     * @returns {object}
+     */
+    function getDirectionsTo() {
+        if (hasURLParameters) {
+            if (directionsTo) {
+                return directionsToParameter ? directionsToLocationParameter : directionsToLocation
+            } else {
+                return directionsToParameter ? directionsToLocationParameter : ''
+            }
+        } else {
+            return directionsTo ? directionsToLocation : ''
+        }
+    }
+
+    /**
+    * Get directions from depending on URL Parameters.
+    * 
+    * @returns {object}
+    */
+    function getDirectionsFrom() {
+        if (hasURLParameters) {
+            if (directionsFrom) {
+                return directionsFromParameter ? directionsFromLocationParameter : directionsFromLocation
+            } else {
+                return directionsFromParameter ? directionsFromLocationParameter : ''
+            }
+        } else {
+            return directionsFrom ? directionsFromLocation : ''
+        }
+    }
+
     /**
      * When venue is fitted while initializing the data,
      * set map to be ready and get the venue categories.
@@ -479,7 +515,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }
 
     return <div className={`mapsindoors-map ${hasDirectionsOpen ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}`}>
-        {!isMapReady && <SplashScreen/>}
+        {!isMapReady && <SplashScreen />}
         {venues.length > 1 && <VenueSelector
             onOpen={() => pushAppView(appStates.VENUE_SELECTOR)}
             onClose={() => goBack()}
@@ -489,8 +525,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             <>
                 {isDesktop &&
                     <Sidebar
-                        directionsFromLocation={directionsFromLocation}
-                        directionsToLocation={directionsToLocation}
+                        directionsFromLocation={getDirectionsFrom()}
+                        directionsToLocation={getDirectionsTo()}
                         pushAppView={pushAppView}
                         currentAppView={currentAppView}
                         appViews={appStates}
@@ -498,8 +534,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 }
                 {isMobile &&
                     <BottomSheet
-                        directionsFromLocation={directionsFromLocation}
-                        directionsToLocation={directionsToLocation}
+                        directionsFromLocation={getDirectionsFrom()}
+                        directionsToLocation={getDirectionsTo()}
                         pushAppView={pushAppView}
                         currentAppView={currentAppView}
                         appViews={appStates}

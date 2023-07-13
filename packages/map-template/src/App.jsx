@@ -32,22 +32,7 @@ function App() {
     return (
         <div className="app">
             {/* This is the Map Template component */}
-            <MapsIndoorsMap
-                hasURLParameters={false}
-            // apiKey={'mapspeople'}
-            // venue='Stigsborgvej'
-            // locationId={'e4a22527f7a64b47b3efeff4'}
-            // primaryColor={'#FF0000'}
-            // logo={''}
-            // appUserRoles={appUserRoles}
-            // directionsFrom={directionsFrom}
-            // directionsTo={directionsTo}
-            // externalIDs={['0.32.05', '0.47.06', '0.23.01', 'AAA2']}
-            // tileStyle={'test'}
-            // startZoomLevel={'15'}
-            // mapboxAccessToken={mapboxAccessToken ? mapboxAccessToken : import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
-            // gmApiKey={gmApiKey ? gmApiKey : import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
-            />
+            <MapsIndoorsMap hasURLParameters={true} />
         </div>
     );
 }
