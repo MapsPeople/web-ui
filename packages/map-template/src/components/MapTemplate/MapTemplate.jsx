@@ -29,12 +29,6 @@ import primaryColorState from '../../atoms/primaryColorState';
 defineCustomElements();
 
 /**
- * Private variable used for checking if the locations should be disabled.
- * Implemented due to the impossibility to use the React useState hook.
- */
-let _locationsDisabled;
-
-/**
  *
  * @param {Object} props
  * @param {string} props.apiKey - MapsIndoors API key or solution alias.
@@ -87,6 +81,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     // Declare the reference to the App Config
     const appConfigRef = useRef();
+
+    // Declare the reference to the disabled locations
+    const locationsDisabledRef = useRef(); 
 
     // Indicate if the MapsIndoors JavaScript SDK is available
     const [mapsindoorsSDKAvailable, setMapsindoorsSDKAvailable] = useState(false);
@@ -230,7 +227,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         }
 
         setHasDirectionsOpen(currentAppView === appStates.DIRECTIONS);
-        _locationsDisabled = currentAppView === appStates.DIRECTIONS;
+        locationsDisabledRef.current = currentAppView === appStates.DIRECTIONS;
     }, [currentAppView]);
 
     /*
@@ -279,7 +276,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     * @param {object} location
     */
     function locationClicked(location) {
-        if (_locationsDisabled !== true) {
+        if (locationsDisabledRef.current !== true) {
             setCurrentLocation(location);
         }
     }
