@@ -212,8 +212,8 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
             });
         } else {
             positionControl.on('position_received', positionInfo => {
-                if (positionInfo.detail.accurate === true) {
-                    setUserPosition(positionInfo.detail.position);
+                if (positionInfo.accurate === true) {
+                    setUserPosition(positionInfo.position);
                 }
             });
         }
