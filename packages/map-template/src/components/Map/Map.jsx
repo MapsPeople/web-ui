@@ -206,14 +206,14 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
         if (positionControl.nodeName === 'MI-MY-POSITION') {
             // The Web Component needs to set up the listener with addEventListener
             positionControl.addEventListener('position_received', positionInfo => {
-                if (positionInfo.accurate === true) {
-                    setUserPosition(positionInfo.position);
+                if (positionInfo.detail.accurate === true) {
+                    setUserPosition(positionInfo.detail.position);
                 }
             });
         } else {
             positionControl.on('position_received', positionInfo => {
-                if (positionInfo.accurate === true) {
-                    setUserPosition(positionInfo.position);
+                if (positionInfo.detail.accurate === true) {
+                    setUserPosition(positionInfo.detail.position);
                 }
             });
         }
