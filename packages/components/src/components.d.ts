@@ -360,6 +360,10 @@ export namespace Components {
     }
     interface MiLocationInfo {
         /**
+          * @description Level info.
+         */
+        "level": string;
+        /**
           * @description Location object.
          */
         "location": any;
@@ -1698,6 +1702,10 @@ declare namespace LocalJSX {
     };
     }
     interface MiLocationInfo {
+        /**
+          * @description Level info.
+         */
+        "level"?: string;
         /**
           * @description Location object.
          */

@@ -59,6 +59,7 @@ If false, the component will not show the location's Extrenal ID. The attribute 
 
 | Property         | Attribute          | Description | Type      | Default     |
 | ---------------- | ------------------ | ----------- | --------- | ----------- |
+| `level`          | `level`            |             | `string`  | `'Level'`   |
 | `location`       | `location`         |             | `any`     | `undefined` |
 | `showExternalId` | `show-external-id` |             | `boolean` | `true`      |
 

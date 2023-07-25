@@ -13,6 +13,11 @@ export class LocationInfo implements ComponentInterface {
     @Prop() location;
 
     /**
+     * @description Level info.
+     */
+    @Prop() level: string = 'Level';
+
+    /**
      * @description Whether to show the External ID.
      */
     @Prop() showExternalId: boolean = true;
@@ -31,7 +36,7 @@ export class LocationInfo implements ComponentInterface {
         }
         // Floor name
         if (this.location.properties.floorName) {
-            details.push(`Level ${this.location.properties.floorName}`);
+            details.push(`${this.level} ${this.location.properties.floorName}`);
         }
         // Building
         if (this.location.properties.building) {
@@ -58,6 +63,8 @@ export class LocationInfo implements ComponentInterface {
     }
 
     /**
+     * Renders location list-info.
+     *
      * @description Render location list-info.
      * @returns {JSX.Element}
      */
