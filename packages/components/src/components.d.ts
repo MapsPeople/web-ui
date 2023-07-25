@@ -360,7 +360,7 @@ export namespace Components {
     }
     interface MiLocationInfo {
         /**
-          * @description Level info.
+          * @description The word used for "Level" when showing level info. Default is "Level".
          */
         "level": string;
         /**
@@ -1703,7 +1703,7 @@ declare namespace LocalJSX {
     }
     interface MiLocationInfo {
         /**
-          * @description Level info.
+          * @description The word used for "Level" when showing level info. Default is "Level".
          */
         "level"?: string;
         /**
