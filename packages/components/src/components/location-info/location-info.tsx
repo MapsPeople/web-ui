@@ -13,7 +13,7 @@ export class LocationInfo implements ComponentInterface {
     @Prop() location;
 
     /**
-     * @description Level.
+     * @description Location's level property that can by translatable for specific languages. By default level value is 'Level'.
      */
     @Prop() level: string = 'Level';
 
