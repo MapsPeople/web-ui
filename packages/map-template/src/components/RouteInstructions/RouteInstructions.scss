@@ -18,6 +18,7 @@
         &::before {
             content: '';
             position: absolute;
+            pointer-events: none;
             bottom: calc(64px + var(--spacing-medium));
             left: 0;
             right: 0;
