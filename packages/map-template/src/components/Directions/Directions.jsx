@@ -34,6 +34,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
 
     const destinationInfoElement = useRef(null);
     const originInfoElement = useRef(null);
+    const guideElement = useRef(null);
 
     const [totalDistance, setTotalDistance] = useState();
     const [totalTime, setTotalTime] = useState();
@@ -122,6 +123,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
      * Render the next navigation step on the map.
      */
     function onNext() {
+        guideElement.current.scrollTop = 0;
         if (directionsRenderer) {
             directionsRenderer.nextStep();
         }
@@ -131,6 +133,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
      * Render the previous navigation step on the map.
      */
     function onPrevious() {
+        guideElement.current.scrollTop = 0;
         if (directionsRenderer) {
             directionsRenderer.previousStep();
         }
@@ -255,7 +258,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                     </div>
                 </div>
             </div>
-            <div className="directions__guide">
+            <div ref={guideElement} className="directions__guide">
                 <div className="directions__metrics">
                     <div className="directions__distance">
                         {travelMode === travelModes.WALKING && <WalkingIcon />}
