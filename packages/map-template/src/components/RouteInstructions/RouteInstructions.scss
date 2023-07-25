@@ -114,7 +114,7 @@
 
     mi-route-instructions-step {
         padding: var(--spacing-medium) 0;
-        overflow: scroll;
+        overflow-y: auto;
         height: 100%;
     }
 }
