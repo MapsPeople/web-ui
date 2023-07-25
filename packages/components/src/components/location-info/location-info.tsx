@@ -13,7 +13,7 @@ export class LocationInfo implements ComponentInterface {
     @Prop() location;
 
     /**
-     * @description Level info.
+     * @description Level.
      */
     @Prop() level: string = 'Level';
 
