@@ -34,7 +34,6 @@ defineCustomElements();
 const queryString = window.location.search;
 const params = new URLSearchParams(queryString);
 
-const locationIdParameter = params.get('locationId');
 const logoParameter = params.get('logo');
 const directionsFromParameter = params.get('directionsFrom');
 const directionsToParameter = params.get('directionsTo');
@@ -258,27 +257,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
-            if (hasURLParameters) {
-                if (locationId) {
-                    setLocationId(locationIdParameter ? locationIdParameter : locationId);
-                    window.mapsindoors.services.LocationsService.getLocation(locationIdParameter ? locationIdParameter : locationId).then(location => {
-                        if (location) {
-                            setCurrentVenueName(location.properties.venueId);
-                            setCurrentLocation(location);
-                        }
-                    });
-                } else {
-                    setLocationId(locationIdParameter ? locationIdParameter : '');
-                    window.mapsindoors.services.LocationsService.getLocation(locationIdParameter ? locationIdParameter : '').then(location => {
-                        if (location) {
-                            setCurrentVenueName(location.properties.venueId);
-                            setCurrentLocation(location);
-                        }
-                    });
-                }
-            } else {
-                setLocationId(locationId ? locationId : '');
-                window.mapsindoors.services.LocationsService.getLocation(locationId ? locationId : '').then(location => {
+            setLocationId(locationId);
+            if (locationId) {
+                window.mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
                     if (location) {
                         setCurrentVenueName(location.properties.venueId);
                         setCurrentLocation(location);
@@ -286,7 +267,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 });
             }
         }
-    }, [locationId, mapsindoorsSDKAvailable, hasURLParameters]);
+    }, [locationId, mapsindoorsSDKAvailable]);
 
     /*
      * React on changes in directions opened state.

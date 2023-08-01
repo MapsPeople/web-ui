@@ -35,10 +35,12 @@ function MapsIndoorsMap(props) {
 
         const apiKeyQueryParameter = queryStringParams.get('apiKey');
         const venueQueryParameter = queryStringParams.get('venue');
+        const locationIdQueryParameter = queryStringParams.get('locationId');
 
         setMapTemplateProps({
             apiKey: props.hasURLParameters && apiKeyQueryParameter ? apiKeyQueryParameter : (props.apiKey || defaultProps.apiKey),
-            venue: props.hasURLParameters && venueQueryParameter ? venueQueryParameter : (props.venue || defaultProps.venue)
+            venue: props.hasURLParameters && venueQueryParameter ? venueQueryParameter : (props.venue || defaultProps.venue),
+            locationId: props.hasURLParameters && locationIdQueryParameter ? locationIdQueryParameter : props.locationId
         });
     }, [props]);
 
