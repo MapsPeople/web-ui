@@ -34,8 +34,6 @@ defineCustomElements();
 const queryString = window.location.search;
 const params = new URLSearchParams(queryString);
 
-const directionsFromParameter = params.get('directionsFrom');
-const directionsToParameter = params.get('directionsTo');
 const tileStyleParameter = params.get('tileStyle');
 const startZoomLevelParameter = params.get('startZoomLevel');
 const gmApiKeyParameter = params.get('gmApiKey');
@@ -94,8 +92,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     const directionsFromLocation = useLocationForWayfinding(directionsFrom);
     const directionsToLocation = useLocationForWayfinding(directionsTo);
-    const directionsFromLocationParameter = useLocationForWayfinding(directionsFromParameter);
-    const directionsToLocationParameter = useLocationForWayfinding(directionsToParameter);
 
     // The filtered locations by external id, if present.
     const [, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
@@ -354,41 +350,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         setLogo(logo);
     }, [logo]);
 
-
-    /**
-     * Get directions to depending on URL Parameters.
-     *
-     * @returns {object}
-     */
-    function getDirectionsTo() {
-        if (hasURLParameters) {
-            if (directionsTo) {
-                return directionsToParameter ? directionsToLocationParameter : directionsToLocation
-            } else {
-                return directionsToParameter ? directionsToLocationParameter : ''
-            }
-        } else {
-            return directionsTo ? directionsToLocation : ''
-        }
-    }
-
-    /**
-    * Get directions from depending on URL Parameters.
-    *
-    * @returns {object}
-    */
-    function getDirectionsFrom() {
-        if (hasURLParameters) {
-            if (directionsFrom) {
-                return directionsFromParameter ? directionsFromLocationParameter : directionsFromLocation
-            } else {
-                return directionsFromParameter ? directionsFromLocationParameter : ''
-            }
-        } else {
-            return directionsFrom ? directionsFromLocation : ''
-        }
-    }
-
     /**
      * When venue is fitted while initializing the data,
      * set map to be ready and get the venue categories.
@@ -470,8 +431,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             <>
                 {isDesktop &&
                     <Sidebar
-                        directionsFromLocation={getDirectionsFrom()}
-                        directionsToLocation={getDirectionsTo()}
+                        directionsFromLocation={directionsFromLocation}
+                        directionsToLocation={directionsToLocation}
                         pushAppView={pushAppView}
                         currentAppView={currentAppView}
                         appViews={appStates}
@@ -479,8 +440,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 }
                 {isMobile &&
                     <BottomSheet
-                        directionsFromLocation={getDirectionsFrom()}
-                        directionsToLocation={getDirectionsTo()}
+                        directionsFromLocation={directionsFromLocation}
+                        directionsToLocation={directionsToLocation}
                         pushAppView={pushAppView}
                         currentAppView={currentAppView}
                         appViews={appStates}

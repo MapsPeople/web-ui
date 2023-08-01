@@ -39,12 +39,16 @@ function MapsIndoorsMap(props) {
         const venueQueryParameter = queryStringParams.get('venue');
         const locationIdQueryParameter = queryStringParams.get('locationId');
         const logoQueryParameter = queryStringParams.get('logo');
+        const directionsFromQueryParameter = queryStringParams.get('directionsFrom');
+        const directionsToQueryParameter = queryStringParams.get('directionsTo');
 
         setMapTemplateProps({
             apiKey: props.hasURLParameters && apiKeyQueryParameter ? apiKeyQueryParameter : (props.apiKey || defaultProps.apiKey),
             venue: props.hasURLParameters && venueQueryParameter ? venueQueryParameter : (props.venue || defaultProps.venue),
             locationId: props.hasURLParameters && locationIdQueryParameter ? locationIdQueryParameter : props.locationId,
-            logo: props.hasURLParameters && logoQueryParameter ? logoQueryParameter : (props.logo || defaultProps.logo)
+            logo: props.hasURLParameters && logoQueryParameter ? logoQueryParameter : (props.logo || defaultProps.logo),
+            directionsFrom: props.hasURLParameters && directionsFromQueryParameter ? directionsFromQueryParameter : props.directionsFrom,
+            directionsTo: props.hasURLParameters && directionsToQueryParameter ? directionsToQueryParameter : props.directionsTo
         });
     }, [props]);
 
