@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { RecoilRoot } from 'recoil';
 import MapTemplate from '../MapTemplate/MapTemplate.jsx';
 
@@ -17,11 +18,30 @@ import MapTemplate from '../MapTemplate/MapTemplate.jsx';
  * @param {array} [props.externalIDs] - Filter locations shown on the map based on the external IDs.
  * @param {string} [props.tileStyle] - Tile style name to change the interface of the map.
  * @param {number} [props.startZoomLevel] - The initial zoom level of the map.
+ * @param {boolean} [props.hasURLParameters] - If you want to support URL Parameters to configure the Map Template.
  */
 function MapsIndoorsMap(props) {
+
+    const [mapTemplateProps, setMapTemplateProps] = useState();
+
+    useEffect(() => {
+        const queryString = window.location.search;
+        const queryStringParams = new URLSearchParams(queryString);
+
+        const defaultProps = {
+            apiKey: '3ddemo'
+        };
+
+        const apiKeyParameter = queryStringParams.get('apiKey');
+
+        setMapTemplateProps({
+            apiKey: props.hasURLParameters && apiKeyParameter ? apiKeyParameter : (props.apiKey || defaultProps.apiKey)
+        });
+    }, [props]);
+
     return (
         <RecoilRoot>
-            <MapTemplate {...props}></MapTemplate>
+            {mapTemplateProps && <MapTemplate {...mapTemplateProps}></MapTemplate>}
         </RecoilRoot>
     )
 }

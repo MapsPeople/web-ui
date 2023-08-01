@@ -159,27 +159,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
-
-            // Check if the Map Template has URL Parameters and handle each case
-            if (hasURLParameters) {
-                // 1. First case is if the Map Template has an apiKey and URL parameters
-                if (apiKey) {
-                    setApiKey(apiKeyParameter ? apiKeyParameter : apiKey)
-                    window.mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKeyParameter ? apiKeyParameter : apiKey);
-                }
-                // 2. Second case is if the Map Template does not have an apikey but has URL parameters
-                else {
-                    setApiKey(apiKeyParameter ? apiKeyParameter : '3ddemo')
-                    window.mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKeyParameter ? apiKeyParameter : '3ddemo');
-                }
-            }
-            // 3. Third case is if the Map Template does not have URL parameters but may/may not have an api key
-            else {
-                setApiKey(apiKey ? apiKey : '3ddemo');
-                window.mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKey ? apiKey : '3ddemo');
-            }
+            setApiKey(apiKey);
 
             setMapReady(false);
+            window.mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKey);
 
             Promise.all([
                 // Fetch all Venues in the Solution
@@ -412,7 +395,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     /**
      * Get directions to depending on URL Parameters.
-     * 
+     *
      * @returns {object}
      */
     function getDirectionsTo() {
@@ -429,7 +412,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     /**
     * Get directions from depending on URL Parameters.
-    * 
+    *
     * @returns {object}
     */
     function getDirectionsFrom() {
