@@ -34,7 +34,6 @@ defineCustomElements();
 const queryString = window.location.search;
 const params = new URLSearchParams(queryString);
 
-const logoParameter = params.get('logo');
 const directionsFromParameter = params.get('directionsFrom');
 const directionsToParameter = params.get('directionsTo');
 const tileStyleParameter = params.get('tileStyle');
@@ -352,16 +351,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the logo prop.
      */
     useEffect(() => {
-        if (hasURLParameters) {
-            if (logo) {
-                setLogo(logoParameter ? logoParameter : logo)
-            } else {
-                setLogo(logoParameter ? logoParameter : defaultLogo)
-            }
-        } else {
-            setLogo(logo ? logo : defaultLogo)
-        }
-    }, [logo, hasURLParameters]);
+        setLogo(logo);
+    }, [logo]);
 
 
     /**

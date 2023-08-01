@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { RecoilRoot } from 'recoil';
 import MapTemplate from '../MapTemplate/MapTemplate.jsx';
+import defaultLogo from "../../assets/logo.svg";
 
 /**
  *
@@ -30,17 +31,20 @@ function MapsIndoorsMap(props) {
 
         const defaultProps = {
             apiKey: '3ddemo',
-            venue: 'WEWORK'
+            venue: 'WEWORK',
+            logo: defaultLogo
         };
 
         const apiKeyQueryParameter = queryStringParams.get('apiKey');
         const venueQueryParameter = queryStringParams.get('venue');
         const locationIdQueryParameter = queryStringParams.get('locationId');
+        const logoQueryParameter = queryStringParams.get('logo');
 
         setMapTemplateProps({
             apiKey: props.hasURLParameters && apiKeyQueryParameter ? apiKeyQueryParameter : (props.apiKey || defaultProps.apiKey),
             venue: props.hasURLParameters && venueQueryParameter ? venueQueryParameter : (props.venue || defaultProps.venue),
-            locationId: props.hasURLParameters && locationIdQueryParameter ? locationIdQueryParameter : props.locationId
+            locationId: props.hasURLParameters && locationIdQueryParameter ? locationIdQueryParameter : props.locationId,
+            logo: props.hasURLParameters && logoQueryParameter ? logoQueryParameter : (props.logo || defaultProps.logo)
         });
     }, [props]);
 
