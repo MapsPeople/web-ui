@@ -25,6 +25,11 @@ function MapsIndoorsMap(props) {
 
     const [mapTemplateProps, setMapTemplateProps] = useState();
 
+    /*
+     * Listening for all props.
+     * Will use query parameters to pass to the child component is the hasURLParameters prop is set to true.
+     * Applies default values for some props if needed.
+     */
     useEffect(() => {
         const queryString = window.location.search;
         const queryStringParams = new URLSearchParams(queryString);

@@ -26,7 +26,6 @@ import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByE
 import startZoomLevelState from '../../atoms/startZoomLevelState';
 import primaryColorState from '../../atoms/primaryColorState';
 import logoState from '../../atoms/logoState';
-import defaultLogo from "../../assets/logo.svg";
 
 defineCustomElements();
 
