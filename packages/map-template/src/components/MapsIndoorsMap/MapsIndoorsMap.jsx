@@ -53,6 +53,7 @@ function MapsIndoorsMap(props) {
         const mapboxAccessTokenQueryParameter = queryStringParams.get('mapboxAccessToken');
         const primaryColorQueryParameter = queryStringParams.get('primaryColor'); // use without '#'. It will be prepended.
         const appUserRolesQueryParameter = queryStringParams.get('appUserRoles')?.split(',');
+        const externalIDsQueryParameter = queryStringParams.get('externalIDs')?.split(',');
 
         setMapTemplateProps({
             apiKey: props.hasURLParameters && apiKeyQueryParameter ? apiKeyQueryParameter : (props.apiKey || defaultProps.apiKey),
@@ -66,7 +67,8 @@ function MapsIndoorsMap(props) {
             gmApiKey: props.hasURLParameters && gmApiKeyQueryParameter ? gmApiKeyQueryParameter : (props.gmApiKey || import.meta.env.VITE_GOOGLE_MAPS_API_KEY),
             mapboxAccessToken: props.hasURLParameters && mapboxAccessTokenQueryParameter ? mapboxAccessTokenQueryParameter : (props.mapboxAccessToken || import.meta.env.VITE_MAPBOX_ACCESS_TOKEN),
             primaryColor: props.hasURLParameters && primaryColorQueryParameter ? '#' + primaryColorQueryParameter : (props.primaryColor || defaultProps.primaryColor),
-            appUserRoles: props.hasURLParameters && appUserRolesQueryParameter ? appUserRolesQueryParameter : props.appUserRoles
+            appUserRoles: props.hasURLParameters && appUserRolesQueryParameter ? appUserRolesQueryParameter : props.appUserRoles,
+            externalIDs: props.hasURLParameters && externalIDsQueryParameter ? externalIDsQueryParameter : props.externalIDs
         });
     }, [props]);
 

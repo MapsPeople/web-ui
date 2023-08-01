@@ -29,13 +29,6 @@ import logoState from '../../atoms/logoState';
 
 defineCustomElements();
 
-// The current query string
-const queryString = window.location.search;
-const params = new URLSearchParams(queryString);
-
-// Create an array of external IDs based on the comma separated values
-const externalIDsParameter = params.get('externalIDs')?.split(',')
-
 /**
  * Private variable used for checking if the locations should be disabled.
  * Implemented due to the impossibility to use the React useState hook.
@@ -188,26 +181,15 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
-
-            if (hasURLParameters) {
-                if (externalIDs) {
-                    window.mapsindoors.services.LocationsService.getLocationsByExternalId(externalIDsParameter ? externalIDsParameter : externalIDs).then(locations => {
-                        setFilteredLocationsByExternalID(locations);
-                    });
-                } else {
-                    window.mapsindoors.services.LocationsService.getLocationsByExternalId(externalIDsParameter ? externalIDsParameter : []).then(locations => {
-                        setFilteredLocationsByExternalID(locations);
-                    });
-                }
-            } else if (!hasURLParameters) {
-                window.mapsindoors.services.LocationsService.getLocationsByExternalId(externalIDs ? externalIDs : []).then(locations => {
+            if (externalIDs) {
+                window.mapsindoors.services.LocationsService.getLocationsByExternalId(externalIDs).then(locations => {
                     setFilteredLocationsByExternalID(locations);
                 });
             } else {
                 setFilteredLocationsByExternalID([]);
             }
         }
-    }, [externalIDs, mapsindoorsSDKAvailable, hasURLParameters]);
+    }, [externalIDs, mapsindoorsSDKAvailable]);
 
     /*
      * React on changes to the locationId prop.
