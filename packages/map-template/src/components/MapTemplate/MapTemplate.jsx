@@ -82,7 +82,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const appConfigRef = useRef();
 
     // Declare the reference to the disabled locations
-    const locationsDisabledRef = useRef(); 
+    const locationsDisabledRef = useRef();
 
     // Indicate if the MapsIndoors JavaScript SDK is available
     const [mapsindoorsSDKAvailable, setMapsindoorsSDKAvailable] = useState(false);
@@ -202,20 +202,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         }
     }, [locationId, mapsindoorsSDKAvailable]);
 
-    /*
-     * React on changes in directions opened state.
-     */
-    useEffect(() => {
-        // Reset all the filters when in directions mode.
-        // Store the filtered locations in another state, to be able to access them again.
-        if (locationsDisabledRef.current) {
-            setInitialFilteredLocations(filteredLocations)
-            setFilteredLocations([]);
-        } else {
-            // Apply the previously filtered locations to the map when navigating outside the directions.
-            setFilteredLocations(initialFilteredLocations);
-        }
-    }, []);
+
 
     /*
      * Add Location to history payload to make it possible to re-enter location details with that Location.
@@ -226,6 +213,16 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         }
 
         locationsDisabledRef.current = currentAppView === appStates.DIRECTIONS;
+
+        // Reset all the filters when in directions mode.
+        // Store the filtered locations in another state, to be able to access them again.
+        if (locationsDisabledRef.current) {
+            setInitialFilteredLocations(filteredLocations)
+            setFilteredLocations([]);
+        } else {
+            // Apply the previously filtered locations to the map when navigating outside the directions.
+            setFilteredLocations(initialFilteredLocations);
+        }
     }, [currentAppView]);
 
     /*
