@@ -13,7 +13,7 @@
     }
 
     &--show-elements {
-        .mapsindoors.floor-selector {
+        mi-floor-selector {
             display: block;
         }
 
@@ -23,7 +23,7 @@
     }
 
     &--hide-elements {
-        .mapsindoors.floor-selector {
+        mi-floor-selector {
             display: none;
         }
 
@@ -44,12 +44,6 @@
 
     #mi_map_logo {
         z-index: var(--z-index-dropdown) !important;
-    }
-
-    .floor-selector {
-        max-height: 346px; // UX Spec
-        overflow-y: auto;
-        overflow-x: hidden;
     }
 }
 
