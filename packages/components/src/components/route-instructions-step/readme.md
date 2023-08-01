@@ -357,9 +357,33 @@ mi-route-instructions-step::part(step-toggle) {
 
 ## Events
 
-| Event         | Description                                           | Type                  |
-| ------------- | ----------------------------------------------------- | --------------------- |
-| `stepClicked` | Event emitted when clicking on a step (not sub step). | `CustomEvent<object>` |
+| Event             | Description                                           | Type                  |
+| ----------------- | ----------------------------------------------------- | --------------------- |
+| `stepClicked`     | Event emitted when clicking on a step (not sub step). | `CustomEvent<object>` |
+| `substepsToggled` | Event emitted when substeps are toggled.              | `CustomEvent<void>`   |
+
+
+## Methods
+
+### `closeSubsteps() => Promise<void>`
+
+Programmatically close the substeps.
+
+#### Returns
+
+Type: `Promise<void>`
+
+
+
+### `openSubsteps() => Promise<void>`
+
+Programmatically open the substeps.
+
+#### Returns
+
+Type: `Promise<void>`
+
+
 
 
 ## Shadow Parts
