@@ -33,12 +33,6 @@ defineCustomElements();
 const queryString = window.location.search;
 const params = new URLSearchParams(queryString);
 
-// Append the hashtag symbol to the color code (i.e. ffffff)
-const primaryColorParameter = params.get('primaryColor');
-
-// The HEX value refers to the --brand-colors-dark-pine-100 from MIDT
-const hexPrimaryColorParameter = primaryColorParameter ? '#'.concat(primaryColorParameter) : '#005655';
-
 // Create an array of app user roles based on the comma separated values
 const appUserRolesParameter = params.get('appUserRoles')?.split(',')
 
@@ -290,16 +284,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the primary color prop.
      */
     useEffect(() => {
-        if (hasURLParameters) {
-            if (primaryColor) {
-                setPrimaryColor(primaryColorParameter ? hexPrimaryColorParameter : primaryColor)
-            } else {
-                setPrimaryColor(primaryColorParameter ? hexPrimaryColorParameter : '#005655')
-            }
-        } else {
-            setPrimaryColor(primaryColor ? primaryColor : '#005655')
-        }
-    }, [primaryColor, hasURLParameters]);
+        setPrimaryColor(primaryColor);
+    }, [primaryColor]);
 
     /*
      * React on changes in the start zoom level prop.

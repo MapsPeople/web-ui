@@ -37,7 +37,8 @@ function MapsIndoorsMap(props) {
         const defaultProps = {
             apiKey: '3ddemo',
             venue: 'WEWORK',
-            logo: defaultLogo
+            logo: defaultLogo,
+            primaryColor: '#005655' // --brand-colors-dark-pine-100 from MIDT
         };
 
         const apiKeyQueryParameter = queryStringParams.get('apiKey');
@@ -50,6 +51,7 @@ function MapsIndoorsMap(props) {
         const startZoomLevelQueryParameter = queryStringParams.get('startZoomLevel');
         const gmApiKeyQueryParameter = queryStringParams.get('gmApiKey');
         const mapboxAccessTokenQueryParameter = queryStringParams.get('mapboxAccessToken');
+        const primaryColorQueryParameter = queryStringParams.get('primaryColor'); // use without '#'. It will be prepended.
 
         setMapTemplateProps({
             apiKey: props.hasURLParameters && apiKeyQueryParameter ? apiKeyQueryParameter : (props.apiKey || defaultProps.apiKey),
@@ -61,7 +63,8 @@ function MapsIndoorsMap(props) {
             tileStyle: props.hasURLParameters && tileStyleQueryParameter ? tileStyleQueryParameter : props.tileStyle,
             startZoomLevel: props.hasURLParameters && startZoomLevelQueryParameter ? startZoomLevelQueryParameter : props.startZoomLevel,
             gmApiKey: props.hasURLParameters && gmApiKeyQueryParameter ? gmApiKeyQueryParameter : (props.gmApiKey || import.meta.env.VITE_GOOGLE_MAPS_API_KEY),
-            mapboxAccessToken: props.hasURLParameters && mapboxAccessTokenQueryParameter ? mapboxAccessTokenQueryParameter : (props.mapboxAccessToken || import.meta.env.VITE_MAPBOX_ACCESS_TOKEN)
+            mapboxAccessToken: props.hasURLParameters && mapboxAccessTokenQueryParameter ? mapboxAccessTokenQueryParameter : (props.mapboxAccessToken || import.meta.env.VITE_MAPBOX_ACCESS_TOKEN),
+            primaryColor: props.hasURLParameters && primaryColorQueryParameter ? '#' + primaryColorQueryParameter : (props.primaryColor || defaultProps.primaryColor)
         });
     }, [props]);
 
