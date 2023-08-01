@@ -34,8 +34,6 @@ defineCustomElements();
 const queryString = window.location.search;
 const params = new URLSearchParams(queryString);
 
-const apiKeyParameter = params.get('apiKey');
-const venueParameter = params.get('venue');
 const locationIdParameter = params.get('locationId');
 const logoParameter = params.get('logo');
 const directionsFromParameter = params.get('directionsFrom');
@@ -321,16 +319,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the venue prop.
      */
     useEffect(() => {
-        if (hasURLParameters) {
-            if (venue) {
-                setCurrentVenueName(venueParameter ? venueParameter : venue)
-            } else {
-                setCurrentVenueName(venueParameter ? venueParameter : 'WEWORK')
-            }
-        } else {
-            setCurrentVenueName(venue ? venue : 'WEWORK')
-        }
-    }, [venue, hasURLParameters]);
+        setCurrentVenueName(venue);
+    }, [venue]);
 
     /*
      * React on changes in the tile style prop.

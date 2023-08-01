@@ -29,13 +29,16 @@ function MapsIndoorsMap(props) {
         const queryStringParams = new URLSearchParams(queryString);
 
         const defaultProps = {
-            apiKey: '3ddemo'
+            apiKey: '3ddemo',
+            venue: 'WEWORK'
         };
 
-        const apiKeyParameter = queryStringParams.get('apiKey');
+        const apiKeyQueryParameter = queryStringParams.get('apiKey');
+        const venueQueryParameter = queryStringParams.get('venue');
 
         setMapTemplateProps({
-            apiKey: props.hasURLParameters && apiKeyParameter ? apiKeyParameter : (props.apiKey || defaultProps.apiKey)
+            apiKey: props.hasURLParameters && apiKeyQueryParameter ? apiKeyQueryParameter : (props.apiKey || defaultProps.apiKey),
+            venue: props.hasURLParameters && venueQueryParameter ? venueQueryParameter : (props.venue || defaultProps.venue)
         });
     }, [props]);
 
