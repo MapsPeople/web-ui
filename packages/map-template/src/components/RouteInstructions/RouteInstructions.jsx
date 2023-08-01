@@ -9,14 +9,7 @@ import activeStepState from '../../atoms/activeStep';
 import setMapZoomLevel from '../../helpers/SetMapZoomLevel';
 import RouteInstructionsStep from '../WebComponentWrappers/RouteInstructionsStep/RouteInstructionsStep';
 import substepsToggledState from '../../atoms/substepsToggledState';
-import triggerSubstepsState from '../../atoms/triggerSubstepsState';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
-
-/**
- * Private variable used for checking if the next button should be enabled.
- * Implemented due to the impossibility to use the React useState hook.
- */
-let _allowNextStep = true;
 
 /**
  * Route instructions step by step component.
@@ -30,7 +23,7 @@ let _allowNextStep = true;
  *
  * @returns
  */
-function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, isOpen }) {
+function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, isOpen, onFitCurrentDirections }) {
 
     const scrollableContentSwipePrevent = usePreventSwipe();
 
@@ -43,18 +36,11 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
 
     const [totalSteps, setTotalSteps] = useState();
 
-    const [lastStepMapState, setLastStepMapState] = useState({ zoom: "", center: "" });
-
     const directions = useRecoilValue(directionsResponseState);
 
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
 
     const substepsOpen = useRecoilValue(substepsToggledState);
-
-    const triggerSubsteps = useRecoilValue(triggerSubstepsState);
-
-    // Indicate if the next step action is active.
-    const [isNextStep, setIsNextStep] = useState(true);
 
     /**
      * Clone the last step in the directions in order to create a destination step.
@@ -71,49 +57,10 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
     }, [steps]);
 
     /**
-     * Get the zoom and the center of the last step when the map instance is idle.
-     * Wait until getting the zoom and center, then allow the user to go to the next step.
-     */
-    function getZoomAndCenter() {
-        return new Promise(resolve => {
-            function getCenter() {
-                const zoom = mapsIndoorsInstance.getMapView().getZoom();
-                const center = mapsIndoorsInstance.getMapView().getCenter();
-                setLastStepMapState({ zoom, center });
-
-                if (isNextStep === true) {
-                    _allowNextStep = true;
-                }
-                resolve();
-            }
-            mapsIndoorsInstance.getMapView().once('idle', getCenter);
-        });
-    }
-
-    /**
-     * Disable the next step and get the zoom and center of the map.
-     */
-    async function asyncCall() {
-        if (isNextStep === true) {
-            _allowNextStep = false;
-        }
-        getZoomAndCenter();
-    }
-
-    /**
      * Get the zoom and the center of the destination step.
      */
     useEffect(() => {
         if (isOpen) {
-            // Check if the directions have more than 2 steps, else take the first step.
-            if (totalSteps?.length > 2) {
-                if (activeStep === totalSteps?.length - 2 && !triggerSubsteps) {
-                    asyncCall();
-                }
-            } else if (activeStep === 0 && lastStepMapState.zoom === "" && lastStepMapState.center === "") {
-                asyncCall();
-            }
-
             if (activeStep === totalSteps?.length - 1 && directions?.destinationLocation) {
                 // Get the destination location
                 const destinationLocation = directions?.destinationLocation;
@@ -144,7 +91,6 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
         setPrevious(totalSteps[activeStep]);
         setActiveStep(activeStep + 1);
         onNextStep();
-        setIsNextStep(true);
     }
 
     /**
@@ -155,11 +101,10 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
     function previousStep() {
         setPrevious(totalSteps[activeStep - 2]);
         setActiveStep(activeStep - 1);
-        setIsNextStep(false);
 
         if (activeStep === totalSteps?.length - 1) {
-            mapsIndoorsInstance.getMapView().setZoom(lastStepMapState.zoom);
-            mapsIndoorsInstance.getMapView().setCenter(lastStepMapState.center);
+            // If coming from the "You have arrived step", reset direction bounds.
+            onFitCurrentDirections();
         } else {
             onPreviousStep();
         }
@@ -234,7 +179,7 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
                             <button className="route-instructions__button"
                                 onClick={() => nextStep()}
                                 aria-label="Next"
-                                disabled={activeStep === totalSteps.length - 1 || _allowNextStep === false}>
+                                disabled={activeStep === totalSteps.length - 1}>
                                 <ArrowRight></ArrowRight>
                             </button>
                         </div>

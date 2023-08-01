@@ -139,6 +139,15 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
         }
     }
 
+    /**
+     * Trigger to directions renderer to fit the map to the current directions step.
+     */
+    function onFitCurrentDirections() {
+        if (directionsRenderer) {
+            directionsRenderer.setStepIndex(directionsRenderer.getStepIndex(), directionsRenderer.getLegIndex());
+        }
+    }
+
     // FIXME: investigate if we can handle the height and width with hooks
     /**
      * Get bottom padding for directions on mobile.
@@ -280,6 +289,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                     onNextStep={() => onNext()}
                     isOpen={isOpen}
                     onPreviousStep={() => onPrevious()}
+                    onFitCurrentDirections={() => onFitCurrentDirections()}
                 >
                 </RouteInstructions>
             </div>
