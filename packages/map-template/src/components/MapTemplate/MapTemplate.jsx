@@ -34,7 +34,6 @@ defineCustomElements();
 const queryString = window.location.search;
 const params = new URLSearchParams(queryString);
 
-const tileStyleParameter = params.get('tileStyle');
 const startZoomLevelParameter = params.get('startZoomLevel');
 const gmApiKeyParameter = params.get('gmApiKey');
 const mapboxAccessTokenParameter = params.get('mapboxAccessToken');
@@ -302,16 +301,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the tile style prop.
      */
     useEffect(() => {
-        if (hasURLParameters) {
-            if (tileStyle) {
-                setTileStyle(tileStyleParameter ? tileStyleParameter : tileStyle)
-            } else {
-                setTileStyle(tileStyleParameter ? tileStyleParameter : undefined)
-            }
-        } else {
-            setTileStyle(tileStyle ? tileStyle : undefined)
-        }
-    }, [tileStyle, hasURLParameters]);
+        setTileStyle(tileStyle);
+    }, [tileStyle]);
 
     /*
      * React on changes in the primary color prop.

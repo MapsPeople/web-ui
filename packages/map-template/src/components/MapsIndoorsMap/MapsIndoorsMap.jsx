@@ -41,6 +41,7 @@ function MapsIndoorsMap(props) {
         const logoQueryParameter = queryStringParams.get('logo');
         const directionsFromQueryParameter = queryStringParams.get('directionsFrom');
         const directionsToQueryParameter = queryStringParams.get('directionsTo');
+        const tileStyleQueryParameter = queryStringParams.get('tileStyle');
 
         setMapTemplateProps({
             apiKey: props.hasURLParameters && apiKeyQueryParameter ? apiKeyQueryParameter : (props.apiKey || defaultProps.apiKey),
@@ -48,7 +49,8 @@ function MapsIndoorsMap(props) {
             locationId: props.hasURLParameters && locationIdQueryParameter ? locationIdQueryParameter : props.locationId,
             logo: props.hasURLParameters && logoQueryParameter ? logoQueryParameter : (props.logo || defaultProps.logo),
             directionsFrom: props.hasURLParameters && directionsFromQueryParameter ? directionsFromQueryParameter : props.directionsFrom,
-            directionsTo: props.hasURLParameters && directionsToQueryParameter ? directionsToQueryParameter : props.directionsTo
+            directionsTo: props.hasURLParameters && directionsToQueryParameter ? directionsToQueryParameter : props.directionsTo,
+            tileStyle: props.hasURLParameters && tileStyleQueryParameter ? tileStyleQueryParameter : props.tileStyle
         });
     }, [props]);
 
