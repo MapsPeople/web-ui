@@ -34,9 +34,6 @@ defineCustomElements();
 const queryString = window.location.search;
 const params = new URLSearchParams(queryString);
 
-const gmApiKeyParameter = params.get('gmApiKey');
-const mapboxAccessTokenParameter = params.get('mapboxAccessToken');
-
 // Append the hashtag symbol to the color code (i.e. ffffff)
 const primaryColorParameter = params.get('primaryColor');
 
@@ -178,21 +175,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
-            if (hasURLParameters) {
-                if (mapboxAccessToken) {
-                    setMapboxAccessToken(mapboxAccessTokenParameter ? mapboxAccessTokenParameter : mapboxAccessToken);
-                } else {
-                    setMapboxAccessToken(mapboxAccessTokenParameter ? mapboxAccessTokenParameter : import.meta.env.VITE_MAPBOX_ACCESS_TOKEN)
-                }
-                if (gmApiKey) {
-                    setGmApyKey(gmApiKeyParameter ? gmApiKeyParameter : gmApiKey);
-                } else {
-                    setGmApyKey(gmApiKeyParameter ? gmApiKeyParameter : import.meta.env.VITE_GOOGLE_MAPS_API_KEY)
-                }
-            } else {
-                setMapboxAccessToken(mapboxAccessToken ? mapboxAccessToken : import.meta.env.VITE_MAPBOX_ACCESS_TOKEN);
-                setGmApyKey(gmApiKey ? gmApiKey : import.meta.env.VITE_GOOGLE_MAPS_API_KEY);
-            }
+            setMapboxAccessToken(mapboxAccessToken);
+            setGmApyKey(gmApiKey);
         }
     }, [gmApiKey, mapboxAccessToken, mapsindoorsSDKAvailable, hasURLParameters]);
 

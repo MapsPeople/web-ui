@@ -43,6 +43,8 @@ function MapsIndoorsMap(props) {
         const directionsToQueryParameter = queryStringParams.get('directionsTo');
         const tileStyleQueryParameter = queryStringParams.get('tileStyle');
         const startZoomLevelQueryParameter = queryStringParams.get('startZoomLevel');
+        const gmApiKeyQueryParameter = queryStringParams.get('gmApiKey');
+        const mapboxAccessTokenQueryParameter = queryStringParams.get('mapboxAccessToken');
 
         setMapTemplateProps({
             apiKey: props.hasURLParameters && apiKeyQueryParameter ? apiKeyQueryParameter : (props.apiKey || defaultProps.apiKey),
@@ -52,7 +54,9 @@ function MapsIndoorsMap(props) {
             directionsFrom: props.hasURLParameters && directionsFromQueryParameter ? directionsFromQueryParameter : props.directionsFrom,
             directionsTo: props.hasURLParameters && directionsToQueryParameter ? directionsToQueryParameter : props.directionsTo,
             tileStyle: props.hasURLParameters && tileStyleQueryParameter ? tileStyleQueryParameter : props.tileStyle,
-            startZoomLevel: props.hasURLParameters && startZoomLevelQueryParameter ? startZoomLevelQueryParameter : props.startZoomLevel
+            startZoomLevel: props.hasURLParameters && startZoomLevelQueryParameter ? startZoomLevelQueryParameter : props.startZoomLevel,
+            gmApiKey: props.hasURLParameters && gmApiKeyQueryParameter ? gmApiKeyQueryParameter : (props.gmApiKey || import.meta.env.VITE_GOOGLE_MAPS_API_KEY),
+            mapboxAccessToken: props.hasURLParameters && mapboxAccessTokenQueryParameter ? mapboxAccessTokenQueryParameter : (props.mapboxAccessToken || import.meta.env.VITE_MAPBOX_ACCESS_TOKEN)
         });
     }, [props]);
 
