@@ -34,7 +34,6 @@ defineCustomElements();
 const queryString = window.location.search;
 const params = new URLSearchParams(queryString);
 
-const startZoomLevelParameter = params.get('startZoomLevel');
 const gmApiKeyParameter = params.get('gmApiKey');
 const mapboxAccessTokenParameter = params.get('mapboxAccessToken');
 
@@ -323,16 +322,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the start zoom level prop.
      */
     useEffect(() => {
-        if (hasURLParameters) {
-            if (startZoomLevel) {
-                setStartZoomLevel(startZoomLevelParameter ? startZoomLevelParameter : startZoomLevel)
-            } else {
-                setStartZoomLevel(startZoomLevelParameter ? startZoomLevelParameter : '')
-            }
-        } else {
-            setStartZoomLevel(startZoomLevel ? startZoomLevel : '')
-        }
-    }, [startZoomLevel, hasURLParameters]);
+        setStartZoomLevel(startZoomLevel);
+    }, [startZoomLevel]);
 
     /*
      * React on changes in the logo prop.

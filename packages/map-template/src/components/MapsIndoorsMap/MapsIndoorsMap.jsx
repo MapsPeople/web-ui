@@ -42,6 +42,7 @@ function MapsIndoorsMap(props) {
         const directionsFromQueryParameter = queryStringParams.get('directionsFrom');
         const directionsToQueryParameter = queryStringParams.get('directionsTo');
         const tileStyleQueryParameter = queryStringParams.get('tileStyle');
+        const startZoomLevelQueryParameter = queryStringParams.get('startZoomLevel');
 
         setMapTemplateProps({
             apiKey: props.hasURLParameters && apiKeyQueryParameter ? apiKeyQueryParameter : (props.apiKey || defaultProps.apiKey),
@@ -50,7 +51,8 @@ function MapsIndoorsMap(props) {
             logo: props.hasURLParameters && logoQueryParameter ? logoQueryParameter : (props.logo || defaultProps.logo),
             directionsFrom: props.hasURLParameters && directionsFromQueryParameter ? directionsFromQueryParameter : props.directionsFrom,
             directionsTo: props.hasURLParameters && directionsToQueryParameter ? directionsToQueryParameter : props.directionsTo,
-            tileStyle: props.hasURLParameters && tileStyleQueryParameter ? tileStyleQueryParameter : props.tileStyle
+            tileStyle: props.hasURLParameters && tileStyleQueryParameter ? tileStyleQueryParameter : props.tileStyle,
+            startZoomLevel: props.hasURLParameters && startZoomLevelQueryParameter ? startZoomLevelQueryParameter : props.startZoomLevel
         });
     }, [props]);
 
