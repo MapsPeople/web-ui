@@ -56,7 +56,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const [, setCategories] = useRecoilState(categoriesState);
     const [, setLocationId] = useRecoilState(locationIdState);
-    const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
     const [, setPrimaryColor] = useRecoilState(primaryColorState);
 
     const directionsFromLocation = useLocationForWayfinding(directionsFrom);
@@ -209,14 +208,14 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         // Reset all the filters when in directions mode.
         // Store the filtered locations in another state, to be able to access them again.
-        if (hasDirectionsOpen) {
+        if (locationsDisabledRef.current) {
             setInitialFilteredLocations(filteredLocations)
             setFilteredLocations([]);
         } else {
             // Apply the previously filtered locations to the map when navigating outside the directions.
             setFilteredLocations(initialFilteredLocations);
         }
-    }, [hasDirectionsOpen]);
+    }, []);
 
     /*
      * Add Location to history payload to make it possible to re-enter location details with that Location.
@@ -226,7 +225,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             setCurrentLocation(currentAppViewPayload);
         }
 
-        setHasDirectionsOpen(currentAppView === appStates.DIRECTIONS);
         locationsDisabledRef.current = currentAppView === appStates.DIRECTIONS;
     }, [currentAppView]);
 
@@ -328,7 +326,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         setCategories(uniqueCategories);
     }
 
-    return <div className={`mapsindoors-map ${hasDirectionsOpen ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}`}>
+    return <div className={`mapsindoors-map ${locationsDisabledRef.current ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}`}>
         {!isMapReady && <SplashScreen logo={logo} />}
         {venues.length > 1 && <VenueSelector
             onOpen={() => pushAppView(appStates.VENUE_SELECTOR)}
