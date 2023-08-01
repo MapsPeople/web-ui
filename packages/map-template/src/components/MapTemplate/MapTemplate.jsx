@@ -33,9 +33,6 @@ defineCustomElements();
 const queryString = window.location.search;
 const params = new URLSearchParams(queryString);
 
-// Create an array of app user roles based on the comma separated values
-const appUserRolesParameter = params.get('appUserRoles')?.split(',')
-
 // Create an array of external IDs based on the comma separated values
 const externalIDsParameter = params.get('externalIDs')?.split(',')
 
@@ -180,19 +177,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         if (mapsindoorsSDKAvailable) {
             window.mapsindoors.services.SolutionsService.getUserRoles().then(userRoles => {
                 const roles = userRoles.filter(role => appUserRoles?.includes(role.name));
-
-                if (hasURLParameters) {
-                    if (appUserRoles) {
-                        window.mapsindoors.MapsIndoors.setUserRoles(appUserRolesParameter ? appUserRolesParameter : roles);
-                    } else {
-                        window.mapsindoors.MapsIndoors.setUserRoles(appUserRolesParameter ? appUserRolesParameter : []);
-                    }
-                } else {
-                    window.mapsindoors.MapsIndoors.setUserRoles(appUserRoles ? roles : []);
-                }
+                window.mapsindoors.MapsIndoors.setUserRoles(roles);
             });
         }
-    }, [appUserRoles, mapsindoorsSDKAvailable, hasURLParameters]);
+    }, [appUserRoles, mapsindoorsSDKAvailable]);
 
     /*
      * React on changes in the externalIDs prop.
