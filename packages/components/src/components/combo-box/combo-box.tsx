@@ -496,7 +496,6 @@ export class ComboBox {
         return (
             <Host class={{ 'open': this.open }}>
                 <input
-                    id='comboBoxInputField'
                     type="text"
                     class="input"
                     onFocus={(event) => this.onClickExists(event)}
