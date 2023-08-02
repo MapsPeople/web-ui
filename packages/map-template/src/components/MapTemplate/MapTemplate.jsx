@@ -51,9 +51,8 @@ let _locationsDisabled;
  * @param {array} [props.externalIDs] - Filter locations shown on the map based on the external IDs.
  * @param {string} [props.tileStyle] - Tile style name to change the interface of the map.
  * @param {number} [props.startZoomLevel] - The initial zoom level of the map.
- * @param {boolean} [props.hasURLParameters] - If you want to support URL Parameters.
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, hasURLParameters }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel }) {
 
     const [, setApiKey] = useRecoilState(apiKeyState);
     const [, setGmApyKey] = useRecoilState(gmApiKeyState);
@@ -151,7 +150,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             });
             setMapReady(false);
         }
-    }, [apiKey, mapsindoorsSDKAvailable, hasURLParameters]);
+    }, [apiKey, mapsindoorsSDKAvailable]);
 
     /*
      * React to changes in the gmApiKey and mapboxAccessToken props.
@@ -161,7 +160,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             setMapboxAccessToken(mapboxAccessToken);
             setGmApyKey(gmApiKey);
         }
-    }, [gmApiKey, mapboxAccessToken, mapsindoorsSDKAvailable, hasURLParameters]);
+    }, [gmApiKey, mapboxAccessToken, mapsindoorsSDKAvailable]);
 
     /*
      * React on changes in the app user roles prop.
