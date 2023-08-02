@@ -23,6 +23,7 @@ import { mapTypes } from "../../constants/mapTypes";
 import { ReactComponent as WalkIcon } from '../../assets/walk.svg';
 import { ReactComponent as DriveIcon } from '../../assets/drive.svg';
 import { ReactComponent as BikeIcon } from '../../assets/bike.svg';
+import { ReactComponent as CompassArrow } from '../../assets/compass-arrow.svg';
 import { travelModes } from "../../constants/travelModes";
 import Dropdown from "../WebComponentWrappers/Dropdown/Dropdown";
 import primaryColorState from "../../atoms/primaryColorState";
@@ -409,7 +410,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                 <div className="wayfinding__scrollable" {...scrollableContentSwipePrevent}>
                     <div className="wayfinding__results">
                         {userPosition && originLocation?.id !== 'USER_POSITION' && <div className="wayfinding__use-current-position" onClick={() => setMyPositionAsOrigin()}>
-                            <CloseIcon />
+                            <CompassArrow />
                             <span>My Position</span>
                         </div>}
                         {searchResults.map(location =>
