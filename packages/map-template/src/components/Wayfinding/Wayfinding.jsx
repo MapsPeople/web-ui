@@ -400,9 +400,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                             cleared={() => onSearchCleared(searchFieldIdentifiers.TO)}
                         />
                     </label>
-                    {userPosition && originLocation?.id !== 'USER_POSITION' && <p className="wayfinding__use-current-position">
-                        <button onClick={() => setMyPositionAsOrigin()}>Use My Position</button>
-                    </p>}
+
                 </div>
             </div>
             {!hasFoundRoute && <p className="wayfinding__error">No route found</p>}
@@ -410,6 +408,10 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
             {searchResults.length > 0 &&
                 <div className="wayfinding__scrollable" {...scrollableContentSwipePrevent}>
                     <div className="wayfinding__results">
+                        {userPosition && originLocation?.id !== 'USER_POSITION' && <div className="wayfinding__use-current-position" onClick={() => setMyPositionAsOrigin()}>
+                            <CloseIcon />
+                            <span>My Position</span>
+                        </div>}
                         {searchResults.map(location =>
                             <ListItemLocation
                                 key={location.id}

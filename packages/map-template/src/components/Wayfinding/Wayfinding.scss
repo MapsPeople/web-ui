@@ -56,16 +56,19 @@
     }
 
     &__use-current-position {
-        position: relative;
-        top: -36px;
-        text-align: right;
-
-        button {
-            all: unset;
-            font-size: var(--font-size-small);
-            color: var(--color-blue-base);
-            margin-top: var(--spacing-x-small);
-        }
+        padding: 16px;
+        font-size: 1rem;
+        font-weight: 500;
+        line-height: 1rem;
+        transition: all 300ms ease 0s;
+        border-radius: 8px;
+        background-color: rgb(249, 250, 251);
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        cursor: pointer;
+        gap: 16px;
+        border: 1px solid rgb(229, 231, 235);
     }
 
     &__details {
