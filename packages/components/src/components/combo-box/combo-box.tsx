@@ -137,7 +137,7 @@ export class ComboBox {
      * @param {ev} ev
      */
     @Listen('mousedown', { target: 'window' })
-    clearSelectionOnClick(ev) {
+    clearSelectionOnMouseDown(ev) {
         if (!this.hostElement.contains(ev.target) && ev.target !== this.svgButtonToggleDropdown) {
             window.getSelection().empty();
         }
