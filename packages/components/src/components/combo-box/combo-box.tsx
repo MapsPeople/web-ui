@@ -16,6 +16,7 @@ enum KeyCode {
 })
 export class ComboBox {
     @Element() hostElement: HTMLElement;
+    // @Element() canvasElement: HTMLCanvasElement;
 
     /**
      * Triggers an event when the selection is changed.
@@ -122,6 +123,7 @@ export class ComboBox {
     isMouseOverEventDisabled = false;
 
     filterElement!: HTMLInputElement;
+    svgButtonToggleDropdown!: SVGElement;
     clearButtonElement!: HTMLButtonElement;
     listElement!: HTMLElement;
 
@@ -130,16 +132,63 @@ export class ComboBox {
     highlightedItemClassName = 'list__item--highlighted';
 
     /**
+     * If we click on the map (canvas) we want to empty selection, so this.open can be set to false.
+     *
+     * @param {ev} ev
+     */
+    @Listen('mousedown', { target: 'window' })
+    clearSelectionOnClick(ev) {
+        if (!this.hostElement.contains(ev.target) && ev.target !== this.svgButtonToggleDropdown) {
+            window.getSelection().empty();
+        }
+    }
+
+    /**
      * Outside the dropdown listener. It will close the dropdown when a click is outside a dropdown and dropdown list.
      *
      * @param {ev} ev
      */
     @Listen('click', { target: 'window' })
+    @Listen('mouseup', { target: 'window' })
     checkForClickOutside(ev) {
-        if (!this.hostElement.contains(ev.target) && this.noResultsMessage) {
-            this.clearFilter();
-            this.filterElement.value = this.selected[0]?.text;
-            this.open = false;
+        // Check if the event target is inside the input field or canvas
+        const clicksInsideBody = document.getElementsByTagName('body');
+        const isTargetInsideInput = this.hostElement.contains(ev.target);
+        const isTargetInsideCanvas = clicksInsideBody[0].contains(ev.target);
+
+        // Check if there is any selected text inside the input field
+        const selection = window.getSelection().toString();
+        const hasSelectedText = selection.length > 0;
+
+        const inputInFocus = this.isComboboxInputFieldInFocus('menu__combobox');
+
+        // If we click outside an input field but the text was highlihted with the mouse, dropdown will remain opened.
+        // We also check if everything that we do is related only to combobox input field.
+        if ((!isTargetInsideInput && hasSelectedText && inputInFocus) || (!isTargetInsideCanvas && hasSelectedText && inputInFocus)) {
+            this.open = true;
+        } else
+            // If we click outside an input field and there is nothing selected, dropdown will be closed.
+            // If we click on SVG arrow, we would like to toggle dropdown (open/close).
+            if (!isTargetInsideInput && !hasSelectedText || ev.target === this.svgButtonToggleDropdown) {
+                this.clearFilter();
+                this.filterElement.value = this.selected[0]?.text;
+                this.open = false;
+            }
+    }
+
+    /**
+     * Checks if combobox input field is in focus.
+     *
+     * @param {string} inputFieldClassName
+     * @returns {boolean}
+     */
+    isComboboxInputFieldInFocus(inputFieldClassName: string): boolean {
+        const focusedElement = document.activeElement;
+
+        if (focusedElement.className === inputFieldClassName) {
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -447,6 +496,7 @@ export class ComboBox {
         return (
             <Host class={{ 'open': this.open }}>
                 <input
+                    id='comboBoxInputField'
                     type="text"
                     class="input"
                     onFocus={(event) => this.onClickExists(event)}
@@ -456,7 +506,8 @@ export class ComboBox {
                     value={this.selected[0]?.text}
                 >
                 </input>
-                <svg role='button' class="input__svg" part="icon-down-arrow" width="12" height="6" viewBox="0 0 18 10" xmlns="http://www.w3.org/2000/svg" onClick={() => this.toggleContentWindow()}>
+                <svg role='button' pointer-events='all' class="input__svg" part="icon-down-arrow" width="12" height="6" viewBox="0 0 18 10"
+                    xmlns="http://www.w3.org/2000/svg" onClick={() => this.toggleContentWindow()} ref={(el) => this.svgButtonToggleDropdown = el as SVGElement}>
                     <path d="M9.37165 9.58706C9.17303 9.80775 8.82697 9.80775 8.62835 9.58706L0.751035 0.834484C0.46145 0.512722 0.689796 7.73699e-08 1.12268 1.25924e-07L16.8773 1.89302e-06C17.3102 1.94157e-06 17.5386 0.512723 17.249 0.834484L9.37165 9.58706Z" />
                 </svg>
                 <section ref={(el) => this.listElement = el as HTMLElement} part="dropdown-container" class="content">
