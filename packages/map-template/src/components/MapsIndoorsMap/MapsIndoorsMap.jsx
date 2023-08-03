@@ -19,7 +19,7 @@ import defaultLogo from "../../assets/logo.svg";
  * @param {array} [props.externalIDs] - Filter locations shown on the map based on the external IDs.
  * @param {string} [props.tileStyle] - Tile style name to change the interface of the map.
  * @param {number} [props.startZoomLevel] - The initial zoom level of the map.
- * @param {boolean} [props.hasURLParameters] - If you want to support URL Parameters to configure the Map Template.
+ * @param {boolean} [props.supportsURLParameters] - If you want to support URL Parameters to configure the Map Template.
  */
 function MapsIndoorsMap(props) {
 
@@ -27,7 +27,7 @@ function MapsIndoorsMap(props) {
 
     /*
      * Listening for all props.
-     * Will use query parameters to pass to the child component is the hasURLParameters prop is set to true.
+     * Will use query parameters to pass to the child component is the supportsURLParameters prop is set to true.
      * Applies default values for some props if needed.
      */
     useEffect(() => {
@@ -56,19 +56,19 @@ function MapsIndoorsMap(props) {
         const externalIDsQueryParameter = queryStringParams.get('externalIDs')?.split(',');
 
         setMapTemplateProps({
-            apiKey: props.hasURLParameters && apiKeyQueryParameter ? apiKeyQueryParameter : (props.apiKey || defaultProps.apiKey),
-            venue: props.hasURLParameters && venueQueryParameter ? venueQueryParameter : (props.venue || defaultProps.venue),
-            locationId: props.hasURLParameters && locationIdQueryParameter ? locationIdQueryParameter : props.locationId,
-            logo: props.hasURLParameters && logoQueryParameter ? logoQueryParameter : (props.logo || defaultProps.logo),
-            directionsFrom: props.hasURLParameters && directionsFromQueryParameter ? directionsFromQueryParameter : props.directionsFrom,
-            directionsTo: props.hasURLParameters && directionsToQueryParameter ? directionsToQueryParameter : props.directionsTo,
-            tileStyle: props.hasURLParameters && tileStyleQueryParameter ? tileStyleQueryParameter : props.tileStyle,
-            startZoomLevel: props.hasURLParameters && startZoomLevelQueryParameter ? startZoomLevelQueryParameter : props.startZoomLevel,
-            gmApiKey: props.hasURLParameters && gmApiKeyQueryParameter ? gmApiKeyQueryParameter : (props.gmApiKey || import.meta.env.VITE_GOOGLE_MAPS_API_KEY),
-            mapboxAccessToken: props.hasURLParameters && mapboxAccessTokenQueryParameter ? mapboxAccessTokenQueryParameter : (props.mapboxAccessToken || import.meta.env.VITE_MAPBOX_ACCESS_TOKEN),
-            primaryColor: props.hasURLParameters && primaryColorQueryParameter ? '#' + primaryColorQueryParameter : (props.primaryColor || defaultProps.primaryColor),
-            appUserRoles: props.hasURLParameters && appUserRolesQueryParameter ? appUserRolesQueryParameter : props.appUserRoles,
-            externalIDs: props.hasURLParameters && externalIDsQueryParameter ? externalIDsQueryParameter : props.externalIDs
+            apiKey: props.supportsURLParameters && apiKeyQueryParameter ? apiKeyQueryParameter : (props.apiKey || defaultProps.apiKey),
+            venue: props.supportsURLParameters && venueQueryParameter ? venueQueryParameter : (props.venue || defaultProps.venue),
+            locationId: props.supportsURLParameters && locationIdQueryParameter ? locationIdQueryParameter : props.locationId,
+            logo: props.supportsURLParameters && logoQueryParameter ? logoQueryParameter : (props.logo || defaultProps.logo),
+            directionsFrom: props.supportsURLParameters && directionsFromQueryParameter ? directionsFromQueryParameter : props.directionsFrom,
+            directionsTo: props.supportsURLParameters && directionsToQueryParameter ? directionsToQueryParameter : props.directionsTo,
+            tileStyle: props.supportsURLParameters && tileStyleQueryParameter ? tileStyleQueryParameter : props.tileStyle,
+            startZoomLevel: props.supportsURLParameters && startZoomLevelQueryParameter ? startZoomLevelQueryParameter : props.startZoomLevel,
+            gmApiKey: props.supportsURLParameters && gmApiKeyQueryParameter ? gmApiKeyQueryParameter : (props.gmApiKey || import.meta.env.VITE_GOOGLE_MAPS_API_KEY),
+            mapboxAccessToken: props.supportsURLParameters && mapboxAccessTokenQueryParameter ? mapboxAccessTokenQueryParameter : (props.mapboxAccessToken || import.meta.env.VITE_MAPBOX_ACCESS_TOKEN),
+            primaryColor: props.supportsURLParameters && primaryColorQueryParameter ? '#' + primaryColorQueryParameter : (props.primaryColor || defaultProps.primaryColor),
+            appUserRoles: props.supportsURLParameters && appUserRolesQueryParameter ? appUserRolesQueryParameter : props.appUserRoles,
+            externalIDs: props.supportsURLParameters && externalIDsQueryParameter ? externalIDsQueryParameter : props.externalIDs
         });
     }, [props]);
 

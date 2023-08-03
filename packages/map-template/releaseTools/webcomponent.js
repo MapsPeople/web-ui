@@ -22,7 +22,7 @@ MapsIndoorsMap.propTypes = {
     externalIDs: PropTypes.array,
     tileStyle: PropTypes.string,
     startZoomLevel: PropTypes.number, 
-    hasURLParameters: PropTypes.bool
+    supportsURLParameters: PropTypes.bool
 };
 
 const WebMapsIndoorsMap = reactToWebComponent(MapsIndoorsMap, React, ReactDOM);
