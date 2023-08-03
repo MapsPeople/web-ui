@@ -132,8 +132,8 @@ The supported query parameters are the following:
 `directionsTo` - Used like this `directionsTo=yourDestinationLocationId` when having a location ID, or like this `directionsTo=USER_POSITION` when having the user location.
 `externalIDs` - Used like this `externalIDs=0.0.1,0.0.2,0.0.3`. **Note!** You need to provide a list of comma separated values, without any spaces between the comma and the value. This will further be converted into an array of external IDs. Because of the way browsers work, you **cannot** use External IDs with the `,`, `&`, `#` and `+`, character in them, as they are interpreted by the browser in a particular way.
 `tileStyle` - Used like this `tileStyle=yourTileStyleName`. If no tile style is provided, the app will show the default tile style.
-`mapboxAccessToken` - Used like this `mapboxAccessToken=yourMapboxAccessToken`. If no mapboxAccessToken is provided, the app will default to the access token in the `.env` file. If both the `mapboxAccessToken` and the `gmApiKey` are present, the app will load a Mapbox map.
-`gmApiKey` - Used like this `gmApiKey=yourGmApiKey`. If no `gmApiKey` is provided, the app will default to the access token in the `.env` file. If both the `mapboxAccessToken` and the `gmApiKey` are present, the app will load a Mapbox map.
+`mapboxAccessToken` - Used like this `mapboxAccessToken=yourMapboxAccessToken`. If both the `mapboxAccessToken` and the `gmApiKey` are present, the app will load a Mapbox map.
+`gmApiKey` - Used like this `gmApiKey=yourGmApiKey`. If both the `mapboxAccessToken` and the `gmApiKey` are present, the app will load a Mapbox map.
 `startZoomLevel` - Used like this `startZoomLevel=22`.
 
 **Note!** All the query parameters need to be separated with the `&` symbol, without any spaces in between. Note! When using parameters such as `directionsTo`, `directionsFrom`, `locationId`, `externalIDs`, and `tileStyle` make sure you are using the correct `apiKey` parameter to which they belong.
