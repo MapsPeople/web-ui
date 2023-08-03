@@ -1,5 +1,5 @@
 import { Component, ComponentInterface, h, Prop, State, Watch, Event, EventEmitter } from '@stencil/core';
-import { JSX } from '@stencil/core/internal';
+import { JSX, Method } from '@stencil/core/internal';
 import { UnitSystem } from '../../enums/unit-system.enum';
 import { DirectionsTranslations } from '../../types/directions-translations.interface';
 import { Step, StepContext } from '../../types/step.interface';
@@ -91,6 +91,27 @@ export class RouteInstructionsStep implements ComponentInterface {
      * Signifies wether substeps are open or not.
      */
     @State() substepsAreOpen: boolean = false;
+
+    /**
+     * Event emitted when substeps are toggled.
+     */
+    @Event() substepsToggled: EventEmitter<void>;
+
+    /**
+     * Programmatically open the substeps.
+     */
+    @Method()
+    openSubsteps(): void {
+        this.substepsAreOpen = true;
+    }
+
+    /**
+     * Programmatically close the substeps.
+     */
+    @Method()
+    closeSubsteps(): void {
+        this.substepsAreOpen = false;
+    }
 
     isInternetExplorer: boolean = isInternetExplorer();
 
@@ -200,6 +221,7 @@ export class RouteInstructionsStep implements ComponentInterface {
      * Toggles visibility of sub steps (steps in steps)
      */
     toggleSubsteps(): void {
+        this.substepsToggled.emit();
         this.substepsAreOpen = !this.substepsAreOpen;
     }
 
@@ -210,7 +232,7 @@ export class RouteInstructionsStep implements ComponentInterface {
      */
     renderSubsteps(): JSX.Element {
         return this.substepsAreOpen === true ? <div class="step__substeps">
-            {this.stepData.steps.map((maneuver, index) => {
+            {this.stepData.steps?.map((maneuver, index) => {
                 return <mi-route-instructions-maneuver
                     data-maneuver-index={index}
                     maneuver={JSON.stringify(maneuver)}
@@ -234,18 +256,16 @@ export class RouteInstructionsStep implements ComponentInterface {
      */
     renderToggleButton(): JSX.Element {
         // Return null if none substeps/maneuvers is provided
-        if (this.stepData.steps.length <= 0) {
-            return null;
-        }
-        // Return null if indoor substeps/maneuvers should be hidden and if the step context corresponds to being inside a building
-        if (this.hideIndoorSubsteps === true && this.stepData.route_context.toLowerCase() === 'insidebuilding') {
+        if (this.stepData.steps?.length <= 0) {
             return null;
         }
 
         return (
-            <span class={`step__toggle ${this.substepsAreOpen ? 'step__toggle--open' : ''}`} onClick={() => this.toggleSubsteps()}>
-                {this.isInternetExplorer ? '\u25BC' :
-                    <mi-icon part="step-toggle" icon-name="toggle"></mi-icon>
+            <span class='step__toggle' onClick={() => this.toggleSubsteps()}>
+                {this.substepsAreOpen ?
+                    <mi-icon part="step-toggle" icon-name="minimize"></mi-icon>
+                    :
+                    <mi-icon part="step-toggle" icon-name="maximize"></mi-icon>
                 }
             </span>
         );
@@ -266,6 +286,18 @@ export class RouteInstructionsStep implements ComponentInterface {
     }
 
     /**
+     * Render toggle and substeps.
+     *
+     * @returns {JSX.Element}
+     */
+    renderToggleAndSubsteps(): JSX.Element {
+        return <div class="step__details">
+            {this.renderToggleButton()}
+            {this.renderSubsteps()}
+        </div>;
+    }
+
+    /**
      * Render a driving step.
      *
      * @returns {JSX.Element}
@@ -283,6 +315,7 @@ export class RouteInstructionsStep implements ComponentInterface {
                 }
                 <div part="step-heading" class="step__heading">{this.getStepHeading()}</div>
             </div>
+            {this.renderToggleAndSubsteps()}
         </div>;
     }
 
@@ -380,6 +413,7 @@ export class RouteInstructionsStep implements ComponentInterface {
                 }
                 <div part="step-heading" class="step__heading">{heading}</div>
             </div>
+            {this.renderToggleAndSubsteps()}
         </div>;
     }
 
@@ -418,6 +452,7 @@ export class RouteInstructionsStep implements ComponentInterface {
                 }
                 <div part="step-heading" class="step__heading">{this.getStepHeading()}</div>
             </div>
+            {this.renderToggleAndSubsteps()}
         </div>;
     }
 
@@ -439,6 +474,7 @@ export class RouteInstructionsStep implements ComponentInterface {
                 </div>
                 <div part="step-location" class="step__location">{this.destinationLocation}</div>
             </div>
+            {this.renderToggleAndSubsteps()}
         </div>;
     }
 
@@ -476,8 +512,7 @@ export class RouteInstructionsStep implements ComponentInterface {
                     {this.stepData.transit_information.num_stops ? this.stepData.transit_information.num_stops : null} {this.translationsData.stops ? this.translationsData.stops : null}
                 </span>
             </div>
-            {this.renderToggleButton()}
-            {this.renderSubsteps()}
+            {this.renderToggleAndSubsteps()}
         </div>;
     }
 }

@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import substepsToggledState from '../../../atoms/substepsToggledState';
 import './Modal.scss';
 
 /**
@@ -14,6 +16,8 @@ function Modal({ children, isOpen }) {
 
     /** Boolean for controlling the "full" CSS class modifier */
     const [fullHeight, setFullHeight] = useState(false);
+
+    const substeps = useRecoilValue(substepsToggledState);
 
     const modalRef = useRef();
     const contentRef = useRef();
@@ -37,7 +41,7 @@ function Modal({ children, isOpen }) {
         }
     }, [contentRef]);
 
-    return <div ref={modalRef} className={`modal ${isOpen ? 'modal--open' : ''} ${fullHeight ? 'modal--full' : ''}`}>
+    return <div ref={modalRef} className={`modal ${isOpen ? 'modal--open' : ''} ${fullHeight ? 'modal--full' : ''} ${substeps ? 'modal--substeps' : ''}`}>
         <div ref={contentRef} className="modal__content">
             {children}
         </div>
