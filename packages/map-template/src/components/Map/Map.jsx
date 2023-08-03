@@ -109,7 +109,7 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
         return mapsIndoorsInstance.fitVenue(venue).then(() => {
             // Set the map zoom level if the property is provided.
             if (startZoomLevel) {
-                mapsIndoorsInstance.setZoom(startZoomLevel);
+                mapsIndoorsInstance.setZoom(parseInt(startZoomLevel));
             }
         });
     }
