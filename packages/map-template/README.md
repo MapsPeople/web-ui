@@ -32,6 +32,7 @@ Use the web component in your HTML:
 ```
 
 Add attributes to the web component as needed (see supported properties below).
+Use query parameters to configure the web component by setting the `supportsURLParameters` prop to `true`.
 
 ## Using just the browser
 
@@ -65,6 +66,7 @@ Add attributes to the web component as needed (see supported properties below).
 ```
 
 Add attributes to the web component as needed (see supported properties below).
+Use query parameters to configure the web component by setting the `supportsURLParameters` prop to `true`.
 
 ## React component: Installation and usage
 
@@ -90,6 +92,7 @@ import MapsIndoorsMap from '@mapsindoors/map-template/dist/mapsindoors-react.es.
 ```
 
 Add properties to the MapsIndoorsMap component as needed (see list below).
+Use query parameters to configure the MapsIndoorsMap component by setting the `supportsURLParameters` prop to `true`.
 
 ## Supported attributes on the MapsIndoors Map components
 
