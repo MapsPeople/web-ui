@@ -1,12 +1,12 @@
-# mi-route-instructions-maneuver
+# mi-route-instructions-maneuver-legacy
 
-The `<mi-route-instructions-maneuver` is used internally within the `<mi-route-instructions>` and `<mi-route-instructions-step` custom elements. The component shows a route instruction maneuver which consists of a maneuver icon, instruction and distance information.
+The `<mi-route-instructions-maneuver-legacy` is used internally within the `<mi-route-instructions>` and `<mi-route-instructions-step` custom elements. The component shows a route instruction maneuver which consists of a maneuver icon, instruction and distance information.
 
 Working example:
 
-<mi-route-instructions-maneuver></mi-route-instructions-maneuver>
+<mi-route-instructions-maneuver-legacy></mi-route-instructions-maneuver-legacy>
 <script>
-const maneuverElement = document.querySelector('mi-route-instructions-maneuver');
+const maneuverElement = document.querySelector('mi-route-instructions-maneuver-legacy');
 
 maneuverElement.translations = JSON.stringify({
     andContinue: 'and continue',
@@ -33,13 +33,13 @@ Example usage:
 ```html
 <!-- HTML -->
 
-<mi-route-instructions-maneuver></mi-route-instructions-maneuver>
+<mi-route-instructions-maneuver-legacy></mi-route-instructions-maneuver-legacy>
 ```
 
 ```js
 // JavaScript
 
-const maneuverElement = document.querySelector('mi-route-instructions-maneuver');
+const maneuverElement = document.querySelector('mi-route-instructions-maneuver-legacy');
 
 maneuverElement.translations = JSON.stringify({
     andContinue: 'and continue',
@@ -63,11 +63,11 @@ maneuverElement.maneuver = JSON.stringify({
 
 ## `maneuver` attribute
 
-A `maneuver` attribute is available on the `<mi-route-instructions-maneuver>` element which can be used to pass a maneuver object as stringified JSON. When set a step will be displayed including a maneuver icon, instruction and distance information. The attribute is required.
+A `maneuver` attribute is available on the `<mi-route-instructions-maneuver-legacy>` element which can be used to pass a maneuver object as stringified JSON. When set a step will be displayed including a maneuver icon, instruction and distance information. The attribute is required.
 
 ## `translations` attribute
 
-A `translations` attribute is available on the `<mi-route-instructions-maneuver>` element which can be used to pass a object with translation strings as stringified JSON. The attribute is required.
+A `translations` attribute is available on the `<mi-route-instructions-maneuver-legacy>` element which can be used to pass a object with translation strings as stringified JSON. The attribute is required.
 
 Translation object should have translations for the following properties:
 
@@ -85,7 +85,7 @@ Translation object should have translations for the following properties:
 
 ## `unit` attribute
 
-A `unit` attribute is available on the `<mi-route-instructions-maneuver>` element which can be used to control how the distance presented. Possible values are `metric` (which will show distance in meters and km) and `imperial` (which will show distance in feet and miles). Default value is `metric`.
+A `unit` attribute is available on the `<mi-route-instructions-maneuver-legacy>` element which can be used to control how the distance presented. Possible values are `metric` (which will show distance in meters and km) and `imperial` (which will show distance in feet and miles). Default value is `metric`.
 
 ## Styling
 
@@ -103,7 +103,7 @@ The following parts are available for styling:
 ```css
 /* CSS */
 
-mi-route-instructions-maneuver::part(maneuver-icon) {
+mi-route-instructions-maneuver-legacy::part(maneuver-icon) {
     background-color: #1a5130;
 }
 ```
@@ -123,10 +123,12 @@ mi-route-instructions-maneuver::part(maneuver-icon) {
 
 ## Shadow Parts
 
-| Part                              | Description |
-| --------------------------------- | ----------- |
-| `"maneuver-description-distance"` |             |
-| `"maneuver-icon"`                 |             |
+| Part                                     | Description |
+| ---------------------------------------- | ----------- |
+| `"maneuver-description"`                 |             |
+| `"maneuver-description-distance"`        |             |
+| `"maneuver-description-distance-border"` |             |
+| `"maneuver-icon"`                        |             |
 
 
 ----------------------------------------------

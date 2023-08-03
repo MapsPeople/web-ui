@@ -1,5 +1,9 @@
 .directions {
     color: var(--brand-colors-black-100);
+    min-height: 475px;
+    display: grid;
+    grid-auto-rows: min-content 1fr;
+    height: 100%;
 
     &__details {
         background-color: var(--color-gray-20);
@@ -48,7 +52,11 @@
     }
 
     &__guide {
-        padding: var(--spacing-medium);
+        padding: var(--spacing-medium) var(--spacing-medium) 0 var(--spacing-medium);
+        height: 100%;
+        overflow-y: auto;
+        display: grid;
+        grid-auto-rows: min-content min-content 1fr;
     }
 
     &__metrics {
