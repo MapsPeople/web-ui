@@ -316,7 +316,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
 
             if (userPosition && !originLocation && directionsToLocation?.id !== 'USER_POSITION') {
                 // If the user's position is known and no origin location is set, use the position as Origin.
-                
+
                 const myPositionLocation = generateMyPositionLocation(userPosition);
                 fromFieldRef.current.setDisplayText(myPositionLocation.properties.name);
                 setOriginLocation(myPositionLocation);
@@ -363,12 +363,10 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
             });
         }
 
-        if (originLocation?.id === 'USER_POSITION' && destinationLocation?.id !== 'USER_POSITION') {
+        if (originLocation?.id === 'USER_POSITION') {
             setHasMyPosition(true)
-        } else if (destinationLocation?.id === 'USER_POSITION' && originLocation?.id !== 'USER_POSITION') {
+        } else if (destinationLocation?.id === 'USER_POSITION') {
             setHasMyPosition(true)
-        } else if (originLocation?.id !== 'USER_POSITION' && destinationLocation?.id !== 'USER_POSITION') {
-            setHasMyPosition(false);
         } else {
             setHasMyPosition(false);
         }
