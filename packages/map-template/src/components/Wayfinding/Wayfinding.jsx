@@ -91,6 +91,8 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
 
     const [hasGooglePlaces, setHasGooglePlaces] = useState(false);
 
+    const [hasMyPostion, setHasMyPosition] = useState(false);
+
     const [travelMode, setTravelMode] = useRecoilState(travelModeState);
 
     /**
@@ -172,18 +174,27 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         return { lat: coordinates[1], lng: coordinates[0], floor: location.properties.floor };
     }
 
+
     /**
-     * Set the user's current position as the origin.
-     *
-     * This is done by having a GeoJSON Feature with geometry corresponding to
-     * the user's position.
-     */
-    function setMyPositionAsOrigin() {
+    * Set the user's current position as the selected field.
+    *
+    * This is done by having a GeoJSON Feature with geometry corresponding to
+    * the user's position.
+    */
+    function selectMyPosition() {
         const myPositionLocation = generateMyPositionLocation(userPosition);
-        fromFieldRef.current.setDisplayText(myPositionLocation.properties.name);
-        setOriginLocation(myPositionLocation);
+
+        if (activeSearchField === searchFieldIdentifiers.TO) {
+            toFieldRef.current.setDisplayText(myPositionLocation.properties.name);
+            setDestinationLocation(myPositionLocation);
+
+        } else if (activeSearchField === searchFieldIdentifiers.FROM) {
+            fromFieldRef.current.setDisplayText(myPositionLocation.properties.name);
+            setOriginLocation(myPositionLocation);
+        }
         setHasFoundRoute(true);
         setHasSearchResults(true);
+        setSearchResults([]);
     }
 
     /**
@@ -210,6 +221,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         setHasFoundRoute(true);
         setHasGooglePlaces(false);
         setHasSearchResults(true);
+        setHasMyPosition(false);
     }
 
     /**
@@ -304,7 +316,13 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
 
             if (userPosition && !originLocation && directionsToLocation?.id !== 'USER_POSITION') {
                 // If the user's position is known and no origin location is set, use the position as Origin.
-                setMyPositionAsOrigin();
+                
+                const myPositionLocation = generateMyPositionLocation(userPosition);
+                fromFieldRef.current.setDisplayText(myPositionLocation.properties.name);
+                setOriginLocation(myPositionLocation);
+                setHasFoundRoute(true);
+                setHasSearchResults(true);
+                setSearchResults([]);
             }
         }
     }, [isActive, directionsToLocation, directionsFromLocation]);
@@ -344,6 +362,17 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                 setHasFoundRoute(false);
             });
         }
+
+        if (originLocation?.id === 'USER_POSITION' && destinationLocation?.id !== 'USER_POSITION') {
+            setHasMyPosition(true)
+        } else if (destinationLocation?.id === 'USER_POSITION' && originLocation?.id !== 'USER_POSITION') {
+            setHasMyPosition(true)
+        } else if (originLocation?.id !== 'USER_POSITION' && destinationLocation?.id !== 'USER_POSITION') {
+            setHasMyPosition(false);
+        } else {
+            setHasMyPosition(false);
+        }
+
     }, [originLocation, destinationLocation, directionsService, accessibilityOn, travelMode]);
 
     /*
@@ -413,7 +442,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
             {searchResults.length > 0 &&
                 <div className="wayfinding__scrollable" {...scrollableContentSwipePrevent}>
                     <div className="wayfinding__results">
-                        {userPosition && originLocation?.id !== 'USER_POSITION' && <div className="wayfinding__use-current-position" onClick={() => setMyPositionAsOrigin()}>
+                        {userPosition && !hasMyPostion && <div className="wayfinding__use-current-position" onClick={() => selectMyPosition()}>
                             <CompassArrow />
                             <span>My Position</span>
                         </div>}
