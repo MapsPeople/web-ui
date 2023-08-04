@@ -91,9 +91,10 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
 
     const [hasGooglePlaces, setHasGooglePlaces] = useState(false);
 
-    const [hasMyPostion, setHasMyPosition] = useState(false);
-
     const [travelMode, setTravelMode] = useRecoilState(travelModeState);
+
+     /** Indicate if the user has My Position selected */
+    const [hasMyPostion, setHasMyPosition] = useState(false);
 
     /**
      * Decorates location with data that is required for wayfinding to work.
@@ -174,7 +175,6 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         return { lat: coordinates[1], lng: coordinates[0], floor: location.properties.floor };
     }
 
-
     /**
     * Set the user's current position as the selected field.
     *
@@ -187,14 +187,15 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         if (activeSearchField === searchFieldIdentifiers.TO) {
             toFieldRef.current.setDisplayText(myPositionLocation.properties.name);
             setDestinationLocation(myPositionLocation);
-
         } else if (activeSearchField === searchFieldIdentifiers.FROM) {
             fromFieldRef.current.setDisplayText(myPositionLocation.properties.name);
             setOriginLocation(myPositionLocation);
         }
+        setSearchResults([]);
         setHasFoundRoute(true);
         setHasSearchResults(true);
-        setSearchResults([]);
+        setHasGooglePlaces(false);
+        setSearchTriggered(false);
     }
 
     /**
