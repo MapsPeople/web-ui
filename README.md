@@ -39,4 +39,4 @@ If your contribution to this repository doesn't follow these standards, it might
 
 When creating a new Pull Request, you must give it a label of `major`, `minor` or `patch` depending on the nature of the code. You can read more about it on the link mentioned above on `Semantic Versioning`.
 
-When the Pull Request has been approved, the `CHANGELOG` file must be updated. If multiple projects have been worked on, the `CHANGELOG` for each project needs to be updated. For now, the label applies for all the projects that have been worked on (i.e. Work has been done on both the `Map Template` and the `Components` folder, and the label is `minor`, then the `CHANGELOG` for both projects need to be updated with a minor change.)
+When the Pull Request has been approved, the `CHANGELOG` file must be updated. If multiple projects have been worked on, the `CHANGELOG` for each project needs to be updated. For now, the label applies for all the projects that have been worked on (i.e. work has been done on both the `Map Template` and the `Components` folder, and the label is `minor`, then the `CHANGELOG` for both projects need to be updated with a minor change.)
