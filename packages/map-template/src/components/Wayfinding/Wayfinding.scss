@@ -56,18 +56,18 @@
     }
 
     &__use-current-position {
-        padding: 16px;
-        font-size: 1rem;
-        font-weight: 500;
+        padding: var(--spacing-medium);
+        font-size: var(--font-size-medium);
+        font-weight: var(--font-weight-large);
         line-height: 1rem;
         transition: all 300ms ease 0s;
-        border-radius: 8px;
+        border-radius: var(--rounding-large);
         background-color: rgb(249, 250, 251);
         display: flex;
         flex-direction: row;
         align-items: center;
         cursor: pointer;
-        gap: 16px;
+        gap: var(--spacing-medium);
         border: 1px solid rgb(229, 231, 235);
     }
 
