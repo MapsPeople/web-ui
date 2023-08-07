@@ -364,6 +364,8 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
             });
         }
 
+        // Check if any of the fields have the 'USER_POSITION' selected
+        // The 'USER_POSITION' option should only be available for one search field at a time 
         if (originLocation?.id === 'USER_POSITION') {
             setHasMyPosition(true)
         } else if (destinationLocation?.id === 'USER_POSITION') {
