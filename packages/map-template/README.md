@@ -117,7 +117,6 @@ Note that when using the React component, the properties should conform to JSX p
 
 ## Using Query Parameters
 
-The Map Template supports using query parameters for all the properties provided by the MapsIndoorsMap component.
 The Web component and the React component support using the URL parameters if the `supportsURLParameters` property is set to `true`.
 
 The supported query parameters are the following:
