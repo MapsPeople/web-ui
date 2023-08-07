@@ -176,11 +176,11 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     }
 
     /**
-    * Set the user's current position as the selected field.
-    *
-    * This is done by having a GeoJSON Feature with geometry corresponding to
-    * the user's position.
-    */
+     * Set the user's current position as the selected field.
+     *
+     * This is done by having a GeoJSON Feature with geometry corresponding to
+     * the user's position.
+     */
     function selectMyPosition() {
         const myPositionLocation = generateMyPositionLocation(userPosition);
 
