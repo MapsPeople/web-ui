@@ -94,7 +94,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     const [travelMode, setTravelMode] = useRecoilState(travelModeState);
 
      /** Indicate if the user has My Position selected */
-    const [hasMyPostion, setHasMyPosition] = useState(false);
+    const [myPositionSelected, setMyPositionSelected] = useState(false);
 
     /**
      * Decorates location with data that is required for wayfinding to work.
@@ -222,7 +222,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         setHasFoundRoute(true);
         setHasGooglePlaces(false);
         setHasSearchResults(true);
-        setHasMyPosition(false);
+        setMyPositionSelected(false);
     }
 
     /**
@@ -367,11 +367,11 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         // Check if any of the fields have the 'USER_POSITION' selected
         // The 'USER_POSITION' option should only be available for one search field at a time 
         if (originLocation?.id === 'USER_POSITION') {
-            setHasMyPosition(true)
+            setMyPositionSelected(true)
         } else if (destinationLocation?.id === 'USER_POSITION') {
-            setHasMyPosition(true)
+            setMyPositionSelected(true)
         } else {
-            setHasMyPosition(false);
+            setMyPositionSelected(false);
         }
 
     }, [originLocation, destinationLocation, directionsService, accessibilityOn, travelMode]);
@@ -443,7 +443,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
             {searchResults.length > 0 &&
                 <div className="wayfinding__scrollable" {...scrollableContentSwipePrevent}>
                     <div className="wayfinding__results">
-                        {userPosition && !hasMyPostion && <div className="wayfinding__use-current-position" onClick={() => selectMyPosition()}>
+                        {userPosition && !myPositionSelected && <div className="wayfinding__use-current-position" onClick={() => selectMyPosition()}>
                             <CompassArrow />
                             My Position
                         </div>}
