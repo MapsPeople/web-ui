@@ -445,7 +445,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                     <div className="wayfinding__results">
                         {userPosition && !hasMyPostion && <div className="wayfinding__use-current-position" onClick={() => selectMyPosition()}>
                             <CompassArrow />
-                            <span>My Position</span>
+                            My Position
                         </div>}
                         {searchResults.map(location =>
                             <ListItemLocation
