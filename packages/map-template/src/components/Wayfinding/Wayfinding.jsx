@@ -445,7 +445,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
             </div>
             {!hasFoundRoute && <p className="wayfinding__error">No route found</p>}
             {!hasSearchResults && <p className="wayfinding__error">Nothing was found</p>}
-            {userPosition && !myPositionSelected && showMyPosition && <button className="wayfinding__use-current-position" onClick={() => selectMyPosition()}>
+            {userPosition && !myPositionSelected && showMyPosition && <button type="button" className="wayfinding__use-current-position" onClick={() => selectMyPosition()}>
                 <CompassArrow />
                 My Position
             </button>}
