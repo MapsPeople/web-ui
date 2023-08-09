@@ -149,6 +149,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         if (results.length === 0) {
             setHasSearchResults(false);
             setHasGooglePlaces(false);
+            setShowMyPosition(false);
             setSearchResults([]);
         } else {
             setHasSearchResults(true);
