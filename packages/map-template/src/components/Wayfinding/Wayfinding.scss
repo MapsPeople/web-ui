@@ -71,7 +71,8 @@
         border: 1px solid rgb(229, 231, 235);
         margin: var(--spacing-x-small) var(--spacing-x-small) 0 var(--spacing-x-small);
         height: fit-content;
-        
+        justify-items: start;
+
         svg {
             justify-self: center;
         }

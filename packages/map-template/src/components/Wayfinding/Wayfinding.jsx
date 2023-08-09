@@ -96,7 +96,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     /** Indicate if the user has My Position selected */
     const [myPositionSelected, setMyPositionSelected] = useState(false);
 
-     /** Indicate if the option to choose My Position should be shown */
+    /** Indicate if the option to choose My Position should be shown */
     const [showMyPosition, setShowMyPosition] = useState(true);
 
     /**
@@ -445,10 +445,10 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
             </div>
             {!hasFoundRoute && <p className="wayfinding__error">No route found</p>}
             {!hasSearchResults && <p className="wayfinding__error">Nothing was found</p>}
-            {userPosition && !myPositionSelected && showMyPosition && <div className="wayfinding__use-current-position" onClick={() => selectMyPosition()}>
+            {userPosition && !myPositionSelected && showMyPosition && <button className="wayfinding__use-current-position" onClick={() => selectMyPosition()}>
                 <CompassArrow />
                 My Position
-            </div>}
+            </button>}
             {searchResults.length > 0 &&
                 <div className="wayfinding__scrollable" {...scrollableContentSwipePrevent}>
                     <div className="wayfinding__results">
