@@ -56,6 +56,9 @@ To have any Stencil component changes be reflected in this project, you need to 
 
 ## Supported properties on the MapsIndoors Map component
 
+The MapsIndoors Map component supports a list of props (see the list below) that can be configured in the `App.jsx` file. 
+When loading the MapsIndoors Map component for the first time, the map will respect the default values set for the `apiKey`, `venue`, `logo` and `primaryColor` props, which can be found in the `MapsIndoorsMap.jsx` file under the `defaultProps` object. 
+
 |Property|Type|Description|
 |:--|:--|:--|
 |`apiKey`|`string`|The MapsIndoors Solution you want to load. Takes both API key as string and "App alias". |

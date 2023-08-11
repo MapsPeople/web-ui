@@ -32,6 +32,18 @@ Use the web component in your HTML:
 ```
 
 Add attributes to the web component as needed (see supported properties below).
+
+**Note!** The `external-IDs` and `app-user-roles` expect an array, which in a web component is handled differently (see example below).
+In your script, define the array of external IDs that you want to be shown on the Map Template. 
+Then get a hold of the mapsIndoors map element using the `document.querySelector()` method. 
+When you have the mapsIndoors map element, assign its prop `externalIDs` the array of external IDs that you defined at the beginning.
+
+```javascript
+const externalIDsArray = ["externalID-1", "externalID-2"]
+const mapsIndoorsMapElement = document.querySelector('mapsindoors-map')
+mapsIndoorsMapElement.externalIDs = externalIDsArray;
+```
+
 Use query parameters to configure the web component by setting the `supports-url-parameter` attribute to `true`.
 
 ## Using just the browser
