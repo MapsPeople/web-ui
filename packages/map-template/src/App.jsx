@@ -5,7 +5,7 @@ function App() {
     return (
         <div className="app">
             {/* This is the Map Template component */}
-            <MapsIndoorsMap supportsURLParameters={true} />
+            <MapsIndoorsMap supportsUrlParameters={true} />
         </div>
     );
 }

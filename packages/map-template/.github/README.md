@@ -71,11 +71,11 @@ To have any Stencil component changes be reflected in this project, you need to 
 |`externalIDs`|`array`|Array of external IDs which filters the map and shows a list of locations. Because of the way browsers work, you can not use External IDs with the `,`, `&`, `#` and `+`, character in them, as they are interpreted by the browser in a particular way. |
 |`tileStyle`|`string`|Name of Tile Style to display on the map. |
 |`startZoomLevel`|`number`|The initial zoom level of the map. |
-|`supports-URL-parameters`|`supportsURLParameters`|`bool`|Indicates if the Map Template supports URL parameters. |
+|`supports-url-parameters`|`supportsUrlParameters`|`bool`|Indicates if the Map Template supports URL parameters. |
 
 ## Using Query Parameters
 
-The Map Template supports using query parameters for all the properties provided by the MapsIndoorsMap component if the `supportsURLParameters` property is set to true.
+The Map Template supports using query parameters for all the properties provided by the MapsIndoorsMap component if the `supportsUrlParameters` property is set to true.
 
 The supported query parameters are the following:
 

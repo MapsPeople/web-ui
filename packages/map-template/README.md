@@ -32,7 +32,7 @@ Use the web component in your HTML:
 ```
 
 Add attributes to the web component as needed (see supported properties below).
-Use query parameters to configure the web component by setting the `supportsURLParameters` prop to `true`.
+Use query parameters to configure the web component by setting the `supports-url-parameter` attribute to `true`.
 
 ## Using just the browser
 
@@ -66,7 +66,7 @@ Use query parameters to configure the web component by setting the `supportsURLP
 ```
 
 Add attributes to the web component as needed (see supported properties below).
-Use query parameters to configure the web component by setting the `supportsURLParameters` prop to `true`.
+Use query parameters to configure the web component by setting the `supports-url-parameter` attribute to `true`.
 
 ## React component: Installation and usage
 
@@ -92,7 +92,7 @@ import MapsIndoorsMap from '@mapsindoors/map-template/dist/mapsindoors-react.es.
 ```
 
 Add properties to the MapsIndoorsMap component as needed (see list below).
-Use query parameters to configure the MapsIndoorsMap component by setting the `supportsURLParameters` prop to `true`.
+Use query parameters to configure the MapsIndoorsMap component by setting the `supportsUrlParameters` prop to `true`.
 
 ## Supported attributes on the MapsIndoors Map components
 
@@ -113,11 +113,11 @@ Note that when using the React component, the properties should conform to JSX p
 |`external-IDs`|`etxternalIDs`|`array`|Array of external IDs which filters the map and shows a list of locations. Because of the way browsers work, you can not use External IDs with the `,`, `&`, `#` and `+`, character in them, as they are interpreted by the browser in a particular way. |
 |`tile-style`|`tileStyle`|`string`|Name of Tile Style to display on the map. |
 |`start-zoom-level`|`startZoomLevel`|`number`|The initial zoom level of the map. |
-|`supports-URL-parameters`|`supportsURLParameters`|`bool`|Indicates if the Map Template supports URL parameters. |
+|`supports-url-parameters`|`supportsUrlParameters`|`bool`|Indicates if the Map Template supports URL parameters. |
 
 ## Using Query Parameters
 
-The Web component and the React component support using the URL parameters if the `supportsURLParameters` property is set to `true`.
+The Web component and the React component support using the URL parameters if the `supports-url-parameters` attribute respectively the `supportsUrlParameters` prop is set to `true`.
 
 The supported query parameters are the following:
 
