@@ -4,11 +4,11 @@ import { Maneuver } from '../../types/maneuver.interface';
 import { DirectionsTranslations } from '../../types/directions-translations.interface';
 
 @Component({
-    tag: 'mi-route-instructions-maneuver',
-    styleUrl: 'route-instructions-maneuver.scss',
+    tag: 'mi-route-instructions-maneuver-legacy',
+    styleUrl: 'route-instructions-maneuver-legacy.scss',
     shadow: true
 })
-export class RouteInstructionsManeuver implements ComponentInterface {
+export class RouteInstructionsManeuverLegacy implements ComponentInterface {
     /**
      * Maneuver to display given as stringified JSON.
      *
@@ -97,8 +97,11 @@ export class RouteInstructionsManeuver implements ComponentInterface {
                 </div>
                 <div class="description">
                     {/* TODO: Render normally when SDK strips instructions properties for HTML */}
-                    <div class="description__text">{translatedManeuver}</div>
-                    <mi-distance part="maneuver-description-distance" meters={this.maneuverData.distance.value} unit={this.unit}></mi-distance>
+                    <p part="maneuver-description">{translatedManeuver}</p>
+                    <div class="description__distance">
+                        <mi-distance part="maneuver-description-distance" meters={this.maneuverData.distance.value} unit={this.unit}></mi-distance>
+                        <span part="maneuver-description-distance-border" class="description__distance-border"></span>
+                    </div>
                 </div>
             </Host>
         );

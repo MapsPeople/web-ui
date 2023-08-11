@@ -10,7 +10,7 @@ import { isInternetExplorer } from '../../utils/utils';
     styleUrl: 'route-instructions-step-legacy.scss',
     shadow: true
 })
-export class RouteInstructionsStep implements ComponentInterface {
+export class RouteInstructionsStepLegacy implements ComponentInterface {
 
     /**
      * The step data object to render from.
@@ -200,7 +200,7 @@ export class RouteInstructionsStep implements ComponentInterface {
     renderSubsteps(): JSX.Element {
         return this.substepsAreOpen === true ? <div class="step__substeps">
             {this.stepData.steps.map((maneuver, index) => {
-                return <mi-route-instructions-maneuver
+                return <mi-route-instructions-maneuver-legacy
                     data-maneuver-index={index}
                     maneuver={JSON.stringify(maneuver)}
                     translations={this.translations}

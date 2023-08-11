@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [13.10.0] - 2023-08-01
+
+### Added
+
+- **mi-route-instructions-maneuver** has been renamed to `mi-route-instructions-maneuver-legacy`.
+- A new component for the `mi-route-instructions-maneuver` with a new design has been created.
+
+## [13.9.0] - 2023-07-25
+
+### Added
+
+- **mi-location-info** now supports translation of the word 'Level'.
+
 ## [13.8.1] - 2023-07-11
 
 ### Fixed
