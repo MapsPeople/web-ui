@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import MapsIndoorsMap from '../src/components/MapsIndoorsMap/MapsIndoorsMap';
 
 /*
- * Exports the MapsIndoorsMap React component as a web component.
+ * Exports the MapsIndoorsMap React component as a Web Component.
  */
 
 MapsIndoorsMap.propTypes = {
