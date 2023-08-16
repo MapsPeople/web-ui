@@ -1,9 +1,11 @@
 import { Component, ComponentInterface, Host, h, Watch, Event, EventEmitter } from '@stencil/core';
 import { JSX, Prop, Method } from '@stencil/core/internal';
 import Debounce from 'debounce-decorator';
+import axios from 'axios';
 
 declare const google;
 declare const mapsindoors;
+declare const mapboxgl;
 
 @Component({
     tag: 'mi-search',
@@ -146,7 +148,6 @@ export class Search implements ComponentInterface {
         this.cleared.emit();
     }
 
-
     /**
      * Programmatically trigger the search.
      */
@@ -183,7 +184,8 @@ export class Search implements ComponentInterface {
     private search(inputValue): void {
         Promise.all([
             this.makeMapsIndoorsQuery(inputValue),
-            this.makeGooglePlacesQuery(inputValue)
+            this.makeGooglePlacesQuery(inputValue),
+            this.getMapboxSearchResults(),
         ])
             .then(results => {
                 this.lastRequested = inputValue;
@@ -319,6 +321,42 @@ export class Search implements ComponentInterface {
         });
     }
 
+    private getBaseURL(searchTerm) {
+        return `https://api.mapbox.com/search/searchbox/v1/suggest?q=${searchTerm}&session_token=[GENERATED-UUID]&access_token=pk.eyJ1IjoiZW5lcHBlciIsImEiOiJjazVzNjB5a3EwODd0M2Ztb3FjYmZmbzJhIn0._fo_iTl7ZHPrl634-F2qYg`;
+    }
+
+    private getMapboxSearchResults() {
+        const inputValue = this.inputElement.value;
+
+        if (!inputValue) {
+            console.log('no input value');
+        } else {
+            const url = this.getBaseURL(inputValue);
+
+            axios.get(url)
+                .then((response) => {
+                    console.log('response', response);
+
+                    const places = response.data.suggestions.map((result) => ({
+                        id: result.mapbox_id,
+                        type: 'Feature',
+                        properties: {
+                            type: 'mapbox_places',
+                            placeId: result.mapbox_id,
+                            name: result.name,
+                            subtitle: result.place_formatted || '',
+                            floor: 0
+                        }
+                    }));
+
+                    console.log('places', places);
+                })
+                .catch(err => {
+                    console.error('Error: ', err);
+                });
+        }
+    }
+
     componentDidRender(): void {
         if (this.dataAttributes) {
             for (const key in this.dataAttributes) {
@@ -326,6 +364,8 @@ export class Search implements ComponentInterface {
             }
         }
         this.componentRendered.emit();
+
+        this.getMapboxSearchResults();
     }
 
     render(): JSX.Element {
