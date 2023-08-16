@@ -162,7 +162,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                     <div className='location-info__name'>
                         {location.properties.name}
                     </div>
-                    <mi-location-info ref={locationInfoElement} />
+                    <mi-location-info ref={locationInfoElement} show-external-id={false} />
                 </div>
                 <button className="location-info__close" onClick={() => back()}>
                     <CloseIcon />
