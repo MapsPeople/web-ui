@@ -20,8 +20,8 @@ The repo consists of these _packages_, which are all found in the `packages` fol
 
 - [`components`](https://github.com/MapsPeople/web-ui/blob/main/packages/components/README.md), the MapsIndoors Web Components found at [@mapsindoors/components](https://www.npmjs.com/package/@mapsindoors/components)
 - `demos`, a collection of demos of how to use the _packages_ in this repo
-- [`map-template`](https://github.com/MapsPeople/web-ui/blob/main/packages/map-template/README.md), the MapsIndoors Map Template, a React app helping you get up and running fast and easy
-- [`midt`](https://github.com/MapsPeople/web-ui/blob/main/packages/midt/README.md), i.e. MapsIndoors Design Tokens, a design library used as the foundation for UI styles across MapsIndoors
+- [`map-template`](https://github.com/MapsPeople/web-ui/blob/main/packages/map-template/README.md), the MapsIndoors Map Template, a React app helping you get up and running fast and easy. It can be found at [@mapsindoors/map-template](https://www.npmjs.com/package/@mapsindoors/map-template)
+- [`midt`](https://github.com/MapsPeople/web-ui/blob/main/packages/midt/README.md), i.e. MapsIndoors Design Tokens, a design library used as the foundation for UI styles across MapsIndoors. It can be found at [@mapsindoors/midt](https://www.npmjs.com/package/@mapsindoors/midt)
 
 ## A quick primer on Lerna
 

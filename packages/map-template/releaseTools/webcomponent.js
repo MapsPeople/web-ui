@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import MapsIndoorsMap from '../src/components/MapsIndoorsMap/MapsIndoorsMap';
 
 /*
- * Exports the MapsIndoorsMap React component as a web component.
+ * Exports the MapsIndoorsMap React component as a Web Component.
  */
 
 MapsIndoorsMap.propTypes = {
@@ -21,7 +21,8 @@ MapsIndoorsMap.propTypes = {
     directionsTo: PropTypes.string,
     externalIDs: PropTypes.array,
     tileStyle: PropTypes.string,
-    startZoomLevel: PropTypes.number
+    startZoomLevel: PropTypes.number, 
+    supportsUrlParameters: PropTypes.bool
 };
 
 const WebMapsIndoorsMap = reactToWebComponent(MapsIndoorsMap, React, ReactDOM);

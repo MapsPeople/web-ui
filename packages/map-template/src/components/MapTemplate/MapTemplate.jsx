@@ -25,6 +25,7 @@ import filteredLocationsState from '../../atoms/filteredLocationsState';
 import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
 import startZoomLevelState from '../../atoms/startZoomLevelState';
 import primaryColorState from '../../atoms/primaryColorState';
+import logoState from '../../atoms/logoState';
 
 defineCustomElements();
 
@@ -57,6 +58,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setCategories] = useRecoilState(categoriesState);
     const [, setLocationId] = useRecoilState(locationIdState);
     const [, setPrimaryColor] = useRecoilState(primaryColorState);
+    const [, setLogo] = useRecoilState(logoState);
 
     const directionsFromLocation = useLocationForWayfinding(directionsFrom);
     const directionsToLocation = useLocationForWayfinding(directionsTo);
@@ -123,6 +125,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
             setApiKey(apiKey);
+
             setMapReady(false);
             window.mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKey);
 
@@ -183,7 +186,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         }
     }, [externalIDs, mapsindoorsSDKAvailable]);
 
-
     /*
      * React on changes to the locationId prop.
      * Set as current location and change the venue according to the venue that the location belongs to.
@@ -236,14 +238,14 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the tile style prop.
      */
     useEffect(() => {
-        setTileStyle(tileStyle)
+        setTileStyle(tileStyle);
     }, [tileStyle]);
 
     /*
      * React on changes in the primary color prop.
      */
     useEffect(() => {
-        setPrimaryColor(primaryColor)
+        setPrimaryColor(primaryColor);
     }, [primaryColor]);
 
     /*
@@ -252,6 +254,13 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         setStartZoomLevel(startZoomLevel);
     }, [startZoomLevel]);
+
+    /*
+     * React on changes in the logo prop.
+     */
+    useEffect(() => {
+        setLogo(logo);
+    }, [logo]);
 
     /**
      * When venue is fitted while initializing the data,
@@ -265,11 +274,11 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }
 
     /**
-    * Handle the clicked location on the map.
-    * Set the current location if not in directions mode.
-    *
-    * @param {object} location
-    */
+     * Handle the clicked location on the map.
+     * Set the current location if not in directions mode.
+     *
+     * @param {object} location
+     */
     function locationClicked(location) {
         if (locationsDisabledRef.current !== true) {
             setCurrentLocation(location);
@@ -324,7 +333,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }
 
     return <div className={`mapsindoors-map ${locationsDisabledRef.current ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}`}>
-        {!isMapReady && <SplashScreen logo={logo} />}
+        {!isMapReady && <SplashScreen />}
         {venues.length > 1 && <VenueSelector
             onOpen={() => pushAppView(appStates.VENUE_SELECTOR)}
             onClose={() => goBack()}
