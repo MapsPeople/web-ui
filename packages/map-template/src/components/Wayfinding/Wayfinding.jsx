@@ -97,7 +97,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     const [myPositionSelected, setMyPositionSelected] = useState(false);
 
     /** Indicate if the option to choose My Position should be shown */
-    const [showMyPosition, setShowMyPosition] = useState(true);
+    const [showMyPositionOption, setShowMyPositionOption] = useState(true);
 
     /**
      * Decorates location with data that is required for wayfinding to work.
@@ -134,7 +134,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         setHasGooglePlaces(false);
         setSearchTriggered(false);
         setSearchResults([]);
-        setShowMyPosition(false);
+        setShowMyPositionOption(false);
     }
 
     /**
@@ -149,7 +149,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         if (results.length === 0) {
             setHasSearchResults(false);
             setHasGooglePlaces(false);
-            setShowMyPosition(false);
+            setShowMyPositionOption(false);
             setSearchResults([]);
         } else {
             setHasSearchResults(true);
@@ -209,7 +209,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
      * @param {string} searchFieldIdentifier
      */
     function onSearchClicked(searchFieldIdentifier) {
-        setShowMyPosition(true);
+        setShowMyPositionOption(true);
         setActiveSearchField(searchFieldIdentifier);
         triggerSearch(searchFieldIdentifier);
         setHasFoundRoute(true);
@@ -446,7 +446,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
             </div>
             {!hasFoundRoute && <p className="wayfinding__error">No route found</p>}
             {!hasSearchResults && <p className="wayfinding__error">Nothing was found</p>}
-            {userPosition && !myPositionSelected && showMyPosition && <button type="button" className="wayfinding__use-current-position" onClick={() => selectMyPosition()}>
+            {userPosition && !myPositionSelected && showMyPositionOption && <button type="button" className="wayfinding__use-current-position" onClick={() => selectMyPosition()}>
                 <CompassArrow />
                 My Position
             </button>}
