@@ -1,6 +1,6 @@
 # Map Template
 
-## Web component: Installation and usage
+## Web Component: Installation and usage
 
 ### Using NPM
 
@@ -25,15 +25,15 @@ mapsindoors-map {
 }
 ```
 
-Use the web component in your HTML:
+Use the Web Component in your HTML:
 
 ```html
 <mapsindoors-map></mapsindoors-map>
 ```
 
-Add attributes to the web component as needed (see supported properties below).
+Add attributes to the Web Component as needed (see supported properties below).
 
-**Note!** The `external-IDs` and `app-user-roles` expect an array, which in a web component is handled differently (see example below).
+**Note!** The `external-IDs` and `app-user-roles` expect an array, which in a Web Component is handled differently (see example below).
 In your script, define the array of external IDs that you want to be shown on the Map Template. 
 Then get a hold of the mapsIndoors map element using the `document.querySelector()` method. 
 When you have the mapsIndoors map element, assign its prop `externalIDs` the array of external IDs that you defined at the beginning.
@@ -44,7 +44,7 @@ const mapsIndoorsMapElement = document.querySelector('mapsindoors-map')
 mapsIndoorsMapElement.externalIDs = externalIDsArray;
 ```
 
-Use query parameters to configure the web component by setting the `supports-url-parameter` attribute to `true`.
+Use query parameters to configure the Web Component by setting the `supports-url-parameter` attribute to `true`.
 
 ## Using just the browser
 
@@ -77,8 +77,8 @@ Use query parameters to configure the web component by setting the `supports-url
 </html>
 ```
 
-Add attributes to the web component as needed (see supported properties below).
-Use query parameters to configure the web component by setting the `supports-url-parameter` attribute to `true`.
+Add attributes to the Web Component as needed (see supported properties below).
+Use query parameters to configure the Web Component by setting the `supports-url-parameter` attribute to `true`.
 
 ## React component: Installation and usage
 
@@ -129,7 +129,7 @@ Note that when using the React component, the properties should conform to JSX p
 
 ## Using Query Parameters
 
-The Web component and the React component support using the URL parameters if the `supports-url-parameters` attribute respectively the `supportsUrlParameters` prop is set to `true`.
+The Web Component and the React component support using the URL parameters if the `supports-url-parameters` attribute respectively the `supportsUrlParameters` prop is set to `true`.
 
 The supported query parameters are the following:
 
