@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.4] - 2023-08-07
+
+### Fixed
+
+- Refactored inefficient use of private variable.
+
+## [1.9.3] - 2023-08-03
+
+### Fixed
+
+- Upgraded to MapsIndoors JavaScript SDK v4.24.4 and remove behavior that is now default in the SDK regarding labels for Buildings and Venues.
+
+## [1.9.2] - 2023-08-03
+
+### Fixed
+
+- Fixed `startZoomLevel` query parameter not working on Google Maps.
+
+## [1.9.1] - 2023-08-03
+
+### Fixed
+
+- Fixed error message appearing in weird states on Google Maps. 
+
 ## [1.9.0] - 2023-08-01
 
 ### Added

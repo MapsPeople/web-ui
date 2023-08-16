@@ -109,7 +109,7 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
         return mapsIndoorsInstance.fitVenue(venue).then(() => {
             // Set the map zoom level if the property is provided.
             if (startZoomLevel) {
-                mapsIndoorsInstance.setZoom(startZoomLevel);
+                mapsIndoorsInstance.setZoom(parseInt(startZoomLevel));
             }
         });
     }
@@ -177,9 +177,8 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
             mapView
         });
 
-        // Turn off visibility for buildings and venues.
-        // TODO: outline color override is also added here for demo purposes until the SDK supports Display Rules for Buildings too.
-        miInstance.setDisplayRule(['MI_BUILDING_OUTLINE', 'MI_BUILDING', 'MI_VENUE'], { visible: false });
+        // TODO: Turn off visibility for building outline for demo purposes until the SDK supports Display Rules for Buildings too.
+        miInstance.setDisplayRule(['MI_BUILDING_OUTLINE'], { visible: false });
 
         miInstance.on('click', location => onLocationClick(location));
         miInstance.once('building_changed', () => onBuildingChanged(miInstance))

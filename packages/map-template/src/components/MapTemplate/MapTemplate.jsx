@@ -29,12 +29,6 @@ import primaryColorState from '../../atoms/primaryColorState';
 defineCustomElements();
 
 /**
- * Private variable used for checking if the locations should be disabled.
- * Implemented due to the impossibility to use the React useState hook.
- */
-let _locationsDisabled;
-
-/**
  *
  * @param {Object} props
  * @param {string} props.apiKey - MapsIndoors API key or solution alias.
@@ -62,7 +56,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const [, setCategories] = useRecoilState(categoriesState);
     const [, setLocationId] = useRecoilState(locationIdState);
-    const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
     const [, setPrimaryColor] = useRecoilState(primaryColorState);
 
     const directionsFromLocation = useLocationForWayfinding(directionsFrom);
@@ -88,6 +81,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     // Declare the reference to the App Config
     const appConfigRef = useRef();
 
+    // Declare the reference to the disabled locations
+    const locationsDisabledRef = useRef();
+
     // Indicate if the MapsIndoors JavaScript SDK is available
     const [mapsindoorsSDKAvailable, setMapsindoorsSDKAvailable] = useState(false);
 
@@ -104,7 +100,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             const miSdkApiTag = document.createElement('script');
             miSdkApiTag.setAttribute('type', 'text/javascript');
-            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.24.1/mapsindoors-4.24.1.js.gz');
+            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.24.4/mapsindoors-4.24.4.js.gz');
             document.body.appendChild(miSdkApiTag);
             miSdkApiTag.onload = () => {
                 resolve();
@@ -206,20 +202,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         }
     }, [locationId, mapsindoorsSDKAvailable]);
 
-    /*
-     * React on changes in directions opened state.
-     */
-    useEffect(() => {
-        // Reset all the filters when in directions mode.
-        // Store the filtered locations in another state, to be able to access them again.
-        if (hasDirectionsOpen) {
-            setInitialFilteredLocations(filteredLocations)
-            setFilteredLocations([]);
-        } else {
-            // Apply the previously filtered locations to the map when navigating outside the directions.
-            setFilteredLocations(initialFilteredLocations);
-        }
-    }, [hasDirectionsOpen]);
+
 
     /*
      * Add Location to history payload to make it possible to re-enter location details with that Location.
@@ -229,8 +212,17 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             setCurrentLocation(currentAppViewPayload);
         }
 
-        setHasDirectionsOpen(currentAppView === appStates.DIRECTIONS);
-        _locationsDisabled = currentAppView === appStates.DIRECTIONS;
+        locationsDisabledRef.current = currentAppView === appStates.DIRECTIONS;
+
+        // Reset all the filters when in directions mode.
+        // Store the filtered locations in another state, to be able to access them again.
+        if (locationsDisabledRef.current) {
+            setInitialFilteredLocations(filteredLocations)
+            setFilteredLocations([]);
+        } else {
+            // Apply the previously filtered locations to the map when navigating outside the directions.
+            setFilteredLocations(initialFilteredLocations);
+        }
     }, [currentAppView]);
 
     /*
@@ -279,7 +271,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     * @param {object} location
     */
     function locationClicked(location) {
-        if (_locationsDisabled !== true) {
+        if (locationsDisabledRef.current !== true) {
             setCurrentLocation(location);
         }
     }
@@ -331,7 +323,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         setCategories(uniqueCategories);
     }
 
-    return <div className={`mapsindoors-map ${hasDirectionsOpen ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}`}>
+    return <div className={`mapsindoors-map ${locationsDisabledRef.current ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}`}>
         {!isMapReady && <SplashScreen logo={logo} />}
         {venues.length > 1 && <VenueSelector
             onOpen={() => pushAppView(appStates.VENUE_SELECTOR)}
