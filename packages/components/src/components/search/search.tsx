@@ -5,7 +5,6 @@ import axios from 'axios';
 
 declare const google;
 declare const mapsindoors;
-declare const mapboxgl;
 
 @Component({
     tag: 'mi-search',
@@ -63,6 +62,11 @@ export class Search implements ComponentInterface {
      * page if not already showing a Google map: https://developers.google.com/places/web-service/policies
      */
     @Prop() google: boolean = false;
+
+    /**
+     * If searching should include Mapbox autocomplete suggestions.
+     */
+    @Prop() mapbox: boolean = false;
 
     /**
      * Which fields on MapsIndoors locations to search in. Comma separated string.
@@ -185,11 +189,11 @@ export class Search implements ComponentInterface {
         Promise.all([
             this.makeMapsIndoorsQuery(inputValue),
             this.makeGooglePlacesQuery(inputValue),
-            this.getMapboxSearchResults(),
+            this.getMapboxSearchResults(inputValue),
         ])
             .then(results => {
                 this.lastRequested = inputValue;
-                this.pushResults(results[0].concat(results[1]));
+                this.pushResults(results[0].concat(results[1]).concat(results[2]));
             });
     }
 
@@ -325,35 +329,39 @@ export class Search implements ComponentInterface {
         return `https://api.mapbox.com/search/searchbox/v1/suggest?q=${searchTerm}&session_token=[GENERATED-UUID]&access_token=pk.eyJ1IjoiZW5lcHBlciIsImEiOiJjazVzNjB5a3EwODd0M2Ztb3FjYmZmbzJhIn0._fo_iTl7ZHPrl634-F2qYg`;
     }
 
-    private getMapboxSearchResults() {
-        const inputValue = this.inputElement.value;
+    private getMapboxSearchResults(query) {
+        if (this.mapbox) {
+            if (!query) {
+                console.log('no input value');
+            } else {
+                return new Promise((resolve) => {
+                    const url = this.getBaseURL(query);
 
-        if (!inputValue) {
-            console.log('no input value');
-        } else {
-            const url = this.getBaseURL(inputValue);
+                    axios.get(url)
+                        .then((response) => {
+                            console.log('response', response);
 
-            axios.get(url)
-                .then((response) => {
-                    console.log('response', response);
-
-                    const places = response.data.suggestions.map((result) => ({
-                        id: result.mapbox_id,
-                        type: 'Feature',
-                        properties: {
-                            type: 'mapbox_places',
-                            placeId: result.mapbox_id,
-                            name: result.name,
-                            subtitle: result.place_formatted || '',
-                            floor: 0
-                        }
-                    }));
-
-                    console.log('places', places);
-                })
-                .catch(err => {
-                    console.error('Error: ', err);
+                            const places = response.data.suggestions.map((result) => ({
+                                id: result.mapbox_id,
+                                type: 'Feature',
+                                properties: {
+                                    type: 'mapbox_places',
+                                    placeId: result.mapbox_id,
+                                    name: result.name,
+                                    subtitle: result.place_formatted || '',
+                                    floor: 0
+                                }
+                            }));
+                            console.log('places', places);
+                            resolve(places);
+                        })
+                        .catch(err => {
+                            console.error('Error: ', err);
+                        });
                 });
+            }
+        } else {
+            console.log('no mapbox');
         }
     }
 
@@ -364,8 +372,6 @@ export class Search implements ComponentInterface {
             }
         }
         this.componentRendered.emit();
-
-        this.getMapboxSearchResults();
     }
 
     render(): JSX.Element {

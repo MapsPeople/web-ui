@@ -381,6 +381,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                             ref={fromFieldRef}
                             mapsindoors={true}
                             google={selectedMapType === mapTypes.Google}
+                            mapbox={selectedMapType === mapTypes.Mapbox}
                             placeholder="Search by name, category, building..."
                             results={locations => searchResultsReceived(locations, searchFieldIdentifiers.FROM)}
                             clicked={() => onSearchClicked(searchFieldIdentifiers.FROM)}
@@ -398,6 +399,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                             ref={toFieldRef}
                             mapsindoors={true}
                             google={selectedMapType === mapTypes.Google}
+                            mapbox={selectedMapType === mapTypes.Mapbox}
                             placeholder="Search by name, category, building..."
                             results={locations => searchResultsReceived(locations, searchFieldIdentifiers.TO)}
                             clicked={() => onSearchClicked(searchFieldIdentifiers.TO)}
@@ -417,7 +419,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                         {searchResults.map(location =>
                             <ListItemLocation
                                 key={location.id}
-                                icon={location.properties.type === 'google_places' ? googlePlacesIcon : undefined}
+                                icon={(location.properties.type === 'google_places' || location.properties.type === 'mapbox_places') ? googlePlacesIcon : undefined}
                                 location={location}
                                 locationClicked={e => locationClickHandler(e)} />
                         )}

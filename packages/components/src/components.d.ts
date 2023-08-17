@@ -869,6 +869,10 @@ export namespace Components {
          */
         "idAttribute": string;
         /**
+          * If searching should include Mapbox autocomplete suggestions.
+         */
+        "mapbox": boolean;
+        /**
           * If searching should include MapsIndoors locations.
          */
         "mapsindoors": boolean;
@@ -2187,6 +2191,10 @@ declare namespace LocalJSX {
           * Id for the input field.
          */
         "idAttribute"?: string;
+        /**
+          * If searching should include Mapbox autocomplete suggestions.
+         */
+        "mapbox"?: boolean;
         /**
           * If searching should include MapsIndoors locations.
          */
