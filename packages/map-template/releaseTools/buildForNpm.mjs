@@ -1,4 +1,4 @@
-// Use "build" from Vite to build a web component and React component in a distribution folder.
+// Use "build" from Vite to build a Web Component and React component in a distribution folder.
 
 import { build } from 'vite';
 import path from 'path';
