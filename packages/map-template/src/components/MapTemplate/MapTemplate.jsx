@@ -25,14 +25,9 @@ import filteredLocationsState from '../../atoms/filteredLocationsState';
 import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
 import startZoomLevelState from '../../atoms/startZoomLevelState';
 import primaryColorState from '../../atoms/primaryColorState';
+import logoState from '../../atoms/logoState';
 
 defineCustomElements();
-
-/**
- * Private variable used for checking if the locations should be disabled.
- * Implemented due to the impossibility to use the React useState hook.
- */
-let _locationsDisabled;
 
 /**
  *
@@ -62,8 +57,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const [, setCategories] = useRecoilState(categoriesState);
     const [, setLocationId] = useRecoilState(locationIdState);
-    const [hasDirectionsOpen, setHasDirectionsOpen] = useState(false);
     const [, setPrimaryColor] = useRecoilState(primaryColorState);
+    const [, setLogo] = useRecoilState(logoState);
 
     const directionsFromLocation = useLocationForWayfinding(directionsFrom);
     const directionsToLocation = useLocationForWayfinding(directionsTo);
@@ -87,6 +82,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     // Declare the reference to the App Config
     const appConfigRef = useRef();
+
+    // Declare the reference to the disabled locations
+    const locationsDisabledRef = useRef();
 
     // Indicate if the MapsIndoors JavaScript SDK is available
     const [mapsindoorsSDKAvailable, setMapsindoorsSDKAvailable] = useState(false);
@@ -127,6 +125,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
             setApiKey(apiKey);
+
             setMapReady(false);
             window.mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKey);
 
@@ -187,7 +186,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         }
     }, [externalIDs, mapsindoorsSDKAvailable]);
 
-
     /*
      * React on changes to the locationId prop.
      * Set as current location and change the venue according to the venue that the location belongs to.
@@ -206,20 +204,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         }
     }, [locationId, mapsindoorsSDKAvailable]);
 
-    /*
-     * React on changes in directions opened state.
-     */
-    useEffect(() => {
-        // Reset all the filters when in directions mode.
-        // Store the filtered locations in another state, to be able to access them again.
-        if (hasDirectionsOpen) {
-            setInitialFilteredLocations(filteredLocations)
-            setFilteredLocations([]);
-        } else {
-            // Apply the previously filtered locations to the map when navigating outside the directions.
-            setFilteredLocations(initialFilteredLocations);
-        }
-    }, [hasDirectionsOpen]);
+
 
     /*
      * Add Location to history payload to make it possible to re-enter location details with that Location.
@@ -229,8 +214,17 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             setCurrentLocation(currentAppViewPayload);
         }
 
-        setHasDirectionsOpen(currentAppView === appStates.DIRECTIONS);
-        _locationsDisabled = currentAppView === appStates.DIRECTIONS;
+        locationsDisabledRef.current = currentAppView === appStates.DIRECTIONS;
+
+        // Reset all the filters when in directions mode.
+        // Store the filtered locations in another state, to be able to access them again.
+        if (locationsDisabledRef.current) {
+            setInitialFilteredLocations(filteredLocations)
+            setFilteredLocations([]);
+        } else {
+            // Apply the previously filtered locations to the map when navigating outside the directions.
+            setFilteredLocations(initialFilteredLocations);
+        }
     }, [currentAppView]);
 
     /*
@@ -244,14 +238,14 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the tile style prop.
      */
     useEffect(() => {
-        setTileStyle(tileStyle)
+        setTileStyle(tileStyle);
     }, [tileStyle]);
 
     /*
      * React on changes in the primary color prop.
      */
     useEffect(() => {
-        setPrimaryColor(primaryColor)
+        setPrimaryColor(primaryColor);
     }, [primaryColor]);
 
     /*
@@ -260,6 +254,13 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         setStartZoomLevel(startZoomLevel);
     }, [startZoomLevel]);
+
+    /*
+     * React on changes in the logo prop.
+     */
+    useEffect(() => {
+        setLogo(logo);
+    }, [logo]);
 
     /**
      * When venue is fitted while initializing the data,
@@ -273,13 +274,13 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }
 
     /**
-    * Handle the clicked location on the map.
-    * Set the current location if not in directions mode.
-    *
-    * @param {object} location
-    */
+     * Handle the clicked location on the map.
+     * Set the current location if not in directions mode.
+     *
+     * @param {object} location
+     */
     function locationClicked(location) {
-        if (_locationsDisabled !== true) {
+        if (locationsDisabledRef.current !== true) {
             setCurrentLocation(location);
         }
     }
@@ -331,8 +332,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         setCategories(uniqueCategories);
     }
 
-    return <div className={`mapsindoors-map ${hasDirectionsOpen ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}`}>
-        {!isMapReady && <SplashScreen logo={logo} />}
+    return <div className={`mapsindoors-map ${locationsDisabledRef.current ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}`}>
+        {!isMapReady && <SplashScreen />}
         {venues.length > 1 && <VenueSelector
             onOpen={() => pushAppView(appStates.VENUE_SELECTOR)}
             onClose={() => goBack()}
