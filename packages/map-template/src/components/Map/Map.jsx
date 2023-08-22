@@ -1,10 +1,8 @@
-import { useEffect } from "react";
+import { lazy, useEffect, Suspense } from "react";
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { mapTypes } from "../../constants/mapTypes";
 import useLiveData from '../../hooks/useLivedata';
 import venuesState from '../../atoms/venuesState';
-import GoogleMapsMap from "./GoogleMapsMap/GoogleMapsMap";
-import MapboxMap from "./MapboxMap/MapboxMap";
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import userPositionState from '../../atoms/userPositionState';
 import directionsServiceState from '../../atoms/directionsServiceState';
@@ -20,6 +18,10 @@ import startZoomLevelState from '../../atoms/startZoomLevelState';
 import positionControlState from '../../atoms/positionControlState';
 import locationIdState from '../../atoms/locationIdState';
 import setMapZoomLevel from "../../helpers/SetMapZoomLevel";
+
+// Lazy loaded components so we don't load the map specific APIs/libraries if we don't need them.
+const GoogleMapsMap = lazy(() => import('./GoogleMapsMap/GoogleMapsMap'));
+const MapboxMap = lazy(() => import('./MapboxMap/MapboxMap'));
 
 const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
 
@@ -227,10 +229,10 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
         onTileStyleChanged(mapsIndoorsInstance);
     }, [tileStyle]);
 
-    return (<>
+    return (<Suspense>
         {mapType === mapTypes.Google && <GoogleMapsMap onMapView={onMapView} onPositionControl={onPositionControlCreated} />}
         {mapType === mapTypes.Mapbox && <MapboxMap onMapView={onMapView} onPositionControl={onPositionControlCreated} />}
-    </>)
+    </Suspense>)
 }
 
 export default Map;
