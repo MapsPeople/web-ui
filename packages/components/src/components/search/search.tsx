@@ -193,7 +193,13 @@ export class Search implements ComponentInterface {
         ])
             .then(results => {
                 this.lastRequested = inputValue;
-                this.pushResults(results[0].concat(results[1]).concat(results[2]));
+                if (this.google) {
+                    this.pushResults(results[0].concat(results[1]));
+                    console.log('google results', results);
+                } else if (this.mapbox) {
+                    this.pushResults(results[0].concat(results[2]));
+                    console.log('mapbox results', results);
+                }
             });
     }
 

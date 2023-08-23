@@ -145,6 +145,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         } else {
             setHasSearchResults(true);
             setSearchResults(results);
+            console.log('results', results)
             const resultsHaveGooglePlaces = results.filter(result => result.properties.type === 'google_places').length > 0;
             setHasGooglePlaces(resultsHaveGooglePlaces);
         }
