@@ -35,6 +35,11 @@ export class Search implements ComponentInterface {
     @Event() shortInput: EventEmitter<void>;
 
     /**
+     * Event emitted whenever the value of the input field has changed.
+     */
+    @Event() changed: EventEmitter<void>;
+
+    /**
      * Placeholder for the input field.
      */
     @Prop() placeholder: string = '';
@@ -233,6 +238,7 @@ export class Search implements ComponentInterface {
                 this.search(inputValue);
             }
         }
+        this.changed.emit();
     }
 
     /**

@@ -2220,6 +2220,10 @@ declare namespace LocalJSX {
          */
         "miVenue"?: string;
         /**
+          * Event emitted whenever the search field contains only one character.
+         */
+        "onChanged"?: (event: MiSearchCustomEvent<void>) => void;
+        /**
           * Event emitted when the search field is emptied.
          */
         "onCleared"?: (event: MiSearchCustomEvent<void>) => void;
