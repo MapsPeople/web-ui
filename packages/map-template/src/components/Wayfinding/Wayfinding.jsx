@@ -206,11 +206,11 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
      */
     function showMyPositionOptionButton(searchFieldIdentifier) {
         if (originLocation?.id === 'USER_POSITION' && searchFieldIdentifier === searchFieldIdentifiers.TO) {
-            return setShowMyPositionOption(false);
+            setShowMyPositionOption(false);
         } else if (destinationLocation?.id === 'USER_POSITION' && searchFieldIdentifier === searchFieldIdentifiers.FROM) {
-            return setShowMyPositionOption(false);
+            setShowMyPositionOption(false);
         } else {
-            return setShowMyPositionOption(true);
+            setShowMyPositionOption(true);
         }
     }
 

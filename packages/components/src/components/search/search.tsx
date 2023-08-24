@@ -237,8 +237,8 @@ export class Search implements ComponentInterface {
             if (inputValue.length > 1 && inputValue !== this.lastRequested) {
                 this.search(inputValue);
             }
+            this.changed.emit();
         }
-        this.changed.emit();
     }
 
     /**
