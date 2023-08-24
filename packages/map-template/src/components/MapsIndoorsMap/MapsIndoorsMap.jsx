@@ -19,8 +19,8 @@ import defaultLogo from "../../assets/logo.svg";
  * @param {array} [props.externalIDs] - Filter locations shown on the map based on the external IDs.
  * @param {string} [props.tileStyle] - Tile style name to change the interface of the map.
  * @param {number} [props.startZoomLevel] - The initial zoom level of the map.
- * @param {string} [props.gmMapId] - The map ID associated with a specific map style or feature.
  * @param {boolean} [props.supportsUrlParameters] - If you want to support URL Parameters to configure the Map Template.
+ * @param {string} [props.gmMapId] - The Google Maps Map ID associated with a specific map style or feature.
  */
 function MapsIndoorsMap(props) {
 

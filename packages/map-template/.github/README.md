@@ -75,7 +75,7 @@ When loading the MapsIndoors Map component for the first time, the map will resp
 |`tileStyle`|`string`|Name of Tile Style to display on the map. |
 |`startZoomLevel`|`number`|The initial zoom level of the map. |
 |`supportsUrlParameters`|`bool`|Indicates if the Map Template supports URL parameters. |
-|`gmMapId`|`string`|The map ID associated with a specific map style or feature. |
+|`gmMapId`|`string`|The Google Maps Map ID associated with a specific map style or feature. |
 
 ## Using Query Parameters
 
