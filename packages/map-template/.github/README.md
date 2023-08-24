@@ -95,8 +95,10 @@ The supported query parameters are the following:
 11. `mapboxAccessToken` - Used like this `mapboxAccessToken=yourMapboxAccessToken`. If both the `mapboxAccessToken` and the `gmApiKey` are present, the app will load a Mapbox map.  
 12. `gmApiKey` - Used like this `gmApiKey=yourGmApiKey`. If both the `mapboxAccessToken` and the `gmApiKey` are present, the app will load a Mapbox map.  
 13. `startZoomLevel` - Used like this `startZoomLevel=22`.  
+14. `gmMapId` - Used like this `gmMapId=yourGmMapId`.  
 
-**Note!** All the query parameters need to be separated with the `&` symbol, without any spaces in between. Note! When using parameters such as `directionsTo`, `directionsFrom`, `locationId`, `externalIDs`, and `tileStyle` make sure you are using the correct `apiKey` parameter to which they belong.
+**Note!** All the query parameters need to be separated with the `&` symbol, without any spaces in between. **Note!** When using parameters such as `directionsTo`, `directionsFrom`, `locationId`, `externalIDs`, and `tileStyle` make sure you are using the correct `apiKey` parameter to which they belong.
+**Note!** When using the `gmMapId` property, you need to use it together with the `gmApiKey` that it is associated with.
 
 Example of URL:
 
