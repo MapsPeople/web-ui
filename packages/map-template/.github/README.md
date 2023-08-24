@@ -74,7 +74,8 @@ When loading the MapsIndoors Map component for the first time, the map will resp
 |`externalIDs`|`array`|Array of external IDs which filters the map and shows a list of locations. Because of the way browsers work, you can not use External IDs with the `,`, `&`, `#` and `+`, character in them, as they are interpreted by the browser in a particular way. |
 |`tileStyle`|`string`|Name of Tile Style to display on the map. |
 |`startZoomLevel`|`number`|The initial zoom level of the map. |
-|`supports-url-parameters`|`supportsUrlParameters`|`bool`|Indicates if the Map Template supports URL parameters. |
+|`supportsUrlParameters`|`bool`|Indicates if the Map Template supports URL parameters. |
+|`gmMapId`|`string`|The map ID associated with a specific map style or feature. |
 
 ## Using Query Parameters
 

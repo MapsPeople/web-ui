@@ -126,6 +126,7 @@ Note that when using the React component, the properties should conform to JSX p
 |`tile-style`|`tileStyle`|`string`|Name of Tile Style to display on the map. |
 |`start-zoom-level`|`startZoomLevel`|`number`|The initial zoom level of the map. |
 |`supports-url-parameters`|`supportsUrlParameters`|`bool`|Indicates if the Map Template supports URL parameters. |
+|`gm-map-id`|`gmMapId`|`string`|The map ID associated with a specific map style or feature. |
 
 ## Using Query Parameters
 
