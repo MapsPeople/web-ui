@@ -26,6 +26,7 @@ import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByE
 import startZoomLevelState from '../../atoms/startZoomLevelState';
 import primaryColorState from '../../atoms/primaryColorState';
 import logoState from '../../atoms/logoState';
+import gmMapIdState from '../../atoms/gmMapIdState';
 
 defineCustomElements();
 
@@ -45,8 +46,9 @@ defineCustomElements();
  * @param {array} [props.externalIDs] - Filter locations shown on the map based on the external IDs.
  * @param {string} [props.tileStyle] - Tile style name to change the interface of the map.
  * @param {number} [props.startZoomLevel] - The initial zoom level of the map.
+ * @param {string} [props.gmMapId] - The map ID associated with a specific map style or feature.
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, gmMapId }) {
 
     const [, setApiKey] = useRecoilState(apiKeyState);
     const [, setGmApyKey] = useRecoilState(gmApiKeyState);
@@ -59,6 +61,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setLocationId] = useRecoilState(locationIdState);
     const [, setPrimaryColor] = useRecoilState(primaryColorState);
     const [, setLogo] = useRecoilState(logoState);
+    const [, setGmMapId] = useRecoilState(gmMapIdState);
 
     const directionsFromLocation = useLocationForWayfinding(directionsFrom);
     const directionsToLocation = useLocationForWayfinding(directionsTo);
@@ -204,7 +207,14 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         }
     }, [locationId, mapsindoorsSDKAvailable]);
 
-
+    /*
+     * React to changes in the gmMapId prop.
+     */
+    useEffect(() => {
+        if (mapsindoorsSDKAvailable) {
+            setGmMapId(gmMapId);
+        }
+    }, [gmMapId, mapsindoorsSDKAvailable]);
 
     /*
      * Add Location to history payload to make it possible to re-enter location details with that Location.

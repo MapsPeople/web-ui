@@ -21,8 +21,9 @@ MapsIndoorsMap.propTypes = {
     directionsTo: PropTypes.string,
     externalIDs: PropTypes.array,
     tileStyle: PropTypes.string,
-    startZoomLevel: PropTypes.number, 
-    supportsUrlParameters: PropTypes.bool
+    startZoomLevel: PropTypes.number,
+    supportsUrlParameters: PropTypes.bool,
+    gmMapId: PropTypes.string,
 };
 
 const WebMapsIndoorsMap = reactToWebComponent(MapsIndoorsMap, React, ReactDOM);
