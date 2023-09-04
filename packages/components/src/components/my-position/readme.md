@@ -102,6 +102,19 @@ A `myPositionOptions` attribute is available on the `<mi-my-position>` element. 
 | `position_received` |             | `CustomEvent<object>` |
 
 
+## Methods
+
+### `watchPosition(selfInvoked?: boolean) => Promise<void>`
+
+Request for current position, emit events and show position on map based on result.
+
+#### Returns
+
+Type: `Promise<void>`
+
+
+
+
 ----------------------------------------------
 
 

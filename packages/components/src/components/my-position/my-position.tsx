@@ -1,4 +1,4 @@
-import { Component, Host, JSX, Prop, Event, EventEmitter, State, h } from '@stencil/core';
+import { Component, Host, JSX, Prop, Event, EventEmitter, State, h, Method } from '@stencil/core';
 import { UAParser } from 'ua-parser-js';
 import merge from 'deepmerge';
 
@@ -218,7 +218,8 @@ export class MyPositionComponent {
      *
      * @param {boolean} [selfInvoked=false] - Used to track if call was invoked by clicking on position control or not.
      */
-    private watchPosition(selfInvoked = false): void {
+    @Method()
+    public watchPosition(selfInvoked = false): void {
         if (!navigator.geolocation) {
             return;
         }

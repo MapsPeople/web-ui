@@ -597,6 +597,11 @@ export namespace Components {
           * Reference: https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/PositionControlOptions.html.
          */
         "myPositionOptions"?: any;
+        /**
+          * Request for current position, emit events and show position on map based on result.
+          * @param selfInvoked - Used to track if call was invoked by clicking on position control or not.
+         */
+        "watchPosition": (selfInvoked?: boolean) => Promise<void>;
     }
     interface MiNotification {
         /**
