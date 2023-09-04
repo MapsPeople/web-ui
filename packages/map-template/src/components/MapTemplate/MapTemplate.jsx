@@ -83,13 +83,13 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     const [pushAppView, goBack, currentAppView, currentAppViewPayload, appStates] = useAppHistory();
 
-    // Declare the reference to the App Config
+    // Declare the reference to the App Config.
     const appConfigRef = useRef();
 
-    // Declare the reference to the disabled locations
+    // Declare the reference to the disabled locations.
     const locationsDisabledRef = useRef();
 
-    // Indicate if the MapsIndoors JavaScript SDK is available
+    // Indicate if the MapsIndoors JavaScript SDK is available.
     const [mapsindoorsSDKAvailable, setMapsindoorsSDKAvailable] = useState(false);
 
     /**
