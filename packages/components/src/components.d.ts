@@ -598,7 +598,7 @@ export namespace Components {
          */
         "myPositionOptions"?: any;
         /**
-          * Request for current position, emit events and show position on map based on result.
+          * Method for requesting the current position, emitting events and showing position on map based on result.
           * @param selfInvoked - Used to track if call was invoked by clicking on position control or not.
          */
         "watchPosition": (selfInvoked?: boolean) => Promise<void>;

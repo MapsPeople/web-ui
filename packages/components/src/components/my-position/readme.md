@@ -106,7 +106,7 @@ A `myPositionOptions` attribute is available on the `<mi-my-position>` element. 
 
 ### `watchPosition(selfInvoked?: boolean) => Promise<void>`
 
-Request for current position, emit events and show position on map based on result.
+Method for requesting the current position, emitting events and showing position on map based on result.
 
 #### Returns
 
