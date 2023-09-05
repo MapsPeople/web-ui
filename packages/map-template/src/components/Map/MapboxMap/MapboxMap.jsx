@@ -27,7 +27,8 @@ function MapboxMap({ onMapView, onPositionControl }) {
         window.mapboxgl = mapboxgl;
         const mapViewOptions = {
             accessToken: mapboxAccessToken,
-            element: document.getElementById('map')
+            element: document.getElementById('map'),
+            maxZoom: 24
         };
 
         const mapViewInstance = new window.mapsindoors.mapView.MapboxView(mapViewOptions);
@@ -54,7 +55,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
             setHasPositionControl(true);
             onPositionControl(myPositionButtonElement);
         }
-    
+
         if (mapsIndoorsInstance && mapView && !hasFloorSelector) {
             const floorSelectorElement = document.createElement('mi-floor-selector');
             floorSelectorElement.mapsindoors = mapsIndoorsInstance;
