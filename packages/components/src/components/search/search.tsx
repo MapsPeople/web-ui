@@ -289,6 +289,7 @@ export class Search implements ComponentInterface {
 
     /**
      * Make Google Places autocomplete suggestion request.
+     * 
      * @param {string} query
      * @return {Promise<any>}
      */
@@ -335,17 +336,23 @@ export class Search implements ComponentInterface {
         return `https://api.mapbox.com/search/searchbox/v1/suggest?q=${searchTerm}&session_token=[GENERATED-UUID]&access_token=pk.eyJ1IjoiZW5lcHBlciIsImEiOiJjazVzNjB5a3EwODd0M2Ztb3FjYmZmbzJhIn0._fo_iTl7ZHPrl634-F2qYg`;
     }
 
-    private getMapboxSearchResults(query) {
+    /**
+     * Get Mapbox Places results.
+     *
+     * @param {string} query
+     * @return {Promise<any>}
+     */
+    private getMapboxSearchResults(query: string): Promise<any> {
         if (this.mapbox) {
             if (!query) {
-                console.log('no input value');
+                console.log('No query provided');
             } else {
                 return new Promise((resolve) => {
                     const url = this.getBaseURL(query);
 
                     axios.get(url)
                         .then((response) => {
-                            console.log('response', response);
+                            console.log('Response from the search term', response);
 
                             const places = response.data.suggestions.map((result) => ({
                                 id: result.mapbox_id,
@@ -358,7 +365,7 @@ export class Search implements ComponentInterface {
                                     floor: 0
                                 }
                             }));
-                            console.log('places', places);
+                            console.log('Places', places);
                             resolve(places);
                         })
                         .catch(err => {
@@ -366,8 +373,42 @@ export class Search implements ComponentInterface {
                         });
                 });
             }
-        } else {
-            console.log('no mapbox');
+        }
+    }
+
+    private retrieveSuggestedFeature(mapboxId) {
+        return `https://api.mapbox.com/search/searchbox/v1/retrieve/${mapboxId}?session_token=[GENERATED-UUID]&access_token=pk.eyJ1IjoiZW5lcHBlciIsImEiOiJjazVzNjB5a3EwODd0M2Ztb3FjYmZmbzJhIn0._fo_iTl7ZHPrl634-F2qYg`;
+    }
+
+    /**
+     * Get the Mapbox places geometry.
+     *
+     * @param {string} id
+     * @return {Promise<any>}
+     */
+    @Method()
+    getMapboxPlaceGeometry(id): Promise<void> {
+        if (this.mapbox) {
+            if (!id) {
+                console.log('No Mapbox Id provided');
+            } else {
+                return new Promise((resolve) => {
+                    const url = this.retrieveSuggestedFeature(id);
+
+                    axios.get(url)
+                        .then((response) => {
+                            console.log('Response from retrieving coordinates', response);
+
+                            const coordinates = response.data.features[0].geometry.coordinates;
+
+                            console.log('Coordinates', coordinates);
+                            resolve(coordinates);
+                        })
+                        .catch(err => {
+                            console.error('Error: ', err);
+                        });
+                });
+            }
         }
     }
 

@@ -101,6 +101,14 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     function decorateLocation(location) {
         if (selectedMapType === mapTypes.Google && location.properties.type === 'google_places') {
             return addGooglePlaceGeometry(location);
+        } else if (selectedMapType === mapTypes.Mapbox && location.properties.type === 'mapbox_places') {
+            console.log('Location', location)
+
+            if (activeSearchField === searchFieldIdentifiers.TO) {
+               return toFieldRef.current.getMapboxPlaceGeometry(location.id);
+            } else if (activeSearchField === searchFieldIdentifiers.FROM) {
+                return fromFieldRef.current.getMapboxPlaceGeometry(location.id);
+            }
         } else {
             return Promise.resolve(location);
         }
@@ -115,11 +123,15 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     function locationClickHandler(location) {
         if (activeSearchField === searchFieldIdentifiers.TO) {
             decorateLocation(location).then(location => {
+
+                console.log('location', location)
                 setDestinationLocation(location);
                 toFieldRef.current.setDisplayText(location.properties.name);
             }, () => setHasFoundRoute(false));
         } else if (activeSearchField === searchFieldIdentifiers.FROM) {
             decorateLocation(location).then(location => {
+
+                console.log('location', location)
                 setOriginLocation(location);
                 fromFieldRef.current.setDisplayText(location.properties.name);
             }, () => setHasFoundRoute(false));
@@ -127,6 +139,14 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         setHasGooglePlaces(false);
         setSearchTriggered(false);
         setSearchResults([]);
+
+        if (location.properties.type === 'mapbox_places') {
+            console.log('a mapbox place was clicked')
+        } else if (location.properties.type === 'google_places') {
+            console.log('a google place was clicked')
+        } else {
+            console.log('a mapsindoors place was clicked')
+        }
     }
 
     /**

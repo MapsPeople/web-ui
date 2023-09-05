@@ -39,6 +39,9 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
         },
         clear() {
             elementRef.current.clear();
+        }, 
+        getMapboxPlaceGeometry(id) {
+           return elementRef.current.getMapboxPlaceGeometry(id);
         }
     }));
 
