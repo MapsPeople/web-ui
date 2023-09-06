@@ -20,6 +20,7 @@ import defaultLogo from "../../assets/logo.svg";
  * @param {string} [props.tileStyle] - Tile style name to change the interface of the map.
  * @param {number} [props.startZoomLevel] - The initial zoom level of the map.
  * @param {boolean} [props.supportsUrlParameters] - If you want to support URL Parameters to configure the Map Template.
+ * @param {string} [props.gmMapId] - The Google Maps Map ID associated with a specific map style or feature.
  */
 function MapsIndoorsMap(props) {
 
@@ -54,6 +55,7 @@ function MapsIndoorsMap(props) {
         const primaryColorQueryParameter = queryStringParams.get('primaryColor'); // use without '#'. It will be prepended.
         const appUserRolesQueryParameter = queryStringParams.get('appUserRoles')?.split(',');
         const externalIDsQueryParameter = queryStringParams.get('externalIDs')?.split(',');
+        const gmMapIdQueryParameter = queryStringParams.get('gmMapId');
 
         setMapTemplateProps({
             apiKey: props.supportsUrlParameters && apiKeyQueryParameter ? apiKeyQueryParameter : (props.apiKey || defaultProps.apiKey),
@@ -68,7 +70,8 @@ function MapsIndoorsMap(props) {
             mapboxAccessToken: props.supportsUrlParameters && mapboxAccessTokenQueryParameter ? mapboxAccessTokenQueryParameter : props.mapboxAccessToken,
             primaryColor: props.supportsUrlParameters && primaryColorQueryParameter ? '#' + primaryColorQueryParameter : (props.primaryColor || defaultProps.primaryColor),
             appUserRoles: props.supportsUrlParameters && appUserRolesQueryParameter ? appUserRolesQueryParameter : props.appUserRoles,
-            externalIDs: props.supportsUrlParameters && externalIDsQueryParameter ? externalIDsQueryParameter : props.externalIDs
+            externalIDs: props.supportsUrlParameters && externalIDsQueryParameter ? externalIDsQueryParameter : props.externalIDs, 
+            gmMapId: props.supportsUrlParameters && gmMapIdQueryParameter ? gmMapIdQueryParameter : props.gmMapId
         });
     }, [props]);
 
