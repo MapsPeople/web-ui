@@ -72,7 +72,7 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
      */
     useEffect(() => {
         if (mapsIndoorsInstance) {
-            window.localStorage.clear(localStorageKeyForVenue);
+            window.localStorage.removeItem(localStorageKeyForVenue);
             const venueToShow = getVenueToShow(venueName, venues);
             if (venueToShow && !locationId) {
                 setVenue(venueToShow, mapsIndoorsInstance).then(() => {
