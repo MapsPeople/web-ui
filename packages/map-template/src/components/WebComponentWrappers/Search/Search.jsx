@@ -58,20 +58,16 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
             cleared();
         }
 
-        function onInputChanged() {
-            changed();
-        }
-
         current.addEventListener('results', searchResultsHandler);
         current.addEventListener('click', clicked);
         current.addEventListener('cleared', onCleared);
-        current.addEventListener('changed', onInputChanged);
+        current.addEventListener('changed', changed);
 
         return () => {
             current.removeEventListener('results', searchResultsHandler);
             current.removeEventListener('click', clicked);
             current.removeEventListener('cleared', onCleared);
-            current.removeEventListener('changed', onInputChanged);
+            current.removeEventListener('changed', changed);
         }
 
     }, [placeholder, mapsindoors, results, clicked, cleared, google, changed]);
