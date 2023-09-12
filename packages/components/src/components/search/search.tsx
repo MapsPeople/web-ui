@@ -373,39 +373,7 @@ export class Search implements ComponentInterface {
             return Promise.resolve([]);
         }
     }
-
-    private retrieveSuggestedFeature(mapboxId) {
-        return `https://api.mapbox.com/search/searchbox/v1/retrieve/${mapboxId}?session_token=[GENERATED-UUID]&access_token=pk.eyJ1IjoiZW5lcHBlciIsImEiOiJjazVzNjB5a3EwODd0M2Ztb3FjYmZmbzJhIn0._fo_iTl7ZHPrl634-F2qYg`;
-    }
-
-    /**
-     * Get the Mapbox places geometry.
-     *
-     * @param {string} id
-     * @return {Promise<any>}
-     */
-    @Method()
-    getMapboxPlaceGeometry(id): Promise<any> {
-        if (this.mapbox) {
-            if (id) {
-                return new Promise((resolve) => {
-                    const url = this.retrieveSuggestedFeature(id);
-
-                    axios.get(url)
-                        .then((response) => {
-                            const coordinates = response.data.features[0];
-                            resolve(coordinates);
-                        })
-                        .catch(err => {
-                            console.error('Error: ', err);
-                        });
-                });
-            }
-        } else {
-            return Promise.resolve([]);
-        }
-    }
-
+    
     componentDidRender(): void {
         if (this.dataAttributes) {
             for (const key in this.dataAttributes) {

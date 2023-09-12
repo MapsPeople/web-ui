@@ -267,16 +267,6 @@ Type: `Promise<void>`
 
 
 
-### `getMapboxPlaceGeometry(id: any) => Promise<any>`
-
-Get the Mapbox places geometry.
-
-#### Returns
-
-Type: `Promise<any>`
-
-
-
 ### `setDisplayText(displayText: string) => Promise<void>`
 
 Sets text to be shown in the search field.

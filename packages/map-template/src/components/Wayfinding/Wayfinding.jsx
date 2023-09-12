@@ -27,6 +27,7 @@ import { travelModes } from "../../constants/travelModes";
 import Dropdown from "../WebComponentWrappers/Dropdown/Dropdown";
 import primaryColorState from "../../atoms/primaryColorState";
 import directionsResponseState from "../../atoms/directionsResponseState";
+import addMapboxPlaceGeometry from "../Map/MapboxMap/MapboxPlacesHandler";
 
 const searchFieldIdentifiers = {
     TO: 'TO',
@@ -102,11 +103,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         if (selectedMapType === mapTypes.Google && location.properties.type === 'google_places') {
             return addGooglePlaceGeometry(location);
         } else if (selectedMapType === mapTypes.Mapbox && location.properties.type === 'mapbox_places') {
-            if (activeSearchField === searchFieldIdentifiers.TO) {
-               return toFieldRef.current.getMapboxPlaceGeometry(location.id);
-            } else if (activeSearchField === searchFieldIdentifiers.FROM) {
-                return fromFieldRef.current.getMapboxPlaceGeometry(location.id);
-            }
+            return addMapboxPlaceGeometry(location);
         } else {
             return Promise.resolve(location);
         }
