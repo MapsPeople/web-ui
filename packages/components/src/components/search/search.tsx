@@ -352,8 +352,6 @@ export class Search implements ComponentInterface {
 
                     axios.get(url)
                         .then((response) => {
-                            console.log('Response from the search term', response);
-
                             const places = response.data.suggestions.map((result) => ({
                                 id: result.mapbox_id,
                                 type: 'Feature',
@@ -365,7 +363,6 @@ export class Search implements ComponentInterface {
                                     floor: 0
                                 }
                             }));
-                            console.log('Places', places);
                             resolve(places);
                         })
                         .catch(err => {
@@ -397,11 +394,7 @@ export class Search implements ComponentInterface {
 
                     axios.get(url)
                         .then((response) => {
-                            console.log('Response from retrieving coordinates', response);
-
                             const coordinates = response.data.features[0];
-
-                            console.log('Coordinates', coordinates);
                             resolve(coordinates);
                         })
                         .catch(err => {
