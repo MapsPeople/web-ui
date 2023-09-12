@@ -399,7 +399,7 @@ export class Search implements ComponentInterface {
                         .then((response) => {
                             console.log('Response from retrieving coordinates', response);
 
-                            const coordinates = response.data.features[0].geometry.coordinates;
+                            const coordinates = response.data.features[0];
 
                             console.log('Coordinates', coordinates);
                             resolve(coordinates);
