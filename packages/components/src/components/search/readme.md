@@ -267,13 +267,13 @@ Type: `Promise<void>`
 
 
 
-### `getMapboxPlaceGeometry(id: any) => Promise<void>`
+### `getMapboxPlaceGeometry(id: any) => Promise<any>`
 
 Get the Mapbox places geometry.
 
 #### Returns
 
-Type: `Promise<void>`
+Type: `Promise<any>`
 
 
 

@@ -193,12 +193,13 @@ export class Search implements ComponentInterface {
         ])
             .then(results => {
                 this.lastRequested = inputValue;
+
                 if (this.google) {
                     this.pushResults(results[0].concat(results[1]));
-                    console.log('google results', results);
                 } else if (this.mapbox) {
                     this.pushResults(results[0].concat(results[2]));
-                    console.log('mapbox results', results);
+                } else {
+                    this.pushResults(results[0]);
                 }
             });
     }
@@ -344,9 +345,7 @@ export class Search implements ComponentInterface {
      */
     private getMapboxSearchResults(query: string): Promise<any> {
         if (this.mapbox) {
-            if (!query) {
-                console.log('No query provided');
-            } else {
+            if (query) {
                 return new Promise((resolve) => {
                     const url = this.getBaseURL(query);
 
@@ -370,6 +369,8 @@ export class Search implements ComponentInterface {
                         });
                 });
             }
+        } else {
+            return Promise.resolve([]);
         }
     }
 
@@ -384,11 +385,9 @@ export class Search implements ComponentInterface {
      * @return {Promise<any>}
      */
     @Method()
-    getMapboxPlaceGeometry(id): Promise<void> {
+    getMapboxPlaceGeometry(id): Promise<any> {
         if (this.mapbox) {
-            if (!id) {
-                console.log('No Mapbox Id provided');
-            } else {
+            if (id) {
                 return new Promise((resolve) => {
                     const url = this.retrieveSuggestedFeature(id);
 
@@ -402,6 +401,8 @@ export class Search implements ComponentInterface {
                         });
                 });
             }
+        } else {
+            return Promise.resolve([]);
         }
     }
 

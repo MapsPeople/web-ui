@@ -861,7 +861,7 @@ export namespace Components {
           * @param id
           * @return
          */
-        "getMapboxPlaceGeometry": (id: any) => Promise<void>;
+        "getMapboxPlaceGeometry": (id: any) => Promise<any>;
         /**
           * Restrict Google Places search to a specific country (two-character, ISO 3166-1 Alpha-2 compatible country code)
          */
