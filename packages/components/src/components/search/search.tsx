@@ -1,7 +1,6 @@
 import { Component, ComponentInterface, Host, h, Watch, Event, EventEmitter } from '@stencil/core';
 import { JSX, Prop, Method } from '@stencil/core/internal';
 import Debounce from 'debounce-decorator';
-import axios from 'axios';
 
 declare const google;
 declare const mapsindoors;
@@ -333,10 +332,6 @@ export class Search implements ComponentInterface {
         });
     }
 
-    private getBaseURL(searchTerm) {
-        return `https://api.mapbox.com/search/searchbox/v1/suggest?q=${searchTerm}&session_token=[GENERATED-UUID]&access_token=pk.eyJ1IjoiZW5lcHBlciIsImEiOiJjazVzNjB5a3EwODd0M2Ztb3FjYmZmbzJhIn0._fo_iTl7ZHPrl634-F2qYg`;
-    }
-
     /**
      * Get Mapbox Places results.
      *
@@ -347,11 +342,14 @@ export class Search implements ComponentInterface {
         if (this.mapbox) {
             if (query) {
                 return new Promise((resolve) => {
-                    const url = this.getBaseURL(query);
+                    const url = `https://api.mapbox.com/search/searchbox/v1/suggest?q=${query}&session_token=[GENERATED-UUID]&access_token=pk.eyJ1IjoiZW5lcHBlciIsImEiOiJjazVzNjB5a3EwODd0M2Ztb3FjYmZmbzJhIn0._fo_iTl7ZHPrl634-F2qYg`;
 
-                    axios.get(url)
+                    fetch(url)
                         .then((response) => {
-                            const places = response.data.suggestions.map((result) => ({
+                            return response.json();
+                        })
+                        .then((result) => {
+                            const places = result.suggestions.map((result) => ({
                                 id: result.mapbox_id,
                                 type: 'Feature',
                                 properties: {
@@ -365,7 +363,7 @@ export class Search implements ComponentInterface {
                             resolve(places);
                         })
                         .catch(err => {
-                            console.error('Error: ', err);
+                            console.log('Error: ', err);
                         });
                 });
             }
@@ -373,7 +371,7 @@ export class Search implements ComponentInterface {
             return Promise.resolve([]);
         }
     }
-    
+
     componentDidRender(): void {
         if (this.dataAttributes) {
             for (const key in this.dataAttributes) {
