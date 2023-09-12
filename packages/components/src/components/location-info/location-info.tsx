@@ -59,6 +59,11 @@ export class LocationInfo implements ComponentInterface {
             details.push(this.location.properties.subtitle);
         }
 
+        // Place formatter (For Mapbox usage)
+        if (this.location.properties.place_formatted) {
+            details.push(this.location.properties.place_formatted);
+        }
+
         return details.join(' · ');
     }
 
