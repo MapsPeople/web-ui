@@ -120,6 +120,11 @@ export class Search implements ComponentInterface {
     @Prop() disabled: boolean = false;
 
     /**
+     * The Mapbox Access Token for getting Mapbox Places.
+     */
+    @Prop() mapboxAccessToken: string;
+
+    /**
      * Sets the prevention of the search.
      */
     private preventSearch: boolean = false;
@@ -339,10 +344,10 @@ export class Search implements ComponentInterface {
      * @return {Promise<any>}
      */
     private getMapboxSearchResults(query: string): Promise<any> {
-        if (this.mapbox) {
+        if (this.mapbox && this.mapboxAccessToken) {
             if (query) {
                 return new Promise((resolve) => {
-                    const url = `https://api.mapbox.com/search/searchbox/v1/suggest?q=${query}&session_token=[GENERATED-UUID]&access_token=pk.eyJ1IjoiZW5lcHBlciIsImEiOiJjazVzNjB5a3EwODd0M2Ztb3FjYmZmbzJhIn0._fo_iTl7ZHPrl634-F2qYg`;
+                    const url = `https://api.mapbox.com/search/searchbox/v1/suggest?q=${query}&session_token=[GENERATED-UUID]&access_token=${this.mapboxAccessToken}`;
 
                     fetch(url)
                         .then((response) => {

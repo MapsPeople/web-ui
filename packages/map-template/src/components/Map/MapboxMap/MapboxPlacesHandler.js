@@ -3,15 +3,17 @@
  *
  * @param {Object} location
  */
-function addMapboxPlaceGeometry(location) {
-
-    return new Promise((resolve) => {
-
-        const url = `https://api.mapbox.com/search/searchbox/v1/retrieve/${location.id}?session_token=[GENERATED-UUID]&access_token=pk.eyJ1IjoiZW5lcHBlciIsImEiOiJjazVzNjB5a3EwODd0M2Ztb3FjYmZmbzJhIn0._fo_iTl7ZHPrl634-F2qYg`;
+function addMapboxPlaceGeometry(location, mapboxAccessToken) {
+    return new Promise((resolve, reject) => {
+        const url = `https://api.mapbox.com/search/searchbox/v1/retrieve/${location.id}?session_token=[GENERATED-UUID]&access_token=${mapboxAccessToken}`;
 
         fetch(url)
             .then((response) => {
-                return response.json();
+                if (response.status !== 200) {
+                    return reject();
+                } else {
+                    return response.json();
+                }
             })
             .then((result) => {
                 location.geometry = {
