@@ -29,8 +29,5 @@
   ],
   "devDependencies": {
     "lerna": "^6.4.0"
-  },
-  "dependencies": {
-    "axios": "^1.4.0"
   }
 }
