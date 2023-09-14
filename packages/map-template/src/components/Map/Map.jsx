@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useRecoilState, useRecoilValue } from 'recoil';
 import apiKeyState from '../../atoms/apiKeyState';
+import bearingState from '../../atoms/bearingState';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
 import directionsServiceState from '../../atoms/directionsServiceState';
 import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
@@ -10,9 +11,8 @@ import locationIdState from '../../atoms/locationIdState';
 import mapboxAccessTokenState from '../../atoms/mapboxAccessTokenState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import mapTypeState from '../../atoms/mapTypeState';
+import pitchState from '../../atoms/pitchState';
 import positionControlState from '../../atoms/positionControlState';
-import startBearingState from '../../atoms/startBearingState';
-import startPitchState from '../../atoms/startPitchState';
 import startZoomLevelState from '../../atoms/startZoomLevelState';
 import tileStyleState from '../../atoms/tileStyleState';
 import userPositionState from '../../atoms/userPositionState';
@@ -23,7 +23,11 @@ import useLiveData from '../../hooks/useLivedata';
 import GoogleMapsMap from "./GoogleMapsMap/GoogleMapsMap";
 import MapboxMap from "./MapboxMap/MapboxMap";
 
+
 const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
+
+
+
 
 /**
  * Private variable used for storing the tile style.
@@ -53,8 +57,8 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
     const filteredLocationsByExternalIDs = useRecoilValue(filteredLocationsByExternalIDState);
     const tileStyle = useRecoilValue(tileStyleState);
     const startZoomLevel = useRecoilValue(startZoomLevelState);
-    const startBearing = useRecoilValue(startBearingState);
-    const startPitch = useRecoilValue(startPitchState);
+    const bearing = useRecoilValue(bearingState);
+    const pitch = useRecoilValue(pitchState);
     const [, setPositionControl] = useRecoilState(positionControlState);
     const locationId = useRecoilValue(locationIdState);
 
@@ -102,51 +106,62 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
         }
     }, [filteredLocations, filteredLocationsByExternalIDs, mapsIndoorsInstance]);
 
+    /*
+     * React to changes in bearing and pitch props and set them on the map if mapsIndoorsInstance exists.
+     */
+    useEffect(() => {
+        if (mapsIndoorsInstance) {
+            if (mapType === mapTypes.Google) {
+                if (bearing) {
+                    mapsIndoorsInstance.getMap().setHeading(parseInt(bearing));
+                }
+                if (pitch) {
+                    mapsIndoorsInstance.getMap().setTilt(parseInt(pitch));
+                }
+            } else if (mapType === mapTypes.Mapbox) {
+                if (bearing) {
+                    mapsIndoorsInstance.getMap().setBearing(parseInt(bearing));
+                }
+                if (pitch) {
+                    mapsIndoorsInstance.getMap().setPitch(parseInt(pitch));
+                }
+            }
+        }
+    }, [bearing, pitch, mapsIndoorsInstance]);
+
     /**
      * Set the venue to show on the map.
      *
      * @param {object} venue
      * @param {object} mapsIndoorsInstance
      */
-    const setVenue = (venue, mapsIndoorsInstance) => {
+     
+     const setVenue = (venue, mapsIndoorsInstance) => {
         window.localStorage.setItem(localStorageKeyForVenue, venue.name);
         return mapsIndoorsInstance.fitVenue(venue).then(() => {
             // Set the map zoom level if the property is provided.
             if (startZoomLevel) {
-                // console.log(startZoomLevel);
                 mapsIndoorsInstance.setZoom(parseInt(startZoomLevel));
             }
-            
-            if (startPitch) {
-                try {
-                    mapsIndoorsInstance.getMap().setPitch(parseInt(startPitch));
-                } catch (error) {
-                    // If setBearing fails, we assume it's a Google map and try to set the heading.
-                    try {
-                        console.log(startPitch);
-                        mapsIndoorsInstance.getMap().setTilt(parseInt(startPitch));
-                    } catch (innerError) {
-                        console.warn("Setting bearing/heading failed for this map instance.");
-                    }
+
+            if (mapType === mapTypes.Google) {
+                if (bearing) {
+                    mapsIndoorsInstance.getMap().setHeading(parseInt(bearing));
                 }
-            }
-        
-            if (startBearing) {
-                console.log(startBearing);
-                try {
-                    mapsIndoorsInstance.getMap().setBearing(parseInt(startBearing));
-                } catch (error) {
-                    // If setBearing fails, we assume it's a Google map and try to set the heading.
-                    try {
-                        mapsIndoorsInstance.getMap().setHeading(parseInt(startBearing));
-                    } catch (innerError) {
-                        console.warn("Setting bearing/heading failed for this map instance.");
-                    }
+                if (pitch) {
+                    mapsIndoorsInstance.getMap().setTilt(parseInt(pitch));
+                }
+            } else if (mapType === mapTypes.Mapbox) {
+                if (bearing) {
+                    mapsIndoorsInstance.getMap().setBearing(parseInt(bearing));
+                }
+                if (pitch) {
+                    mapsIndoorsInstance.getMap().setPitch(parseInt(pitch));
                 }
             }
         });
-        
     }
+
 
     /**
      * Handle the tile style changes and the locationId property.

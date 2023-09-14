@@ -1,35 +1,38 @@
-import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { useRecoilState } from 'recoil';
-import apiKeyState from '../../atoms/apiKeyState';
-import categoriesState from '../../atoms/categoriesState';
-import currentLocationState from '../../atoms/currentLocationState';
-import currentVenueNameState from '../../atoms/currentVenueNameState';
-import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
-import filteredLocationsState from '../../atoms/filteredLocationsState';
-import gmApiKeyState from '../../atoms/gmApiKeyState';
-import gmMapIdState from '../../atoms/gmMapIdState';
-import isMapReadyState from '../../atoms/isMapReadyState.js';
-import locationIdState from '../../atoms/locationIdState';
-import logoState from '../../atoms/logoState';
-import mapboxAccessTokenState from '../../atoms/mapboxAccessTokenState';
-import primaryColorState from '../../atoms/primaryColorState';
-import startBearingState from '../../atoms/startBearingState';
-import startPitchState from '../../atoms/startPitchState';
-import startZoomLevelState from '../../atoms/startZoomLevelState';
-import tileStyleState from '../../atoms/tileStyleState';
-import venuesState from '../../atoms/venuesState';
-import { useAppHistory } from '../../hooks/useAppHistory';
-import useLocationForWayfinding from '../../hooks/useLocationForWayfinding';
-import useMediaQuery from '../../hooks/useMediaQuery';
-import BottomSheet from '../BottomSheet/BottomSheet';
+import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
+import './MapTemplate.scss';
 import MIMap from "../Map/Map";
-import Sidebar from '../Sidebar/Sidebar';
 import SplashScreen from '../SplashScreen/SplashScreen';
 import VenueSelector from '../VenueSelector/VenueSelector';
-import './MapTemplate.scss';
+import BottomSheet from '../BottomSheet/BottomSheet';
+import apiKeyState from '../../atoms/apiKeyState';
+import gmApiKeyState from '../../atoms/gmApiKeyState';
+import isMapReadyState from '../../atoms/isMapReadyState.js';
+import currentLocationState from '../../atoms/currentLocationState';
+import tileStyleState from '../../atoms/tileStyleState';
+import categoriesState from '../../atoms/categoriesState';
+import venuesState from '../../atoms/venuesState';
+import currentVenueNameState from '../../atoms/currentVenueNameState';
+import { useAppHistory } from '../../hooks/useAppHistory';
+import useMediaQuery from '../../hooks/useMediaQuery';
+import Sidebar from '../Sidebar/Sidebar';
+import useLocationForWayfinding from '../../hooks/useLocationForWayfinding';
+import locationIdState from '../../atoms/locationIdState';
+import mapboxAccessTokenState from '../../atoms/mapboxAccessTokenState';
+import filteredLocationsState from '../../atoms/filteredLocationsState';
+import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
+import startZoomLevelState from '../../atoms/startZoomLevelState';
+import primaryColorState from '../../atoms/primaryColorState';
+import logoState from '../../atoms/logoState';
+import gmMapIdState from '../../atoms/gmMapIdState';
+import bearingState from '../../atoms/bearingState';
+import pitchState from '../../atoms/pitchState';
+
 
 defineCustomElements();
+
 
 /**
  *
@@ -47,11 +50,11 @@ defineCustomElements();
  * @param {array} [props.externalIDs] - Filter locations shown on the map based on the external IDs.
  * @param {string} [props.tileStyle] - Tile style name to change the interface of the map.
  * @param {number} [props.startZoomLevel] - The initial zoom level of the map.
- * @param {number} [props.startBearing] - The initial bearing of the map.
- * @param {number} [props.startPitch] - The initial pitch of the map.
+ * @param {number} [props.bearing] - The bearing of the map as a number. Not recommended for Google Maps with 2d Models.
+ * @param {number} [props.pitch] - The pitch of the map as a number. Not recommended for Google Maps with 2d Models.
  * @param {string} [props.gmMapId] - The Google Maps Map ID associated with a specific map style or feature.
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, startBearing, startPitch, gmMapId }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId }) {
 
     const [, setApiKey] = useRecoilState(apiKeyState);
     const [, setGmApyKey] = useRecoilState(gmApiKeyState);
@@ -81,8 +84,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setTileStyle] = useRecoilState(tileStyleState);
     const [, setStartZoomLevel] = useRecoilState(startZoomLevelState);
 
-    const [, setStartBearing] = useRecoilState(startBearingState);
-    const [, setStartPitch] = useRecoilState(startPitchState);
+    const [, setBearing] = useRecoilState(bearingState);
+    const [, setPitch] = useRecoilState(pitchState);
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
     const isMobile = useMediaQuery('(max-width: 991px)');
@@ -270,18 +273,20 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         setStartZoomLevel(startZoomLevel);
     }, [startZoomLevel]);
+    
     /*
-    * React on changes in the pitch prop.
-    */
+     * React on changes in the pitch prop.
+     */
     useEffect(() => {
-        setStartPitch(startPitch);
-    }, [startPitch]); 
+        setPitch(pitch);
+    }, [pitch]); 
+
     /*
-    * React on changes in the bearing prop.
-    */
+     * React on changes in the bearing prop.
+     */
     useEffect(() => {
-        setStartBearing(startBearing);
-    }, [startBearing]);
+        setBearing(bearing);
+    }, [bearing]);
 
     /*
      * React on changes in the logo prop.
