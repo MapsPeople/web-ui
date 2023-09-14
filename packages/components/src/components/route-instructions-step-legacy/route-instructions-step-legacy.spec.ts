@@ -1,7 +1,7 @@
-import { RouteInstructionsStep } from './route-instructions-step-legacy';
+import { RouteInstructionsStepLegacy } from './route-instructions-step-legacy';
 
 describe('mi-route-instructions-step-legacy', () => {
     it('builds', () => {
-        expect(new RouteInstructionsStep()).toBeTruthy();
+        expect(new RouteInstructionsStepLegacy()).toBeTruthy();
     });
 });

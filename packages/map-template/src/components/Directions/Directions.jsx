@@ -13,8 +13,8 @@ import useMediaQuery from '../../hooks/useMediaQuery';
 import { travelModes } from "../../constants/travelModes";
 import directionsResponseState from "../../atoms/directionsResponseState";
 import activeStepState from "../../atoms/activeStep";
-
-const mapsindoors = window.mapsindoors;
+import { snapPoints } from "../../constants/snapPoints";
+import substepsToggledState from "../../atoms/substepsToggledState";
 
 let directionsRenderer;
 
@@ -24,13 +24,17 @@ let directionsRenderer;
  * @param {object} props
  * @param {boolean} props.isOpen - Indicates if the directions view is open.
  * @param {function} props.onBack - Callback that fires when the directions view is closed by the user.
+ * @param {function} props.onSetSize - Callback that is fired when the component has loaded.
+ * @param {function} props.snapPointSwiped - Changes value when user has swiped a Bottom sheet to a new snap point.
+ *
  */
-function Directions({ isOpen, onBack }) {
+function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
     // Holds the MapsIndoors DisplayRule for the destination
     const [destinationDisplayRule, setDestinationDisplayRule] = useState(null);
 
     const destinationInfoElement = useRef(null);
     const originInfoElement = useRef(null);
+    const guideElement = useRef(null);
 
     const [totalDistance, setTotalDistance] = useState();
     const [totalTime, setTotalTime] = useState();
@@ -42,6 +46,8 @@ function Directions({ isOpen, onBack }) {
     const directions = useRecoilValue(directionsResponseState);
 
     const [, setActiveStep] = useRecoilState(activeStepState);
+
+    const [substepsOpen, setSubstepsOpen] = useRecoilState(substepsToggledState);
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
@@ -55,7 +61,11 @@ function Directions({ isOpen, onBack }) {
             // 6 percent of smallest of viewport height or width
             const padding = Math.min(window.innerHeight, window.innerWidth) * 0.06;
 
-            directionsRenderer = new mapsindoors.directions.DirectionsRenderer({
+            // Set the directions renderer and the route to null, in order to avoid multiple routes shown simultaneously.
+            directionsRenderer?.setRoute(null);
+            directionsRenderer = null;
+
+            directionsRenderer = new window.mapsindoors.directions.DirectionsRenderer({
                 mapsIndoors: mapsIndoorsInstance,
                 fitBoundsPadding: {
                     top: padding,
@@ -113,6 +123,7 @@ function Directions({ isOpen, onBack }) {
      * Render the next navigation step on the map.
      */
     function onNext() {
+        guideElement.current.scrollTop = 0;
         if (directionsRenderer) {
             directionsRenderer.nextStep();
         }
@@ -122,8 +133,18 @@ function Directions({ isOpen, onBack }) {
      * Render the previous navigation step on the map.
      */
     function onPrevious() {
+        guideElement.current.scrollTop = 0;
         if (directionsRenderer) {
             directionsRenderer.previousStep();
+        }
+    }
+
+    /**
+     * Trigger to directions renderer to fit the map to the current directions step.
+     */
+    function onFitCurrentDirections() {
+        if (directionsRenderer) {
+            directionsRenderer.setStepIndex(directionsRenderer.getStepIndex(), directionsRenderer.getLegIndex());
         }
     }
 
@@ -156,14 +177,51 @@ function Directions({ isOpen, onBack }) {
     }
 
     /**
+     * Reset the substeps to 0 and close the substeps.
+     * Set the size of the bottom sheet to fit the content.
+     */
+    function resetSubsteps() {
+        setActiveStep(0);
+        setSubstepsOpen(false);
+        setSize(snapPoints.FIT);
+    }
+
+    /**
      * Close the directions.
      * Reset the active steps and stop rendering directions.
      */
     function onDirectionsClosed() {
-        setActiveStep(0);
+        resetSubsteps();
         stopRendering();
         onBack();
     }
+
+    /**
+     * Communicate size change to parent component.
+     * @param {number} size
+     */
+    function setSize(size) {
+        if (typeof onSetSize === 'function') {
+            onSetSize(size);
+        }
+    }
+
+    /**
+     * Set the size of the bottom sheet depending on the substepsOpen state.
+     */
+    useEffect(() => {
+        substepsOpen ? setSize(snapPoints.MAX) : setSize(snapPoints.FIT);
+    }, [substepsOpen])
+
+
+    /**
+     * When user swipes the bottom sheet to a new snap point.
+     */
+    useEffect(() => {
+        if (isOpen && snapPointSwiped) {
+            setSubstepsOpen(snapPointSwiped === snapPoints.MAX);
+        }
+    }, [isOpen, snapPointSwiped]); // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
         <div className="directions">
@@ -182,7 +240,7 @@ function Directions({ isOpen, onBack }) {
                                     <div className='directions__name'>
                                         {directions?.originLocation.properties.name}
                                         {directions?.originLocation.properties.name !== 'My Position' && <div>·</div>}
-                                        <mi-location-info ref={originInfoElement} />
+                                        <mi-location-info ref={originInfoElement} show-external-id={false} />
                                     </div>
                                 </div>
                             </div>
@@ -202,14 +260,14 @@ function Directions({ isOpen, onBack }) {
                                     <div className='directions__name'>
                                         {directions?.destinationLocation.properties.name}
                                     </div>
-                                    <mi-location-info ref={destinationInfoElement} />
+                                    <mi-location-info ref={destinationInfoElement} show-external-id={false} />
                                 </div>
                             </div>
                         }
                     </div>
                 </div>
             </div>
-            <div className="directions__guide">
+            <div ref={guideElement} className="directions__guide">
                 <div className="directions__metrics">
                     <div className="directions__distance">
                         {travelMode === travelModes.WALKING && <WalkingIcon />}
@@ -225,15 +283,15 @@ function Directions({ isOpen, onBack }) {
                     </div>
                 </div>
                 <hr></hr>
-                <div className="directions__steps">
-                    <RouteInstructions
-                        steps={getRouteSteps()}
-                        originLocation={directions?.originLocation}
-                        onNextStep={() => onNext()}
-                        isOpen={isOpen}
-                        onPreviousStep={() => onPrevious()}>
-                    </RouteInstructions>
-                </div>
+                <RouteInstructions
+                    steps={getRouteSteps()}
+                    originLocation={directions?.originLocation}
+                    onNextStep={() => onNext()}
+                    isOpen={isOpen}
+                    onPreviousStep={() => onPrevious()}
+                    onFitCurrentDirections={() => onFitCurrentDirections()}
+                >
+                </RouteInstructions>
             </div>
         </div>
     )

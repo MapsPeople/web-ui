@@ -1,52 +1,34 @@
 @use '~@mapsindoors/midt/build/scss/variables';
-@use "~@mapsindoors/midt/icons";
-@use "~@mapsindoors/midt/sizing";
-@use "~@mapsindoors/midt/padding";
-@use "~@mapsindoors/midt/border";
-@use "~@mapsindoors/midt/font";
+@use "~@mapsindoors/midt/color";
+
 
 :host {
-    display: flex;
-    @include padding.vertical(small);
-    @include font.family(sans-serif);
+    display: grid;
+    gap: variables.$spacing-large;
+    grid-auto-flow: column;
+    align-items: center;
+    grid-template-columns: variables.$spacing-large 1fr;
 }
 
 .icon {
-    @include sizing.width(xxx-large);
-
-    display: flex;
-    justify-content: center;
-
-    mi-icon {
-        @include icons.size(medium);
-    }
+    width: variables.$spacing-large;
+    height: variables.$spacing-large;
 }
 
 .description {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    p {
-        margin: 0;
-        @include padding.right(medium);
-        @include font.size(small);
+    font-size: variables.$spacing-medium;
+    display: grid;
+    gap: variables.$spacing-x-small;
+    height: fit-content;
 
+    &__text {
+        margin: 0;
+        font-size: variables.$spacing-medium;
         word-break: break-all;
     }
-    &__distance {
-        display: flex;
-        align-items: center;
 
-        mi-distance {
-            @include font.size(x-small);
-            @include padding.right(small);
-        }
-
-        &-border {
-            flex: 1;
-            width: 100%;
-            height: 0;
-            border-bottom: 1px solid variables.$color-gray-30;
-        }
+    mi-distance {
+        font-size: variables.$spacing-small;
+        @include color.gray(60);
     }
 }

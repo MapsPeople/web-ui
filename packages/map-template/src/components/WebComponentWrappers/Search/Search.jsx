@@ -14,7 +14,7 @@ import useNear from '../../../hooks/useNear';
  * @param {boolean} props.preventFocus - If set to true, the search field will be disabled.
  * @param {boolean} props.google - Set to true to include results from Google Places autocomplete service.
  */
-const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cleared, category, google, disabled=false }, ref) => {
+const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cleared, category, google, disabled = false }, ref) => {
     const elementRef = useRef();
 
     /** Instruct the search field to search for Locations near the map center. */
@@ -69,7 +69,12 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
 
     }, [placeholder, mapsindoors, results, clicked, cleared, google]);
 
-    return <mi-search ref={elementRef} placeholder={placeholder} mi-near={searchNear} mi-categories={category} disabled={disabled} google={google} />
+    return <mi-search ref={elementRef}
+        placeholder={placeholder}
+        mi-near={searchNear}
+        mi-categories={category}
+        disabled={disabled}
+        google={google} />
 });
 
 export default SearchField;

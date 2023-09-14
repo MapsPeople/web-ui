@@ -137,9 +137,11 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
      */
     function searchResultsReceived(results, searchFieldIdentifier) {
         setActiveSearchField(searchFieldIdentifier);
+        setHasFoundRoute(true);
         if (results.length === 0) {
             setHasSearchResults(false);
             setHasGooglePlaces(false);
+            setSearchResults([]);
         } else {
             setHasSearchResults(true);
             setSearchResults(results);
@@ -180,6 +182,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         fromFieldRef.current.setDisplayText(myPositionLocation.properties.name);
         setOriginLocation(myPositionLocation);
         setHasFoundRoute(true);
+        setHasSearchResults(true);
     }
 
     /**
@@ -205,6 +208,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         setSearchResults([]);
         setHasFoundRoute(true);
         setHasGooglePlaces(false);
+        setHasSearchResults(true);
     }
 
     /**
@@ -420,10 +424,10 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                         {hasGooglePlaces && <img className="wayfinding__google" alt="Powered by Google" src={GooglePlaces} />}
                     </div>
                 </div>}
-            {!searchTriggered && hasFoundRoute && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
+            {!searchTriggered && hasFoundRoute && !hasGooglePlaces && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
                 <div className="wayfinding__settings">
                     <div className="wayfinding__accessibility">
-                        <input className="mi-toggle" type="checkbox" checked={accessibilityOn} onChange={e => setAccessibilityOn(e.target.checked)} style={{backgroundColor: accessibilityOn ? primaryColor : ''}}/>
+                        <input className="mi-toggle" type="checkbox" checked={accessibilityOn} onChange={e => setAccessibilityOn(e.target.checked)} style={{ backgroundColor: accessibilityOn ? primaryColor : '' }} />
                         <div>Accessibility</div>
                         <Tooltip text="Turn on Accessibility to get directions that avoids stairs and escalators."></Tooltip>
                     </div>
@@ -459,7 +463,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                         <div className="wayfinding__minutes">{totalTime && <mi-time seconds={totalTime} />}</div>
                     </div>
                 </div>
-                <button className="wayfinding__button" style={{background: primaryColor}} onClick={() => onStartDirections()}>
+                <button className="wayfinding__button" style={{ background: primaryColor }} onClick={() => onStartDirections()}>
                     Go!
                 </button>
             </div>}

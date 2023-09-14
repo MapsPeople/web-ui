@@ -9,7 +9,6 @@
     background: var(--color-white-white);
     transform: translateY(calc(100% + var(--spacing-large)));
     max-height: 80%; // UX spec
-    min-height: fit-content;
     overflow: auto;
     display: none;
 
@@ -19,6 +18,14 @@
     }
 
     &--full {
+        height: 100%;
+
+        .modal__content {
+            height: 100%;
+        }
+    }
+
+    &--substeps {
         height: 100%;
 
         .modal__content {

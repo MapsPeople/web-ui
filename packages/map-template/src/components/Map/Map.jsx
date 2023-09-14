@@ -21,8 +21,6 @@ import positionControlState from '../../atoms/positionControlState';
 import locationIdState from '../../atoms/locationIdState';
 import setMapZoomLevel from "../../helpers/SetMapZoomLevel";
 
-const mapsindoors = window.mapsindoors;
-
 const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
 
 /**
@@ -74,7 +72,7 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
      */
     useEffect(() => {
         if (mapsIndoorsInstance) {
-            window.localStorage.clear(localStorageKeyForVenue);
+            window.localStorage.removeItem(localStorageKeyForVenue);
             const venueToShow = getVenueToShow(venueName, venues);
             if (venueToShow && !locationId) {
                 setVenue(venueToShow, mapsIndoorsInstance).then(() => {
@@ -111,7 +109,7 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
         return mapsIndoorsInstance.fitVenue(venue).then(() => {
             // Set the map zoom level if the property is provided.
             if (startZoomLevel) {
-                mapsIndoorsInstance.setZoom(startZoomLevel);
+                mapsIndoorsInstance.setZoom(parseInt(startZoomLevel));
             }
         });
     }
@@ -133,7 +131,7 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
      */
     const onLocationIdChanged = (miInstance) => {
         if (locationId && miInstance) {
-            mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
+            window.mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
                 if (location) {
                     // Set the floor to the one that the location belongs to.
                     const locationFloor = location.properties.floor;
@@ -175,13 +173,12 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
 
     const onMapView = async (mapView, externalDirectionsProvider) => {
         // Instantiate MapsIndoors instance
-        const miInstance = new mapsindoors.MapsIndoors({
+        const miInstance = new window.mapsindoors.MapsIndoors({
             mapView
         });
 
-        // Turn off visibility for buildings and venues.
-        // TODO: outline color override is also added here for demo purposes until the SDK supports Display Rules for Buildings too.
-        miInstance.setDisplayRule(['MI_BUILDING_OUTLINE', 'MI_BUILDING', 'MI_VENUE'], { visible: false });
+        // TODO: Turn off visibility for building outline for demo purposes until the SDK supports Display Rules for Buildings too.
+        miInstance.setDisplayRule(['MI_BUILDING_OUTLINE'], { visible: false });
 
         miInstance.on('click', location => onLocationClick(location));
         miInstance.once('building_changed', () => onBuildingChanged(miInstance))
@@ -190,7 +187,7 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
         setMapsIndoorsInstance(miInstance);
 
         // Initialize a Directions Service
-        const directionsService = new mapsindoors.services.DirectionsService(externalDirectionsProvider);
+        const directionsService = new window.mapsindoors.services.DirectionsService(externalDirectionsProvider);
         setDirectionsService(directionsService);
 
         const venueToShow = getVenueToShow(venueName, venues);
@@ -208,8 +205,8 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
         if (positionControl.nodeName === 'MI-MY-POSITION') {
             // The Web Component needs to set up the listener with addEventListener
             positionControl.addEventListener('position_received', positionInfo => {
-                if (positionInfo.accurate === true) {
-                    setUserPosition(positionInfo.position);
+                if (positionInfo.detail.accurate === true) {
+                    setUserPosition(positionInfo.detail.position);
                 }
             });
         } else {
