@@ -120,7 +120,7 @@ export class Search implements ComponentInterface {
     @Prop() disabled: boolean = false;
 
     /**
-     * The Mapbox Access Token for getting Mapbox Places.
+     * The Mapbox Access Token used for getting Mapbox autocomplete suggestions.
      */
     @Prop() mapboxAccessToken: string;
 
