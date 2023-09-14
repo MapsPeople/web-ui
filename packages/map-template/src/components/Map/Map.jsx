@@ -1,25 +1,27 @@
 import { useEffect } from "react";
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { mapTypes } from "../../constants/mapTypes";
-import useLiveData from '../../hooks/useLivedata';
+import apiKeyState from '../../atoms/apiKeyState';
+import currentVenueNameState from '../../atoms/currentVenueNameState';
+import directionsServiceState from '../../atoms/directionsServiceState';
+import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
+import filteredLocationsState from '../../atoms/filteredLocationsState';
+import gmApiKeyState from '../../atoms/gmApiKeyState';
+import locationIdState from '../../atoms/locationIdState';
+import mapboxAccessTokenState from '../../atoms/mapboxAccessTokenState';
+import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
+import mapTypeState from '../../atoms/mapTypeState';
+import positionControlState from '../../atoms/positionControlState';
+import startBearingState from '../../atoms/startBearingState';
+import startPitchState from '../../atoms/startPitchState';
+import startZoomLevelState from '../../atoms/startZoomLevelState';
+import tileStyleState from '../../atoms/tileStyleState';
+import userPositionState from '../../atoms/userPositionState';
 import venuesState from '../../atoms/venuesState';
+import { mapTypes } from "../../constants/mapTypes";
+import setMapZoomLevel from "../../helpers/SetMapZoomLevel";
+import useLiveData from '../../hooks/useLivedata';
 import GoogleMapsMap from "./GoogleMapsMap/GoogleMapsMap";
 import MapboxMap from "./MapboxMap/MapboxMap";
-import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
-import userPositionState from '../../atoms/userPositionState';
-import directionsServiceState from '../../atoms/directionsServiceState';
-import mapTypeState from '../../atoms/mapTypeState';
-import currentVenueNameState from '../../atoms/currentVenueNameState';
-import apiKeyState from '../../atoms/apiKeyState';
-import gmApiKeyState from '../../atoms/gmApiKeyState';
-import mapboxAccessTokenState from '../../atoms/mapboxAccessTokenState';
-import filteredLocationsState from '../../atoms/filteredLocationsState';
-import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
-import tileStyleState from '../../atoms/tileStyleState';
-import startZoomLevelState from '../../atoms/startZoomLevelState';
-import positionControlState from '../../atoms/positionControlState';
-import locationIdState from '../../atoms/locationIdState';
-import setMapZoomLevel from "../../helpers/SetMapZoomLevel";
 
 const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
 
@@ -51,6 +53,8 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
     const filteredLocationsByExternalIDs = useRecoilValue(filteredLocationsByExternalIDState);
     const tileStyle = useRecoilValue(tileStyleState);
     const startZoomLevel = useRecoilValue(startZoomLevelState);
+    const startBearing = useRecoilValue(startBearingState);
+    const startPitch = useRecoilValue(startPitchState);
     const [, setPositionControl] = useRecoilState(positionControlState);
     const locationId = useRecoilValue(locationIdState);
 
@@ -109,9 +113,39 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
         return mapsIndoorsInstance.fitVenue(venue).then(() => {
             // Set the map zoom level if the property is provided.
             if (startZoomLevel) {
+                // console.log(startZoomLevel);
                 mapsIndoorsInstance.setZoom(parseInt(startZoomLevel));
             }
+            
+            if (startPitch) {
+                try {
+                    mapsIndoorsInstance.getMap().setPitch(parseInt(startPitch));
+                } catch (error) {
+                    // If setBearing fails, we assume it's a Google map and try to set the heading.
+                    try {
+                        console.log(startPitch);
+                        mapsIndoorsInstance.getMap().setTilt(parseInt(startPitch));
+                    } catch (innerError) {
+                        console.warn("Setting bearing/heading failed for this map instance.");
+                    }
+                }
+            }
+        
+            if (startBearing) {
+                console.log(startBearing);
+                try {
+                    mapsIndoorsInstance.getMap().setBearing(parseInt(startBearing));
+                } catch (error) {
+                    // If setBearing fails, we assume it's a Google map and try to set the heading.
+                    try {
+                        mapsIndoorsInstance.getMap().setHeading(parseInt(startBearing));
+                    } catch (innerError) {
+                        console.warn("Setting bearing/heading failed for this map instance.");
+                    }
+                }
+            }
         });
+        
     }
 
     /**
