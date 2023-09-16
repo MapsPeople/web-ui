@@ -23,11 +23,7 @@ import useLiveData from '../../hooks/useLivedata';
 import GoogleMapsMap from "./GoogleMapsMap/GoogleMapsMap";
 import MapboxMap from "./MapboxMap/MapboxMap";
 
-
 const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
-
-
-
 
 /**
  * Private variable used for storing the tile style.
@@ -143,25 +139,14 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
             if (startZoomLevel) {
                 mapsIndoorsInstance.setZoom(parseInt(startZoomLevel));
             }
-
-            if (mapType === mapTypes.Google) {
-                if (bearing) {
-                    mapsIndoorsInstance.getMap().setHeading(parseInt(bearing));
-                }
-                if (pitch) {
-                    mapsIndoorsInstance.getMap().setTilt(parseInt(pitch));
-                }
-            } else if (mapType === mapTypes.Mapbox) {
-                if (bearing) {
-                    mapsIndoorsInstance.getMap().setBearing(parseInt(bearing));
-                }
-                if (pitch) {
-                    mapsIndoorsInstance.getMap().setPitch(parseInt(pitch));
-                }
+            if (bearing) {
+                mapsIndoorsInstance.getMapView().rotate(parseInt(bearing));
+            }
+            if (pitch) {
+                mapsIndoorsInstance.getMapView().tilt(parseInt(pitch));
             }
         });
     }
-
 
     /**
      * Handle the tile style changes and the locationId property.
@@ -283,7 +268,6 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
 }
 
 export default Map;
-
 
 /**
  * Get the venue to show initally on the map.

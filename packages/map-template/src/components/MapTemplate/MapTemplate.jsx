@@ -30,9 +30,7 @@ import gmMapIdState from '../../atoms/gmMapIdState';
 import bearingState from '../../atoms/bearingState';
 import pitchState from '../../atoms/pitchState';
 
-
 defineCustomElements();
-
 
 /**
  *
