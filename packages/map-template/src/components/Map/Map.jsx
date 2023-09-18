@@ -107,20 +107,13 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
      */
     useEffect(() => {
         if (mapsIndoorsInstance) {
-            if (mapType === mapTypes.Google) {
-                if (bearing) {
-                    mapsIndoorsInstance.getMap().setHeading(parseInt(bearing));
-                }
-                if (pitch) {
-                    mapsIndoorsInstance.getMap().setTilt(parseInt(pitch));
-                }
-            } else if (mapType === mapTypes.Mapbox) {
-                if (bearing) {
-                    mapsIndoorsInstance.getMap().setBearing(parseInt(bearing));
-                }
-                if (pitch) {
-                    mapsIndoorsInstance.getMap().setPitch(parseInt(pitch));
-                }
+            if (bearing)
+            {
+                mapsIndoorsInstance.getMapView().rotate(parseInt(bearing));
+            }
+            if (pitch)
+            {
+                mapsIndoorsInstance.getMapView().tilt(parseInt(pitch));
             }
         }
     }, [bearing, pitch, mapsIndoorsInstance]);
