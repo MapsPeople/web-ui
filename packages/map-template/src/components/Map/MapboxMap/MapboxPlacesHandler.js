@@ -24,8 +24,8 @@ function addMapboxPlaceGeometry(location, mapboxAccessToken, sessionToken) {
                 }
                 resolve(location);
             })
-            .catch(err => {
-                console.log('Error: ', err);
+            .catch(() => {
+                reject();
             });
     });
 }
