@@ -23,7 +23,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
     const [hasPositionControl, setHasPositionControl] = useState(false);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const primaryColor = useRecoilValue(primaryColorState);
-    const [sessionToken, setSessionToken] = useRecoilState(sessionTokenState);
+    const [, setSessionToken] = useRecoilState(sessionTokenState);
 
     useEffect(() => {
         // Initialize MapboxView MapView
