@@ -1,27 +1,27 @@
 import { useEffect } from "react";
 import { useRecoilState, useRecoilValue } from 'recoil';
-import apiKeyState from '../../atoms/apiKeyState';
-import bearingState from '../../atoms/bearingState';
-import currentVenueNameState from '../../atoms/currentVenueNameState';
-import directionsServiceState from '../../atoms/directionsServiceState';
-import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
-import filteredLocationsState from '../../atoms/filteredLocationsState';
-import gmApiKeyState from '../../atoms/gmApiKeyState';
-import locationIdState from '../../atoms/locationIdState';
-import mapboxAccessTokenState from '../../atoms/mapboxAccessTokenState';
-import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
-import mapTypeState from '../../atoms/mapTypeState';
-import pitchState from '../../atoms/pitchState';
-import positionControlState from '../../atoms/positionControlState';
-import startZoomLevelState from '../../atoms/startZoomLevelState';
-import tileStyleState from '../../atoms/tileStyleState';
-import userPositionState from '../../atoms/userPositionState';
-import venuesState from '../../atoms/venuesState';
 import { mapTypes } from "../../constants/mapTypes";
-import setMapZoomLevel from "../../helpers/SetMapZoomLevel";
 import useLiveData from '../../hooks/useLivedata';
+import venuesState from '../../atoms/venuesState';
 import GoogleMapsMap from "./GoogleMapsMap/GoogleMapsMap";
 import MapboxMap from "./MapboxMap/MapboxMap";
+import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
+import userPositionState from '../../atoms/userPositionState';
+import directionsServiceState from '../../atoms/directionsServiceState';
+import mapTypeState from '../../atoms/mapTypeState';
+import currentVenueNameState from '../../atoms/currentVenueNameState';
+import apiKeyState from '../../atoms/apiKeyState';
+import gmApiKeyState from '../../atoms/gmApiKeyState';
+import mapboxAccessTokenState from '../../atoms/mapboxAccessTokenState';
+import filteredLocationsState from '../../atoms/filteredLocationsState';
+import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
+import tileStyleState from '../../atoms/tileStyleState';
+import startZoomLevelState from '../../atoms/startZoomLevelState';
+import positionControlState from '../../atoms/positionControlState';
+import locationIdState from '../../atoms/locationIdState';
+import setMapZoomLevel from "../../helpers/SetMapZoomLevel";
+import bearingState from '../../atoms/bearingState';
+import pitchState from '../../atoms/pitchState';
 
 const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
 
@@ -130,9 +130,11 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
             if (startZoomLevel) {
                 mapsIndoorsInstance.setZoom(parseInt(startZoomLevel));
             }
+            // Set the map bearing if the property is provided.
             if (bearing) {
                 mapsIndoorsInstance.getMapView().rotate(parseInt(bearing));
             }
+            // Set the map pitch if the property is provided.
             if (pitch) {
                 mapsIndoorsInstance.getMapView().tilt(parseInt(pitch));
             }

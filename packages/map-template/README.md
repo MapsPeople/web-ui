@@ -127,6 +127,8 @@ Note that when using the React component, the properties should conform to JSX p
 |`start-zoom-level`|`startZoomLevel`|`number`|The initial zoom level of the map. |
 |`supports-url-parameters`|`supportsUrlParameters`|`bool`|Indicates if the Map Template supports URL parameters. |
 |`gm-map-id`|`gmMapId`|`string`|The Google Maps Map ID associated with a specific map style or feature. |
+|`pitch`|`pitch`|`number`|The initial pitch setting of the map. 2d models does not work with Google Maps and this setting. |
+|`bearing`|`bearing`|`number`|The initial bearing setting of the map. 2d models does not work with Google Maps and this setting.|
 
 ## Using Query Parameters
 
@@ -147,7 +149,9 @@ The supported query parameters are the following:
 11. `mapboxAccessToken` - Used like this `mapboxAccessToken=yourMapboxAccessToken`. If both the `mapboxAccessToken` and the `gmApiKey` are present, the app will load a Mapbox map.  
 12. `gmApiKey` - Used like this `gmApiKey=yourGmApiKey`. If both the `mapboxAccessToken` and the `gmApiKey` are present, the app will load a Mapbox map.  
 13. `startZoomLevel` - Used like this `startZoomLevel=22`.  
-14. `gmMapId` - Used like this `gmMapId=yourGmMapId`.  
+14. `gmMapId` - Used like this `gmMapId=yourGmMapId`.
+15. `pitch` - Used like this `pitch=50`.  
+16. `bearing` - Used like this `bearing=180`.  
 
 **Note!** All the query parameters need to be separated with the `&` symbol, without any spaces in between. **Note!** When using parameters such as `directionsTo`, `directionsFrom`, `locationId`, `externalIDs`, and `tileStyle` make sure you are using the correct `apiKey` parameter to which they belong.
 **Note!** When using the `gmMapId` property, you need to use it together with the `gmApiKey` that it is associated with.
