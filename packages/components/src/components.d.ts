@@ -878,7 +878,7 @@ export namespace Components {
          */
         "mapbox": boolean;
         /**
-          * The Mapbox Access Token for getting Mapbox Places.
+          * The Mapbox Access Token used for getting Mapbox autocomplete suggestions.
          */
         "mapboxAccessToken": string;
         /**
@@ -2205,7 +2205,7 @@ declare namespace LocalJSX {
          */
         "mapbox"?: boolean;
         /**
-          * The Mapbox Access Token for getting Mapbox Places.
+          * The Mapbox Access Token used for getting Mapbox autocomplete suggestions.
          */
         "mapboxAccessToken"?: string;
         /**
