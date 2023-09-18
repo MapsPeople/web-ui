@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import mapsIndoorsInstanceState from '../../../atoms/mapsIndoorsInstanceState';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import mapboxAccessTokenState from '../../../atoms/mapboxAccessTokenState';
 import primaryColorState from '../../../atoms/primaryColorState';
+import sessionTokenState from '../../../atoms/sessionTokenState';
+import { v4 as uuidv4 } from 'uuid';
 
 /**
  * Takes care of instantiating a MapsIndoors Mapbox MapView.
@@ -21,6 +23,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
     const [hasPositionControl, setHasPositionControl] = useState(false);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const primaryColor = useRecoilValue(primaryColorState);
+    const [sessionToken, setSessionToken] = useRecoilState(sessionTokenState);
 
     useEffect(() => {
         // Initialize MapboxView MapView
@@ -38,6 +41,10 @@ function MapboxMap({ onMapView, onPositionControl }) {
         const externalDirectionsProvider = new window.mapsindoors.directions.MapboxProvider(mapboxAccessToken);
 
         onMapView(mapViewInstance, externalDirectionsProvider);
+
+        // Generate a UUIDv4 and set the Session Token for searching for Mapbox places.
+        const uuid = uuidv4();
+        setSessionToken(uuid);
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
     // We ignore eslint warnings about missing dependencies because onMapView should never change runtime and changing Mapbox Access Token runtime will give other problems.
 
@@ -54,7 +61,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
             setHasPositionControl(true);
             onPositionControl(myPositionButtonElement);
         }
-    
+
         if (mapsIndoorsInstance && mapView && !hasFloorSelector) {
             const floorSelectorElement = document.createElement('mi-floor-selector');
             floorSelectorElement.mapsindoors = mapsIndoorsInstance;

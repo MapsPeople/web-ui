@@ -125,6 +125,11 @@ export class Search implements ComponentInterface {
     @Prop() mapboxAccessToken: string;
 
     /**
+    * The Mapbox Session Token used for getting Mapbox autocomplete suggestions.
+    */
+    @Prop() sessionToken: string;
+
+    /**
      * Sets the prevention of the search.
      */
     private preventSearch: boolean = false;
@@ -347,7 +352,7 @@ export class Search implements ComponentInterface {
         if (this.mapbox && this.mapboxAccessToken) {
             if (query) {
                 return new Promise((resolve) => {
-                    const url = `https://api.mapbox.com/search/searchbox/v1/suggest?q=${query}&session_token=[GENERATED-UUID]&access_token=${this.mapboxAccessToken}`;
+                    const url = `https://api.mapbox.com/search/searchbox/v1/suggest?q=${query}&session_token=${this.sessionToken}&access_token=${this.mapboxAccessToken}`;
 
                     fetch(url)
                         .then((response) => {
@@ -367,8 +372,8 @@ export class Search implements ComponentInterface {
                             }));
                             resolve(places);
                         })
-                        .catch(err => {
-                            console.log('Error: ', err);
+                        .catch(() => {
+                            resolve([]);
                         });
                 });
             }

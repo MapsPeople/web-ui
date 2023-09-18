@@ -2,6 +2,7 @@ import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import useNear from '../../../hooks/useNear';
 import { useRecoilValue } from 'recoil';
 import mapboxAccessTokenState from '../../../atoms/mapboxAccessTokenState';
+import sessionTokenState from '../../../atoms/sessionTokenState';
 
 /**
  * React wrapper around the custom element <mi-search>.
@@ -21,6 +22,7 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
     const elementRef = useRef();
 
     const mapboxAccessToken = useRecoilValue(mapboxAccessTokenState);
+    const sessionToken = useRecoilValue(sessionTokenState);
 
     /** Instruct the search field to search for Locations near the map center. */
     const searchNear = useNear();
@@ -77,6 +79,7 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
     return <mi-search ref={elementRef}
         placeholder={placeholder}
         mapbox-access-token={mapboxAccessToken}
+        session-token={sessionToken}
         mi-near={searchNear}
         mi-categories={category}
         disabled={disabled}

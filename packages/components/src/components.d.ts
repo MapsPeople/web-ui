@@ -918,6 +918,10 @@ export namespace Components {
          */
         "placeholder": string;
         /**
+          * The Mapbox Session Token used for getting Mapbox autocomplete suggestions.
+         */
+        "sessionToken": string;
+        /**
           * Sets text to be shown in the search field. Setting it will not perform a search.
          */
         "setDisplayText": (displayText: string) => Promise<void>;
@@ -2260,6 +2264,10 @@ declare namespace LocalJSX {
           * Placeholder for the input field.
          */
         "placeholder"?: string;
+        /**
+          * The Mapbox Session Token used for getting Mapbox autocomplete suggestions.
+         */
+        "sessionToken"?: string;
         /**
           * Get or set the entered value
          */
