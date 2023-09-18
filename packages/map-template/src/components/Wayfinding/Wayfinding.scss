@@ -72,6 +72,7 @@
         margin: var(--spacing-x-small) var(--spacing-x-small) 0 var(--spacing-x-small);
         height: fit-content;
         justify-items: start;
+        max-width: 550px;
 
         svg {
             justify-self: center;
