@@ -205,7 +205,7 @@ export class Search implements ComponentInterface {
 
                 if (this.google) {
                     this.pushResults(results[0].concat(results[1]));
-                } else if (this.mapbox) {
+                } else if (this.mapbox && this.mapboxAccessToken) {
                     this.pushResults(results[0].concat(results[2]));
                 } else {
                     this.pushResults(results[0]);
