@@ -107,12 +107,10 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
      */
     useEffect(() => {
         if (mapsIndoorsInstance) {
-            if (bearing)
-            {
+            if (bearing) {
                 mapsIndoorsInstance.getMapView().rotate(parseInt(bearing));
             }
-            if (pitch)
-            {
+            if (pitch) {
                 mapsIndoorsInstance.getMapView().tilt(parseInt(pitch));
             }
         }
