@@ -122,7 +122,6 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
      * @param {object} venue
      * @param {object} mapsIndoorsInstance
      */
-     
      const setVenue = (venue, mapsIndoorsInstance) => {
         window.localStorage.setItem(localStorageKeyForVenue, venue.name);
         return mapsIndoorsInstance.fitVenue(venue).then(() => {
