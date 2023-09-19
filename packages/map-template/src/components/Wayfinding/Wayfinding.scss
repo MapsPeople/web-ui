@@ -72,7 +72,6 @@
         margin: var(--spacing-x-small) var(--spacing-x-small) 0 var(--spacing-x-small);
         height: fit-content;
         justify-items: start;
-        max-width: 550px;
 
         svg {
             justify-self: center;
@@ -87,7 +86,6 @@
         display: grid;
         gap: var(--spacing-x-small);
         padding: var(--spacing-x-small);
-        overflow: scroll;
         grid-auto-rows: min-content;
 
         p {
