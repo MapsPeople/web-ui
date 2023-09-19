@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Make a `Use My Position` option in the Wayfinding.
 
+## [1.12.3] - 2023-09-11
+
+### Fixed
+
+- Fixed wrong usage of clear function on localStorage.
+
 ## [1.12.2] - 2023-09-04
 
 ### Fixed

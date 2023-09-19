@@ -11,7 +11,7 @@ Install the package:
 In your script:
 
 ```javascript
-import MapsIndoorsMap from '@mapsindoors/map-template/dist/mapsindoors-webcomponent.es.js';
+import MapsIndoorsMap from '@mapsindoors/map-template@stable/dist/mapsindoors-webcomponent.es.js';
 window.customElements.define('mapsindoors-map', MapsIndoorsMap);
 ```
 
@@ -57,7 +57,7 @@ Use query parameters to configure the Web Component by setting the `supports-url
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MapsIndoors Map Template</title>
     <script type="module">
-        import MapsindoorsMap from 'https://www.unpkg.com/@mapsindoors/map-template/dist/mapsindoors-webcomponent.es.js';
+        import MapsindoorsMap from 'https://www.unpkg.com/@mapsindoors/map-template@stable/dist/mapsindoors-webcomponent.es.js';
         window.customElements.define('mapsindoors-map', MapsindoorsMap)
     </script>
     <style>
@@ -91,7 +91,7 @@ Install the package:
 Use the `MapsIndoorsMap` component in a React component:
 
 ```javascript
-import MapsIndoorsMap from '@mapsindoors/map-template/dist/mapsindoors-react.es.js';
+import MapsIndoorsMap from '@mapsindoors/map-template@stable/dist/mapsindoors-react.es.js';
 
 // Somewhere in your JSX:
 <div style={{
