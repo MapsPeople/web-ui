@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import currentLocationState from '../../atoms/currentLocationState';
 import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
 import Modal from './Modal/Modal';
@@ -8,6 +8,7 @@ import Wayfinding from '../Wayfinding/Wayfinding';
 import Directions from '../Directions/Directions';
 import Search from '../Search/Search';
 import LocationsList from '../LocationsList/LocationsList';
+import currentVenueNameState from '../../atoms/currentVenueNameState';
 
 /**
  * @param {Object} props
@@ -21,6 +22,7 @@ import LocationsList from '../LocationsList/LocationsList';
  */
 function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews }) {
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
+    const [currentVenue, setCurrentVenue] = useRecoilState(currentVenueNameState);
     const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
 
     /*
@@ -62,10 +64,20 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
         setFilteredLocationsByExternalID([]);
     }
 
+    /**
+     * Handle locations clicked on the map.
+     */
+    function onLocationClicked(location) {
+        if (location.properties.venueId !== currentVenue) {
+            setCurrentVenue(location.properties.venueId);
+        }
+        setCurrentLocation(location);
+    }
+
     const pages = [
         <Modal isOpen={currentAppView === appViews.SEARCH} key="A">
             <Search
-                onLocationClick={(location) => setCurrentLocation(location)}
+                onLocationClick={(location) => onLocationClicked(location)}
             />
         </Modal>,
         <Modal isOpen={currentAppView === appViews.EXTERNALIDS} key="B">

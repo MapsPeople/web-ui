@@ -12,6 +12,7 @@ import Wayfinding from '../Wayfinding/Wayfinding';
 import Directions from '../Directions/Directions';
 import Search from '../Search/Search';
 import LocationsList from '../LocationsList/LocationsList';
+import currentVenueNameState from '../../atoms/currentVenueNameState';
 
 /**
  * @param {Object} props
@@ -37,6 +38,7 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
     const categories = useRecoilValue(categoriesState);
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
+    const [currentVenue, setCurrentVenue] = useRecoilState(currentVenueNameState);
 
     /*
      * React on changes on the current location and directions locations and set relevant bottom sheet.
@@ -77,6 +79,17 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
         setFilteredLocationsByExternalID([]);
     }
 
+
+    /**
+     * Handle locations clicked on the map.
+     */
+    function onLocationClicked(location) {
+        if (location.properties.venueId !== currentVenue) {
+            setCurrentVenue(location.properties.venueId);
+        }
+        setCurrentLocation(location);
+    }
+
     const bottomSheets = [
         <Sheet
             minHeight={categories.length > 0 ? "136" : "80"}
@@ -85,7 +98,7 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
             key="A">
             <Search
                 onSetSize={size => setSearchSheetSize(size)}
-                onLocationClick={(location) => setCurrentLocation(location)}
+                onLocationClick={(location) => onLocationClicked(location)}
             />
         </Sheet>,
         <Sheet
