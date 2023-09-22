@@ -10,6 +10,7 @@ import Search from '../Search/Search';
 import LocationsList from '../LocationsList/LocationsList';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
+import { calculateBounds } from '../../helpers/CalculateBounds';
 
 /**
  * @param {Object} props
@@ -80,6 +81,12 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
         }
         // Set the current location.
         setCurrentLocation(location);
+
+        const padding = 200;
+        const bounds = calculateBounds(location.geometry)
+        let coordinates = {west: bounds[0], south: bounds[1], east: bounds[2], north: bounds[3]}
+        console.log('coordinates', coordinates)
+        mapsIndoorsInstance.getMapView().fitBounds(coordinates, padding);
     }
 
     const pages = [
