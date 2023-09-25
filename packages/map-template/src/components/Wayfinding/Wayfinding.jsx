@@ -123,14 +123,14 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
      */
     function locationClickHandler(location) {
         if (activeSearchField === searchFieldIdentifiers.TO) {
-            decorateLocation(location).then(selectedLocation => {
-                setDestinationLocation(selectedLocation);
-                toFieldRef.current.setDisplayText(selectedLocation.properties.name);
+            decorateLocation(location).then(decoratedLocation => {
+                setDestinationLocation(decoratedLocation);
+                toFieldRef.current.setDisplayText(decoratedLocation.properties.name);
             }, () => setHasFoundRoute(false));
         } else if (activeSearchField === searchFieldIdentifiers.FROM) {
-            decorateLocation(location).then(selectedLocation => {
-                setOriginLocation(selectedLocation);
-                fromFieldRef.current.setDisplayText(selectedLocation.properties.name);
+            decorateLocation(location).then(decoratedLocation => {
+                setOriginLocation(decoratedLocation);
+                fromFieldRef.current.setDisplayText(decoratedLocation.properties.name);
             }, () => setHasFoundRoute(false));
         }
         setHasGooglePlaces(false);
