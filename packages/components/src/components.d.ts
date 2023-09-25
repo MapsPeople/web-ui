@@ -2245,6 +2245,10 @@ declare namespace LocalJSX {
          */
         "miVenue"?: string;
         /**
+          * Event emitted whenever the value of the input field has changed.
+         */
+        "onChanged"?: (event: MiSearchCustomEvent<void>) => void;
+        /**
           * Event emitted when the search field is emptied.
          */
         "onCleared"?: (event: MiSearchCustomEvent<void>) => void;

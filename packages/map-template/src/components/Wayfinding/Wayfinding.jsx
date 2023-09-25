@@ -23,6 +23,7 @@ import { mapTypes } from "../../constants/mapTypes";
 import { ReactComponent as WalkIcon } from '../../assets/walk.svg';
 import { ReactComponent as DriveIcon } from '../../assets/drive.svg';
 import { ReactComponent as BikeIcon } from '../../assets/bike.svg';
+import { ReactComponent as CompassArrow } from '../../assets/compass-arrow.svg';
 import { travelModes } from "../../constants/travelModes";
 import Dropdown from "../WebComponentWrappers/Dropdown/Dropdown";
 import primaryColorState from "../../atoms/primaryColorState";
@@ -95,6 +96,9 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
 
     const [travelMode, setTravelMode] = useRecoilState(travelModeState);
 
+    /** Indicate if the option to choose My Position should be shown */
+    const [showMyPositionOption, setShowMyPositionOption] = useState(false);
+
     const mapboxAccessToken = useRecoilValue(mapboxAccessTokenState);
 
     const sessionToken = useRecoilValue(sessionTokenState);
@@ -136,6 +140,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         setHasGooglePlaces(false);
         setSearchTriggered(false);
         setSearchResults([]);
+        setShowMyPositionOption(false);
     }
 
     /**
@@ -181,17 +186,48 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     }
 
     /**
-     * Set the user's current position as the origin.
+     * Set the user's current position as the selected field.
      *
      * This is done by having a GeoJSON Feature with geometry corresponding to
      * the user's position.
      */
-    function setMyPositionAsOrigin() {
+    function selectMyPosition() {
         const myPositionLocation = generateMyPositionLocation(userPosition);
-        fromFieldRef.current.setDisplayText(myPositionLocation.properties.name);
-        setOriginLocation(myPositionLocation);
+
+        if (activeSearchField === searchFieldIdentifiers.TO) {
+            toFieldRef.current.setDisplayText(myPositionLocation.properties.name);
+            setDestinationLocation(myPositionLocation);
+        } else if (activeSearchField === searchFieldIdentifiers.FROM) {
+            fromFieldRef.current.setDisplayText(myPositionLocation.properties.name);
+            setOriginLocation(myPositionLocation);
+        }
+        setSearchResults([]);
         setHasFoundRoute(true);
         setHasSearchResults(true);
+        setHasGooglePlaces(false);
+        setSearchTriggered(false);
+        setShowMyPositionOption(false);
+    }
+
+    /**
+     * Check if any of the fields have the 'USER_POSITION' selected.
+     * The 'USER_POSITION' option should only be available for one search field at a time.
+     */
+    function showMyPositionOptionButton(searchFieldIdentifier) {
+        if (originLocation?.id === 'USER_POSITION' && searchFieldIdentifier === searchFieldIdentifiers.TO) {
+            setShowMyPositionOption(false);
+        } else if (destinationLocation?.id === 'USER_POSITION' && searchFieldIdentifier === searchFieldIdentifiers.FROM) {
+            setShowMyPositionOption(false);
+        } else {
+            setShowMyPositionOption(true);
+        }
+    }
+
+    /**
+     * Handle the value change of the input field.
+     */
+    function onInputChanged(searchFieldIdentifier) {
+        showMyPositionOptionButton(searchFieldIdentifier)
     }
 
     /**
@@ -204,6 +240,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         triggerSearch(searchFieldIdentifier);
         setHasFoundRoute(true);
         setHasGooglePlaces(false);
+        showMyPositionOptionButton(searchFieldIdentifier)
     }
 
     /**
@@ -212,6 +249,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
      * @param {string} searchFieldIdentifier
      */
     function onSearchCleared(searchFieldIdentifier) {
+        setShowMyPositionOption(true);
         setActiveSearchField(searchFieldIdentifier);
         resetSearchField(searchFieldIdentifier);
         setSearchResults([]);
@@ -312,7 +350,13 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
 
             if (userPosition && !originLocation && directionsToLocation?.id !== 'USER_POSITION') {
                 // If the user's position is known and no origin location is set, use the position as Origin.
-                setMyPositionAsOrigin();
+
+                const myPositionLocation = generateMyPositionLocation(userPosition);
+                fromFieldRef.current.setDisplayText(myPositionLocation.properties.name);
+                setOriginLocation(myPositionLocation);
+                setHasFoundRoute(true);
+                setHasSearchResults(true);
+                setSearchResults([]);
             }
         }
     }, [isActive, directionsToLocation, directionsFromLocation]);
@@ -395,6 +439,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                             results={locations => searchResultsReceived(locations, searchFieldIdentifiers.FROM)}
                             clicked={() => onSearchClicked(searchFieldIdentifiers.FROM)}
                             cleared={() => onSearchCleared(searchFieldIdentifiers.FROM)}
+                            changed={() => onInputChanged(searchFieldIdentifiers.FROM)}
                         />
                     </label>
                     <button onClick={() => switchDirectionsHandler()}
@@ -413,18 +458,22 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                             results={locations => searchResultsReceived(locations, searchFieldIdentifiers.TO)}
                             clicked={() => onSearchClicked(searchFieldIdentifiers.TO)}
                             cleared={() => onSearchCleared(searchFieldIdentifiers.TO)}
+                            changed={() => onInputChanged(searchFieldIdentifiers.TO)}
                         />
                     </label>
-                    {userPosition && originLocation?.id !== 'USER_POSITION' && <p className="wayfinding__use-current-position">
-                        <button onClick={() => setMyPositionAsOrigin()}>Use My Position</button>
-                    </p>}
+
                 </div>
             </div>
             {!hasFoundRoute && <p className="wayfinding__error">No route found</p>}
-            {!hasSearchResults && <p className="wayfinding__error">Nothing was found</p>}
+            {!hasSearchResults && !showMyPositionOption && <p className="wayfinding__error">Nothing was found</p>}
+            {userPosition && showMyPositionOption && <button type="button" className="wayfinding__use-current-position" onClick={() => selectMyPosition()}>
+                <CompassArrow />
+                My Position
+            </button>}
             {searchResults.length > 0 &&
                 <div className="wayfinding__scrollable" {...scrollableContentSwipePrevent}>
                     <div className="wayfinding__results">
+
                         {searchResults.map(location =>
                             <ListItemLocation
                                 key={location.id}
@@ -435,7 +484,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                         {hasGooglePlaces && <img className="wayfinding__google" alt="Powered by Google" src={GooglePlaces} />}
                     </div>
                 </div>}
-            {!searchTriggered && hasFoundRoute && !hasGooglePlaces && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
+            {!searchTriggered && !showMyPositionOption && hasFoundRoute && !hasGooglePlaces && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
                 <div className="wayfinding__settings">
                     <div className="wayfinding__accessibility">
                         <input className="mi-toggle" type="checkbox" checked={accessibilityOn} onChange={e => setAccessibilityOn(e.target.checked)} style={{ backgroundColor: accessibilityOn ? primaryColor : '' }} />

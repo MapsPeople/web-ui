@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [13.11.1] - 2023-09-19
+
+### Fixed
+
+- Fixed version number.
+
+## [13.11.0] - 2023-09-19
+
+### Added
+
+- Add support for having `changed` event on the search component.
+- A `changed` event will be emitted whenever the valye of the input field is changed.
+
 ## [13.10.2] - 2023-09-04
 
 ### Fixed
