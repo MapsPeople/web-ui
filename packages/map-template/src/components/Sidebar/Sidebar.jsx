@@ -67,6 +67,16 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
         setFilteredLocationsByExternalID([]);
     }
 
+
+    /**
+     * Get left padding for directions on desktop.
+     */
+    function getDesktopPaddingLeft() {
+        // The width of the sidebar plus adequate padding
+        const sidebar = document.querySelector('.modal--open');
+        return sidebar.offsetWidth + sidebar.offsetLeft * 2;
+    }
+
     /**
      * Handle locations clicked on the map.
      */
@@ -82,11 +92,13 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
         // Set the current location.
         setCurrentLocation(location);
 
+        console.log('mapsindoors instance', mapsIndoorsInstance.getMapView())
+
         const padding = 200;
         const bounds = calculateBounds(location.geometry)
-        let coordinates = {west: bounds[0], south: bounds[1], east: bounds[2], north: bounds[3]}
+        let coordinates = { west: bounds[0], south: bounds[1], east: bounds[2], north: bounds[3] }
         console.log('coordinates', coordinates)
-        mapsIndoorsInstance.getMapView().fitBounds(coordinates, padding);
+        mapsIndoorsInstance.getMapView().fitBounds(coordinates, { top: padding, right: padding, bottom: padding, left: getDesktopPaddingLeft()});
     }
 
     const pages = [

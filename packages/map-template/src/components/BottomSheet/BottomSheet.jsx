@@ -14,6 +14,7 @@ import Search from '../Search/Search';
 import LocationsList from '../LocationsList/LocationsList';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
+import { calculateBounds } from '../../helpers/CalculateBounds';
 
 /**
  * @param {Object} props
@@ -82,6 +83,16 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
     }
 
     /**
+     * Get bottom padding for directions on mobile.
+     */
+    function getMobilePaddingBottom() {
+        const bottomSheet = document.querySelector('.sheet--active');
+        const mapContainer = document.querySelector('.mapsindoors-map');
+        // Subtract the top padding from the height of the map container element.
+        return mapContainer.offsetHeight - bottomSheet.offsetTop;
+    }
+
+    /**
      * Handle locations clicked on the map.
      */
     function onLocationClicked(location) {
@@ -95,6 +106,12 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
         }
         // Set the current location.
         setCurrentLocation(location);
+
+        // const padding = 0;
+        // const bounds = calculateBounds(location.geometry)
+        // let coordinates = { west: bounds[0], south: bounds[1], east: bounds[2], north: bounds[3] }
+        // console.log('coordinates', coordinates)
+        // mapsIndoorsInstance.getMapView().fitBounds(coordinates, { top: padding, right: padding, bottom: getMobilePaddingBottom(), left: padding});
     }
 
     const bottomSheets = [
