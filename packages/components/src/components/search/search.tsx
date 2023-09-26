@@ -4,6 +4,7 @@ import Debounce from 'debounce-decorator';
 
 declare const google;
 declare const mapsindoors;
+declare const mapboxgl;
 
 @Component({
     tag: 'mi-search',
@@ -125,11 +126,6 @@ export class Search implements ComponentInterface {
     @Prop() disabled: boolean = false;
 
     /**
-     * The Mapbox Access Token used for getting Mapbox autocomplete suggestions.
-     */
-    @Prop() mapboxAccessToken: string;
-
-    /**
     * The Mapbox Session Token used for getting Mapbox autocomplete suggestions.
     */
     @Prop() sessionToken: string;
@@ -210,7 +206,7 @@ export class Search implements ComponentInterface {
 
                 if (this.google) {
                     this.pushResults(results[0].concat(results[1]));
-                } else if (this.mapbox && this.mapboxAccessToken) {
+                } else if (this.mapbox && mapboxgl.accessToken) {
                     this.pushResults(results[0].concat(results[2]));
                 } else {
                     this.pushResults(results[0]);
@@ -355,10 +351,10 @@ export class Search implements ComponentInterface {
      * @return {Promise<any>}
      */
     private getMapboxSearchResults(query: string): Promise<any> {
-        if (this.mapbox && this.mapboxAccessToken) {
+        if (this.mapbox && mapboxgl.accessToken) {
             if (query) {
                 return new Promise((resolve) => {
-                    const url = `https://api.mapbox.com/search/searchbox/v1/suggest?q=${query}&session_token=${this.sessionToken}&access_token=${this.mapboxAccessToken}`;
+                    const url = `https://api.mapbox.com/search/searchbox/v1/suggest?q=${query}&session_token=${this.sessionToken}&access_token=${mapboxgl.accessToken}`;
 
                     fetch(url)
                         .then((response) => {

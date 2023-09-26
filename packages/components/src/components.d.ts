@@ -878,10 +878,6 @@ export namespace Components {
          */
         "mapbox": boolean;
         /**
-          * The Mapbox Access Token used for getting Mapbox autocomplete suggestions.
-         */
-        "mapboxAccessToken": string;
-        /**
           * If searching should include MapsIndoors locations.
          */
         "mapsindoors": boolean;
@@ -2208,10 +2204,6 @@ declare namespace LocalJSX {
           * If searching should include Mapbox autocomplete suggestions.
          */
         "mapbox"?: boolean;
-        /**
-          * The Mapbox Access Token used for getting Mapbox autocomplete suggestions.
-         */
-        "mapboxAccessToken"?: string;
         /**
           * If searching should include MapsIndoors locations.
          */
