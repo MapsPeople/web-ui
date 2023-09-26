@@ -11,6 +11,7 @@ import LocationsList from '../LocationsList/LocationsList';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import { calculateBounds } from '../../helpers/CalculateBounds';
+import { booleanWithin, bboxPolygon } from '@turf/turf';
 
 /**
  * @param {Object} props
@@ -92,13 +93,27 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
         // Set the current location.
         setCurrentLocation(location);
 
-        console.log('mapsindoors instance', mapsIndoorsInstance.getMapView())
+        // Get the map view bounds
+        const mapViewBounds = mapsIndoorsInstance.getMapView().getBounds();
+        // Calculate the map view bbox
+        const mapViewBbox = [mapViewBounds.west, mapViewBounds.south, mapViewBounds.east, mapViewBounds.north];
+        // Calculate the location bbox
+        const locationBbox = calculateBounds(location.geometry)
 
-        const padding = 200;
-        const bounds = calculateBounds(location.geometry)
-        let coordinates = { west: bounds[0], south: bounds[1], east: bounds[2], north: bounds[3] }
-        console.log('coordinates', coordinates)
-        mapsIndoorsInstance.getMapView().fitBounds(coordinates, { top: padding, right: padding, bottom: padding, left: getDesktopPaddingLeft()});
+        // Convert the location and map view to bbox polygon
+        const locationBboxPolygon = bboxPolygon(locationBbox);
+        const mapViewBboxPolygon = bboxPolygon(mapViewBbox);
+
+        const isLocationWithinMapView = booleanWithin(locationBboxPolygon, mapViewBboxPolygon);
+
+        if (!isLocationWithinMapView) {
+            mapsIndoorsInstance.getMapView().setCenter({ lat: location.properties.anchor.coordinates[1], lng: location.properties.anchor.coordinates[0] });
+        } else {
+            const padding = 200;
+            const bounds = calculateBounds(location.geometry)
+            let coordinates = { west: bounds[0], south: bounds[1], east: bounds[2], north: bounds[3] }
+            mapsIndoorsInstance.getMapView().fitBounds(coordinates, { top: padding, right: padding, bottom: padding, left: getDesktopPaddingLeft() });
+        }
     }
 
     const pages = [
