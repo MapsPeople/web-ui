@@ -5,7 +5,7 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import mapboxAccessTokenState from '../../../atoms/mapboxAccessTokenState';
 import primaryColorState from '../../../atoms/primaryColorState';
-import sessionTokenState from '../../../atoms/sessionTokenState';
+import mapboxSessionTokenState from '../../../atoms/mapboxSessionTokenState';
 import { v4 as uuidv4 } from 'uuid';
 
 /**
@@ -23,7 +23,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
     const [hasPositionControl, setHasPositionControl] = useState(false);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const primaryColor = useRecoilValue(primaryColorState);
-    const [, setSessionToken] = useRecoilState(sessionTokenState);
+    const [, setMapboxSessionToken] = useRecoilState(mapboxSessionTokenState);
 
     useEffect(() => {
         // Initialize MapboxView MapView
@@ -44,7 +44,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
 
         // Generate a UUIDv4 and set the Session Token for searching for Mapbox places.
         const uuid = uuidv4();
-        setSessionToken(uuid);
+        setMapboxSessionToken(uuid);
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
     // We ignore eslint warnings about missing dependencies because onMapView should never change runtime and changing Mapbox Access Token runtime will give other problems.
 

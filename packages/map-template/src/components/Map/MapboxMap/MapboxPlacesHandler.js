@@ -3,11 +3,11 @@
  *
  * @param {Object} location
  * @param {string} mapboxAccessToken
- * @param {string} sessionToken
+ * @param {string} mapboxSessionToken
  */
-function addMapboxPlaceGeometry(location, mapboxAccessToken, sessionToken) {
+function addMapboxPlaceGeometry(location, mapboxAccessToken, mapboxSessionToken) {
     return new Promise((resolve, reject) => {
-        const url = `https://api.mapbox.com/search/searchbox/v1/retrieve/${location.id}?session_token=${sessionToken}&access_token=${mapboxAccessToken}`;
+        const url = `https://api.mapbox.com/search/searchbox/v1/retrieve/${location.id}?session_token=${mapboxSessionToken}&access_token=${mapboxAccessToken}`;
 
         fetch(url)
             .then((response) => {
