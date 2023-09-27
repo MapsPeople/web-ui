@@ -105,7 +105,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             const miSdkApiTag = document.createElement('script');
             miSdkApiTag.setAttribute('type', 'text/javascript');
-            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.24.6/mapsindoors-4.24.6.js.gz');
+            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.24.6/mapsindoors-4.24.7.js.gz');
             document.body.appendChild(miSdkApiTag);
             miSdkApiTag.onload = () => {
                 resolve();
