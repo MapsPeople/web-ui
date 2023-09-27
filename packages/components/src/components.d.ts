@@ -926,6 +926,10 @@ export namespace Components {
          */
         "triggerSearch": () => Promise<void>;
         /**
+          * The user position which can determine the proximity for the Mapbox places results.
+         */
+        "userPosition": string;
+        /**
           * Get or set the entered value
          */
         "value": string;
@@ -2264,6 +2268,10 @@ declare namespace LocalJSX {
           * The Mapbox Session Token used for getting Mapbox autocomplete suggestions.
          */
         "sessionToken"?: string;
+        /**
+          * The user position which can determine the proximity for the Mapbox places results.
+         */
+        "userPosition"?: string;
         /**
           * Get or set the entered value
          */

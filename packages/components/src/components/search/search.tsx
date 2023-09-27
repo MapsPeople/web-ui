@@ -126,9 +126,14 @@ export class Search implements ComponentInterface {
     @Prop() disabled: boolean = false;
 
     /**
-    * The Mapbox Session Token used for getting Mapbox autocomplete suggestions.
-    */
+     * The Mapbox Session Token used for getting Mapbox autocomplete suggestions.
+     */
     @Prop() sessionToken: string;
+
+    /**
+     * The user position which can determine the proximity for the Mapbox places results.
+     */
+    @Prop() userPosition: string;
 
     /**
      * Sets the prevention of the search.
@@ -354,7 +359,11 @@ export class Search implements ComponentInterface {
         if (this.mapbox && mapboxgl.accessToken) {
             if (query) {
                 return new Promise((resolve) => {
-                    const url = `https://api.mapbox.com/search/searchbox/v1/suggest?q=${query}&session_token=${this.sessionToken}&access_token=${mapboxgl.accessToken}`;
+                    let url = `https://api.mapbox.com/search/searchbox/v1/suggest?q=${query}&session_token=${this.sessionToken}&access_token=${mapboxgl.accessToken}`;
+
+                    if (this.userPosition) {
+                        url = url.concat(`&proximity=${this.userPosition}`);
+                    }
 
                     fetch(url)
                         .then((response) => {
