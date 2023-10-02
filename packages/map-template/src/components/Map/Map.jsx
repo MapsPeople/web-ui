@@ -20,6 +20,8 @@ import startZoomLevelState from '../../atoms/startZoomLevelState';
 import positionControlState from '../../atoms/positionControlState';
 import locationIdState from '../../atoms/locationIdState';
 import setMapZoomLevel from "../../helpers/SetMapZoomLevel";
+import bearingState from '../../atoms/bearingState';
+import pitchState from '../../atoms/pitchState';
 
 const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
 
@@ -51,6 +53,8 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
     const filteredLocationsByExternalIDs = useRecoilValue(filteredLocationsByExternalIDState);
     const tileStyle = useRecoilValue(tileStyleState);
     const startZoomLevel = useRecoilValue(startZoomLevelState);
+    const bearing = useRecoilValue(bearingState);
+    const pitch = useRecoilValue(pitchState);
     const [, setPositionControl] = useRecoilState(positionControlState);
     const locationId = useRecoilValue(locationIdState);
 
@@ -98,18 +102,40 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
         }
     }, [filteredLocations, filteredLocationsByExternalIDs, mapsIndoorsInstance]);
 
+    /*
+     * React to changes in bearing and pitch props and set them on the map if mapsIndoorsInstance exists.
+     */
+    useEffect(() => {
+        if (mapsIndoorsInstance) {
+            if (pitch) {
+                mapsIndoorsInstance.getMapView().tilt(parseInt(pitch));
+            }
+            if (bearing) {
+                mapsIndoorsInstance.getMapView().rotate(parseInt(bearing));
+            }
+        }
+    }, [bearing, pitch, mapsIndoorsInstance]);
+
     /**
      * Set the venue to show on the map.
      *
      * @param {object} venue
      * @param {object} mapsIndoorsInstance
      */
-    const setVenue = (venue, mapsIndoorsInstance) => {
+     const setVenue = (venue, mapsIndoorsInstance) => {
         window.localStorage.setItem(localStorageKeyForVenue, venue.name);
         return mapsIndoorsInstance.fitVenue(venue).then(() => {
             // Set the map zoom level if the property is provided.
             if (startZoomLevel) {
                 mapsIndoorsInstance.setZoom(parseInt(startZoomLevel));
+            }
+            // Set the map bearing if the property is provided.
+            if (bearing) {
+                mapsIndoorsInstance.getMapView().rotate(parseInt(bearing));
+            }
+            // Set the map pitch if the property is provided.
+            if (pitch) {
+                mapsIndoorsInstance.getMapView().tilt(parseInt(pitch));
             }
         });
     }
@@ -234,7 +260,6 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
 }
 
 export default Map;
-
 
 /**
  * Get the venue to show initally on the map.

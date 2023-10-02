@@ -76,6 +76,8 @@ When loading the MapsIndoors Map component for the first time, the map will resp
 |`startZoomLevel`|`number`|The initial zoom level of the map. |
 |`supportsUrlParameters`|`bool`|Indicates if the Map Template supports URL parameters. |
 |`gmMapId`|`string`|The Google Maps Map ID associated with a specific map style or feature. |
+|`pitch`|`pitch`|`number`|The pitch (Mapbox) or tilt (Google) value of the map. |
+|`bearing`|`bearing`|`number`|The bearing (Mapbox) or heading (Google) value of the map. |
 
 ## Using Query Parameters
 
@@ -96,7 +98,9 @@ The supported query parameters are the following:
 11. `mapboxAccessToken` - Used like this `mapboxAccessToken=yourMapboxAccessToken`. If both the `mapboxAccessToken` and the `gmApiKey` are present, the app will load a Mapbox map.  
 12. `gmApiKey` - Used like this `gmApiKey=yourGmApiKey`. If both the `mapboxAccessToken` and the `gmApiKey` are present, the app will load a Mapbox map.  
 13. `startZoomLevel` - Used like this `startZoomLevel=22`.  
-14. `gmMapId` - Used like this `gmMapId=yourGmMapId`.  
+14. `gmMapId` - Used like this `gmMapId=yourGmMapId`.
+15. `bearing` - Used like this `bearing=180`. Not compatible with MapsIndoors 2D models with Google Maps.
+16. `pitch` - Used like this `pitch=30`. Not compatible with MapsIndoors 2D models with Google Maps. 
 
 **Note!** All the query parameters need to be separated with the `&` symbol, without any spaces in between. **Note!** When using parameters such as `directionsTo`, `directionsFrom`, `locationId`, `externalIDs`, and `tileStyle` make sure you are using the correct `apiKey` parameter to which they belong.
 **Note!** When using the `gmMapId` property, you need to use it together with the `gmApiKey` that it is associated with.
