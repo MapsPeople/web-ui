@@ -12,6 +12,8 @@ import currentVenueNameState from '../../atoms/currentVenueNameState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import { calculateBounds } from '../../helpers/CalculateBounds';
 import { booleanWithin, bboxPolygon } from '@turf/turf';
+import startZoomLevelState from '../../atoms/startZoomLevelState';
+import setMapZoomLevel from '../../helpers/SetMapZoomLevel';
 
 /**
  * @param {Object} props
@@ -25,9 +27,10 @@ import { booleanWithin, bboxPolygon } from '@turf/turf';
  */
 function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews }) {
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
-    const [currentVenue, setCurrentVenue] = useRecoilState(currentVenueNameState);
+    const [currentVenue, setCurrentVenueName] = useRecoilState(currentVenueNameState);
     const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
+    const startZoomLevel = useRecoilValue(startZoomLevelState);
 
     /*
      * React on changes on the current location and directions locations and set relevant bottom sheet.
@@ -82,14 +85,15 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
      * Handle locations clicked on the map.
      */
     function onLocationClicked(location) {
-        // Set the current venue to be the selected location venue.
-        if (location.properties.venueId !== currentVenue) {
-            setCurrentVenue(location.properties.venueId);
-        }
-        // Set the current floor to be the selected location floor.
-        if (mapsIndoorsInstance.getFloor() !== location.properties.floor) {
-            mapsIndoorsInstance.setFloor(location.properties.floor)
-        }
+        console.log('here',location)
+        // // Set the current venue to be the selected location venue.
+        // if (location.properties.venueId !== currentVenue) {
+        //     setCurrentVenueName(location.properties.venueId);
+        // }
+        // // Set the current floor to be the selected location floor.
+        // if (mapsIndoorsInstance.getFloor() !== location.properties.floor) {
+        //     mapsIndoorsInstance.setFloor(location.properties.floor)
+        // }
         // Set the current location.
         setCurrentLocation(location);
 
@@ -114,6 +118,27 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
             let coordinates = { west: bounds[0], south: bounds[1], east: bounds[2], north: bounds[3] }
             mapsIndoorsInstance.getMapView().fitBounds(coordinates, { top: padding, right: padding, bottom: padding, left: getDesktopPaddingLeft() });
         }
+
+
+        window.mapsindoors.services.LocationsService.getLocation(location.id).then(location => {
+            if (location) {
+                // Set the floor to the one that the location belongs to.
+                const locationFloor = location.properties.floor;
+                mapsIndoorsInstance.setFloor(locationFloor);
+
+                // Center the map to the location coordinates.
+                const locationGeometry = location.geometry.type === 'Point' ? location.geometry.coordinates : location.properties.anchor.coordinates;
+                mapsIndoorsInstance.getMapView().setCenter({ lat: locationGeometry[1], lng: locationGeometry[0] });
+
+                // If there is a startZoomLevel, set the map zoom to that
+                // Else call the function to check the max zoom level supported on the solution
+                if (startZoomLevel) {
+                    mapsIndoorsInstance?.setZoom(startZoomLevel);
+                } else {
+                    setMapZoomLevel(mapsIndoorsInstance);
+                }
+            }
+        });
     }
 
     const pages = [
