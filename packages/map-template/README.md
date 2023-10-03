@@ -127,8 +127,8 @@ Note that when using the React component, the properties should conform to JSX p
 |`start-zoom-level`|`startZoomLevel`|`number`|The initial zoom level of the map. |
 |`supports-url-parameters`|`supportsUrlParameters`|`bool`|Indicates if the Map Template supports URL parameters. |
 |`gm-map-id`|`gmMapId`|`string`|The Google Maps Map ID associated with a specific map style or feature. |
-|`pitch`|`pitch`|`number`|The pitch (Mapbox) or tilt (Google) value of the map. |
-|`bearing`|`bearing`|`number`|The bearing (Mapbox) or heading (Google) value of the map. |
+|`pitch`|`pitch`|`number`|The pitch (Mapbox) or tilt (Google) value of the map. The value of the pitch can be between 0-90 degrees. |
+|`bearing`|`bearing`|`number`|The bearing (Mapbox) or heading (Google) value of the map.  |
 
 ## Using Query Parameters
 
