@@ -5,6 +5,7 @@ import { Loader as GoogleMapsApiLoader } from '@googlemaps/js-api-loader';
 import gmApiKeyState from '../../../atoms/gmApiKeyState';
 import primaryColorState from '../../../atoms/primaryColorState';
 import gmMapIdState from '../../../atoms/gmMapIdState';
+import bearingState from '../../../atoms/bearingState';
 
 /**
  * Takes care of instantiating a MapsIndoors Google Maps MapView.
@@ -23,6 +24,7 @@ function GoogleMapsMap({ onMapView, onPositionControl }) {
     const [hasPositionControl, setHasPositionControl] = useState(false);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const primaryColor = useRecoilValue(primaryColorState);
+    const bearing = useRecoilValue(bearingState);
 
     useEffect(() => {
         const loader = new GoogleMapsApiLoader({
@@ -62,6 +64,9 @@ function GoogleMapsMap({ onMapView, onPositionControl }) {
         if (mapsIndoorsInstance && mapView && google && !hasPositionControl) {
             const myPositionButtonElement = document.createElement('mi-my-position');
             myPositionButtonElement.mapsindoors = mapsIndoorsInstance;
+            if (bearing) {
+                myPositionButtonElement.bearing = bearing;
+            }
 
             mapView.getMap().controls[google.maps.ControlPosition.RIGHT_TOP].push(myPositionButtonElement);
             setHasPositionControl(true);

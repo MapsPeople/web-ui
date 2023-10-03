@@ -41,6 +41,11 @@ export class MyPositionComponent {
      */
     @State() positionState: PositionStateTypes;
 
+    /**
+     * The bearing value.
+     */
+    @Prop() bearing;
+
     private mapView;
     private options;
     private compassButton: HTMLButtonElement;
@@ -380,6 +385,14 @@ export class MyPositionComponent {
         this.mapView.on('rotateend', () => {
             this.setCompassStyle(this.mapView.getBearing());
         });
+    }
+
+    componentDidRender(): void {
+        if (this.bearing) {
+            this.setCompassStyle(this.bearing);
+        } else {
+            this.setCompassStyle(0);
+        }
     }
 
     /**
