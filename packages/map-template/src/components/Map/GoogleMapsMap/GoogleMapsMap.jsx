@@ -6,6 +6,7 @@ import gmApiKeyState from '../../../atoms/gmApiKeyState';
 import primaryColorState from '../../../atoms/primaryColorState';
 import gmMapIdState from '../../../atoms/gmMapIdState';
 import bearingState from '../../../atoms/bearingState';
+import pitchState from '../../../atoms/pitchState';
 
 /**
  * Takes care of instantiating a MapsIndoors Google Maps MapView.
@@ -25,6 +26,7 @@ function GoogleMapsMap({ onMapView, onPositionControl }) {
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const primaryColor = useRecoilValue(primaryColorState);
     const bearing = useRecoilValue(bearingState);
+    const pitch = useRecoilValue(pitchState);
 
     useEffect(() => {
         const loader = new GoogleMapsApiLoader({
@@ -44,7 +46,9 @@ function GoogleMapsMap({ onMapView, onPositionControl }) {
                 center: { lat: 0, lng: 0 },
                 // Set a large zoom so we prevent a "zoom 0 glitch" (showing the whole globe temporarily)
                 zoom: 21, 
-                mapId: gmMapId
+                mapId: gmMapId, 
+                heading: bearing, 
+                tilt: pitch
             };
 
             const mapViewInstance = new window.mapsindoors.mapView.GoogleMapsView(mapViewOptions);
