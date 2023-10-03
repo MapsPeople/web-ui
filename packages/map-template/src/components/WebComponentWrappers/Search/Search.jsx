@@ -23,7 +23,7 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
 
     const userPosition = useRecoilValue(userPositionState);
 
-    const mapboxSessionToken = sessionStorage.getItem('sessionToken');
+    const mapboxPlacesSessionToken = sessionStorage.getItem('mapboxPlacesSessionToken');
 
     const userPositionCoordinates = {
         longitude: userPosition?.coords.longitude,
@@ -86,7 +86,7 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
 
     return <mi-search ref={elementRef}
         placeholder={placeholder}
-        session-token={mapboxSessionToken}
+        session-token={mapboxPlacesSessionToken}
         user-position={(userPositionCoordinates.latitude !== undefined && userPositionCoordinates.longitude !== undefined) ? Object.values(userPositionCoordinates).join(',') : null}
         mi-near={searchNear}
         mi-categories={category}
