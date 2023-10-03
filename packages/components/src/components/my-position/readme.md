@@ -90,7 +90,6 @@ A `myPositionOptions` attribute is available on the `<mi-my-position>` element. 
 
 | Property            | Attribute             | Description                                                                                        | Type  | Default     |
 | ------------------- | --------------------- | -------------------------------------------------------------------------------------------------- | ----- | ----------- |
-| `bearing`           | `bearing`             | The bearing value.                                                                                 | `any` | `undefined` |
 | `mapsindoors`       | `mapsindoors`         | MapsIndoors instance.                                                                              | `any` | `undefined` |
 | `myPositionOptions` | `my-position-options` | Reference: https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/PositionControlOptions.html. | `any` | `undefined` |
 

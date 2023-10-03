@@ -52,9 +52,6 @@ function MapboxMap({ onMapView, onPositionControl }) {
         if (mapsIndoorsInstance && mapView && !hasPositionControl) {
             const myPositionButtonElement = document.createElement('mi-my-position');
             myPositionButtonElement.mapsindoors = mapsIndoorsInstance;
-            if (bearing) {
-                myPositionButtonElement.bearing = bearing;
-            }
 
             mapView.getMap().addControl({
                 onAdd: () => myPositionButtonElement,

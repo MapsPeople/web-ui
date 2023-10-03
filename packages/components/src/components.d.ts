@@ -590,10 +590,6 @@ export namespace Components {
     }
     interface MiMyPosition {
         /**
-          * The bearing value.
-         */
-        "bearing": any;
-        /**
           * MapsIndoors instance.
          */
         "mapsindoors": any;
@@ -1922,10 +1918,6 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     interface MiMyPosition {
-        /**
-          * The bearing value.
-         */
-        "bearing"?: any;
         /**
           * MapsIndoors instance.
          */
