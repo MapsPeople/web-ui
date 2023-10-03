@@ -127,7 +127,7 @@ Note that when using the React component, the properties should conform to JSX p
 |`start-zoom-level`|`startZoomLevel`|`number`|The initial zoom level of the map. |
 |`supports-url-parameters`|`supportsUrlParameters`|`bool`|Indicates if the Map Template supports URL parameters. |
 |`gm-map-id`|`gmMapId`|`string`|The Google Maps Map ID associated with a specific map style or feature. |
-|`pitch`|`pitch`|`number`|The pitch (Mapbox) or tilt (Google) value of the map. The value of the pitch can be between 0-90 degrees. |
+|`pitch`|`pitch`|`number`|The pitch (Mapbox) or tilt (Google) value of the map. The value of the pitch can be between 0-85 degrees on a Mapbox map. |
 |`bearing`|`bearing`|`number`|The bearing (Mapbox) or heading (Google) value of the map.  |
 
 ## Using Query Parameters
@@ -151,7 +151,7 @@ The supported query parameters are the following:
 13. `startZoomLevel` - Used like this `startZoomLevel=22`.  
 14. `gmMapId` - Used like this `gmMapId=yourGmMapId`.
 15. `bearing` - Used like this `bearing=180`. Not compatible with MapsIndoors 2D models and MapsIndoors labels on Google Maps.
-16. `pitch` - Used like this `pitch=30`. Not compatible with MapsIndoors 2D models and MapsIndoors labels on Google Maps. The value of the pitch can be between 0-90 degrees. 
+16. `pitch` - Used like this `pitch=30`. Not compatible with MapsIndoors 2D models and MapsIndoors labels on Google Maps. The value of the pitch can be between 0-85 degrees on a Mapbox map. 
 
 **Note!** All the query parameters need to be separated with the `&` symbol, without any spaces in between. **Note!** When using parameters such as `directionsTo`, `directionsFrom`, `locationId`, `externalIDs`, and `tileStyle` make sure you are using the correct `apiKey` parameter to which they belong.
 **Note!** When using the `gmMapId` property, you need to use it together with the `gmApiKey` that it is associated with.
