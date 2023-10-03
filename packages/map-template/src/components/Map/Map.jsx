@@ -107,10 +107,10 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
      */
     useEffect(() => {
         if (mapsIndoorsInstance) {
-            if (pitch) {
+            if (pitch && !isNaN(parseInt(pitch))) {
                 mapsIndoorsInstance.getMapView().tilt(parseInt(pitch));
             }
-            if (bearing) {
+            if (bearing && !isNaN(parseInt(bearing))) {
                 mapsIndoorsInstance.getMapView().rotate(parseInt(bearing));
             }
         }
@@ -122,20 +122,20 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
      * @param {object} venue
      * @param {object} mapsIndoorsInstance
      */
-     const setVenue = (venue, mapsIndoorsInstance) => {
+    const setVenue = (venue, mapsIndoorsInstance) => {
         window.localStorage.setItem(localStorageKeyForVenue, venue.name);
         return mapsIndoorsInstance.fitVenue(venue).then(() => {
             // Set the map zoom level if the property is provided.
             if (startZoomLevel) {
                 mapsIndoorsInstance.setZoom(parseInt(startZoomLevel));
             }
-            // Set the map bearing if the property is provided.
-            if (bearing) {
-                mapsIndoorsInstance.getMapView().rotate(parseInt(bearing));
-            }
             // Set the map pitch if the property is provided.
-            if (pitch) {
+            if (pitch && !isNaN(parseInt(pitch))) {
                 mapsIndoorsInstance.getMapView().tilt(parseInt(pitch));
+            }
+            // Set the map bearing if the property is provided.
+            if (bearing && !isNaN(parseInt(bearing))) {
+                mapsIndoorsInstance.getMapView().rotate(parseInt(bearing));
             }
         });
     }
