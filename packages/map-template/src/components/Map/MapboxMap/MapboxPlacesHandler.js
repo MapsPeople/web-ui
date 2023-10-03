@@ -5,7 +5,9 @@
  * @param {string} mapboxAccessToken
  * @param {string} mapboxSessionToken
  */
-function addMapboxPlaceGeometry(location, mapboxAccessToken, mapboxSessionToken) {
+function addMapboxPlaceGeometry(location, mapboxAccessToken) {
+    const  mapboxSessionToken =  sessionStorage.getItem('sessionToken');
+    
     return new Promise((resolve, reject) => {
         const url = `https://api.mapbox.com/search/searchbox/v1/retrieve/${location.id}?session_token=${mapboxSessionToken}&access_token=${mapboxAccessToken}`;
 

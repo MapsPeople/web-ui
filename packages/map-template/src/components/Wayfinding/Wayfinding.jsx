@@ -30,7 +30,6 @@ import primaryColorState from "../../atoms/primaryColorState";
 import directionsResponseState from "../../atoms/directionsResponseState";
 import addMapboxPlaceGeometry from "../Map/MapboxMap/MapboxPlacesHandler";
 import mapboxAccessTokenState from "../../atoms/mapboxAccessTokenState";
-import mapboxSessionTokenState from "../../atoms/mapboxSessionTokenState";
 
 const searchFieldIdentifiers = {
     TO: 'TO',
@@ -101,7 +100,6 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
 
     const mapboxAccessToken = useRecoilValue(mapboxAccessTokenState);
 
-    const mapboxSessionToken = useRecoilValue(mapboxSessionTokenState);
 
     /**
      * Decorates location with data that is required for wayfinding to work.
@@ -113,7 +111,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         if (selectedMapType === mapTypes.Google && location.properties.type === 'google_places') {
             return addGooglePlaceGeometry(location);
         } else if (selectedMapType === mapTypes.Mapbox && location.properties.type === 'mapbox_places') {
-            return addMapboxPlaceGeometry(location, mapboxAccessToken, mapboxSessionToken);
+            return addMapboxPlaceGeometry(location, mapboxAccessToken);
         } else {
             return Promise.resolve(location);
         }

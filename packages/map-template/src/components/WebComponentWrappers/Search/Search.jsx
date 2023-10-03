@@ -1,7 +1,6 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import useNear from '../../../hooks/useNear';
 import { useRecoilValue } from 'recoil';
-import mapboxSessionTokenState from '../../../atoms/mapboxSessionTokenState';
 import userPositionState from '../../../atoms/userPositionState';
 
 /**
@@ -22,8 +21,9 @@ import userPositionState from '../../../atoms/userPositionState';
 const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cleared, changed, category, google, mapbox, disabled = false }, ref) => {
     const elementRef = useRef();
 
-    const mapboxSessionToken = useRecoilValue(mapboxSessionTokenState);
     const userPosition = useRecoilValue(userPositionState);
+
+    const mapboxSessionToken = sessionStorage.getItem('sessionToken');
 
     const userPositionCoordinates = {
         longitude: userPosition?.coords.longitude,
