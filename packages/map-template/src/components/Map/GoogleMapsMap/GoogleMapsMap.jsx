@@ -68,7 +68,6 @@ function GoogleMapsMap({ onMapView, onPositionControl }) {
         if (mapsIndoorsInstance && mapView && google && !hasPositionControl) {
             const myPositionButtonElement = document.createElement('mi-my-position');
             myPositionButtonElement.mapsindoors = mapsIndoorsInstance;
-    
             mapView.getMap().controls[google.maps.ControlPosition.RIGHT_TOP].push(myPositionButtonElement);
             setHasPositionControl(true);
             onPositionControl(myPositionButtonElement);
