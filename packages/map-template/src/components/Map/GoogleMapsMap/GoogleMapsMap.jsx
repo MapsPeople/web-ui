@@ -45,10 +45,10 @@ function GoogleMapsMap({ onMapView, onPositionControl }) {
                 // Always set a center so the map so the bounds or center can be read from the start.
                 center: { lat: 0, lng: 0 },
                 // Set a large zoom so we prevent a "zoom 0 glitch" (showing the whole globe temporarily)
-                zoom: 21, 
-                mapId: gmMapId, 
-                heading: bearing, 
-                tilt: pitch
+                zoom: 21,
+                mapId: gmMapId,
+                heading: !isNaN(parseInt(bearing)) ? parseInt(bearing) : 0,
+                tilt: !isNaN(parseInt(pitch)) ? parseInt(pitch) : 0,
             };
 
             const mapViewInstance = new window.mapsindoors.mapView.GoogleMapsView(mapViewOptions);

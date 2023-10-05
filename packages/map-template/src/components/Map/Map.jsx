@@ -107,10 +107,10 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
      */
     useEffect(() => {
         if (mapsIndoorsInstance) {
-            if (pitch && !Number.isNaN(parseInt(pitch))) {
+            if (!isNaN(parseInt(pitch))) {
                 mapsIndoorsInstance.getMapView().tilt(parseInt(pitch));
             }
-            if (bearing && !Number.isNaN(parseInt(bearing))) {
+            if (!isNaN(parseInt(bearing))) {
                 mapsIndoorsInstance.getMapView().rotate(parseInt(bearing));
             }
         }
@@ -130,11 +130,11 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
                 mapsIndoorsInstance.setZoom(parseInt(startZoomLevel));
             }
             // Set the map pitch if the property is provided.
-            if (pitch && !Number.isNaN(parseInt(pitch))) {
+            if (!isNaN(parseInt(pitch))) {
                 mapsIndoorsInstance.getMapView().tilt(parseInt(pitch));
             }
             // Set the map bearing if the property is provided.
-            if (bearing && !Number.isNaN(parseInt(bearing))) {
+            if (!isNaN(parseInt(bearing))) {
                 mapsIndoorsInstance.getMapView().rotate(parseInt(bearing));
             }
         });

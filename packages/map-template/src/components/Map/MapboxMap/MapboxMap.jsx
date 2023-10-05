@@ -31,9 +31,9 @@ function MapboxMap({ onMapView, onPositionControl }) {
         window.mapboxgl = mapboxgl;
         const mapViewOptions = {
             accessToken: mapboxAccessToken,
-            element: document.getElementById('map'), 
-            bearing: bearing, 
-            pitch: pitch
+            element: document.getElementById('map'),
+            bearing: !isNaN(parseInt(bearing)) ? parseInt(bearing) : 0,
+            pitch: !isNaN(parseInt(pitch)) ? parseInt(pitch) : 0,
         };
 
         const mapViewInstance = new window.mapsindoors.mapView.MapboxView(mapViewOptions);
