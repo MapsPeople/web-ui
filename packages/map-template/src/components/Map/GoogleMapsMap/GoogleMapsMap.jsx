@@ -4,6 +4,9 @@ import mapsIndoorsInstanceState from '../../../atoms/mapsIndoorsInstanceState';
 import { Loader as GoogleMapsApiLoader } from '@googlemaps/js-api-loader';
 import gmApiKeyState from '../../../atoms/gmApiKeyState';
 import primaryColorState from '../../../atoms/primaryColorState';
+import gmMapIdState from '../../../atoms/gmMapIdState';
+import bearingState from '../../../atoms/bearingState';
+import pitchState from '../../../atoms/pitchState';
 
 /**
  * Takes care of instantiating a MapsIndoors Google Maps MapView.
@@ -15,12 +18,15 @@ import primaryColorState from '../../../atoms/primaryColorState';
 function GoogleMapsMap({ onMapView, onPositionControl }) {
 
     const gmApiKey = useRecoilValue(gmApiKeyState);
+    const gmMapId = useRecoilValue(gmMapIdState);
     const [google, setGoogle] = useState();
     const [mapView, setMapView] = useState();
     const [hasFloorSelector, setHasFloorSelector] = useState(false);
     const [hasPositionControl, setHasPositionControl] = useState(false);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const primaryColor = useRecoilValue(primaryColorState);
+    const bearing = useRecoilValue(bearingState);
+    const pitch = useRecoilValue(pitchState);
 
     useEffect(() => {
         const loader = new GoogleMapsApiLoader({
@@ -39,7 +45,10 @@ function GoogleMapsMap({ onMapView, onPositionControl }) {
                 // Always set a center so the map so the bounds or center can be read from the start.
                 center: { lat: 0, lng: 0 },
                 // Set a large zoom so we prevent a "zoom 0 glitch" (showing the whole globe temporarily)
-                zoom: 21
+                zoom: 21,
+                mapId: gmMapId,
+                heading: !isNaN(parseInt(bearing)) ? parseInt(bearing) : 0,
+                tilt: !isNaN(parseInt(pitch)) ? parseInt(pitch) : 0,
             };
 
             const mapViewInstance = new window.mapsindoors.mapView.GoogleMapsView(mapViewOptions);
@@ -59,7 +68,6 @@ function GoogleMapsMap({ onMapView, onPositionControl }) {
         if (mapsIndoorsInstance && mapView && google && !hasPositionControl) {
             const myPositionButtonElement = document.createElement('mi-my-position');
             myPositionButtonElement.mapsindoors = mapsIndoorsInstance;
-
             mapView.getMap().controls[google.maps.ControlPosition.RIGHT_TOP].push(myPositionButtonElement);
             setHasPositionControl(true);
             onPositionControl(myPositionButtonElement);

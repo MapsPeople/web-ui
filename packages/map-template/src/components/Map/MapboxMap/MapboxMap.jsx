@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
-import mapsIndoorsInstanceState from '../../../atoms/mapsIndoorsInstanceState';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import bearingState from '../../../atoms/bearingState';
 import mapboxAccessTokenState from '../../../atoms/mapboxAccessTokenState';
+import mapsIndoorsInstanceState from '../../../atoms/mapsIndoorsInstanceState';
+import pitchState from '../../../atoms/pitchState';
 import primaryColorState from '../../../atoms/primaryColorState';
 
 /**
@@ -21,6 +23,8 @@ function MapboxMap({ onMapView, onPositionControl }) {
     const [hasPositionControl, setHasPositionControl] = useState(false);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const primaryColor = useRecoilValue(primaryColorState);
+    const bearing = useRecoilValue(bearingState);
+    const pitch = useRecoilValue(pitchState);
 
     useEffect(() => {
         // Initialize MapboxView MapView
@@ -28,7 +32,8 @@ function MapboxMap({ onMapView, onPositionControl }) {
         const mapViewOptions = {
             accessToken: mapboxAccessToken,
             element: document.getElementById('map'),
-            maxZoom: 24
+            bearing: !isNaN(parseInt(bearing)) ? parseInt(bearing) : 0,
+            pitch: !isNaN(parseInt(pitch)) ? parseInt(pitch) : 0,
         };
 
         const mapViewInstance = new window.mapsindoors.mapView.MapboxView(mapViewOptions);

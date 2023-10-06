@@ -5,6 +5,72 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.15.1] - 2023-10-06
+
+### Fixed
+
+- Added latest version of the MI Components.
+
+## [1.15.0] - 2023-10-06
+
+### Added
+
+- Added support for tilt and rotation properties.
+
+## [1.14.2] - 2023-10-05
+
+### Fixed
+
+- Fixed bottom sheet not being fully visible on mobile devices.
+
+## [1.14.1] - 2023-09-28
+
+### Fixed
+
+- Fixed outdated version of the SDK.
+
+## [1.14.0] - 2023-09-27
+
+### Added
+
+- Upgrade to MapsIndoors JavaScript SDK v4.24.7 which enables the possibility of zooming to level 25 on Mapbox where applicable.
+
+## [1.13.0] - 2023-09-19
+
+### Added
+
+- Make a `Use My Position` option in the Wayfinding.
+
+## [1.12.3] - 2023-09-11
+
+### Fixed
+
+- Fixed wrong usage of clear function on localStorage.
+
+## [1.12.2] - 2023-09-04
+
+### Fixed
+
+- Fixed documentation for the My Position component.
+
+## [1.12.1] - 2023-09-04
+
+### Fixed
+
+- Fixed My Position URL parameter not working.
+
+## [1.12.0] - 2023-08-24
+
+### Added
+
+- Added support for Google Maps Map ID prop.
+
+## [1.11.2] - 2023-08-23
+
+### Fixed
+
+- Upgrade to MapsIndoors JavaScript SDK v4.24.6. 
+
 ## [1.11.1] - 2023-08-17
 
 ### Fixed

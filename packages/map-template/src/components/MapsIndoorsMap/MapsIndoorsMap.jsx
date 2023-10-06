@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { RecoilRoot } from 'recoil';
 import MapTemplate from '../MapTemplate/MapTemplate.jsx';
 import defaultLogo from "../../assets/logo.svg";
-
 /**
  *
  * @param {Object} props
@@ -19,7 +18,10 @@ import defaultLogo from "../../assets/logo.svg";
  * @param {array} [props.externalIDs] - Filter locations shown on the map based on the external IDs.
  * @param {string} [props.tileStyle] - Tile style name to change the interface of the map.
  * @param {number} [props.startZoomLevel] - The initial zoom level of the map.
+ * @param {number} [props.pitch] - The pitch of the map as a number. Not recommended for Google Maps with 2D Models.
+ * @param {number} [props.bearing] - The bearing of the map as a number. Not recommended for Google Maps with 2D Models.
  * @param {boolean} [props.supportsUrlParameters] - If you want to support URL Parameters to configure the Map Template.
+ * @param {string} [props.gmMapId] - The Google Maps Map ID associated with a specific map style or feature.
  */
 function MapsIndoorsMap(props) {
 
@@ -49,11 +51,14 @@ function MapsIndoorsMap(props) {
         const directionsToQueryParameter = queryStringParams.get('directionsTo');
         const tileStyleQueryParameter = queryStringParams.get('tileStyle');
         const startZoomLevelQueryParameter = queryStringParams.get('startZoomLevel');
+        const pitchQueryParameter = queryStringParams.get('pitch');
+        const bearingQueryParameter = queryStringParams.get('bearing');
         const gmApiKeyQueryParameter = queryStringParams.get('gmApiKey');
         const mapboxAccessTokenQueryParameter = queryStringParams.get('mapboxAccessToken');
         const primaryColorQueryParameter = queryStringParams.get('primaryColor'); // use without '#'. It will be prepended.
         const appUserRolesQueryParameter = queryStringParams.get('appUserRoles')?.split(',');
         const externalIDsQueryParameter = queryStringParams.get('externalIDs')?.split(',');
+        const gmMapIdQueryParameter = queryStringParams.get('gmMapId');
 
         setMapTemplateProps({
             apiKey: props.supportsUrlParameters && apiKeyQueryParameter ? apiKeyQueryParameter : (props.apiKey || defaultProps.apiKey),
@@ -64,11 +69,14 @@ function MapsIndoorsMap(props) {
             directionsTo: props.supportsUrlParameters && directionsToQueryParameter ? directionsToQueryParameter : props.directionsTo,
             tileStyle: props.supportsUrlParameters && tileStyleQueryParameter ? tileStyleQueryParameter : props.tileStyle,
             startZoomLevel: props.supportsUrlParameters && startZoomLevelQueryParameter ? startZoomLevelQueryParameter : props.startZoomLevel,
+            pitch: props.supportsUrlParameters && pitchQueryParameter ? pitchQueryParameter : props.pitch,
+            bearing: props.supportsUrlParameters && bearingQueryParameter ? bearingQueryParameter : props.bearing,
             gmApiKey: props.supportsUrlParameters && gmApiKeyQueryParameter ? gmApiKeyQueryParameter : props.gmApiKey,
             mapboxAccessToken: props.supportsUrlParameters && mapboxAccessTokenQueryParameter ? mapboxAccessTokenQueryParameter : props.mapboxAccessToken,
             primaryColor: props.supportsUrlParameters && primaryColorQueryParameter ? '#' + primaryColorQueryParameter : (props.primaryColor || defaultProps.primaryColor),
             appUserRoles: props.supportsUrlParameters && appUserRolesQueryParameter ? appUserRolesQueryParameter : props.appUserRoles,
-            externalIDs: props.supportsUrlParameters && externalIDsQueryParameter ? externalIDsQueryParameter : props.externalIDs
+            externalIDs: props.supportsUrlParameters && externalIDsQueryParameter ? externalIDsQueryParameter : props.externalIDs, 
+            gmMapId: props.supportsUrlParameters && gmMapIdQueryParameter ? gmMapIdQueryParameter : props.gmMapId
         });
     }, [props]);
 
