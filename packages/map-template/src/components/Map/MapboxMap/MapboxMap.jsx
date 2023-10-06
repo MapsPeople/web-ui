@@ -5,6 +5,8 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import mapboxAccessTokenState from '../../../atoms/mapboxAccessTokenState';
 import primaryColorState from '../../../atoms/primaryColorState';
+import bearingState from '../../../atoms/bearingState';
+import pitchState from '../../../atoms/pitchState';
 
 /**
  * Takes care of instantiating a MapsIndoors Mapbox MapView.
@@ -21,13 +23,17 @@ function MapboxMap({ onMapView, onPositionControl }) {
     const [hasPositionControl, setHasPositionControl] = useState(false);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const primaryColor = useRecoilValue(primaryColorState);
+    const bearing = useRecoilValue(bearingState);
+    const pitch = useRecoilValue(pitchState);
 
     useEffect(() => {
         // Initialize MapboxView MapView
         window.mapboxgl = mapboxgl;
         const mapViewOptions = {
             accessToken: mapboxAccessToken,
-            element: document.getElementById('map')
+            element: document.getElementById('map'),
+            bearing: !isNaN(parseInt(bearing)) ? parseInt(bearing) : 0,
+            pitch: !isNaN(parseInt(pitch)) ? parseInt(pitch) : 0,
         };
 
         const mapViewInstance = new window.mapsindoors.mapView.MapboxView(mapViewOptions);
@@ -54,7 +60,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
             setHasPositionControl(true);
             onPositionControl(myPositionButtonElement);
         }
-    
+
         if (mapsIndoorsInstance && mapView && !hasFloorSelector) {
             const floorSelectorElement = document.createElement('mi-floor-selector');
             floorSelectorElement.mapsindoors = mapsIndoorsInstance;

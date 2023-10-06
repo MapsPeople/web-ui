@@ -382,6 +382,10 @@ export class MyPositionComponent {
         });
     }
 
+    componentDidRender(): void {
+        this.setCompassStyle(this.mapView.getBearing());
+    }
+
     /**
      * Renders the floor selector.
      *
