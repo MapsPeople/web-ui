@@ -21,7 +21,7 @@ In your styles make sure to give it a size. For example:
 mapsindoors-map {
     display: block;
     width: 100vw;
-    height: 100vh;
+    height: 100svh;
 }
 ```
 
@@ -67,7 +67,7 @@ Use query parameters to configure the Web Component by setting the `supports-url
         mapsindoors-map {
             display: block;
             width: 100vw;
-            height: 100vh;
+            height: 100svh;
         }
     </style>
 </head>
@@ -97,7 +97,7 @@ import MapsIndoorsMap from '@mapsindoors/map-template@stable/dist/mapsindoors-re
 <div style={{
       display: 'block',
       width: '100vw',
-      height: '100vh'
+      height: '100svh'
 }}>
       <MapsIndoorsMap></MapsIndoorsMap>
 </div>
