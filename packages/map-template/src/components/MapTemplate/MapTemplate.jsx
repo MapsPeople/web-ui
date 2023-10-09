@@ -27,6 +27,8 @@ import startZoomLevelState from '../../atoms/startZoomLevelState';
 import primaryColorState from '../../atoms/primaryColorState';
 import logoState from '../../atoms/logoState';
 import gmMapIdState from '../../atoms/gmMapIdState';
+import bearingState from '../../atoms/bearingState';
+import pitchState from '../../atoms/pitchState';
 
 defineCustomElements();
 
@@ -46,9 +48,11 @@ defineCustomElements();
  * @param {array} [props.externalIDs] - Filter locations shown on the map based on the external IDs.
  * @param {string} [props.tileStyle] - Tile style name to change the interface of the map.
  * @param {number} [props.startZoomLevel] - The initial zoom level of the map.
+ * @param {number} [props.bearing] - The bearing of the map as a number. Not recommended for Google Maps with 2D Models.
+ * @param {number} [props.pitch] - The pitch of the map as a number. Not recommended for Google Maps with 2D Models.
  * @param {string} [props.gmMapId] - The Google Maps Map ID associated with a specific map style or feature.
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, gmMapId }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId }) {
 
     const [, setApiKey] = useRecoilState(apiKeyState);
     const [, setGmApyKey] = useRecoilState(gmApiKeyState);
@@ -77,6 +81,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     const [, setTileStyle] = useRecoilState(tileStyleState);
     const [, setStartZoomLevel] = useRecoilState(startZoomLevelState);
+
+    const [, setBearing] = useRecoilState(bearingState);
+    const [, setPitch] = useRecoilState(pitchState);
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
     const isMobile = useMediaQuery('(max-width: 991px)');
@@ -264,6 +271,20 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         setStartZoomLevel(startZoomLevel);
     }, [startZoomLevel]);
+    
+    /*
+     * React on changes in the pitch prop.
+     */
+    useEffect(() => {
+        setPitch(pitch);
+    }, [pitch]); 
+
+    /*
+     * React on changes in the bearing prop.
+     */
+    useEffect(() => {
+        setBearing(bearing);
+    }, [bearing]);
 
     /*
      * React on changes in the logo prop.
