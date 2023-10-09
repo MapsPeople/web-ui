@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added support for searching for Mapbox places.
+- Added support for searching for Mapbox places in the Wayfinding.
 
 ## [1.15.1] - 2023-10-06
 
