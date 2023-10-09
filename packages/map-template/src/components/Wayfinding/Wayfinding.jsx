@@ -28,13 +28,15 @@ import { travelModes } from "../../constants/travelModes";
 import Dropdown from "../WebComponentWrappers/Dropdown/Dropdown";
 import primaryColorState from "../../atoms/primaryColorState";
 import directionsResponseState from "../../atoms/directionsResponseState";
+import addMapboxPlaceGeometry from "../Map/MapboxMap/MapboxPlacesHandler";
+import mapboxAccessTokenState from "../../atoms/mapboxAccessTokenState";
 
 const searchFieldIdentifiers = {
     TO: 'TO',
     FROM: 'FROM'
 };
 
-const googlePlacesIcon = "data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 14 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 0C3.13 0 0 3.13 0 7C0 12.25 7 20 7 20C7 20 14 12.25 14 7C14 3.13 10.87 0 7 0ZM7 9.5C5.62 9.5 4.5 8.38 4.5 7C4.5 5.62 5.62 4.5 7 4.5C8.38 4.5 9.5 5.62 9.5 7C9.5 8.38 8.38 9.5 7 9.5Z' fill='black' fill-opacity='0.88'/%3E%3C/svg%3E%0A"
+const externalLocationIcon = "data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 14 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 0C3.13 0 0 3.13 0 7C0 12.25 7 20 7 20C7 20 14 12.25 14 7C14 3.13 10.87 0 7 0ZM7 9.5C5.62 9.5 4.5 8.38 4.5 7C4.5 5.62 5.62 4.5 7 4.5C8.38 4.5 9.5 5.62 9.5 7C9.5 8.38 8.38 9.5 7 9.5Z' fill='black' fill-opacity='0.88'/%3E%3C/svg%3E%0A"
 
 /**
  * Show the wayfinding view.
@@ -96,6 +98,9 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     /** Indicate if the option to choose My Position should be shown */
     const [showMyPositionOption, setShowMyPositionOption] = useState(false);
 
+    const mapboxAccessToken = useRecoilValue(mapboxAccessTokenState);
+
+
     /**
      * Decorates location with data that is required for wayfinding to work.
      * Specifically, adds geometry to a google_places location.
@@ -105,6 +110,8 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     function decorateLocation(location) {
         if (selectedMapType === mapTypes.Google && location.properties.type === 'google_places') {
             return addGooglePlaceGeometry(location);
+        } else if (selectedMapType === mapTypes.Mapbox && location.properties.type === 'mapbox_places') {
+            return addMapboxPlaceGeometry(location, mapboxAccessToken);
         } else {
             return Promise.resolve(location);
         }
@@ -118,14 +125,14 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
      */
     function locationClickHandler(location) {
         if (activeSearchField === searchFieldIdentifiers.TO) {
-            decorateLocation(location).then(location => {
-                setDestinationLocation(location);
-                toFieldRef.current.setDisplayText(location.properties.name);
+            decorateLocation(location).then(decoratedLocation => {
+                setDestinationLocation(decoratedLocation);
+                toFieldRef.current.setDisplayText(decoratedLocation.properties.name);
             }, () => setHasFoundRoute(false));
         } else if (activeSearchField === searchFieldIdentifiers.FROM) {
-            decorateLocation(location).then(location => {
-                setOriginLocation(location);
-                fromFieldRef.current.setDisplayText(location.properties.name);
+            decorateLocation(location).then(decoratedLocation => {
+                setOriginLocation(decoratedLocation);
+                fromFieldRef.current.setDisplayText(decoratedLocation.properties.name);
             }, () => setHasFoundRoute(false));
         }
         setHasGooglePlaces(false);
@@ -425,6 +432,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                             ref={fromFieldRef}
                             mapsindoors={true}
                             google={selectedMapType === mapTypes.Google}
+                            mapbox={selectedMapType === mapTypes.Mapbox}
                             placeholder="Search by name, category, building..."
                             results={locations => searchResultsReceived(locations, searchFieldIdentifiers.FROM)}
                             clicked={() => onSearchClicked(searchFieldIdentifiers.FROM)}
@@ -443,6 +451,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                             ref={toFieldRef}
                             mapsindoors={true}
                             google={selectedMapType === mapTypes.Google}
+                            mapbox={selectedMapType === mapTypes.Mapbox}
                             placeholder="Search by name, category, building..."
                             results={locations => searchResultsReceived(locations, searchFieldIdentifiers.TO)}
                             clicked={() => onSearchClicked(searchFieldIdentifiers.TO)}
@@ -466,7 +475,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                         {searchResults.map(location =>
                             <ListItemLocation
                                 key={location.id}
-                                icon={location.properties.type === 'google_places' ? googlePlacesIcon : undefined}
+                                icon={(location.properties.type === 'google_places' || location.properties.type === 'mapbox_places') ? externalLocationIcon : undefined}
                                 location={location}
                                 locationClicked={e => locationClickHandler(e)} />
                         )}

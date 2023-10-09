@@ -1,7 +1,7 @@
 let googleMapsGeocoder;
 
 /**
- * Handle google places and add geometry with type and coordinates
+ * Handle Google places and add geometry with type and coordinates
  * using the Geocoder() method provided by Google.
  *
  * @param {Object} location

@@ -1,5 +1,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import useNear from '../../../hooks/useNear';
+import { useRecoilValue } from 'recoil';
+import userPositionState from '../../../atoms/userPositionState';
 
 /**
  * React wrapper around the custom element <mi-search>.
@@ -14,9 +16,19 @@ import useNear from '../../../hooks/useNear';
  * @param {string} props.category - If set, search will be performed for Locations having this category.
  * @param {boolean} props.preventFocus - If set to true, the search field will be disabled.
  * @param {boolean} props.google - Set to true to include results from Google Places autocomplete service.
+ * @param {boolean} props.mapbox - Set to true to include results from Mapbox Places autocomplete service.
  */
-const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cleared, changed, category, google, disabled = false }, ref) => {
+const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cleared, changed, category, google, mapbox, disabled = false }, ref) => {
     const elementRef = useRef();
+
+    const userPosition = useRecoilValue(userPositionState);
+
+    const mapboxPlacesSessionToken = sessionStorage.getItem('mapboxPlacesSessionToken');
+
+    const userPositionCoordinates = {
+        longitude: userPosition?.coords.longitude,
+        latitude: userPosition?.coords.latitude,
+    }
 
     /** Instruct the search field to search for Locations near the map center. */
     const searchNear = useNear();
@@ -70,13 +82,16 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
             current.removeEventListener('changed', changed);
         }
 
-    }, [placeholder, mapsindoors, results, clicked, cleared, google, changed]);
+    }, [placeholder, mapsindoors, results, clicked, cleared, google, mapbox, changed]);
 
     return <mi-search ref={elementRef}
         placeholder={placeholder}
+        session-token={mapboxPlacesSessionToken}
+        user-position={(userPositionCoordinates.latitude !== undefined && userPositionCoordinates.longitude !== undefined) ? Object.values(userPositionCoordinates).join(',') : null}
         mi-near={searchNear}
         mi-categories={category}
         disabled={disabled}
+        mapbox={mapbox}
         google={google} />
 });
 

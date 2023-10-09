@@ -211,8 +211,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
      */
     useEffect(() => {
         substepsOpen ? setSize(snapPoints.MAX) : setSize(snapPoints.FIT);
-    }, [substepsOpen])
-
+    }, [substepsOpen]);
 
     /**
      * When user swipes the bottom sheet to a new snap point.
