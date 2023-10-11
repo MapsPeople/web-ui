@@ -134,8 +134,7 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
         } else {
             console.log('in map view')
             const padding = 200;
-            const bounds = calculateBounds(location.geometry)
-            let coordinates = { west: bounds[0], south: bounds[1], east: bounds[2], north: bounds[3] }
+            let coordinates = { west: locationBbox[0], south: locationBbox[1], east: locationBbox[2], north: locationBbox[3] }
             mapsIndoorsInstance.getMapView().fitBounds(coordinates, { top: padding, right: padding, bottom: padding, left: getDesktopPaddingLeft() });
         }
     }
