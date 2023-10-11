@@ -9,6 +9,7 @@ import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemL
 import SearchField from '../WebComponentWrappers/Search/Search';
 import filteredLocationsState from '../../atoms/filteredLocationsState';
 import primaryColorState from '../../atoms/primaryColorState';
+import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 
 /**
  * Show the search results.
@@ -21,7 +22,7 @@ import primaryColorState from '../../atoms/primaryColorState';
  * @returns
  */
 function Search({ onLocationClick, onSetSize }) {
-
+    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const searchRef = useRef();
 
     /** Referencing the search field */
@@ -45,6 +46,8 @@ function Search({ onLocationClick, onSetSize }) {
     const scrollableContentSwipePrevent = usePreventSwipe();
 
     const primaryColor = useRecoilValue(primaryColorState);
+
+    const [hoveredLocation, setHoveredLocation] = useState();
 
     /**
      * Get the locations and filter through them based on categories selected.
@@ -139,6 +142,10 @@ function Search({ onLocationClick, onSetSize }) {
         }
     }
 
+    function onMouseEnter(location) {
+        setHoveredLocation(location);
+    }
+
     /*
      * React on changes in the venue prop.
      * Deselect category and clear results list.
@@ -149,6 +156,17 @@ function Search({ onLocationClick, onSetSize }) {
             setSelectedCategory(null);
         }
     }, [currentVenueName]);
+
+    useEffect(() => {
+        // mapsIndoorsInstance.on('mouseleave', onMouseLeave);
+        mapsIndoorsInstance.on('mouseenter', onMouseEnter);
+
+        return () => {
+            // mapsIndoorsInstance.off('mouseleave', onMouseLeave);
+            mapsIndoorsInstance.off('mouseenter', onMouseEnter);
+        }
+
+    })
 
     return (
         <div className="search"
@@ -186,6 +204,7 @@ function Search({ onLocationClick, onSetSize }) {
                                 key={location.id}
                                 location={location}
                                 locationClicked={e => onLocationClick(e)}
+                                isHovered={location?.id === hoveredLocation?.id}
                             />
                         )}
                     </div>
