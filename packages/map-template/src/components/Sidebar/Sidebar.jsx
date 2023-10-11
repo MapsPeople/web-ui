@@ -97,11 +97,11 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
 
         // Set the floor to the one that the location belongs to.
         if (locationFloor !== currentFloor) {
-            console.log('changed floor')
             mapsIndoorsInstance.setFloor(locationFloor);
-        } else {
-            console.log('did not change floor')
+            const floorSelectorElement = document.querySelector('mi-floor-selector');
+            floorSelectorElement.onFloorChanged(locationFloor)
         }
+
 
         // If there is a startZoomLevel, set the map zoom to that
         // Else call the function to check the max zoom level supported on the solution

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Component, Element, Host, JSX, Prop, State, h } from '@stencil/core';
+import { Component, Element, Host, JSX, Method, Prop, State, h } from '@stencil/core';
 
 @Component({
     tag: 'mi-floor-selector',
@@ -201,6 +201,17 @@ export class FloorSelector {
                     });
             }
         });
+    }
+
+    /**
+     * Handle floor change.
+     *
+     * @param {string} floorIndex
+     */
+    @Method()
+    onFloorChanged(floorIndex): void {
+        this.mapsindoors.setFloor(floorIndex);
+        this.currentFloor = this.mapsindoors.getFloor();
     }
 
     /**
