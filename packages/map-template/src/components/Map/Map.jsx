@@ -91,9 +91,9 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
     useEffect(() => {
         if (mapsIndoorsInstance) {
             if (filteredLocations) {
-                mapsIndoorsInstance.filter(filteredLocations.map(location => location.id));
+                mapsIndoorsInstance.highlight(filteredLocations.map(location => location.id));
             } else if (filteredLocationsByExternalIDs) {
-                mapsIndoorsInstance.filter(filteredLocationsByExternalIDs.map(location => location.id));
+                mapsIndoorsInstance.highlight(filteredLocationsByExternalIDs.map(location => location.id));
             }
         }
     }, [filteredLocations, filteredLocationsByExternalIDs, mapsIndoorsInstance]);
