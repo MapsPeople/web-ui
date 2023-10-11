@@ -92,9 +92,16 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
             setCurrentVenueName(location.properties.venueId);
         }
 
-        // Set the floor to the one that the location belongs to.
+        const currentFloor = mapsIndoorsInstance.getFloor();
         const locationFloor = location.properties.floor;
-        mapsIndoorsInstance.setFloor(locationFloor);
+
+        // Set the floor to the one that the location belongs to.
+        if (locationFloor !== currentFloor) {
+            console.log('changed floor')
+            mapsIndoorsInstance.setFloor(locationFloor);
+        } else {
+            console.log('did not change floor')
+        }
 
         // If there is a startZoomLevel, set the map zoom to that
         // Else call the function to check the max zoom level supported on the solution
@@ -122,10 +129,10 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
         const locationGeometry = location.geometry.type === 'Point' ? location.geometry.coordinates : location.properties.anchor.coordinates;
 
         if (!isLocationWithinMapView) {
-            console.log('no')
+            console.log('not in map view')
             mapsIndoorsInstance.getMapView().setCenter({ lat: locationGeometry[1], lng: locationGeometry[0] });
         } else {
-            console.log('yes')
+            console.log('in map view')
             const padding = 200;
             const bounds = calculateBounds(location.geometry)
             let coordinates = { west: bounds[0], south: bounds[1], east: bounds[2], north: bounds[3] }
