@@ -102,15 +102,6 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
             floorSelectorElement.onFloorChanged(locationFloor)
         }
 
-
-        // If there is a startZoomLevel, set the map zoom to that
-        // Else call the function to check the max zoom level supported on the solution
-        if (startZoomLevel) {
-            mapsIndoorsInstance?.setZoom(startZoomLevel);
-        } else {
-            setMapZoomLevel(mapsIndoorsInstance);
-        }
-
         // Get the map view bounds
         const mapViewBounds = mapsIndoorsInstance.getMapView().getBounds();
         // Calculate the map view bbox
@@ -129,9 +120,19 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
         const locationGeometry = location.geometry.type === 'Point' ? location.geometry.coordinates : location.properties.anchor.coordinates;
 
         if (!isLocationWithinMapView) {
+            
+            // If there is a startZoomLevel, set the map zoom to that
+            // Else call the function to check the max zoom level supported on the solution
+            if (startZoomLevel) {
+                mapsIndoorsInstance?.setZoom(startZoomLevel);
+            } else {
+                setMapZoomLevel(mapsIndoorsInstance);
+            }
+
             console.log('not in map view')
             mapsIndoorsInstance.getMapView().setCenter({ lat: locationGeometry[1], lng: locationGeometry[0] });
         } else {
+
             console.log('in map view')
             const padding = 200;
             let coordinates = { west: locationBbox[0], south: locationBbox[1], east: locationBbox[2], north: locationBbox[3] }
