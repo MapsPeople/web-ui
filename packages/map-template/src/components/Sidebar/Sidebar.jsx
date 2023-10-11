@@ -85,17 +85,19 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
      * Handle locations clicked on the map.
      */
     function onLocationClicked(location) {
-        console.log('here',location)
-        // // Set the current venue to be the selected location venue.
-        // if (location.properties.venueId !== currentVenue) {
-        //     setCurrentVenueName(location.properties.venueId);
-        // }
-        // // Set the current floor to be the selected location floor.
-        // if (mapsIndoorsInstance.getFloor() !== location.properties.floor) {
-        //     mapsIndoorsInstance.setFloor(location.properties.floor)
-        // }
-        // Set the current location.
         setCurrentLocation(location);
+
+        // Set the floor to the one that the location belongs to.
+        const locationFloor = location.properties.floor;
+        mapsIndoorsInstance.setFloor(locationFloor);
+
+        // If there is a startZoomLevel, set the map zoom to that
+        // Else call the function to check the max zoom level supported on the solution
+        if (startZoomLevel) {
+            mapsIndoorsInstance?.setZoom(startZoomLevel);
+        } else {
+            setMapZoomLevel(mapsIndoorsInstance);
+        }
 
         // Get the map view bounds
         const mapViewBounds = mapsIndoorsInstance.getMapView().getBounds();
@@ -108,37 +110,22 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
         const locationBboxPolygon = bboxPolygon(locationBbox);
         const mapViewBboxPolygon = bboxPolygon(mapViewBbox);
 
+        // Check if the selected location is in the map view
         const isLocationWithinMapView = booleanWithin(locationBboxPolygon, mapViewBboxPolygon);
 
+        // The selected location geometry
+        const locationGeometry = location.geometry.type === 'Point' ? location.geometry.coordinates : location.properties.anchor.coordinates;
+
         if (!isLocationWithinMapView) {
-            mapsIndoorsInstance.getMapView().setCenter({ lat: location.properties.anchor.coordinates[1], lng: location.properties.anchor.coordinates[0] });
+            console.log('no')
+            mapsIndoorsInstance.getMapView().setCenter({ lat: locationGeometry[1], lng: locationGeometry[0] });
         } else {
+            console.log('yes')
             const padding = 200;
             const bounds = calculateBounds(location.geometry)
             let coordinates = { west: bounds[0], south: bounds[1], east: bounds[2], north: bounds[3] }
             mapsIndoorsInstance.getMapView().fitBounds(coordinates, { top: padding, right: padding, bottom: padding, left: getDesktopPaddingLeft() });
         }
-
-
-        window.mapsindoors.services.LocationsService.getLocation(location.id).then(location => {
-            if (location) {
-                // Set the floor to the one that the location belongs to.
-                const locationFloor = location.properties.floor;
-                mapsIndoorsInstance.setFloor(locationFloor);
-
-                // Center the map to the location coordinates.
-                const locationGeometry = location.geometry.type === 'Point' ? location.geometry.coordinates : location.properties.anchor.coordinates;
-                mapsIndoorsInstance.getMapView().setCenter({ lat: locationGeometry[1], lng: locationGeometry[0] });
-
-                // If there is a startZoomLevel, set the map zoom to that
-                // Else call the function to check the max zoom level supported on the solution
-                if (startZoomLevel) {
-                    mapsIndoorsInstance?.setZoom(startZoomLevel);
-                } else {
-                    setMapZoomLevel(mapsIndoorsInstance);
-                }
-            }
-        });
     }
 
     const pages = [
