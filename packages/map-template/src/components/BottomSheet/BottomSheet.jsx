@@ -83,35 +83,30 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
     }
 
     /**
-     * Get bottom padding for directions on mobile.
-     */
-    function getMobilePaddingBottom() {
-        const bottomSheet = document.querySelector('.sheet--active');
-        const mapContainer = document.querySelector('.mapsindoors-map');
-        // Subtract the top padding from the height of the map container element.
-        return mapContainer.offsetHeight - bottomSheet.offsetTop;
-    }
-
-    /**
-     * Handle locations clicked on the map.
-     */
+    * Handle locations clicked on the map.
+    */
     function onLocationClicked(location) {
-        // Set the current venue to be the selected location venue.
-        if (location.properties.venueId !== currentVenue) {
-            setCurrentVenue(location.properties.venueId);
-        }
-        // Set the current floor to be the selected location floor.
-        if (mapsIndoorsInstance.getFloor() !== location.properties.floor) {
-            mapsIndoorsInstance.setFloor(location.properties.floor)
-        }
-        // Set the current location.
         setCurrentLocation(location);
 
-        // const padding = 0;
-        // const bounds = calculateBounds(location.geometry)
-        // let coordinates = { west: bounds[0], south: bounds[1], east: bounds[2], north: bounds[3] }
-        // console.log('coordinates', coordinates)
-        // mapsIndoorsInstance.getMapView().fitBounds(coordinates, { top: padding, right: padding, bottom: getMobilePaddingBottom(), left: padding});
+        // // Set the current venue to be the selected location venue.
+        // if (location.properties.venueId !== currentVenue) {
+        //     setCurrentVenueName(location.properties.venueId);
+        // }
+
+        const currentFloor = mapsIndoorsInstance.getFloor();
+        const locationFloor = location.properties.floor;
+
+        // Set the floor to the one that the location belongs to.
+        if (locationFloor !== currentFloor) {
+            mapsIndoorsInstance.setFloor(locationFloor);
+            const floorSelectorElement = document.querySelector('mi-floor-selector');
+            floorSelectorElement.onFloorChanged(locationFloor)
+        }
+
+        // Calculate the location bbox
+        const locationBbox = calculateBounds(location.geometry)
+        let coordinates = { west: locationBbox[0], south: locationBbox[1], east: locationBbox[2], north: locationBbox[3] }
+        mapsIndoorsInstance.getMapView().fitBounds(coordinates, { top: 0, right: 0, bottom: 200, left: 0 });
     }
 
     const bottomSheets = [

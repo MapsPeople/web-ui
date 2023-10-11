@@ -71,7 +71,6 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
         setFilteredLocationsByExternalID([]);
     }
 
-
     /**
      * Get left padding for directions on desktop.
      */
@@ -87,10 +86,10 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
     function onLocationClicked(location) {
         setCurrentLocation(location);
 
-        // Set the current venue to be the selected location venue.
-        if (location.properties.venueId !== currentVenue) {
-            setCurrentVenueName(location.properties.venueId);
-        }
+        // // Set the current venue to be the selected location venue.
+        // if (location.properties.venueId !== currentVenue) {
+        //     setCurrentVenueName(location.properties.venueId);
+        // }
 
         const currentFloor = mapsIndoorsInstance.getFloor();
         const locationFloor = location.properties.floor;
@@ -115,27 +114,15 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
 
         // Check if the selected location is in the map view
         const isLocationWithinMapView = booleanWithin(locationBboxPolygon, mapViewBboxPolygon);
-
-        // The selected location geometry
-        const locationGeometry = location.geometry.type === 'Point' ? location.geometry.coordinates : location.properties.anchor.coordinates;
+    
+        let coordinates = { west: locationBbox[0], south: locationBbox[1], east: locationBbox[2], north: locationBbox[3] }
+        const padding = 200;
 
         if (!isLocationWithinMapView) {
-            
-            // If there is a startZoomLevel, set the map zoom to that
-            // Else call the function to check the max zoom level supported on the solution
-            if (startZoomLevel) {
-                mapsIndoorsInstance?.setZoom(startZoomLevel);
-            } else {
-                setMapZoomLevel(mapsIndoorsInstance);
-            }
-
             console.log('not in map view')
-            mapsIndoorsInstance.getMapView().setCenter({ lat: locationGeometry[1], lng: locationGeometry[0] });
+            mapsIndoorsInstance.getMapView().fitBounds(coordinates, { top: 0, right: 0, bottom: 0, left: getDesktopPaddingLeft() });
         } else {
-
             console.log('in map view')
-            const padding = 200;
-            let coordinates = { west: locationBbox[0], south: locationBbox[1], east: locationBbox[2], north: locationBbox[3] }
             mapsIndoorsInstance.getMapView().fitBounds(coordinates, { top: padding, right: padding, bottom: padding, left: getDesktopPaddingLeft() });
         }
     }
