@@ -87,6 +87,11 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
     function onLocationClicked(location) {
         setCurrentLocation(location);
 
+        // Set the current venue to be the selected location venue.
+        if (location.properties.venueId !== currentVenue) {
+            setCurrentVenueName(location.properties.venueId);
+        }
+
         // Set the floor to the one that the location belongs to.
         const locationFloor = location.properties.floor;
         mapsIndoorsInstance.setFloor(locationFloor);
