@@ -270,13 +270,13 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         setStartZoomLevel(startZoomLevel);
     }, [startZoomLevel]);
-    
+
     /*
      * React on changes in the pitch prop.
      */
     useEffect(() => {
         setPitch(pitch);
-    }, [pitch]); 
+    }, [pitch]);
 
     /*
      * React on changes in the bearing prop.
