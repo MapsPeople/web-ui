@@ -114,16 +114,17 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
 
         // Check if the selected location is in the map view
         const isLocationWithinMapView = booleanWithin(locationBboxPolygon, mapViewBboxPolygon);
-    
-        let coordinates = { west: locationBbox[0], south: locationBbox[1], east: locationBbox[2], north: locationBbox[3] }
+
+        let locationBounds = { west: locationBbox[0], south: locationBbox[1], east: locationBbox[2], north: locationBbox[3] }
+        let mapBounds = { west: mapViewBbox[0], south: mapViewBbox[1], east: mapViewBbox[2], north: mapViewBbox[3] }
         const padding = 200;
 
         if (!isLocationWithinMapView) {
             console.log('not in map view')
-            mapsIndoorsInstance.getMapView().fitBounds(coordinates, { top: 0, right: 0, bottom: 0, left: getDesktopPaddingLeft() });
+            mapsIndoorsInstance.getMapView().fitBounds(locationBounds, { top: 0, right: 0, bottom: 0, left: getDesktopPaddingLeft() });
         } else {
             console.log('in map view')
-            mapsIndoorsInstance.getMapView().fitBounds(coordinates, { top: padding, right: padding, bottom: padding, left: getDesktopPaddingLeft() });
+            mapsIndoorsInstance.getMapView().panToBounds(mapBounds);
         }
     }
 
