@@ -194,6 +194,13 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
         resetSubsteps();
         stopRendering();
         onBack();
+
+        // Get the current floor
+        const currentFloor = mapsIndoorsInstance.getFloor();
+        const floorSelectorElement = document.querySelector('mi-floor-selector');
+        // Set the floor and call the onFloorChanged() method
+        mapsIndoorsInstance.setFloor(currentFloor);
+        floorSelectorElement.onFloorChanged(currentFloor)
     }
 
     /**

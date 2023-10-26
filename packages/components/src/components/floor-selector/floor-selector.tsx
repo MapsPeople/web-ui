@@ -211,7 +211,7 @@ export class FloorSelector {
     @Method()
     onFloorChanged(floorIndex): void {
         this.mapsindoors.setFloor(floorIndex);
-        this.currentFloor = this.mapsindoors.getFloor();
+        this.currentFloor = this.mapsindoors.getFloor().toString();
     }
 
     /**
