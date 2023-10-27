@@ -12,7 +12,6 @@ import Wayfinding from '../Wayfinding/Wayfinding';
 import Directions from '../Directions/Directions';
 import Search from '../Search/Search';
 import LocationsList from '../LocationsList/LocationsList';
-import currentVenueNameState from '../../atoms/currentVenueNameState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import { calculateBounds } from '../../helpers/CalculateBounds';
 
@@ -40,7 +39,6 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
     const categories = useRecoilValue(categoriesState);
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
-    const [currentVenue, setCurrentVenue] = useRecoilState(currentVenueNameState);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
 
     /*
@@ -83,15 +81,10 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
     }
 
     /**
-    * Handle locations clicked on the map.
-    */
+     * Handle locations clicked on the map.
+     */
     function onLocationClicked(location) {
         setCurrentLocation(location);
-
-        // // Set the current venue to be the selected location venue.
-        // if (location.properties.venueId !== currentVenue) {
-        //     setCurrentVenueName(location.properties.venueId);
-        // }
 
         const currentFloor = mapsIndoorsInstance.getFloor();
         const locationFloor = location.properties.floor;
@@ -106,6 +99,7 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
         // Calculate the location bbox
         const locationBbox = calculateBounds(location.geometry)
         let coordinates = { west: locationBbox[0], south: locationBbox[1], east: locationBbox[2], north: locationBbox[3] }
+        // Fit map to the bounds of the location coordinates, and add a bottom padding
         mapsIndoorsInstance.getMapView().fitBounds(coordinates, { top: 0, right: 0, bottom: 200, left: 0 });
     }
 

@@ -11,9 +11,6 @@ import LocationsList from '../LocationsList/LocationsList';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import { calculateBounds } from '../../helpers/CalculateBounds';
-import { booleanWithin, bboxPolygon } from '@turf/turf';
-import startZoomLevelState from '../../atoms/startZoomLevelState';
-import setMapZoomLevel from '../../helpers/SetMapZoomLevel';
 
 /**
  * @param {Object} props
@@ -30,7 +27,6 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
     const [currentVenue, setCurrentVenueName] = useRecoilState(currentVenueNameState);
     const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
-    const startZoomLevel = useRecoilValue(startZoomLevelState);
 
     /*
      * React on changes on the current location and directions locations and set relevant bottom sheet.
@@ -101,31 +97,11 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
             floorSelectorElement.onFloorChanged(locationFloor)
         }
 
-        // Get the map view bounds
-        const mapViewBounds = mapsIndoorsInstance.getMapView().getBounds();
-        // Calculate the map view bbox
-        const mapViewBbox = [mapViewBounds.west, mapViewBounds.south, mapViewBounds.east, mapViewBounds.north];
         // Calculate the location bbox
         const locationBbox = calculateBounds(location.geometry)
-
-        // Convert the location and map view to bbox polygon
-        const locationBboxPolygon = bboxPolygon(locationBbox);
-        const mapViewBboxPolygon = bboxPolygon(mapViewBbox);
-
-        // Check if the selected location is in the map view
-        const isLocationWithinMapView = booleanWithin(locationBboxPolygon, mapViewBboxPolygon);
-
-        let locationBounds = { west: locationBbox[0], south: locationBbox[1], east: locationBbox[2], north: locationBbox[3] }
-        let mapBounds = { west: mapViewBbox[0], south: mapViewBbox[1], east: mapViewBbox[2], north: mapViewBbox[3] }
-        const padding = 200;
-
-        if (!isLocationWithinMapView) {
-            console.log('not in map view')
-            mapsIndoorsInstance.getMapView().fitBounds(locationBounds, { top: 0, right: 0, bottom: 0, left: getDesktopPaddingLeft() });
-        } else {
-            console.log('in map view')
-            mapsIndoorsInstance.getMapView().panToBounds(mapBounds);
-        }
+        let coordinates = { west: locationBbox[0], south: locationBbox[1], east: locationBbox[2], north: locationBbox[3] }
+        // Fit map to the bounds of the location coordinates, and add left padding
+        mapsIndoorsInstance.getMapView().fitBounds(coordinates, { top: 0, right: 0, bottom: 0, left: getDesktopPaddingLeft() });
     }
 
     const pages = [
