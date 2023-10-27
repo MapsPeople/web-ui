@@ -22,6 +22,7 @@ import locationIdState from '../../atoms/locationIdState';
 import setMapZoomLevel from "../../helpers/SetMapZoomLevel";
 import bearingState from '../../atoms/bearingState';
 import pitchState from '../../atoms/pitchState';
+import isLocationClickedState from "../../atoms/isLocationClickedState";
 
 const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
 
@@ -57,6 +58,7 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
     const pitch = useRecoilValue(pitchState);
     const [, setPositionControl] = useRecoilState(positionControlState);
     const locationId = useRecoilValue(locationIdState);
+    const isLocationClicked = useRecoilValue(isLocationClickedState);
 
     useLiveData(apiKey);
 
@@ -78,7 +80,7 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
         if (mapsIndoorsInstance) {
             window.localStorage.removeItem(localStorageKeyForVenue);
             const venueToShow = getVenueToShow(venueName, venues);
-            if (venueToShow && !locationId) {
+            if (venueToShow && !locationId && !isLocationClicked) {
                 setVenue(venueToShow, mapsIndoorsInstance).then(() => {
                     onVenueChangedOnMap(venueToShow);
                 });

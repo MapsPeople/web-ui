@@ -11,6 +11,7 @@ import LocationsList from '../LocationsList/LocationsList';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import { calculateBounds } from '../../helpers/CalculateBounds';
+import isLocationClickedState from '../../atoms/isLocationClickedState';
 
 /**
  * @param {Object} props
@@ -27,6 +28,7 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
     const [currentVenue, setCurrentVenueName] = useRecoilState(currentVenueNameState);
     const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
+    const [, setIsLocationClicked] = useRecoilState(isLocationClickedState);
 
     /*
      * React on changes on the current location and directions locations and set relevant bottom sheet.
@@ -82,10 +84,11 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
     function onLocationClicked(location) {
         setCurrentLocation(location);
 
-        // // Set the current venue to be the selected location venue.
-        // if (location.properties.venueId !== currentVenue) {
-        //     setCurrentVenueName(location.properties.venueId);
-        // }
+        // Set the current venue to be the selected location venue.
+        if (location.properties.venueId !== currentVenue) {
+            setCurrentVenueName(location.properties.venueId);
+            setIsLocationClicked(true);
+        }
 
         const currentFloor = mapsIndoorsInstance.getFloor();
         const locationFloor = location.properties.floor;
