@@ -15,6 +15,8 @@ import directionsResponseState from "../../atoms/directionsResponseState";
 import activeStepState from "../../atoms/activeStep";
 import { snapPoints } from "../../constants/snapPoints";
 import substepsToggledState from "../../atoms/substepsToggledState";
+import getDesktopPadding from "../../helpers/GetDesktopPadding";
+import getMobilePadding from "../../helpers/GetMobilePadding";
 
 let directionsRenderer;
 
@@ -69,8 +71,8 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                 mapsIndoors: mapsIndoorsInstance,
                 fitBoundsPadding: {
                     top: padding,
-                    bottom: isDesktop ? padding : getMobilePaddingBottom(),
-                    left: isDesktop ? getDesktopPaddingLeft() : padding,
+                    bottom: isDesktop ? padding : getMobilePadding(),
+                    left: isDesktop ? getDesktopPadding() : padding,
                     right: padding
                 }
             });
@@ -146,26 +148,6 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
         if (directionsRenderer) {
             directionsRenderer.setStepIndex(directionsRenderer.getStepIndex(), directionsRenderer.getLegIndex());
         }
-    }
-
-    // FIXME: investigate if we can handle the height and width with hooks
-    /**
-     * Get bottom padding for directions on mobile.
-     */
-    function getMobilePaddingBottom() {
-        const bottomSheet = document.querySelector('.sheet--active');
-        const mapContainer = document.querySelector('.mapsindoors-map');
-        // Subtract the top padding from the height of the map container element.
-        return mapContainer.offsetHeight - bottomSheet.offsetTop;
-    }
-
-    /**
-     * Get left padding for directions on desktop.
-     */
-    function getDesktopPaddingLeft() {
-        // The width of the sidebar plus adequate padding
-        const sidebar = document.querySelector('.modal--open');
-        return sidebar.offsetWidth + sidebar.offsetLeft * 2;
     }
 
     /**

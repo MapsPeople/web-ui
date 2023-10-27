@@ -12,6 +12,7 @@ import currentVenueNameState from '../../atoms/currentVenueNameState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import { calculateBounds } from '../../helpers/CalculateBounds';
 import isLocationClickedState from '../../atoms/isLocationClickedState';
+import getDesktopPadding from '../../helpers/GetDesktopPadding';
 
 /**
  * @param {Object} props
@@ -70,15 +71,6 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
     }
 
     /**
-     * Get left padding for directions on desktop.
-     */
-    function getDesktopPaddingLeft() {
-        // The width of the sidebar plus adequate padding
-        const sidebar = document.querySelector('.modal--open');
-        return sidebar.offsetWidth + sidebar.offsetLeft * 2;
-    }
-
-    /**
      * Handle locations clicked on the map.
      */
     function onLocationClicked(location) {
@@ -104,7 +96,7 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
         const locationBbox = calculateBounds(location.geometry)
         let coordinates = { west: locationBbox[0], south: locationBbox[1], east: locationBbox[2], north: locationBbox[3] }
         // Fit map to the bounds of the location coordinates, and add left padding
-        mapsIndoorsInstance.getMapView().fitBounds(coordinates, { top: 0, right: 0, bottom: 0, left: getDesktopPaddingLeft() });
+        mapsIndoorsInstance.getMapView().fitBounds(coordinates, { top: 0, right: 0, bottom: 0, left: getDesktopPadding() });
     }
 
     const pages = [
