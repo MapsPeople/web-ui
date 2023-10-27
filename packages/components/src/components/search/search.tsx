@@ -4,6 +4,7 @@ import Debounce from 'debounce-decorator';
 
 declare const google;
 declare const mapsindoors;
+declare const mapboxgl;
 
 @Component({
     tag: 'mi-search',
@@ -68,6 +69,11 @@ export class Search implements ComponentInterface {
     @Prop() google: boolean = false;
 
     /**
+     * If searching should include Mapbox autocomplete suggestions.
+     */
+    @Prop() mapbox: boolean = false;
+
+    /**
      * Which fields on MapsIndoors locations to search in. Comma separated string.
      */
     @Prop() miFields: string = 'name,description,aliases,categories,externalId';
@@ -120,6 +126,16 @@ export class Search implements ComponentInterface {
     @Prop() disabled: boolean = false;
 
     /**
+     * The Mapbox Session Token used for getting Mapbox autocomplete suggestions.
+     */
+    @Prop() sessionToken: string;
+
+    /**
+     * The user position which can determine the proximity for the Mapbox places results.
+     */
+    @Prop() userPosition: string;
+
+    /**
      * Sets the prevention of the search.
      */
     private preventSearch: boolean = false;
@@ -150,7 +166,6 @@ export class Search implements ComponentInterface {
         this.lastRequested = null;
         this.cleared.emit();
     }
-
 
     /**
      * Programmatically trigger the search.
@@ -188,11 +203,19 @@ export class Search implements ComponentInterface {
     private search(inputValue): void {
         Promise.all([
             this.makeMapsIndoorsQuery(inputValue),
-            this.makeGooglePlacesQuery(inputValue)
+            this.makeGooglePlacesQuery(inputValue),
+            this.getMapboxSearchResults(inputValue),
         ])
             .then(results => {
                 this.lastRequested = inputValue;
-                this.pushResults(results[0].concat(results[1]));
+
+                if (this.google) {
+                    this.pushResults(results[0].concat(results[1]));
+                } else if (this.mapbox && mapboxgl.accessToken) {
+                    this.pushResults(results[0].concat(results[2]));
+                } else {
+                    this.pushResults(results[0]);
+                }
             });
     }
 
@@ -283,6 +306,7 @@ export class Search implements ComponentInterface {
 
     /**
      * Make Google Places autocomplete suggestion request.
+     * 
      * @param {string} query
      * @return {Promise<any>}
      */
@@ -323,6 +347,50 @@ export class Search implements ComponentInterface {
                 resolve(places);
             });
         });
+    }
+
+    /**
+     * Get Mapbox Places results.
+     *
+     * @param {string} query
+     * @return {Promise<any>}
+     */
+    private getMapboxSearchResults(query: string): Promise<any> {
+        if (this.mapbox && mapboxgl.accessToken) {
+            if (query) {
+                return new Promise((resolve) => {
+                    let url = `https://api.mapbox.com/search/searchbox/v1/suggest?q=${query}&session_token=${this.sessionToken}&access_token=${mapboxgl.accessToken}`;
+
+                    if (this.userPosition) {
+                        url = url.concat(`&proximity=${this.userPosition}`);
+                    }
+
+                    fetch(url)
+                        .then((response) => {
+                            return response.json();
+                        })
+                        .then((result) => {
+                            const places = result.suggestions.map((result) => ({
+                                id: result.mapbox_id,
+                                type: 'Feature',
+                                properties: {
+                                    type: 'mapbox_places',
+                                    placeId: result.mapbox_id,
+                                    name: result.name,
+                                    subtitle: result.place_formatted || '',
+                                    floor: 0
+                                }
+                            }));
+                            resolve(places);
+                        })
+                        .catch(() => {
+                            resolve([]);
+                        });
+                });
+            }
+        } else {
+            return Promise.resolve([]);
+        }
     }
 
     componentDidRender(): void {

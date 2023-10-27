@@ -879,6 +879,10 @@ export namespace Components {
          */
         "idAttribute": string;
         /**
+          * If searching should include Mapbox autocomplete suggestions.
+         */
+        "mapbox": boolean;
+        /**
           * If searching should include MapsIndoors locations.
          */
         "mapsindoors": boolean;
@@ -915,6 +919,10 @@ export namespace Components {
          */
         "placeholder": string;
         /**
+          * The Mapbox Session Token used for getting Mapbox autocomplete suggestions.
+         */
+        "sessionToken": string;
+        /**
           * Sets text to be shown in the search field. Setting it will not perform a search.
          */
         "setDisplayText": (displayText: string) => Promise<void>;
@@ -922,6 +930,10 @@ export namespace Components {
           * Programmatically trigger the search.
          */
         "triggerSearch": () => Promise<void>;
+        /**
+          * The user position which can determine the proximity for the Mapbox places results.
+         */
+        "userPosition": string;
         /**
           * Get or set the entered value
          */
@@ -2198,6 +2210,10 @@ declare namespace LocalJSX {
          */
         "idAttribute"?: string;
         /**
+          * If searching should include Mapbox autocomplete suggestions.
+         */
+        "mapbox"?: boolean;
+        /**
           * If searching should include MapsIndoors locations.
          */
         "mapsindoors"?: boolean;
@@ -2253,6 +2269,14 @@ declare namespace LocalJSX {
           * Placeholder for the input field.
          */
         "placeholder"?: string;
+        /**
+          * The Mapbox Session Token used for getting Mapbox autocomplete suggestions.
+         */
+        "sessionToken"?: string;
+        /**
+          * The user position which can determine the proximity for the Mapbox places results.
+         */
+        "userPosition"?: string;
         /**
           * Get or set the entered value
          */

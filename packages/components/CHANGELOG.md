@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [13.13.0] - 2023-10-09
+
+### Added
+
+- Add support for searching for Mapbox places in the `mi-search` component. 
+
+## [13.12.0] - 2023-10-06
+
+### Added
+
+- Add support for setting the compass style when the component has been rendered.
+
 ## [13.11.1] - 2023-09-19
 
 ### Fixed
