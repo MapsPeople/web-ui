@@ -158,11 +158,9 @@ function Search({ onLocationClick, onSetSize }) {
     }, [currentVenueName]);
 
     useEffect(() => {
-        // mapsIndoorsInstance.on('mouseleave', onMouseLeave);
         mapsIndoorsInstance.on('mouseenter', onMouseEnter);
 
         return () => {
-            // mapsIndoorsInstance.off('mouseleave', onMouseLeave);
             mapsIndoorsInstance.off('mouseenter', onMouseEnter);
         }
 
