@@ -273,13 +273,13 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         setStartZoomLevel(startZoomLevel);
     }, [startZoomLevel]);
-    
+
     /*
      * React on changes in the pitch prop.
      */
     useEffect(() => {
         setPitch(pitch);
-    }, [pitch]); 
+    }, [pitch]);
 
     /*
      * React on changes in the bearing prop.
@@ -297,9 +297,13 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     useEffect(() => {
         if (currentLocation) {
-            mapsIndoorsInstance?.selectLocation(currentLocation);
+            if (mapsIndoorsInstance.selectLocation) {
+                mapsIndoorsInstance.selectLocation(currentLocation);
+            }
         } else {
-            mapsIndoorsInstance?.deselectLocation();
+            if (mapsIndoorsInstance.deselectLocation) {
+                mapsIndoorsInstance.deselectLocation();
+            }
         }
     }, [currentLocation]);
 
