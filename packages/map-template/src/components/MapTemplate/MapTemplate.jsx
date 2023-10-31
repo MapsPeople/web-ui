@@ -297,11 +297,11 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     useEffect(() => {
         if (currentLocation) {
-            if (mapsIndoorsInstance.selectLocation) {
+            if (mapsIndoorsInstance?.selectLocation) {
                 mapsIndoorsInstance.selectLocation(currentLocation);
             }
         } else {
-            if (mapsIndoorsInstance.deselectLocation) {
+            if (mapsIndoorsInstance?.deselectLocation) {
                 mapsIndoorsInstance.deselectLocation();
             }
         }

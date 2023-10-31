@@ -14,7 +14,7 @@
 
     &--show-elements {
         mi-floor-selector {
-            display: block;
+            visibility: visible;
         }
 
         .venue-selector__button {
@@ -24,7 +24,7 @@
 
     &--hide-elements {
         mi-floor-selector {
-            display: none;
+            visibility: hidden;
         }
 
         .venue-selector__button {

@@ -102,8 +102,6 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
         // Set the floor to the one that the location belongs to.
         if (locationFloor !== currentFloor) {
             mapsIndoorsInstance.setFloor(locationFloor);
-            const floorSelectorElement = document.querySelector('mi-floor-selector');
-            floorSelectorElement.onFloorChanged(locationFloor)
         }
 
         // Calculate the location bbox

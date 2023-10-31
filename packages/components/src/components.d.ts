@@ -241,11 +241,6 @@ export namespace Components {
          */
         "mapsindoors": any;
         /**
-          * Handle floor change.
-          * @param floorIndex
-         */
-        "onFloorChanged": (floorIndex: any) => Promise<void>;
-        /**
           * The color to use as the primary color (as background color of the selected floor in the list).
           * @type {string}
          */

@@ -97,19 +97,6 @@ A `primaryColor` attribute is available on the `<mi-floor-selector>` element, wh
 | `primaryColor` | `primary-color` | The color to use as the primary color (as background color of the selected floor in the list). | `string` | `'#005655'` |
 
 
-## Methods
-
-### `onFloorChanged(floorIndex: any) => Promise<void>`
-
-Handle floor change.
-
-#### Returns
-
-Type: `Promise<void>`
-
-
-
-
 ----------------------------------------------
 
 
