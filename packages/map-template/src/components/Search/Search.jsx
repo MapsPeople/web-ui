@@ -26,7 +26,6 @@ import useMediaQuery from '../../hooks/useMediaQuery';
  * @returns
  */
 function Search({ onSetSize }) {
-    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const searchRef = useRef();
 
     /** Referencing the search field */
@@ -50,6 +49,8 @@ function Search({ onSetSize }) {
     const primaryColor = useRecoilValue(primaryColorState);
 
     const [hoveredLocation, setHoveredLocation] = useState();
+
+    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
 
     const [, setFilteredLocations] = useRecoilState(filteredLocationsState);
 
@@ -196,6 +197,9 @@ function Search({ onSetSize }) {
         }
     }, [currentVenueName]);
 
+    /**
+     * Handle location hover.
+     */
     useEffect(() => {
         mapsIndoorsInstance.on('mouseenter', onMouseEnter);
         return () => {
