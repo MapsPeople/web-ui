@@ -10,18 +10,22 @@ import SearchField from '../WebComponentWrappers/Search/Search';
 import filteredLocationsState from '../../atoms/filteredLocationsState';
 import primaryColorState from '../../atoms/primaryColorState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
+import { calculateBounds } from '../../helpers/CalculateBounds';
+import currentLocationState from '../../atoms/currentLocationState';
+import isLocationClickedState from '../../atoms/isLocationClickedState';
+import getDesktopPadding from '../../helpers/GetDesktopPadding';
+import useMediaQuery from '../../hooks/useMediaQuery';
 
 /**
  * Show the search results.
  *
  * @param {Object} props
- * @param {function} props.onLocationClick - Function that is run when a location from the search results is clicked.
  * @param {[[string, number]]} props.categories - All the unique categories that users can filter through.
  * @param {function} props.onSetSize - Callback that is fired when the search field takes focus.
  *
  * @returns
  */
-function Search({ onLocationClick, onSetSize }) {
+function Search({ onSetSize }) {
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const searchRef = useRef();
 
@@ -31,8 +35,6 @@ function Search({ onLocationClick, onSetSize }) {
     const [searchDisabled, setSearchDisabled] = useState(true);
     const [searchResults, setSearchResults] = useState([]);
     const categories = useRecoilValue(categoriesState);
-    const currentVenueName = useRecoilValue(currentVenueNameState);
-    const [, setFilteredLocations] = useRecoilState(filteredLocationsState);
 
     /** Indicate if search results have been found */
     const [showNotFoundMessage, setShowNotFoundMessage] = useState(false);
@@ -48,6 +50,16 @@ function Search({ onLocationClick, onSetSize }) {
     const primaryColor = useRecoilValue(primaryColorState);
 
     const [hoveredLocation, setHoveredLocation] = useState();
+
+    const [, setFilteredLocations] = useRecoilState(filteredLocationsState);
+
+    const [, setCurrentLocation] = useRecoilState(currentLocationState);
+
+    const [, setIsLocationClicked] = useRecoilState(isLocationClickedState);
+    
+    const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
+
+    const isDesktop = useMediaQuery('(min-width: 992px)');
 
     /**
      * Get the locations and filter through them based on categories selected.
@@ -146,6 +158,33 @@ function Search({ onLocationClick, onSetSize }) {
         setHoveredLocation(location);
     }
 
+    /**
+     * Handle locations clicked on the map.
+     */
+    function onLocationClicked(location) {
+        setCurrentLocation(location);
+
+        // Set the current venue to be the selected location venue.
+        if (location.properties.venueId !== currentVenueName) {
+            setCurrentVenueName(location.properties.venueId);
+            setIsLocationClicked(true);
+        }
+
+        const currentFloor = mapsIndoorsInstance.getFloor();
+        const locationFloor = location.properties.floor;
+
+        // Set the floor to the one that the location belongs to.
+        if (locationFloor !== currentFloor) {
+            mapsIndoorsInstance.setFloor(locationFloor);
+        }
+
+        // Calculate the location bbox
+        const locationBbox = calculateBounds(location.geometry)
+        let coordinates = { west: locationBbox[0], south: locationBbox[1], east: locationBbox[2], north: locationBbox[3] }
+        // Fit map to the bounds of the location coordinates, and add left padding
+        mapsIndoorsInstance.getMapView().fitBounds(coordinates, { top: 0, right: 0, bottom: isDesktop ? 0 : 200, left: isDesktop ? getDesktopPadding() : 0 });
+    }
+
     /*
      * React on changes in the venue prop.
      * Deselect category and clear results list.
@@ -159,12 +198,10 @@ function Search({ onLocationClick, onSetSize }) {
 
     useEffect(() => {
         mapsIndoorsInstance.on('mouseenter', onMouseEnter);
-
         return () => {
             mapsIndoorsInstance.off('mouseenter', onMouseEnter);
         }
-
-    })
+    });
 
     return (
         <div className="search"
@@ -201,7 +238,7 @@ function Search({ onLocationClick, onSetSize }) {
                             <ListItemLocation
                                 key={location.id}
                                 location={location}
-                                locationClicked={e => onLocationClick(e)}
+                                locationClicked={() => onLocationClicked(location)}
                                 isHovered={location?.id === hoveredLocation?.id}
                             />
                         )}

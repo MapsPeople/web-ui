@@ -12,10 +12,6 @@ import Wayfinding from '../Wayfinding/Wayfinding';
 import Directions from '../Directions/Directions';
 import Search from '../Search/Search';
 import LocationsList from '../LocationsList/LocationsList';
-import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
-import { calculateBounds } from '../../helpers/CalculateBounds';
-import currentVenueNameState from '../../atoms/currentVenueNameState';
-import isLocationClickedState from '../../atoms/isLocationClickedState';
 
 /**
  * @param {Object} props
@@ -41,9 +37,6 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
     const categories = useRecoilValue(categoriesState);
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
-    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
-    const [currentVenue, setCurrentVenueName] = useRecoilState(currentVenueNameState);
-    const [, setIsLocationClicked] = useRecoilState(isLocationClickedState);
 
     /*
      * React on changes on the current location and directions locations and set relevant bottom sheet.
@@ -84,33 +77,6 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
         setFilteredLocationsByExternalID([]);
     }
 
-    /**
-     * Handle locations clicked on the map.
-     */
-    function onLocationClicked(location) {
-        setCurrentLocation(location);
-
-         // Set the current venue to be the selected location venue.
-         if (location.properties.venueId !== currentVenue) {
-            setCurrentVenueName(location.properties.venueId);
-            setIsLocationClicked(true);
-        }
-
-        const currentFloor = mapsIndoorsInstance.getFloor();
-        const locationFloor = location.properties.floor;
-
-        // Set the floor to the one that the location belongs to.
-        if (locationFloor !== currentFloor) {
-            mapsIndoorsInstance.setFloor(locationFloor);
-        }
-
-        // Calculate the location bbox
-        const locationBbox = calculateBounds(location.geometry)
-        let coordinates = { west: locationBbox[0], south: locationBbox[1], east: locationBbox[2], north: locationBbox[3] }
-        // Fit map to the bounds of the location coordinates, and add a bottom padding
-        mapsIndoorsInstance.getMapView().fitBounds(coordinates, { top: 0, right: 0, bottom: 200, left: 0 });
-    }
-
     const bottomSheets = [
         <Sheet
             minHeight={categories.length > 0 ? "136" : "80"}
@@ -119,7 +85,6 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
             key="A">
             <Search
                 onSetSize={size => setSearchSheetSize(size)}
-                onLocationClick={(location) => onLocationClicked(location)}
             />
         </Sheet>,
         <Sheet
