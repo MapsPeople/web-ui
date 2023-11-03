@@ -177,9 +177,6 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
         resetSubsteps();
         stopRendering();
         onBack();
-
-        const currentFloor = mapsIndoorsInstance.getFloor();
-        mapsIndoorsInstance.setFloor(currentFloor);
     }
 
     /**
