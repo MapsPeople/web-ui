@@ -57,7 +57,7 @@ function Search({ onSetSize }) {
     const [, setCurrentLocation] = useRecoilState(currentLocationState);
 
     const [, setIsLocationClicked] = useRecoilState(isLocationClickedState);
-    
+
     const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
@@ -105,6 +105,7 @@ function Search({ onSetSize }) {
 
     /**
      * Communicate size change to parent component.
+     * 
      * @param {number} size
      */
     function setSize(size) {
@@ -155,12 +156,19 @@ function Search({ onSetSize }) {
         }
     }
 
+    /**
+     * Handle hovering over location.
+     * 
+     * @param {object} location
+     */
     function onMouseEnter(location) {
         setHoveredLocation(location);
     }
 
     /**
      * Handle locations clicked on the map.
+     * 
+     * @param {object} location
      */
     function onLocationClicked(location) {
         setCurrentLocation(location);
@@ -197,7 +205,7 @@ function Search({ onSetSize }) {
         }
     }, [currentVenueName]);
 
-    /**
+    /*
      * Handle location hover.
      */
     useEffect(() => {
