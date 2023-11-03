@@ -91,10 +91,9 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
     }, [venueName, venues, startZoomLevel]); // eslint-disable-line react-hooks/exhaustive-deps
     // We ignore eslint warnings about missing dependencies because mapsIndoorsInstance should never change runtime anyway.
 
-    /**
+    /*
      * Show the filtered locations on the map based on their IDs or external IDs if present.
      * Check if the highlight or filter methods exist.
-     * 
      */
     useEffect(() => {
         if (mapsIndoorsInstance) {
