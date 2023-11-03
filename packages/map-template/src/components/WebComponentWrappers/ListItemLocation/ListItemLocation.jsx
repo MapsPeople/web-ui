@@ -27,6 +27,12 @@ function ListItemLocation({ location, locationClicked, icon, isHovered }) {
 
         current.addEventListener('locationClicked', clickHandler);
         current.addEventListener('mouseover', hoverHandler)
+        
+        if (isHovered) {
+            elementRef.current.classList.add('hovered')
+        } else {
+            elementRef.current.classList.remove('hovered')
+        }
 
         return () => {
             current.removeEventListener('locationClicked', clickHandler);
@@ -35,7 +41,7 @@ function ListItemLocation({ location, locationClicked, icon, isHovered }) {
     }, [location, locationClicked, isHovered]);
 
 
-    return <mi-list-item-location class-list={isHovered ? 'hovered' : ''} ref={elementRef} />
+    return <mi-list-item-location ref={elementRef} />
 }
 
 export default ListItemLocation;
