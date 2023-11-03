@@ -58,7 +58,7 @@ function Search({ onSetSize }) {
 
     const [, setIsLocationClicked] = useRecoilState(isLocationClickedState);
 
-    const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
+    const [currentVenueId, setCurrentVenueId] = useRecoilState(currentVenueNameState);
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
@@ -174,8 +174,8 @@ function Search({ onSetSize }) {
         setCurrentLocation(location);
 
         // Set the current venue to be the selected location venue.
-        if (location.properties.venueId !== currentVenueName) {
-            setCurrentVenueName(location.properties.venueId);
+        if (location.properties.venueId !== currentVenueId) {
+            setCurrentVenueId(location.properties.venueId);
             setIsLocationClicked(true);
         }
 
@@ -203,7 +203,7 @@ function Search({ onSetSize }) {
             setSearchResults([]);
             setSelectedCategory(null);
         }
-    }, [currentVenueName]);
+    }, [currentVenueId]);
 
     /*
      * Handle location hover.
