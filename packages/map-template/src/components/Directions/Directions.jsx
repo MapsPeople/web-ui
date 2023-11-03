@@ -171,7 +171,6 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
     /**
      * Close the directions.
      * Reset the active steps and stop rendering directions.
-     * Set the floor according to the current location's floor.
      */
     function onDirectionsClosed() {
         resetSubsteps();
