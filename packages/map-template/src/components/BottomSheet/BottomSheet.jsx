@@ -85,7 +85,6 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
             key="A">
             <Search
                 onSetSize={size => setSearchSheetSize(size)}
-                onLocationClick={(location) => setCurrentLocation(location)}
             />
         </Sheet>,
         <Sheet

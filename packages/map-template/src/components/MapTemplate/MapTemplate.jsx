@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
 import './MapTemplate.scss';
 import MIMap from "../Map/Map";
@@ -29,6 +29,7 @@ import logoState from '../../atoms/logoState';
 import gmMapIdState from '../../atoms/gmMapIdState';
 import bearingState from '../../atoms/bearingState';
 import pitchState from '../../atoms/pitchState';
+import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 
 defineCustomElements();
 
@@ -66,6 +67,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setPrimaryColor] = useRecoilState(primaryColorState);
     const [, setLogo] = useRecoilState(logoState);
     const [, setGmMapId] = useRecoilState(gmMapIdState);
+    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
 
     const directionsFromLocation = useLocationForWayfinding(directionsFrom);
     const directionsToLocation = useLocationForWayfinding(directionsTo);
@@ -112,7 +114,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             const miSdkApiTag = document.createElement('script');
             miSdkApiTag.setAttribute('type', 'text/javascript');
-            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.24.7/mapsindoors-4.24.7.js.gz');
+            miSdkApiTag.setAttribute('src', 'https://folia-customer.s3.eu-west-1.amazonaws.com/mapsindoors/js/sdk/CandidateReleases/4.25.0-rc0/mapsindoors-4.25.0-rc0.js.gz');
             document.body.appendChild(miSdkApiTag);
             miSdkApiTag.onload = () => {
                 resolve();
@@ -271,13 +273,13 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         setStartZoomLevel(startZoomLevel);
     }, [startZoomLevel]);
-    
+
     /*
      * React on changes in the pitch prop.
      */
     useEffect(() => {
         setPitch(pitch);
-    }, [pitch]); 
+    }, [pitch]);
 
     /*
      * React on changes in the bearing prop.
@@ -292,6 +294,18 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         setLogo(logo);
     }, [logo]);
+
+    useEffect(() => {
+        if (currentLocation) {
+            if (mapsIndoorsInstance?.selectLocation) {
+                mapsIndoorsInstance.selectLocation(currentLocation);
+            }
+        } else {
+            if (mapsIndoorsInstance?.deselectLocation) {
+                mapsIndoorsInstance.deselectLocation();
+            }
+        }
+    }, [currentLocation]);
 
     /**
      * When venue is fitted while initializing the data,

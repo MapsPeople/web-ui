@@ -7,6 +7,9 @@
     "dist/*.js",
     "dist/*.mjs"
   ],
+  "dependencies": {
+    "@turf/turf": "^6.5.0"
+  },
   "devDependencies": {
     "@googlemaps/js-api-loader": "^1.15.1",
     "@mapsindoors/components": "*",

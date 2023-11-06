@@ -7,6 +7,7 @@ import { ReactComponent as BuildingIcon } from '../../assets/building.svg';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import Venue from './Venue/Venue';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
+import isLocationClickedState from '../../atoms/isLocationClickedState';
 
 /**
  * Show a list of Venues. The user can click on a Venue to select it.
@@ -20,6 +21,7 @@ function VenueSelector({ onOpen, onClose, active }) {
     const venues = useRecoilValue(venuesState);
 
     const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
+    const [, setIsLocationClicked] = useRecoilState(isLocationClickedState);
 
     /**
      * When a Venue is selected, close the list of Venues and do the callback.
@@ -42,15 +44,25 @@ function VenueSelector({ onOpen, onClose, active }) {
         }
     };
 
+    /**
+     * Handle venue selection.
+     * 
+     * @param {object} venue 
+     */
+    function onVenueSelected(venue) {
+        selectVenue(venue);
+        setIsLocationClicked(false);
+    }
+
     return <>
-        <button className={`venue-selector__button ${active ? 'venue-selector__button--open' : '' }`} onClick={() => toggle()} aria-label="Venues">
+        <button className={`venue-selector__button ${active ? 'venue-selector__button--open' : ''}`} onClick={() => toggle()} aria-label="Venues">
             {active ? <CloseIcon /> : <BuildingIcon />}
         </button>
         <CSSTransition unmountOnExit in={active} nodeRef={venueSelectorContentRef} timeout={400} classNames="venue-selector__content">
             <div className="venue-selector__content" ref={venueSelectorContentRef}>
                 <h1>Select venue</h1>
                 <div className="venue-selector__list">
-                    {venues.map(venue => (<Venue key={venue.id} isCurrent={currentVenueName === venue.name} venue={venue} onVenueClicked={() => selectVenue(venue)} />))}
+                    {venues.map(venue => (<Venue key={venue.id} isCurrent={currentVenueName === venue.name} venue={venue} onVenueClicked={() => onVenueSelected(venue)} />))}
                 </div>
             </div>
         </CSSTransition>
