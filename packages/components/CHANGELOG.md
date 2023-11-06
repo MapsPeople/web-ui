@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add support for listening to `floor_changed` event in the `mi-floor-selector` component.
+- Add support for listening to the `floor_changed` event in the `mi-floor-selector` component.
 - Add hovering effects on the `mi-list-item-location` component.
 
 ## [13.13.0] - 2023-10-09
