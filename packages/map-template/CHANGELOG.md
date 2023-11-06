@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added support for filter, search, highlight features from the SDK.
+- Added support for filter, search and highlight features from the SDK.
 - Implemented functionality for selecting a location and centering it on the map.
 
 ### Fixed
