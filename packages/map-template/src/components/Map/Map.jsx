@@ -23,6 +23,10 @@ import setMapZoomLevel from "../../helpers/SetMapZoomLevel";
 import bearingState from '../../atoms/bearingState';
 import pitchState from '../../atoms/pitchState';
 import isLocationClickedState from "../../atoms/isLocationClickedState";
+import kioskOriginLocationIdState from "../../atoms/kioskOriginLocationIdState";
+import { calculateBounds } from "../../helpers/CalculateBounds";
+import currentKioskLocationState from "../../atoms/currentKioskLocationState";
+import getDesktopPadding from "../../helpers/GetDesktopPadding";
 
 const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
 
@@ -59,6 +63,8 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
     const [, setPositionControl] = useRecoilState(positionControlState);
     const locationId = useRecoilValue(locationIdState);
     const isLocationClicked = useRecoilValue(isLocationClickedState);
+    const kioskOriginLocationId = useRecoilValue(kioskOriginLocationIdState);
+    const [, setCurrentKioskLocation] = useRecoilState(currentKioskLocationState);
 
     useLiveData(apiKey);
 
@@ -80,7 +86,7 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
         if (mapsIndoorsInstance) {
             window.localStorage.removeItem(localStorageKeyForVenue);
             const venueToShow = getVenueToShow(venueName, venues);
-            if (venueToShow && !locationId && !isLocationClicked) {
+            if (venueToShow && !locationId && !isLocationClicked && !kioskOriginLocationId) {
                 setVenue(venueToShow, mapsIndoorsInstance).then(() => {
                     onVenueChangedOnMap(venueToShow);
                 });
@@ -167,7 +173,35 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
      * @param {object} miInstance
      */
     const onLocationIdChanged = (miInstance) => {
-        if (locationId && miInstance) {
+        if (kioskOriginLocationId && miInstance) {
+            window.mapsindoors.services.LocationsService.getLocation(kioskOriginLocationId).then(kioskOriginLocation => {
+                if (kioskOriginLocation) {
+                    setCurrentKioskLocation(kioskOriginLocation);
+
+                    // Replace icon with "you are here" icon
+                    const displayRule = miInstance.getDisplayRule(kioskOriginLocation);
+                    displayRule.visible = true;
+                    displayRule.iconSize = { width: 40, height: 40 };
+                    displayRule.iconVisible = true;
+                    displayRule.zoomFrom = 0;
+                    displayRule.zoomTo = 999;
+                    displayRule.clickable = false;
+                    miInstance.setDisplayRule(kioskOriginLocation.id, displayRule);
+
+                    const locationFloor = kioskOriginLocation.properties.floor;
+                    miInstance.setFloor(locationFloor);
+
+                    const padding = getDesktopPadding();
+                    console.log('padding', padding)
+
+                    // Calculate the location bbox
+                    const locationBbox = calculateBounds(kioskOriginLocation.geometry)
+                    let coordinates = { west: locationBbox[0], south: locationBbox[1], east: locationBbox[2], north: locationBbox[3] }
+                    // Fit map to the bounds of the location coordinates, and add left padding
+                    miInstance.getMapView().fitBounds(coordinates, { top: 0, right: 0, bottom: 500, left: 0 });
+                }
+            });
+        } else if (locationId && miInstance) {
             window.mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
                 if (location) {
                     // Set the floor to the one that the location belongs to.
@@ -228,7 +262,7 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
         setDirectionsService(directionsService);
 
         const venueToShow = getVenueToShow(venueName, venues);
-        if (venueToShow && !locationId) {
+        if (venueToShow && !locationId && !kioskOriginLocationId) {
             setVenue(venueToShow, miInstance);
         }
     };
