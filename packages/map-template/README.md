@@ -6,12 +6,12 @@
 
 Install the package:
 
-`npm install @mapsindoors/map-template`
+`npm install @mapsindoors/map-template@stable`
 
 In your script:
 
 ```javascript
-import MapsIndoorsMap from '@mapsindoors/map-template@stable/dist/mapsindoors-webcomponent.es.js';
+import MapsIndoorsMap from '@mapsindoors/map-template/dist/mapsindoors-webcomponent.es.js';
 window.customElements.define('mapsindoors-map', MapsIndoorsMap);
 ```
 
@@ -86,12 +86,12 @@ Use query parameters to configure the Web Component by setting the `supports-url
 
 Install the package:
 
-`npm install @mapsindoors/map-template`
+`npm install @mapsindoors/map-template@stable`
 
 Use the `MapsIndoorsMap` component in a React component:
 
 ```javascript
-import MapsIndoorsMap from '@mapsindoors/map-template@stable/dist/mapsindoors-react.es.js';
+import MapsIndoorsMap from '@mapsindoors/map-template/dist/mapsindoors-react.es.js';
 
 // Somewhere in your JSX:
 <div style={{
