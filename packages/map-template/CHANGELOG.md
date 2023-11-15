@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.17.1] - 2023-11-15
+
+### Fixed
+
+- Bundling the exported Web Component into one file instead of several chunks.
+- Fix missing possibility to test the Web Component locally.
+
 ## [1.17.0] - 2023-11-06
 
 ### Added
@@ -15,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed floor selector not updating when exiting directions.
-- Fixed floor selector not updating when selecting a location on a different floor. 
+- Fixed floor selector not updating when selecting a location on a different floor.
 
 ## [1.16.0] - 2023-10-09
 
@@ -87,7 +94,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Upgrade to MapsIndoors JavaScript SDK v4.24.6. 
+- Upgrade to MapsIndoors JavaScript SDK v4.24.6.
 
 ## [1.11.1] - 2023-08-17
 
@@ -129,7 +136,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed error message appearing in weird states on Google Maps. 
+- Fixed error message appearing in weird states on Google Maps.
 
 ## [1.9.0] - 2023-08-01
 
@@ -147,7 +154,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed search results not being scrollable on Safari. 
+- Fixed search results not being scrollable on Safari.
 
 ## [1.8.1] - 2023-08-01
 
