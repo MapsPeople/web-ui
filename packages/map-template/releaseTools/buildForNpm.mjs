@@ -19,6 +19,12 @@ const libraries = [
                 formats: ['es', 'umd']
             },
             emptyOutDir: false,
+            rollupOptions: {
+                output: {
+                    manualChunks: false,
+                    inlineDynamicImports: true
+                }
+            }
         },
         plugins: [
             cssInjectedByJsPlugin()
