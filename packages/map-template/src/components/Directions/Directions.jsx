@@ -15,8 +15,8 @@ import directionsResponseState from "../../atoms/directionsResponseState";
 import activeStepState from "../../atoms/activeStep";
 import { snapPoints } from "../../constants/snapPoints";
 import substepsToggledState from "../../atoms/substepsToggledState";
-import getDesktopPadding from "../../helpers/GetDesktopPadding";
-import getMobilePadding from "../../helpers/GetMobilePadding";
+import getDesktopPaddingLeft from "../../helpers/GetDesktopPaddingLeft";
+import getMobilePaddingBottom from "../../helpers/GetMobilePaddingBottom";
 
 let directionsRenderer;
 
@@ -71,8 +71,8 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                 mapsIndoors: mapsIndoorsInstance,
                 fitBoundsPadding: {
                     top: padding,
-                    bottom: isDesktop ? padding : getMobilePadding(),
-                    left: isDesktop ? getDesktopPadding() : padding,
+                    bottom: isDesktop ? padding : getMobilePaddingBottom(),
+                    left: isDesktop ? getDesktopPaddingLeft() : padding,
                     right: padding
                 }
             });

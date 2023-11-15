@@ -1,7 +1,7 @@
 /**
- * Get left padding for directions on desktop.
+ * Get bottom padding on mobile.
  */
-export default function getMobilePadding() {
+export default function getMobilePaddingBottom() {
     const bottomSheet = document.querySelector('.sheet--active');
     const mapContainer = document.querySelector('.mapsindoors-map');
     // Subtract the top padding from the height of the map container element.

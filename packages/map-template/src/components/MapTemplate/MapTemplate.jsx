@@ -74,6 +74,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setKioskOriginLocationId] = useRecoilState(kioskOriginLocationIdState);
     const currentKioskLocation = useRecoilValue(currentKioskLocationState);
 
+
     const directionsFromLocation = useLocationForWayfinding(directionsFrom);
     const directionsToLocation = useLocationForWayfinding(directionsTo);
 
@@ -300,8 +301,13 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         setLogo(logo);
     }, [logo]);
 
+
+    /*
+     * React on changes in the current location prop.
+     * Apply location selection if the current location exists and is not the same as the kioskOriginLocationId. 
+     */
     useEffect(() => {
-        if (currentLocation && currentLocation.id !== currentKioskLocation.id) {
+        if (currentLocation && currentLocation.id !== kioskOriginLocationId) {
             if (mapsIndoorsInstance?.selectLocation) {
                 mapsIndoorsInstance.selectLocation(currentLocation);
             }
@@ -336,12 +342,13 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     /**
      * Handle the clicked location on the map.
-     * Set the current location if not in directions mode.
+     * Set the current location if not in directions mode,
+     * and if the clicked location is not the same as the kioskOriginLocationId.
      *
      * @param {object} location
      */
     function locationClicked(location) {
-        if (locationsDisabledRef.current !== true) {
+        if (locationsDisabledRef.current !== true && location.id !== kioskOriginLocationId) {
             setCurrentLocation(location);
         }
     }
