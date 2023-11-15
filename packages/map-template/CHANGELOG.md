@@ -9,8 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Bundling the exported Web Component into one file instead of several chunks.
-- Fix missing possibility to test the Web Component locally.
+- Bundling the exported Web Component into one file instead of several chunks to mitigate slow loading times when using the Web Component.
 
 ## [1.17.0] - 2023-11-06
 
