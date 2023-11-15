@@ -2,6 +2,7 @@ import { calculateBounds } from "./CalculateBounds";
 
 /**
  * Calculate the location bbox, and then fit bounds of a location.
+ * Add padding left and bottom as parameters, due to needing to dynamically calculate that. 
  */
 export default function fitBoundsLocation(location, mapsIndoorsInstance, paddingBottom, paddingLeft) {
     // Calculate the location bbox
