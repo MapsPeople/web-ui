@@ -12,6 +12,7 @@ import Wayfinding from '../Wayfinding/Wayfinding';
 import Directions from '../Directions/Directions';
 import Search from '../Search/Search';
 import LocationsList from '../LocationsList/LocationsList';
+import locationIdState from '../../atoms/locationIdState';
 
 /**
  * @param {Object} props
@@ -38,6 +39,8 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
 
+    const [, setLocationId] = useRecoilState(locationIdState);
+
     /*
      * React on changes on the current location and directions locations and set relevant bottom sheet.
      */
@@ -50,6 +53,9 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
             pushAppView(appViews.LOCATION_DETAILS, currentLocation);
         } else if (filteredLocationsByExternalIDs?.length > 0) {
             pushAppView(appViews.EXTERNALIDS);
+        } else if (filteredLocationsByExternalIDs?.length === 1) {
+            setCurrentLocation(filteredLocationsByExternalIDs[0])
+            setLocationId(filteredLocationsByExternalIDs[0].id)
         } else {
             pushAppView(appViews.SEARCH);
         }
@@ -62,6 +68,10 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
         if (filteredLocationsByExternalIDs?.length > 0) {
             pushAppView(appViews.EXTERNALIDS);
             setCurrentLocation();
+        } else if (filteredLocationsByExternalIDs?.length === 1) {
+            pushAppView(appViews.SEARCH);
+            setCurrentLocation();
+            setFilteredLocationsByExternalID([]);
         } else {
             pushAppView(appViews.SEARCH);
             setCurrentLocation();
