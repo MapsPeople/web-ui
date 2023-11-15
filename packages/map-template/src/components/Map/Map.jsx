@@ -288,7 +288,6 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
         }
     }, [kioskOriginLocationId, locationId, isMapReady]);
 
-
     return (<>
         {mapType === mapTypes.Google && <GoogleMapsMap onMapView={onMapView} onPositionControl={onPositionControlCreated} />}
         {mapType === mapTypes.Mapbox && <MapboxMap onMapView={onMapView} onPositionControl={onPositionControlCreated} />}
