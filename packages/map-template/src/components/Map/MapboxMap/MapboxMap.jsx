@@ -8,6 +8,7 @@ import primaryColorState from '../../../atoms/primaryColorState';
 import bearingState from '../../../atoms/bearingState';
 import pitchState from '../../../atoms/pitchState';
 import { v4 as uuidv4 } from 'uuid';
+import showPositionControlState from '../../../atoms/showPositionControlState';
 
 /**
  * Takes care of instantiating a MapsIndoors Mapbox MapView.
@@ -26,6 +27,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
     const primaryColor = useRecoilValue(primaryColorState);
     const bearing = useRecoilValue(bearingState);
     const pitch = useRecoilValue(pitchState);
+    const showPositionControl = useRecoilValue(showPositionControlState);
 
     useEffect(() => {
         // Initialize MapboxView MapView
@@ -55,7 +57,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
 
     // Add Floor Selector to the Map when ready.
     useEffect(() => {
-        if (mapsIndoorsInstance && mapView && !hasPositionControl) {
+        if (mapsIndoorsInstance && mapView && showPositionControl && !hasPositionControl) {
             const myPositionButtonElement = document.createElement('mi-my-position');
             myPositionButtonElement.mapsindoors = mapsIndoorsInstance;
 
@@ -79,7 +81,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
 
             setHasFloorSelector(true);
         }
-    }, [mapsIndoorsInstance, mapView, hasFloorSelector, hasPositionControl]);
+    }, [mapsIndoorsInstance, mapView, hasFloorSelector, hasPositionControl, showPositionControl]);
 
     return <div className="map-container" id="map"></div>
 }

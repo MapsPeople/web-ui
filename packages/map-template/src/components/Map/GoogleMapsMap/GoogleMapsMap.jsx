@@ -7,6 +7,7 @@ import primaryColorState from '../../../atoms/primaryColorState';
 import gmMapIdState from '../../../atoms/gmMapIdState';
 import bearingState from '../../../atoms/bearingState';
 import pitchState from '../../../atoms/pitchState';
+import showPositionControlState from '../../../atoms/showPositionControlState';
 
 /**
  * Takes care of instantiating a MapsIndoors Google Maps MapView.
@@ -27,6 +28,7 @@ function GoogleMapsMap({ onMapView, onPositionControl }) {
     const primaryColor = useRecoilValue(primaryColorState);
     const bearing = useRecoilValue(bearingState);
     const pitch = useRecoilValue(pitchState);
+    const showPositionControl = useRecoilValue(showPositionControlState);
 
     useEffect(() => {
         const loader = new GoogleMapsApiLoader({
@@ -65,7 +67,7 @@ function GoogleMapsMap({ onMapView, onPositionControl }) {
 
     // Add Floor Selector to the Map when ready.
     useEffect(() => {
-        if (mapsIndoorsInstance && mapView && google && !hasPositionControl) {
+        if (mapsIndoorsInstance && mapView && google && showPositionControl && !hasPositionControl) {
             const myPositionButtonElement = document.createElement('mi-my-position');
             myPositionButtonElement.mapsindoors = mapsIndoorsInstance;
             mapView.getMap().controls[google.maps.ControlPosition.RIGHT_TOP].push(myPositionButtonElement);
@@ -81,7 +83,7 @@ function GoogleMapsMap({ onMapView, onPositionControl }) {
             mapView.getMap().controls[google.maps.ControlPosition.RIGHT_TOP].push(floorSelectorElement);
             setHasFloorSelector(true);
         }
-    }, [mapsIndoorsInstance, mapView, google, hasFloorSelector, hasPositionControl])
+    }, [mapsIndoorsInstance, mapView, google, hasFloorSelector, hasPositionControl, showPositionControl])
 
     return <div className="map-container" id="map"></div>
 }

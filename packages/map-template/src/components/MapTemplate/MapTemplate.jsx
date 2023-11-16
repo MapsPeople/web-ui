@@ -31,6 +31,8 @@ import bearingState from '../../atoms/bearingState';
 import pitchState from '../../atoms/pitchState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import kioskOriginLocationIdState from '../../atoms/kioskOriginLocationIdState';
+import showVenueSelectorState from '../../atoms/showVenueSelectorState';
+import showPositionControlState from '../../atoms/showPositionControlState';
 
 defineCustomElements();
 
@@ -71,6 +73,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setGmMapId] = useRecoilState(gmMapIdState);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const [, setKioskOriginLocationId] = useRecoilState(kioskOriginLocationIdState);
+
+    const [showVenueSelector, setShowVenueSelector] = useRecoilState(showVenueSelectorState);
+    const [, setShowPositionControl] = useRecoilState(showPositionControlState);
 
     const directionsFromLocation = useLocationForWayfinding(directionsFrom);
     const directionsToLocation = useLocationForWayfinding(directionsTo);
@@ -322,6 +327,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         if (mapsindoorsSDKAvailable) {
             if (kioskOriginLocationId) {
                 setKioskOriginLocationId(kioskOriginLocationId);
+                setShowVenueSelector(false);
+                setShowPositionControl(false);
             }
         }
     }, [kioskOriginLocationId, mapsindoorsSDKAvailable]);
@@ -399,7 +406,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     return <div className={`mapsindoors-map ${locationsDisabledRef.current ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}`}>
         {!isMapReady && <SplashScreen />}
-        {venues.length > 1 && <VenueSelector
+        {venues.length > 1 && showVenueSelector && <VenueSelector
             onOpen={() => pushAppView(appStates.VENUE_SELECTOR)}
             onClose={() => goBack()}
             active={currentAppView === appStates.VENUE_SELECTOR}
