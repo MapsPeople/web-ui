@@ -338,9 +338,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }
 
     /**
-     * Handle the clicked location on the map.
-     * Set the current location if not in directions mode,
-     * and if the clicked location is not the same as the kioskOriginLocationId.
+     * Handle the clicked location on the map. Set the current location if not in directions mode.
+     * Do not set the current location if the clicked location is the same as the kioskOriginLocationId, 
+     * due to the logic of displaying directions right away when selecting a location on the map, when in kiosk mode.
      *
      * @param {object} location
      */
