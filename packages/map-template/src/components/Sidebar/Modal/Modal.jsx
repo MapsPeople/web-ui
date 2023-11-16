@@ -45,14 +45,7 @@ function Modal({ children, isOpen }) {
     }, [contentRef]);
 
     return <div ref={modalRef}
-        className={`modal ${isOpen ? 'modal--open' : ''} ${fullHeight ? 'modal--full' : ''} ${substeps ? 'modal--substeps' : ''}`}
-        style={{
-            left: kioskOriginLocationId ? '0' : null,
-            right: kioskOriginLocationId ? '0' : null,
-            marginLeft: kioskOriginLocationId ? 'auto' : null,
-            marginRight: kioskOriginLocationId ? 'auto' : null,
-            maxHeight: kioskOriginLocationId ? '50%' : '80%'
-        }}>
+        className={`modal ${isOpen ? 'modal--open' : ''} ${fullHeight ? 'modal--full' : ''} ${substeps ? 'modal--substeps' : ''} ${kioskOriginLocationId ? 'modal--kiosk' : ''}`}>
         <div ref={contentRef} className="modal__content">
             {children}
         </div>
