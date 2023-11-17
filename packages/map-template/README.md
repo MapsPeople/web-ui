@@ -34,8 +34,8 @@ Use the Web Component in your HTML:
 Add attributes to the Web Component as needed (see supported properties below).
 
 **Note!** The `external-IDs` and `app-user-roles` expect an array, which in a Web Component is handled differently (see example below).
-In your script, define the array of external IDs that you want to be shown on the Map Template. 
-Then get a hold of the mapsIndoors map element using the `document.querySelector()` method. 
+In your script, define the array of external IDs that you want to be shown on the Map Template.
+Then get a hold of the mapsIndoors map element using the `document.querySelector()` method.
 When you have the mapsIndoors map element, assign its prop `externalIDs` the array of external IDs that you defined at the beginning.
 
 ```javascript
@@ -113,8 +113,8 @@ Note that when using the React component, the properties should conform to JSX p
 |Attribute|React prop name|Type|Description|
 |:--|:--|:--|:--|
 |`api-key`|`apiKey`|`string`|The MapsIndoors Solution you want to load. Takes both API key as string and "App alias". |
-|`gm-api-key`|`gmApiKey`|`string`|Your Google Maps API key. |
-|`mapbox-access-token`|`mapboxAccessToken`|`string`|Your Mapbox Access Token. Setting it will load a Mapbox map. If you set both a Mapbox Access Token and Google Maps API key, the Mapbox Access Token takes precedence. |
+|`gm-api-key`|`gmApiKey`|`string`|Your Google Maps API key. Can also be set in the MapsIndoors App Config as "gmKey" under "appSettings".|
+|`mapbox-access-token`|`mapboxAccessToken`|`string`|Your Mapbox Access Token. Can also be set in the MapsIndoors App Config "mapboxAccessToken" under "appSettings". Setting it will load a Mapbox map. If you set both a Mapbox Access Token and Google Maps API key, the Mapbox Access Token takes precedence. |
 |`venue`|`venue`|`string`|The Venue to load from your MapsIndoors Solution. |
 |`location-id`|`locationId`|`string`|Set a MapsIndoors Location ID to show it on the map and its details in the sheet. |
 |`primary-color`|`primaryColor`|`string`|The primary color to use throughout the app. |
@@ -136,21 +136,21 @@ The Map Template supports using query parameters for all the properties provided
 
 The supported query parameters are the following:
 
-1. `apiKey` - Used like this `apiKey=yourApiKey`. If no apiKey is provided, the app will default to `3ddemo`.  
-2. `venue` - Used like this `venue=yourVenueName` - the Venue property is case sensitive. If no venue is provided, the app will select the first venue from the solution in alphabetical order.  
-3. `locationId` - Used like this `locationId=yourLocationId`  
-4. `primaryColor` - Used like this `primaryColor=000000`. **Note!** You need to provide a hex color value, without the `#`, due to the hashtag being a reserved symbol that has a predefined purpose in a query string. If no primary color is provided, the app will default to the MapsPeople brand color.  
-5. `logo` - Used like this `logo=https://images.g2crowd.com/uploads/product/image/social_landscape/social_landscape_7a75ff13f42605422950b411ab7e03b5/mapspeople.png`. Use an image address to provide a different logo on the loading screen. If no logo is provided, the app will default to the MapsPeople icon.  
-6. `appUserRoles` - Used like this `appUserRoles=visitor,staff,security` - the App User Roles are case sensitive. **Note!** You need to provide a list of comma separated values, without any spaces between the comma and the value. This will further be converted into an array of appUserRoles.  
-7. `directionsFrom` - Used like this `directionsFrom=yourOriginLocationId` when having a location ID, or like this `directionsFrom=USER_POSITION` when having the user location. Using the `directionsFrom` property in the URL followed by the selection of a destination location in the search view results in the wayfinding having both the origin and the destination prefilled.  
-8. `directionsTo` - Used like this `directionsTo=yourDestinationLocationId` when having a location ID, or like this `directionsTo=USER_POSITION` when having the user location.  
-9. `externalIDs` - Used like this `externalIDs=0.0.1,0.0.2,0.0.3`. **Note!** You need to provide a list of comma separated values, without any spaces between the comma and the value. This will further be converted into an array of external IDs. Because of the way browsers work, you **cannot** use External IDs with the `,`, `&`, `#` and `+`, character in them, as they are interpreted by the browser in a particular way.  
-10. `tileStyle` - Used like this `tileStyle=yourTileStyleName`. If no tile style is provided, the app will show the default tile style.  
-11. `mapboxAccessToken` - Used like this `mapboxAccessToken=yourMapboxAccessToken`. If both the `mapboxAccessToken` and the `gmApiKey` are present, the app will load a Mapbox map.  
-12. `gmApiKey` - Used like this `gmApiKey=yourGmApiKey`. If both the `mapboxAccessToken` and the `gmApiKey` are present, the app will load a Mapbox map.  
-13. `startZoomLevel` - Used like this `startZoomLevel=22`.  
+1. `apiKey` - Used like this `apiKey=yourApiKey`. If no apiKey is provided, the app will default to `3ddemo`.
+2. `venue` - Used like this `venue=yourVenueName` - the Venue property is case sensitive. If no venue is provided, the app will select the first venue from the solution in alphabetical order.
+3. `locationId` - Used like this `locationId=yourLocationId`
+4. `primaryColor` - Used like this `primaryColor=000000`. **Note!** You need to provide a hex color value, without the `#`, due to the hashtag being a reserved symbol that has a predefined purpose in a query string. If no primary color is provided, the app will default to the MapsPeople brand color.
+5. `logo` - Used like this `logo=https://images.g2crowd.com/uploads/product/image/social_landscape/social_landscape_7a75ff13f42605422950b411ab7e03b5/mapspeople.png`. Use an image address to provide a different logo on the loading screen. If no logo is provided, the app will default to the MapsPeople icon.
+6. `appUserRoles` - Used like this `appUserRoles=visitor,staff,security` - the App User Roles are case sensitive. **Note!** You need to provide a list of comma separated values, without any spaces between the comma and the value. This will further be converted into an array of appUserRoles.
+7. `directionsFrom` - Used like this `directionsFrom=yourOriginLocationId` when having a location ID, or like this `directionsFrom=USER_POSITION` when having the user location. Using the `directionsFrom` property in the URL followed by the selection of a destination location in the search view results in the wayfinding having both the origin and the destination prefilled.
+8. `directionsTo` - Used like this `directionsTo=yourDestinationLocationId` when having a location ID, or like this `directionsTo=USER_POSITION` when having the user location.
+9. `externalIDs` - Used like this `externalIDs=0.0.1,0.0.2,0.0.3`. **Note!** You need to provide a list of comma separated values, without any spaces between the comma and the value. This will further be converted into an array of external IDs. Because of the way browsers work, you **cannot** use External IDs with the `,`, `&`, `#` and `+`, character in them, as they are interpreted by the browser in a particular way.
+10. `tileStyle` - Used like this `tileStyle=yourTileStyleName`. If no tile style is provided, the app will show the default tile style.
+11. `mapboxAccessToken` - Used like this `mapboxAccessToken=yourMapboxAccessToken`. If both the `mapboxAccessToken` and the `gmApiKey` are present, the app will load a Mapbox map.
+12. `gmApiKey` - Used like this `gmApiKey=yourGmApiKey`. If both the `mapboxAccessToken` and the `gmApiKey` are present, the app will load a Mapbox map.
+13. `startZoomLevel` - Used like this `startZoomLevel=22`.
 14. `gmMapId` - Used like this `gmMapId=yourGmMapId`.
-15. `pitch` - Used like this `pitch=30`. Not compatible with MapsIndoors 2D models and MapsIndoors labels on Google Maps. The value of the pitch can be between 0-85 degrees on a Mapbox map. 
+15. `pitch` - Used like this `pitch=30`. Not compatible with MapsIndoors 2D models and MapsIndoors labels on Google Maps. The value of the pitch can be between 0-85 degrees on a Mapbox map.
 16. `bearing` - Used like this `bearing=180`. Not compatible with MapsIndoors 2D models and MapsIndoors labels on Google Maps.  It accepts any value, and will modify it to fit into the range [0, 360].
 
 **Note!** All the query parameters need to be separated with the `&` symbol, without any spaces in between. **Note!** When using parameters such as `directionsTo`, `directionsFrom`, `locationId`, `externalIDs`, and `tileStyle` make sure you are using the correct `apiKey` parameter to which they belong.

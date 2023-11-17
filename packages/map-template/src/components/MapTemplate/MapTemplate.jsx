@@ -37,8 +37,8 @@ defineCustomElements();
  *
  * @param {Object} props
  * @param {string} props.apiKey - MapsIndoors API key or solution alias.
- * @param {string} [props.gmApiKey] - Google Maps API key if you want to show a Google Maps map.
- * @param {string} [props.mapboxAccessToken] - Mapbox Access Token if you want to show a Mapbox map.
+ * @param {string} [props.gmApiKey] - Google Maps API key if you want to show a Google Maps map. Can also be set in the MapsIndoors App Config as "gmKey" under "appSettings".
+ * @param {string} [props.mapboxAccessToken] - Mapbox Access Token if you want to show a Mapbox map. Can also be set in the MapsIndoors App Config "mapboxAccessToken" under "appSettings".
  * @param {string} [props.venue] - If you want the map to show a specific Venue, provide the Venue name here.
  * @param {string} [props.locationId] - If you want the map to show a specific Location, provide the Location ID here.
  * @param {string} [props.primaryColor] - If you want the splash screen to have a custom primary color, provide the value here.
