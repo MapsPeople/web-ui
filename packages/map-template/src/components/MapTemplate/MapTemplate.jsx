@@ -81,6 +81,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     // Holds a copy of the initially filtered locations.
     const [initialFilteredLocations, setInitialFilteredLocations] = useState();
 
+    const [appConfig, setAppConfig] = useState();
+
     const [, setTileStyle] = useRecoilState(tileStyleState);
     const [, setStartZoomLevel] = useRecoilState(startZoomLevelState);
 
@@ -144,8 +146,11 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             Promise.all([
                 // Fetch all Venues in the Solution
                 window.mapsindoors.services.VenuesService.getVenues(),
-                // Fixme: Venue Images are currently stored in the AppConfig object. So we will need to fetch the AppConfig as well.
-                window.mapsindoors.services.AppConfigService.getConfig(),
+                // Fetch the App Config belonging to the given API key. This is needed for checking access tokens and Venue images.
+                window.mapsindoors.services.AppConfigService.getConfig().then(appConfigResult => {
+                    setAppConfig(appConfigResult); // We need this as early as possible
+                    return appConfigResult;
+                }),
                 // Ensure a minimum waiting time of 3 seconds
                 new Promise(resolve => setTimeout(resolve, 3000))
             ]).then(([venuesResult, appConfigResult]) => {
@@ -161,14 +166,25 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [apiKey, mapsindoorsSDKAvailable]);
 
     /*
-     * React to changes in the gmApiKey and mapboxAccessToken props.
+     * Set map provider access token / API key based on props and app config.
      */
     useEffect(() => {
-        if (mapsindoorsSDKAvailable) {
-            setMapboxAccessToken(mapboxAccessToken);
-            setGmApyKey(gmApiKey);
+        if (mapsindoorsSDKAvailable && appConfig) {
+            if (!gmApiKey && !mapboxAccessToken) {
+                // If there are no set props for map access token / API key, check if there is one in the App Config.
+                if (appConfig.appSettings?.mapboxAccessToken) {
+                    setMapboxAccessToken(appConfig.appSettings.mapboxAccessToken);
+                }
+                if (appConfig.appSettings?.gmKey) {
+                    setGmApyKey(appConfig.appSettings.gmKey);
+                }
+            } else {
+                setMapboxAccessToken(mapboxAccessToken);
+                setGmApyKey(gmApiKey);
+            }
+
         }
-    }, [gmApiKey, mapboxAccessToken, mapsindoorsSDKAvailable]);
+    }, [gmApiKey, mapboxAccessToken, mapsindoorsSDKAvailable, appConfig]);
 
     /*
      * React on changes in the app user roles prop.
