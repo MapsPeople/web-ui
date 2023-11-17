@@ -28,6 +28,7 @@ import useMediaQuery from "../../hooks/useMediaQuery";
 import isMapReadyState from "../../atoms/isMapReadyState";
 import getDesktopPaddingLeft from "../../helpers/GetDesktopPaddingLeft";
 import getDesktopPaddingBottom from "../../helpers/GetDesktopPaddingBottom";
+import getMobilePaddingBottom from "../../helpers/GetMobilePaddingBottom";
 
 const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
 
@@ -245,14 +246,17 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
     }, [tileStyle]);
 
     /*
-    * React on changes in the kioskOriginLocationId and locationId.
-    */
+     * React on changes in the kioskOriginLocationId and locationId.
+     */
     useEffect(() => {
         if (isMapReady && mapsIndoorsInstance) {
+            // If kioskOriginLocationId prop is present, set the display rule for the kiosk location.
+            // Set the icon size representing the kiosk to be double the size.
+            // Set the floor based on the floor that the kiosk is located on.
+            // Fit the map to the kiosk location bounds and add the padding calculated based on the modal.
             if (kioskOriginLocationId && isDesktop) {
                 window.mapsindoors.services.LocationsService.getLocation(kioskOriginLocationId).then(kioskOriginLocation => {
                     if (kioskOriginLocation) {
-                        // Replace icon with "you are here" icon
                         const displayRule = mapsIndoorsInstance.getDisplayRule(kioskOriginLocation);
 
                         displayRule.visible = true;
@@ -276,11 +280,11 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
                         const locationFloor = location.properties.floor;
                         mapsIndoorsInstance.setFloor(locationFloor);
 
-                        fitBoundsLocation(location, mapsIndoorsInstance, 0, getDesktopPaddingLeft());
+                        // Fit the map to the location bounds and add the padding calculated based on the modal.
+                        fitBoundsLocation(location, mapsIndoorsInstance, isDesktop ? 0 : getMobilePaddingBottom(), isDesktop ? getDesktopPaddingLeft() : 0);
                     }
                 });
             }
-
         }
     }, [kioskOriginLocationId, locationId, isMapReady]);
 
