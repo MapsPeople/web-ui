@@ -170,19 +170,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable && appConfig) {
-            if (!gmApiKey && !mapboxAccessToken) {
-                // If there are no set props for map access token / API key, check if there is one in the App Config.
-                if (appConfig.appSettings?.mapboxAccessToken) {
-                    setMapboxAccessToken(appConfig.appSettings.mapboxAccessToken);
-                }
-                if (appConfig.appSettings?.gmKey) {
-                    setGmApyKey(appConfig.appSettings.gmKey);
-                }
-            } else {
-                setMapboxAccessToken(mapboxAccessToken);
-                setGmApyKey(gmApiKey);
-            }
-
+            setMapboxAccessToken(mapboxAccessToken || appConfig.appSettings?.mapboxAccessToken);
+            setGmApyKey(gmApiKey || appConfig.appSettings?.gmKey);
         }
     }, [gmApiKey, mapboxAccessToken, mapsindoorsSDKAvailable, appConfig]);
 
