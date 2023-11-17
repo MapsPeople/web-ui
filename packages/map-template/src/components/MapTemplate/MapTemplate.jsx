@@ -94,9 +94,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     const [pushAppView, goBack, currentAppView, currentAppViewPayload, appStates] = useAppHistory();
 
-    // Declare the reference to the App Config.
-    const appConfigRef = useRef();
-
     // Declare the reference to the disabled locations.
     const locationsDisabledRef = useRef();
 
@@ -158,7 +155,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                     venue.image = appConfigResult.venueImages[venue.name.toLowerCase()];
                     return venue;
                 });
-                appConfigRef.current = appConfigResult;
                 setVenues(venuesResult);
             });
             setMapReady(false);
@@ -365,7 +361,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             for (const key of keys) {
                 // Get the categories from the App Config that have a matching key.
-                const appConfigCategory = appConfigRef.current?.menuInfo.mainmenu.find(category => category.categoryKey === key);
+                const appConfigCategory = appConfig.menuInfo.mainmenu.find(category => category.categoryKey === key);
 
                 if (uniqueCategories.has(key)) {
                     let count = uniqueCategories.get(key).count;
