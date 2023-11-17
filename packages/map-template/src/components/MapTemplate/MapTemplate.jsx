@@ -56,7 +56,7 @@ defineCustomElements();
 function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId }) {
 
     const [, setApiKey] = useRecoilState(apiKeyState);
-    const [, setGmApyKey] = useRecoilState(gmApiKeyState);
+    const [, setGmApiKey] = useRecoilState(gmApiKeyState);
     const [, setMapboxAccessToken] = useRecoilState(mapboxAccessTokenState);
     const [isMapReady, setMapReady] = useRecoilState(isMapReadyState);
     const [venues, setVenues] = useRecoilState(venuesState);
@@ -171,7 +171,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         if (mapsindoorsSDKAvailable && appConfig) {
             setMapboxAccessToken(mapboxAccessToken || appConfig.appSettings?.mapboxAccessToken);
-            setGmApyKey(gmApiKey || appConfig.appSettings?.gmKey);
+            setGmApiKey(gmApiKey || appConfig.appSettings?.gmKey);
         }
     }, [gmApiKey, mapboxAccessToken, mapsindoorsSDKAvailable, appConfig]);
 
