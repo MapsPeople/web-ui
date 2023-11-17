@@ -1,13 +1,17 @@
 import React, { useEffect, useState, useRef } from 'react';
 import './LocationDetails.scss';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import currentLocationState from '../../atoms/currentLocationState';
 import { useIsVerticalOverflow } from '../../hooks/useIsVerticalOverflow';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import { snapPoints } from '../../constants/snapPoints';
 import primaryColorState from '../../atoms/primaryColorState';
+import kioskOriginLocationIdState from '../../atoms/kioskOriginLocationIdState';
+import currentKioskLocationState from '../../atoms/currentKioskLocationState';
+import directionsServiceState from '../../atoms/directionsServiceState';
+import directionsResponseState from '../../atoms/directionsResponseState';
 
 /**
  * Shows details for a MapsIndoors Location.
@@ -17,9 +21,10 @@ import primaryColorState from '../../atoms/primaryColorState';
  * @param {function} props.onStartWayfinding - Callback that fires when user clicks the Start Wayfinding button.
  * @param {function} props.onSetSize - Callback that is fired when the toggle full description button is clicked and the Sheet size changes.
  * @param {function} props.snapPointSwiped - Changes value when user has swiped a Bottom sheet to a new snap point.
+ * @param {function} props.onStartDirections - Callback that fires when user clicks the Start directions button.
  *
  */
-function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped }) {
+function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped, onStartDirections }) {
 
     const locationInfoElement = useRef(null);
     const locationDetailsContainer = useRef(null);
@@ -42,6 +47,18 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
 
     const primaryColor = useRecoilValue(primaryColorState);
 
+    const kioskOriginLocationId = useRecoilValue(kioskOriginLocationIdState);
+
+    const currentKioskLocation = useRecoilValue(currentKioskLocationState);
+
+    const [hasFoundRoute, setHasFoundRoute] = useState(false);
+    const directionsService = useRecoilValue(directionsServiceState);
+
+    const [destinationLocation, setDestinationLocation] = useState();
+    const [originLocation, setOriginLocation] = useState();
+
+    const [, setDirectionsResponse] = useRecoilState(directionsResponseState);
+
     useEffect(() => {
         // Reset state
         setShowFullDescription(false);
@@ -52,8 +69,45 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
         if (location) {
             locationInfoElement.current.location = location;
             setLocationDisplayRule(mapsIndoorsInstance.getDisplayRule(location));
+            setDestinationLocation(location)
+
         }
-    }, [location, mapsIndoorsInstance]);
+        if (currentKioskLocation) {
+            setOriginLocation(currentKioskLocation)
+        }
+    }, [location, mapsIndoorsInstance, currentKioskLocation]);
+
+    /*
+    * When both origin location and destination location are selected, and have geometry, call the MapsIndoors SDK
+    * to get information about the route.
+    */
+    useEffect(() => {
+        if (originLocation?.geometry && destinationLocation?.geometry) {
+            directionsService.getRoute({
+                origin: getLocationPoint(originLocation),
+                destination: getLocationPoint(destinationLocation),
+            }).then(directionsResult => {
+                if (directionsResult && directionsResult.legs) {
+                    setHasFoundRoute(true);
+                    // Calculate total distance and time
+                    const totalDistance = directionsResult.legs.reduce((accumulator, current) => accumulator + current.distance.value, 0);
+                    const totalTime = directionsResult.legs.reduce((accumulator, current) => accumulator + current.duration.value, 0);
+
+                    setDirectionsResponse({
+                        originLocation,
+                        destinationLocation,
+                        totalDistance,
+                        totalTime,
+                        directionsResult
+                    });
+                } else {
+                    setHasFoundRoute(false);
+                }
+            }, () => {
+                setHasFoundRoute(false);
+            });
+        }
+    }, [originLocation, destinationLocation, directionsService]);
 
     /**
      * Communicate size change to parent component.
@@ -131,7 +185,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
         setDescriptionHasContentBelow(false);
     }
 
-    /*
+    /**
      * Start wayfinding, making some cleanup first.
      */
     function startWayfinding() {
@@ -143,6 +197,21 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
         onStartWayfinding();
     }
 
+    /**
+     * Start directions, making some cleanup first.
+     */
+    function startDirections() {
+        setShowFullDescription(false);
+        setDescriptionHasContentAbove(false);
+        setDescriptionHasContentBelow(false);
+        setSize(snapPoints.FIT);
+
+        onStartDirections();
+    }
+
+    /**
+     * Close the Location details page.
+     */
     function back() {
         setShowFullDescription(false);
         setDescriptionHasContentAbove(false);
@@ -199,11 +268,39 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                 </section>}
             </div>
 
-            <button onClick={() => startWayfinding()} style={{ background: primaryColor }} className="location-details__wayfinding">
-                Start wayfinding
-            </button>
+            {!kioskOriginLocationId
+                    ?
+                    <button onClick={() => startWayfinding()}
+                        style={{ background: primaryColor }}
+                        className="location-details__wayfinding">
+                        Start wayfinding
+                    </button>
+                    :
+                    <button disabled={!hasFoundRoute}
+                        onClick={() => startDirections()}
+                        className="location-details__wayfinding"
+                        style={{
+                            background: !hasFoundRoute ? 'gray' : primaryColor,
+                            opacity: !hasFoundRoute ? .5 : 'unset',
+                            cursor: !hasFoundRoute ? 'not-allowed' : 'auto'
+                        }}>
+                        {!hasFoundRoute ? 'Route not available' : 'Start directions'}
+                    </button>
+            }
         </>}
     </div>
 }
 
 export default LocationDetails;
+
+
+/**
+ * Get a point with a floor from a Location to use as origin or destination point.
+ *
+ * @param {object} location
+ * @returns {object}
+ */
+function getLocationPoint(location) {
+    const coordinates = location.geometry.type === 'Point' ? location.geometry.coordinates : location.properties.anchor.coordinates;
+    return { lat: coordinates[1], lng: coordinates[0], floor: location.properties.floor };
+}

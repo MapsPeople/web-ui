@@ -29,6 +29,7 @@ import isMapReadyState from "../../atoms/isMapReadyState";
 import getDesktopPaddingLeft from "../../helpers/GetDesktopPaddingLeft";
 import getDesktopPaddingBottom from "../../helpers/GetDesktopPaddingBottom";
 import getMobilePaddingBottom from "../../helpers/GetMobilePaddingBottom";
+import currentKioskLocationState from "../../atoms/currentKioskLocationState";
 
 const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
 
@@ -66,6 +67,7 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
     const locationId = useRecoilValue(locationIdState);
     const isLocationClicked = useRecoilValue(isLocationClickedState);
     const kioskOriginLocationId = useRecoilValue(kioskOriginLocationIdState);
+    const [, setCurrentKioskLocation] = useRecoilState(currentKioskLocationState);
 
     const isMapReady = useRecoilValue(isMapReadyState);
 
@@ -257,6 +259,7 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
             if (kioskOriginLocationId && isDesktop) {
                 window.mapsindoors.services.LocationsService.getLocation(kioskOriginLocationId).then(kioskOriginLocation => {
                     if (kioskOriginLocation) {
+                        setCurrentKioskLocation(kioskOriginLocation);
                         const displayRule = mapsIndoorsInstance.getDisplayRule(kioskOriginLocation);
 
                         displayRule.visible = true;
