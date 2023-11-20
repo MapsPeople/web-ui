@@ -102,7 +102,8 @@ The supported query parameters are the following:
 15. `pitch` - Used like this `pitch=30`. Not compatible with MapsIndoors 2D models and MapsIndoors labels on Google Maps. The value of the pitch can be between 0-85 degrees on a Mapbox map. 
 16. `bearing` - Used like this `bearing=180`. Not compatible with MapsIndoors 2D models and MapsIndoors labels on Google Maps.  It accepts any value, and will modify it to fit into the range [0, 360].
 
-**Note!** All the query parameters need to be separated with the `&` symbol, without any spaces in between. **Note!** When using parameters such as `directionsTo`, `directionsFrom`, `locationId`, `externalIDs`, and `tileStyle` make sure you are using the correct `apiKey` parameter to which they belong.
+**Note!** All the query parameters need to be separated with the `&` symbol, without any spaces in between.  
+**Note!** When using parameters such as `directionsTo`, `directionsFrom`, `locationId`, `externalIDs`, and `tileStyle` make sure you are using the correct `apiKey` parameter to which they belong.  
 **Note!** When using the `gmMapId` property, you need to use it together with the `gmApiKey` that it is associated with.
 
 Example of URL:
