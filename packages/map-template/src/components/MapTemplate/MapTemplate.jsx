@@ -15,6 +15,7 @@ import tileStyleState from '../../atoms/tileStyleState';
 import categoriesState from '../../atoms/categoriesState';
 import venuesState from '../../atoms/venuesState';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
+import solutionState from '../../atoms/solutionState.js';
 import { useAppHistory } from '../../hooks/useAppHistory';
 import useMediaQuery from '../../hooks/useMediaQuery';
 import Sidebar from '../Sidebar/Sidebar';
@@ -82,6 +83,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [initialFilteredLocations, setInitialFilteredLocations] = useState();
 
     const [appConfig, setAppConfig] = useState();
+    const [solution, setSolution] = useRecoilState(solutionState);
 
     const [, setTileStyle] = useRecoilState(tileStyleState);
     const [, setStartZoomLevel] = useRecoilState(startZoomLevelState);
@@ -148,6 +150,11 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                     setAppConfig(appConfigResult); // We need this as early as possible
                     return appConfigResult;
                 }),
+                // Fetch solution info in order to see what modules are enabled
+                window.mapsindoors.services.SolutionsService.getSolution().then(solutionResult => {
+                    setSolution(solutionResult);
+                    return solutionResult;
+                }),
                 // Ensure a minimum waiting time of 3 seconds
                 new Promise(resolve => setTimeout(resolve, 3000))
             ]).then(([venuesResult, appConfigResult]) => {
@@ -162,14 +169,14 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [apiKey, mapsindoorsSDKAvailable]);
 
     /*
-     * Set map provider access token / API key based on props and app config.
+     * Set map provider access token / API key based on props, app config and solution.
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable && appConfig) {
             setMapboxAccessToken(mapboxAccessToken || appConfig.appSettings?.mapboxAccessToken);
             setGmApiKey(gmApiKey || appConfig.appSettings?.gmKey);
         }
-    }, [gmApiKey, mapboxAccessToken, mapsindoorsSDKAvailable, appConfig]);
+    }, [gmApiKey, mapboxAccessToken, mapsindoorsSDKAvailable, appConfig, solution]);
 
     /*
      * React on changes in the app user roles prop.

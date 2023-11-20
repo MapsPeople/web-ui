@@ -19,7 +19,7 @@ import tileStyleState from '../../atoms/tileStyleState';
 import startZoomLevelState from '../../atoms/startZoomLevelState';
 import positionControlState from '../../atoms/positionControlState';
 import locationIdState from '../../atoms/locationIdState';
-import setMapZoomLevel from "../../helpers/SetMapZoomLevel";
+import useSetMaxZoomLevel from '../../hooks/useSetMaxZoomLevel';
 import bearingState from '../../atoms/bearingState';
 import pitchState from '../../atoms/pitchState';
 import isLocationClickedState from "../../atoms/isLocationClickedState";
@@ -59,6 +59,8 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
     const [, setPositionControl] = useRecoilState(positionControlState);
     const locationId = useRecoilValue(locationIdState);
     const isLocationClicked = useRecoilValue(isLocationClickedState);
+
+    const setMaxZoomLevel = useSetMaxZoomLevel();
 
     useLiveData(apiKey);
 
@@ -183,7 +185,7 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
                     if (startZoomLevel) {
                         miInstance?.setZoom(startZoomLevel);
                     } else {
-                        setMapZoomLevel(miInstance);
+                        setMaxZoomLevel();
                     }
                 }
             });
