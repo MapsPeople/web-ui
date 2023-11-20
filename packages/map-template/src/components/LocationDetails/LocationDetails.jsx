@@ -12,6 +12,7 @@ import kioskOriginLocationIdState from '../../atoms/kioskOriginLocationIdState';
 import currentKioskLocationState from '../../atoms/currentKioskLocationState';
 import directionsServiceState from '../../atoms/directionsServiceState';
 import directionsResponseState from '../../atoms/directionsResponseState';
+import useMediaQuery from '../../hooks/useMediaQuery';
 
 /**
  * Shows details for a MapsIndoors Location.
@@ -58,6 +59,8 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
     const [originLocation, setOriginLocation] = useState();
 
     const [, setDirectionsResponse] = useRecoilState(directionsResponseState);
+
+    const isDesktop = useMediaQuery('(min-width: 992px)');
 
     useEffect(() => {
         // Reset state
@@ -268,24 +271,24 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                 </section>}
             </div>
 
-            {!kioskOriginLocationId
-                    ?
-                    <button onClick={() => startWayfinding()}
-                        style={{ background: primaryColor }}
-                        className="location-details__wayfinding">
-                        Start wayfinding
-                    </button>
-                    :
-                    <button disabled={!hasFoundRoute}
-                        onClick={() => startDirections()}
-                        className="location-details__wayfinding"
-                        style={{
-                            background: !hasFoundRoute ? 'gray' : primaryColor,
-                            opacity: !hasFoundRoute ? .5 : 'unset',
-                            cursor: !hasFoundRoute ? 'not-allowed' : 'auto'
-                        }}>
-                        {!hasFoundRoute ? 'Route not available' : 'Start directions'}
-                    </button>
+            {kioskOriginLocationId && isDesktop
+                ?
+                <button disabled={!hasFoundRoute}
+                    onClick={() => startDirections()}
+                    className="location-details__wayfinding"
+                    style={{
+                        background: !hasFoundRoute ? 'gray' : primaryColor,
+                        opacity: !hasFoundRoute ? .5 : 'unset',
+                        cursor: !hasFoundRoute ? 'not-allowed' : 'auto'
+                    }}>
+                    {!hasFoundRoute ? 'Route not available' : 'Start directions'}
+                </button>
+                :
+                <button onClick={() => startWayfinding()}
+                    style={{ background: primaryColor }}
+                    className="location-details__wayfinding">
+                    Start wayfinding
+                </button>
             }
         </>}
     </div>

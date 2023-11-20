@@ -12,7 +12,6 @@ import Wayfinding from '../Wayfinding/Wayfinding';
 import Directions from '../Directions/Directions';
 import Search from '../Search/Search';
 import LocationsList from '../LocationsList/LocationsList';
-import currentKioskLocationState from '../../atoms/currentKioskLocationState';
 
 /**
  * @param {Object} props
@@ -38,8 +37,6 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
     const categories = useRecoilValue(categoriesState);
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
-
-    const currentKioskLocation = useRecoilValue(currentKioskLocationState)
 
     /*
      * React on changes on the current location and directions locations and set relevant bottom sheet.
@@ -78,17 +75,6 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
         pushAppView(appViews.SEARCH);
         setCurrentLocation();
         setFilteredLocationsByExternalID([]);
-    }
-
-    /**
-     * Close the Directions page and navigate to the different pages based on the currentKioskLocation.
-     */
-    function closeDirections() {
-        if (currentKioskLocation) {
-            pushAppView(appViews.LOCATION_DETAILS)
-        } else {
-            pushAppView(appViews.WAYFINDING)
-        }
     }
 
     const bottomSheets = [
@@ -151,7 +137,7 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
             <Directions
                 onSetSize={size => setDirectionsSheetSize(size)}
                 isOpen={currentAppView === appViews.DIRECTIONS}
-                onBack={() => closeDirections()}
+                onBack={() => pushAppView(appViews.WAYFINDING)}
                 snapPointSwiped={directionsSheetSwiped}
             />
         </Sheet>
