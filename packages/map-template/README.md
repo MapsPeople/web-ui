@@ -91,7 +91,7 @@ Install the package:
 Use the `MapsIndoorsMap` component in a React component:
 
 ```javascript
-import MapsIndoorsMap from '@mapsindoors/map-template/dist/mapsindoors-react.es.js';
+import MapsIndoorsMap from '@mapsindoors/map-template@stable/dist/mapsindoors-react.es.js';
 
 // Somewhere in your JSX:
 <div style={{
