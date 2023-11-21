@@ -13,6 +13,7 @@ import currentKioskLocationState from '../../atoms/currentKioskLocationState';
 import directionsServiceState from '../../atoms/directionsServiceState';
 import directionsResponseState from '../../atoms/directionsResponseState';
 import useMediaQuery from '../../hooks/useMediaQuery';
+import getLocationPoint from '../../helpers/GetLocationPoint';
 
 /**
  * Shows details for a MapsIndoors Location.
@@ -75,6 +76,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
             setDestinationLocation(location)
 
         }
+
         if (currentKioskLocation) {
             setOriginLocation(currentKioskLocation)
         }
@@ -295,15 +297,3 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
 }
 
 export default LocationDetails;
-
-
-/**
- * Get a point with a floor from a Location to use as origin or destination point.
- *
- * @param {object} location
- * @returns {object}
- */
-function getLocationPoint(location) {
-    const coordinates = location.geometry.type === 'Point' ? location.geometry.coordinates : location.properties.anchor.coordinates;
-    return { lat: coordinates[1], lng: coordinates[0], floor: location.properties.floor };
-}

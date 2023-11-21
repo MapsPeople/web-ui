@@ -30,6 +30,7 @@ import primaryColorState from "../../atoms/primaryColorState";
 import directionsResponseState from "../../atoms/directionsResponseState";
 import addMapboxPlaceGeometry from "../Map/MapboxMap/MapboxPlacesHandler";
 import mapboxAccessTokenState from "../../atoms/mapboxAccessTokenState";
+import getLocationPoint from "../../helpers/GetLocationPoint";
 
 const searchFieldIdentifiers = {
     TO: 'TO',
@@ -170,17 +171,6 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         if (typeof onSetSize === 'function') {
             onSetSize(size);
         }
-    }
-
-    /**
-     * Get a point with a floor from a Location to use as origin or destination point.
-     *
-     * @param {object} location
-     * @returns {object}
-     */
-    function getLocationPoint(location) {
-        const coordinates = location.geometry.type === 'Point' ? location.geometry.coordinates : location.properties.anchor.coordinates;
-        return { lat: coordinates[1], lng: coordinates[0], floor: location.properties.floor };
     }
 
     /**
