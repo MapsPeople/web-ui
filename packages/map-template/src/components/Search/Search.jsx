@@ -15,6 +15,8 @@ import isLocationClickedState from '../../atoms/isLocationClickedState';
 import useMediaQuery from '../../hooks/useMediaQuery';
 import fitBoundsLocation from '../../helpers/fitBoundsLocation';
 import getDesktopPaddingLeft from '../../helpers/GetDesktopPaddingLeft';
+import showKeyboardState from '../../atoms/showKeyboardState';
+import kioskOriginLocationIdState from '../../atoms/kioskOriginLocationIdState';
 
 /**
  * Show the search results.
@@ -34,6 +36,7 @@ function Search({ onSetSize }) {
     const [searchDisabled, setSearchDisabled] = useState(true);
     const [searchResults, setSearchResults] = useState([]);
     const categories = useRecoilValue(categoriesState);
+    const showKeyboard = useRecoilValue(showKeyboardState);
 
     /** Indicate if search results have been found */
     const [showNotFoundMessage, setShowNotFoundMessage] = useState(false);
@@ -61,6 +64,8 @@ function Search({ onSetSize }) {
     const [currentVenueId, setCurrentVenueId] = useRecoilState(currentVenueNameState);
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
+
+    const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
 
     /**
      * Get the locations and filter through them based on categories selected.
@@ -154,6 +159,10 @@ function Search({ onSetSize }) {
         } else {
             searchFieldRef.current.focusInput();
         }
+
+        if (showKeyboard) {
+            setIsKeyboardVisible(true);
+        }
     }
 
     /**
@@ -211,6 +220,14 @@ function Search({ onSetSize }) {
         }
     });
 
+    setTimeout(() => {
+        if (isDesktop && showKeyboard) {
+            const miKeyboard = document.querySelector('mi-keyboard');
+            miKeyboard.inputElement = document.querySelector('mi-search input');
+        }
+    }, 2000);
+
+
     return (
         <div className="search"
             ref={searchRef}
@@ -253,6 +270,7 @@ function Search({ onSetSize }) {
                     </div>
                 }
             </div>
+            {isKeyboardVisible && isDesktop && <mi-keyboard></mi-keyboard>}
         </div>
     )
 }
