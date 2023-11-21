@@ -17,6 +17,8 @@ import { snapPoints } from "../../constants/snapPoints";
 import substepsToggledState from "../../atoms/substepsToggledState";
 import getDesktopPaddingLeft from "../../helpers/GetDesktopPaddingLeft";
 import getMobilePaddingBottom from "../../helpers/GetMobilePaddingBottom";
+import kioskOriginLocationIdState from "../../atoms/kioskOriginLocationIdState";
+import getDesktopPaddingBottom from "../../helpers/GetDesktopPaddingBottom";
 
 let directionsRenderer;
 
@@ -51,6 +53,8 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
 
     const [substepsOpen, setSubstepsOpen] = useRecoilState(substepsToggledState);
 
+    const kioskOriginLocationId = useRecoilValue(kioskOriginLocationIdState);
+
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
     useEffect(() => {
@@ -71,8 +75,8 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                 mapsIndoors: mapsIndoorsInstance,
                 fitBoundsPadding: {
                     top: padding,
-                    bottom: isDesktop ? padding : getMobilePaddingBottom(),
-                    left: isDesktop ? getDesktopPaddingLeft() : padding,
+                    bottom: getBottomPadding(padding),
+                    left: getLeftPadding(padding),
                     right: padding
                 }
             });
@@ -93,6 +97,39 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
             }
         }
     }, [isOpen, directions, mapsIndoorsInstance, travelMode]);
+
+
+    /**
+     * Get bottom padding when getting directions.
+     * Calculate all cases depending on the kioskOriginLocationId prop as well.
+     */
+    function getBottomPadding(padding) {
+        if (isDesktop) {
+            if (kioskOriginLocationId) {
+                return getDesktopPaddingBottom();
+            } else {
+                return padding;
+            }
+        } else {
+            return getMobilePaddingBottom();
+        }
+    }
+
+    /**
+    * Get left padding when getting directions. 
+    * Calculate all cases depending on the kioskOriginLocationId prop as well. 
+    */
+    function getLeftPadding(padding) {
+        if (isDesktop) {
+            if (kioskOriginLocationId) {
+                return padding;
+            } else {
+                return getDesktopPaddingLeft();
+            }
+        } else {
+            return padding;
+        }
+    }
 
     /*
      * Make sure directions stop rendering on the map when the Directions view is not active anymore.

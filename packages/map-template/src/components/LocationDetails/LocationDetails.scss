@@ -103,6 +103,11 @@
             cursor: pointer;
         }
     }
+
+    &--no-route {
+        opacity: .5;
+        cursor: not-allowed;
+    }
 }
 
 .location-info {
