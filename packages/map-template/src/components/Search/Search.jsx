@@ -10,11 +10,11 @@ import SearchField from '../WebComponentWrappers/Search/Search';
 import filteredLocationsState from '../../atoms/filteredLocationsState';
 import primaryColorState from '../../atoms/primaryColorState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
-import { calculateBounds } from '../../helpers/CalculateBounds';
 import currentLocationState from '../../atoms/currentLocationState';
 import isLocationClickedState from '../../atoms/isLocationClickedState';
-import getDesktopPadding from '../../helpers/GetDesktopPadding';
 import useMediaQuery from '../../hooks/useMediaQuery';
+import fitBoundsLocation from '../../helpers/fitBoundsLocation';
+import getDesktopPaddingLeft from '../../helpers/GetDesktopPaddingLeft';
 
 /**
  * Show the search results.
@@ -187,11 +187,7 @@ function Search({ onSetSize }) {
             mapsIndoorsInstance.setFloor(locationFloor);
         }
 
-        // Calculate the location bbox
-        const locationBbox = calculateBounds(location.geometry)
-        let coordinates = { west: locationBbox[0], south: locationBbox[1], east: locationBbox[2], north: locationBbox[3] }
-        // Fit map to the bounds of the location coordinates, and add left padding
-        mapsIndoorsInstance.getMapView().fitBounds(coordinates, { top: 0, right: 0, bottom: isDesktop ? 0 : 200, left: isDesktop ? getDesktopPadding() : 0 });
+        fitBoundsLocation(location, mapsIndoorsInstance, isDesktop ? 0 : 200, isDesktop ? getDesktopPaddingLeft() : 0)
     }
 
     /*
