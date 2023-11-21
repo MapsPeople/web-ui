@@ -53,6 +53,7 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
             pushAppView(appViews.LOCATION_DETAILS, currentLocation);
         } else if (filteredLocationsByExternalIDs?.length > 0) {
             pushAppView(appViews.EXTERNALIDS);
+            // If there is only one external ID, behave the same as having the location ID prop. 
         } else if (filteredLocationsByExternalIDs?.length === 1) {
             setCurrentLocation(filteredLocationsByExternalIDs[0])
             setLocationId(filteredLocationsByExternalIDs[0].id)
