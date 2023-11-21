@@ -31,7 +31,6 @@ import bearingState from '../../atoms/bearingState';
 import pitchState from '../../atoms/pitchState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import kioskOriginLocationIdState from '../../atoms/kioskOriginLocationIdState';
-import showVenueSelectorState from '../../atoms/showVenueSelectorState';
 import showPositionControlState from '../../atoms/showPositionControlState';
 
 defineCustomElements();
@@ -74,7 +73,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const [, setKioskOriginLocationId] = useRecoilState(kioskOriginLocationIdState);
 
-    const [showVenueSelector, setShowVenueSelector] = useRecoilState(showVenueSelectorState);
+    const [showVenueSelector, setShowVenueSelector] = useState(true);
     const [, setShowPositionControl] = useRecoilState(showPositionControlState);
 
     const directionsFromLocation = useLocationForWayfinding(directionsFrom);
