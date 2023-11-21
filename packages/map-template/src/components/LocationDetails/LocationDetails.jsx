@@ -83,9 +83,9 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
     }, [location, mapsIndoorsInstance, currentKioskLocation]);
 
     /*
-    * When both origin location and destination location are selected, and have geometry, call the MapsIndoors SDK
-    * to get information about the route.
-    */
+     * When both origin location and destination location are selected, and have geometry, 
+     * call the MapsIndoors SDK to get information about the route.
+     */
     useEffect(() => {
         if (originLocation?.geometry && destinationLocation?.geometry) {
             directionsService.getRoute({
