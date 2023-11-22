@@ -173,14 +173,14 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [apiKey, mapsindoorsSDKAvailable]);
 
     /*
-     * Set map provider access token / API key based on props, app config and solution.
+     * Set map provider access token / API key based on props and app config.
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable && appConfig) {
             setMapboxAccessToken(mapboxAccessToken || appConfig.appSettings?.mapboxAccessToken);
             setGmApiKey(gmApiKey || appConfig.appSettings?.gmKey);
         }
-    }, [gmApiKey, mapboxAccessToken, mapsindoorsSDKAvailable, appConfig, solution]);
+    }, [gmApiKey, mapboxAccessToken, mapsindoorsSDKAvailable, appConfig]);
 
     /*
      * React on changes in the app user roles prop.
