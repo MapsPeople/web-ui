@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import substepsToggledState from '../../../atoms/substepsToggledState';
 import './Modal.scss';
+import kioskOriginLocationIdState from '../../../atoms/kioskOriginLocationIdState';
 
 /**
  * A Modal for showing content in the Sidebar.
@@ -18,6 +19,8 @@ function Modal({ children, isOpen }) {
     const [fullHeight, setFullHeight] = useState(false);
 
     const substeps = useRecoilValue(substepsToggledState);
+
+    const kioskOriginLocationId = useRecoilValue(kioskOriginLocationIdState);
 
     const modalRef = useRef();
     const contentRef = useRef();
@@ -41,7 +44,8 @@ function Modal({ children, isOpen }) {
         }
     }, [contentRef]);
 
-    return <div ref={modalRef} className={`modal ${isOpen ? 'modal--open' : ''} ${fullHeight ? 'modal--full' : ''} ${substeps ? 'modal--substeps' : ''}`}>
+    return <div ref={modalRef}
+        className={`modal ${isOpen ? 'modal--open' : ''} ${fullHeight ? 'modal--full' : ''} ${substeps ? 'modal--substeps' : ''} ${kioskOriginLocationId ? 'modal--kiosk' : ''}`}>
         <div ref={contentRef} className="modal__content">
             {children}
         </div>
