@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import './LocationDetails.scss';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import currentLocationState from '../../atoms/currentLocationState';
 import { useIsVerticalOverflow } from '../../hooks/useIsVerticalOverflow';
@@ -11,9 +11,9 @@ import primaryColorState from '../../atoms/primaryColorState';
 import kioskOriginLocationIdState from '../../atoms/kioskOriginLocationIdState';
 import currentKioskLocationState from '../../atoms/currentKioskLocationState';
 import directionsServiceState from '../../atoms/directionsServiceState';
-import directionsResponseState from '../../atoms/directionsResponseState';
 import useMediaQuery from '../../hooks/useMediaQuery';
-import getLocationPoint from '../../helpers/GetLocationPoint';
+import useDirectionsInfo from "../../hooks/useDirectionsInfo";
+import travelModeState from '../../atoms/travelModeState';
 
 /**
  * Shows details for a MapsIndoors Location.
@@ -53,15 +53,19 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
 
     const currentKioskLocation = useRecoilValue(currentKioskLocationState);
 
-    const [hasFoundRoute, setHasFoundRoute] = useState(false);
     const directionsService = useRecoilValue(directionsServiceState);
 
     const [destinationLocation, setDestinationLocation] = useState();
     const [originLocation, setOriginLocation] = useState();
 
-    const [, setDirectionsResponse] = useRecoilState(directionsResponseState);
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
+
+    const travelMode = useRecoilValue(travelModeState);
+
+    const accessibilityOn = useState(false);
+
+    const [, , hasFoundRoute] = useDirectionsInfo(originLocation, destinationLocation, directionsService, travelMode, accessibilityOn)
 
     useEffect(() => {
         // Reset state
@@ -81,38 +85,6 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
             setOriginLocation(currentKioskLocation)
         }
     }, [location, mapsIndoorsInstance, currentKioskLocation]);
-
-    /*
-     * When both origin location and destination location are selected, and have geometry, 
-     * call the MapsIndoors SDK to get information about the route.
-     */
-    useEffect(() => {
-        if (originLocation?.geometry && destinationLocation?.geometry) {
-            directionsService.getRoute({
-                origin: getLocationPoint(originLocation),
-                destination: getLocationPoint(destinationLocation),
-            }).then(directionsResult => {
-                if (directionsResult && directionsResult.legs) {
-                    setHasFoundRoute(true);
-                    // Calculate total distance and time
-                    const totalDistance = directionsResult.legs.reduce((accumulator, current) => accumulator + current.distance.value, 0);
-                    const totalTime = directionsResult.legs.reduce((accumulator, current) => accumulator + current.duration.value, 0);
-
-                    setDirectionsResponse({
-                        originLocation,
-                        destinationLocation,
-                        totalDistance,
-                        totalTime,
-                        directionsResult
-                    });
-                } else {
-                    setHasFoundRoute(false);
-                }
-            }, () => {
-                setHasFoundRoute(false);
-            });
-        }
-    }, [originLocation, destinationLocation, directionsService]);
 
     /**
      * Communicate size change to parent component.
