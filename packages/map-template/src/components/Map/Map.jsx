@@ -44,9 +44,10 @@ let _tileStyle;
  * @param {Object} props
  * @param {function} [props.onLocationClick] - Function that is run when a MapsIndoors Location is clicked. the Location will be sent along as first argument.
  * @param {function} props.onVenueChangedOnMap - Function that is run when the map bounds was changed due to fitting to a venue.
+ * @param {boolean} props.useMapProviderModule
  * @returns
  */
-function Map({ onLocationClick, onVenueChangedOnMap }) {
+function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule }) {
     const apiKey = useRecoilValue(apiKeyState);
     const gmApiKey = useRecoilValue(gmApiKeyState);
     const mapboxAccessToken = useRecoilValue(mapboxAccessTokenState);

@@ -436,6 +436,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             </>
         }
         <MIMap
+            useMapProviderModule={useMapProviderModule}
             onVenueChangedOnMap={(venue) => venueChangedOnMap(venue)}
             onLocationClick={(location) => locationClicked(location)}
         />
