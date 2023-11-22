@@ -23,6 +23,7 @@ import defaultLogo from "../../assets/logo.svg";
  * @param {boolean} [props.supportsUrlParameters] - If you want to support URL Parameters to configure the Map Template.
  * @param {string} [props.gmMapId] - The Google Maps Map ID associated with a specific map style or feature.
  * @param {boolean} [props.useMapProviderModule] - If you want to use the Map Provider set on your solution in the MapsIndoors CMS.
+ * @param {string} [props.kioskOriginLocationId] - If running the Map Template as a kiosk (upcoming feature), provide the Location ID that represents the location of the kiosk.
  */
 function MapsIndoorsMap(props) {
 
@@ -61,6 +62,7 @@ function MapsIndoorsMap(props) {
         const externalIDsQueryParameter = queryStringParams.get('externalIDs')?.split(',');
         const gmMapIdQueryParameter = queryStringParams.get('gmMapId');
         const useMapProviderModule = queryStringParams.get('useMapProviderModule');
+        const kioskOriginLocationId = queryStringParams.get('kioskOriginLocationId');
 
         setMapTemplateProps({
             apiKey: props.supportsUrlParameters && apiKeyQueryParameter ? apiKeyQueryParameter : (props.apiKey || defaultProps.apiKey),
@@ -79,7 +81,8 @@ function MapsIndoorsMap(props) {
             appUserRoles: props.supportsUrlParameters && appUserRolesQueryParameter ? appUserRolesQueryParameter : props.appUserRoles,
             externalIDs: props.supportsUrlParameters && externalIDsQueryParameter ? externalIDsQueryParameter : props.externalIDs,
             gmMapId: props.supportsUrlParameters && gmMapIdQueryParameter ? gmMapIdQueryParameter : props.gmMapId,
-            useMapProviderModule: props.supportsUrlParameters && useMapProviderModule ? useMapProviderModule : props.useMapProviderModule // TODO: Check if types are strict enough.
+            useMapProviderModule: props.supportsUrlParameters && useMapProviderModule ? useMapProviderModule : props.useMapProviderModule, // TODO: Check if types are strict enough.
+            kioskOriginLocationId: props.supportsUrlParameters && kioskOriginLocationId ? kioskOriginLocationId : props.kioskOriginLocationId,
         });
     }, [props]);
 

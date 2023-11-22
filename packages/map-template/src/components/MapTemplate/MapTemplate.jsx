@@ -31,6 +31,7 @@ import gmMapIdState from '../../atoms/gmMapIdState';
 import bearingState from '../../atoms/bearingState';
 import pitchState from '../../atoms/pitchState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
+import kioskOriginLocationIdState from '../../atoms/kioskOriginLocationIdState';
 
 defineCustomElements();
 
@@ -54,8 +55,9 @@ defineCustomElements();
  * @param {number} [props.pitch] - The pitch of the map as a number. Not recommended for Google Maps with 2D Models.
  * @param {string} [props.gmMapId] - The Google Maps Map ID associated with a specific map style or feature.
  * @param {boolean} [props.useMapProviderModule] - If you want to use the Map Provider set on your solution in the MapsIndoors CMS, set this to true.
+ * @param {string} [props.kioskOriginLocationId] - If running the Map Template as a kiosk (upcoming feature), provide the Location ID that represents the location of the kiosk.
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId }) {
 
     const [, setApiKey] = useRecoilState(apiKeyState);
     const [, setGmApiKey] = useRecoilState(gmApiKeyState);
@@ -70,6 +72,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setLogo] = useRecoilState(logoState);
     const [, setGmMapId] = useRecoilState(gmMapIdState);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
+    const [, setKioskOriginLocationId] = useRecoilState(kioskOriginLocationIdState);
 
     const directionsFromLocation = useLocationForWayfinding(directionsFrom);
     const directionsToLocation = useLocationForWayfinding(directionsTo);
@@ -304,8 +307,13 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         setLogo(logo);
     }, [logo]);
 
+
+    /*
+     * React on changes in the current location prop.
+     * Apply location selection if the current location exists and is not the same as the kioskOriginLocationId.
+     */
     useEffect(() => {
-        if (currentLocation) {
+        if (currentLocation && currentLocation.id !== kioskOriginLocationId) {
             if (mapsIndoorsInstance?.selectLocation) {
                 mapsIndoorsInstance.selectLocation(currentLocation);
             }
@@ -315,6 +323,17 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             }
         }
     }, [currentLocation]);
+
+    /*
+     * React on changes to the kioskOriginLocationId prop.
+     */
+    useEffect(() => {
+        if (mapsindoorsSDKAvailable) {
+            if (kioskOriginLocationId) {
+                setKioskOriginLocationId(kioskOriginLocationId);
+            }
+        }
+    }, [kioskOriginLocationId, mapsindoorsSDKAvailable]);
 
     /**
      * When venue is fitted while initializing the data,
@@ -328,13 +347,14 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }
 
     /**
-     * Handle the clicked location on the map.
-     * Set the current location if not in directions mode.
+     * Handle the clicked location on the map. Set the current location if not in directions mode.
+     * Do not set the current location if the clicked location is the same as the kioskOriginLocationId,
+     * due to the logic of displaying directions right away when selecting a location on the map, when in kiosk mode.
      *
      * @param {object} location
      */
     function locationClicked(location) {
-        if (locationsDisabledRef.current !== true) {
+        if (locationsDisabledRef.current !== true && location.id !== kioskOriginLocationId) {
             setCurrentLocation(location);
         }
     }
