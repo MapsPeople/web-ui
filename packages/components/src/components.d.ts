@@ -862,6 +862,10 @@ export namespace Components {
          */
         "focusInput": () => Promise<void>;
         /**
+          * Get hold of the search input field.
+         */
+        "getInputField": () => Promise<HTMLInputElement>;
+        /**
           * Restrict Google Places search to a specific country (two-character, ISO 3166-1 Alpha-2 compatible country code)
          */
         "gmCountryCode": string;

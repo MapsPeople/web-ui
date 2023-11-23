@@ -1,7 +1,8 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import useNear from '../../../hooks/useNear';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useRecoilState } from 'recoil';
 import userPositionState from '../../../atoms/userPositionState';
+import searchInputState from '../../../atoms/searchInputState';
 
 /**
  * React wrapper around the custom element <mi-search>.
@@ -22,6 +23,8 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
     const elementRef = useRef();
 
     const userPosition = useRecoilValue(userPositionState);
+
+    const [, setSearchInput] = useRecoilState(searchInputState)
 
     const mapboxPlacesSessionToken = sessionStorage.getItem('mapboxPlacesSessionToken');
 
@@ -51,6 +54,9 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
         },
         clear() {
             elementRef.current.clear();
+        },
+        getInputField() {
+            return elementRef.current.getInputField().then((searchInput) => setSearchInput(searchInput));
         }
     }));
 

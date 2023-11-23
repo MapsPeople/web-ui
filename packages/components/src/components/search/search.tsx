@@ -198,6 +198,14 @@ export class Search implements ComponentInterface {
     }
 
     /**
+     * Get hold of the search input field.
+     */
+    @Method()
+    public async getInputField(): Promise<HTMLInputElement> {
+        return this.inputElement;
+    }
+
+    /**
      * Perform the search.
      */
     private search(inputValue): void {

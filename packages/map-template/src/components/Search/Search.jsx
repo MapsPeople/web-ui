@@ -16,7 +16,8 @@ import useMediaQuery from '../../hooks/useMediaQuery';
 import fitBoundsLocation from '../../helpers/fitBoundsLocation';
 import getDesktopPaddingLeft from '../../helpers/GetDesktopPaddingLeft';
 import showKeyboardState from '../../atoms/showKeyboardState';
-import kioskOriginLocationIdState from '../../atoms/kioskOriginLocationIdState';
+import Keyboard from '../WebComponentWrappers/Keyboard/Keyboard';
+import searchInputState from '../../atoms/searchInputState';
 
 /**
  * Show the search results.
@@ -66,6 +67,8 @@ function Search({ onSetSize }) {
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
     const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+
+    const searchInput = useRecoilValue(searchInputState)
 
     /**
      * Get the locations and filter through them based on categories selected.
@@ -148,6 +151,7 @@ function Search({ onSetSize }) {
      * But wait for any bottom sheet transition to end before doing that to avoid content jumping when virtual keyboard appears.
      */
     function searchFieldClicked() {
+
         setSize(snapPoints.MAX);
         setSearchDisabled(false);
 
@@ -220,14 +224,6 @@ function Search({ onSetSize }) {
         }
     });
 
-    setTimeout(() => {
-        if (isDesktop && showKeyboard) {
-            const miKeyboard = document.querySelector('mi-keyboard');
-            miKeyboard.inputElement = document.querySelector('mi-search input');
-        }
-    }, 2000);
-
-
     return (
         <div className="search"
             ref={searchRef}
@@ -270,7 +266,7 @@ function Search({ onSetSize }) {
                     </div>
                 }
             </div>
-            {isKeyboardVisible && isDesktop && <mi-keyboard></mi-keyboard>}
+            {isKeyboardVisible && isDesktop && <Keyboard searchInputElement={searchInput}></Keyboard>}
         </div>
     )
 }
