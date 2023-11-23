@@ -42,7 +42,8 @@ function MapsIndoorsMap(props) {
             apiKey: '3ddemo',
             venue: 'WEWORK',
             logo: defaultLogo,
-            primaryColor: '#005655' // --brand-colors-dark-pine-100 from MIDT
+            primaryColor: '#005655', // --brand-colors-dark-pine-100 from MIDT
+            useMapProviderModule: false
         };
 
         const apiKeyQueryParameter = queryStringParams.get('apiKey');
@@ -81,7 +82,7 @@ function MapsIndoorsMap(props) {
             appUserRoles: props.supportsUrlParameters && appUserRolesQueryParameter ? appUserRolesQueryParameter : props.appUserRoles,
             externalIDs: props.supportsUrlParameters && externalIDsQueryParameter ? externalIDsQueryParameter : props.externalIDs,
             gmMapId: props.supportsUrlParameters && gmMapIdQueryParameter ? gmMapIdQueryParameter : props.gmMapId,
-            useMapProviderModule: props.supportsUrlParameters && useMapProviderModule ? useMapProviderModule : props.useMapProviderModule, // TODO: Check if types are strict enough.
+            useMapProviderModule: props.supportsUrlParameters && useMapProviderModule ? useMapProviderModule : (props.useMapProviderModule || defaultProps.useMapProviderModule),
             kioskOriginLocationId: props.supportsUrlParameters && kioskOriginLocationId ? kioskOriginLocationId : props.kioskOriginLocationId,
         });
     }, [props]);
