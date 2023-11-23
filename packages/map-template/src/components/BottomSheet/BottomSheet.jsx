@@ -51,7 +51,7 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
             pushAppView(appViews.WAYFINDING);
         } else if (currentLocation) {
             pushAppView(appViews.LOCATION_DETAILS, currentLocation);
-        } else if (filteredLocationsByExternalIDs?.length > 0) {
+        } else if (filteredLocationsByExternalIDs?.length > 1) {
             pushAppView(appViews.EXTERNALIDS);
             // If there is only one external ID, behave the same as having the location ID prop. 
         } else if (filteredLocationsByExternalIDs?.length === 1) {
@@ -66,7 +66,7 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
      * Close the location details page and navigate to either the Locations list page or the Search page.
      */
     function closeLocationDetails() {
-        if (filteredLocationsByExternalIDs?.length > 0) {
+        if (filteredLocationsByExternalIDs?.length > 1) {
             pushAppView(appViews.EXTERNALIDS);
             setCurrentLocation();
         } else if (filteredLocationsByExternalIDs?.length === 1) {
