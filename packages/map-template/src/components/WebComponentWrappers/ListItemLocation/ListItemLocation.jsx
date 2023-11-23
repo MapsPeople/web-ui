@@ -20,7 +20,6 @@ function ListItemLocation({ location, locationClicked, icon, isHovered }) {
         const hoverHandler = () => {
             mapsIndoorsInstance.hoverLocation(location);
         }
-
         const unhoverHandler = () => {
             mapsIndoorsInstance.unhoverLocation(location);
         }
