@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import mapsIndoorsInstanceState from '../../../atoms/mapsIndoorsInstanceState';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -8,7 +8,6 @@ import primaryColorState from '../../../atoms/primaryColorState';
 import bearingState from '../../../atoms/bearingState';
 import pitchState from '../../../atoms/pitchState';
 import { v4 as uuidv4 } from 'uuid';
-import showPositionControlState from '../../../atoms/showPositionControlState';
 
 /**
  * Takes care of instantiating a MapsIndoors Mapbox MapView.
@@ -27,7 +26,6 @@ function MapboxMap({ onMapView, onPositionControl }) {
     const primaryColor = useRecoilValue(primaryColorState);
     const bearing = useRecoilValue(bearingState);
     const pitch = useRecoilValue(pitchState);
-    const showPositionControl = useRecoilValue(showPositionControlState);
 
     useEffect(() => {
         // Initialize MapboxView MapView
@@ -57,7 +55,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
 
     // Add Floor Selector to the Map when ready.
     useEffect(() => {
-        if (mapsIndoorsInstance && mapView && showPositionControl && !hasPositionControl) {
+        if (mapsIndoorsInstance && mapView && !hasPositionControl) {
             const myPositionButtonElement = document.createElement('mi-my-position');
             myPositionButtonElement.mapsindoors = mapsIndoorsInstance;
 
@@ -81,7 +79,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
 
             setHasFloorSelector(true);
         }
-    }, [mapsIndoorsInstance, mapView, hasFloorSelector, hasPositionControl, showPositionControl]);
+    }, [mapsIndoorsInstance, mapView, hasFloorSelector, hasPositionControl]);
 
     return <div className="map-container" id="map"></div>
 }

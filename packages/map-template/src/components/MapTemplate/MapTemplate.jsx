@@ -31,7 +31,6 @@ import bearingState from '../../atoms/bearingState';
 import pitchState from '../../atoms/pitchState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import kioskOriginLocationIdState from '../../atoms/kioskOriginLocationIdState';
-import showPositionControlState from '../../atoms/showPositionControlState';
 
 defineCustomElements();
 
@@ -74,7 +73,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setKioskOriginLocationId] = useRecoilState(kioskOriginLocationIdState);
 
     const [showVenueSelector, setShowVenueSelector] = useState(true);
-    const [, setShowPositionControl] = useRecoilState(showPositionControlState);
+    const [showPositionControl, setShowPositionControl] = useState(true);
 
     const directionsFromLocation = useLocationForWayfinding(directionsFrom);
     const directionsToLocation = useLocationForWayfinding(directionsTo);
@@ -324,10 +323,13 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
+            setKioskOriginLocationId(kioskOriginLocationId);
             if (kioskOriginLocationId) {
-                setKioskOriginLocationId(kioskOriginLocationId);
                 setShowVenueSelector(false);
                 setShowPositionControl(false);
+            } else {
+                setShowVenueSelector(true);
+                setShowPositionControl(true);
             }
         }
     }, [kioskOriginLocationId, mapsindoorsSDKAvailable]);
@@ -403,7 +405,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         setCategories(uniqueCategories);
     }
 
-    return <div className={`mapsindoors-map ${locationsDisabledRef.current ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}`}>
+    return <div className={`mapsindoors-map ${locationsDisabledRef.current ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'} ${showPositionControl ? 'mapsindoors-map--show-my-position' : 'mapsindoors-map--hide-my-position'}`}>
         {!isMapReady && <SplashScreen />}
         {venues.length > 1 && showVenueSelector && <VenueSelector
             onOpen={() => pushAppView(appStates.VENUE_SELECTOR)}
