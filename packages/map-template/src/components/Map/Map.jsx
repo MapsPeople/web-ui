@@ -30,6 +30,7 @@ import getDesktopPaddingLeft from "../../helpers/GetDesktopPaddingLeft";
 import getDesktopPaddingBottom from "../../helpers/GetDesktopPaddingBottom";
 import getMobilePaddingBottom from "../../helpers/GetMobilePaddingBottom";
 import solutionState from '../../atoms/solutionState';
+import notificationMessageState from '../../atoms/notificationMessageState';
 
 const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
 
@@ -69,6 +70,7 @@ function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule }) {
     const locationId = useRecoilValue(locationIdState);
     const isLocationClicked = useRecoilValue(isLocationClickedState);
     const kioskOriginLocationId = useRecoilValue(kioskOriginLocationIdState);
+    const [, setErrorMessage] = useRecoilState(notificationMessageState);
 
     const isMapReady = useRecoilValue(isMapReadyState);
 
@@ -128,8 +130,8 @@ function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule }) {
         if (mapTypeToUse) {
             setMapType(mapTypeToUse);
         } else {
-            // A good candiate for map type could not be determined.
-            // TODO: Show a message to the user
+            // A good candidate for map type could not be determined.
+            setErrorMessage({ text: 'Please provide a Mapbox Access Token or Google Maps API key to show a map.', type: 'error' });
         }
     }, [gmApiKey, mapboxAccessToken, solution]);
 
