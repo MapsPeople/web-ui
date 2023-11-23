@@ -22,14 +22,13 @@ import locationIdState from '../../atoms/locationIdState';
 import bearingState from '../../atoms/bearingState';
 import pitchState from '../../atoms/pitchState';
 import isLocationClickedState from "../../atoms/isLocationClickedState";
-import kioskOriginLocationIdState from "../../atoms/kioskOriginLocationIdState";
 import fitBoundsLocation from "../../helpers/fitBoundsLocation";
 import useMediaQuery from "../../hooks/useMediaQuery";
 import isMapReadyState from "../../atoms/isMapReadyState";
 import getDesktopPaddingLeft from "../../helpers/GetDesktopPaddingLeft";
 import getDesktopPaddingBottom from "../../helpers/GetDesktopPaddingBottom";
 import getMobilePaddingBottom from "../../helpers/GetMobilePaddingBottom";
-import currentKioskLocationState from "../../atoms/currentKioskLocationState";
+import kioskLocationState from "../../atoms/kioskLocationState";
 
 const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
 
@@ -66,8 +65,7 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
     const [, setPositionControl] = useRecoilState(positionControlState);
     const locationId = useRecoilValue(locationIdState);
     const isLocationClicked = useRecoilValue(isLocationClickedState);
-    const kioskOriginLocationId = useRecoilValue(kioskOriginLocationIdState);
-    const [, setCurrentKioskLocation] = useRecoilState(currentKioskLocationState);
+    const kioskLocation = useRecoilValue(kioskLocationState);
 
     const isMapReady = useRecoilValue(isMapReadyState);
 
@@ -93,7 +91,7 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
         if (mapsIndoorsInstance) {
             window.localStorage.removeItem(localStorageKeyForVenue);
             const venueToShow = getVenueToShow(venueName, venues);
-            if (venueToShow && !isLocationClicked && !locationId && !kioskOriginLocationId) {
+            if (venueToShow && !isLocationClicked && !locationId && !kioskLocation.id) {
                 setVenue(venueToShow, mapsIndoorsInstance).then(() => {
                     onVenueChangedOnMap(venueToShow);
                 });
@@ -211,7 +209,7 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
         setDirectionsService(directionsService);
 
         const venueToShow = getVenueToShow(venueName, venues);
-        if (venueToShow && !locationId && !kioskOriginLocationId) {
+        if (venueToShow && !locationId && !kioskLocation.id) {
             setVenue(venueToShow, miInstance);
         }
     };
@@ -252,30 +250,25 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
      */
     useEffect(() => {
         if (isMapReady && mapsIndoorsInstance) {
-            // If kioskOriginLocationId prop is present, set the display rule for the kiosk location.
+            // If kioskLocation prop is present, set the display rule for the kiosk location.
             // Set the icon size representing the kiosk to be double the size.
             // Set the floor based on the floor that the kiosk is located on.
             // Fit the map to the kiosk location bounds and add the padding calculated based on the modal.
-            if (kioskOriginLocationId && isDesktop) {
-                window.mapsindoors.services.LocationsService.getLocation(kioskOriginLocationId).then(kioskOriginLocation => {
-                    if (kioskOriginLocation) {
-                        setCurrentKioskLocation(kioskOriginLocation);
-                        const displayRule = mapsIndoorsInstance.getDisplayRule(kioskOriginLocation);
+            if (kioskLocation && isDesktop) {
+                const displayRule = mapsIndoorsInstance.getDisplayRule(kioskLocation);
 
-                        displayRule.visible = true;
-                        displayRule.iconSize = { width: displayRule.iconSize.width * 2, height: displayRule.iconSize.height * 2 };
-                        displayRule.iconVisible = true;
-                        displayRule.zoomFrom = 0;
-                        displayRule.zoomTo = 999;
-                        displayRule.clickable = false;
-                        mapsIndoorsInstance.setDisplayRule(kioskOriginLocation.id, displayRule);
+                displayRule.visible = true;
+                displayRule.iconSize = { width: displayRule.iconSize.width * 2, height: displayRule.iconSize.height * 2 };
+                displayRule.iconVisible = true;
+                displayRule.zoomFrom = 0;
+                displayRule.zoomTo = 999;
+                displayRule.clickable = false;
+                mapsIndoorsInstance.setDisplayRule(kioskLocation.id, displayRule);
 
-                        const locationFloor = kioskOriginLocation.properties.floor;
-                        mapsIndoorsInstance.setFloor(locationFloor);
+                const locationFloor = kioskLocation.properties.floor;
+                mapsIndoorsInstance.setFloor(locationFloor);
 
-                        fitBoundsLocation(kioskOriginLocation, mapsIndoorsInstance, getDesktopPaddingBottom(), 0);
-                    }
-                });
+                fitBoundsLocation(kioskLocation, mapsIndoorsInstance, getDesktopPaddingBottom(), 0);
             } else if (locationId) {
                 window.mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
                     if (location) {
@@ -289,7 +282,7 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
                 });
             }
         }
-    }, [kioskOriginLocationId, locationId, isMapReady]);
+    }, [kioskLocation, locationId, isMapReady]);
 
     return (<>
         {mapType === mapTypes.Google && <GoogleMapsMap onMapView={onMapView} onPositionControl={onPositionControlCreated} />}

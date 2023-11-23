@@ -8,7 +8,7 @@ import Wayfinding from '../Wayfinding/Wayfinding';
 import Directions from '../Directions/Directions';
 import Search from '../Search/Search';
 import LocationsList from '../LocationsList/LocationsList';
-import currentKioskLocationState from '../../atoms/currentKioskLocationState';
+import kioskLocationState from '../../atoms/kioskLocationState';
 
 /**
  * @param {Object} props
@@ -23,7 +23,7 @@ import currentKioskLocationState from '../../atoms/currentKioskLocationState';
 function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews }) {
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
-    const currentKioskLocation = useRecoilValue(currentKioskLocationState)
+    const kioskLocation = useRecoilValue(kioskLocationState)
 
     /*
      * React on changes on the current location and directions locations and set relevant bottom sheet.
@@ -65,10 +65,10 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
     }
 
     /**
-     * Close the Directions page and navigate to the different pages based on the currentKioskLocation.
+     * Close the Directions page and navigate to the different pages based on the kioskLocation.
      */
     function closeDirections() {
-        if (currentKioskLocation) {
+        if (kioskLocation) {
             pushAppView(appViews.LOCATION_DETAILS)
         } else {
             pushAppView(appViews.WAYFINDING)

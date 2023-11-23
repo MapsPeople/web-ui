@@ -8,12 +8,11 @@ import { useIsVerticalOverflow } from '../../hooks/useIsVerticalOverflow';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import { snapPoints } from '../../constants/snapPoints';
 import primaryColorState from '../../atoms/primaryColorState';
-import kioskOriginLocationIdState from '../../atoms/kioskOriginLocationIdState';
-import currentKioskLocationState from '../../atoms/currentKioskLocationState';
 import directionsServiceState from '../../atoms/directionsServiceState';
 import useMediaQuery from '../../hooks/useMediaQuery';
 import useDirectionsInfo from "../../hooks/useDirectionsInfo";
 import travelModeState from '../../atoms/travelModeState';
+import kioskLocationState from '../../atoms/kioskLocationState';
 
 /**
  * Shows details for a MapsIndoors Location.
@@ -49,15 +48,12 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
 
     const primaryColor = useRecoilValue(primaryColorState);
 
-    const kioskOriginLocationId = useRecoilValue(kioskOriginLocationIdState);
-
-    const currentKioskLocation = useRecoilValue(currentKioskLocationState);
+    const kioskLocation = useRecoilValue(kioskLocationState);
 
     const directionsService = useRecoilValue(directionsServiceState);
 
     const [destinationLocation, setDestinationLocation] = useState();
     const [originLocation, setOriginLocation] = useState();
-
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
@@ -81,10 +77,10 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
 
         }
 
-        if (currentKioskLocation) {
-            setOriginLocation(currentKioskLocation)
+        if (kioskLocation) {
+            setOriginLocation(kioskLocation)
         }
-    }, [location, mapsIndoorsInstance, currentKioskLocation]);
+    }, [location, mapsIndoorsInstance, kioskLocation]);
 
     /**
      * Communicate size change to parent component.
@@ -245,7 +241,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                 </section>}
             </div>
 
-            {kioskOriginLocationId && isDesktop
+            {kioskLocation.id && isDesktop
                 ?
                 <button disabled={!hasFoundRoute}
                     onClick={() => startDirections()}
