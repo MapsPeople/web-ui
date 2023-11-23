@@ -241,7 +241,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                 </section>}
             </div>
 
-            {kioskLocation.id && isDesktop
+            {kioskLocation && isDesktop
                 ?
                 <button disabled={!hasFoundRoute}
                     onClick={() => startDirections()}

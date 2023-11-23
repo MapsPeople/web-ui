@@ -91,7 +91,7 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
         if (mapsIndoorsInstance) {
             window.localStorage.removeItem(localStorageKeyForVenue);
             const venueToShow = getVenueToShow(venueName, venues);
-            if (venueToShow && !isLocationClicked && !locationId && !kioskLocation.id) {
+            if (venueToShow && !isLocationClicked && !locationId && !kioskLocation) {
                 setVenue(venueToShow, mapsIndoorsInstance).then(() => {
                     onVenueChangedOnMap(venueToShow);
                 });
@@ -209,7 +209,7 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
         setDirectionsService(directionsService);
 
         const venueToShow = getVenueToShow(venueName, venues);
-        if (venueToShow && !locationId && !kioskLocation.id) {
+        if (venueToShow && !locationId && !kioskLocation) {
             setVenue(venueToShow, miInstance);
         }
     };

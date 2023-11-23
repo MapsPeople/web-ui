@@ -105,7 +105,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
      */
     function getBottomPadding(padding) {
         if (isDesktop) {
-            if (kioskLocation.id) {
+            if (kioskLocation) {
                 return getDesktopPaddingBottom();
             } else {
                 return padding;
@@ -121,7 +121,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
     */
     function getLeftPadding(padding) {
         if (isDesktop) {
-            if (kioskLocation.id) {
+            if (kioskLocation) {
                 return padding;
             } else {
                 return getDesktopPaddingLeft();
