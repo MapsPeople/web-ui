@@ -17,7 +17,13 @@ function ListItemLocation({ location, locationClicked, icon, isHovered }) {
 
     useEffect(() => {
         const clickHandler = customEvent => locationClicked(customEvent.detail);
-        const hoverHandler = () => mapsIndoorsInstance.setHoveredLocation(location);
+        const hoverHandler = () => {
+            mapsIndoorsInstance.hoverLocation(location);
+        }
+
+        const unhoverHandler = () => {
+            mapsIndoorsInstance.unhoverLocation(location);
+        }
 
         const { current } = elementRef;
 
@@ -27,7 +33,8 @@ function ListItemLocation({ location, locationClicked, icon, isHovered }) {
 
         current.addEventListener('locationClicked', clickHandler);
         current.addEventListener('mouseover', hoverHandler)
-        
+        current.addEventListener('mouseout', unhoverHandler)
+
         if (isHovered) {
             elementRef.current.classList.add('hovered')
         } else {
@@ -37,6 +44,7 @@ function ListItemLocation({ location, locationClicked, icon, isHovered }) {
         return () => {
             current.removeEventListener('locationClicked', clickHandler);
             current.removeEventListener('mouseover', hoverHandler);
+            current.removeEventListener('mouseout', unhoverHandler)
         }
     }, [location, locationClicked, isHovered]);
 
