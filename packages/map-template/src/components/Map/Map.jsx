@@ -29,6 +29,7 @@ import isMapReadyState from "../../atoms/isMapReadyState";
 import getDesktopPaddingLeft from "../../helpers/GetDesktopPaddingLeft";
 import getDesktopPaddingBottom from "../../helpers/GetDesktopPaddingBottom";
 import getMobilePaddingBottom from "../../helpers/GetMobilePaddingBottom";
+import solutionState from '../../atoms/solutionState';
 
 const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
 
@@ -64,6 +65,7 @@ function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule }) {
     const bearing = useRecoilValue(bearingState);
     const pitch = useRecoilValue(pitchState);
     const [, setPositionControl] = useRecoilState(positionControlState);
+    const solution = useRecoilValue(solutionState);
     const locationId = useRecoilValue(locationIdState);
     const isLocationClicked = useRecoilValue(isLocationClickedState);
     const kioskOriginLocationId = useRecoilValue(kioskOriginLocationIdState);
@@ -75,15 +77,61 @@ function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule }) {
     useLiveData(apiKey);
 
     useEffect(() => {
-        if (gmApiKey === null && mapboxAccessToken === null) return;
+        if (!solution || (gmApiKey === null && mapboxAccessToken === null)) return;
 
-        if (mapboxAccessToken) {
-            setMapType(mapTypes.Mapbox);
+        /*
+        Which map type to load (Mapbox or Google Maps) is determined here, based on following decision table:
+        (note that some combinations can result in no map being loaded at all)
+
+        -----------------------------------------------------------------------------------------------------------------
+        useMapProviderModule     Mapbox module enabled      Mapbox Access Token      Google Maps API key      Map to load
+        prop value               on solution                is available             is available
+        -----------------------------------------------------------------------------------------------------------------
+        true                     ✅                         ✅                       ✅                      Mapbox
+        true                     ✅                         ✅                       ❌                      Mapbox
+        true                     ✅                         ❌                       ✅                      None
+        true                     ✅                         ❌                       ❌                      None
+        true                     ❌                         ✅                       ✅                      Google Maps
+        true                     ❌                         ✅                       ❌                      None
+        true                     ❌                         ❌                       ✅                      Google Maps
+        true                     ❌                         ❌                       ❌                      None
+        false                    ✅                         ✅                       ✅                      Mapbox
+        false                    ✅                         ✅                       ❌                      Mapbox
+        false                    ✅                         ❌                       ✅                      Google Maps
+        false                    ✅                         ❌                       ❌                      Google Maps
+        false                    ❌                         ✅                       ✅                      Mapbox
+        false                    ❌                         ✅                       ❌                      Mapbox
+        false                    ❌                         ❌                       ✅                      Google Maps
+        false                    ❌                         ❌                       ❌                      Google Maps
+         */
+
+        let mapTypeToUse;
+        const isMapboxModuleEnabled = solution.modules.map(module => module.toLowerCase()).includes('mapbox');
+        if (useMapProviderModule) {
+            if (isMapboxModuleEnabled) {
+                if (mapboxAccessToken) {
+                    mapTypeToUse = mapTypes.Mapbox;
+                }
+            } else {
+                if (gmApiKey) {
+                    mapTypeToUse = mapTypes.Google;
+                }
+            }
         } else {
-            // A Google Maps map will have precedense if no keys or keys for both providers are set.
-            setMapType(mapTypes.Google);
+            if (mapboxAccessToken) {
+                mapTypeToUse = mapTypes.Mapbox;
+            } else {
+                mapTypeToUse = mapTypes.Google;
+            }
         }
-    }, [gmApiKey, mapboxAccessToken]);
+
+        if (mapTypeToUse) {
+            setMapType(mapTypeToUse);
+        } else {
+            // A good candiate for map type could not be determined.
+            // TODO: Show a message to the user
+        }
+    }, [gmApiKey, mapboxAccessToken, solution]);
 
     /*
      * React to changes in the venue prop.
