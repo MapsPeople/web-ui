@@ -23,7 +23,7 @@ import defaultLogo from "../../assets/logo.svg";
  * @param {boolean} [props.supportsUrlParameters] - If you want to support URL Parameters to configure the Map Template.
  * @param {string} [props.gmMapId] - The Google Maps Map ID associated with a specific map style or feature.
  * @param {string} [props.kioskOriginLocationId] - If running the Map Template as a kiosk (upcoming feature), provide the Location ID that represents the location of the kiosk.
- * @param {boolean} [props.showKeyboard] - If you want to show an onscreen keyboard in the Map Template.
+ * @param {boolean} [props.showKeyboard] - If running the Map Template as a kiosk, set this prop to true and it will prompt a keyboard. 
  */
 function MapsIndoorsMap(props) {
 

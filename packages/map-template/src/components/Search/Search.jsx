@@ -147,11 +147,11 @@ function Search({ onSetSize }) {
     }
 
     /**
-     * When search field is clicked, maximize the sheet size and set focus on the from field.
+     * When search field is clicked, maximize the sheet size and set focus on the from field, 
+     * and if the showKeyboard prop is present, show the onscreen keyboard.
      * But wait for any bottom sheet transition to end before doing that to avoid content jumping when virtual keyboard appears.
      */
     function searchFieldClicked() {
-
         setSize(snapPoints.MAX);
         setSearchDisabled(false);
 
