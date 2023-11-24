@@ -324,7 +324,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
             setKioskOriginLocationId(kioskOriginLocationId);
-            if (kioskOriginLocationId) {
+            if (kioskOriginLocationId && isDesktop)  {
                 setShowVenueSelector(false);
                 setShowPositionControl(false);
             } else {
