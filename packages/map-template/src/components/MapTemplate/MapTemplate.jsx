@@ -327,7 +327,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 window.mapsindoors.services.LocationsService.getLocation(kioskOriginLocationId).then(kioskLocation => {
                     setKioskLocation(kioskLocation);
                 })
+            } else {
+                setKioskLocation();
             }
+
             if (kioskOriginLocationId && isDesktop) {
                 setShowVenueSelector(false);
                 setShowPositionControl(false);
