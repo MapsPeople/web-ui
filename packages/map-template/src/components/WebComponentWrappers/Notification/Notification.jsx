@@ -1,5 +1,5 @@
 import { useRecoilValue } from 'recoil';
-import notificationMessageState from '../../atoms/notificationMessageState';
+import notificationMessageState from '../../../atoms/notificationMessageState';
 import { useEffect, useRef } from 'react';
 import './Notification.scss';
 

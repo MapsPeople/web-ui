@@ -32,7 +32,7 @@ import bearingState from '../../atoms/bearingState';
 import pitchState from '../../atoms/pitchState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import kioskOriginLocationIdState from '../../atoms/kioskOriginLocationIdState';
-import Notification from '../Notification/Notification.jsx';
+import Notification from '../WebComponentWrappers/Notification/Notification.jsx';
 
 defineCustomElements();
 
