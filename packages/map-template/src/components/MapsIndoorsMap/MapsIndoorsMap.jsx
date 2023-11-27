@@ -62,7 +62,7 @@ function MapsIndoorsMap(props) {
         const appUserRolesQueryParameter = queryStringParams.get('appUserRoles')?.split(',');
         const externalIDsQueryParameter = queryStringParams.get('externalIDs')?.split(',');
         const gmMapIdQueryParameter = queryStringParams.get('gmMapId');
-        const useMapProviderModule = queryStringParams.get('useMapProviderModule');
+        const useMapProviderModuleParameter = queryStringParams.get('useMapProviderModule');
         const kioskOriginLocationId = queryStringParams.get('kioskOriginLocationId');
 
         setMapTemplateProps({
@@ -82,7 +82,7 @@ function MapsIndoorsMap(props) {
             appUserRoles: props.supportsUrlParameters && appUserRolesQueryParameter ? appUserRolesQueryParameter : props.appUserRoles,
             externalIDs: props.supportsUrlParameters && externalIDsQueryParameter ? externalIDsQueryParameter : props.externalIDs,
             gmMapId: props.supportsUrlParameters && gmMapIdQueryParameter ? gmMapIdQueryParameter : props.gmMapId,
-            useMapProviderModule: props.supportsUrlParameters && useMapProviderModule ? useMapProviderModule : (props.useMapProviderModule || defaultProps.useMapProviderModule),
+            useMapProviderModule: props.supportsUrlParameters && useMapProviderModuleParameter ? useMapProviderModuleParameter : (props.useMapProviderModule || defaultProps.useMapProviderModule),
             kioskOriginLocationId: props.supportsUrlParameters && kioskOriginLocationId ? kioskOriginLocationId : props.kioskOriginLocationId,
         });
     }, [props]);
