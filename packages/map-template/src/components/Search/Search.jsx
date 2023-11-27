@@ -165,6 +165,7 @@ function Search({ onSetSize }) {
         }
 
         if (showKeyboard) {
+            searchFieldRef.current.getInputField();
             setIsKeyboardVisible(true);
         }
     }
