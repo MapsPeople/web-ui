@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 
 /**
  * React wrapper around the custom element <mi-keyboard>.
+ * Listen to changes in the searchInputElement and set the inputElement property on the mi-keyboard element.
  *
  * @param {object} props
  * @param {object} props.searchInputElement 
