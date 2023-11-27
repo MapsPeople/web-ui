@@ -1,5 +1,5 @@
 import { Component, ComponentInterface, h } from '@stencil/core';
-import { JSX, Prop, Watch } from '@stencil/core/internal';
+import { JSX, Prop, Watch, Method } from '@stencil/core/internal';
 import SimpleKeyboard from 'simple-keyboard';
 import { danishAlphabetic, defaultAlphabetic, frenchAlphabetic, germanAlphabetic, unitedStatesAlphabetic } from './keyboard-alphabetic-layouts';
 import { KeyboardLayout } from './keyboard-layout.enum';
@@ -79,6 +79,14 @@ export class Keyboard implements ComponentInterface {
             },
             theme: 'hg-theme-default hg-layout-numeric numeric-theme'
         });
+    }
+
+    /**
+     * Clear the input field.
+     */
+    @Method()
+    clearInputField(): void {
+        this.simpleKeyboard.clearInput();
     }
 
     /**

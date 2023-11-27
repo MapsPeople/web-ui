@@ -255,6 +255,10 @@ export namespace Components {
     }
     interface MiKeyboard {
         /**
+          * Clear the input field.
+         */
+        "clearInputField": () => Promise<void>;
+        /**
           * The active input element.
           * @type {HTMLInputElement}
          */

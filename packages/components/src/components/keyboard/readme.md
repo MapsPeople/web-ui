@@ -79,6 +79,19 @@ A table showing which alphabetical layouts and languages are supported and mappe
 | `layout`       | `layout`  | The keyboard layout to use. Defaults to alphabetic. | `string`           | `KeyboardLayout.Alphabetic` |
 
 
+## Methods
+
+### `clearInputField() => Promise<void>`
+
+Clear the input field.
+
+#### Returns
+
+Type: `Promise<void>`
+
+
+
+
 ----------------------------------------------
 
 

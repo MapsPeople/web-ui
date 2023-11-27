@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
 
 /**
  * React wrapper around the custom element <mi-keyboard>.
@@ -8,8 +8,17 @@ import { useEffect, useRef } from 'react';
  * @param {object} props.searchInputElement 
  * 
  */
-function Keyboard({ searchInputElement }) {
+const Keyboard = forwardRef(({ searchInputElement }, ref) => {
     const elementRef = useRef();
+
+    /**
+     * Methods that can be triggered on the mi-search element.
+     */
+    useImperativeHandle(ref, () => ({
+        clearInputField() {
+            elementRef.current.clearInputField();
+        }
+    }));
 
     useEffect(() => {
         const { current } = elementRef;
@@ -20,6 +29,6 @@ function Keyboard({ searchInputElement }) {
     }, [searchInputElement]);
 
     return <mi-keyboard ref={elementRef}></mi-keyboard>
-}
+});
 
 export default Keyboard;

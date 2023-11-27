@@ -34,6 +34,9 @@ function Search({ onSetSize }) {
     /** Referencing the search field */
     const searchFieldRef = useRef();
 
+    /** Referencing the keyboard element */
+    const keyboardRef = useRef();
+
     const [searchDisabled, setSearchDisabled] = useState(true);
     const [searchResults, setSearchResults] = useState([]);
     const categories = useRecoilValue(categoriesState);
@@ -144,6 +147,8 @@ function Search({ onSetSize }) {
         }
 
         setFilteredLocations([]);
+
+        keyboardRef.current.clearInputField();
     }
 
     /**
@@ -267,7 +272,7 @@ function Search({ onSetSize }) {
                     </div>
                 }
             </div>
-            {isKeyboardVisible && isDesktop && <Keyboard searchInputElement={searchInput}></Keyboard>}
+            {isKeyboardVisible && isDesktop && <Keyboard ref={keyboardRef} searchInputElement={searchInput}></Keyboard>}
         </div>
     )
 }
