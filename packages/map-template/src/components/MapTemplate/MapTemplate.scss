@@ -32,6 +32,18 @@
         }
     }
 
+    &--show-my-position {
+        mi-my-position {
+            display: block;
+        }
+    }
+
+    &--hide-my-position {
+        mi-my-position {
+            display: none;
+        }
+    }
+
     .mi-floor-selector__list {
         box-sizing: unset;
     }
