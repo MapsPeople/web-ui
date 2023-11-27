@@ -95,6 +95,10 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
                 setVenue(venueToShow, mapsIndoorsInstance).then(() => {
                     onVenueChangedOnMap(venueToShow);
                 });
+            } else if (venueToShow && !isLocationClicked && !locationId && kioskOriginLocationId && !isDesktop) {
+                setVenue(venueToShow, mapsIndoorsInstance).then(() => {
+                    onVenueChangedOnMap(venueToShow);
+                });
             } else if (venueToShow) {
                 onVenueChangedOnMap(venueToShow);
             }
@@ -210,6 +214,8 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
 
         const venueToShow = getVenueToShow(venueName, venues);
         if (venueToShow && !locationId && !kioskOriginLocationId) {
+            setVenue(venueToShow, miInstance);
+        } else if (venueToShow && !locationId && kioskOriginLocationId && !isDesktop) {
             setVenue(venueToShow, miInstance);
         }
     };
