@@ -136,4 +136,12 @@
         display: grid;
         gap: var(--spacing-xx-small);
     }
+
+    .qr-code-button {
+        width: fit-content;
+        height: 48px;
+        background-color: white;
+        border: 1px solid #E6E6E6;
+        border-radius: 8px;
+    }
 }

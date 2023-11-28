@@ -17,6 +17,7 @@ import { snapPoints } from "../../constants/snapPoints";
 import substepsToggledState from "../../atoms/substepsToggledState";
 import getDesktopPaddingLeft from "../../helpers/GetDesktopPaddingLeft";
 import getMobilePaddingBottom from "../../helpers/GetMobilePaddingBottom";
+import showQRCodeDialogState from "../../atoms/showQRCodeDialogState";
 
 let directionsRenderer;
 
@@ -52,6 +53,8 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
     const [substepsOpen, setSubstepsOpen] = useRecoilState(substepsToggledState);
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
+
+    const [, setShowQRCodeDialog] = useRecoilState(showQRCodeDialogState);
 
     useEffect(() => {
         setDestinationDisplayRule(null);
@@ -188,6 +191,10 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
         }
     }
 
+    function onShowQRCode() {
+        setShowQRCodeDialog(true);
+    }
+
     /**
      * Set the size of the bottom sheet depending on the substepsOpen state.
      */
@@ -263,6 +270,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                         <div className="directions__minutes">{totalTime && <mi-time seconds={totalTime} />}</div>
                     </div>
                 </div>
+                <button className='qr-code-button' onClick={() => onShowQRCode()}>Show QR code</button>
                 <hr></hr>
                 <RouteInstructions
                     steps={getRouteSteps()}

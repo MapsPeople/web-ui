@@ -31,6 +31,8 @@ import bearingState from '../../atoms/bearingState';
 import pitchState from '../../atoms/pitchState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import kioskOriginLocationIdState from '../../atoms/kioskOriginLocationIdState';
+import showQRCodeDialogState from '../../atoms/showQRCodeDialogState';
+import QRCode from '../QRCode/QRCode';
 
 defineCustomElements();
 
@@ -106,6 +108,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     // Indicate if the MapsIndoors JavaScript SDK is available.
     const [mapsindoorsSDKAvailable, setMapsindoorsSDKAvailable] = useState(false);
+
+    const showQRCodeDialog = useRecoilValue(showQRCodeDialogState);
 
     /**
      * Ensure that MapsIndoors Web SDK is available.
@@ -324,7 +328,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
             setKioskOriginLocationId(kioskOriginLocationId);
-            if (kioskOriginLocationId && isDesktop)  {
+            if (kioskOriginLocationId && isDesktop) {
                 setShowVenueSelector(false);
                 setShowPositionControl(false);
             } else {
@@ -412,6 +416,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             onClose={() => goBack()}
             active={currentAppView === appStates.VENUE_SELECTOR}
         />}
+        {showQRCodeDialog && <QRCode />}
         {isMapReady &&
             <>
                 {isDesktop &&
