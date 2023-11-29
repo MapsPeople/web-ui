@@ -5,7 +5,7 @@ import { useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
  * Listen to changes in the searchInputElement and set the inputElement property on the mi-keyboard element.
  *
  * @param {object} props
- * @param {object} props.searchInputElement 
+ * @param {HTMLInputElement} props.searchInputElement 
  * 
  */
 const Keyboard = forwardRef(({ searchInputElement }, ref) => {
