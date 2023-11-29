@@ -21,9 +21,7 @@ function Notification() {
         }
     }, [notificationMessage]);
 
-    return (<>
-        <mi-notification ref={elementRef} position="top-center"></mi-notification>
-    </>)
+    return <mi-notification ref={elementRef} position="top-center"></mi-notification>;
 }
 
 export default Notification;
