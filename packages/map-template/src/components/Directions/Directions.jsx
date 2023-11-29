@@ -8,6 +8,7 @@ import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
 import { ReactComponent as WalkingIcon } from '../../assets/walk.svg';
 import { ReactComponent as DriveIcon } from '../../assets/drive.svg';
 import { ReactComponent as BikeIcon } from '../../assets/bike.svg';
+import { ReactComponent as QRCode } from '../../assets/qrcode.svg';
 import RouteInstructions from "../RouteInstructions/RouteInstructions";
 import useMediaQuery from '../../hooks/useMediaQuery';
 import { travelModes } from "../../constants/travelModes";
@@ -17,6 +18,8 @@ import { snapPoints } from "../../constants/snapPoints";
 import substepsToggledState from "../../atoms/substepsToggledState";
 import getDesktopPaddingLeft from "../../helpers/GetDesktopPaddingLeft";
 import getMobilePaddingBottom from "../../helpers/GetMobilePaddingBottom";
+import getDesktopPaddingBottom from "../../helpers/GetDesktopPaddingBottom";
+import kioskLocationState from "../../atoms/kioskLocationState";
 import showQRCodeDialogState from "../../atoms/showQRCodeDialogState";
 
 let directionsRenderer;
@@ -52,6 +55,8 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
 
     const [substepsOpen, setSubstepsOpen] = useRecoilState(substepsToggledState);
 
+    const kioskLocation = useRecoilValue(kioskLocationState)
+
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
     const [, setShowQRCodeDialog] = useRecoilState(showQRCodeDialogState);
@@ -74,8 +79,8 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                 mapsIndoors: mapsIndoorsInstance,
                 fitBoundsPadding: {
                     top: padding,
-                    bottom: isDesktop ? padding : getMobilePaddingBottom(),
-                    left: isDesktop ? getDesktopPaddingLeft() : padding,
+                    bottom: getBottomPadding(padding),
+                    left: getLeftPadding(padding),
                     right: padding
                 }
             });
@@ -96,6 +101,39 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
             }
         }
     }, [isOpen, directions, mapsIndoorsInstance, travelMode]);
+
+
+    /**
+     * Get bottom padding when getting directions.
+     * Calculate all cases depending on the kioskLocation id prop as well.
+     */
+    function getBottomPadding(padding) {
+        if (isDesktop) {
+            if (kioskLocation) {
+                return getDesktopPaddingBottom();
+            } else {
+                return padding;
+            }
+        } else {
+            return getMobilePaddingBottom();
+        }
+    }
+
+    /**
+    * Get left padding when getting directions. 
+    * Calculate all cases depending on the kioskLocation id prop as well. 
+    */
+    function getLeftPadding(padding) {
+        if (isDesktop) {
+            if (kioskLocation) {
+                return padding;
+            } else {
+                return getDesktopPaddingLeft();
+            }
+        } else {
+            return padding;
+        }
+    }
 
     /*
      * Make sure directions stop rendering on the map when the Directions view is not active anymore.
@@ -256,21 +294,23 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                 </div>
             </div>
             <div ref={guideElement} className="directions__guide">
-                <div className="directions__metrics">
-                    <div className="directions__distance">
-                        {travelMode === travelModes.WALKING && <WalkingIcon />}
-                        {travelMode === travelModes.DRIVING && <DriveIcon />}
-                        {travelMode === travelModes.BICYCLING && <BikeIcon />}
-                        <div>Distance:</div>
-                        <div className="directions__meters">{totalDistance && <mi-distance meters={totalDistance} />}</div>
+                <div className="directions__route">
+                    <div className="directions__metrics">
+                        <div className="directions__distance">
+                            {travelMode === travelModes.WALKING && <WalkingIcon />}
+                            {travelMode === travelModes.DRIVING && <DriveIcon />}
+                            {travelMode === travelModes.BICYCLING && <BikeIcon />}
+                            <div>Distance:</div>
+                            <div className="directions__meters">{totalDistance && <mi-distance meters={totalDistance} />}</div>
+                        </div>
+                        <div className="directions__time">
+                            <ClockIcon />
+                            <div>Estimated time:</div>
+                            <div className="directions__minutes">{totalTime && <mi-time seconds={totalTime} />}</div>
+                        </div>
                     </div>
-                    <div className="directions__time">
-                        <ClockIcon />
-                        <div>Estimated time:</div>
-                        <div className="directions__minutes">{totalTime && <mi-time seconds={totalTime} />}</div>
-                    </div>
+                    <button className='directions__qr-code' onClick={() => onShowQRCode()}><QRCode /> Scan QR code</button>
                 </div>
-                <button className='qr-code-button' onClick={() => onShowQRCode()}>Show QR code</button>
                 <hr></hr>
                 <RouteInstructions
                     steps={getRouteSteps()}

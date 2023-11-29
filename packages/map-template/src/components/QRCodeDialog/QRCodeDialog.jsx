@@ -6,8 +6,8 @@ import primaryColorState from "../../atoms/primaryColorState";
 import apiKeyState from "../../atoms/apiKeyState";
 import venuesState from "../../atoms/venuesState";
 import currentLocationState from "../../atoms/currentLocationState";
-import kioskOriginLocationIdState from "../../atoms/kioskOriginLocationIdState";
 import QRCode from 'qrcode';
+import kioskLocationState from "../../atoms/kioskLocationState";
 
 function QRCodeDialog() {
 
@@ -16,12 +16,12 @@ function QRCodeDialog() {
     const apiKey = useRecoilValue(apiKeyState);
     const venue = useRecoilValue(venuesState);
     const directionsFrom = useRecoilValue(currentLocationState);
-    const directionsTo = useRecoilValue(kioskOriginLocationIdState);
+    const directionsTo = useRecoilValue(kioskLocationState);
 
     useEffect(() => {
         if (directionsFrom && directionsTo) {
             console.log(directionsTo, directionsFrom)
-            const appUrl = `https://map.mapsindoors.com/?apiKey=${apiKey}&venue=${venue}&directionsFrom=${directionsTo}&directionsTo=${directionsFrom.id}`;
+            const appUrl = `https://map.mapsindoors.com/?apiKey=${apiKey}&venue=${venue}&directionsFrom=${directionsTo.id}&directionsTo=${directionsFrom.id}`;
             const options = {
                 errorCorrectionLevel: 'L',
                 margin: 0,
@@ -45,7 +45,7 @@ function QRCodeDialog() {
     return (<>
         <div className="background"></div>
         <div className="qr-code">
-            <img id='qr' alt="QR Code" />
+            <img id='qr' alt="QR Code" className="qr-code__image" />
             <p>Scan the QR code to see the route on your phone</p>
             <button className="qr-code__button" style={{ background: primaryColor }} onClick={() => closeDialog()}>DONE</button>
         </div>

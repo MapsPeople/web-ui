@@ -137,11 +137,23 @@
         gap: var(--spacing-xx-small);
     }
 
-    .qr-code-button {
+    &__qr-code {
         width: fit-content;
-        height: 48px;
         background-color: white;
         border: 1px solid #E6E6E6;
         border-radius: 8px;
+        font-weight: 500;
+        display: grid;
+        gap: 16px;
+        grid-auto-flow: column;
+        align-items: center;
+        padding: 16px;
+    }
+
+    &__route {
+        display: grid;
+        grid-auto-flow: column;
+        align-items: center;
+        justify-content: space-between;
     }
 }

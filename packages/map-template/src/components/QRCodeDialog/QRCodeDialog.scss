@@ -20,6 +20,7 @@
     border-radius: 8px;
     padding: 16px; 
     z-index: 1000000;
+    display: grid;
 
     &__button {
         color: var(--color-white-white);
@@ -35,5 +36,14 @@
         &:hover {
             filter: brightness(90%);
         }
+    }
+
+    &__image {
+        justify-self: center;
+        padding-top: 16px;
+    }
+
+    p {
+        font-weight: 500;
     }
 }
