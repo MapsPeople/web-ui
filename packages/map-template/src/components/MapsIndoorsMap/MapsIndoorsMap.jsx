@@ -62,7 +62,7 @@ function MapsIndoorsMap(props) {
         const appUserRolesQueryParameter = queryStringParams.get('appUserRoles')?.split(',');
         const externalIDsQueryParameter = queryStringParams.get('externalIDs')?.split(',');
         const gmMapIdQueryParameter = queryStringParams.get('gmMapId');
-        const useMapProviderModuleParameter = queryStringParams.get('useMapProviderModule');
+        const useMapProviderModuleParameter = getBooleanQueryParameter(queryStringParams.get('useMapProviderModule'));
         const kioskOriginLocationId = queryStringParams.get('kioskOriginLocationId');
 
         setMapTemplateProps({
@@ -95,3 +95,14 @@ function MapsIndoorsMap(props) {
 }
 
 export default MapsIndoorsMap;
+
+/**
+ * Convert query parameter value (which is always a string) into a boolean.
+ * It will only accept the string 'true' as a boolean true. Anything else will return false.
+ *
+ * @param {string} queryParameterValue
+ * @return {boolean}
+ */
+function getBooleanQueryParameter(queryParameterValue) {
+    return queryParameterValue === 'true' ? true : false;
+}
