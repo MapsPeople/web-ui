@@ -32,7 +32,7 @@ import pitchState from '../../atoms/pitchState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import kioskOriginLocationIdState from '../../atoms/kioskOriginLocationIdState';
 import showQRCodeDialogState from '../../atoms/showQRCodeDialogState';
-import QRCode from '../QRCode/QRCode';
+import QRCodeDialog from '../QRCode/QRCode';
 
 defineCustomElements();
 
@@ -416,7 +416,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             onClose={() => goBack()}
             active={currentAppView === appStates.VENUE_SELECTOR}
         />}
-        {showQRCodeDialog && <QRCode />}
+        {showQRCodeDialog && <QRCodeDialog />}
         {isMapReady &&
             <>
                 {isDesktop &&
