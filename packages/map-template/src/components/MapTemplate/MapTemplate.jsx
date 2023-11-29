@@ -32,7 +32,7 @@ import pitchState from '../../atoms/pitchState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import kioskOriginLocationIdState from '../../atoms/kioskOriginLocationIdState';
 import showQRCodeDialogState from '../../atoms/showQRCodeDialogState';
-import QRCodeDialog from '../QRCode/QRCode';
+import QRCodeDialog from '../QRCodeDialog/QRCodeDialog';
 
 defineCustomElements();
 
