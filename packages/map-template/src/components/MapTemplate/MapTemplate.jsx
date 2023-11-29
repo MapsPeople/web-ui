@@ -172,6 +172,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable && appConfig) {
+            console.log('app config', appConfig);
             setMapboxAccessToken(mapboxAccessToken || appConfig.appSettings?.mapboxAccessToken);
             setGmApiKey(gmApiKey || appConfig.appSettings?.gmKey);
         }
@@ -305,7 +306,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     /*
      * React on changes in the current location prop.
-     * Apply location selection if the current location exists and is not the same as the kioskOriginLocationId. 
+     * Apply location selection if the current location exists and is not the same as the kioskOriginLocationId.
      */
     useEffect(() => {
         if (currentLocation && currentLocation.id !== kioskOriginLocationId) {
@@ -348,7 +349,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     /**
      * Handle the clicked location on the map. Set the current location if not in directions mode.
-     * Do not set the current location if the clicked location is the same as the kioskOriginLocationId, 
+     * Do not set the current location if the clicked location is the same as the kioskOriginLocationId,
      * due to the logic of displaying directions right away when selecting a location on the map, when in kiosk mode.
      *
      * @param {object} location
