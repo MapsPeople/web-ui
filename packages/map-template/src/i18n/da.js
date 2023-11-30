@@ -6,6 +6,9 @@ export const da = {
     'Distance': 'Distance',
     'Estimated time': 'Forventet tid',
     'Level': 'Etage',
+    // Location Details
+    'Read full description': 'Læs hel beskrivelse',
+    'Start wayfinding': 'Start rutebeskrivelse',
     // Search component
     'Search by name, category, building...': 'Søg efter navn, kategori, bygning...',
     'Nothing was found': 'Intet fundet',

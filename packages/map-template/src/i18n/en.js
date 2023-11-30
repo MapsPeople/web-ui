@@ -6,6 +6,8 @@ export const en = {
     'Distance': 'Distance',
     'Estimated time': 'Estimated time',
     'Level': 'Level',
+    // Location Details
+    'Read full description': 'Read full description',
     // Search component
     'Search by name, category, building...': 'Search by name, category, building...',
     'Nothing was found': 'Nothing was found',
