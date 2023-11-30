@@ -328,7 +328,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
             setKioskOriginLocationId(kioskOriginLocationId);
-            if (kioskOriginLocationId && isDesktop)  {
+            if (kioskOriginLocationId && isDesktop) {
                 setShowVenueSelector(false);
                 setShowPositionControl(false);
             } else {
@@ -340,16 +340,15 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     /*
      * React on changes to the showKeyboard prop.
+     * Show keyboard only in a kiosk context.
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
-            if (showKeyboard === 'true' || showKeyboard === true) {
-                setShowKeyboard(true);
-            } else {
-                setShowKeyboard(false);
+            if (showKeyboard && kioskOriginLocationId) {
+                setShowKeyboard(showKeyboard);
             }
         }
-    }, [showKeyboard, mapsindoorsSDKAvailable]);
+    }, [showKeyboard, kioskOriginLocationId, mapsindoorsSDKAvailable]);
 
     /**
      * When venue is fitted while initializing the data,
