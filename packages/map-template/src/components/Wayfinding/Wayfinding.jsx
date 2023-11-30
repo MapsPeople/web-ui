@@ -430,7 +430,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                 </button>
                 <div className="wayfinding__locations">
                     <label className="wayfinding__label">
-                        {t('From')}
+                        {t('From').toUpperCase()}
                         <SearchField
                             ref={fromFieldRef}
                             mapsindoors={true}
@@ -449,7 +449,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                         <SwitchIcon />
                     </button>
                     <label className="wayfinding__label">
-                        {t('To')}
+                        {t('To').toUpperCase()}
                         <SearchField
                             ref={toFieldRef}
                             mapsindoors={true}

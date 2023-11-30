@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import './Directions.scss';
+import { useTranslation } from 'react-i18next';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import travelModeState from '../../atoms/travelModeState';
@@ -31,6 +32,8 @@ let directionsRenderer;
  *
  */
 function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
+    const { t } = useTranslation();
+
     // Holds the MapsIndoors DisplayRule for the destination
     const [destinationDisplayRule, setDestinationDisplayRule] = useState(null);
 
@@ -207,13 +210,13 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
     return (
         <div className="directions">
             <div className="directions__details">
-                <button className="directions__close" onClick={() => onDirectionsClosed()} aria-label="Close">
+                <button className="directions__close" onClick={() => onDirectionsClosed()} aria-label={t('Close')}>
                     <CloseIcon />
                 </button>
                 <div className="directions__locations">
                     <div className="directions__container">
                         <label className="directions__label">
-                            From
+                            {t('From')}
                         </label>
                         {directions?.originLocation &&
                             <div className="directions__info">
@@ -221,7 +224,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                                     <div className='directions__name'>
                                         {directions?.originLocation.properties.name}
                                         {directions?.originLocation.properties.name !== 'My Position' && <div>·</div>}
-                                        <mi-location-info ref={originInfoElement} show-external-id={false} />
+                                        <mi-location-info level={t('Level')} ref={originInfoElement} show-external-id={false} />
                                     </div>
                                 </div>
                             </div>
@@ -229,7 +232,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                     </div>
                     <div className="directions__container">
                         <label className="directions__label">
-                            To
+                            {t('To')}
                         </label>
                         {directions?.destinationLocation &&
                             <div className="directions__info">
@@ -241,7 +244,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                                     <div className='directions__name'>
                                         {directions?.destinationLocation.properties.name}
                                     </div>
-                                    <mi-location-info ref={destinationInfoElement} show-external-id={false} />
+                                    <mi-location-info level={t('Level')} ref={destinationInfoElement} show-external-id={false} />
                                 </div>
                             </div>
                         }
@@ -254,12 +257,12 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                         {travelMode === travelModes.WALKING && <WalkingIcon />}
                         {travelMode === travelModes.DRIVING && <DriveIcon />}
                         {travelMode === travelModes.BICYCLING && <BikeIcon />}
-                        <div>Distance:</div>
+                        <div>{t('Distance')}:</div>
                         <div className="directions__meters">{totalDistance && <mi-distance meters={totalDistance} />}</div>
                     </div>
                     <div className="directions__time">
                         <ClockIcon />
-                        <div>Estimated time:</div>
+                        <div>{t('Estimated time')}:</div>
                         <div className="directions__minutes">{totalTime && <mi-time seconds={totalTime} />}</div>
                     </div>
                 </div>
