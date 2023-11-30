@@ -105,5 +105,5 @@ export default MapsIndoorsMap;
  * @return {boolean}
  */
 function getBooleanQueryParameter(queryParameterValue) {
-    return queryParameterValue === 'true' ? true : false;
+    return queryParameterValue === 'true';
 }
