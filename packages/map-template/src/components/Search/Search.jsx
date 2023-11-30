@@ -15,7 +15,7 @@ import isLocationClickedState from '../../atoms/isLocationClickedState';
 import useMediaQuery from '../../hooks/useMediaQuery';
 import fitBoundsLocation from '../../helpers/fitBoundsLocation';
 import getDesktopPaddingLeft from '../../helpers/GetDesktopPaddingLeft';
-import showKeyboardState from '../../atoms/showKeyboardState';
+import useKeyboardState from '../../atoms/useKeyboardState';
 import Keyboard from '../WebComponentWrappers/Keyboard/Keyboard';
 import searchInputState from '../../atoms/searchInputState';
 
@@ -40,7 +40,7 @@ function Search({ onSetSize }) {
     const [searchDisabled, setSearchDisabled] = useState(true);
     const [searchResults, setSearchResults] = useState([]);
     const categories = useRecoilValue(categoriesState);
-    const showKeyboard = useRecoilValue(showKeyboardState);
+    const useKeyboard = useRecoilValue(useKeyboardState);
 
     /** Indicate if search results have been found */
     const [showNotFoundMessage, setShowNotFoundMessage] = useState(false);
@@ -153,7 +153,7 @@ function Search({ onSetSize }) {
 
     /**
      * When search field is clicked, maximize the sheet size and set focus on the from field, 
-     * and if the showKeyboard prop is present, show the onscreen keyboard.
+     * and if the useKeyboard prop is present, show the onscreen keyboard.
      * But wait for any bottom sheet transition to end before doing that to avoid content jumping when virtual keyboard appears.
      */
     function searchFieldClicked() {
@@ -169,7 +169,7 @@ function Search({ onSetSize }) {
             searchFieldRef.current.focusInput();
         }
 
-        if (showKeyboard) {
+        if (useKeyboard) {
             searchFieldRef.current.getInputField();
             setIsKeyboardVisible(true);
         }

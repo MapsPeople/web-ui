@@ -23,7 +23,7 @@ import defaultLogo from "../../assets/logo.svg";
  * @param {boolean} [props.supportsUrlParameters] - If you want to support URL Parameters to configure the Map Template.
  * @param {string} [props.gmMapId] - The Google Maps Map ID associated with a specific map style or feature.
  * @param {string} [props.kioskOriginLocationId] - If running the Map Template as a kiosk (upcoming feature), provide the Location ID that represents the location of the kiosk.
- * @param {boolean} [props.showKeyboard] - If running the Map Template as a kiosk, set this prop to true and it will prompt a keyboard. 
+ * @param {boolean} [props.useKeyboard] - If running the Map Template as a kiosk, set this prop to true and it will prompt a keyboard. 
  */
 function MapsIndoorsMap(props) {
 
@@ -43,7 +43,7 @@ function MapsIndoorsMap(props) {
             venue: 'WEWORK',
             logo: defaultLogo,
             primaryColor: '#005655', // --brand-colors-dark-pine-100 from MIDT
-            showKeyboard: false
+            useKeyboard: false
         };
 
         const apiKeyQueryParameter = queryStringParams.get('apiKey');
@@ -63,7 +63,7 @@ function MapsIndoorsMap(props) {
         const externalIDsQueryParameter = queryStringParams.get('externalIDs')?.split(',');
         const gmMapIdQueryParameter = queryStringParams.get('gmMapId');
         const kioskOriginLocationId = queryStringParams.get('kioskOriginLocationId');
-        const showKeyboardQueryParameter = getBooleanQueryParameter(queryStringParams.get('showKeyboard'));
+        const useKeyboardQueryParameter = getBooleanQueryParameter(queryStringParams.get('useKeyboard'));
 
         setMapTemplateProps({
             apiKey: props.supportsUrlParameters && apiKeyQueryParameter ? apiKeyQueryParameter : (props.apiKey || defaultProps.apiKey),
@@ -83,7 +83,7 @@ function MapsIndoorsMap(props) {
             externalIDs: props.supportsUrlParameters && externalIDsQueryParameter ? externalIDsQueryParameter : props.externalIDs,
             gmMapId: props.supportsUrlParameters && gmMapIdQueryParameter ? gmMapIdQueryParameter : props.gmMapId,
             kioskOriginLocationId: props.supportsUrlParameters && kioskOriginLocationId ? kioskOriginLocationId : props.kioskOriginLocationId,
-            showKeyboard: props.supportsUrlParameters && showKeyboardQueryParameter ? showKeyboardQueryParameter : (props.showKeyboard || defaultProps.showKeyboard),
+            useKeyboard: props.supportsUrlParameters && useKeyboardQueryParameter ? useKeyboardQueryParameter : (props.useKeyboard || defaultProps.useKeyboard),
         });
     }, [props]);
 

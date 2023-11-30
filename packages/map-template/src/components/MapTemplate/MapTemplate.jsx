@@ -31,7 +31,7 @@ import bearingState from '../../atoms/bearingState';
 import pitchState from '../../atoms/pitchState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import kioskOriginLocationIdState from '../../atoms/kioskOriginLocationIdState';
-import showKeyboardState from '../../atoms/showKeyboardState';
+import useKeyboardState from '../../atoms/useKeyboardState';
 
 defineCustomElements();
 
@@ -55,9 +55,9 @@ defineCustomElements();
  * @param {number} [props.pitch] - The pitch of the map as a number. Not recommended for Google Maps with 2D Models.
  * @param {string} [props.gmMapId] - The Google Maps Map ID associated with a specific map style or feature.
  * @param {string} [props.kioskOriginLocationId] - If running the Map Template as a kiosk (upcoming feature), provide the Location ID that represents the location of the kiosk.
- * @param {boolean} [props.showKeyboard] - If running the Map Template as a kiosk, set this prop to true and it will prompt a keyboard. 
+ * @param {boolean} [props.useKeyboard] - If running the Map Template as a kiosk, set this prop to true and it will prompt a keyboard. 
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, kioskOriginLocationId, showKeyboard }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, kioskOriginLocationId, useKeyboard }) {
 
     const [, setApiKey] = useRecoilState(apiKeyState);
     const [, setGmApiKey] = useRecoilState(gmApiKeyState);
@@ -73,7 +73,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setGmMapId] = useRecoilState(gmMapIdState);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const [, setKioskOriginLocationId] = useRecoilState(kioskOriginLocationIdState);
-    const [, setShowKeyboard] = useRecoilState(showKeyboardState);
+    const [, setUseKeyboard] = useRecoilState(useKeyboardState);
 
     const [showVenueSelector, setShowVenueSelector] = useState(true);
     const [showPositionControl, setShowPositionControl] = useState(true);
@@ -339,16 +339,16 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [kioskOriginLocationId, mapsindoorsSDKAvailable]);
 
     /*
-     * React on changes to the showKeyboard prop.
+     * React on changes to the useKeyboard prop.
      * Show keyboard only in a kiosk context.
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
-            if (showKeyboard && kioskOriginLocationId) {
-                setShowKeyboard(showKeyboard);
+            if (useKeyboard && kioskOriginLocationId) {
+                setUseKeyboard(useKeyboard);
             }
         }
-    }, [showKeyboard, kioskOriginLocationId, mapsindoorsSDKAvailable]);
+    }, [useKeyboard, kioskOriginLocationId, mapsindoorsSDKAvailable]);
 
     /**
      * When venue is fitted while initializing the data,
