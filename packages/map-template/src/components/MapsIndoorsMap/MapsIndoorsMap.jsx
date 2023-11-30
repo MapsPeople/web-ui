@@ -42,7 +42,8 @@ function MapsIndoorsMap(props) {
             apiKey: '3ddemo',
             venue: 'WEWORK',
             logo: defaultLogo,
-            primaryColor: '#005655' // --brand-colors-dark-pine-100 from MIDT
+            primaryColor: '#005655', // --brand-colors-dark-pine-100 from MIDT
+            showKeyboard: false
         };
 
         const apiKeyQueryParameter = queryStringParams.get('apiKey');
@@ -62,7 +63,7 @@ function MapsIndoorsMap(props) {
         const externalIDsQueryParameter = queryStringParams.get('externalIDs')?.split(',');
         const gmMapIdQueryParameter = queryStringParams.get('gmMapId');
         const kioskOriginLocationId = queryStringParams.get('kioskOriginLocationId');
-        const showKeyboardQueryParameter = queryStringParams.get('showKeyboard');
+        const showKeyboardQueryParameter = getBooleanQueryParameter(queryStringParams.get('showKeyboard'));
 
         setMapTemplateProps({
             apiKey: props.supportsUrlParameters && apiKeyQueryParameter ? apiKeyQueryParameter : (props.apiKey || defaultProps.apiKey),
@@ -82,7 +83,7 @@ function MapsIndoorsMap(props) {
             externalIDs: props.supportsUrlParameters && externalIDsQueryParameter ? externalIDsQueryParameter : props.externalIDs,
             gmMapId: props.supportsUrlParameters && gmMapIdQueryParameter ? gmMapIdQueryParameter : props.gmMapId,
             kioskOriginLocationId: props.supportsUrlParameters && kioskOriginLocationId ? kioskOriginLocationId : props.kioskOriginLocationId,
-            showKeyboard: props.supportsUrlParameters && showKeyboardQueryParameter ? showKeyboardQueryParameter : props.showKeyboard,
+            showKeyboard: props.supportsUrlParameters && showKeyboardQueryParameter ? showKeyboardQueryParameter :(props.showKeyboard || defaultProps.showKeyboard),
         });
     }, [props]);
 
@@ -94,3 +95,15 @@ function MapsIndoorsMap(props) {
 }
 
 export default MapsIndoorsMap;
+
+
+/**
+ * Convert query parameter value (which is always a string) into a boolean.
+ * It will only accept the string 'true' as a boolean true. Anything else will return false.
+ *
+ * @param {string} queryParameterValue
+ * @return {boolean}
+ */
+function getBooleanQueryParameter(queryParameterValue) {
+    return queryParameterValue === 'true' ? true : false;
+}
