@@ -201,6 +201,10 @@ export class FloorSelector {
                     });
             }
         });
+
+        this.mapsindoors.addListener('floor_changed', () => {
+            this.currentFloor = this.mapsindoors.getFloor().toString();
+        });
     }
 
     /**

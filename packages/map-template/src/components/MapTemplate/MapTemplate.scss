@@ -14,7 +14,7 @@
 
     &--show-elements {
         mi-floor-selector {
-            display: block;
+            visibility: visible;
         }
 
         .venue-selector__button {
@@ -24,10 +24,22 @@
 
     &--hide-elements {
         mi-floor-selector {
-            display: none;
+            visibility: hidden;
         }
 
         .venue-selector__button {
+            display: none;
+        }
+    }
+
+    &--show-my-position {
+        mi-my-position {
+            display: block;
+        }
+    }
+
+    &--hide-my-position {
+        mi-my-position {
             display: none;
         }
     }

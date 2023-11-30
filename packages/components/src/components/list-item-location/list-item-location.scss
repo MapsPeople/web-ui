@@ -26,8 +26,9 @@
     border: 1px solid variables.$color-gray-30;
 }
 
-:host(:hover) {
-    background-color: var(--tailwind-colors-gray-100);
+:host(:hover), :host(.hovered) {
+    background-color: var(--tailwind-colors-gray-200);
+    border: 1px solid variables.$color-gray-40;
 }
 
 .img-container {

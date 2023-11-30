@@ -6,8 +6,8 @@ import defaultLogo from "../../assets/logo.svg";
  *
  * @param {Object} props
  * @param {string} props.apiKey - MapsIndoors API key or solution alias.
- * @param {string} [props.gmApiKey] - Google Maps API key if you want to show a Google Maps map.
- * @param {string} [props.mapboxAccessToken] - Mapbox Access Token if you want to show a Mapbox map.
+ * @param {string} [props.gmApiKey] - Google Maps API key if you want to show a Google Maps map. Can also be set in the MapsIndoors App Config as "gmKey" under "appSettings".
+ * @param {string} [props.mapboxAccessToken] - Mapbox Access Token if you want to show a Mapbox map. Can also be set in the MapsIndoors App Config "mapboxAccessToken" under "appSettings".
  * @param {string} [props.venue] - If you want the map to show a specific Venue, provide the Venue name here.
  * @param {string} [props.locationId] - If you want the map to show a specific Location, provide the Location ID here.
  * @param {string} [props.primaryColor] - If you want the splash screen to have a custom primary color, provide the value here.
@@ -22,6 +22,7 @@ import defaultLogo from "../../assets/logo.svg";
  * @param {number} [props.bearing] - The bearing of the map as a number. Not recommended for Google Maps with 2D Models.
  * @param {boolean} [props.supportsUrlParameters] - If you want to support URL Parameters to configure the Map Template.
  * @param {string} [props.gmMapId] - The Google Maps Map ID associated with a specific map style or feature.
+ * @param {string} [props.kioskOriginLocationId] - If running the Map Template as a kiosk (upcoming feature), provide the Location ID that represents the location of the kiosk.
  */
 function MapsIndoorsMap(props) {
 
@@ -59,6 +60,7 @@ function MapsIndoorsMap(props) {
         const appUserRolesQueryParameter = queryStringParams.get('appUserRoles')?.split(',');
         const externalIDsQueryParameter = queryStringParams.get('externalIDs')?.split(',');
         const gmMapIdQueryParameter = queryStringParams.get('gmMapId');
+        const kioskOriginLocationId = queryStringParams.get('kioskOriginLocationId');
 
         setMapTemplateProps({
             apiKey: props.supportsUrlParameters && apiKeyQueryParameter ? apiKeyQueryParameter : (props.apiKey || defaultProps.apiKey),
@@ -75,8 +77,9 @@ function MapsIndoorsMap(props) {
             mapboxAccessToken: props.supportsUrlParameters && mapboxAccessTokenQueryParameter ? mapboxAccessTokenQueryParameter : props.mapboxAccessToken,
             primaryColor: props.supportsUrlParameters && primaryColorQueryParameter ? '#' + primaryColorQueryParameter : (props.primaryColor || defaultProps.primaryColor),
             appUserRoles: props.supportsUrlParameters && appUserRolesQueryParameter ? appUserRolesQueryParameter : props.appUserRoles,
-            externalIDs: props.supportsUrlParameters && externalIDsQueryParameter ? externalIDsQueryParameter : props.externalIDs, 
-            gmMapId: props.supportsUrlParameters && gmMapIdQueryParameter ? gmMapIdQueryParameter : props.gmMapId
+            externalIDs: props.supportsUrlParameters && externalIDsQueryParameter ? externalIDsQueryParameter : props.externalIDs,
+            gmMapId: props.supportsUrlParameters && gmMapIdQueryParameter ? gmMapIdQueryParameter : props.gmMapId,
+            kioskOriginLocationId: props.supportsUrlParameters && kioskOriginLocationId ? kioskOriginLocationId : props.kioskOriginLocationId,
         });
     }, [props]);
 

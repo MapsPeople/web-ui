@@ -5,6 +5,67 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.21.0] - 2023-11-30
+
+### Added
+
+- It is now possible to set and use a Mapbox Access Token or Google Maps API key from the MapsIndoors App Config.
+
+## [1.20.2] - 2023-11-29
+
+### Added
+
+- Upgrade to MapsIndoors JavaScript SDK v4.26.3.
+
+## [1.20.1] - 2023-11-28
+
+### Added
+
+- Upgrade to MapsIndoors JavaScript SDK v4.26.2.
+
+## [1.20.0] - 2023-11-27
+
+### Added
+
+- Add functionality for hiding venue selector and my position elements in a kiosk context.
+
+## [1.19.0] - 2023-11-27
+
+### Added
+
+- Upgrade to MapsIndoors JavaScript SDK v4.26.1.
+
+## [1.18.0] - 2023-11-17
+
+### Added
+
+- Added support for having `kioskOriginLocationId` property.
+- Adjust UI to center the sidebar based on the `kioskOriginLocationId` property.
+
+## [1.17.1] - 2023-11-15
+
+### Fixed
+
+- Bundling the exported Web Component into one file instead of several chunks to mitigate slow loading times when using the Web Component.
+
+## [1.17.0] - 2023-11-06
+
+### Added
+
+- Added support for filter, search and highlight features from the SDK.
+- Implemented functionality for selecting a location and centering it on the map.
+
+### Fixed
+
+- Fixed floor selector not updating when exiting directions.
+- Fixed floor selector not updating when selecting a location on a different floor.
+
+## [1.16.0] - 2023-10-09
+
+### Added
+
+- Added support for searching for Mapbox places in the Wayfinding.
+
 ## [1.15.1] - 2023-10-06
 
 ### Fixed
@@ -69,7 +130,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Upgrade to MapsIndoors JavaScript SDK v4.24.6. 
+- Upgrade to MapsIndoors JavaScript SDK v4.24.6.
 
 ## [1.11.1] - 2023-08-17
 
@@ -111,7 +172,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed error message appearing in weird states on Google Maps. 
+- Fixed error message appearing in weird states on Google Maps.
 
 ## [1.9.0] - 2023-08-01
 
@@ -129,7 +190,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed search results not being scrollable on Safari. 
+- Fixed search results not being scrollable on Safari.
 
 ## [1.8.1] - 2023-08-01
 

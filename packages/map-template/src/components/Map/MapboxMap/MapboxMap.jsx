@@ -6,6 +6,7 @@ import bearingState from '../../../atoms/bearingState';
 import mapboxAccessTokenState from '../../../atoms/mapboxAccessTokenState';
 import mapsIndoorsInstanceState from '../../../atoms/mapsIndoorsInstanceState';
 import pitchState from '../../../atoms/pitchState';
+import { v4 as uuidv4 } from 'uuid';
 import primaryColorState from '../../../atoms/primaryColorState';
 
 /**
@@ -44,6 +45,11 @@ function MapboxMap({ onMapView, onPositionControl }) {
         const externalDirectionsProvider = new window.mapsindoors.directions.MapboxProvider(mapboxAccessToken);
 
         onMapView(mapViewInstance, externalDirectionsProvider);
+
+        // Generate a UUIDv4 and set the Session Token for searching for Mapbox places.
+        const uuid = uuidv4();
+        sessionStorage.setItem('mapboxPlacesSessionToken', uuid);
+        
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
     // We ignore eslint warnings about missing dependencies because onMapView should never change runtime and changing Mapbox Access Token runtime will give other problems.
 
