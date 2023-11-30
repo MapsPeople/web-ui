@@ -2,10 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
-import { en } from '../../i18n/en.js'; // TODO: Default exports
-import { da } from '../../i18n/da.js';
+import '../../i18n/setup.js';
 import './MapTemplate.scss';
 import MIMap from "../Map/Map";
 import SplashScreen from '../SplashScreen/SplashScreen';
@@ -38,25 +35,6 @@ import kioskOriginLocationIdState from '../../atoms/kioskOriginLocationIdState';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
-
-// Setup support for multiple languages (i18n),
-i18n
-    .use(initReactI18next)
-    .init({
-        resources: {
-            en: {
-                translation: en
-            },
-            da: {
-                translation: da
-            }
-        },
-        lng: navigator.language, // TODO: Improve to support variants.
-        fallbackLng: 'en',
-        interpolation: {
-            escapeValue: false // react already safes from xss => https://www.i18next.com/translation-function/interpolation#unescape
-        }
-    });
 
 /**
  *
