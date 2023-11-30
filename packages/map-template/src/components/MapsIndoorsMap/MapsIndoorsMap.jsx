@@ -83,7 +83,7 @@ function MapsIndoorsMap(props) {
             externalIDs: props.supportsUrlParameters && externalIDsQueryParameter ? externalIDsQueryParameter : props.externalIDs,
             gmMapId: props.supportsUrlParameters && gmMapIdQueryParameter ? gmMapIdQueryParameter : props.gmMapId,
             kioskOriginLocationId: props.supportsUrlParameters && kioskOriginLocationId ? kioskOriginLocationId : props.kioskOriginLocationId,
-            showKeyboard: props.supportsUrlParameters && showKeyboardQueryParameter ? showKeyboardQueryParameter :(props.showKeyboard || defaultProps.showKeyboard),
+            showKeyboard: props.supportsUrlParameters && showKeyboardQueryParameter ? showKeyboardQueryParameter : (props.showKeyboard || defaultProps.showKeyboard),
         });
     }, [props]);
 
