@@ -5,6 +5,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.21.0] - 2023-11-30
+
+### Added
+
+- It is now possible to set and use a Mapbox Access Token or Google Maps API key from the MapsIndoors App Config.
+
+## [1.20.2] - 2023-11-29
+
+### Added
+
+- Upgrade to MapsIndoors JavaScript SDK v4.26.3.
+
+## [1.20.1] - 2023-11-28
+
+### Added
+
+- Upgrade to MapsIndoors JavaScript SDK v4.26.2.
+
+## [1.20.0] - 2023-11-27
+
+### Added
+
+- Add functionality for hiding venue selector and my position elements in a kiosk context.
+
+## [1.19.0] - 2023-11-27
+
+### Added
+
+- Upgrade to MapsIndoors JavaScript SDK v4.26.1.
+
 ## [1.18.0] - 2023-11-17
 
 ### Added

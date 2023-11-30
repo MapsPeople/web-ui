@@ -75,6 +75,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const [, setKioskOriginLocationId] = useRecoilState(kioskOriginLocationIdState);
 
+    const [showVenueSelector, setShowVenueSelector] = useState(true);
+    const [showPositionControl, setShowPositionControl] = useState(true);
+
     const directionsFromLocation = useLocationForWayfinding(directionsFrom);
     const directionsToLocation = useLocationForWayfinding(directionsTo);
 
@@ -120,7 +123,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             const miSdkApiTag = document.createElement('script');
             miSdkApiTag.setAttribute('type', 'text/javascript');
-            miSdkApiTag.setAttribute('src', 'https://folia-customer.s3.eu-west-1.amazonaws.com/mapsindoors/js/sdk/CandidateReleases/4.25.0-rc0/mapsindoors-4.25.0-rc0.js.gz');
+            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.26.3/mapsindoors-4.26.3.js.gz');
             document.body.appendChild(miSdkApiTag);
             miSdkApiTag.onload = () => {
                 resolve();
@@ -330,8 +333,13 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
-            if (kioskOriginLocationId) {
-                setKioskOriginLocationId(kioskOriginLocationId);
+            setKioskOriginLocationId(kioskOriginLocationId);
+            if (kioskOriginLocationId && isDesktop)  {
+                setShowVenueSelector(false);
+                setShowPositionControl(false);
+            } else {
+                setShowVenueSelector(true);
+                setShowPositionControl(true);
             }
         }
     }, [kioskOriginLocationId, mapsindoorsSDKAvailable]);
@@ -407,10 +415,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         setCategories(uniqueCategories);
     }
 
-    return <div className={`mapsindoors-map ${locationsDisabledRef.current ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}`}>
+    return <div className={`mapsindoors-map ${locationsDisabledRef.current ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'} ${showPositionControl ? 'mapsindoors-map--show-my-position' : 'mapsindoors-map--hide-my-position'}`}>
         <Notification />
         {!isMapReady && <SplashScreen />}
-        {venues.length > 1 && <VenueSelector
+        {venues.length > 1 && showVenueSelector && <VenueSelector
             onOpen={() => pushAppView(appStates.VENUE_SELECTOR)}
             onClose={() => goBack()}
             active={currentAppView === appStates.VENUE_SELECTOR}
