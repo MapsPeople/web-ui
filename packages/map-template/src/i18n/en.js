@@ -10,5 +10,8 @@ export const en = {
     'Walk': 'Walk',
     'Drive': 'Drive',
     'Bike': 'Bike',
-    'Estimated time': 'Estimated time'
+    'Estimated time': 'Estimated time',
+    // Venue selector
+    'Select venue': 'Select venue',
+    'Current': 'Current'
 };

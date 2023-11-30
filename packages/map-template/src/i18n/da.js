@@ -10,5 +10,8 @@ export const da = {
     'Walk': 'Gå',
     'Drive': 'Kør bil',
     'Bike': 'På cykel',
-    'Estimated time': 'Forventet tid'
+    'Estimated time': 'Forventet tid',
+    // Venue selector
+    'Select venue': 'Vælg venue',
+    'Current': 'Valgt'
 };
