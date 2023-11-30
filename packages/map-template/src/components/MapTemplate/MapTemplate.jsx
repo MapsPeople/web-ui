@@ -38,8 +38,8 @@ defineCustomElements();
  *
  * @param {Object} props
  * @param {string} props.apiKey - MapsIndoors API key or solution alias.
- * @param {string} [props.gmApiKey] - Google Maps API key if you want to show a Google Maps map.
- * @param {string} [props.mapboxAccessToken] - Mapbox Access Token if you want to show a Mapbox map.
+ * @param {string} [props.gmApiKey] - Google Maps API key if you want to show a Google Maps map. Can also be set in the MapsIndoors App Config as "gmKey" under "appSettings".
+ * @param {string} [props.mapboxAccessToken] - Mapbox Access Token if you want to show a Mapbox map. Can also be set in the MapsIndoors App Config "mapboxAccessToken" under "appSettings".
  * @param {string} [props.venue] - If you want the map to show a specific Venue, provide the Venue name here.
  * @param {string} [props.locationId] - If you want the map to show a specific Location, provide the Location ID here.
  * @param {string} [props.primaryColor] - If you want the splash screen to have a custom primary color, provide the value here.
@@ -58,7 +58,7 @@ defineCustomElements();
 function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, kioskOriginLocationId }) {
 
     const [, setApiKey] = useRecoilState(apiKeyState);
-    const [, setGmApyKey] = useRecoilState(gmApiKeyState);
+    const [, setGmApiKey] = useRecoilState(gmApiKeyState);
     const [, setMapboxAccessToken] = useRecoilState(mapboxAccessTokenState);
     const [isMapReady, setMapReady] = useRecoilState(isMapReadyState);
     const [venues, setVenues] = useRecoilState(venuesState);
@@ -87,6 +87,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     // Holds a copy of the initially filtered locations.
     const [initialFilteredLocations, setInitialFilteredLocations] = useState();
 
+    const [appConfig, setAppConfig] = useState();
+
     const [, setTileStyle] = useRecoilState(tileStyleState);
     const [, setStartZoomLevel] = useRecoilState(startZoomLevelState);
 
@@ -97,9 +99,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const isMobile = useMediaQuery('(max-width: 991px)');
 
     const [pushAppView, goBack, currentAppView, currentAppViewPayload, appStates] = useAppHistory();
-
-    // Declare the reference to the App Config.
-    const appConfigRef = useRef();
 
     // Declare the reference to the disabled locations.
     const locationsDisabledRef = useRef();
@@ -150,8 +149,11 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             Promise.all([
                 // Fetch all Venues in the Solution
                 window.mapsindoors.services.VenuesService.getVenues(),
-                // Fixme: Venue Images are currently stored in the AppConfig object. So we will need to fetch the AppConfig as well.
-                window.mapsindoors.services.AppConfigService.getConfig(),
+                // Fetch the App Config belonging to the given API key. This is needed for checking access tokens and Venue images.
+                window.mapsindoors.services.AppConfigService.getConfig().then(appConfigResult => {
+                    setAppConfig(appConfigResult); // We need this as early as possible
+                    return appConfigResult;
+                }),
                 // Ensure a minimum waiting time of 3 seconds
                 new Promise(resolve => setTimeout(resolve, 3000))
             ]).then(([venuesResult, appConfigResult]) => {
@@ -159,7 +161,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                     venue.image = appConfigResult.venueImages[venue.name.toLowerCase()];
                     return venue;
                 });
-                appConfigRef.current = appConfigResult;
                 setVenues(venuesResult);
             });
             setMapReady(false);
@@ -167,14 +168,14 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [apiKey, mapsindoorsSDKAvailable]);
 
     /*
-     * React to changes in the gmApiKey and mapboxAccessToken props.
+     * Set map provider access token / API key based on props and app config.
      */
     useEffect(() => {
-        if (mapsindoorsSDKAvailable) {
-            setMapboxAccessToken(mapboxAccessToken);
-            setGmApyKey(gmApiKey);
+        if (mapsindoorsSDKAvailable && appConfig) {
+            setMapboxAccessToken(mapboxAccessToken || appConfig.appSettings?.mapboxAccessToken);
+            setGmApiKey(gmApiKey || appConfig.appSettings?.gmKey);
         }
-    }, [gmApiKey, mapboxAccessToken, mapsindoorsSDKAvailable]);
+    }, [gmApiKey, mapboxAccessToken, mapsindoorsSDKAvailable, appConfig]);
 
     /*
      * React on changes in the app user roles prop.
@@ -304,7 +305,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     /*
      * React on changes in the current location prop.
-     * Apply location selection if the current location exists and is not the same as the kioskOriginLocationId. 
+     * Apply location selection if the current location exists and is not the same as the kioskOriginLocationId.
      */
     useEffect(() => {
         if (currentLocation && currentLocation.id !== kioskOriginLocationId) {
@@ -347,7 +348,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     /**
      * Handle the clicked location on the map. Set the current location if not in directions mode.
-     * Do not set the current location if the clicked location is the same as the kioskOriginLocationId, 
+     * Do not set the current location if the clicked location is the same as the kioskOriginLocationId,
      * due to the logic of displaying directions right away when selecting a location on the map, when in kiosk mode.
      *
      * @param {object} location
@@ -388,7 +389,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             for (const key of keys) {
                 // Get the categories from the App Config that have a matching key.
-                const appConfigCategory = appConfigRef.current?.menuInfo.mainmenu.find(category => category.categoryKey === key);
+                const appConfigCategory = appConfig.menuInfo.mainmenu.find(category => category.categoryKey === key);
 
                 if (uniqueCategories.has(key)) {
                     let count = uniqueCategories.get(key).count;
