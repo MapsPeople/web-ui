@@ -2,6 +2,10 @@ import { useEffect, useRef } from 'react';
 import { useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+import { en } from '../../i18n/en.js'; // TODO: Default exports
+import { da } from '../../i18n/da.js';
 import './MapTemplate.scss';
 import MIMap from "../Map/Map";
 import SplashScreen from '../SplashScreen/SplashScreen';
@@ -32,7 +36,27 @@ import pitchState from '../../atoms/pitchState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import kioskOriginLocationIdState from '../../atoms/kioskOriginLocationIdState';
 
+// Define the Custom Elements from our components package.
 defineCustomElements();
+
+// Setup support for multiple languages (i18n),
+i18n
+    .use(initReactI18next)
+    .init({
+        resources: {
+            en: {
+                translation: en
+            },
+            da: {
+                translation: da
+            }
+        },
+        lng: navigator.language, // TODO: Improve to support variants.
+        fallbackLng: 'en',
+        interpolation: {
+            escapeValue: false // react already safes from xss => https://www.i18next.com/translation-function/interpolation#unescape
+        }
+    });
 
 /**
  *
@@ -304,7 +328,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     /*
      * React on changes in the current location prop.
-     * Apply location selection if the current location exists and is not the same as the kioskOriginLocationId. 
+     * Apply location selection if the current location exists and is not the same as the kioskOriginLocationId.
      */
     useEffect(() => {
         if (currentLocation && currentLocation.id !== kioskOriginLocationId) {
@@ -347,7 +371,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     /**
      * Handle the clicked location on the map. Set the current location if not in directions mode.
-     * Do not set the current location if the clicked location is the same as the kioskOriginLocationId, 
+     * Do not set the current location if the clicked location is the same as the kioskOriginLocationId,
      * due to the logic of displaying directions right away when selecting a location on the map, when in kiosk mode.
      *
      * @param {object} location

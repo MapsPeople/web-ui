@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import './Wayfinding.scss';
 import { useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
 import { ReactComponent as WalkingIcon } from '../../assets/walk.svg';
@@ -51,6 +52,8 @@ const externalLocationIcon = "data:image/svg+xml,%3Csvg width='10' height='10' v
  * @returns
  */
 function Wayfinding({ onStartDirections, onBack, directionsToLocation, directionsFromLocation, onSetSize, isActive }) {
+
+    const { t } = useTranslation();
 
     const wayfindingRef = useRef();
 
@@ -419,7 +422,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     return (
         <div className="wayfinding" ref={wayfindingRef}>
             <div className="wayfinding__directions">
-                <div className="wayfinding__title">Start wayfinding</div>
+                <div className="wayfinding__title">{t('Start wayfinding')}</div>
                 <button className="wayfinding__close"
                     onClick={() => onBack()}
                     aria-label="Close">
@@ -427,7 +430,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                 </button>
                 <div className="wayfinding__locations">
                     <label className="wayfinding__label">
-                        FROM
+                        {t('From')}
                         <SearchField
                             ref={fromFieldRef}
                             mapsindoors={true}
@@ -446,7 +449,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                         <SwitchIcon />
                     </button>
                     <label className="wayfinding__label">
-                        TO
+                        {t('To')}
                         <SearchField
                             ref={toFieldRef}
                             mapsindoors={true}
@@ -486,22 +489,22 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                 <div className="wayfinding__settings">
                     <div className="wayfinding__accessibility">
                         <input className="mi-toggle" type="checkbox" checked={accessibilityOn} onChange={e => setAccessibilityOn(e.target.checked)} style={{ backgroundColor: accessibilityOn ? primaryColor : '' }} />
-                        <div>Accessibility</div>
+                        <div>{t('Accessibility')}</div>
                         <Tooltip text="Turn on Accessibility to get directions that avoids stairs and escalators."></Tooltip>
                     </div>
                     <div className="wayfinding__travel">
                         <Dropdown selectionChanged={travelMode => setTravelMode(travelMode[0].value)}>
                             <mi-dropdown-item selected value={travelModes.WALKING}>
                                 <WalkIcon></WalkIcon>
-                                Walk
+                                {t('Walk')}
                             </mi-dropdown-item>
                             <mi-dropdown-item value={travelModes.DRIVING}>
                                 <DriveIcon></DriveIcon>
-                                Drive
+                                {t('Drive')}
                             </mi-dropdown-item>
                             <mi-dropdown-item value={travelModes.BICYCLING}>
                                 <BikeIcon></BikeIcon>
-                                Bike
+                                {t('Bike')}
                             </mi-dropdown-item>
                         </Dropdown>
                     </div>
@@ -517,7 +520,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                     </div>
                     <div className="wayfinding__time">
                         <ClockIcon />
-                        <div>Estimated time:</div>
+                        <div>{t('Estimated time')}:</div>
                         <div className="wayfinding__minutes">{totalTime && <mi-time seconds={totalTime} />}</div>
                     </div>
                 </div>
