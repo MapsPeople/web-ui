@@ -11,6 +11,10 @@ export const en = {
     'Start wayfinding': 'Start wayfinding',
     // Locations list
     'Locations': 'Locations',
+    // Route instructions
+    'Previous': 'Previous',
+    'Next': 'Next',
+    'StepYofX': 'Step {{activeStep}} of {{totalSteps}}',
     // Search component
     'Search by name, category, building...': 'Search by name, category, building...',
     'Nothing was found': 'Nothing was found',

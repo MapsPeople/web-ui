@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import './RouteInstructions.scss';
+import { useTranslation } from 'react-i18next';
 import { ReactComponent as ArrowRight } from '../../assets/arrow-right.svg';
 import { ReactComponent as ArrowLeft } from '../../assets/arrow-left.svg';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -24,6 +25,8 @@ import { usePreventSwipe } from '../../hooks/usePreventSwipe';
  * @returns
  */
 function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, isOpen, onFitCurrentDirections }) {
+
+    const { t } = useTranslation();
 
     const scrollableContentSwipePrevent = usePreventSwipe();
 
@@ -111,6 +114,7 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
     }
 
     // Translations required for the mi-route-instructions-step component
+    // TODO: Move to RouteInstructionsStep
     const translations = {
         walk: 'Walk',
         bike: 'Bike',
@@ -171,14 +175,14 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
                         <div className="route-instructions__actions">
                             <button className="route-instructions__button"
                                 onClick={() => previousStep()}
-                                aria-label="Previous"
+                                aria-label={t('Previous')}
                                 disabled={activeStep === 0}>
                                 <ArrowLeft></ArrowLeft>
                             </button>
-                            <div className="route-instructions__overview">Step {activeStep + 1} of {totalSteps.length}</div>
+                            <div className="route-instructions__overview">{t('StepYofX', { activeStep: activeStep + 1, totalSteps: totalSteps.length})}</div>
                             <button className="route-instructions__button"
                                 onClick={() => nextStep()}
-                                aria-label="Next"
+                                aria-label={t('Next')}
                                 disabled={activeStep === totalSteps.length - 1}>
                                 <ArrowRight></ArrowRight>
                             </button>

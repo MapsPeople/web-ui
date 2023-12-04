@@ -11,6 +11,10 @@ export const da = {
     'Start wayfinding': 'Start rutebeskrivelse',
     // Locations List
     'Locations': 'Lokationer',
+    // Route instructions
+    'Previous': 'Forrige',
+    'Next': 'Næste',
+    'StepYofX': 'Trin {{activeStep}} ud af {{totalSteps}}',
     // Search component
     'Search by name, category, building...': 'Søg efter navn, kategori, bygning...',
     'Nothing was found': 'Intet fundet',
