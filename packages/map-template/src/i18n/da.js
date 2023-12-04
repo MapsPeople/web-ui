@@ -57,6 +57,7 @@ export const da = {
     'Drive': 'Kørsel',
     'Bike': 'Cykling',
     // Venue selector
+    'Venues': 'Venues',
     'Select venue': 'Vælg venue',
     'Current': 'Valgt'
 };

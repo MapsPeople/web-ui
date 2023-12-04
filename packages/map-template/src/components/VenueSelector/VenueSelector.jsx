@@ -58,7 +58,7 @@ function VenueSelector({ onOpen, onClose, active }) {
     }
 
     return <>
-        <button className={`venue-selector__button ${active ? 'venue-selector__button--open' : ''}`} onClick={() => toggle()} aria-label="Venues">
+        <button className={`venue-selector__button ${active ? 'venue-selector__button--open' : ''}`} onClick={() => toggle()} aria-label={t('Venues')}>
             {active ? <CloseIcon /> : <BuildingIcon />}
         </button>
         <CSSTransition unmountOnExit in={active} nodeRef={venueSelectorContentRef} timeout={400} classNames="venue-selector__content">

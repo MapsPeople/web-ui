@@ -57,6 +57,7 @@ export const en = {
     'Drive': 'Drive',
     'Bike': 'Bike',
     // Venue selector
+    'Venues': 'Venues',
     'Select venue': 'Select venue',
     'Current': 'Current'
 };
