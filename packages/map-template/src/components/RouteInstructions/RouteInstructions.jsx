@@ -113,49 +113,11 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
         }
     }
 
-    // Translations required for the mi-route-instructions-step component
-    // TODO: Move to RouteInstructionsStep
-    const translations = {
-        walk: 'Walk',
-        bike: 'Bike',
-        transit: 'Transit',
-        drive: 'Drive',
-        destination: 'You have arrived',
-        leave: 'Leave',
-        from: 'From',
-        park: 'Park',
-        at: 'at',
-        building: 'Building',
-        venue: 'Venue',
-        takeStaircaseToLevel: 'Take staircase to level',
-        takeLadderToLevel: 'Take the ladder to level',
-        takeElevatorToLevel: 'Take elevator to level',
-        takeEscalatorToLevel: 'Take escalator to level',
-        takeWheelchairLiftToLevel: 'Take wheelchair lift to level',
-        takeWheelchairRampToLevel: 'Take wheelchair ramp to level',
-        exit: 'Exit',
-        enter: 'Enter',
-        stops: 'stops',
-        andContinue: 'and continue',
-        continueStraightAhead: 'Continue straight ahead',
-        goLeft: 'Go left',
-        goSharpLeft: 'Go sharp left',
-        goSlightLeft: 'Go slight left',
-        goRight: 'Go right',
-        goSharpRight: 'Go sharp right',
-        goSlightRight: 'Go slight right',
-        turnAround: 'Turn around',
-        days: 'd',
-        hours: 'h',
-        minutes: 'min'
-    }
-
     return (
         <div className="route-instructions prevent-scroll" {...scrollableContentSwipePrevent}>
             {totalSteps &&
                 <>
                     <RouteInstructionsStep
-                        translations={translations}
                         totalSteps={totalSteps}
                         activeStep={activeStep}
                         previous={previous}
