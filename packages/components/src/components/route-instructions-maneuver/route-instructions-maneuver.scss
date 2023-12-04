@@ -8,6 +8,8 @@
     grid-auto-flow: column;
     align-items: center;
     grid-template-columns: variables.$spacing-large 1fr;
+    border-top: 1px solid #E5E7EB;
+    padding: 16px;
 }
 
 .icon {

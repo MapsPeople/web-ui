@@ -3,14 +3,8 @@ import './Directions.scss';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import travelModeState from '../../atoms/travelModeState';
-import { ReactComponent as CloseIcon } from '../../assets/close.svg';
-import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
-import { ReactComponent as WalkingIcon } from '../../assets/walk.svg';
-import { ReactComponent as DriveIcon } from '../../assets/drive.svg';
-import { ReactComponent as BikeIcon } from '../../assets/bike.svg';
 import RouteInstructions from "../RouteInstructions/RouteInstructions";
 import useMediaQuery from '../../hooks/useMediaQuery';
-import { travelModes } from "../../constants/travelModes";
 import directionsResponseState from "../../atoms/directionsResponseState";
 import activeStepState from "../../atoms/activeStep";
 import { snapPoints } from "../../constants/snapPoints";
@@ -35,10 +29,8 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
     const [destinationDisplayRule, setDestinationDisplayRule] = useState(null);
 
     const destinationInfoElement = useRef(null);
-    const originInfoElement = useRef(null);
     const guideElement = useRef(null);
 
-    const [totalDistance, setTotalDistance] = useState();
     const [totalTime, setTotalTime] = useState();
 
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
@@ -57,7 +49,6 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
         setDestinationDisplayRule(null);
 
         if (isOpen && directions) {
-            setTotalDistance(directions.totalDistance);
             setTotalTime(directions.totalTime);
 
             // 6 percent of smallest of viewport height or width
@@ -82,7 +73,6 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
             // Set the step index to be 0 in order to display the correct instruction on the map.
             directionsRenderer.setStepIndex(0);
 
-            originInfoElement.current.location = directions.originLocation;
             destinationInfoElement.current.location = directions.destinationLocation;
 
             // If the destination is My Position, then set the display rule to null.
@@ -205,65 +195,10 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
     }, [isOpen, snapPointSwiped]); // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
+
         <div className="directions">
-            <div className="directions__details">
-                <button className="directions__close" onClick={() => onDirectionsClosed()} aria-label="Close">
-                    <CloseIcon />
-                </button>
-                <div className="directions__locations">
-                    <div className="directions__container">
-                        <label className="directions__label">
-                            From
-                        </label>
-                        {directions?.originLocation &&
-                            <div className="directions__info">
-                                <div className="directions__content">
-                                    <div className='directions__name'>
-                                        {directions?.originLocation.properties.name}
-                                        {directions?.originLocation.properties.name !== 'My Position' && <div>·</div>}
-                                        <mi-location-info ref={originInfoElement} show-external-id={false} />
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                    </div>
-                    <div className="directions__container">
-                        <label className="directions__label">
-                            To
-                        </label>
-                        {directions?.destinationLocation &&
-                            <div className="directions__info">
-                                {destinationDisplayRule && directions.destinationLocation.name !== 'My Position' &&
-                                    <div className="directions__icon">
-                                        <img alt="" src={destinationDisplayRule.icon.src ? destinationDisplayRule.icon.src : destinationDisplayRule.icon} />
-                                    </div>}
-                                <div className="directions__content">
-                                    <div className='directions__name'>
-                                        {directions?.destinationLocation.properties.name}
-                                    </div>
-                                    <mi-location-info ref={destinationInfoElement} show-external-id={false} />
-                                </div>
-                            </div>
-                        }
-                    </div>
-                </div>
-            </div>
-            <div ref={guideElement} className="directions__guide">
-                <div className="directions__metrics">
-                    <div className="directions__distance">
-                        {travelMode === travelModes.WALKING && <WalkingIcon />}
-                        {travelMode === travelModes.DRIVING && <DriveIcon />}
-                        {travelMode === travelModes.BICYCLING && <BikeIcon />}
-                        <div>Distance:</div>
-                        <div className="directions__meters">{totalDistance && <mi-distance meters={totalDistance} />}</div>
-                    </div>
-                    <div className="directions__time">
-                        <ClockIcon />
-                        <div>Estimated time:</div>
-                        <div className="directions__minutes">{totalTime && <mi-time seconds={totalTime} />}</div>
-                    </div>
-                </div>
-                <hr></hr>
+            <div className="directions__steps">
+                <div className="directions__minutes">{totalTime && <mi-time seconds={totalTime} />}</div>
                 <RouteInstructions
                     steps={getRouteSteps()}
                     originLocation={directions?.originLocation}
@@ -274,7 +209,100 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                 >
                 </RouteInstructions>
             </div>
+            <hr></hr>
+            <div className="directions__actions">
+                <div className="directions__details">
+                    {directions?.destinationLocation &&
+                        <div className="directions__info">
+                            {destinationDisplayRule && directions.destinationLocation.name !== 'My Position' &&
+                                <div className="directions__icon">
+                                    <img alt="" src={destinationDisplayRule.icon.src ? destinationDisplayRule.icon.src : destinationDisplayRule.icon} />
+                                </div>}
+                            <div className="directions__content">
+                                <div className='directions__name'>
+                                    {directions?.destinationLocation.properties.name}
+                                </div>
+                                <mi-location-info ref={destinationInfoElement} show-external-id={false} />
+                            </div>
+                        </div>
+                    }
+                </div>
+                <button className="directions__close" onClick={() => onDirectionsClosed()} aria-label="Close">
+                    CANCEL ROUTE
+                </button>
+            </div>
         </div>
+
+        // <div className="directions">
+        //     <div className="directions__details">
+        //         <button className="directions__close" onClick={() => onDirectionsClosed()} aria-label="Close">
+        //             <CloseIcon />
+        //         </button>
+        //         <div className="directions__locations">
+        //             <div className="directions__container">
+        //                 <label className="directions__label">
+        //                     From
+        //                 </label>
+        //                 {directions?.originLocation &&
+        //                     <div className="directions__info">
+        //                         <div className="directions__content">
+        //                             <div className='directions__name'>
+        //                                 {directions?.originLocation.properties.name}
+        //                                 {directions?.originLocation.properties.name !== 'My Position' && <div>·</div>}
+        //                                 <mi-location-info ref={originInfoElement} show-external-id={false} />
+        //                             </div>
+        //                         </div>
+        //                     </div>
+        //                 }
+        //             </div>
+        //             <div className="directions__container">
+        //                 <label className="directions__label">
+        //                     To
+        //                 </label>
+        //                 {directions?.destinationLocation &&
+        //                     <div className="directions__info">
+        //                         {destinationDisplayRule && directions.destinationLocation.name !== 'My Position' &&
+        //                             <div className="directions__icon">
+        //                                 <img alt="" src={destinationDisplayRule.icon.src ? destinationDisplayRule.icon.src : destinationDisplayRule.icon} />
+        //                             </div>}
+        //                         <div className="directions__content">
+        //                             <div className='directions__name'>
+        //                                 {directions?.destinationLocation.properties.name}
+        //                             </div>
+        //                             <mi-location-info ref={destinationInfoElement} show-external-id={false} />
+        //                         </div>
+        //                     </div>
+        //                 }
+        //             </div>
+        //         </div>
+        //     </div>
+        //     <div ref={guideElement} className="directions__guide">
+        //         <div className="directions__metrics">
+        //             <div className="directions__distance">
+        //                 {travelMode === travelModes.WALKING && <WalkingIcon />}
+        //                 {travelMode === travelModes.DRIVING && <DriveIcon />}
+        //                 {travelMode === travelModes.BICYCLING && <BikeIcon />}
+        //                 <div>Distance:</div>
+        //                 <div className="directions__meters">{totalDistance && <mi-distance meters={totalDistance} />}</div>
+        //             </div>
+        //             <div className="directions__time">
+        //                 <ClockIcon />
+        //                 <div>Estimated time:</div>
+        //                 <div className="directions__minutes">{totalTime && <mi-time seconds={totalTime} />}</div>
+        //             </div>
+        //         </div>
+        //         <hr></hr>
+        //         <RouteInstructions
+        //             steps={getRouteSteps()}
+        //             originLocation={directions?.originLocation}
+        //             onNextStep={() => onNext()}
+        //             isOpen={isOpen}
+        //             onPreviousStep={() => onPrevious()}
+        //             onFitCurrentDirections={() => onFitCurrentDirections()}
+        //         >
+        //         </RouteInstructions>
+        //     </div>
+        // </div>
     )
 }
 

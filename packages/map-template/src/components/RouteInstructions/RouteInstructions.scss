@@ -1,13 +1,8 @@
 .route-instructions {
     width: 100%;
-    gap: var(--spacing-medium);
     height: 100%;
     display: grid;
     grid-template-rows: 1fr min-content;
-
-    &__progress {
-        display: flex;
-    }
 
     &__footer {
         position: sticky;
@@ -26,61 +21,7 @@
             background: linear-gradient(rgba(255, 255, 255, 0), white);
         }
     }
-
-    &__step {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        flex: 1;
-
-        .step-counter {
-            z-index: 100;
-            width: var(--spacing-x-small);
-            height: var(--spacing-x-small);
-            border-radius: 50%;
-            background: var(--color-gray-30);
-        }
-
-        // Rendering the progress line
-        &::after {
-            position: absolute;
-            content: "";
-            border-bottom: 2px solid var(--color-gray-30);
-            width: 100%;
-            top: 3px;
-            left: 50%;
-        }
-
-        &.completed {
-            .step-counter {
-                background-color: var(--color-gray-60);
-            }
-
-            // Rendering the completed progress line
-            &::before {
-                position: absolute;
-                content: "";
-                border-bottom: 2px solid var(--color-gray-60);
-                width: 100%;
-                top: 3px;
-                left: -50%;
-            }
-        }
-
-        &:first-child {
-            &::before {
-                content: none;
-            }
-        }
-
-        &:last-child {
-            &::after {
-                content: none;
-            }
-        }
-    }
-
+    
     &__actions {
         display: grid;
         grid-auto-flow: column;
@@ -89,7 +30,8 @@
     }
 
     &__overview {
-        color: var(--color-gray-60);
+        color: var(--color-gray-80);
+        font-weight: 500;
     }
 
     &__button {
@@ -97,7 +39,7 @@
         justify-content: center;
         align-items: center;
         background: none;
-        border: 1px solid var(--tailwind-colors-gray-200);
+        border: none;
         width: var(--spacing-xx-large);
         height: var(--spacing-xx-large);
         border-radius: var(--rounding-large);

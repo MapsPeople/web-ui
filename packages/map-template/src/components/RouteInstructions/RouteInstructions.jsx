@@ -161,13 +161,6 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
                     >
                     </RouteInstructionsStep>
                     <div className='route-instructions__footer'>
-                        <div className="route-instructions__progress">
-                            {totalSteps.map((_, index) => (
-                                <div className={`route-instructions__step ${(activeStep) >= index ? "completed" : ""}`} key={index}>
-                                    <div className="step-counter"></div>
-                                </div>
-                            ))}
-                        </div>
                         <div className="route-instructions__actions">
                             <button className="route-instructions__button"
                                 onClick={() => previousStep()}

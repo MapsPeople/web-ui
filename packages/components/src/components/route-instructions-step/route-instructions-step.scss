@@ -21,13 +21,9 @@
     &__info {
         display: grid;
         grid-auto-flow: column;
-        gap: variables.$spacing-x-small;
         align-items: center;
-
-        &.destination {
-            grid-auto-flow: row;
-            justify-items: center;
-        }
+        justify-content: space-between;
+        width: 100%;
     }
 
     &__destination {
@@ -38,21 +34,8 @@
         grid-auto-flow: column;
     }
 
-    &__action-icon {
-
-        &--circled {
-            position: relative;
-        }
-
-        mi-icon {
-            display: block;
-            width: variables.$spacing-xx-large;
-            height: variables.$spacing-xx-large;
-        }
-    }
-
     &__heading {
-        @include font.weight(normal);
+        @include font.weight(large);
         @include font.size(large);
         @include margin.all(none);
 
@@ -90,9 +73,11 @@
         }
 
         &-icon {
-            position: absolute; /* To ensure it is placed above dots */
+            position: absolute;
+            /* To ensure it is placed above dots */
             left: 50%;
-            top: variables.$spacing-large; /* Halfway down uncollapsed (72px) */
+            top: variables.$spacing-large;
+            /* Halfway down uncollapsed (72px) */
             transform: translateX(-50%);
 
             /* solid background and padding to hide the dots */
@@ -127,14 +112,10 @@
         justify-content: center;
 
         mi-icon {
-            @include icons.size(medium);
+            width: 20px;
+            height: 20px;
             display: block;
         }
-    }
-
-    &__substeps {
-        display: grid;
-        gap: variables.$spacing-x-large;
     }
 
     &__details {

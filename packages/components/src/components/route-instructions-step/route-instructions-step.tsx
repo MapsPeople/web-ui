@@ -263,9 +263,9 @@ export class RouteInstructionsStep implements ComponentInterface {
         return (
             <span class='step__toggle' onClick={() => this.toggleSubsteps()}>
                 {this.substepsAreOpen ?
-                    <mi-icon part="step-toggle" icon-name="minimize"></mi-icon>
+                    <mi-icon part="step-toggle" icon-name="chevron-down"></mi-icon>
                     :
-                    <mi-icon part="step-toggle" icon-name="maximize"></mi-icon>
+                    <mi-icon part="step-toggle" icon-name="chevron-up"></mi-icon>
                 }
             </span>
         );
@@ -290,9 +290,8 @@ export class RouteInstructionsStep implements ComponentInterface {
      *
      * @returns {JSX.Element}
      */
-    renderToggleAndSubsteps(): JSX.Element {
+    showSubsteps(): JSX.Element {
         return <div class="step__details">
-            {this.renderToggleButton()}
             {this.renderSubsteps()}
         </div>;
     }
@@ -304,18 +303,11 @@ export class RouteInstructionsStep implements ComponentInterface {
      */
     renderDrivingStep(): JSX.Element {
         return <div class="step" onClick={e => this.stepClickHandler(e)}>
-            <div part="step-description" class="step__description">
-                {this.renderDistance()}
-            </div>
             <div class="step__info">
-                {this.isInternetExplorer ? null :
-                    <span class="step__action-icon step__action-icon--circled">
-                        <mi-icon icon-name="car"></mi-icon>
-                    </span>
-                }
                 <div part="step-heading" class="step__heading">{this.getStepHeading()}</div>
+                {this.renderToggleButton()}
             </div>
-            {this.renderToggleAndSubsteps()}
+            {this.showSubsteps()}
         </div>;
     }
 
@@ -344,7 +336,6 @@ export class RouteInstructionsStep implements ComponentInterface {
      */
     renderWalkingStep(): JSX.Element {
         let heading: string;
-        let actionIconName: string;
 
         /*
          * Determine action heading:
@@ -352,68 +343,48 @@ export class RouteInstructionsStep implements ComponentInterface {
         if (this.stepData.parking === true) {
             // Park your vehicle
             heading = `${this.translationsData.park} ${this.stepData.label ? ` ${this.translationsData.at} ` + this.stepData.label : ''}`;
-            actionIconName = 'park';
         } else if (this.stepData.highway && this.stepData.highway.toUpperCase() === 'STEPS') { // TODO: SDK, why is highway not always set?
             // Take stairs
             heading = `${this.translationsData.takeStaircaseToLevel} ${this.stepData.end_location.floor_name}`;
-            actionIconName = 'stairs';
         } else if (this.stepData.highway && this.stepData.highway.toUpperCase() === 'LADDER') {
             // Take a laddder
             heading = `${this.translationsData.takeLadderToLevel} ${this.stepData.end_location.floor_name}`;
-            actionIconName = 'ladder';
         } else if (this.stepData.highway && this.stepData.highway.toUpperCase() === 'ESCALATOR') {
             // Take an escalator
             heading = `${this.translationsData.takeEscalatorToLevel} ${this.stepData.end_location.floor_name}`;
-            actionIconName = 'escalator';
         } else if (this.stepData.highway && this.stepData.highway.toUpperCase() === 'WHEELCHAIRRAMP') {
             // Take wheel chair ramp
             heading = `${this.translationsData.takeWheelchairRampToLevel} ${this.stepData.end_location.floor_name}`;
-            actionIconName = 'wheelchair-ramp';
         } else if (this.stepData.highway && this.stepData.highway.toUpperCase() === 'WHEELCHAIRLIFT') {
             // Take wheel chair lift
             heading = `${this.translationsData.takeWheelchairLiftToLevel} ${this.stepData.end_location.floor_name}`;
-            actionIconName = 'wheelchair-lift';
         } else if (this.stepData.highway && this.stepData.highway.toUpperCase() === 'ELEVATOR') {
             // Take elevator
             heading = `${this.translationsData.takeElevatorToLevel} ${this.stepData.end_location.floor_name}`;
-            actionIconName = 'elevator';
         } else if (this.fromRouteContext === 'InsideBuilding' && this.stepData.route_context === 'Outside') {
             // Exit from inside to outside
             heading = this.addStepContextNameToHeading(this.translationsData.exit, this.stepData.start_context);
-            actionIconName = 'exit';
         } else if (this.fromRouteContext === 'InsideBuilding' && this.stepData.route_context === 'InsideBuilding') {
             heading = this.getStepHeading();
-            actionIconName = 'walk';
         } else if (this.fromRouteContext === 'Outside' && this.stepData.route_context === 'Outside' && this.fromTravelMode.toUpperCase() === 'TRANSIT') {
             // Switching between public transportation
             heading = this.fromTransitStop;
-            actionIconName = 'transit-stop';
         } else if (this.fromRouteContext === 'Outside' && this.stepData.route_context === 'Outside') {
             heading = this.getStepHeading();
-            actionIconName = 'walk';
         } else if (this.fromRouteContext === 'Outside' && this.stepData.route_context === 'InsideBuilding') {
             // Enter from outside to inside
             heading = this.addStepContextNameToHeading(this.translationsData.enter, this.stepData.end_context);
-            actionIconName = 'enter';
         } else {
             // Origin Location name or empty
             heading = this.fromRouteContext;
-            actionIconName = 'circle';
         }
 
         return <div class="step" onClick={e => this.stepClickHandler(e)}>
-            <div part="step-description" class="step__description">
-                {this.renderDistance()}
-            </div>
             <div class="step__info">
-                {this.isInternetExplorer ? null :
-                    <span class={`step__action-icon ${actionIconName !== 'circle' ? 'step__action-icon--circled' : ''}`}>
-                        <mi-icon icon-name={actionIconName}></mi-icon>
-                    </span>
-                }
                 <div part="step-heading" class="step__heading">{heading}</div>
+                {this.renderToggleButton()}
             </div>
-            {this.renderToggleAndSubsteps()}
+            {this.showSubsteps()}
         </div>;
     }
 
@@ -441,18 +412,11 @@ export class RouteInstructionsStep implements ComponentInterface {
      */
     renderBicyclingStep(): JSX.Element {
         return <div class="step" onClick={e => this.stepClickHandler(e)}>
-            <div part="step-description" class="step__description">
-                {this.renderDistance()}
-            </div>
             <div class="step__info">
-                {this.isInternetExplorer ? null :
-                    <span class="step__action-icon step__action-icon--circled">
-                        <mi-icon icon-name="bike"></mi-icon>
-                    </span>
-                }
                 <div part="step-heading" class="step__heading">{this.getStepHeading()}</div>
+                {this.renderToggleButton()}
             </div>
-            {this.renderToggleAndSubsteps()}
+            {this.showSubsteps()}
         </div>;
     }
 
@@ -463,18 +427,12 @@ export class RouteInstructionsStep implements ComponentInterface {
      */
     renderDestinationStep(): JSX.Element {
         return <div class="step" onClick={e => this.stepClickHandler(e)}>
-            <div class="step__info destination">
-                <div class="step__destination">
-                    {this.isInternetExplorer ? null :
-                        <span class="step__action-icon step__action-icon--circled">
-                            <mi-icon icon-name="logo"></mi-icon>
-                        </span>
-                    }
-                    <div part="step-heading" class="step__heading">{this.translationsData.destination}</div>
-                </div>
-                <div part="step-location" class="step__location">{this.destinationLocation}</div>
+            <div class="step__info">
+                <div part="step-heading" class="step__heading">{this.translationsData.destination}</div>
+                {this.renderToggleButton()}
             </div>
-            {this.renderToggleAndSubsteps()}
+            <div part="step-location" class="step__location">{this.destinationLocation}</div>
+            {this.showSubsteps()}
         </div>;
     }
 
@@ -485,12 +443,10 @@ export class RouteInstructionsStep implements ComponentInterface {
      */
     renderTransitStep(): JSX.Element {
         return <div class="step" onClick={e => this.stepClickHandler(e)}>
-            {this.isInternetExplorer ? null :
-                <span class="step__action-icon step__action-icon--circled">
-                    <mi-icon icon-name="transit-stop"></mi-icon>
-                </span>
-            }
-            <h3 part="step-heading" class="step__heading">{this.stepData.instructions}</h3>
+            <div class="step__info">
+                <h3 part="step-heading" class="step__heading">{this.stepData.instructions}</h3>
+                {this.renderToggleButton()}
+            </div>
             {this.renderTravelMode()}
             <div part="step-description" class="step__description">
                 {this.stepData.transit_information.line.short_name ?
@@ -512,7 +468,7 @@ export class RouteInstructionsStep implements ComponentInterface {
                     {this.stepData.transit_information.num_stops ? this.stepData.transit_information.num_stops : null} {this.translationsData.stops ? this.translationsData.stops : null}
                 </span>
             </div>
-            {this.renderToggleAndSubsteps()}
+            {this.showSubsteps()}
         </div>;
     }
 }

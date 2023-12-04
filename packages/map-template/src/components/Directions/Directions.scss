@@ -1,106 +1,30 @@
 .directions {
     color: var(--brand-colors-black-100);
-    min-height: 475px;
     display: grid;
-    grid-auto-rows: min-content 1fr;
     height: 100%;
+    grid-auto-rows: max-content;
 
     &__details {
-        background-color: var(--color-gray-20);
-        border-bottom: 1px solid var(--color-gray-30);
-        padding: var(--spacing-medium);
-        position: relative;
-        border-radius: var(--rounding-large) var(--rounding-large) 0 0;
+        padding: var(--spacing-medium) 0;
     }
 
     &__close {
-        position: absolute;
-        top: var(--spacing-x-small);
-        right: var(--spacing-x-small);
         background-color: var(--tailwind-colors-gray-100);
-        border: 1px solid var(--tailwind-colors-gray-200);
-        margin-left: auto;
-        width: var(--spacing-xx-large);
-        height: var(--spacing-xx-large);
+        border: none;
         border-radius: var(--rounding-large);
-        display: grid;
-        justify-content: center;
-        align-items: center;
+        width: 100%;
+        height: fit-content;
+        padding: 16px;
 
         &:hover {
             background-color: var(--tailwind-colors-gray-200);
         }
     }
 
-    &__locations {
-        display: grid;
-        gap: var(--spacing-medium);
-        position: relative;
-        width: calc(100% - 36px);
-    }
-
-    &__container {
-        display: grid;
-        gap: var(--spacing-x-small);
-    }
-
-    &__label {
-        font-size: var(--font-size-small);
-        color: var(--color-gray-70);
+    &__minutes {
         font-weight: var(--font-weight-large);
-        text-transform: uppercase;
+        color: #6B7280;
     }
-
-    &__guide {
-        padding: var(--spacing-medium) var(--spacing-medium) 0 var(--spacing-medium);
-        height: 100%;
-        overflow-y: auto;
-        display: grid;
-        grid-auto-rows: min-content min-content 1fr;
-    }
-
-    &__metrics {
-        display: grid;
-        gap: var(--spacing-x-small);
-    }
-
-    &__distance,
-    &__time {
-        display: grid;
-        grid-auto-flow: column;
-        grid-template-columns: 20px 1fr 1fr;
-        gap: var(--spacing-x-small);
-        align-items: center;
-        color: var(--color-gray-70);
-        width: fit-content;
-    }
-
-    &__distance {
-        svg {
-            width: 20px;
-            height: 20px;
-        }
-    }
-
-    &__time {
-        svg {
-            width: var(--spacing-medium);
-            height: var(--spacing-medium);
-        }
-    }
-
-    &__minutes,
-    &__meters {
-        font-weight: var(--font-weight-large);
-    }
-
-    hr {
-        margin: var(--spacing-medium) 0;
-        background-color: var(--color-gray-30);
-        border: none;
-        height: 1px;
-    }
-
 
     &__info {
         display: flex;
@@ -135,5 +59,20 @@
     &__content {
         display: grid;
         gap: var(--spacing-xx-small);
+    }
+
+    hr {
+        width: 100%;
+        background-color: #E5E7EB;
+        height: 1px;
+        border:none
+    }
+
+    &__steps {
+        padding: 16px;
+    }
+
+    &__actions {
+        padding: 0 16px 16px 16px;
     }
 }
