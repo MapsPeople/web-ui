@@ -1,5 +1,6 @@
 import React from "react";
 import './LocationsList.scss';
+import { useTranslation } from 'react-i18next';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import ListItemLocation from "../WebComponentWrappers/ListItemLocation/ListItemLocation";
 import { usePreventSwipe } from "../../hooks/usePreventSwipe";
@@ -18,6 +19,8 @@ import { useEffect } from "react";
  *
  */
 function LocationsList({ onBack, onLocationClick, locations, onSetSize }) {
+
+    const { t } = useTranslation();
 
     const scrollableContentSwipePrevent = usePreventSwipe();
 
@@ -43,8 +46,8 @@ function LocationsList({ onBack, onLocationClick, locations, onSetSize }) {
     return (
         <div className="locations-list">
             <div className="locations-list__header">
-                <div className="locations-list__title">{locations?.length} Locations</div>
-                <button className="locations-list__close" onClick={() => onBack()} aria-label="Close">
+                <div className="locations-list__title">{locations?.length} {t('Locations')}</div>
+                <button className="locations-list__close" onClick={() => onBack()} aria-label={t('Close')}>
                     <CloseIcon />
                 </button>
             </div>

@@ -8,6 +8,9 @@ export const en = {
     'Level': 'Level',
     // Location Details
     'Read full description': 'Read full description',
+    'Start wayfinding': 'Start wayfinding',
+    // Locations list
+    'Locations': 'Locations',
     // Search component
     'Search by name, category, building...': 'Search by name, category, building...',
     'Nothing was found': 'Nothing was found',

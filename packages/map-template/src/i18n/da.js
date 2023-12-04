@@ -9,6 +9,8 @@ export const da = {
     // Location Details
     'Read full description': 'Læs hel beskrivelse',
     'Start wayfinding': 'Start rutebeskrivelse',
+    // Locations List
+    'Locations': 'Lokationer',
     // Search component
     'Search by name, category, building...': 'Søg efter navn, kategori, bygning...',
     'Nothing was found': 'Intet fundet',
