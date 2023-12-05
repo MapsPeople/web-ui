@@ -139,15 +139,15 @@
 
     &__qr-code {
         width: fit-content;
-        background-color: white;
-        border: 1px solid #E6E6E6;
-        border-radius: 8px;
-        font-weight: 500;
+        background-color: var(--color-white-white);
+        border: 1px solid var(--color-gray-30);
+        border-radius: var(--rounding-large);
+        font-weight: var(--font-weight-large);
         display: grid;
-        gap: 16px;
+        gap: var(--spacing-medium);
         grid-auto-flow: column;
         align-items: center;
-        padding: 16px;
+        padding: var(--spacing-medium);
     }
 
     &__route {
