@@ -2,7 +2,8 @@ import { useEffect, useRef } from 'react';
 import { useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
-import '../../i18n/setup.js';
+import i18n from 'i18next';
+import initI18n from '../../i18n/initialize.js';
 import './MapTemplate.scss';
 import MIMap from "../Map/Map";
 import SplashScreen from '../SplashScreen/SplashScreen';
@@ -32,6 +33,7 @@ import bearingState from '../../atoms/bearingState';
 import pitchState from '../../atoms/pitchState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import kioskOriginLocationIdState from '../../atoms/kioskOriginLocationIdState';
+import languageState from '../../atoms/languageState.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -56,8 +58,9 @@ defineCustomElements();
  * @param {number} [props.pitch] - The pitch of the map as a number. Not recommended for Google Maps with 2D Models.
  * @param {string} [props.gmMapId] - The Google Maps Map ID associated with a specific map style or feature.
  * @param {string} [props.kioskOriginLocationId] - If running the Map Template as a kiosk (upcoming feature), provide the Location ID that represents the location of the kiosk.
+ * @param {string} [props.language] - The language to show textual content in. Supported values are "en" for English, "da" for Danish, "de" for German and "fr" for French. If the prop is not set, the language of the browser will be used (if it is one of the four supported languages - otherwise it will default to English).
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, kioskOriginLocationId }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, kioskOriginLocationId, language }) {
 
     const [, setApiKey] = useRecoilState(apiKeyState);
     const [, setGmApiKey] = useRecoilState(gmApiKeyState);
@@ -73,6 +76,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setGmMapId] = useRecoilState(gmMapIdState);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const [, setKioskOriginLocationId] = useRecoilState(kioskOriginLocationIdState);
+    const [currentLanguage, setCurrentLanguage] = useRecoilState(languageState);
 
     const [showVenueSelector, setShowVenueSelector] = useState(true);
     const [showPositionControl, setShowPositionControl] = useState(true);
@@ -168,6 +172,29 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             setMapReady(false);
         }
     }, [apiKey, mapsindoorsSDKAvailable]);
+
+    /*
+     * React on changes in the language prop.
+     * If it is undefined, try to use the browser language. It will fall back to English if the language is not supported.
+     */
+    useEffect(() => {
+        if (mapsindoorsSDKAvailable) {
+            const languageToUse = language ? language : navigator.language;
+
+            // Set the language on the MapsIndoors SDK in order to get eg. Mapbox and Google directions in that language.
+            window.mapsindoors.MapsIndoors.setLanguage(languageToUse);
+
+            if (!currentLanguage) {
+                // Initialize i18n instance that is used to assist translating in the React components.
+                initI18n(languageToUse);
+            } else {
+                // Change the already set language
+                i18n.changeLanguage(languageToUse);
+            }
+
+            setCurrentLanguage(languageToUse);
+        }
+    }, [language, mapsindoorsSDKAvailable]);
 
     /*
      * Set map provider access token / API key based on props and app config.
