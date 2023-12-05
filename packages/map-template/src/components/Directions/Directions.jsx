@@ -266,7 +266,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                     <div className="directions__time">
                         <ClockIcon />
                         <div>{t('Estimated time')}:</div>
-                        <div className="directions__minutes">{totalTime && <mi-time seconds={totalTime} />}</div>
+                        <div className="directions__minutes">{totalTime && <mi-time translations={JSON.stringify({ days: t('d'), hours: t('h'), minutes: t('min') })} seconds={totalTime} />}</div>
                     </div>
                 </div>
                 <hr></hr>

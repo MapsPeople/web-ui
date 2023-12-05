@@ -8,6 +8,9 @@ export const da = {
     'Level': 'Etage',
     'Search by name, category, building...': 'Søg efter navn, kategori, bygning...',
     'Nothing was found': 'Intet fundet',
+    'd': 'd',
+    'h': 't',
+    'min': 'min',
     // Location Details
     'Read full description': 'Læs hel beskrivelse',
     'Start wayfinding': 'Start rutebeskrivelse',
@@ -46,9 +49,6 @@ export const da = {
     'Go sharp right': 'Drej skarpt til højre',
     'Go slight right': 'Drej en smule til højre',
     'Turn around': 'Vend om',
-    'd': 'd',
-    'h': 't',
-    'min': 'min',
     // Search component
     // Wayfinding component
     'Switch': 'Skift',

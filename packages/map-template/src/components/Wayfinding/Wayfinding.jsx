@@ -523,7 +523,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                     <div className="wayfinding__time">
                         <ClockIcon />
                         <div>{t('Estimated time')}:</div>
-                        <div className="wayfinding__minutes">{totalTime && <mi-time seconds={totalTime} />}</div>
+                        <div className="wayfinding__minutes">{totalTime && <mi-time translations={JSON.stringify({ days: t('d'), hours: t('h'), minutes: t('min') })}  seconds={totalTime} />}</div>
                     </div>
                 </div>
                 <button className="wayfinding__button" style={{ background: primaryColor }} onClick={() => onStartDirections()}>

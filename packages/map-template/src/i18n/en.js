@@ -8,6 +8,9 @@ export const en = {
     'Level': 'Level',
     'Search by name, category, building...': 'Search by name, category, building...',
     'Nothing was found': 'Nothing was found',
+    'd': 'd',
+    'h': 'h',
+    'min': 'min',
     // Location Details
     'Read full description': 'Read full description',
     'Start wayfinding': 'Start wayfinding',
@@ -46,9 +49,6 @@ export const en = {
     'Go sharp right': 'Go sharp right',
     'Go slight right': 'Go slight right',
     'Turn around': 'Turn around',
-    'd': 'd',
-    'h': 'h',
-    'min': 'min',
     // Search component
     // Wayfinding component
     'Switch': 'Switch',
