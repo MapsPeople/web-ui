@@ -1,6 +1,6 @@
 .background {
     z-index: 10000;
-    background-color: #000;
+    background-color: var(--color-black-black);
     opacity: 0.5;
     position: fixed;
     width: 100%;
@@ -17,8 +17,8 @@
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 100;
-    border-radius: 8px;
-    padding: 16px; 
+    border-radius: var(--rounding-large);
+    padding: var(--spacing-medium);
     z-index: 1000000;
     display: grid;
 
@@ -40,10 +40,10 @@
 
     &__image {
         justify-self: center;
-        padding-top: 16px;
+        padding-top: var(--spacing-medium);
     }
 
     p {
-        font-weight: 500;
+        font-weight: var(--font-weight-large);
     }
 }
