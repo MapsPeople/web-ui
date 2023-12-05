@@ -436,7 +436,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                             mapsindoors={true}
                             google={selectedMapType === mapTypes.Google}
                             mapbox={selectedMapType === mapTypes.Mapbox}
-                            placeholder="Search by name, category, building..."
+                            placeholder={t('Search by name, category, building...')}
                             results={locations => searchResultsReceived(locations, searchFieldIdentifiers.FROM)}
                             clicked={() => onSearchClicked(searchFieldIdentifiers.FROM)}
                             cleared={() => onSearchCleared(searchFieldIdentifiers.FROM)}
@@ -444,7 +444,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                         />
                     </label>
                     <button onClick={() => switchDirectionsHandler()}
-                        aria-label="Switch"
+                        aria-label={t('Switch')}
                         className="wayfinding__switch">
                         <SwitchIcon />
                     </button>
@@ -455,7 +455,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                             mapsindoors={true}
                             google={selectedMapType === mapTypes.Google}
                             mapbox={selectedMapType === mapTypes.Mapbox}
-                            placeholder="Search by name, category, building..."
+                            placeholder={t('Search by name, category, building...')}
                             results={locations => searchResultsReceived(locations, searchFieldIdentifiers.TO)}
                             clicked={() => onSearchClicked(searchFieldIdentifiers.TO)}
                             cleared={() => onSearchCleared(searchFieldIdentifiers.TO)}
@@ -465,16 +465,15 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
 
                 </div>
             </div>
-            {!hasFoundRoute && <p className="wayfinding__error">No route found</p>}
-            {!hasSearchResults && !showMyPositionOption && <p className="wayfinding__error">Nothing was found</p>}
+            {!hasFoundRoute && <p className="wayfinding__error">{t('No route found')}</p>}
+            {!hasSearchResults && !showMyPositionOption && <p className="wayfinding__error">{t('Nothing was found')}</p>}
             {userPosition && showMyPositionOption && <button type="button" className="wayfinding__use-current-position" onClick={() => selectMyPosition()}>
                 <CompassArrow />
-                My Position
+                {t('My Position')}
             </button>}
             {searchResults.length > 0 &&
                 <div className="wayfinding__scrollable" {...scrollableContentSwipePrevent}>
                     <div className="wayfinding__results">
-
                         {searchResults.map(location =>
                             <ListItemLocation
                                 key={location.id}
@@ -490,7 +489,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                     <div className="wayfinding__accessibility">
                         <input className="mi-toggle" type="checkbox" checked={accessibilityOn} onChange={e => setAccessibilityOn(e.target.checked)} style={{ backgroundColor: accessibilityOn ? primaryColor : '' }} />
                         <div>{t('Accessibility')}</div>
-                        <Tooltip text="Turn on Accessibility to get directions that avoids stairs and escalators."></Tooltip>
+                        <Tooltip text={t('Turn on Accessibility to get directions that avoids stairs and escalators.')}></Tooltip>
                     </div>
                     <div className="wayfinding__travel">
                         <Dropdown selectionChanged={travelMode => setTravelMode(travelMode[0].value)}>
@@ -515,7 +514,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                         {travelMode === travelModes.WALKING && <WalkingIcon />}
                         {travelMode === travelModes.DRIVING && <DriveIcon />}
                         {travelMode === travelModes.BICYCLING && <BikeIcon />}
-                        <div>Distance:</div>
+                        <div>{t('Distance')}:</div>
                         <div className="wayfinding__meters">{totalDistance && <mi-distance meters={totalDistance} />}</div>
                     </div>
                     <div className="wayfinding__time">
@@ -525,7 +524,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                     </div>
                 </div>
                 <button className="wayfinding__button" style={{ background: primaryColor }} onClick={() => onStartDirections()}>
-                    Go!
+                    {t('Go!')}
                 </button>
             </div>}
         </div>

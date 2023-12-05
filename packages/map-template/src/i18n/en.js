@@ -6,6 +6,8 @@ export const en = {
     'Distance': 'Distance',
     'Estimated time': 'Estimated time',
     'Level': 'Level',
+    'Search by name, category, building...': 'Search by name, category, building...',
+    'Nothing was found': 'Nothing was found',
     // Location Details
     'Read full description': 'Read full description',
     'Start wayfinding': 'Start wayfinding',
@@ -48,14 +50,18 @@ export const en = {
     'h': 'h',
     'min': 'min',
     // Search component
-    'Search by name, category, building...': 'Search by name, category, building...',
-    'Nothing was found': 'Nothing was found',
     // Wayfinding component
+    'Switch': 'Switch',
     'Start wayfinding': 'Start wayfinding',
     'Accessibility': 'Accessibility',
     'Walk': 'Walk',
     'Drive': 'Drive',
     'Bike': 'Bike',
+    'No route found': 'No route found',
+    'Nothing was found': 'Nothing was found',
+    'My position': 'My position',
+    'Turn on Accessibility to get directions that avoids stairs and escalators.': 'Turn on Accessibility to get directions that avoids stairs and escalators.',
+    'Go!': 'Go!',
     // Venue selector
     'Venues': 'Venues',
     'Select venue': 'Select venue',

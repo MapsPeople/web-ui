@@ -6,6 +6,8 @@ export const da = {
     'Distance': 'Distance',
     'Estimated time': 'Forventet tid',
     'Level': 'Etage',
+    'Search by name, category, building...': 'Søg efter navn, kategori, bygning...',
+    'Nothing was found': 'Intet fundet',
     // Location Details
     'Read full description': 'Læs hel beskrivelse',
     'Start wayfinding': 'Start rutebeskrivelse',
@@ -48,14 +50,18 @@ export const da = {
     'h': 't',
     'min': 'min',
     // Search component
-    'Search by name, category, building...': 'Søg efter navn, kategori, bygning...',
-    'Nothing was found': 'Intet fundet',
     // Wayfinding component
+    'Switch': 'Skift',
     'Start wayfinding': 'Start rutevejledning',
     'Accessibility': 'Tilgængelig rute',
     'Walk': 'Til fods',
     'Drive': 'Kørsel',
     'Bike': 'Cykling',
+    'No route found': 'Ingen rute fundet',
+    'Nothing was found': 'Intet fundet',
+    'My position': 'Min position',
+    'Turn on Accessibility to get directions that avoids stairs and escalators.': 'Slå "Tilgængelig rute" til for at få en rutevejledning uden trapper og rulletrapper.',
+    'Go!': 'Go!',
     // Venue selector
     'Venues': 'Venues',
     'Select venue': 'Vælg venue',
