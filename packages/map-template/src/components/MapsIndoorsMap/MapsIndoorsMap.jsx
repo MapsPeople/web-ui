@@ -62,6 +62,7 @@ function MapsIndoorsMap(props) {
         const externalIDsQueryParameter = queryStringParams.get('externalIDs')?.split(',');
         const gmMapIdQueryParameter = queryStringParams.get('gmMapId');
         const kioskOriginLocationId = queryStringParams.get('kioskOriginLocationId');
+        const languageQueryParameter = queryStringParams.get('language');
 
         setMapTemplateProps({
             apiKey: props.supportsUrlParameters && apiKeyQueryParameter ? apiKeyQueryParameter : (props.apiKey || defaultProps.apiKey),
@@ -81,7 +82,7 @@ function MapsIndoorsMap(props) {
             externalIDs: props.supportsUrlParameters && externalIDsQueryParameter ? externalIDsQueryParameter : props.externalIDs,
             gmMapId: props.supportsUrlParameters && gmMapIdQueryParameter ? gmMapIdQueryParameter : props.gmMapId,
             kioskOriginLocationId: props.supportsUrlParameters && kioskOriginLocationId ? kioskOriginLocationId : props.kioskOriginLocationId,
-            language: props.language
+            language: props.supportsUrlParameters && languageQueryParameter ? languageQueryParameter : props.language
         });
     }, [props]);
 
