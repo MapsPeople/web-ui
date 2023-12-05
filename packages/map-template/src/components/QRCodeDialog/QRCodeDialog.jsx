@@ -9,8 +9,11 @@ import QRCode from 'qrcode';
 import kioskLocationState from "../../atoms/kioskLocationState";
 import logoState from "../../atoms/logoState";
 
+/**
+ * Handle the QR Code dialog.
+ *
+ */
 function QRCodeDialog() {
-
     const [, setShowQRCodeDialog] = useRecoilState(showQRCodeDialogState);
     const primaryColor = useRecoilValue(primaryColorState);
     const apiKey = useRecoilValue(apiKeyState);
@@ -18,11 +21,8 @@ function QRCodeDialog() {
     const directionsTo = useRecoilValue(currentLocationState);
     const logo = useRecoilValue(logoState);
 
-
     useEffect(() => {
         if (directionsFrom && directionsTo) {
-            let QRCodeURL;
-
             let currentUrl = window.location.origin;
             const currentParams = new URLSearchParams(window.location.search);
 
@@ -69,10 +69,11 @@ function QRCodeDialog() {
                 newParams.append('logo', logo)
             }
 
+            // Get the string with all the final query parameters
             const finalParams = newParams.toString()
 
-            QRCodeURL = `${currentUrl}/?${finalParams}&directionsFrom=${directionsFrom.id}&directionsTo=${directionsTo.id}`
-            console.log('qr code', QRCodeURL)
+            // Construct the QR code URL.
+            let QRCodeURL = `${currentUrl}/?${finalParams}&directionsFrom=${directionsFrom.id}&directionsTo=${directionsTo.id}`
 
             const options = {
                 errorCorrectionLevel: 'L',
