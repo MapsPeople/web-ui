@@ -18,6 +18,7 @@ import { snapPoints } from "../../constants/snapPoints";
 import substepsToggledState from "../../atoms/substepsToggledState";
 import getDesktopPaddingLeft from "../../helpers/GetDesktopPaddingLeft";
 import getMobilePaddingBottom from "../../helpers/GetMobilePaddingBottom";
+import distanceUnitSystemSelector from '../../selectors/distanceUnitSystemSelector';
 
 let directionsRenderer;
 
@@ -49,6 +50,8 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
     const travelMode = useRecoilValue(travelModeState);
 
     const directions = useRecoilValue(directionsResponseState);
+
+    const distanceUnitSystem = useRecoilValue(distanceUnitSystemSelector);
 
     const [, setActiveStep] = useRecoilState(activeStepState);
 
@@ -258,7 +261,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                         {travelMode === travelModes.DRIVING && <DriveIcon />}
                         {travelMode === travelModes.BICYCLING && <BikeIcon />}
                         <div>{t('Distance')}:</div>
-                        <div className="directions__meters">{totalDistance && <mi-distance meters={totalDistance} />}</div>
+                        <div className="directions__meters">{totalDistance && <mi-distance unit={distanceUnitSystem} meters={totalDistance} />}</div>
                     </div>
                     <div className="directions__time">
                         <ClockIcon />

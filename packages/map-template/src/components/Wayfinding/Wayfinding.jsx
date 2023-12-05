@@ -31,6 +31,7 @@ import primaryColorState from "../../atoms/primaryColorState";
 import directionsResponseState from "../../atoms/directionsResponseState";
 import addMapboxPlaceGeometry from "../Map/MapboxMap/MapboxPlacesHandler";
 import mapboxAccessTokenState from "../../atoms/mapboxAccessTokenState";
+import distanceUnitSystemSelector from '../../selectors/distanceUnitSystemSelector';
 
 const searchFieldIdentifiers = {
     TO: 'TO',
@@ -102,6 +103,8 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     const [showMyPositionOption, setShowMyPositionOption] = useState(false);
 
     const mapboxAccessToken = useRecoilValue(mapboxAccessTokenState);
+
+    const distanceUnitSystem = useRecoilValue(distanceUnitSystemSelector);
 
 
     /**
@@ -515,7 +518,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                         {travelMode === travelModes.DRIVING && <DriveIcon />}
                         {travelMode === travelModes.BICYCLING && <BikeIcon />}
                         <div>{t('Distance')}:</div>
-                        <div className="wayfinding__meters">{totalDistance && <mi-distance meters={totalDistance} />}</div>
+                        <div className="wayfinding__meters">{totalDistance && <mi-distance unit={distanceUnitSystem} meters={totalDistance} />}</div>
                     </div>
                     <div className="wayfinding__time">
                         <ClockIcon />
