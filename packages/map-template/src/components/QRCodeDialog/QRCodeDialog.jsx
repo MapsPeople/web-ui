@@ -7,8 +7,6 @@ import apiKeyState from "../../atoms/apiKeyState";
 import currentLocationState from "../../atoms/currentLocationState";
 import QRCode from 'qrcode';
 import kioskLocationState from "../../atoms/kioskLocationState";
-import gmApiKeyState from "../../atoms/gmApiKeyState";
-import mapboxAccessTokenState from "../../atoms/mapboxAccessTokenState";
 import logoState from "../../atoms/logoState";
 
 function QRCodeDialog() {
@@ -18,8 +16,6 @@ function QRCodeDialog() {
     const apiKey = useRecoilValue(apiKeyState);
     const directionsFrom = useRecoilValue(kioskLocationState);
     const directionsTo = useRecoilValue(currentLocationState);
-    const gmApiKey = useRecoilValue(gmApiKeyState);
-    const mapboxAccessToken = useRecoilValue(mapboxAccessTokenState);
     const logo = useRecoilValue(logoState);
 
 
@@ -32,63 +28,51 @@ function QRCodeDialog() {
 
             const newParams = new URLSearchParams();
 
-            /**
-             * Function that handles the Api Key parameter
-             */
-            function handleApiKey() {
-                // Check if the apiKey exists as a parameter
-                if (currentParams.has('apiKey')) {
-                    const apiKeyParameter = currentParams.get('apiKey');
-                    newParams.append('apiKey', apiKeyParameter);
-                    //Else just take the apiKey prop
-                } else {
-                    const apiKeyParameter = apiKey;
-                    newParams.append('apiKey', apiKeyParameter);
-                }
+            // Check if the mapboxAccessToken exists as a parameter
+            if (currentParams.has('mapboxAccessToken')) {
+                const mapboxAccessTokenParameter = currentParams.get('mapboxAccessToken');
+                newParams.append('mapboxAccessToken', mapboxAccessTokenParameter);
             }
 
-            /**
-             * Function that handles the Primary Color parameter
-             */
-            function handlePrimaryColor() {
-                // Check for primary color query parameter
-                if (currentParams.has('primaryColor')) {
-                    const primaryColorParameter = currentParams.get('primaryColor')
-                    newParams.append('primaryColor', primaryColorParameter)
-                    // Check for primary color property 
-                    // Remove the "#" character from the hex code
-                } else if (primaryColor) {
-                    newParams.append('primaryColor', primaryColor.replace("#", ""))
-                }
+            // Check if the gmApiKey exists as a parameter
+            if (currentParams.has('gmApiKey')) {
+                const gmApiKeyParameter = currentParams.get('gmApiKey');
+                newParams.append('gmApiKey', gmApiKeyParameter);
             }
 
-            /**
-             * Function that handles the Logo parameter
-             */
-            function handleLogo() {
-                // Check for logo query parameter
-                if (currentParams.has('logo')) {
-                    const logoParameter = currentParams.get('logo')
-                    newParams.append('logo', logoParameter)
-                    // Check for logo property
-                } else if (logo) {
-                    newParams.append('logo', logo)
-                }
+            // Check if the apiKey exists as a parameter
+            if (currentParams.has('apiKey')) {
+                const apiKeyParameter = currentParams.get('apiKey');
+                newParams.append('apiKey', apiKeyParameter);
+                //Else just take the apiKey prop
+            } else {
+                const apiKeyParameter = apiKey;
+                newParams.append('apiKey', apiKeyParameter);
             }
 
-            handleApiKey()
-            handlePrimaryColor();
-            handleLogo();
+            // Check for primary color query parameter
+            if (currentParams.has('primaryColor')) {
+                const primaryColorParameter = currentParams.get('primaryColor')
+                newParams.append('primaryColor', primaryColorParameter)
+                // Check for primary color property 
+                // Remove the "#" character from the hex code
+            } else if (primaryColor) {
+                newParams.append('primaryColor', primaryColor.replace("#", ""))
+            }
+
+            // Check for logo query parameter
+            if (currentParams.has('logo')) {
+                const logoParameter = currentParams.get('logo')
+                newParams.append('logo', logoParameter)
+                // Check for logo property
+            } else if (logo) {
+                newParams.append('logo', logo)
+            }
 
             const finalParams = newParams.toString()
 
             QRCodeURL = `${currentUrl}/?${finalParams}&directionsFrom=${directionsFrom.id}&directionsTo=${directionsTo.id}`
             console.log('qr code', QRCodeURL)
-            
-            // if (mapboxAccessToken || gmApiKey || currentParams.has('gmApiKey') || currentParams.has('mapboxAccessToken')) {
-            // } else {
-            //     console.log('no mapbox access token or google maps api key provided')
-            // }
 
             const options = {
                 errorCorrectionLevel: 'L',
