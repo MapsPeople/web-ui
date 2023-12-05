@@ -229,10 +229,6 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
         }
     }
 
-    function onShowQRCode() {
-        setShowQRCodeDialog(true);
-    }
-
     /**
      * Set the size of the bottom sheet depending on the substepsOpen state.
      */
@@ -309,7 +305,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                             <div className="directions__minutes">{totalTime && <mi-time seconds={totalTime} />}</div>
                         </div>
                     </div>
-                    {kioskLocation && <button className='directions__qr-code' onClick={() => onShowQRCode()}><QRCode /> Scan QR code</button>}
+                    {kioskLocation && <button className='directions__qr-code' onClick={() => setShowQRCodeDialog(true)}><QRCode /> Scan QR code</button>}
                 </div>
                 <hr></hr>
                 <RouteInstructions
