@@ -309,7 +309,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                             <div className="directions__minutes">{totalTime && <mi-time seconds={totalTime} />}</div>
                         </div>
                     </div>
-                    <button className='directions__qr-code' onClick={() => onShowQRCode()}><QRCode /> Scan QR code</button>
+                    {kioskLocation && <button className='directions__qr-code' onClick={() => onShowQRCode()}><QRCode /> Scan QR code</button>}
                 </div>
                 <hr></hr>
                 <RouteInstructions
