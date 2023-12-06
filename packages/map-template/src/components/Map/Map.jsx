@@ -71,7 +71,6 @@ function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule }) {
     const isLocationClicked = useRecoilValue(isLocationClickedState);
     const kioskOriginLocationId = useRecoilValue(kioskOriginLocationIdState);
     const [, setErrorMessage] = useRecoilState(notificationMessageState);
-
     const isMapReady = useRecoilValue(isMapReadyState);
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
@@ -132,6 +131,7 @@ function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule }) {
         } else {
             // A good candidate for map type could not be determined.
             setErrorMessage({ text: 'Please provide a Mapbox Access Token or Google Maps API key to show a map.', type: 'error' });
+            setMapType(undefined);
         }
     }, [gmApiKey, mapboxAccessToken, solution]);
 
