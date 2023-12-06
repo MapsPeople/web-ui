@@ -15,6 +15,8 @@ import isLocationClickedState from '../../atoms/isLocationClickedState';
 import useMediaQuery from '../../hooks/useMediaQuery';
 import fitBoundsLocation from '../../helpers/fitBoundsLocation';
 import getDesktopPaddingLeft from '../../helpers/GetDesktopPaddingLeft';
+import kioskLocationState from '../../atoms/kioskLocationState';
+import getDesktopPaddingBottom from '../../helpers/GetDesktopPaddingBottom';
 import useKeyboardState from '../../atoms/useKeyboardState';
 import Keyboard from '../WebComponentWrappers/Keyboard/Keyboard';
 import searchInputState from '../../atoms/searchInputState';
@@ -68,6 +70,8 @@ function Search({ onSetSize }) {
     const [currentVenueId, setCurrentVenueId] = useRecoilState(currentVenueNameState);
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
+
+    const kioskLocation = useRecoilValue(kioskLocationState);
 
     const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
 
@@ -206,7 +210,39 @@ function Search({ onSetSize }) {
             mapsIndoorsInstance.setFloor(locationFloor);
         }
 
-        fitBoundsLocation(location, mapsIndoorsInstance, isDesktop ? 0 : 200, isDesktop ? getDesktopPaddingLeft() : 0)
+        fitBoundsLocation(location, mapsIndoorsInstance, getBottomPadding(), getLeftPadding());
+    }
+
+    /**
+     * Get bottom padding when selecting a location.
+     * Calculate all cases depending on the kioskLocation id prop as well.
+     */
+    function getBottomPadding() {
+        if (isDesktop) {
+            if (kioskLocation) {
+                return getDesktopPaddingBottom();
+            } else {
+                return 0;
+            }
+        } else {
+            return 200;
+        }
+    }
+
+    /**
+     * Get left padding when selecting a location. 
+     * Calculate all cases depending on the kioskLocation id prop as well. 
+     */
+    function getLeftPadding() {
+        if (isDesktop) {
+            if (kioskLocation) {
+                return 0;
+            } else {
+                return getDesktopPaddingLeft();
+            }
+        } else {
+            return 0;
+        }
     }
 
     /*

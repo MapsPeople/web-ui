@@ -30,7 +30,7 @@ import gmMapIdState from '../../atoms/gmMapIdState';
 import bearingState from '../../atoms/bearingState';
 import pitchState from '../../atoms/pitchState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
-import kioskOriginLocationIdState from '../../atoms/kioskOriginLocationIdState';
+import kioskLocationState from '../../atoms/kioskLocationState';
 import useKeyboardState from '../../atoms/useKeyboardState';
 
 defineCustomElements();
@@ -72,7 +72,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setLogo] = useRecoilState(logoState);
     const [, setGmMapId] = useRecoilState(gmMapIdState);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
-    const [, setKioskOriginLocationId] = useRecoilState(kioskOriginLocationIdState);
+    const [, setKioskLocation] = useRecoilState(kioskLocationState);
     const [, setUseKeyboard] = useRecoilState(useKeyboardState);
 
     const [showVenueSelector, setShowVenueSelector] = useState(true);
@@ -327,7 +327,14 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
-            setKioskOriginLocationId(kioskOriginLocationId);
+            if (kioskOriginLocationId) {
+                window.mapsindoors.services.LocationsService.getLocation(kioskOriginLocationId).then(kioskLocation => {
+                    setKioskLocation(kioskLocation);
+                })
+            } else {
+                setKioskLocation();
+            }
+
             if (kioskOriginLocationId && isDesktop) {
                 setShowVenueSelector(false);
                 setShowPositionControl(false);

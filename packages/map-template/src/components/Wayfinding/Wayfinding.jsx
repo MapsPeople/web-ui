@@ -27,9 +27,10 @@ import { ReactComponent as CompassArrow } from '../../assets/compass-arrow.svg';
 import { travelModes } from "../../constants/travelModes";
 import Dropdown from "../WebComponentWrappers/Dropdown/Dropdown";
 import primaryColorState from "../../atoms/primaryColorState";
-import directionsResponseState from "../../atoms/directionsResponseState";
 import addMapboxPlaceGeometry from "../Map/MapboxMap/MapboxPlacesHandler";
 import mapboxAccessTokenState from "../../atoms/mapboxAccessTokenState";
+import useDirectionsInfo from "../../hooks/useDirectionsInfo";
+import hasFoundRouteState from "../../atoms/hasFoundRouteState";
 
 const searchFieldIdentifiers = {
     TO: 'TO',
@@ -60,7 +61,6 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     const toFieldRef = useRef();
     const fromFieldRef = useRef();
 
-    const [, setDirectionsResponse] = useRecoilState(directionsResponseState);
     const directionsService = useRecoilValue(directionsServiceState);
     const userPosition = useRecoilValue(userPositionState);
     const currentLocation = useRecoilValue(currentLocationState);
@@ -70,7 +70,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     const [activeSearchField, setActiveSearchField] = useState();
 
     /** Indicate if a route has been found */
-    const [hasFoundRoute, setHasFoundRoute] = useState(true);
+    const [, setHasFoundRoute] = useRecoilState(hasFoundRouteState);
 
     /** Indicate if search results have been found */
     const [hasSearchResults, setHasSearchResults] = useState(true);
@@ -83,9 +83,6 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
 
     const [destinationLocation, setDestinationLocation] = useState();
     const [originLocation, setOriginLocation] = useState();
-
-    const [totalDistance, setTotalDistance] = useState();
-    const [totalTime, setTotalTime] = useState();
 
     const [accessibilityOn, setAccessibilityOn] = useState(false);
 
@@ -100,6 +97,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
 
     const mapboxAccessToken = useRecoilValue(mapboxAccessTokenState);
 
+    const [totalDistance, totalTime, hasFoundRoute] = useDirectionsInfo(originLocation, destinationLocation, directionsService, travelMode, accessibilityOn)
 
     /**
      * Decorates location with data that is required for wayfinding to work.
@@ -170,17 +168,6 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         if (typeof onSetSize === 'function') {
             onSetSize(size);
         }
-    }
-
-    /**
-     * Get a point with a floor from a Location to use as origin or destination point.
-     *
-     * @param {object} location
-     * @returns {object}
-     */
-    function getLocationPoint(location) {
-        const coordinates = location.geometry.type === 'Point' ? location.geometry.coordinates : location.properties.anchor.coordinates;
-        return { lat: coordinates[1], lng: coordinates[0], floor: location.properties.floor };
     }
 
     /**
@@ -360,43 +347,6 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     }, [isActive, directionsToLocation, directionsFromLocation]);
 
     /*
-     * When both origin location and destination location are selected, and have geometry, call the MapsIndoors SDK
-     * to get information about the route.
-     */
-    useEffect(() => {
-        if (originLocation?.geometry && destinationLocation?.geometry) {
-            directionsService.getRoute({
-                origin: getLocationPoint(originLocation),
-                destination: getLocationPoint(destinationLocation),
-                travelMode: travelMode,
-                avoidStairs: accessibilityOn
-            }).then(directionsResult => {
-                if (directionsResult && directionsResult.legs) {
-                    setHasFoundRoute(true);
-                    // Calculate total distance and time
-                    const totalDistance = directionsResult.legs.reduce((accumulator, current) => accumulator + current.distance.value, 0);
-                    const totalTime = directionsResult.legs.reduce((accumulator, current) => accumulator + current.duration.value, 0);
-
-                    setTotalDistance(totalDistance);
-                    setTotalTime(totalTime);
-
-                    setDirectionsResponse({
-                        originLocation,
-                        destinationLocation,
-                        totalDistance,
-                        totalTime,
-                        directionsResult
-                    });
-                } else {
-                    setHasFoundRoute(false);
-                }
-            }, () => {
-                setHasFoundRoute(false);
-            });
-        }
-    }, [originLocation, destinationLocation, directionsService, accessibilityOn, travelMode]);
-
-    /*
      * React on changes on the selected map type.
      */
     useEffect(() => {
@@ -487,7 +437,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                     <div className="wayfinding__accessibility">
                         <input className="mi-toggle" type="checkbox" checked={accessibilityOn} onChange={e => setAccessibilityOn(e.target.checked)} style={{ backgroundColor: accessibilityOn ? primaryColor : '' }} />
                         <div>Accessibility</div>
-                        <Tooltip text="Turn on Accessibility to get directions that avoids stairs and escalators."></Tooltip>
+                        <Tooltip text="Turn on Accessibility to get directions that avoid stairs and escalators."></Tooltip>
                     </div>
                     <div className="wayfinding__travel">
                         <Dropdown selectionChanged={travelMode => setTravelMode(travelMode[0].value)}>
