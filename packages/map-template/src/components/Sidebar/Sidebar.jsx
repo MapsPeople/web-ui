@@ -8,6 +8,7 @@ import Wayfinding from '../Wayfinding/Wayfinding';
 import Directions from '../Directions/Directions';
 import Search from '../Search/Search';
 import LocationsList from '../LocationsList/LocationsList';
+import locationIdState from '../../atoms/locationIdState';
 import kioskLocationState from '../../atoms/kioskLocationState';
 
 /**
@@ -23,6 +24,7 @@ import kioskLocationState from '../../atoms/kioskLocationState';
 function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews }) {
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
+    const [, setLocationId] = useRecoilState(locationIdState);
     const kioskLocation = useRecoilValue(kioskLocationState)
 
     /*
@@ -35,8 +37,12 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
             pushAppView(appViews.WAYFINDING);
         } else if (currentLocation) {
             pushAppView(appViews.LOCATION_DETAILS, currentLocation);
-        } else if (filteredLocationsByExternalIDs?.length > 0) {
+        } else if (filteredLocationsByExternalIDs?.length > 1) {
             pushAppView(appViews.EXTERNALIDS);
+            // If there is only one external ID, behave the same as having the location ID prop. 
+        } else if (filteredLocationsByExternalIDs?.length === 1) {
+            setCurrentLocation(filteredLocationsByExternalIDs[0])
+            setLocationId(filteredLocationsByExternalIDs[0].id)
         } else {
             pushAppView(appViews.SEARCH);
         }
@@ -46,9 +52,13 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
      * Close the location details page and navigate to either the Locations list page or the Search page.
      */
     function closeLocationDetails() {
-        if (filteredLocationsByExternalIDs?.length > 0) {
+        if (filteredLocationsByExternalIDs?.length > 1) {
             pushAppView(appViews.EXTERNALIDS);
             setCurrentLocation();
+        } else if (filteredLocationsByExternalIDs?.length === 1) {
+            pushAppView(appViews.SEARCH);
+            setCurrentLocation();
+            setFilteredLocationsByExternalID([]);
         } else {
             pushAppView(appViews.SEARCH);
             setCurrentLocation();
@@ -77,7 +87,7 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
 
     const pages = [
         <Modal isOpen={currentAppView === appViews.SEARCH} key="A">
-            <Search/>
+            <Search />
         </Modal>,
         <Modal isOpen={currentAppView === appViews.EXTERNALIDS} key="B">
             <LocationsList
