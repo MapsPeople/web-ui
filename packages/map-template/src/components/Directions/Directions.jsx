@@ -116,9 +116,9 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
     }
 
     /**
-    * Get left padding when getting directions. 
-    * Calculate all cases depending on the kioskLocation id prop as well. 
-    */
+     * Get left padding when getting directions. 
+     * Calculate all cases depending on the kioskLocation id prop as well. 
+     */
     function getLeftPadding(padding) {
         if (isDesktop) {
             if (kioskLocation) {

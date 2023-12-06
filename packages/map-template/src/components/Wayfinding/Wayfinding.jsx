@@ -437,7 +437,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                     <div className="wayfinding__accessibility">
                         <input className="mi-toggle" type="checkbox" checked={accessibilityOn} onChange={e => setAccessibilityOn(e.target.checked)} style={{ backgroundColor: accessibilityOn ? primaryColor : '' }} />
                         <div>Accessibility</div>
-                        <Tooltip text="Turn on Accessibility to get directions that avoids stairs and escalators."></Tooltip>
+                        <Tooltip text="Turn on Accessibility to get directions that avoid stairs and escalators."></Tooltip>
                     </div>
                     <div className="wayfinding__travel">
                         <Dropdown selectionChanged={travelMode => setTravelMode(travelMode[0].value)}>

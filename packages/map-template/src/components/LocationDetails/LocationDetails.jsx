@@ -74,7 +74,6 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
             locationInfoElement.current.location = location;
             setLocationDisplayRule(mapsIndoorsInstance.getDisplayRule(location));
             setDestinationLocation(location)
-
         }
 
         if (kioskLocation) {
