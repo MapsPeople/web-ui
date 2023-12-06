@@ -129,7 +129,7 @@ Note that when using the React component, the properties should conform to JSX p
 |`gm-map-id`|`gmMapId`|`string`|The Google Maps Map ID associated with a specific map style or feature. |
 |`pitch`|`pitch`|`number`|The pitch (Mapbox) or tilt (Google) value of the map. The value of the pitch can be between 0-85 degrees on a Mapbox map. |
 |`bearing`|`bearing`|`number`|The bearing (Mapbox) or heading (Google) value of the map. It accepts any value, and will modify it to fit into the range [0, 360]. |
-|`use-map-provider-module`|`useMapProviderModule`|``|Set to true if the Map Template should take MapsIndoors solution modules into consideration when determining what map type to use.|
+|`use-map-provider-module`|`useMapProviderModule`| Set to true if the Map Template should take MapsIndoors solution modules into consideration when determining what map type to use. |
 
 ## Using Query Parameters
 
