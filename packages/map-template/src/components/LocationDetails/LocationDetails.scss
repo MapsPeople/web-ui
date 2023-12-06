@@ -100,8 +100,12 @@
 
         &:hover {
             filter: brightness(90%);
-            cursor: pointer;
         }
+    }
+
+    &--no-route {
+        opacity: .5;
+        cursor: not-allowed;
     }
 }
 
