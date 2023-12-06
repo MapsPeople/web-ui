@@ -41,7 +41,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "vite --host",
+    "start": "vite",
     "build": "vite build",
     "build-for-npm": "node releaseTools/buildForNpm.mjs",
     "serve": "vite preview",
