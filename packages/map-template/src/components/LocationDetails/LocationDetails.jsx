@@ -74,7 +74,6 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
             locationInfoElement.current.location = location;
             setLocationDisplayRule(mapsIndoorsInstance.getDisplayRule(location));
             setDestinationLocation(location)
-
         }
 
         if (kioskLocation) {
@@ -247,7 +246,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                     onClick={() => startDirections()}
                     className={`location-details__wayfinding ${!hasFoundRoute ? 'location-details--no-route' : ''}`}
                     style={{ background: primaryColor }}>
-                    {!hasFoundRoute ? 'Route not available' : 'Start directions'}
+                    {!hasFoundRoute ? 'Directions not available' : 'Start directions'}
                 </button>
                 :
                 <button onClick={() => startWayfinding()}
