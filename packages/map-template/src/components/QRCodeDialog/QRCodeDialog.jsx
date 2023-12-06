@@ -28,7 +28,7 @@ function QRCodeDialog() {
             // The current URL when the user opens the QR code dialog
             let currentUrl = window.location.origin;
 
-             // The interface for the existing URL search params
+            // The interface for the existing URL search params
             const currentParams = new URLSearchParams(window.location.search);
 
             // The interface for the new URL search params
@@ -41,9 +41,11 @@ function QRCodeDialog() {
              * @param {string} queryParam 
              * @param {string} prop 
              */
-            function handleQueryParams(queryparam) {
-                const queryParameter = currentParams.get(queryparam);
-                newParams.append(queryparam, queryParameter);
+            function handleQueryParams(queryParam) {
+                if (currentParams.has(queryParam)) {
+                    const queryParameter = currentParams.get(queryParam);
+                    newParams.append(queryParam, queryParameter);
+                }
             }
 
             /**
@@ -55,7 +57,8 @@ function QRCodeDialog() {
              */
             function handleQueryParamsAndProps(queryParam, prop) {
                 if (currentParams.has(queryParam)) {
-                    handleQueryParamsAndProps(queryParam)
+                    const queryParameter = currentParams.get(queryParam);
+                    newParams.append(queryParam, queryParameter);
                 } else if (prop) {
                     if (prop === primaryColorProp) {
                         newParams.append(queryParam, primaryColorProp.replace("#", ""))
