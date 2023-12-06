@@ -69,7 +69,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [venues, setVenues] = useRecoilState(venuesState);
     const [, setCurrentVenueName] = useRecoilState(currentVenueNameState);
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
-    const [, setCategories] = useRecoilState(categoriesState);
+    const [categories, setCategories] = useRecoilState(categoriesState);
     const [, setLocationId] = useRecoilState(locationIdState);
     const [, setPrimaryColor] = useRecoilState(primaryColorState);
     const [, setLogo] = useRecoilState(logoState);
@@ -183,6 +183,13 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             // Set the language on the MapsIndoors SDK in order to get eg. Mapbox and Google directions in that language.
             window.mapsindoors.MapsIndoors.setLanguage(languageToUse);
+
+            // Make sure to update categories
+            if (categories.length > 0) {
+                window.mapsindoors.services.LocationsService.once('update_completed', (payload) => {
+                    getVenueCategories(venue);
+                });
+            }
 
             if (!currentLanguage) {
                 // Initialize i18n instance that is used to assist translating in the React components.
@@ -394,6 +401,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * @param {string} venue
      */
     function getVenueCategories(venue) {
+        console.log('get venue categories', venue);
         // Filter through the locations which have the venueId equal to the selected venue,
         // due to the impossibility to use the venue parameter in the getLocations().
         window.mapsindoors.services.LocationsService.getLocations({}).then(locations => {

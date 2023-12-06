@@ -15,6 +15,7 @@ import isLocationClickedState from '../../atoms/isLocationClickedState';
 import useMediaQuery from '../../hooks/useMediaQuery';
 import fitBoundsLocation from '../../helpers/fitBoundsLocation';
 import getDesktopPaddingLeft from '../../helpers/GetDesktopPaddingLeft';
+import languageState from '../../atoms/languageState';
 import { useTranslation } from 'react-i18next';
 
 /**
@@ -63,6 +64,8 @@ function Search({ onSetSize }) {
     const [, setIsLocationClicked] = useRecoilState(isLocationClickedState);
 
     const [currentVenueId, setCurrentVenueId] = useRecoilState(currentVenueNameState);
+
+    const currentLanguage = useRecoilValue(languageState);
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
@@ -204,6 +207,17 @@ function Search({ onSetSize }) {
             setSelectedCategory(null);
         }
     }, [currentVenueId]);
+
+    /*
+     * React on changes in the app language. Any existing category search needs to update with translated Locations.
+     */
+    useEffect(() => {
+        if (selectedCategory) {
+            window.mapsindoors.services.LocationsService.once('update_completed', () => {
+                searchFieldRef.current.triggerSearch();
+            });
+        }
+    }, [currentLanguage]);
 
     /*
      * Handle location hover.

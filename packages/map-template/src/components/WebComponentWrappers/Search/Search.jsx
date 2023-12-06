@@ -2,6 +2,7 @@ import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import useNear from '../../../hooks/useNear';
 import { useRecoilValue } from 'recoil';
 import userPositionState from '../../../atoms/userPositionState';
+import languageState from '../../../atoms/languageState';
 
 /**
  * React wrapper around the custom element <mi-search>.
@@ -22,6 +23,7 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
     const elementRef = useRef();
 
     const userPosition = useRecoilValue(userPositionState);
+    const language = useRecoilValue(languageState);
 
     const mapboxPlacesSessionToken = sessionStorage.getItem('mapboxPlacesSessionToken');
 
@@ -53,6 +55,16 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
             elementRef.current.clear();
         }
     }));
+
+    useEffect(() => {
+        const { current } = elementRef;
+
+        if (current.value) {
+            window.mapsindoors.services.LocationsService.once('update_completed', () => {
+                current.triggerSearch();
+            });
+        }
+    }, [language]);
 
     useEffect(() => {
         const searchResultsHandler = customEvent => results(customEvent.detail);
