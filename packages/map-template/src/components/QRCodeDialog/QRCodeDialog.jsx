@@ -15,64 +15,69 @@ import logoState from "../../atoms/logoState";
  */
 function QRCodeDialog() {
     const [, setShowQRCodeDialog] = useRecoilState(showQRCodeDialogState);
-    const primaryColor = useRecoilValue(primaryColorState);
-    const apiKey = useRecoilValue(apiKeyState);
+
+    const primaryColorProp = useRecoilValue(primaryColorState);
+    const apiKeyProp = useRecoilValue(apiKeyState);
+    const logoProp = useRecoilValue(logoState);
+
     const directionsFrom = useRecoilValue(kioskLocationState);
     const directionsTo = useRecoilValue(currentLocationState);
-    const logo = useRecoilValue(logoState);
 
     useEffect(() => {
         if (directionsFrom && directionsTo) {
+            // The current URL when the user opens the QR code dialog
             let currentUrl = window.location.origin;
+
+             // The interface for the existing URL search params
             const currentParams = new URLSearchParams(window.location.search);
 
+            // The interface for the new URL search params
             const newParams = new URLSearchParams();
 
-            // Check if the mapboxAccessToken exists as a parameter
-            if (currentParams.has('mapboxAccessToken')) {
-                const mapboxAccessTokenParameter = currentParams.get('mapboxAccessToken');
-                newParams.append('mapboxAccessToken', mapboxAccessTokenParameter);
+            /**
+             * Function that handles the presence of query parameters
+             * and appends them to the newParams interface.
+             * 
+             * @param {string} queryParam 
+             * @param {string} prop 
+             */
+            function handleQueryParams(queryparam) {
+                const queryParameter = currentParams.get(queryparam);
+                newParams.append(queryparam, queryParameter);
             }
 
-            // Check if the gmApiKey exists as a parameter
-            if (currentParams.has('gmApiKey')) {
-                const gmApiKeyParameter = currentParams.get('gmApiKey');
-                newParams.append('gmApiKey', gmApiKeyParameter);
+            /**
+             * Function that handles the presence of query parameters and props
+             * and appends them to the newParams interface.
+             * 
+             * @param {string} queryParam 
+             * @param {string} prop 
+             */
+            function handleQueryParamsAndProps(queryParam, prop) {
+                if (currentParams.has(queryParam)) {
+                    handleQueryParamsAndProps(queryParam)
+                } else if (prop) {
+                    if (prop === primaryColorProp) {
+                        newParams.append(queryParam, primaryColorProp.replace("#", ""))
+                    } else {
+                        newParams.append(queryParam, prop)
+                    }
+                }
             }
 
-            // Check if the apiKey exists as a parameter
-            if (currentParams.has('apiKey')) {
-                const apiKeyParameter = currentParams.get('apiKey');
-                newParams.append('apiKey', apiKeyParameter);
-                //Else just take the apiKey prop
-            } else {
-                const apiKeyParameter = apiKey;
-                newParams.append('apiKey', apiKeyParameter);
-            }
+            // Handle query parameters for the gmApiKey and mapboxAccessToken
+            handleQueryParams('gmApiKey');
+            handleQueryParams('mapboxAccessToken');
 
-            // Check for primary color query parameter
-            if (currentParams.has('primaryColor')) {
-                const primaryColorParameter = currentParams.get('primaryColor')
-                newParams.append('primaryColor', primaryColorParameter)
-                // Check for primary color property 
-                // Remove the "#" character from the hex code
-            } else if (primaryColor) {
-                newParams.append('primaryColor', primaryColor.replace("#", ""))
-            }
-
-            // Check for logo query parameter
-            if (currentParams.has('logo')) {
-                const logoParameter = currentParams.get('logo')
-                newParams.append('logo', logoParameter)
-                // Check for logo property
-            } else if (logo) {
-                newParams.append('logo', logo)
-            }
+            // Handle query parameters and props for apiKey, primaryColor, logo 
+            handleQueryParamsAndProps('apiKey', apiKeyProp);
+            handleQueryParamsAndProps('primaryColor', primaryColorProp);
+            handleQueryParamsAndProps('logo', logoProp);
 
             // Get the string with all the final query parameters
             const finalParams = newParams.toString()
 
-            // Construct the QR code URL.
+            // Construct the QR code URL
             let QRCodeURL = `${currentUrl}/?${finalParams}&directionsFrom=${directionsFrom.id}&directionsTo=${directionsTo.id}`
 
             const options = {
@@ -100,7 +105,7 @@ function QRCodeDialog() {
         <div className="qr-code">
             <img id='qr' alt="QR Code" className="qr-code__image" />
             <p>Scan the QR code to see the route on your phone</p>
-            <button className="qr-code__button" style={{ background: primaryColor }} onClick={() => closeDialog()}>DONE</button>
+            <button className="qr-code__button" style={{ background: primaryColorProp }} onClick={() => closeDialog()}>DONE</button>
         </div>
     </>
     )
