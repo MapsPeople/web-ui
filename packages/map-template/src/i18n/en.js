@@ -11,9 +11,13 @@ export const en = {
     'd': 'd',
     'h': 'h',
     'min': 'min',
+    'Walk': 'Walk',
+    'Bike': 'Bike',
+    'Transit': 'Transit',
+    'Drive': 'Drive',
+    'Start wayfinding': 'Start wayfinding',
     // Location Details
     'Read full description': 'Read full description',
-    'Start wayfinding': 'Start wayfinding',
     // Locations list
     'Locations': 'Locations',
     // Route instructions
@@ -21,10 +25,6 @@ export const en = {
     'Next': 'Next',
     'StepYofX': 'Step {{activeStep}} of {{totalSteps}}',
     // Route Instructions Step
-    'Walk': 'Walk',
-    'Bike': 'Bike',
-    'Transit': 'Transit',
-    'Drive': 'Drive',
     'You have arrived': 'You have arrived',
     'Leave': 'Leave',
     'Park': 'Park',
@@ -52,13 +52,8 @@ export const en = {
     // Search component
     // Wayfinding component
     'Switch': 'Switch',
-    'Start wayfinding': 'Start wayfinding',
     'Accessibility': 'Accessibility',
-    'Walk': 'Walk',
-    'Drive': 'Drive',
-    'Bike': 'Bike',
     'No route found': 'No route found',
-    'Nothing was found': 'Nothing was found',
     'My position': 'My position',
     'Turn on Accessibility to get directions that avoids stairs and escalators.': 'Turn on Accessibility to get directions that avoids stairs and escalators.',
     'Go!': 'Go!',

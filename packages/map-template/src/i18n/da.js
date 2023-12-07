@@ -11,9 +11,13 @@ export const da = {
     'd': 'd',
     'h': 't',
     'min': 'min',
+    'Walk': 'Gå',
+    'Bike': 'Cykl',
+    'Transit': 'Offentlig transport',
+    'Drive': 'Kør',
+    'Start wayfinding': 'Start rutebeskrivelse',
     // Location Details
     'Read full description': 'Læs hel beskrivelse',
-    'Start wayfinding': 'Start rutebeskrivelse',
     // Locations List
     'Locations': 'Lokationer',
     // Route instructions
@@ -21,10 +25,6 @@ export const da = {
     'Next': 'Næste',
     'StepYofX': 'Trin {{activeStep}} ud af {{totalSteps}}',
     // Route Instructions Step
-    'Walk': 'Gå',
-    'Bike': 'Cykl',
-    'Transit': 'Offentlig transport',
-    'Drive': 'Kør',
     'You have arrived': 'Du er ankommet',
     'Leave': 'Forlad',
     'Park': 'Parkér',
@@ -52,11 +52,7 @@ export const da = {
     // Search component
     // Wayfinding component
     'Switch': 'Skift',
-    'Start wayfinding': 'Start rutevejledning',
     'Accessibility': 'Tilgængelig rute',
-    'Walk': 'Til fods',
-    'Drive': 'Kørsel',
-    'Bike': 'Cykling',
     'No route found': 'Ingen rute fundet',
     'Nothing was found': 'Intet fundet',
     'My position': 'Min position',

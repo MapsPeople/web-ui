@@ -2,6 +2,8 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import { en } from './en.js'; // TODO: Default exports
 import { da } from './da.js';
+import { de } from './de.js';
+import { fr } from './fr.js';
 
 export default function initI18n(language) {
     i18n
@@ -13,6 +15,12 @@ export default function initI18n(language) {
                 },
                 da: {
                     translation: da
+                },
+                de: {
+                    translation: de
+                },
+                fr: {
+                    translation: fr
                 }
             },
             lng: language,
