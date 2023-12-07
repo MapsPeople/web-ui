@@ -22,6 +22,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
     const [mapView, setMapView] = useState();
     const [hasFloorSelector, setHasFloorSelector] = useState(false);
     const [hasPositionControl, setHasPositionControl] = useState(false);
+    const [hasZoomControl, setHasZoomControl] = useState(false);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const primaryColor = useRecoilValue(primaryColorState);
     const bearing = useRecoilValue(bearingState);
@@ -49,7 +50,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
         // Generate a UUIDv4 and set the Session Token for searching for Mapbox places.
         const uuid = uuidv4();
         sessionStorage.setItem('mapboxPlacesSessionToken', uuid);
-        
+
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
     // We ignore eslint warnings about missing dependencies because onMapView should never change runtime and changing Mapbox Access Token runtime will give other problems.
 
@@ -79,7 +80,15 @@ function MapboxMap({ onMapView, onPositionControl }) {
 
             setHasFloorSelector(true);
         }
-    }, [mapsIndoorsInstance, mapView, hasFloorSelector, hasPositionControl]);
+
+        if (mapsIndoorsInstance && mapView && !hasZoomControl) {
+            mapView
+                .getMap()
+                .addControl(new mapboxgl.NavigationControl({showCompass: false}), 'top-right');
+
+            setHasZoomControl(true);
+        }
+    }, [mapsIndoorsInstance, mapView, hasFloorSelector, hasPositionControl, hasZoomControl]);
 
     return <div className="map-container" id="map"></div>
 }
