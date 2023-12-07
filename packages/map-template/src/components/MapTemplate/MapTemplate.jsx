@@ -184,10 +184,22 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             // Set the language on the MapsIndoors SDK in order to get eg. Mapbox and Google directions in that language.
             window.mapsindoors.MapsIndoors.setLanguage(languageToUse);
 
-            // Make sure to update categories
+            // Fetch venues and categories again to get them in the new language
             if (categories.length > 0) {
-                window.mapsindoors.services.LocationsService.once('update_completed', (payload) => {
-                    getVenueCategories(venue);
+                window.mapsindoors.services.LocationsService.once('update_completed', () => {
+                    if (categories.length > 0) {
+                        getVenueCategories(venue);
+                    }
+
+                    if (venues.length > 0) {
+                        window.mapsindoors.services.VenuesService.getVenues().then(venuesResult => {
+                            venuesResult = venuesResult.map(venue => {
+                                venue.image = appConfig.venueImages[venue.name.toLowerCase()];
+                                return venue;
+                            });
+                            setVenues(venuesResult);
+                        });
+                    }
                 });
             }
 
@@ -401,7 +413,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * @param {string} venue
      */
     function getVenueCategories(venue) {
-        console.log('get venue categories', venue);
         // Filter through the locations which have the venueId equal to the selected venue,
         // due to the impossibility to use the venue parameter in the getLocations().
         window.mapsindoors.services.LocationsService.getLocations({}).then(locations => {
