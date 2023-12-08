@@ -1,13 +1,13 @@
 export const fr = {
     // Common
-    'Close': 'Close', // !
+    'Close': 'Close',
     'From': 'De',
     'To': 'À',
-    'Distance': 'Distance', // !
-    'Estimated time': 'Estimated time', // !
+    'Distance': 'Distance',
+    'Estimated time': 'Estimated time',
     'Level': 'Niveau',
-    'Search by name, category, building...': 'Search by name, category, building...', // !
-    'Nothing was found': 'Nothing was found', // !
+    'Search by name, category, building...': 'Search by name, category, building...',
+    'Nothing was found': 'Nothing was found',
     'd': 'd',
     'h': 'h',
     'min': 'min',
@@ -15,19 +15,19 @@ export const fr = {
     'Bike': 'À vélo',
     'Transit': 'En transports',
     'Drive': 'Voiture',
-    'Start wayfinding': 'Start wayfinding', // !
+    'Start wayfinding': 'Start wayfinding',
     // Location Details
-    'Read full description': 'Read full description', // !
+    'Read full description': 'Read full description',
     // Locations list
-    'Locations': 'Locations', // !
+    'Locations': 'Locations',
     // Route instructions
     'Previous': 'Precedent',
     'Next': 'Suivant',
-    'StepYofX': 'Step {{activeStep}} of {{totalSteps}}', // !
+    'StepYofX': 'Step {{activeStep}} of {{totalSteps}}',
     // Route Instructions Step
-    'You have arrived': 'You have arrived', // !
+    'You have arrived': 'You have arrived',
     'Leave': 'Quitte',
-    'Park': 'Park', // !
+    'Park': 'Park',
     'at': 'à',
     'Building': 'Bâtiment',
     'Venue': 'Lieu',
@@ -39,7 +39,7 @@ export const fr = {
     'Take wheelchair ramp to level': 'Prenez la rampe pour fauteuil roulant jusqu\'au niveau',
     'Exit': 'Quitter',
     'Enter': 'Entrer',
-    'stops': 'stops', // !
+    'stops': 'stops',
     'and continue': 'et continue',
     'Continue straight ahead': 'Continuez tout droit',
     'Go left': 'Tournez a gauche',
@@ -49,16 +49,15 @@ export const fr = {
     'Go sharp right': 'Allez brusquement à droit',
     'Go slight right': 'Allez légèrement à droit',
     'Turn around': 'Faite demi-tour',
-    // Search component
     // Wayfinding component
-    'Switch': 'Switch', // !
-    'Accessibility': 'Accessibility', // !
-    'No route found': 'No route found', // !
+    'Switch': 'Switch',
+    'Accessibility': 'Accessibility',
+    'No route found': 'No route found',
     'My position': 'Ma position',
-    'Turn on Accessibility to get directions that avoids stairs and escalators.': 'Turn on Accessibility to get directions that avoids stairs and escalators.', // !
+    'Turn on Accessibility to get directions that avoids stairs and escalators.': 'Turn on Accessibility to get directions that avoids stairs and escalators.',
     'Go!': 'Aller!',
     // Venue selector
-    'Venues': 'Venues', // !
-    'Select venue': 'Select venue', // !
-    'Current': 'Current' // !
+    'Venues': 'Venues',
+    'Select venue': 'Select venue',
+    'Current': 'Current'
 };

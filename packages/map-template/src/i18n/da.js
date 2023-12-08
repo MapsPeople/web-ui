@@ -49,12 +49,10 @@ export const da = {
     'Go sharp right': 'Drej skarpt til højre',
     'Go slight right': 'Drej en smule til højre',
     'Turn around': 'Vend om',
-    // Search component
     // Wayfinding component
     'Switch': 'Skift',
     'Accessibility': 'Tilgængelig rute',
     'No route found': 'Ingen rute fundet',
-    'Nothing was found': 'Intet fundet',
     'My position': 'Min position',
     'Turn on Accessibility to get directions that avoids stairs and escalators.': 'Slå "Tilgængelig rute" til for at få en rutevejledning uden trapper og rulletrapper.',
     'Go!': 'Go!',

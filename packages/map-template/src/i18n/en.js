@@ -49,7 +49,6 @@ export const en = {
     'Go sharp right': 'Go sharp right',
     'Go slight right': 'Go slight right',
     'Turn around': 'Turn around',
-    // Search component
     // Wayfinding component
     'Switch': 'Switch',
     'Accessibility': 'Accessibility',

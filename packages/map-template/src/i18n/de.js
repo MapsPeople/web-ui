@@ -17,7 +17,7 @@ export const de = {
     'Drive': 'Auto',
     'Start wayfinding': 'Starte Navigation',
     // Location Details
-    'Read full description': 'Ôffne vollständige Beschreibung',
+    'Read full description': 'Öffne vollständige Beschreibung',
     // Locations list
     'Locations': 'Locations',
     // Route instructions
@@ -49,13 +49,12 @@ export const de = {
     'Go sharp right': 'Scharf rechts abbiegen',
     'Go slight right': 'Leicht rechts abbiegen',
     'Turn around': 'Umdrehen',
-    // Search component
     // Wayfinding component
     'Switch': 'Umkehren',
     'Accessibility': 'Barrierefrei',
     'No route found': 'Keine Route gefunden',
     'My position': 'Meine Position',
-    'Turn on Accessibility to get directions that avoids stairs and escalators.': 'Schalte Barrierefrei ein, um Treppen und Rolltreppen zu vermeiden. Turn on Accessibility to get directions that avoids stairs and escalators.',
+    'Turn on Accessibility to get directions that avoids stairs and escalators.': 'Schalte Barrierefrei ein, um Treppen und Rolltreppen zu vermeiden.',
     'Go!': 'Start!',
     // Venue selector
     'Venues': 'Standorte',
