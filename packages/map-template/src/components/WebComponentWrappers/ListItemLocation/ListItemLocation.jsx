@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useRecoilValue } from 'recoil';
 import mapsIndoorsInstanceState from '../../../atoms/mapsIndoorsInstanceState';
+import { useTranslation } from 'react-i18next';
 
 /**
  * React wrapper around the custom element <mi-list-item-location>.
@@ -11,6 +12,7 @@ import mapsIndoorsInstanceState from '../../../atoms/mapsIndoorsInstanceState';
  * @param {string} icon
  */
 function ListItemLocation({ location, locationClicked, icon, isHovered }) {
+    const { t } = useTranslation();
     const elementRef = useRef();
 
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
@@ -48,7 +50,7 @@ function ListItemLocation({ location, locationClicked, icon, isHovered }) {
     }, [location, locationClicked, isHovered]);
 
 
-    return <mi-list-item-location ref={elementRef} />
+    return <mi-list-item-location level={t('Level')} ref={elementRef} />
 }
 
 export default ListItemLocation;

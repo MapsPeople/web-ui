@@ -306,6 +306,10 @@ export namespace Components {
          */
         "iconBadgeValue": string;
         /**
+          * @description The word used for "Level" when showing level info. Default is "Level".
+         */
+        "level": string;
+        /**
           * @description Location object.
          */
         "location": any;
@@ -1664,6 +1668,10 @@ declare namespace LocalJSX {
           * @type {string} For availability, use "true" or "false".
          */
         "iconBadgeValue"?: string;
+        /**
+          * @description The word used for "Level" when showing level info. Default is "Level".
+         */
+        "level"?: string;
         /**
           * @description Location object.
          */
