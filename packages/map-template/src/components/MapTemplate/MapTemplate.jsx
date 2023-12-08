@@ -185,23 +185,21 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             window.mapsindoors.MapsIndoors.setLanguage(languageToUse);
 
             // Fetch venues and categories again to get them in the new language
-            if (categories.length > 0) {
-                window.mapsindoors.services.LocationsService.once('update_completed', () => {
-                    if (categories.length > 0) {
-                        getVenueCategories(venue);
-                    }
+            window.mapsindoors.services.LocationsService.once('update_completed', () => {
+                if (categories.length > 0) {
+                    getVenueCategories(venue);
+                }
 
-                    if (venues.length > 0) {
-                        window.mapsindoors.services.VenuesService.getVenues().then(venuesResult => {
-                            venuesResult = venuesResult.map(venue => {
-                                venue.image = appConfig.venueImages[venue.name.toLowerCase()];
-                                return venue;
-                            });
-                            setVenues(venuesResult);
+                if (venues.length > 0) {
+                    window.mapsindoors.services.VenuesService.getVenues().then(venuesResult => {
+                        venuesResult = venuesResult.map(venue => {
+                            venue.image = appConfig.venueImages[venue.name.toLowerCase()];
+                            return venue;
                         });
-                    }
-                });
-            }
+                        setVenues(venuesResult);
+                    });
+                }
+            });
 
             if (!currentLanguage) {
                 // Initialize i18n instance that is used to assist translating in the React components.
