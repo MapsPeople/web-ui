@@ -140,38 +140,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         initializeMapsIndoorsSDK().then(() => {
             setMapsindoorsSDKAvailable(true);
         });
-    }, [])
-
-    /**
-     * React on changes in the MapsIndoors API key by fetching the required data.
-     */
-    useEffect(() => {
-        if (mapsindoorsSDKAvailable) {
-            setApiKey(apiKey);
-
-            setMapReady(false);
-            window.mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKey);
-
-            Promise.all([
-                // Fetch all Venues in the Solution
-                window.mapsindoors.services.VenuesService.getVenues(),
-                // Fetch the App Config belonging to the given API key. This is needed for checking access tokens and Venue images.
-                window.mapsindoors.services.AppConfigService.getConfig().then(appConfigResult => {
-                    setAppConfig(appConfigResult); // We need this as early as possible
-                    return appConfigResult;
-                }),
-                // Ensure a minimum waiting time of 3 seconds
-                new Promise(resolve => setTimeout(resolve, 3000))
-            ]).then(([venuesResult, appConfigResult]) => {
-                venuesResult = venuesResult.map(venue => {
-                    venue.image = appConfigResult.venueImages[venue.name.toLowerCase()];
-                    return venue;
-                });
-                setVenues(venuesResult);
-            });
-            setMapReady(false);
-        }
-    }, [apiKey, mapsindoorsSDKAvailable]);
+    }, []);
 
     /*
      * React on changes in the language prop.
@@ -216,6 +185,37 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             setCurrentLanguage(languageToUse);
         }
     }, [language, mapsindoorsSDKAvailable]);
+
+    /**
+     * React on changes in the MapsIndoors API key by fetching the required data.
+     */
+    useEffect(() => {
+        if (mapsindoorsSDKAvailable) {
+            setApiKey(apiKey);
+
+            setMapReady(false);
+            window.mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKey);
+
+            Promise.all([
+                // Fetch all Venues in the Solution
+                window.mapsindoors.services.VenuesService.getVenues(),
+                // Fetch the App Config belonging to the given API key. This is needed for checking access tokens and Venue images.
+                window.mapsindoors.services.AppConfigService.getConfig().then(appConfigResult => {
+                    setAppConfig(appConfigResult); // We need this as early as possible
+                    return appConfigResult;
+                }),
+                // Ensure a minimum waiting time of 3 seconds
+                new Promise(resolve => setTimeout(resolve, 3000))
+            ]).then(([venuesResult, appConfigResult]) => {
+                venuesResult = venuesResult.map(venue => {
+                    venue.image = appConfigResult.venueImages[venue.name.toLowerCase()];
+                    return venue;
+                });
+                setVenues(venuesResult);
+            });
+            setMapReady(false);
+        }
+    }, [apiKey, mapsindoorsSDKAvailable]);
 
     /*
      * Set map provider access token / API key based on props and app config.
