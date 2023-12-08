@@ -3,62 +3,62 @@ export const de = {
     'Close': 'Schließen',
     'From': 'Von',
     'To': 'Nach',
-    'Distance': 'Distanz', // !
-    'Estimated time': 'Estimated time', // !
+    'Distance': 'Distanz',
+    'Estimated time': 'Geschätzte Zeit',
     'Level': 'Etage',
-    'Search by name, category, building...': 'Search by name, category, building...', // !
-    'Nothing was found': 'Nothing was found', // !
-    'd': 't',
-    'h': 's',
+    'Search by name, category, building...': 'Suche nach Name, Kategorie, Gebäude...',
+    'Nothing was found': 'Keine Suchtreffer',
+    'd': 'd',
+    'h': 'h',
     'min': 'min',
     'Walk': 'Zu Fuß',
     'Bike': 'Fahrrad',
-    'Transit': 'Öffentlicher Transport',
+    'Transit': 'Öffentliche Verkehrsmittel',
     'Drive': 'Auto',
-    'Start wayfinding': 'Start wayfinding', // !
+    'Start wayfinding': 'Starte Navigation',
     // Location Details
-    'Read full description': 'Read full description', // !
+    'Read full description': 'Ôffne vollständige Beschreibung',
     // Locations list
-    'Locations': 'Locations', // !
+    'Locations': 'Locations',
     // Route instructions
     'Previous': 'Zurück',
     'Next': 'Weiter',
-    'StepYofX': 'Step {{activeStep}} of {{totalSteps}}', // !
+    'StepYofX': 'Schritt {{activeStep}} von {{totalSteps}}',
     // Route Instructions Step
-    'You have arrived': 'You have arrived', // !
+    'You have arrived': 'Sie haben ihr Ziel erreicht',
     'Leave': 'Verlassen',
-    'Park': 'Park',
+    'Park': 'Parken',
     'at': 'bei',
     'Building': 'Gebäude',
-    'Venue': 'Veranstaltungsort',
+    'Venue': 'Standort',
     'Take staircase to level': 'Nutzen Sie die Treppe zur Etage',
     'Take the ladder to level': 'Nutzen Sie die Leiter zur Etage',
     'Take elevator to level': 'Nutzen Sie den Aufzug zur Etage',
-    'Take escalator to level': 'Nutze die Rolltreppe zur Etage',
+    'Take escalator to level': 'Nutzen Sie die Rolltreppe zur Etage',
     'Take wheelchair lift to level': 'Nutzen Sie den Rollstuhllift zur Etage',
-    'Take wheelchair ramp to level': 'Nutzen Sie die Rollstuhlrampe zur Ebene',
-    'Exit': 'Gehe aus dem',
+    'Take wheelchair ramp to level': 'Nutzen Sie die Rollstuhlrampe zur Etage',
+    'Exit': 'Verlasse das',
     'Enter': 'Gehe in das',
-    'stops': 'stops', // !
-    'and continue': 'und fortsetzen',
-    'Continue straight ahead': 'Continue straight ahead', // !
+    'stops': 'Zwischenstopps',
+    'and continue': 'und Weg fortsetzen',
+    'Continue straight ahead': 'Weiter geradeaus',
     'Go left': 'Links abbiegen',
     'Go sharp left': 'Scharf links abbiegen',
     'Go slight left': 'Leicht links abbiegen',
     'Go right': 'Rechts abbiegen',
     'Go sharp right': 'Scharf rechts abbiegen',
     'Go slight right': 'Leicht rechts abbiegen',
-    'Turn around': 'Drehe um',
+    'Turn around': 'Umdrehen',
     // Search component
     // Wayfinding component
-    'Switch': 'Switch', // !
-    'Accessibility': 'Accessibility', // !
-    'No route found': 'No route found', // !
+    'Switch': 'Umkehren',
+    'Accessibility': 'Barrierefrei',
+    'No route found': 'Keine Route gefunden',
     'My position': 'Meine Position',
-    'Turn on Accessibility to get directions that avoids stairs and escalators.': 'Turn on Accessibility to get directions that avoids stairs and escalators.', // !
-    'Go!': 'Los!',
+    'Turn on Accessibility to get directions that avoids stairs and escalators.': 'Schalte Barrierefrei ein, um Treppen und Rolltreppen zu vermeiden. Turn on Accessibility to get directions that avoids stairs and escalators.',
+    'Go!': 'Start!',
     // Venue selector
-    'Venues': 'Venues', // !
-    'Select venue': 'Select venue', // !
-    'Current': 'Current' // !
+    'Venues': 'Standorte',
+    'Select venue': 'Wähle Standort',
+    'Current': 'Aktuell'
 };
