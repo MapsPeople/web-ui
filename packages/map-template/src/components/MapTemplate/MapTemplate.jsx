@@ -184,7 +184,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             // Set the language on the MapsIndoors SDK in order to get eg. Mapbox and Google directions in that language.
             window.mapsindoors.MapsIndoors.setLanguage(languageToUse);
 
-            // Fetch venues and categories again to get them in the new language
+            // If relevant, fetch venues, categories and the current location again to get them in the new language
             window.mapsindoors.services.LocationsService.once('update_completed', () => {
                 if (categories.length > 0) {
                     getVenueCategories(venue);
@@ -198,6 +198,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                         });
                         setVenues(venuesResult);
                     });
+                }
+
+                if (currentLocation) {
+                    window.mapsindoors.services.LocationsService.getLocation(currentLocation.id).then(location => setCurrentLocation(location));
                 }
             });
 
