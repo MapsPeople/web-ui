@@ -28,6 +28,8 @@ import isMapReadyState from "../../atoms/isMapReadyState";
 import getDesktopPaddingLeft from "../../helpers/GetDesktopPaddingLeft";
 import getDesktopPaddingBottom from "../../helpers/GetDesktopPaddingBottom";
 import getMobilePaddingBottom from "../../helpers/GetMobilePaddingBottom";
+import solutionState from '../../atoms/solutionState';
+import notificationMessageState from '../../atoms/notificationMessageState';
 import kioskLocationState from "../../atoms/kioskLocationState";
 
 const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
@@ -44,9 +46,10 @@ let _tileStyle;
  * @param {Object} props
  * @param {function} [props.onLocationClick] - Function that is run when a MapsIndoors Location is clicked. the Location will be sent along as first argument.
  * @param {function} props.onVenueChangedOnMap - Function that is run when the map bounds was changed due to fitting to a venue.
+ * @param {boolean} props.useMapProviderModule - If you want to use the Map Provider set on your solution in the MapsIndoors CMS, set this to true.
  * @returns
  */
-function Map({ onLocationClick, onVenueChangedOnMap }) {
+function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule }) {
     const apiKey = useRecoilValue(apiKeyState);
     const gmApiKey = useRecoilValue(gmApiKeyState);
     const mapboxAccessToken = useRecoilValue(mapboxAccessTokenState);
@@ -63,8 +66,10 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
     const bearing = useRecoilValue(bearingState);
     const pitch = useRecoilValue(pitchState);
     const [, setPositionControl] = useRecoilState(positionControlState);
+    const solution = useRecoilValue(solutionState);
     const locationId = useRecoilValue(locationIdState);
     const isLocationClicked = useRecoilValue(isLocationClickedState);
+    const [, setErrorMessage] = useRecoilState(notificationMessageState);
     const kioskLocation = useRecoilValue(kioskLocationState);
 
     const isMapReady = useRecoilValue(isMapReadyState);
@@ -74,15 +79,63 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
     useLiveData(apiKey);
 
     useEffect(() => {
-        if (gmApiKey === null && mapboxAccessToken === null) return;
+        if (!solution || (gmApiKey === null && mapboxAccessToken === null)) return;
 
-        if (mapboxAccessToken) {
-            setMapType(mapTypes.Mapbox);
+        /*
+        Which map type to load (Mapbox or Google Maps) is determined here, based on following decision table:
+        (note that some combinations can result in no map being loaded at all)
+
+        -----------------------------------------------------------------------------------------------------------------
+        useMapProviderModule     Mapbox module enabled      Mapbox Access Token      Google Maps API key      Map to load
+        prop value               on solution                is available             is available
+        -----------------------------------------------------------------------------------------------------------------
+        true                     ✅                         ✅                       ✅                      Mapbox
+        true                     ✅                         ✅                       ❌                      Mapbox
+        true                     ✅                         ❌                       ✅                      None
+        true                     ✅                         ❌                       ❌                      None
+        true                     ❌                         ✅                       ✅                      Google Maps
+        true                     ❌                         ✅                       ❌                      None
+        true                     ❌                         ❌                       ✅                      Google Maps
+        true                     ❌                         ❌                       ❌                      None
+        false                    ✅                         ✅                       ✅                      Mapbox
+        false                    ✅                         ✅                       ❌                      Mapbox
+        false                    ✅                         ❌                       ✅                      Google Maps
+        false                    ✅                         ❌                       ❌                      Google Maps
+        false                    ❌                         ✅                       ✅                      Mapbox
+        false                    ❌                         ✅                       ❌                      Mapbox
+        false                    ❌                         ❌                       ✅                      Google Maps
+        false                    ❌                         ❌                       ❌                      Google Maps
+         */
+
+        let mapTypeToUse;
+        const isMapboxModuleEnabled = solution.modules.map(module => module.toLowerCase()).includes('mapbox');
+
+        if (useMapProviderModule) {
+            if (isMapboxModuleEnabled) {
+                if (mapboxAccessToken) {
+                    mapTypeToUse = mapTypes.Mapbox;
+                }
+            } else {
+                if (gmApiKey) {
+                    mapTypeToUse = mapTypes.Google;
+                }
+            }
         } else {
-            // A Google Maps map will have precedense if no keys or keys for both providers are set.
-            setMapType(mapTypes.Google);
+            if (mapboxAccessToken) {
+                mapTypeToUse = mapTypes.Mapbox;
+            } else {
+                mapTypeToUse = mapTypes.Google;
+            }
         }
-    }, [gmApiKey, mapboxAccessToken]);
+
+        if (mapTypeToUse) {
+            setMapType(mapTypeToUse);
+        } else {
+            // A good candidate for map type could not be determined.
+            setErrorMessage({ text: 'Please provide a Mapbox Access Token or Google Maps API key to show a map.', type: 'error' });
+            setMapType(undefined);
+        }
+    }, [gmApiKey, mapboxAccessToken, solution]);
 
     /*
      * React to changes in the venue prop.
@@ -252,7 +305,7 @@ function Map({ onLocationClick, onVenueChangedOnMap }) {
     }, [tileStyle]);
 
     /*
-     * React on changes in the kioskOriginLocationId and locationId.
+     * React on changes in the kioskLocation and locationId.
      */
     useEffect(() => {
         if (isMapReady && mapsIndoorsInstance) {
