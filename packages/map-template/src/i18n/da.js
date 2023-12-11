@@ -20,6 +20,8 @@ export const da = {
     'Read full description': 'Læs hel beskrivelse',
     // Locations List
     'Locations': 'Lokationer',
+    'Directions not available': 'Rutevejledning ikke tilgængelig',
+    'Start directions': 'Start rutevejledning',
     // Route instructions
     'Previous': 'Forrige',
     'Next': 'Næste',

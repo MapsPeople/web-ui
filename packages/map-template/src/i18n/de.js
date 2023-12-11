@@ -20,6 +20,8 @@ export const de = {
     'Read full description': 'Öffne vollständige Beschreibung',
     // Locations list
     'Locations': 'Locations',
+    'Directions not available': 'Beschreibung nicht verfügbar',
+    'Start directions': 'Starte Beschreibung',
     // Route instructions
     'Previous': 'Zurück',
     'Next': 'Weiter',

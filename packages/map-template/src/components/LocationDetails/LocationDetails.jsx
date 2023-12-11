@@ -248,7 +248,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                     onClick={() => startDirections()}
                     className={`location-details__wayfinding ${!hasFoundRoute ? 'location-details--no-route' : ''}`}
                     style={{ background: primaryColor }}>
-                    {!hasFoundRoute ? 'Directions not available' : 'Start directions'}
+                    {!hasFoundRoute ? t('Directions not available') : t('Start directions')}
                 </button>
                 :
                 <button onClick={() => startWayfinding()}
