@@ -1,4 +1,4 @@
-export const fr = {
+const fr = {
     // Common
     'Close': 'Close',
     'From': 'De',
@@ -63,3 +63,5 @@ export const fr = {
     'Select venue': 'Select venue',
     'Current': 'Current'
 };
+
+export default fr;

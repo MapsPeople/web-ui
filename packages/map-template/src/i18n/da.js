@@ -1,4 +1,4 @@
-export const da = {
+const da = {
     // Common
     'Close': 'Luk',
     'From': 'Fra',
@@ -63,3 +63,5 @@ export const da = {
     'Select venue': 'Vælg venue',
     'Current': 'Valgt'
 };
+
+export default da;

@@ -1,4 +1,4 @@
-export const de = {
+const de = {
     // Common
     'Close': 'Schließen',
     'From': 'Von',
@@ -63,3 +63,5 @@ export const de = {
     'Select venue': 'Wähle Standort',
     'Current': 'Aktuell'
 };
+
+export default de;

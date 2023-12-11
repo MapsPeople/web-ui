@@ -1,4 +1,4 @@
-export const en = {
+const en = {
     // Common
     'Close': 'Close',
     'From': 'From',
@@ -63,3 +63,5 @@ export const en = {
     'Select venue': 'Select venue',
     'Current': 'Current'
 };
+
+export default en;
