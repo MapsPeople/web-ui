@@ -12,6 +12,7 @@ import Wayfinding from '../Wayfinding/Wayfinding';
 import Directions from '../Directions/Directions';
 import Search from '../Search/Search';
 import LocationsList from '../LocationsList/LocationsList';
+import locationIdState from '../../atoms/locationIdState';
 
 /**
  * @param {Object} props
@@ -38,6 +39,8 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
 
+    const [, setLocationId] = useRecoilState(locationIdState);
+
     /*
      * React on changes on the current location and directions locations and set relevant bottom sheet.
      */
@@ -48,8 +51,12 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
             pushAppView(appViews.WAYFINDING);
         } else if (currentLocation) {
             pushAppView(appViews.LOCATION_DETAILS, currentLocation);
-        } else if (filteredLocationsByExternalIDs?.length > 0) {
+        } else if (filteredLocationsByExternalIDs?.length > 1) {
             pushAppView(appViews.EXTERNALIDS);
+            // If there is only one external ID, behave the same as having the location ID prop. 
+        } else if (filteredLocationsByExternalIDs?.length === 1) {
+            setCurrentLocation(filteredLocationsByExternalIDs[0])
+            setLocationId(filteredLocationsByExternalIDs[0].id)
         } else {
             pushAppView(appViews.SEARCH);
         }
@@ -59,9 +66,13 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
      * Close the location details page and navigate to either the Locations list page or the Search page.
      */
     function closeLocationDetails() {
-        if (filteredLocationsByExternalIDs?.length > 0) {
+        if (filteredLocationsByExternalIDs?.length > 1) {
             pushAppView(appViews.EXTERNALIDS);
             setCurrentLocation();
+        } else if (filteredLocationsByExternalIDs?.length === 1) {
+            pushAppView(appViews.SEARCH);
+            setCurrentLocation();
+            setFilteredLocationsByExternalID([]);
         } else {
             pushAppView(appViews.SEARCH);
             setCurrentLocation();
@@ -111,6 +122,7 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
                 onStartWayfinding={() => pushAppView(appViews.WAYFINDING)}
                 onBack={() => closeLocationDetails()}
                 snapPointSwiped={locationDetailsSheetSwiped}
+                onStartDirections={() => pushAppView(appViews.DIRECTIONS)}
             />
         </Sheet>,
         <Sheet

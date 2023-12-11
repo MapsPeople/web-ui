@@ -54,7 +54,7 @@ export const en = {
     'Accessibility': 'Accessibility',
     'No route found': 'No route found',
     'My position': 'My position',
-    'Turn on Accessibility to get directions that avoids stairs and escalators.': 'Turn on Accessibility to get directions that avoids stairs and escalators.',
+    'Turn on Accessibility to get directions that avoid stairs and escalators.': 'Turn on Accessibility to get directions that avoid stairs and escalators.',
     'Go!': 'Go!',
     // Venue selector
     'Venues': 'Venues',

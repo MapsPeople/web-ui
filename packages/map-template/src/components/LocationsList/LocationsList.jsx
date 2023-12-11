@@ -42,7 +42,6 @@ function LocationsList({ onBack, onLocationClick, locations, onSetSize }) {
         setSize(snapPoints.FIT);
     }, []);
 
-
     return (
         <div className="locations-list">
             <div className="locations-list__header">

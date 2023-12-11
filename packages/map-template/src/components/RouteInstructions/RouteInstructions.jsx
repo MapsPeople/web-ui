@@ -7,9 +7,9 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import directionsResponseState from '../../atoms/directionsResponseState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import activeStepState from '../../atoms/activeStep';
-import setMapZoomLevel from '../../helpers/SetMapZoomLevel';
 import RouteInstructionsStep from '../WebComponentWrappers/RouteInstructionsStep/RouteInstructionsStep';
 import substepsToggledState from '../../atoms/substepsToggledState';
+import useSetMaxZoomLevel from '../../hooks/useSetMaxZoomLevel';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 
 /**
@@ -45,6 +45,8 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
 
     const substepsOpen = useRecoilValue(substepsToggledState);
 
+    const setMaxZoomLevel = useSetMaxZoomLevel();
+
     /**
      * Clone the last step in the directions in order to create a destination step.
      * Assign the specific travel mode to the destination step and set the steps to null.
@@ -73,7 +75,7 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
                 mapsIndoorsInstance.getMapView().setCenter({ lat: destinationLocationGeometry[1], lng: destinationLocationGeometry[0] });
 
                 // Call function to set the map zoom level depeding on the max zoom supported on the solution
-                setMapZoomLevel(mapsIndoorsInstance);
+                setMaxZoomLevel();
             }
 
             // Check if the substeps are closed or open, and trigger the method on the <route-instructions-step> component.

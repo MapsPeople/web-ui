@@ -9,6 +9,11 @@ import { useIsVerticalOverflow } from '../../hooks/useIsVerticalOverflow';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import { snapPoints } from '../../constants/snapPoints';
 import primaryColorState from '../../atoms/primaryColorState';
+import directionsServiceState from '../../atoms/directionsServiceState';
+import useMediaQuery from '../../hooks/useMediaQuery';
+import useDirectionsInfo from "../../hooks/useDirectionsInfo";
+import travelModeState from '../../atoms/travelModeState';
+import kioskLocationState from '../../atoms/kioskLocationState';
 
 /**
  * Shows details for a MapsIndoors Location.
@@ -18,9 +23,10 @@ import primaryColorState from '../../atoms/primaryColorState';
  * @param {function} props.onStartWayfinding - Callback that fires when user clicks the Start Wayfinding button.
  * @param {function} props.onSetSize - Callback that is fired when the toggle full description button is clicked and the Sheet size changes.
  * @param {function} props.snapPointSwiped - Changes value when user has swiped a Bottom sheet to a new snap point.
+ * @param {function} props.onStartDirections - Callback that fires when user clicks the Start directions button.
  *
  */
-function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped }) {
+function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped, onStartDirections }) {
     const { t } = useTranslation();
 
     const locationInfoElement = useRef(null);
@@ -44,6 +50,21 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
 
     const primaryColor = useRecoilValue(primaryColorState);
 
+    const kioskLocation = useRecoilValue(kioskLocationState);
+
+    const directionsService = useRecoilValue(directionsServiceState);
+
+    const [destinationLocation, setDestinationLocation] = useState();
+    const [originLocation, setOriginLocation] = useState();
+
+    const isDesktop = useMediaQuery('(min-width: 992px)');
+
+    const travelMode = useRecoilValue(travelModeState);
+
+    const accessibilityOn = useState(false);
+
+    const [, , hasFoundRoute] = useDirectionsInfo(originLocation, destinationLocation, directionsService, travelMode, accessibilityOn)
+
     useEffect(() => {
         // Reset state
         setShowFullDescription(false);
@@ -54,8 +75,13 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
         if (location) {
             locationInfoElement.current.location = location;
             setLocationDisplayRule(mapsIndoorsInstance.getDisplayRule(location));
+            setDestinationLocation(location)
         }
-    }, [location, mapsIndoorsInstance]);
+
+        if (kioskLocation) {
+            setOriginLocation(kioskLocation)
+        }
+    }, [location, mapsIndoorsInstance, kioskLocation]);
 
     /**
      * Communicate size change to parent component.
@@ -133,7 +159,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
         setDescriptionHasContentBelow(false);
     }
 
-    /*
+    /**
      * Start wayfinding, making some cleanup first.
      */
     function startWayfinding() {
@@ -145,6 +171,21 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
         onStartWayfinding();
     }
 
+    /**
+     * Start directions, making some cleanup first.
+     */
+    function startDirections() {
+        setShowFullDescription(false);
+        setDescriptionHasContentAbove(false);
+        setDescriptionHasContentBelow(false);
+        setSize(snapPoints.FIT);
+
+        onStartDirections();
+    }
+
+    /**
+     * Close the Location details page.
+     */
     function back() {
         setShowFullDescription(false);
         setDescriptionHasContentAbove(false);
@@ -201,9 +242,21 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                 </section>}
             </div>
 
-            <button onClick={() => startWayfinding()} style={{ background: primaryColor }} className="location-details__wayfinding">
-                {t('Start wayfinding')}
-            </button>
+            {kioskLocation && isDesktop
+                ?
+                <button disabled={!hasFoundRoute}
+                    onClick={() => startDirections()}
+                    className={`location-details__wayfinding ${!hasFoundRoute ? 'location-details--no-route' : ''}`}
+                    style={{ background: primaryColor }}>
+                    {!hasFoundRoute ? 'Directions not available' : 'Start directions'}
+                </button>
+                :
+                <button onClick={() => startWayfinding()}
+                    style={{ background: primaryColor }}
+                    className="location-details__wayfinding">
+                    {t('Start wayfinding')}
+                </button>
+            }
         </>}
     </div>
 }

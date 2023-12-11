@@ -54,7 +54,7 @@ export const da = {
     'Accessibility': 'Tilgængelig rute',
     'No route found': 'Ingen rute fundet',
     'My position': 'Min position',
-    'Turn on Accessibility to get directions that avoids stairs and escalators.': 'Slå "Tilgængelig rute" til for at få en rutevejledning uden trapper og rulletrapper.',
+    'Turn on Accessibility to get directions that avoid stairs and escalators.': 'Slå "Tilgængelig rute" til for at få en rutevejledning uden trapper og rulletrapper.',
     'Go!': 'Go!',
     // Venue selector
     'Venues': 'Venues',

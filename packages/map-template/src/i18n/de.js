@@ -54,7 +54,7 @@ export const de = {
     'Accessibility': 'Barrierefrei',
     'No route found': 'Keine Route gefunden',
     'My position': 'Meine Position',
-    'Turn on Accessibility to get directions that avoids stairs and escalators.': 'Schalte Barrierefrei ein, um Treppen und Rolltreppen zu vermeiden.',
+    'Turn on Accessibility to get directions that avoid stairs and escalators.': 'Schalte Barrierefrei ein, um Treppen und Rolltreppen zu vermeiden.',
     'Go!': 'Start!',
     // Venue selector
     'Venues': 'Standorte',

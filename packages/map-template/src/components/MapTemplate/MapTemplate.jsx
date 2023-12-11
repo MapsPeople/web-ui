@@ -17,6 +17,7 @@ import tileStyleState from '../../atoms/tileStyleState';
 import categoriesState from '../../atoms/categoriesState';
 import venuesState from '../../atoms/venuesState';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
+import solutionState from '../../atoms/solutionState.js';
 import { useAppHistory } from '../../hooks/useAppHistory';
 import useMediaQuery from '../../hooks/useMediaQuery';
 import Sidebar from '../Sidebar/Sidebar';
@@ -32,8 +33,9 @@ import gmMapIdState from '../../atoms/gmMapIdState';
 import bearingState from '../../atoms/bearingState';
 import pitchState from '../../atoms/pitchState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
-import kioskOriginLocationIdState from '../../atoms/kioskOriginLocationIdState';
 import languageState from '../../atoms/languageState.js';
+import Notification from '../WebComponentWrappers/Notification/Notification.jsx';
+import kioskLocationState from '../../atoms/kioskLocationState';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -57,10 +59,11 @@ defineCustomElements();
  * @param {number} [props.bearing] - The bearing of the map as a number. Not recommended for Google Maps with 2D Models.
  * @param {number} [props.pitch] - The pitch of the map as a number. Not recommended for Google Maps with 2D Models.
  * @param {string} [props.gmMapId] - The Google Maps Map ID associated with a specific map style or feature.
+ * @param {boolean} [props.useMapProviderModule] - Set to true if the Map Template should take MapsIndoors solution modules into consideration when determining what map type to use.
  * @param {string} [props.kioskOriginLocationId] - If running the Map Template as a kiosk (upcoming feature), provide the Location ID that represents the location of the kiosk.
  * @param {string} [props.language] - The language to show textual content in. Supported values are "en" for English, "da" for Danish, "de" for German and "fr" for French. If the prop is not set, the language of the browser will be used (if it is one of the four supported languages - otherwise it will default to English).
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, kioskOriginLocationId, language }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language }) {
 
     const [, setApiKey] = useRecoilState(apiKeyState);
     const [, setGmApiKey] = useRecoilState(gmApiKeyState);
@@ -75,8 +78,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setLogo] = useRecoilState(logoState);
     const [, setGmMapId] = useRecoilState(gmMapIdState);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
-    const [, setKioskOriginLocationId] = useRecoilState(kioskOriginLocationIdState);
     const [currentLanguage, setCurrentLanguage] = useRecoilState(languageState);
+    const [, setKioskLocation] = useRecoilState(kioskLocationState);
 
     const [showVenueSelector, setShowVenueSelector] = useState(true);
     const [showPositionControl, setShowPositionControl] = useState(true);
@@ -94,6 +97,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [initialFilteredLocations, setInitialFilteredLocations] = useState();
 
     const [appConfig, setAppConfig] = useState();
+    const [solution, setSolution] = useRecoilState(solutionState);
 
     const [, setTileStyle] = useRecoilState(tileStyleState);
     const [, setStartZoomLevel] = useRecoilState(startZoomLevelState);
@@ -203,6 +207,11 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 window.mapsindoors.services.AppConfigService.getConfig().then(appConfigResult => {
                     setAppConfig(appConfigResult); // We need this as early as possible
                     return appConfigResult;
+                }),
+                // Fetch solution info in order to see what modules are enabled
+                window.mapsindoors.services.SolutionsService.getSolution().then(solutionResult => {
+                    setSolution(solutionResult);
+                    return solutionResult;
                 }),
                 // Ensure a minimum waiting time of 3 seconds
                 new Promise(resolve => setTimeout(resolve, 3000))
@@ -374,8 +383,15 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
-            setKioskOriginLocationId(kioskOriginLocationId);
-            if (kioskOriginLocationId && isDesktop)  {
+            if (kioskOriginLocationId) {
+                window.mapsindoors.services.LocationsService.getLocation(kioskOriginLocationId).then(kioskLocation => {
+                    setKioskLocation(kioskLocation);
+                })
+            } else {
+                setKioskLocation();
+            }
+
+            if (kioskOriginLocationId && isDesktop) {
                 setShowVenueSelector(false);
                 setShowPositionControl(false);
             } else {
@@ -457,6 +473,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }
 
     return <div className={`mapsindoors-map ${locationsDisabledRef.current ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'} ${showPositionControl ? 'mapsindoors-map--show-my-position' : 'mapsindoors-map--hide-my-position'}`}>
+        <Notification />
         {!isMapReady && <SplashScreen />}
         {venues.length > 1 && showVenueSelector && <VenueSelector
             onOpen={() => pushAppView(appStates.VENUE_SELECTOR)}
@@ -486,6 +503,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             </>
         }
         <MIMap
+            useMapProviderModule={useMapProviderModule}
             onVenueChangedOnMap={(venue) => venueChangedOnMap(venue)}
             onLocationClick={(location) => locationClicked(location)}
         />
