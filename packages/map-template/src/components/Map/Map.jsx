@@ -22,7 +22,6 @@ import locationIdState from '../../atoms/locationIdState';
 import bearingState from '../../atoms/bearingState';
 import pitchState from '../../atoms/pitchState';
 import isLocationClickedState from "../../atoms/isLocationClickedState";
-import kioskOriginLocationIdState from "../../atoms/kioskOriginLocationIdState";
 import fitBoundsLocation from "../../helpers/fitBoundsLocation";
 import useMediaQuery from "../../hooks/useMediaQuery";
 import isMapReadyState from "../../atoms/isMapReadyState";
@@ -31,6 +30,7 @@ import getDesktopPaddingBottom from "../../helpers/GetDesktopPaddingBottom";
 import getMobilePaddingBottom from "../../helpers/GetMobilePaddingBottom";
 import solutionState from '../../atoms/solutionState';
 import notificationMessageState from '../../atoms/notificationMessageState';
+import kioskLocationState from "../../atoms/kioskLocationState";
 
 const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
 
@@ -69,8 +69,9 @@ function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule }) {
     const solution = useRecoilValue(solutionState);
     const locationId = useRecoilValue(locationIdState);
     const isLocationClicked = useRecoilValue(isLocationClickedState);
-    const kioskOriginLocationId = useRecoilValue(kioskOriginLocationIdState);
     const [, setErrorMessage] = useRecoilState(notificationMessageState);
+    const kioskLocation = useRecoilValue(kioskLocationState);
+
     const isMapReady = useRecoilValue(isMapReadyState);
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
@@ -108,6 +109,7 @@ function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule }) {
 
         let mapTypeToUse;
         const isMapboxModuleEnabled = solution.modules.map(module => module.toLowerCase()).includes('mapbox');
+
         if (useMapProviderModule) {
             if (isMapboxModuleEnabled) {
                 if (mapboxAccessToken) {
@@ -142,11 +144,11 @@ function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule }) {
         if (mapsIndoorsInstance) {
             window.localStorage.removeItem(localStorageKeyForVenue);
             const venueToShow = getVenueToShow(venueName, venues);
-            if (venueToShow && !isLocationClicked && !locationId && !kioskOriginLocationId) {
+            if (venueToShow && !isLocationClicked && !locationId && !kioskLocation) {
                 setVenue(venueToShow, mapsIndoorsInstance).then(() => {
                     onVenueChangedOnMap(venueToShow);
                 });
-            } else if (venueToShow && !isLocationClicked && !locationId && kioskOriginLocationId && !isDesktop) {
+            } else if (venueToShow && !isLocationClicked && !locationId && kioskLocation && !isDesktop) {
                 setVenue(venueToShow, mapsIndoorsInstance).then(() => {
                     onVenueChangedOnMap(venueToShow);
                 });
@@ -264,9 +266,9 @@ function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule }) {
         setDirectionsService(directionsService);
 
         const venueToShow = getVenueToShow(venueName, venues);
-        if (venueToShow && !locationId && !kioskOriginLocationId) {
+        if (venueToShow && !locationId && !kioskLocation) {
             setVenue(venueToShow, miInstance);
-        } else if (venueToShow && !locationId && kioskOriginLocationId && !isDesktop) {
+        } else if (venueToShow && !locationId && kioskLocation && !isDesktop) {
             setVenue(venueToShow, miInstance);
         }
     };
@@ -303,33 +305,29 @@ function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule }) {
     }, [tileStyle]);
 
     /*
-     * React on changes in the kioskOriginLocationId and locationId.
+     * React on changes in the kioskLocation and locationId.
      */
     useEffect(() => {
         if (isMapReady && mapsIndoorsInstance) {
-            // If kioskOriginLocationId prop is present, set the display rule for the kiosk location.
+            // If kioskLocation prop is present, set the display rule for the kiosk location.
             // Set the icon size representing the kiosk to be double the size.
             // Set the floor based on the floor that the kiosk is located on.
             // Fit the map to the kiosk location bounds and add the padding calculated based on the modal.
-            if (kioskOriginLocationId && isDesktop) {
-                window.mapsindoors.services.LocationsService.getLocation(kioskOriginLocationId).then(kioskOriginLocation => {
-                    if (kioskOriginLocation) {
-                        const displayRule = mapsIndoorsInstance.getDisplayRule(kioskOriginLocation);
+            if (kioskLocation && isDesktop) {
+                const displayRule = mapsIndoorsInstance.getDisplayRule(kioskLocation);
 
-                        displayRule.visible = true;
-                        displayRule.iconSize = { width: displayRule.iconSize.width * 2, height: displayRule.iconSize.height * 2 };
-                        displayRule.iconVisible = true;
-                        displayRule.zoomFrom = 0;
-                        displayRule.zoomTo = 999;
-                        displayRule.clickable = false;
-                        mapsIndoorsInstance.setDisplayRule(kioskOriginLocation.id, displayRule);
+                displayRule.visible = true;
+                displayRule.iconSize = { width: displayRule.iconSize.width * 2, height: displayRule.iconSize.height * 2 };
+                displayRule.iconVisible = true;
+                displayRule.zoomFrom = 0;
+                displayRule.zoomTo = 999;
+                displayRule.clickable = false;
+                mapsIndoorsInstance.setDisplayRule(kioskLocation.id, displayRule);
 
-                        const locationFloor = kioskOriginLocation.properties.floor;
-                        mapsIndoorsInstance.setFloor(locationFloor);
+                const locationFloor = kioskLocation.properties.floor;
+                mapsIndoorsInstance.setFloor(locationFloor);
 
-                        fitBoundsLocation(kioskOriginLocation, mapsIndoorsInstance, getDesktopPaddingBottom(), 0);
-                    }
-                });
+                fitBoundsLocation(kioskLocation, mapsIndoorsInstance, getDesktopPaddingBottom(), 0);
             } else if (locationId) {
                 window.mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
                     if (location) {
@@ -343,7 +341,7 @@ function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule }) {
                 });
             }
         }
-    }, [kioskOriginLocationId, locationId, isMapReady]);
+    }, [kioskLocation, locationId, isMapReady]);
 
     return (<>
         {mapType === mapTypes.Google && <GoogleMapsMap onMapView={onMapView} onPositionControl={onPositionControlCreated} />}

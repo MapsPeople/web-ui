@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import currentLocationState from '../../atoms/currentLocationState';
 import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
 import Modal from './Modal/Modal';
@@ -9,6 +9,7 @@ import Directions from '../Directions/Directions';
 import Search from '../Search/Search';
 import LocationsList from '../LocationsList/LocationsList';
 import locationIdState from '../../atoms/locationIdState';
+import kioskLocationState from '../../atoms/kioskLocationState';
 
 /**
  * @param {Object} props
@@ -24,6 +25,7 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
     const [, setLocationId] = useRecoilState(locationIdState);
+    const kioskLocation = useRecoilValue(kioskLocationState)
 
     /*
      * React on changes on the current location and directions locations and set relevant bottom sheet.
@@ -72,6 +74,17 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
         setFilteredLocationsByExternalID([]);
     }
 
+    /**
+     * Close the Directions page and navigate to the different pages based on the kioskLocation.
+     */
+    function closeDirections() {
+        if (kioskLocation) {
+            pushAppView(appViews.LOCATION_DETAILS)
+        } else {
+            pushAppView(appViews.WAYFINDING)
+        }
+    }
+
     const pages = [
         <Modal isOpen={currentAppView === appViews.SEARCH} key="A">
             <Search />
@@ -88,6 +101,7 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
             <LocationDetails
                 onStartWayfinding={() => pushAppView(appViews.WAYFINDING)}
                 onBack={() => closeLocationDetails()}
+                onStartDirections={() => pushAppView(appViews.DIRECTIONS)}
             />
         </Modal>,
         <Modal isOpen={currentAppView === appViews.WAYFINDING} key="D">
@@ -102,7 +116,7 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
         <Modal isOpen={currentAppView === appViews.DIRECTIONS} key="E">
             <Directions
                 isOpen={currentAppView === appViews.DIRECTIONS}
-                onBack={() => pushAppView(appViews.WAYFINDING)}
+                onBack={() => closeDirections()}
             />
         </Modal>
     ]

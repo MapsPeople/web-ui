@@ -31,8 +31,8 @@ import gmMapIdState from '../../atoms/gmMapIdState';
 import bearingState from '../../atoms/bearingState';
 import pitchState from '../../atoms/pitchState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
-import kioskOriginLocationIdState from '../../atoms/kioskOriginLocationIdState';
 import Notification from '../WebComponentWrappers/Notification/Notification.jsx';
+import kioskLocationState from '../../atoms/kioskLocationState';
 
 defineCustomElements();
 
@@ -73,7 +73,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setLogo] = useRecoilState(logoState);
     const [, setGmMapId] = useRecoilState(gmMapIdState);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
-    const [, setKioskOriginLocationId] = useRecoilState(kioskOriginLocationIdState);
+    const [, setKioskLocation] = useRecoilState(kioskLocationState);
 
     const [showVenueSelector, setShowVenueSelector] = useState(true);
     const [showPositionControl, setShowPositionControl] = useState(true);
@@ -333,8 +333,15 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
-            setKioskOriginLocationId(kioskOriginLocationId);
-            if (kioskOriginLocationId && isDesktop)  {
+            if (kioskOriginLocationId) {
+                window.mapsindoors.services.LocationsService.getLocation(kioskOriginLocationId).then(kioskLocation => {
+                    setKioskLocation(kioskLocation);
+                })
+            } else {
+                setKioskLocation();
+            }
+
+            if (kioskOriginLocationId && isDesktop) {
                 setShowVenueSelector(false);
                 setShowPositionControl(false);
             } else {
