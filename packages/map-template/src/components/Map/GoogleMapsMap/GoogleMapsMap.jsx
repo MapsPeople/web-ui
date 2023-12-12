@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import mapsIndoorsInstanceState from '../../../atoms/mapsIndoorsInstanceState';
 import { Loader as GoogleMapsApiLoader } from '@googlemaps/js-api-loader';
 import gmApiKeyState from '../../../atoms/gmApiKeyState';
@@ -7,6 +7,7 @@ import primaryColorState from '../../../atoms/primaryColorState';
 import gmMapIdState from '../../../atoms/gmMapIdState';
 import bearingState from '../../../atoms/bearingState';
 import pitchState from '../../../atoms/pitchState';
+import initialMapPositionState from '../../../atoms/initialMapPositionState';
 
 /**
  * Takes care of instantiating a MapsIndoors Google Maps MapView.
@@ -27,6 +28,7 @@ function GoogleMapsMap({ onMapView, onPositionControl }) {
     const primaryColor = useRecoilValue(primaryColorState);
     const bearing = useRecoilValue(bearingState);
     const pitch = useRecoilValue(pitchState);
+    const [, setInitialMapPosition] = useRecoilState(initialMapPositionState);
 
     useEffect(() => {
         const loader = new GoogleMapsApiLoader({
@@ -59,6 +61,21 @@ function GoogleMapsMap({ onMapView, onPositionControl }) {
             const externalDirectionsProvider = new window.mapsindoors.directions.GoogleMapsProvider();
 
             onMapView(mapViewInstance, externalDirectionsProvider);
+
+            let hasStoredInitialCenter = false;
+            mapViewInstance.on('idle', () => {
+                const mapCenter = mapViewInstance.getCenter();
+                if (mapCenter.lng !== 0 && mapCenter.lat !== 0 && !hasStoredInitialCenter) {
+                    setInitialMapPosition(current => {
+                        return {
+                            ...current,
+                            lat: mapCenter.lat,
+                            lng: mapCenter.lng
+                        };
+                    })
+                    hasStoredInitialCenter = true;
+                }
+            });
         });
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
     // We ignore eslint warnings about missing dependencies because onMapView should never change runtime and changing Google Maps API key runtime will give other problems.
