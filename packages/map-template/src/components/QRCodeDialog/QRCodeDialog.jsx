@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useRecoilState, useRecoilValue } from 'recoil';
 import './QRCodeDialog.scss';
 import showQRCodeDialogState from "../../atoms/showQRCodeDialogState";
@@ -15,6 +15,7 @@ import logoState from "../../atoms/logoState";
  */
 function QRCodeDialog() {
     const [, setShowQRCodeDialog] = useRecoilState(showQRCodeDialogState);
+    const elementRef = useRef()
 
     const primaryColorProp = useRecoilValue(primaryColorState);
     const apiKeyProp = useRecoilValue(apiKeyState);
@@ -91,7 +92,7 @@ function QRCodeDialog() {
 
             QRCode.toDataURL(QRCodeURL, options)
                 .then((dataUrl) => {
-                    document.getElementById('qr').src = dataUrl;
+                    elementRef.current.src = dataUrl;
                 }).catch(() => {
                     console.log('error')
                 });
@@ -99,16 +100,12 @@ function QRCodeDialog() {
 
     }, [directionsFrom, directionsTo])
 
-
-    function closeDialog() {
-        setShowQRCodeDialog(false);
-    }
     return (<>
         <div className="background"></div>
         <div className="qr-code">
-            <img id='qr' alt="QR Code" className="qr-code__image" />
+            <img alt="QR Code" className="qr-code__image" ref={elementRef} />
             <p>Scan the QR code to see the route on your phone</p>
-            <button className="qr-code__button" style={{ background: primaryColorProp }} onClick={() => closeDialog()}>Done</button>
+            <button className="qr-code__button" style={{ background: primaryColorProp }} onClick={() => setShowQRCodeDialog(false)}>Done</button>
         </div>
     </>
     )
