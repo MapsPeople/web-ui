@@ -108,7 +108,7 @@ function QRCodeDialog() {
         <div className="qr-code">
             <img id='qr' alt="QR Code" className="qr-code__image" />
             <p>Scan the QR code to see the route on your phone</p>
-            <button className="qr-code__button" style={{ background: primaryColorProp }} onClick={() => closeDialog()}>DONE</button>
+            <button className="qr-code__button" style={{ background: primaryColorProp }} onClick={() => closeDialog()}>Done</button>
         </div>
     </>
     )

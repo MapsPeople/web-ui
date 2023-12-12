@@ -32,6 +32,7 @@
         position: relative;
         margin-top: var(--spacing-medium);
         font-weight: var(--font-weight-x-large);
+        text-transform: uppercase;
 
         &:hover {
             filter: brightness(90%);
