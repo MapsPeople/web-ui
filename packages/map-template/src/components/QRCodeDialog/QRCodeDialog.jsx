@@ -93,8 +93,6 @@ function QRCodeDialog() {
             QRCode.toDataURL(QRCodeURL, options)
                 .then((dataUrl) => {
                     elementRef.current.src = dataUrl;
-                }).catch(() => {
-                    console.log('error')
                 });
         }
 
