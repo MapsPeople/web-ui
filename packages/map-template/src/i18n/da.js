@@ -11,10 +11,10 @@ const da = {
     'd': 'd',
     'h': 't',
     'min': 'min',
-    'Walk': 'Gå',
-    'Bike': 'Cykl',
+    'Walk': 'Til fods',
+    'Bike': 'Cykling',
     'Transit': 'Offentlig transport',
-    'Drive': 'Kør',
+    'Drive': 'Kørsel',
     'Start wayfinding': 'Start rutebeskrivelse',
     // Location Details
     'Read full description': 'Læs hel beskrivelse',
