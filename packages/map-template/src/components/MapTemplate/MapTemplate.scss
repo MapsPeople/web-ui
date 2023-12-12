@@ -95,7 +95,7 @@
     position: relative;
 
     #mi_map_logo {
-        z-index: var(--z-index-dropdown);
+        z-index: var(--z-index-dropdown) !important;
     }
 }
 
