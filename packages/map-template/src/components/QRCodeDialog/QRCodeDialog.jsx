@@ -40,7 +40,6 @@ function QRCodeDialog() {
              * and appends them to the newParams interface.
              * 
              * @param {string} queryParam 
-             * @param {string} prop 
              */
             function handleQueryParams(queryParam) {
                 if (currentParams.has(queryParam)) {
