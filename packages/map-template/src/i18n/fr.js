@@ -1,13 +1,13 @@
 const fr = {
     // Common
-    'Close': 'Close',
+    'Close': 'Fermer',
     'From': 'De',
     'To': 'À',
     'Distance': 'Distance',
-    'Estimated time': 'Estimated time',
+    'Estimated time': 'Heure d\'arrivée estimée',
     'Level': 'Niveau',
-    'Search by name, category, building...': 'Search by name, category, building...',
-    'Nothing was found': 'Nothing was found',
+    'Search by name, category, building...': 'Recherche par nom, catégorie, bâtiment',
+    'Nothing was found': 'Rien n\'a été trouvé',
     'd': 'd',
     'h': 'h',
     'min': 'min',
@@ -15,21 +15,21 @@ const fr = {
     'Bike': 'À vélo',
     'Transit': 'En transports',
     'Drive': 'Voiture',
-    'Start wayfinding': 'Start wayfinding',
+    'Start wayfinding': 'Start wayfinding', // TODO: Awaiting proper translation
     // Location Details
-    'Read full description': 'Read full description',
+    'Read full description': 'Lire la description complète',
     // Locations list
-    'Locations': 'Locations',
-    'Directions not available': 'Directions not available',
-    'Start directions': 'Start directions',
+    'Locations': 'Emplacements',
+    'Directions not available': 'Itinéraire non disponible',
+    'Start directions': 'Commencer les directions',
     // Route instructions
     'Previous': 'Precedent',
     'Next': 'Suivant',
-    'StepYofX': 'Step {{activeStep}} of {{totalSteps}}',
+    'StepYofX': 'Étape {{activeStep}} sur {{totalSteps}}',
     // Route Instructions Step
-    'You have arrived': 'You have arrived',
-    'Leave': 'Quitte',
-    'Park': 'Park',
+    'You have arrived': 'Tu es arrivé',
+    'Leave': 'Partir',
+    'Park': 'Parc',
     'at': 'à',
     'Building': 'Bâtiment',
     'Venue': 'Lieu',
@@ -39,9 +39,9 @@ const fr = {
     'Take escalator to level': 'Empruntez l\'escalier roulant jusqu\'au niveau',
     'Take wheelchair lift to level': 'Prenez l\'élévateur pour fauteuil roulant jusqu\'au niveau',
     'Take wheelchair ramp to level': 'Prenez la rampe pour fauteuil roulant jusqu\'au niveau',
-    'Exit': 'Quitter',
+    'Exit': 'Partir',
     'Enter': 'Entrer',
-    'stops': 'stops',
+    'stops': 'arrêts',
     'and continue': 'et continue',
     'Continue straight ahead': 'Continuez tout droit',
     'Go left': 'Tournez a gauche',
@@ -52,16 +52,16 @@ const fr = {
     'Go slight right': 'Allez légèrement à droit',
     'Turn around': 'Faite demi-tour',
     // Wayfinding component
-    'Switch': 'Switch',
-    'Accessibility': 'Accessibility',
-    'No route found': 'No route found',
+    'Switch': 'Changer',
+    'Accessibility': 'Accessibilité',
+    'No route found': 'Aucun itinéraire trouvé',
     'My position': 'Ma position',
-    'Turn on Accessibility to get directions that avoid stairs and escalators.': 'Turn on Accessibility to get directions that avoid stairs and escalators.',
+    'Turn on Accessibility to get directions that avoid stairs and escalators.': 'Activez l\'accessibilité pour obtenir des itinéraires qui évitent les escaliers et les escaliers mécaniques.',
     'Go!': 'Aller!',
     // Venue selector
-    'Venues': 'Venues',
-    'Select venue': 'Select venue',
-    'Current': 'Current'
+    'Venues': 'Lieux',
+    'Select venue': 'Sélectionner le lieu',
+    'Current': 'Actuelle'
 };
 
 export default fr;
