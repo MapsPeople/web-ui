@@ -8,6 +8,8 @@ import currentLocationState from "../../atoms/currentLocationState";
 import QRCode from 'qrcode';
 import kioskLocationState from "../../atoms/kioskLocationState";
 import logoState from "../../atoms/logoState";
+import mapboxAccessTokenState from "../../atoms/mapboxAccessTokenState";
+import gmApiKeyState from "../../atoms/gmApiKeyState";
 
 /**
  * Handle the QR Code dialog.
@@ -20,6 +22,8 @@ function QRCodeDialog() {
     const primaryColorProp = useRecoilValue(primaryColorState);
     const apiKeyProp = useRecoilValue(apiKeyState);
     const logoProp = useRecoilValue(logoState);
+    const gmApiKeyProp = useRecoilValue(gmApiKeyState);
+    const mapboxAccessTokenProp = useRecoilValue(mapboxAccessTokenState);
 
     const directionsFrom = useRecoilValue(kioskLocationState);
     const directionsTo = useRecoilValue(currentLocationState);
@@ -36,46 +40,26 @@ function QRCodeDialog() {
             const newParams = new URLSearchParams();
 
             /**
-             * Function that handles the presence of query parameters
-             * and appends them to the newParams interface.
-             * 
-             * @param {string} queryParam 
+             * Handle the presence of query parameters and props
+             * and append them to the newParams interface.
              */
-            function handleQueryParams(queryParam) {
-                if (currentParams.has(queryParam)) {
-                    const queryParameter = currentParams.get(queryParam);
-                    newParams.append(queryParam, queryParameter);
-                }
-            }
-
-            /**
-             * Function that handles the presence of query parameters and props
-             * and appends them to the newParams interface.
-             * 
-             * @param {string} queryParam 
-             * @param {string} prop 
-             */
-            function handleQueryParamsAndProps(queryParam, prop) {
-                if (currentParams.has(queryParam)) {
-                    const queryParameter = currentParams.get(queryParam);
-                    newParams.append(queryParam, queryParameter);
-                } else if (prop) {
-                    if (prop === primaryColorProp) {
-                        newParams.append(queryParam, primaryColorProp.replace("#", ""))
-                    } else {
-                        newParams.append(queryParam, prop)
+            [['gmApiKey', gmApiKeyProp],
+            ['mapboxAccessToken', mapboxAccessTokenProp],
+            ['apiKey', apiKeyProp],
+            ['primaryColor', primaryColorProp],
+            ['logo', logoProp]]
+                .forEach(([queryParam, prop]) => {
+                    if (currentParams.has(queryParam)) {
+                        const queryParameter = currentParams.get(queryParam);
+                        newParams.append(queryParam, queryParameter);
+                    } else if (prop) {
+                        if (prop === primaryColorProp) {
+                            newParams.append(queryParam, primaryColorProp.replace("#", ""))
+                        } else {
+                            newParams.append(queryParam, prop)
+                        }
                     }
-                }
-            }
-
-            // Handle query parameters for the gmApiKey and mapboxAccessToken
-            handleQueryParams('gmApiKey');
-            handleQueryParams('mapboxAccessToken');
-
-            // Handle query parameters and props for apiKey, primaryColor, logo 
-            handleQueryParamsAndProps('apiKey', apiKeyProp);
-            handleQueryParamsAndProps('primaryColor', primaryColorProp);
-            handleQueryParamsAndProps('logo', logoProp);
+                });
 
             // Get the string with all the final query parameters
             const finalParams = newParams.toString()
