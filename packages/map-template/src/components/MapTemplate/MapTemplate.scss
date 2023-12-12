@@ -48,6 +48,16 @@
         box-sizing: unset;
     }
 
+    .gmnoprint {
+        background-color: red;
+        top: 120px !important;
+        right: 45px !important;
+
+        div {
+            border-radius: 8px !important;
+        }
+    }
+
     .mapboxgl-ctrl {
         &-group {
             margin: 10px 10px 0 0;
