@@ -1,0 +1,4 @@
+.notification {
+    z-index: 10000000; /* Needs to be visible on top of any element */
+    min-width: 320px;
+}
