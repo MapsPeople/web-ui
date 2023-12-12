@@ -2,7 +2,7 @@
     color: var(--brand-colors-black-100);
     display: grid;
     height: 100%;
-    grid-auto-rows: max-content;
+    grid-template-rows: 1fr;
 
     &__details {
         padding: var(--spacing-medium) 0;
@@ -15,6 +15,9 @@
         width: 100%;
         height: fit-content;
         padding: 16px;
+        text-transform: uppercase;
+        font-weight: 600;
+        color: var(--color-gray-70);
 
         &:hover {
             background-color: var(--tailwind-colors-gray-200);
@@ -65,7 +68,7 @@
         width: 100%;
         background-color: #E5E7EB;
         height: 1px;
-        border:none
+        border: none
     }
 
     &__steps {
@@ -74,5 +77,9 @@
 
     &__actions {
         padding: 0 16px 16px 16px;
+        position: sticky;
+        bottom: 0;
+        background: white;
+
     }
 }

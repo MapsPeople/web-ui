@@ -30,7 +30,7 @@
     }
 
     &__overview {
-        color: var(--color-gray-80);
+        color: var(--color-gray-90);
         font-weight: 500;
     }
 
@@ -40,9 +40,8 @@
         align-items: center;
         background: none;
         border: none;
-        width: var(--spacing-xx-large);
-        height: var(--spacing-xx-large);
-        border-radius: var(--rounding-large);
+        width: var(--icon-size-medium);
+        height: var(--icon-size-medium);
 
         &:hover {
             background-color: var(--tailwind-colors-gray-50);

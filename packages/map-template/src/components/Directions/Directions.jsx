@@ -195,7 +195,6 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
     }, [isOpen, snapPointSwiped]); // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
-
         <div className="directions">
             <div className="directions__steps">
                 <div className="directions__minutes">{totalTime && <mi-time seconds={totalTime} />}</div>
@@ -228,7 +227,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                     }
                 </div>
                 <button className="directions__close" onClick={() => onDirectionsClosed()} aria-label="Close">
-                    CANCEL ROUTE
+                    Cancel route
                 </button>
             </div>
         </div>

@@ -15,7 +15,7 @@
 
 .step {
     display: grid;
-    gap: variables.$spacing-x-small;
+    gap: variables.$spacing-medium;
     justify-items: center;
 
     &__info {
