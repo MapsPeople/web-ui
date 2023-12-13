@@ -89,7 +89,7 @@ function GoogleMapsMap({ onMapView, onPositionControl }) {
                 zoomControl: true,
                 zoomControlOptions: {
                     style: google.maps.ZoomControlStyle.DEFAULT,
-                    position: google.maps.ControlPosition.RIGHT_CENTER,
+                    position: google.maps.ControlPosition.RIGHT_TOP,
                 },
             });
             setHasZoomControl(true);
