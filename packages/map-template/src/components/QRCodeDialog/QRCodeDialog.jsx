@@ -54,7 +54,7 @@ function QRCodeDialog() {
                         newParams.append(queryParam, queryParameter);
                     } else if (prop) {
                         if (prop === primaryColorProp) {
-                            newParams.append(queryParam, primaryColorProp.replace("#", ""))
+                            newParams.append(queryParam, primaryColorProp.replace("#", ""));
                         } else {
                             newParams.append(queryParam, prop)
                         }
