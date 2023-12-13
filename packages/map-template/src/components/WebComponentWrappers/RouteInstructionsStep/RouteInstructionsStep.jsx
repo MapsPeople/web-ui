@@ -2,6 +2,7 @@ import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import { useRecoilState } from 'recoil';
 import substepsToggledState from '../../../atoms/substepsToggledState';
 import triggerSubstepsState from '../../../atoms/triggerSubstepsState';
+import kioskLocationState from '../../../atoms/kioskLocationState';
 
 /**
  * React wrapper around the custom element <mi-route-instructions-step>.
@@ -20,6 +21,8 @@ const RouteInstructionsStep = forwardRef(({ translations, totalSteps, activeStep
 
     const [substepsOpen, setSubstepsOpen] = useRecoilState(substepsToggledState);
     const [, setTriggerSubsteps] = useRecoilState(triggerSubstepsState);
+
+    const kioskLocation = useRecoilState(kioskLocationState);
 
     /**
      * Method that can be triggered on the element.
@@ -48,8 +51,10 @@ const RouteInstructionsStep = forwardRef(({ translations, totalSteps, activeStep
         }
     }, [substepsOpen]);
 
+
     return <mi-route-instructions-step
         ref={elementRef}
+        show-toggle-button={kioskLocation[0] === undefined ? true : false}
         step={JSON.stringify(totalSteps[activeStep])}
         translations={JSON.stringify(translations)}
         destination-location={directions?.destinationLocation.properties.name}

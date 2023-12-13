@@ -3,6 +3,7 @@ import './Directions.scss';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import travelModeState from '../../atoms/travelModeState';
+import { ReactComponent as QRCode } from '../../assets/qrcode.svg';
 import RouteInstructions from "../RouteInstructions/RouteInstructions";
 import useMediaQuery from '../../hooks/useMediaQuery';
 import directionsResponseState from "../../atoms/directionsResponseState";
@@ -11,6 +12,12 @@ import { snapPoints } from "../../constants/snapPoints";
 import substepsToggledState from "../../atoms/substepsToggledState";
 import getDesktopPaddingLeft from "../../helpers/GetDesktopPaddingLeft";
 import getMobilePaddingBottom from "../../helpers/GetMobilePaddingBottom";
+import getDesktopPaddingBottom from "../../helpers/GetDesktopPaddingBottom";
+import kioskLocationState from "../../atoms/kioskLocationState";
+import showQRCodeDialogState from "../../atoms/showQRCodeDialogState";
+import Tooltip from "../Tooltip/Tooltip";
+import primaryColorState from "../../atoms/primaryColorState";
+import Accessibility from "../Accessibility/Accessibility";
 
 let directionsRenderer;
 
@@ -29,7 +36,6 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
     const [destinationDisplayRule, setDestinationDisplayRule] = useState(null);
 
     const destinationInfoElement = useRef(null);
-    const guideElement = useRef(null);
 
     const [totalTime, setTotalTime] = useState();
 
@@ -43,7 +49,15 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
 
     const [substepsOpen, setSubstepsOpen] = useRecoilState(substepsToggledState);
 
+    const kioskLocation = useRecoilValue(kioskLocationState)
+
     const isDesktop = useMediaQuery('(min-width: 992px)');
+
+    const [, setShowQRCodeDialog] = useRecoilState(showQRCodeDialogState);
+
+    const [accessibilityOn, setAccessibilityOn] = useState(false);
+
+    const primaryColor = useRecoilValue(primaryColorState);
 
     useEffect(() => {
         setDestinationDisplayRule(null);
@@ -62,8 +76,8 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                 mapsIndoors: mapsIndoorsInstance,
                 fitBoundsPadding: {
                     top: padding,
-                    bottom: isDesktop ? padding : getMobilePaddingBottom(),
-                    left: isDesktop ? getDesktopPaddingLeft() : padding,
+                    bottom: getBottomPadding(padding),
+                    left: getLeftPadding(padding),
                     right: padding
                 }
             });
@@ -83,6 +97,39 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
             }
         }
     }, [isOpen, directions, mapsIndoorsInstance, travelMode]);
+
+
+    /**
+     * Get bottom padding when getting directions.
+     * Calculate all cases depending on the kioskLocation id prop as well.
+     */
+    function getBottomPadding(padding) {
+        if (isDesktop) {
+            if (kioskLocation) {
+                return getDesktopPaddingBottom();
+            } else {
+                return padding;
+            }
+        } else {
+            return getMobilePaddingBottom();
+        }
+    }
+
+    /**
+     * Get left padding when getting directions. 
+     * Calculate all cases depending on the kioskLocation id prop as well. 
+     */
+    function getLeftPadding(padding) {
+        if (isDesktop) {
+            if (kioskLocation) {
+                return padding;
+            } else {
+                return getDesktopPaddingLeft();
+            }
+        } else {
+            return padding;
+        }
+    }
 
     /*
      * Make sure directions stop rendering on the map when the Directions view is not active anymore.
@@ -115,7 +162,6 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
      * Render the next navigation step on the map.
      */
     function onNext() {
-        guideElement.current.scrollTop = 0;
         if (directionsRenderer) {
             directionsRenderer.nextStep();
         }
@@ -125,7 +171,6 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
      * Render the previous navigation step on the map.
      */
     function onPrevious() {
-        guideElement.current.scrollTop = 0;
         if (directionsRenderer) {
             directionsRenderer.previousStep();
         }
@@ -204,10 +249,18 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                     onNextStep={() => onNext()}
                     isOpen={isOpen}
                     onPreviousStep={() => onPrevious()}
-                    onFitCurrentDirections={() => onFitCurrentDirections()}
-                >
+                    onFitCurrentDirections={() => onFitCurrentDirections()} >
                 </RouteInstructions>
             </div>
+            {kioskLocation &&
+                <>
+                    <hr></hr>
+                    <div className="directions__kiosk">
+                        <Accessibility />
+                        <button className='directions__qr-code' onClick={() => setShowQRCodeDialog(true)}><QRCode /> Scan QR code</button>
+                    </div>
+                </>
+            }
             <hr></hr>
             <div className="directions__actions">
                 <div className="directions__details">
@@ -230,6 +283,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                     Cancel route
                 </button>
             </div>
+
         </div>
     )
 }

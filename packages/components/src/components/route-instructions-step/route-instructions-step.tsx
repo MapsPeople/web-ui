@@ -68,6 +68,13 @@ export class RouteInstructionsStep implements ComponentInterface {
     @Prop() unit: UnitSystem = navigator.language === 'en-US' ? UnitSystem.Imperial : UnitSystem.Metric;
 
     /**
+     * Indicates if it should show the toggle button.
+     *
+     * @type {boolean}
+     */
+    @Prop() showToggleButton: boolean = true;
+
+    /**
      * Object with translation strings as stringified JSON.
      */
     @Prop() translations: string;
@@ -255,8 +262,9 @@ export class RouteInstructionsStep implements ComponentInterface {
      * @returns {JSX.Element}
      */
     renderToggleButton(): JSX.Element {
-        // Return null if none substeps/maneuvers is provided
-        if (this.stepData.steps?.length <= 0) {
+        // Return null if none substeps/maneuvers is provided,
+        // or if the showToggleButton is set to false.
+        if (this.stepData.steps?.length <= 0 || !this.showToggleButton) {
             return null;
         }
 
@@ -431,7 +439,6 @@ export class RouteInstructionsStep implements ComponentInterface {
                 <div part="step-heading" class="step__heading">{this.translationsData.destination}</div>
                 {this.renderToggleButton()}
             </div>
-            <div part="step-location" class="step__location">{this.destinationLocation}</div>
             {this.showSubsteps()}
         </div>;
     }

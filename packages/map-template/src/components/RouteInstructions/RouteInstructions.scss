@@ -8,13 +8,13 @@
         position: sticky;
         bottom: 0;
         background: white;
-        padding: 16px 0;
+        padding-bottom: 16px;
 
         &::before {
             content: '';
             position: absolute;
             pointer-events: none;
-            bottom: calc(64px + var(--spacing-medium));
+            bottom: calc(40px + var(--spacing-medium));
             left: 0;
             right: 0;
             height: var(--spacing-xx-large);

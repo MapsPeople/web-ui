@@ -64,12 +64,40 @@
         gap: var(--spacing-xx-small);
     }
 
+    &__qr-code {
+        width: fit-content;
+        font-weight: var(--font-weight-large);
+        display: grid;
+        gap: var(--spacing-medium);
+        grid-auto-flow: column;
+        align-items: center;
+        padding: var(--spacing-medium);
+        background-color: var(--tailwind-colors-gray-100);
+        border: none;
+        border-radius: var(--rounding-large);
+        font-weight: 600;
+        color: var(--color-gray-90);
+
+        &:hover {
+            background-color: var(--tailwind-colors-gray-200);
+        }
+    }
+
+    &__kiosk {
+        display: grid;
+        grid-auto-flow: column;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 16px;
+    }
+
     hr {
         width: 100%;
         background-color: #E5E7EB;
         height: 1px;
         border: none
     }
+
 
     &__steps {
         padding: 16px;
@@ -80,6 +108,5 @@
         position: sticky;
         bottom: 0;
         background: white;
-
     }
 }
