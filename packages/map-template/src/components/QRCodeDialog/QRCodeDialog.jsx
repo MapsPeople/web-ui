@@ -54,18 +54,18 @@ function QRCodeDialog() {
                         newParams.append(queryParam, queryParameter);
                     } else if (prop) {
                         if (prop === primaryColorProp) {
-                            newParams.append(queryParam, primaryColorProp.replace("#", ""))
+                            newParams.append(queryParam, primaryColorProp.replace("#", ""));
                         } else {
-                            newParams.append(queryParam, prop)
+                            newParams.append(queryParam, prop);
                         }
                     }
                 });
 
             // Get the string with all the final query parameters
-            const finalParams = newParams.toString()
+            const finalParams = newParams.toString();
 
             // Construct the QR code URL
-            let QRCodeURL = `${targetUrl}/?${finalParams}&directionsFrom=${directionsFrom.id}&directionsTo=${directionsTo.id}`
+            let QRCodeURL = `${targetUrl}/?${finalParams}&directionsFrom=${directionsFrom.id}&directionsTo=${directionsTo.id}`;
 
             const options = {
                 errorCorrectionLevel: 'L',
@@ -79,7 +79,7 @@ function QRCodeDialog() {
                 });
         }
 
-    }, [directionsFrom, directionsTo])
+    }, [directionsFrom, directionsTo]);
 
     return (<>
         <div className="background"></div>
