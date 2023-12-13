@@ -84,7 +84,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
         if (mapsIndoorsInstance && mapView && !hasZoomControl) {
             mapView
                 .getMap()
-                .addControl(new mapboxgl.NavigationControl({showCompass: false}), 'top-right');
+                .addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
 
             setHasZoomControl(true);
         }
