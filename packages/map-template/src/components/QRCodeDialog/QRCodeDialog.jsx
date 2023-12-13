@@ -79,7 +79,7 @@ function QRCodeDialog() {
                 });
         }
 
-    }, [directionsFrom, directionsTo])
+    }, [directionsFrom, directionsTo]);
 
     return (<>
         <div className="background"></div>
