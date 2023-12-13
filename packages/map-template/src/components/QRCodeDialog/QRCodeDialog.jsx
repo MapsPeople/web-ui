@@ -56,7 +56,7 @@ function QRCodeDialog() {
                         if (prop === primaryColorProp) {
                             newParams.append(queryParam, primaryColorProp.replace("#", ""));
                         } else {
-                            newParams.append(queryParam, prop)
+                            newParams.append(queryParam, prop);
                         }
                     }
                 });
