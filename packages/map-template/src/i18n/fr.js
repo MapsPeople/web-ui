@@ -6,7 +6,7 @@ const fr = {
     'Distance': 'Distance',
     'Estimated time': 'Heure d\'arrivée estimée',
     'Level': 'Niveau',
-    'Search by name, category, building...': 'Recherche par nom, catégorie, bâtiment',
+    'Search by name, category, building...': 'Recherche par nom, catégorie, bâtiment...',
     'Nothing was found': 'Rien n\'a été trouvé',
     'd': 'd',
     'h': 'h',
@@ -15,20 +15,20 @@ const fr = {
     'Bike': 'À vélo',
     'Transit': 'En transports',
     'Drive': 'Voiture',
-    'Start wayfinding': 'Start wayfinding', // TODO: Awaiting proper translation
+    'Start wayfinding': 'Commencer la navigation',
     // Location Details
     'Read full description': 'Lire la description complète',
     // Locations list
     'Locations': 'Emplacements',
     'Directions not available': 'Itinéraire non disponible',
-    'Start directions': 'Commencer les directions',
+    'Start directions': 'Commencer la navigation',
     // Route instructions
-    'Previous': 'Precedent',
+    'Previous': 'Précédent',
     'Next': 'Suivant',
     'StepYofX': 'Étape {{activeStep}} sur {{totalSteps}}',
     // Route Instructions Step
-    'You have arrived': 'Tu es arrivé',
-    'Leave': 'Partir',
+    'You have arrived': 'Vous êtes arrivé',
+    'Leave': 'Départ',
     'Park': 'Parc',
     'at': 'à',
     'Building': 'Bâtiment',
@@ -42,26 +42,26 @@ const fr = {
     'Exit': 'Partir',
     'Enter': 'Entrer',
     'stops': 'arrêts',
-    'and continue': 'et continue',
+    'and continue': 'et continuez',
     'Continue straight ahead': 'Continuez tout droit',
     'Go left': 'Tournez a gauche',
-    'Go sharp left': 'Allez brusquement à gauche',
+    'Go sharp left': 'Allez directement à gauche',
     'Go slight left': 'Allez légèrement à gauche',
     'Go right': 'Allez à droite',
-    'Go sharp right': 'Allez brusquement à droit',
-    'Go slight right': 'Allez légèrement à droit',
+    'Go sharp right': 'Allez directement à droite',
+    'Go slight right': 'Allez légèrement à droite',
     'Turn around': 'Faite demi-tour',
     // Wayfinding component
     'Switch': 'Changer',
     'Accessibility': 'Accessibilité',
     'No route found': 'Aucun itinéraire trouvé',
     'My position': 'Ma position',
-    'Turn on Accessibility to get directions that avoid stairs and escalators.': 'Activez l\'accessibilité pour obtenir des itinéraires qui évitent les escaliers et les escaliers mécaniques.',
-    'Go!': 'Aller!',
+    'Turn on Accessibility to get directions that avoid stairs and escalators.': 'Activez l\'accessibilité pour obtenir des itinéraires qui évitent les escaliers.',
+    'Go!': 'C\'est parti!',
     // Venue selector
     'Venues': 'Lieux',
     'Select venue': 'Sélectionner le lieu',
-    'Current': 'Actuelle'
+    'Current': 'Actuel'
 };
 
 export default fr;
