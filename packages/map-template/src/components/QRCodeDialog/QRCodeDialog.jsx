@@ -62,7 +62,7 @@ function QRCodeDialog() {
                 });
 
             // Get the string with all the final query parameters
-            const finalParams = newParams.toString()
+            const finalParams = newParams.toString();
 
             // Construct the QR code URL
             let QRCodeURL = `${targetUrl}/?${finalParams}&directionsFrom=${directionsFrom.id}&directionsTo=${directionsTo.id}`;
