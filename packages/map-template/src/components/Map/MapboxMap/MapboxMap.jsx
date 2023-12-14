@@ -68,6 +68,14 @@ function MapboxMap({ onMapView, onPositionControl }) {
             onPositionControl(myPositionButtonElement);
         }
 
+        if (mapsIndoorsInstance && mapView && !hasZoomControl) {
+            mapView
+                .getMap()
+                .addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
+
+            setHasZoomControl(true);
+        }
+
         if (mapsIndoorsInstance && mapView && !hasFloorSelector) {
             const floorSelectorElement = document.createElement('mi-floor-selector');
             floorSelectorElement.mapsindoors = mapsIndoorsInstance;
@@ -79,14 +87,6 @@ function MapboxMap({ onMapView, onPositionControl }) {
             }, 'top-right');
 
             setHasFloorSelector(true);
-        }
-
-        if (mapsIndoorsInstance && mapView && !hasZoomControl) {
-            mapView
-                .getMap()
-                .addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
-
-            setHasZoomControl(true);
         }
     }, [mapsIndoorsInstance, mapView, hasFloorSelector, hasPositionControl, hasZoomControl]);
 
