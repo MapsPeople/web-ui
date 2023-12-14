@@ -15,8 +15,6 @@ import getMobilePaddingBottom from "../../helpers/GetMobilePaddingBottom";
 import getDesktopPaddingBottom from "../../helpers/GetDesktopPaddingBottom";
 import kioskLocationState from "../../atoms/kioskLocationState";
 import showQRCodeDialogState from "../../atoms/showQRCodeDialogState";
-import Tooltip from "../Tooltip/Tooltip";
-import primaryColorState from "../../atoms/primaryColorState";
 import Accessibility from "../Accessibility/Accessibility";
 
 let directionsRenderer;
@@ -54,10 +52,6 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
     const [, setShowQRCodeDialog] = useRecoilState(showQRCodeDialogState);
-
-    const [accessibilityOn, setAccessibilityOn] = useState(false);
-
-    const primaryColor = useRecoilValue(primaryColorState);
 
     useEffect(() => {
         setDestinationDisplayRule(null);
