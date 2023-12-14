@@ -48,6 +48,7 @@
         box-sizing: unset;
     }
 
+    // In order to align with UX design, button placement has to be edited
     .gmnoprint {
         right: 44px !important;
 
@@ -58,9 +59,9 @@
 
     .mapboxgl-ctrl {
         &-group {
-            margin: 10px 10px 0 0;
+            margin: 10px 12px 10px 0 !important;
             border-radius: 8px;
-            box-shadow: none !important;
+            box-shadow: 0 0 0 2px #e5e7eb !important;
 
             button {
                 padding: 24px; // UX design
