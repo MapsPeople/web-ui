@@ -16,6 +16,8 @@ import getDesktopPaddingBottom from "../../helpers/GetDesktopPaddingBottom";
 import kioskLocationState from "../../atoms/kioskLocationState";
 import showQRCodeDialogState from "../../atoms/showQRCodeDialogState";
 import Accessibility from "../Accessibility/Accessibility";
+import isDestinationStepState from "../../atoms/isDestinationStepState";
+import primaryColorState from "../../atoms/primaryColorState";
 
 let directionsRenderer;
 
@@ -52,6 +54,10 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
     const [, setShowQRCodeDialog] = useRecoilState(showQRCodeDialogState);
+
+    const isDestinationStep = useRecoilValue(isDestinationStepState);
+
+    const primaryColor = useRecoilValue(primaryColorState);
 
     useEffect(() => {
         setDestinationDisplayRule(null);
@@ -273,9 +279,15 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                         </div>
                     }
                 </div>
-                <button className="directions__close" onClick={() => onDirectionsClosed()} aria-label="Close">
-                    Cancel route
-                </button>
+                {!isDestinationStep ?
+                    <button className="directions__cancel" onClick={() => onDirectionsClosed()} aria-label="Close">
+                        Cancel route
+                    </button>
+                    :
+                    <button className="directions__finish" onClick={() => onDirectionsClosed()} aria-label="Close" style={{ background: primaryColor }}>
+                        Finish route
+                    </button>
+                }
             </div>
 
         </div>

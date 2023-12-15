@@ -14,7 +14,7 @@
             content: '';
             position: absolute;
             pointer-events: none;
-            bottom: calc(40px + var(--spacing-medium));
+            bottom: calc(30px + var(--spacing-medium));
             left: 0;
             right: 0;
             height: var(--spacing-xx-large);
@@ -42,10 +42,6 @@
         border: none;
         width: var(--icon-size-medium);
         height: var(--icon-size-medium);
-
-        &:hover {
-            background-color: var(--tailwind-colors-gray-50);
-        }
     }
 
     button:disabled,
@@ -55,7 +51,7 @@
     }
 
     mi-route-instructions-step {
-        padding: var(--spacing-medium) 0;
+        padding-top: var(--spacing-medium);
         overflow-y: auto;
         height: 100%;
     }

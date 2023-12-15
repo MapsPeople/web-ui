@@ -8,7 +8,8 @@
         padding: var(--spacing-medium) 0;
     }
 
-    &__close {
+    &__cancel,
+    &__finish {
         background-color: var(--tailwind-colors-gray-100);
         border: none;
         border-radius: var(--rounding-large);
@@ -22,6 +23,10 @@
         &:hover {
             background-color: var(--tailwind-colors-gray-200);
         }
+    }
+
+    &__finish {
+        color: white;
     }
 
     &__minutes {

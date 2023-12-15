@@ -10,6 +10,7 @@ import RouteInstructionsStep from '../WebComponentWrappers/RouteInstructionsStep
 import substepsToggledState from '../../atoms/substepsToggledState';
 import useSetMaxZoomLevel from '../../hooks/useSetMaxZoomLevel';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
+import isDestinationStepState from '../../atoms/isDestinationStepState';
 
 /**
  * Route instructions step by step component.
@@ -42,6 +43,8 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
 
     const substepsOpen = useRecoilValue(substepsToggledState);
 
+    const [, setIsDestinationStep] = useRecoilState(isDestinationStepState);
+
     const setMaxZoomLevel = useSetMaxZoomLevel();
 
     /**
@@ -64,6 +67,9 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
     useEffect(() => {
         if (isOpen) {
             if (activeStep === totalSteps?.length - 1 && directions?.destinationLocation) {
+                // Set the destination step boolean to true
+                setIsDestinationStep(true);
+
                 // Get the destination location
                 const destinationLocation = directions?.destinationLocation;
 
@@ -73,6 +79,9 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
 
                 // Call function to set the map zoom level depeding on the max zoom supported on the solution
                 setMaxZoomLevel();
+            } else {
+                // Reset the destination step boolean to false
+                setIsDestinationStep(false);
             }
 
             // Check if the substeps are closed or open, and trigger the method on the <route-instructions-step> component.
