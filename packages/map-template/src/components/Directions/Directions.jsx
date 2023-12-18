@@ -96,7 +96,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
             destinationInfoElement.current.location = directions.destinationLocation;
 
             // If the destination is My Position, then set the display rule to null.
-            if (directions.destinationLocation.properties.id === 'USER_POSITION') {
+            if (directions.destinationLocation.id === 'USER_POSITION') {
                 setDestinationDisplayRule(null)
             } else {
                 setDestinationDisplayRule(mapsIndoorsInstance.getDisplayRule(directions.destinationLocation));
