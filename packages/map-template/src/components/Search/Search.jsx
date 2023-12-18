@@ -17,7 +17,6 @@ import fitBoundsLocation from '../../helpers/fitBoundsLocation';
 import getDesktopPaddingLeft from '../../helpers/GetDesktopPaddingLeft';
 import kioskLocationState from '../../atoms/kioskLocationState';
 import getDesktopPaddingBottom from '../../helpers/GetDesktopPaddingBottom';
-import getMobilePaddingBottom from '../../helpers/GetMobilePaddingBottom';
 
 /**
  * Show the search results.
