@@ -1,7 +1,7 @@
 {
   "name": "@mapsindoors/map-template",
   "description": "Get a MapsIndoors map up and running in less than 10 mins.",
-  "version": "1.24.1",
+  "version": "1.25.0",
   "private": false,
   "files": [
     "dist/*.js",
@@ -34,7 +34,7 @@
     "vite-plugin-eslint": "^1.8.1",
     "vite-plugin-favicon2": "^1.1.5",
     "vite-plugin-svgr": "^3.2.0",
-    "web-vitals": "^2.1.4", 
+    "web-vitals": "^2.1.4",
     "@turf/turf": "^6.5.0",
     "qrcode": "^1.5.3"
   },
