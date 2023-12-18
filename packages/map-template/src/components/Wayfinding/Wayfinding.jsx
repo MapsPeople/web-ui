@@ -422,7 +422,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
             {!hasSearchResults && !showMyPositionOption && <p className="wayfinding__error">{t('Nothing was found')}</p>}
             {userPosition && showMyPositionOption && <button type="button" className="wayfinding__use-current-position" onClick={() => selectMyPosition()}>
                 <CompassArrow />
-                {t('My Position')}
+                {t('My position')}
             </button>}
             {searchResults.length > 0 &&
                 <div className="wayfinding__scrollable" {...scrollableContentSwipePrevent}>

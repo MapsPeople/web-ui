@@ -96,7 +96,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
             destinationInfoElement.current.location = directions.destinationLocation;
 
             // If the destination is My Position, then set the display rule to null.
-            if (directions.destinationLocation.properties.name === 'My Position') {
+            if (directions.destinationLocation.properties.id === 'USER_POSITION') {
                 setDestinationDisplayRule(null)
             } else {
                 setDestinationDisplayRule(mapsIndoorsInstance.getDisplayRule(directions.destinationLocation));
@@ -263,7 +263,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                                 <div className="directions__content">
                                     <div className='directions__name'>
                                         {directions?.originLocation.properties.name}
-                                        {directions?.originLocation.properties.name !== 'My Position' && <div>·</div>}
+                                        {directions?.originLocation.id !== 'USER_POSITION' && <div>·</div>}
                                         <mi-location-info level={t('Level')} ref={originInfoElement} show-external-id={false} />
                                     </div>
                                 </div>
@@ -276,7 +276,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                         </label>
                         {directions?.destinationLocation &&
                             <div className="directions__info">
-                                {destinationDisplayRule && directions.destinationLocation.name !== 'My Position' &&
+                                {destinationDisplayRule && directions.destinationLocation.id !== 'USER_POSITION' &&
                                     <div className="directions__icon">
                                         <img alt="" src={destinationDisplayRule.icon.src ? destinationDisplayRule.icon.src : destinationDisplayRule.icon} />
                                     </div>}
