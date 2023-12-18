@@ -21,6 +21,7 @@ import getMobilePaddingBottom from "../../helpers/GetMobilePaddingBottom";
 import getDesktopPaddingBottom from "../../helpers/GetDesktopPaddingBottom";
 import kioskLocationState from "../../atoms/kioskLocationState";
 import showQRCodeDialogState from "../../atoms/showQRCodeDialogState";
+import supportsUrlParametersState from "../../atoms/supportsUrlParametersState";
 
 let directionsRenderer;
 
@@ -60,6 +61,8 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
     const [, setShowQRCodeDialog] = useRecoilState(showQRCodeDialogState);
+
+    const supportsUrlParameters = useRecoilValue(supportsUrlParametersState)
 
     useEffect(() => {
         setDestinationDisplayRule(null);
@@ -305,7 +308,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                             <div className="directions__minutes">{totalTime && <mi-time seconds={totalTime} />}</div>
                         </div>
                     </div>
-                    {kioskLocation && <button className='directions__qr-code' onClick={() => setShowQRCodeDialog(true)}><QRCode /> Scan QR code</button>}
+                    {kioskLocation && supportsUrlParameters && <button className='directions__qr-code' onClick={() => setShowQRCodeDialog(true)}><QRCode /> Scan QR code</button>}
                 </div>
                 <hr></hr>
                 <RouteInstructions
