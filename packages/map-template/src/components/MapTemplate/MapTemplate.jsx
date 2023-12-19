@@ -36,6 +36,9 @@ import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import languageState from '../../atoms/languageState.js';
 import Notification from '../WebComponentWrappers/Notification/Notification.jsx';
 import kioskLocationState from '../../atoms/kioskLocationState';
+import showQRCodeDialogState from '../../atoms/showQRCodeDialogState';
+import QRCodeDialog from '../QRCodeDialog/QRCodeDialog';
+import supportsUrlParametersState from '../../atoms/supportsUrlParametersState';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -62,8 +65,9 @@ defineCustomElements();
  * @param {boolean} [props.useMapProviderModule] - Set to true if the Map Template should take MapsIndoors solution modules into consideration when determining what map type to use.
  * @param {string} [props.kioskOriginLocationId] - If running the Map Template as a kiosk (upcoming feature), provide the Location ID that represents the location of the kiosk.
  * @param {string} [props.language] - The language to show textual content in. Supported values are "en" for English, "da" for Danish, "de" for German and "fr" for French. If the prop is not set, the language of the browser will be used (if it is one of the four supported languages - otherwise it will default to English).
+ * @param {boolean} [props.supportsUrlParameters] - Set to true if you want to support URL Parameters to configure the Map Template.
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters }) {
 
     const [, setApiKey] = useRecoilState(apiKeyState);
     const [, setGmApiKey] = useRecoilState(gmApiKeyState);
@@ -80,6 +84,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const [currentLanguage, setCurrentLanguage] = useRecoilState(languageState);
     const [, setKioskLocation] = useRecoilState(kioskLocationState);
+    const [, setSupportsUrlParameters] = useRecoilState(supportsUrlParametersState);
 
     const [showVenueSelector, setShowVenueSelector] = useState(true);
     const [showPositionControl, setShowPositionControl] = useState(true);
@@ -97,7 +102,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [initialFilteredLocations, setInitialFilteredLocations] = useState();
 
     const [appConfig, setAppConfig] = useState();
-    const [solution, setSolution] = useRecoilState(solutionState);
+    const [, setSolution] = useRecoilState(solutionState);
 
     const [, setTileStyle] = useRecoilState(tileStyleState);
     const [, setStartZoomLevel] = useRecoilState(startZoomLevelState);
@@ -115,6 +120,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     // Indicate if the MapsIndoors JavaScript SDK is available.
     const [mapsindoorsSDKAvailable, setMapsindoorsSDKAvailable] = useState(false);
+
+    const showQRCodeDialog = useRecoilValue(showQRCodeDialogState);
 
     /**
      * Ensure that MapsIndoors Web SDK is available.
@@ -361,7 +368,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         setLogo(logo);
     }, [logo]);
 
-
     /*
      * React on changes in the current location prop.
      * Apply location selection if the current location exists and is not the same as the kioskOriginLocationId.
@@ -400,6 +406,13 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             }
         }
     }, [kioskOriginLocationId, mapsindoorsSDKAvailable]);
+
+    /*
+     * React on changes in the supportsUrlParameters prop.
+     */
+    useEffect(() => {
+        setSupportsUrlParameters(supportsUrlParameters);
+    }, [supportsUrlParameters]);
 
     /**
      * When venue is fitted while initializing the data,
@@ -480,6 +493,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             onClose={() => goBack()}
             active={currentAppView === appStates.VENUE_SELECTOR}
         />}
+        {showQRCodeDialog && <QRCodeDialog />}
         {isMapReady &&
             <>
                 {isDesktop &&

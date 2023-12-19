@@ -1,15 +1,12 @@
 {
   "name": "@mapsindoors/map-template",
   "description": "Get a MapsIndoors map up and running in less than 10 mins.",
-  "version": "1.24.0",
+  "version": "1.25.0",
   "private": false,
   "files": [
     "dist/*.js",
     "dist/*.mjs"
   ],
-  "dependencies": {
-    "@turf/turf": "^6.5.0"
-  },
   "devDependencies": {
     "@googlemaps/js-api-loader": "^1.15.1",
     "@mapsindoors/components": "*",
@@ -33,13 +30,15 @@
     "recoil": "^0.7.7",
     "sass": "^1.57.1",
     "standard-version": "^9.5.0",
+    "uuid": "^9.0.1",
     "vite": "^4.3.4",
     "vite-plugin-css-injected-by-js": "^3.1.0",
     "vite-plugin-eslint": "^1.8.1",
     "vite-plugin-favicon2": "^1.1.5",
     "vite-plugin-svgr": "^3.2.0",
     "web-vitals": "^2.1.4",
-    "uuid": "^9.0.1"
+    "@turf/turf": "^6.5.0",
+    "qrcode": "^1.5.3"
   },
   "scripts": {
     "start": "vite",

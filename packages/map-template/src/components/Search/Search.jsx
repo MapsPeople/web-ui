@@ -19,7 +19,6 @@ import languageState from '../../atoms/languageState';
 import { useTranslation } from 'react-i18next';
 import kioskLocationState from '../../atoms/kioskLocationState';
 import getDesktopPaddingBottom from '../../helpers/GetDesktopPaddingBottom';
-import getMobilePaddingBottom from '../../helpers/GetMobilePaddingBottom';
 
 /**
  * Show the search results.

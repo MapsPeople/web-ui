@@ -9,6 +9,7 @@ import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
 import { ReactComponent as WalkingIcon } from '../../assets/walk.svg';
 import { ReactComponent as DriveIcon } from '../../assets/drive.svg';
 import { ReactComponent as BikeIcon } from '../../assets/bike.svg';
+import { ReactComponent as QRCode } from '../../assets/qrcode.svg';
 import RouteInstructions from "../RouteInstructions/RouteInstructions";
 import useMediaQuery from '../../hooks/useMediaQuery';
 import { travelModes } from "../../constants/travelModes";
@@ -21,6 +22,8 @@ import getMobilePaddingBottom from "../../helpers/GetMobilePaddingBottom";
 import distanceUnitSystemSelector from '../../selectors/distanceUnitSystemSelector';
 import getDesktopPaddingBottom from "../../helpers/GetDesktopPaddingBottom";
 import kioskLocationState from "../../atoms/kioskLocationState";
+import showQRCodeDialogState from "../../atoms/showQRCodeDialogState";
+import supportsUrlParametersState from "../../atoms/supportsUrlParametersState";
 
 let directionsRenderer;
 
@@ -62,6 +65,10 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
     const kioskLocation = useRecoilValue(kioskLocationState)
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
+
+    const [, setShowQRCodeDialog] = useRecoilState(showQRCodeDialogState);
+
+    const supportsUrlParameters = useRecoilValue(supportsUrlParametersState)
 
     useEffect(() => {
         setDestinationDisplayRule(null);
@@ -292,19 +299,22 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                 </div>
             </div>
             <div ref={guideElement} className="directions__guide">
-                <div className="directions__metrics">
-                    <div className="directions__distance">
-                        {travelMode === travelModes.WALKING && <WalkingIcon />}
-                        {travelMode === travelModes.DRIVING && <DriveIcon />}
-                        {travelMode === travelModes.BICYCLING && <BikeIcon />}
-                        <div>{t('Distance')}:</div>
-                        <div className="directions__meters">{totalDistance && <mi-distance unit={distanceUnitSystem} meters={totalDistance} />}</div>
+                <div className="directions__route">
+                    <div className="directions__metrics">
+                        <div className="directions__distance">
+                            {travelMode === travelModes.WALKING && <WalkingIcon />}
+                            {travelMode === travelModes.DRIVING && <DriveIcon />}
+                            {travelMode === travelModes.BICYCLING && <BikeIcon />}
+                            <div>{t('Distance')}:</div>
+                            <div className="directions__meters">{totalDistance && <mi-distance unit={distanceUnitSystem} meters={totalDistance} />}</div>
+                        </div>
+                        <div className="directions__time">
+                            <ClockIcon />
+                            <div>{t('Estimated time')}:</div>
+                            <div className="directions__minutes">{totalTime && <mi-time translations={JSON.stringify({ days: t('d'), hours: t('h'), minutes: t('min') })} seconds={totalTime} />}</div>
+                        </div>
                     </div>
-                    <div className="directions__time">
-                        <ClockIcon />
-                        <div>{t('Estimated time')}:</div>
-                        <div className="directions__minutes">{totalTime && <mi-time translations={JSON.stringify({ days: t('d'), hours: t('h'), minutes: t('min') })} seconds={totalTime} />}</div>
-                    </div>
+                    {kioskLocation && supportsUrlParameters && <button className='directions__qr-code' onClick={() => setShowQRCodeDialog(true)}><QRCode /> Scan QR code</button>}
                 </div>
                 <hr></hr>
                 <RouteInstructions
