@@ -347,7 +347,7 @@ function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule }) {
                 const locationFloor = kioskLocation.properties.floor;
                 mapsIndoorsInstance.setFloor(locationFloor);
 
-                fitBoundsLocation(kioskLocation, mapsIndoorsInstance, getDesktopPaddingBottom(), 0);
+                fitBoundsLocation(kioskLocation, mapsIndoorsInstance, getDesktopPaddingBottom(), 0, startZoomLevel, pitch, bearing);
             } else if (locationId) {
                 window.mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
                     if (location) {
@@ -356,12 +356,12 @@ function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule }) {
                         mapsIndoorsInstance.setFloor(locationFloor);
 
                         // Fit the map to the location bounds and add the padding calculated based on the modal.
-                        fitBoundsLocation(location, mapsIndoorsInstance, isDesktop ? 0 : getMobilePaddingBottom(), isDesktop ? getDesktopPaddingLeft() : 0);
+                        fitBoundsLocation(location, mapsIndoorsInstance, isDesktop ? 0 : getMobilePaddingBottom(), isDesktop ? getDesktopPaddingLeft() : 0, startZoomLevel, pitch, bearing);
                     }
                 });
             }
         }
-    }, [kioskLocation, locationId, isMapReady]);
+    }, [kioskLocation, locationId, isMapReady, startZoomLevel, pitch, bearing]);
 
     return (<>
         {mapType === mapTypes.Google && <GoogleMapsMap onMapView={onMapView} onPositionControl={onPositionControlCreated} />}

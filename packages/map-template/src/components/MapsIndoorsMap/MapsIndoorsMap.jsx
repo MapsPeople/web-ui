@@ -86,7 +86,8 @@ function MapsIndoorsMap(props) {
             gmMapId: props.supportsUrlParameters && gmMapIdQueryParameter ? gmMapIdQueryParameter : props.gmMapId,
             useMapProviderModule: props.supportsUrlParameters && useMapProviderModuleParameter ? useMapProviderModuleParameter : (props.useMapProviderModule || defaultProps.useMapProviderModule),
             kioskOriginLocationId: props.supportsUrlParameters && kioskOriginLocationId ? kioskOriginLocationId : props.kioskOriginLocationId,
-            timeout: props.supportsUrlParameters && timeoutQueryParameter ? timeoutQueryParameter : props.timeout
+            timeout: props.supportsUrlParameters && timeoutQueryParameter ? timeoutQueryParameter : props.timeout,
+            supportsUrlParameters: props.supportsUrlParameters,
         });
     }, [props]);
 
