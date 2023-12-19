@@ -63,9 +63,9 @@ const fr = {
     'Select venue': 'Sélectionner le lieu',
     'Current': 'Actuel',
     // QR code dialog
-    'Scan QR code': 'Scan QR code', // TODO: Translate properly
-    'Scan the QR code to see the route on your phone': 'Scan the QR code to see the route on your phone', // TODO: Translate properly
-    'Done': 'Done' // TODO: Translate properly
+    'Scan QR code': 'Scanne le code QR',
+    'Scan the QR code to see the route on your phone': 'Scannez le code QR pour voir l\'itinéraire sur votre téléphone',
+    'Done': 'Fini'
 };
 
 export default fr;
