@@ -33,6 +33,8 @@ import pitchState from '../../atoms/pitchState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import Notification from '../WebComponentWrappers/Notification/Notification.jsx';
 import kioskLocationState from '../../atoms/kioskLocationState';
+import timeoutState from '../../atoms/timoutState.js';
+import { useInactive } from '../../hooks/useInactive.js';
 
 defineCustomElements();
 
@@ -75,6 +77,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setGmMapId] = useRecoilState(gmMapIdState);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const [, setKioskLocation] = useRecoilState(kioskLocationState);
+    const [, setTimeoutValue] = useRecoilState(timeoutState);
+    const isInactive = useInactive(); // Hook to detect if user is inactive. Used in combination with timeout prop to reset the Map Template to initial values after a specified time.
 
     const [showVenueSelector, setShowVenueSelector] = useState(true);
     const [showPositionControl, setShowPositionControl] = useState(true);
@@ -110,6 +114,12 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     // Indicate if the MapsIndoors JavaScript SDK is available.
     const [mapsindoorsSDKAvailable, setMapsindoorsSDKAvailable] = useState(false);
+
+    useEffect(() => {
+        if (isInactive) {
+            // TODO: Reset map position, state and UI.
+        }
+    }, [isInactive]);
 
     /**
      * Ensure that MapsIndoors Web SDK is available.
@@ -357,7 +367,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         if (timeout !== undefined) {
-            // TODO: Setup timeout handler
+            setTimeoutValue(timeout); // TODO: Check that changing this to nothing will stop the timeout functionality.
         }
     }, [timeout]);
 
