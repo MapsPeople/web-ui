@@ -878,6 +878,10 @@ export namespace Components {
          */
         "idAttribute": string;
         /**
+          * The language used when retrieving Google Places or Mapbox autocomplete suggestions.
+         */
+        "language": string;
+        /**
           * If searching should include Mapbox autocomplete suggestions.
          */
         "mapbox": boolean;
@@ -2212,6 +2216,10 @@ declare namespace LocalJSX {
           * Id for the input field.
          */
         "idAttribute"?: string;
+        /**
+          * The language used when retrieving Google Places or Mapbox autocomplete suggestions.
+         */
+        "language"?: string;
         /**
           * If searching should include Mapbox autocomplete suggestions.
          */

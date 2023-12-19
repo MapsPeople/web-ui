@@ -74,6 +74,11 @@ export class Search implements ComponentInterface {
     @Prop() mapbox: boolean = false;
 
     /**
+     * The language used when retrieving Google Places or Mapbox autocomplete suggestions.
+     */
+    @Prop() language: string = 'en';
+
+    /**
      * Which fields on MapsIndoors locations to search in. Comma separated string.
      */
     @Prop() miFields: string = 'name,description,aliases,categories,externalId';
@@ -306,7 +311,7 @@ export class Search implements ComponentInterface {
 
     /**
      * Make Google Places autocomplete suggestion request.
-     * 
+     *
      * @param {string} query
      * @return {Promise<any>}
      */
@@ -325,7 +330,8 @@ export class Search implements ComponentInterface {
 
         return new Promise((resolve) => {
             const params: google.maps.places.AutocompletionRequest = {
-                input: query
+                input: query,
+                language: this.language
             };
 
             if (this.gmCountryCode) {
@@ -359,7 +365,7 @@ export class Search implements ComponentInterface {
         if (this.mapbox && mapboxgl.accessToken) {
             if (query) {
                 return new Promise((resolve) => {
-                    let url = `https://api.mapbox.com/search/searchbox/v1/suggest?q=${query}&session_token=${this.sessionToken}&access_token=${mapboxgl.accessToken}`;
+                    let url = `https://api.mapbox.com/search/searchbox/v1/suggest?q=${query}&session_token=${this.sessionToken}&access_token=${mapboxgl.accessToken}&language=${this.language}`;
 
                     if (this.userPosition) {
                         url = url.concat(`&proximity=${this.userPosition}`);

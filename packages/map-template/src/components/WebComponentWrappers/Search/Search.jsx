@@ -104,7 +104,8 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
         mi-categories={category}
         disabled={disabled}
         mapbox={mapbox}
-        google={google} />
+        google={google}
+        language={language} />
 });
 
 export default SearchField;
