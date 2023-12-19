@@ -61,7 +61,11 @@ const en = {
     // Venue selector
     'Venues': 'Venues',
     'Select venue': 'Select venue',
-    'Current': 'Current'
+    'Current': 'Current',
+    // QR code dialog
+    'Scan QR code': 'Scan QR code',
+    'Scan the QR code to see the route on your phone': 'Scan the QR code to see the route on your phone',
+    'Done': 'Done'
 };
 
 export default en;

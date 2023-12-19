@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { useRecoilState, useRecoilValue } from 'recoil';
+import { useTranslation } from 'react-i18next';
 import './QRCodeDialog.scss';
 import showQRCodeDialogState from "../../atoms/showQRCodeDialogState";
 import primaryColorState from "../../atoms/primaryColorState";
@@ -16,6 +17,7 @@ import gmApiKeyState from "../../atoms/gmApiKeyState";
  *
  */
 function QRCodeDialog() {
+    const { t } = useTranslation();
     const [, setShowQRCodeDialog] = useRecoilState(showQRCodeDialogState);
     const elementRef = useRef()
 
@@ -84,9 +86,9 @@ function QRCodeDialog() {
     return (<>
         <div className="background"></div>
         <div className="qr-code">
-            <img alt="QR Code" className="qr-code__image" ref={elementRef} />
-            <p>Scan the QR code to see the route on your phone</p>
-            <button className="qr-code__button" style={{ background: primaryColorProp }} onClick={() => setShowQRCodeDialog(false)}>Done</button>
+            <img alt="" className="qr-code__image" ref={elementRef} />
+            <p>{t('Scan the QR code to see the route on your phone')}</p>
+            <button className="qr-code__button" style={{ background: primaryColorProp }} onClick={() => setShowQRCodeDialog(false)}>{t('Done')}</button>
         </div>
     </>
     )

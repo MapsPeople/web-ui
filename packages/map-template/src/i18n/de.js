@@ -61,7 +61,11 @@ const de = {
     // Venue selector
     'Venues': 'Standorte',
     'Select venue': 'Wähle Standort',
-    'Current': 'Aktuell'
+    'Current': 'Aktuell',
+    // QR code dialog
+    'Scan QR code': 'QR-Code scannen',
+    'Scan the QR code to see the route on your phone': 'Scannen Sie den QR-Code, um die Route auf Ihrem Smartphone anzuzeigen',
+    'Done': 'Schließen'
 };
 
 export default de;

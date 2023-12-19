@@ -314,7 +314,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                             <div className="directions__minutes">{totalTime && <mi-time translations={JSON.stringify({ days: t('d'), hours: t('h'), minutes: t('min') })} seconds={totalTime} />}</div>
                         </div>
                     </div>
-                    {kioskLocation && supportsUrlParameters && <button className='directions__qr-code' onClick={() => setShowQRCodeDialog(true)}><QRCode /> Scan QR code</button>}
+                    {kioskLocation && supportsUrlParameters && <button className='directions__qr-code' onClick={() => setShowQRCodeDialog(true)}><QRCode /> {t('Scan QR code')}</button>}
                 </div>
                 <hr></hr>
                 <RouteInstructions
