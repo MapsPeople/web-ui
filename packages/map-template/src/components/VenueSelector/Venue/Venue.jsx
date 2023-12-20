@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import './Venue.scss';
 
 /**
@@ -10,6 +11,7 @@ import './Venue.scss';
  * @returns
  */
 function Venue({ venue, isCurrent, onVenueClicked }) {
+    const { t } = useTranslation();
 
     const [style, setStyle] = useState({});
 
@@ -27,7 +29,7 @@ function Venue({ venue, isCurrent, onVenueClicked }) {
         <div className="venue__image" style={style}></div>
         <div className="venue__content">
             <div>{venue.venueInfo.name}</div>
-            {isCurrent && <div className="venue__current">Current</div>}
+            {isCurrent && <div className="venue__current">{t('Current')}</div>}
         </div>
     </button>
 }

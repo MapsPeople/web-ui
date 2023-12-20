@@ -15,6 +15,8 @@ import isLocationClickedState from '../../atoms/isLocationClickedState';
 import useMediaQuery from '../../hooks/useMediaQuery';
 import fitBoundsLocation from '../../helpers/fitBoundsLocation';
 import getDesktopPaddingLeft from '../../helpers/GetDesktopPaddingLeft';
+import languageState from '../../atoms/languageState';
+import { useTranslation } from 'react-i18next';
 import kioskLocationState from '../../atoms/kioskLocationState';
 import getDesktopPaddingBottom from '../../helpers/GetDesktopPaddingBottom';
 
@@ -28,6 +30,9 @@ import getDesktopPaddingBottom from '../../helpers/GetDesktopPaddingBottom';
  * @returns
  */
 function Search({ onSetSize }) {
+
+    const { t } = useTranslation();
+
     const searchRef = useRef();
 
     /** Referencing the search field */
@@ -61,6 +66,8 @@ function Search({ onSetSize }) {
     const [, setIsLocationClicked] = useRecoilState(isLocationClickedState);
 
     const [currentVenueId, setCurrentVenueId] = useRecoilState(currentVenueNameState);
+
+    const currentLanguage = useRecoilValue(languageState);
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
@@ -109,7 +116,7 @@ function Search({ onSetSize }) {
 
     /**
      * Communicate size change to parent component.
-     * 
+     *
      * @param {number} size
      */
     function setSize(size) {
@@ -162,7 +169,7 @@ function Search({ onSetSize }) {
 
     /**
      * Handle hovering over location.
-     * 
+     *
      * @param {object} location
      */
     function onMouseEnter(location) {
@@ -171,7 +178,7 @@ function Search({ onSetSize }) {
 
     /**
      * Handle locations clicked on the map.
-     * 
+     *
      * @param {object} location
      */
     function onLocationClicked(location) {
@@ -244,6 +251,17 @@ function Search({ onSetSize }) {
     }, [currentVenueId]);
 
     /*
+     * React on changes in the app language. Any existing category search needs to update with translated Locations.
+     */
+    useEffect(() => {
+        if (selectedCategory) {
+            window.mapsindoors.services.LocationsService.once('update_completed', () => {
+                searchFieldRef.current.triggerSearch();
+            });
+        }
+    }, [currentLanguage]);
+
+    /*
      * Handle location hover.
      */
     useEffect(() => {
@@ -260,7 +278,7 @@ function Search({ onSetSize }) {
             <SearchField
                 ref={searchFieldRef}
                 mapsindoors={true}
-                placeholder="Search by name, category, building..."
+                placeholder={t('Search by name, category, building...')}
                 results={locations => onResults(locations)}
                 clicked={() => searchFieldClicked()}
                 cleared={() => cleared()}
@@ -281,7 +299,7 @@ function Search({ onSetSize }) {
                             </mi-chip>
                         )}
                     </div>}
-                {showNotFoundMessage && <p className="search__error">Nothing was found</p>}
+                {showNotFoundMessage && <p className="search__error"> {t('Nothing was found')}</p>}
                 {searchResults.length > 0 &&
                     <div className="search__results">
                         {searchResults.map(location =>
