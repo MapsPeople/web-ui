@@ -2,6 +2,8 @@ import { useEffect, useRef } from 'react';
 import { useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
+import i18n from 'i18next';
+import initI18n from '../../i18n/initialize.js';
 import './MapTemplate.scss';
 import MIMap from "../Map/Map";
 import SplashScreen from '../SplashScreen/SplashScreen';
@@ -31,12 +33,14 @@ import gmMapIdState from '../../atoms/gmMapIdState';
 import bearingState from '../../atoms/bearingState';
 import pitchState from '../../atoms/pitchState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
+import languageState from '../../atoms/languageState.js';
 import Notification from '../WebComponentWrappers/Notification/Notification.jsx';
 import kioskLocationState from '../../atoms/kioskLocationState';
 import showQRCodeDialogState from '../../atoms/showQRCodeDialogState';
 import QRCodeDialog from '../QRCodeDialog/QRCodeDialog';
 import supportsUrlParametersState from '../../atoms/supportsUrlParametersState';
 
+// Define the Custom Elements from our components package.
 defineCustomElements();
 
 /**
@@ -60,9 +64,10 @@ defineCustomElements();
  * @param {string} [props.gmMapId] - The Google Maps Map ID associated with a specific map style or feature.
  * @param {boolean} [props.useMapProviderModule] - Set to true if the Map Template should take MapsIndoors solution modules into consideration when determining what map type to use.
  * @param {string} [props.kioskOriginLocationId] - If running the Map Template as a kiosk (upcoming feature), provide the Location ID that represents the location of the kiosk.
+ * @param {string} [props.language] - The language to show textual content in. Supported values are "en" for English, "da" for Danish, "de" for German and "fr" for French. If the prop is not set, the language of the browser will be used (if it is one of the four supported languages - otherwise it will default to English).
  * @param {boolean} [props.supportsUrlParameters] - Set to true if you want to support URL Parameters to configure the Map Template.
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, supportsUrlParameters }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters }) {
 
     const [, setApiKey] = useRecoilState(apiKeyState);
     const [, setGmApiKey] = useRecoilState(gmApiKeyState);
@@ -71,12 +76,13 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [venues, setVenues] = useRecoilState(venuesState);
     const [, setCurrentVenueName] = useRecoilState(currentVenueNameState);
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
-    const [, setCategories] = useRecoilState(categoriesState);
+    const [categories, setCategories] = useRecoilState(categoriesState);
     const [, setLocationId] = useRecoilState(locationIdState);
     const [, setPrimaryColor] = useRecoilState(primaryColorState);
     const [, setLogo] = useRecoilState(logoState);
     const [, setGmMapId] = useRecoilState(gmMapIdState);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
+    const [currentLanguage, setCurrentLanguage] = useRecoilState(languageState);
     const [, setKioskLocation] = useRecoilState(kioskLocationState);
     const [, setSupportsUrlParameters] = useRecoilState(supportsUrlParametersState);
 
@@ -130,7 +136,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             const miSdkApiTag = document.createElement('script');
             miSdkApiTag.setAttribute('type', 'text/javascript');
-            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.26.3/mapsindoors-4.26.3.js.gz');
+            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.26.4/mapsindoors-4.26.4.js.gz');
             document.body.appendChild(miSdkApiTag);
             miSdkApiTag.onload = () => {
                 resolve();
@@ -145,7 +151,51 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         initializeMapsIndoorsSDK().then(() => {
             setMapsindoorsSDKAvailable(true);
         });
-    }, [])
+    }, []);
+
+    /*
+     * React on changes in the language prop.
+     * If it is undefined, try to use the browser language. It will fall back to English if the language is not supported.
+     */
+    useEffect(() => {
+        if (mapsindoorsSDKAvailable) {
+            const languageToUse = language ? language : navigator.language;
+
+            // Set the language on the MapsIndoors SDK in order to get eg. Mapbox and Google directions in that language.
+            window.mapsindoors.MapsIndoors.setLanguage(languageToUse);
+
+            // If relevant, fetch venues, categories and the current location again to get them in the new language
+            window.mapsindoors.services.LocationsService.once('update_completed', () => {
+                if (categories.length > 0) {
+                    getVenueCategories(venue);
+                }
+
+                if (venues.length > 0) {
+                    window.mapsindoors.services.VenuesService.getVenues().then(venuesResult => {
+                        venuesResult = venuesResult.map(venue => {
+                            venue.image = appConfig.venueImages[venue.name.toLowerCase()];
+                            return venue;
+                        });
+                        setVenues(venuesResult);
+                    });
+                }
+
+                if (currentLocation) {
+                    window.mapsindoors.services.LocationsService.getLocation(currentLocation.id).then(location => setCurrentLocation(location));
+                }
+            });
+
+            if (!currentLanguage) {
+                // Initialize i18n instance that is used to assist translating in the React components.
+                initI18n(languageToUse);
+            } else {
+                // Change the already set language
+                i18n.changeLanguage(languageToUse);
+            }
+
+            setCurrentLanguage(languageToUse);
+        }
+    }, [language, mapsindoorsSDKAvailable]);
 
     /**
      * React on changes in the MapsIndoors API key by fetching the required data.

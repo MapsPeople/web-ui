@@ -24,6 +24,7 @@ import defaultLogo from "../../assets/logo.svg";
  * @param {string} [props.gmMapId] - The Google Maps Map ID associated with a specific map style or feature.
  * @param {boolean} [props.useMapProviderModule] - Set to true if the Map Template should take MapsIndoors solution modules into consideration when determining what map type to use.
  * @param {string} [props.kioskOriginLocationId] - If running the Map Template as a kiosk (upcoming feature), provide the Location ID that represents the location of the kiosk.
+ * @param {string} [props.language] - The language to show textual content in. Supported values are "en" for English, "da" for Danish, "de" for German and "fr" for French. If the prop is not set, the language of the browser will be used (if it is one of the four supported languages - otherwise it will default to English).
  */
 function MapsIndoorsMap(props) {
 
@@ -64,6 +65,7 @@ function MapsIndoorsMap(props) {
         const gmMapIdQueryParameter = queryStringParams.get('gmMapId');
         const useMapProviderModuleParameter = getBooleanQueryParameter(queryStringParams.get('useMapProviderModule'));
         const kioskOriginLocationId = queryStringParams.get('kioskOriginLocationId');
+        const languageQueryParameter = queryStringParams.get('language');
 
         setMapTemplateProps({
             apiKey: props.supportsUrlParameters && apiKeyQueryParameter ? apiKeyQueryParameter : (props.apiKey || defaultProps.apiKey),
@@ -84,6 +86,7 @@ function MapsIndoorsMap(props) {
             gmMapId: props.supportsUrlParameters && gmMapIdQueryParameter ? gmMapIdQueryParameter : props.gmMapId,
             useMapProviderModule: props.supportsUrlParameters && useMapProviderModuleParameter ? useMapProviderModuleParameter : (props.useMapProviderModule || defaultProps.useMapProviderModule),
             kioskOriginLocationId: props.supportsUrlParameters && kioskOriginLocationId ? kioskOriginLocationId : props.kioskOriginLocationId,
+            language: props.supportsUrlParameters && languageQueryParameter ? languageQueryParameter : props.language,
             supportsUrlParameters: props.supportsUrlParameters,
         });
     }, [props]);
