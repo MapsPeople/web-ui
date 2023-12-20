@@ -191,7 +191,9 @@ function Search({ onSetSize }) {
             mapsIndoorsInstance.setFloor(locationFloor);
         }
 
-        fitBoundsLocation(location, mapsIndoorsInstance, getBottomPadding(), getLeftPadding());
+        Promise.all(getBottomPadding(), getLeftPadding()).then(([bottomPadding, leftPadding]) => {
+            fitBoundsLocation(location, mapsIndoorsInstance, bottomPadding, leftPadding);
+        });
     }
 
     /**
@@ -199,31 +201,35 @@ function Search({ onSetSize }) {
      * Calculate all cases depending on the kioskLocation id prop as well.
      */
     function getBottomPadding() {
-        if (isDesktop) {
-            if (kioskLocation) {
-                return getDesktopPaddingBottom();
+        return new Promise((resolve) => {
+            if (isDesktop) {
+                if (kioskLocation) {
+                    return getDesktopPaddingBottom();
+                } else {
+                    resolve(0);
+                }
             } else {
-                return 0;
+                resolve(200);
             }
-        } else {
-            return 200;
-        }
+        });
     }
 
     /**
-     * Get left padding when selecting a location. 
-     * Calculate all cases depending on the kioskLocation id prop as well. 
+     * Get left padding when selecting a location.
+     * Calculate all cases depending on the kioskLocation id prop as well.
      */
     function getLeftPadding() {
-        if (isDesktop) {
-            if (kioskLocation) {
-                return 0;
+        return new Promise((resolve) => {
+            if (isDesktop) {
+                if (kioskLocation) {
+                    resolve(0);
+                } else {
+                    return getDesktopPaddingLeft();
+                }
             } else {
-                return getDesktopPaddingLeft();
+                resolve(0);
             }
-        } else {
-            return 0;
-        }
+        });
     }
 
     /*

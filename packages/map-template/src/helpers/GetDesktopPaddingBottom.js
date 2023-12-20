@@ -1,9 +1,27 @@
 /**
  * Get bottom padding on desktop.
+ * Returns a promise with the padding in pixels.
+ *
+ * @returns {Promise}
  */
 export default function getDesktopPaddingBottom() {
-    const sidebar = document.querySelector('.modal--open');
-    const mapContainer = document.querySelector('.mapsindoors-map');
-    // Subtract the top padding from the height of the map container element.
-    return mapContainer.offsetHeight - sidebar?.offsetTop;
+    return new Promise(resolve => {
+        const sidebar = document.querySelector('.modal--open');
+        const mapContainer = document.querySelector('.mapsindoors-map');
+
+        // If there is no sidebar element (yet), setup a MutationObserver that listens for the appearance of it.
+        if (!sidebar) {
+            const observer = new MutationObserver(() => {
+                const sidebar = document.querySelector('.modal--open');
+                if (sidebar) {
+                    observer.disconnect();
+                    resolve(mapContainer.offsetHeight - sidebar?.offsetTop); // Subtract the top padding from the height of the map container element.
+                }
+            });
+
+            observer.observe(document, { attributes: false, childList: true, characterData: false, subtree: true });
+        } else {
+            resolve(mapContainer.offsetHeight - sidebar?.offsetTop); // Subtract the top padding from the height of the map container element.
+        }
+    });
 }
