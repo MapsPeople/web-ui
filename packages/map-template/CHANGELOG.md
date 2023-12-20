@@ -359,3 +359,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Closing button not being clickable on the Directions page.
 - Resizing of the sheet/modal when no categories are set.
+
