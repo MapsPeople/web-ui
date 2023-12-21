@@ -3,6 +3,7 @@ import { useRecoilValue } from 'recoil';
 
 import { calculateBounds } from '../helpers/CalculateBounds';
 import getDesktopPaddingBottom from '../helpers/GetDesktopPaddingBottom';
+import { mapTypes } from '../constants/mapTypes';
 
 // Recoil atoms
 import bearingState from '../atoms/bearingState';
@@ -10,12 +11,15 @@ import currentVenueNameState from '../atoms/currentVenueNameState';
 import kioskOriginLocationIdState from '../atoms/kioskOriginLocationIdState';
 import locationIdState from '../atoms/locationIdState';
 import mapsIndoorsInstanceState from '../atoms/mapsIndoorsInstanceState';
+import mapTypeState from '../atoms/mapTypeState';
 import pitchState from '../atoms/pitchState';
 import startZoomLevelState from '../atoms/startZoomLevelState';
 import venuesState from '../atoms/venuesState';
 import useMediaQuery from './useMediaQuery';
 import getMobilePaddingBottom from '../helpers/GetMobilePaddingBottom';
 import getDesktopPaddingLeft from '../helpers/GetDesktopPaddingLeft';
+
+import { useInactive } from './useInactive';
 
 /**
  * TODO: Describe
@@ -25,15 +29,24 @@ const useMapPositionDeterminer = () => {
     const [venueOnMap, setVenueOnMap] = useState();
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
+    const isInactive = useInactive();
 
     const bearing = useRecoilValue(bearingState);
     const kioskOriginLocationId = useRecoilValue(kioskOriginLocationIdState);
     const locationId = useRecoilValue(locationIdState);
+    const mapType = useRecoilValue(mapTypeState);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const pitch = useRecoilValue(pitchState);
     const startZoomLevel = useRecoilValue(startZoomLevelState);
     const venueName = useRecoilValue(currentVenueNameState);
     const venues = useRecoilValue(venuesState);
+
+    useEffect(() => {
+        if (isInactive) {
+            console.log('Please reset the map position');
+            // TODO: Reset map position. My vision is that when this changes to false, the big useEffect shall run. But how?
+        }
+    }, [isInactive]);
 
     /*
      * Based on the combination of the states for venueName, locationId & kioskOriginLocationId,
@@ -56,7 +69,7 @@ const useMapPositionDeterminer = () => {
                             setVenueOnMap(venueToShow);
                             // TODO: Determine map type and implement a googleMapsPanner
                             // TODO: What about mobile?
-                            mapboxPanner(kioskLocation.geometry, mapsIndoorsInstance, desktopPaddingBottom, 0, startZoomLevel, pitch, bearing);
+                            goTo(mapType, kioskLocation.geometry, mapsIndoorsInstance, desktopPaddingBottom, 0, startZoomLevel, pitch, bearing);
                         });
                     }
                 });
@@ -73,7 +86,7 @@ const useMapPositionDeterminer = () => {
                             setVenueOnMap(venueToShow);
                             // TODO: Determine map type and implement a googleMapsPanner
                             // TODO: What about mobile?
-                            mapboxPanner(location.geometry, mapsIndoorsInstance, isDesktop ? 0 : getMobilePaddingBottom(), isDesktop ? desktopPaddingLeft : 0, startZoomLevel, pitch, bearing);
+                            goTo(mapType, location.geometry, mapsIndoorsInstance, isDesktop ? 0 : getMobilePaddingBottom(), isDesktop ? desktopPaddingLeft : 0, startZoomLevel, pitch, bearing);
                         });
 
 
@@ -86,7 +99,7 @@ const useMapPositionDeterminer = () => {
                     setVenueOnMap(venueToShow);
                     // TODO: Determine map type and implement a googleMapsPanner
                     // TODO: What about mobile?
-                    mapboxPanner(venueToShow.geometry, mapsIndoorsInstance, desktopPaddingBottom, 0, startZoomLevel, pitch, bearing);
+                    goTo(mapType, venueToShow.geometry, mapsIndoorsInstance, desktopPaddingBottom, 0, startZoomLevel, pitch, bearing);
                 });
             }
 
@@ -148,6 +161,14 @@ function getVenueToShow(preferredVenueName, venues) {
     return [...venues].sort(function (a, b) { return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0); })[0];
 }
 
+function goTo(mapType, geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLevel, pitch, bearing) {
+    if (mapType === mapTypes.Google) {
+        googleMapsGoTo(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLevel, pitch, bearing)
+    } else if (mapType === mapTypes.Mapbox) {
+        mapboxGoto(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLevel, pitch, bearing);
+    }
+}
+
 
 /**
  *
@@ -159,10 +180,13 @@ function getVenueToShow(preferredVenueName, venues) {
  * @param {number|undefined} pitch
  * @param {number|undefined} bearing
  */
-function mapboxPanner(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLevel, pitch, bearing) {
+function mapboxGoto(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLevel, pitch, bearing) {
     const mapboxMap = mapsIndoorsInstance.getMap();
     const bounds = calculateBounds(geometry);
 
+    // We use the Mapbox fitBounds instead of MapsIndoors MapView fitBounds since we
+    // need to be able to use pitch and bearing in one go,
+    // and we want to turn of panning animation.
     mapboxMap.fitBounds(bounds, {
         pitch: pitch || 0,
         bearing: bearing || 0,
@@ -174,3 +198,26 @@ function mapboxPanner(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft,
         mapsIndoorsInstance.setZoom(zoomLevel);
     }
 };
+
+function googleMapsGoTo(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLevel, pitch, bearing) {
+    const locationBbox = calculateBounds(geometry)
+    let coordinates = { west: locationBbox[0], south: locationBbox[1], east: locationBbox[2], north: locationBbox[3] }
+    // Fit map to the bounds of the location coordinates, and add padding.
+    // There is no way to combine this call with bearing and pitch, so those will be called consecutively.
+    mapsIndoorsInstance.getMapView().fitBounds(coordinates, { top: 0, right: 0, bottom: paddingBottom, left: paddingLeft });
+
+    // Set the map zoom level if the property is provided.
+    if (zoomLevel) {
+        mapsIndoorsInstance.setZoom(parseInt(zoomLevel));
+    }
+
+    // Set the map pitch if the property is provided.
+    if (!isNaN(parseInt(pitch))) {
+        mapsIndoorsInstance.getMapView().tilt(parseInt(pitch));
+    }
+
+    // Set the map bearing if the property is provided.
+    if (!isNaN(parseInt(bearing))) {
+        mapsIndoorsInstance.getMapView().rotate(parseInt(bearing));
+    }
+}
