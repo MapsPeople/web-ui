@@ -41,6 +41,8 @@ const useMapPositionDeterminer = () => {
     const venueName = useRecoilValue(currentVenueNameState);
     const venues = useRecoilValue(venuesState);
 
+    const [kioskLocationDisplayRuleWasChanged, setKioskLocationDisplayRuleWasChanged] = useState(false);
+
     useEffect(() => {
         if (isInactive) {
             console.log('Please reset the map position');
@@ -108,15 +110,19 @@ const useMapPositionDeterminer = () => {
             }
 
             function setKioskDisplayRule(kioskLocation) {
+                if (kioskLocationDisplayRuleWasChanged) return; // Don't set Display Rule more than once.
+
                 const displayRule = mapsIndoorsInstance.getDisplayRule(kioskLocation);
 
                 displayRule.visible = true;
-                displayRule.iconSize = { width: displayRule.iconSize.width * 2, height: displayRule.iconSize.height * 2 }; // TODO: The icon is doubled every time the useeffect runs. Fix that.
+                displayRule.iconSize = { width: displayRule.iconSize.width * 2, height: displayRule.iconSize.height * 2 };
                 displayRule.iconVisible = true;
                 displayRule.zoomFrom = 0;
                 displayRule.zoomTo = 999;
                 displayRule.clickable = false;
                 mapsIndoorsInstance.setDisplayRule(kioskLocation.id, displayRule);
+
+                setKioskLocationDisplayRuleWasChanged(true);
             }
         }
     }, [mapsIndoorsInstance, venueName, venues, locationId, kioskOriginLocationId, pitch, bearing, startZoomLevel])
