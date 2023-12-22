@@ -198,7 +198,7 @@ function Search({ onSetSize }) {
             mapsIndoorsInstance.setFloor(locationFloor);
         }
 
-        Promise.all(getBottomPadding(), getLeftPadding()).then(([bottomPadding, leftPadding]) => {
+        Promise.all([getBottomPadding(), getLeftPadding()]).then(([bottomPadding, leftPadding]) => {
             fitBoundsLocation(location, mapsIndoorsInstance, bottomPadding, leftPadding);
         });
     }

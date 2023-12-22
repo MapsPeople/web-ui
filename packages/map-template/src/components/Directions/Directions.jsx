@@ -84,7 +84,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
             directionsRenderer?.setRoute(null);
             directionsRenderer = null;
 
-            Promise.all(getBottomPadding(padding, getLeftPadding(padding))).then(([bottomPadding, leftPadding]) => {
+            Promise.all([getBottomPadding(padding), getLeftPadding(padding)]).then(([bottomPadding, leftPadding]) => {
                 directionsRenderer = new window.mapsindoors.directions.DirectionsRenderer({
                     mapsIndoors: mapsIndoorsInstance,
                     fitBoundsPadding: {
