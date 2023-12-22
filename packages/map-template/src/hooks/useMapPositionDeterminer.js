@@ -23,9 +23,13 @@ import { useInactive } from './useInactive';
 
 /**
  * TODO: Describe
+ *
+ * Returns two state variables:
+ * - mapPositionKnown is set to true when map position is investigating. This is used to instruct the Map Template to start showing UI elements.
+ * - venueOnMap is populated with the venue shown on map. This is used to instruct the Map Template to hide the spinner, since the map is now ready to be shown to the user.
  */
 const useMapPositionDeterminer = () => {
-    const [mapAlmostReady, setMapAlmostReady] = useState(false);
+    const [mapPositionKnown, setMapPositionKnown] = useState(false);
     const [venueOnMap, setVenueOnMap] = useState();
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
@@ -61,7 +65,7 @@ const useMapPositionDeterminer = () => {
                 // for the bottom-centered modal.
 
                 const venueToShow = getVenueToShow(venueName, venues);
-                setMapAlmostReady(true);
+                setMapPositionKnown(true);
 
                 window.mapsindoors.services.LocationsService.getLocation(kioskOriginLocationId).then(kioskLocation => {
                     if (kioskLocation) {
@@ -80,7 +84,7 @@ const useMapPositionDeterminer = () => {
                 // When a LocationID is set, the map is centered fitted to the bounds of the given Location with some padding,
                 // either bottom (on mobile to accommodate for the bottom sheet) or to the left (on desktop to accommodate for the modal).
                 const venueToShow = getVenueToShow(venueName, venues);
-                setMapAlmostReady(true);
+                setMapPositionKnown(true);
                 window.mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
                     if (location) {
                         // Set the floor to the one that the Location belongs to.
@@ -103,7 +107,7 @@ const useMapPositionDeterminer = () => {
             } else if (venueName) {
                 // When showing a venue, the map is fitted to the bounds of the Venue with no padding.
                 const venueToShow = getVenueToShow(venueName, venues);
-                setMapAlmostReady(true);
+                setMapPositionKnown(true);
 
                 setVenueOnMap(venueToShow);
                 goToGeometry(mapType, venueToShow.geometry, mapsIndoorsInstance, 0, 0, startZoomLevel, pitch, bearing);
@@ -127,7 +131,7 @@ const useMapPositionDeterminer = () => {
         }
     }, [mapsIndoorsInstance, venueName, venues, locationId, kioskOriginLocationId, pitch, bearing, startZoomLevel])
 
-    return [mapAlmostReady, venueOnMap];
+    return [mapPositionKnown, venueOnMap];
 };
 
 export default useMapPositionDeterminer;
