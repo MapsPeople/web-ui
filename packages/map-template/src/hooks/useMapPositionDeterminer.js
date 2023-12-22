@@ -50,11 +50,14 @@ const useMapPositionDeterminer = () => {
 
     /*
      * Based on the combination of the states for venueName, locationId & kioskOriginLocationId,
-    * determine where to make the pan go to.
+     * determine what to make the map go to.
      */
     useEffect(() =>  {
         if (mapsIndoorsInstance && venues.length) {
             if (kioskOriginLocationId && isDesktop) {
+                // When in Kiosk mode (which can only happen on desktop), the map is fitted to the bounds of the given Location with some bottom padding to accommodate
+                // for the bottom-centered modal.
+
                 const venueToShow = getVenueToShow(venueName, venues);
                 setMapAlmostReady(true);
 
@@ -67,13 +70,13 @@ const useMapPositionDeterminer = () => {
 
                         getDesktopPaddingBottom().then(desktopPaddingBottom => {
                             setVenueOnMap(venueToShow);
-                            // TODO: Determine map type and implement a googleMapsPanner
-                            // TODO: What about mobile?
-                            goTo(mapType, kioskLocation.geometry, mapsIndoorsInstance, desktopPaddingBottom, 0, startZoomLevel, pitch, bearing);
+                            goToGeometry(mapType, kioskLocation.geometry, mapsIndoorsInstance, desktopPaddingBottom, 0, startZoomLevel, pitch, bearing);
                         });
                     }
                 });
             } else if (locationId) {
+                // When a LocationID is set, the map is centered fitted to the bounds of the given Location with some padding,
+                // either bottom (on mobile to accommodate for the bottom sheet) or to the left (on desktop to accommodate for the modal).
                 const venueToShow = getVenueToShow(venueName, venues);
                 setMapAlmostReady(true);
                 window.mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
@@ -82,25 +85,26 @@ const useMapPositionDeterminer = () => {
                         const locationFloor = location.properties.floor;
                         mapsIndoorsInstance.setFloor(locationFloor);
 
-                        getDesktopPaddingLeft().then(desktopPaddingLeft => {
-                            setVenueOnMap(venueToShow);
-                            // TODO: Determine map type and implement a googleMapsPanner
-                            // TODO: What about mobile?
-                            goTo(mapType, location.geometry, mapsIndoorsInstance, isDesktop ? 0 : getMobilePaddingBottom(), isDesktop ? desktopPaddingLeft : 0, startZoomLevel, pitch, bearing);
-                        });
-
-
+                        if (isDesktop) {
+                            getDesktopPaddingLeft().then(desktopPaddingLeft => {
+                                setVenueOnMap(venueToShow);
+                                goToGeometry(mapType, location.geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, startZoomLevel, pitch, bearing);
+                            });
+                        } else {
+                            getMobilePaddingBottom().then(mobilePaddingBottom => {
+                                setVenueOnMap(venueToShow);
+                                goToGeometry(mapType, location.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, startZoomLevel, pitch, bearing);
+                            });
+                        }
                     }
                 });
             } else if (venueName) {
+                // When showing a venue, the map is fitted to the bounds of the Venue with no padding.
                 const venueToShow = getVenueToShow(venueName, venues);
                 setMapAlmostReady(true);
-                getDesktopPaddingBottom().then(desktopPaddingBottom => {
-                    setVenueOnMap(venueToShow);
-                    // TODO: Determine map type and implement a googleMapsPanner
-                    // TODO: What about mobile?
-                    goTo(mapType, venueToShow.geometry, mapsIndoorsInstance, desktopPaddingBottom, 0, startZoomLevel, pitch, bearing);
-                });
+
+                setVenueOnMap(venueToShow);
+                goToGeometry(mapType, venueToShow.geometry, mapsIndoorsInstance, 0, 0, startZoomLevel, pitch, bearing);
             }
 
             function setKioskDisplayRule(kioskLocation) {
@@ -161,18 +165,27 @@ function getVenueToShow(preferredVenueName, venues) {
     return [...venues].sort(function (a, b) { return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0); })[0];
 }
 
-function goTo(mapType, geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLevel, pitch, bearing) {
+function goToGeometry(mapType, geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLevel, pitch, bearing) {
+    // Make sure that the given geometry is converted into a bbox.
+    let bbox;
+    if (geometry.coordinates && geometry.type) {
+        // This looks like GeoJSON.
+        bbox = calculateBounds(geometry);
+    } else if (geometry.west && geometry.south) {
+        // This looks like bounds.
+        bbox = [geometry.west, geometry.south, geometry.east, geometry.north];
+    }
+
     if (mapType === mapTypes.Google) {
-        googleMapsGoTo(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLevel, pitch, bearing)
+        googleMapsGoToBBox(bbox, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLevel, pitch, bearing)
     } else if (mapType === mapTypes.Mapbox) {
-        mapboxGoto(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLevel, pitch, bearing);
+        mapboxGotoBBox(bbox, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLevel, pitch, bearing);
     }
 }
 
-
 /**
  *
- * @param {GeoJSON.Geometry} geometry
+ * @param {bbox} bbox
  * @param {object} mapsIndoorsInstance
  * @param {number} paddingBottom
  * @param {number} paddingLeft
@@ -180,14 +193,13 @@ function goTo(mapType, geometry, mapsIndoorsInstance, paddingBottom, paddingLeft
  * @param {number|undefined} pitch
  * @param {number|undefined} bearing
  */
-function mapboxGoto(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLevel, pitch, bearing) {
+function mapboxGotoBBox(bbox, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLevel, pitch, bearing) {
     const mapboxMap = mapsIndoorsInstance.getMap();
-    const bounds = calculateBounds(geometry);
 
     // We use the Mapbox fitBounds instead of MapsIndoors MapView fitBounds since we
     // need to be able to use pitch and bearing in one go,
     // and we want to turn of panning animation.
-    mapboxMap.fitBounds(bounds, {
+    mapboxMap.fitBounds(bbox, {
         pitch: pitch || 0,
         bearing: bearing || 0,
         animate: false,
@@ -199,9 +211,18 @@ function mapboxGoto(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, z
     }
 };
 
-function googleMapsGoTo(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLevel, pitch, bearing) {
-    const locationBbox = calculateBounds(geometry)
-    let coordinates = { west: locationBbox[0], south: locationBbox[1], east: locationBbox[2], north: locationBbox[3] }
+/**
+ *
+ * @param {bbox} bbox
+ * @param {object} mapsIndoorsInstance
+ * @param {number} paddingBottom
+ * @param {number} paddingLeft
+ * @param {number|undefined} zoomLevel
+ * @param {number|undefined} pitch
+ * @param {number|undefined} bearing
+ */
+function googleMapsGoToBBox(bbox, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLevel, pitch, bearing) {
+    let coordinates = { west: bbox[0], south: bbox[1], east: bbox[2], north: bbox[3] }
     // Fit map to the bounds of the location coordinates, and add padding.
     // There is no way to combine this call with bearing and pitch, so those will be called consecutively.
     mapsIndoorsInstance.getMapView().fitBounds(coordinates, { top: 0, right: 0, bottom: paddingBottom, left: paddingLeft });
