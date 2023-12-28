@@ -47,10 +47,12 @@ const useMapPositionDeterminer = () => {
 
     const [kioskLocationDisplayRuleWasChanged, setKioskLocationDisplayRuleWasChanged] = useState(false);
 
+    /**
+     * If the app is inactive, run code to reset to initial map position.
+     */
     useEffect(() => {
         if (isInactive) {
-            console.log('Please reset the map position');
-            // TODO: Reset map position. My vision is that when this changes to false, the big useEffect shall run. But how?
+            determineMapPosition();
         }
     }, [isInactive]);
 
@@ -59,6 +61,10 @@ const useMapPositionDeterminer = () => {
      * determine what to make the map go to.
      */
     useEffect(() =>  {
+        determineMapPosition();
+    }, [mapsIndoorsInstance, venueName, venues, locationId, kioskOriginLocationId, pitch, bearing, startZoomLevel]);
+
+    function determineMapPosition() {
         if (mapsIndoorsInstance && venues.length) {
             if (kioskOriginLocationId && isDesktop) {
                 // When in Kiosk mode (which can only happen on desktop), the map is fitted to the bounds of the given Location with some bottom padding to accommodate
@@ -129,7 +135,7 @@ const useMapPositionDeterminer = () => {
                 setKioskLocationDisplayRuleWasChanged(true);
             }
         }
-    }, [mapsIndoorsInstance, venueName, venues, locationId, kioskOriginLocationId, pitch, bearing, startZoomLevel])
+    }
 
     return [mapPositionKnown, venueOnMap];
 };
