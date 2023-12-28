@@ -72,7 +72,6 @@ function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule }) {
     const isLocationClicked = useRecoilValue(isLocationClickedState);
     const [, setErrorMessage] = useRecoilState(notificationMessageState);
     const kioskLocation = useRecoilValue(kioskLocationState);
-    const [, setInitialMapPosition] = useRecoilState(initialMapPositionState);
 
     const isMapReady = useRecoilValue(isMapReadyState);
 
@@ -231,23 +230,6 @@ function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule }) {
     }
 
     /**
-     * On the very first floor change, store the floor and zoom level so the timeout reset can use it later.
-     */
-    const onFirstFloorChanged = (miInstance) => {
-        const currentZooomLevel = miInstance.getZoom();
-        const currentFloor = miInstance.getFloor();
-        if (currentZooomLevel && currentFloor) {
-            setInitialMapPosition(currentValue => {
-                return {
-                    ...currentValue,
-                    zoom: miInstance.getZoom(),
-                    floor: miInstance.getFloor()
-                };
-            });
-        }
-    }
-
-    /**
      * Replace the default tile URL style to the incoming tile style.
      *
      * @param {object} miInstance
@@ -277,7 +259,6 @@ function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule }) {
         miInstance.on('click', location => onLocationClick(location));
         miInstance.once('building_changed', () => onBuildingChanged(miInstance))
         miInstance.on('floor_changed', () => onTileStyleChanged(miInstance));
-        miInstance.once('floor_changed', () => onFirstFloorChanged(miInstance));
 
         setMapsIndoorsInstance(miInstance);
 
