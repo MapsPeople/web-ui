@@ -122,7 +122,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
         return new Promise((resolve) => {
             if (isDesktop) {
                 if (kioskLocation) {
-                    return getDesktopPaddingBottom();
+                    getDesktopPaddingBottom().then(result => resolve(result));
                 } else {
                     resolve(padding);
                 }
@@ -143,7 +143,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                 if (kioskLocation) {
                     resolve(padding);
                 } else {
-                    return getDesktopPaddingLeft();
+                    getDesktopPaddingLeft().then(result => resolve(result));
                 }
             } else {
                 resolve(padding);

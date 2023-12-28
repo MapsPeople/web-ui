@@ -211,7 +211,7 @@ function Search({ onSetSize }) {
         return new Promise((resolve) => {
             if (isDesktop) {
                 if (kioskLocation) {
-                    return getDesktopPaddingBottom();
+                    getDesktopPaddingBottom().then(padding => resolve(padding));
                 } else {
                     resolve(0);
                 }
@@ -231,7 +231,7 @@ function Search({ onSetSize }) {
                 if (kioskLocation) {
                     resolve(0);
                 } else {
-                    return getDesktopPaddingLeft();
+                    getDesktopPaddingLeft().then(padding => resolve(padding));
                 }
             } else {
                 resolve(0);
