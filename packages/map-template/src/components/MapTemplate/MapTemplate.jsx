@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react';
+import { Fragment, useEffect, useRef } from 'react';
 import { useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
 import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
 import i18n from 'i18next';
 import initI18n from '../../i18n/initialize.js';
@@ -19,6 +19,7 @@ import venuesState from '../../atoms/venuesState';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
 import solutionState from '../../atoms/solutionState.js';
 import { useAppHistory } from '../../hooks/useAppHistory';
+import { useReset } from '../../hooks/useReset.js';
 import useMediaQuery from '../../hooks/useMediaQuery';
 import Sidebar from '../Sidebar/Sidebar';
 import useLocationForWayfinding from '../../hooks/useLocationForWayfinding';
@@ -117,7 +118,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
     const isMobile = useMediaQuery('(max-width: 991px)');
-
+    const resetState = useReset();
     const [pushAppView, goBack, currentAppView, currentAppViewPayload, appStates] = useAppHistory();
 
     // Declare the reference to the disabled locations.
@@ -128,11 +129,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     const showQRCodeDialog = useRecoilValue(showQRCodeDialogState);
 
-    useEffect(() => {
-        if (isInactive) {
-            // TODO: Reset map position, state and UI.
-        }
-    }, [isInactive]);
+    // The reset count is used to add a new key to the sidebar or bottomsheet, forcing it to re-render from scratch when resetting the Map Template.
+    const [resetCount, setResetCount] = useState(0);
 
     /**
      * Ensure that MapsIndoors Web SDK is available.
@@ -154,6 +152,16 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             }
         });
     }
+
+    /*
+     * If the app is inactive, run code to reset UI and state.
+     */
+    useEffect(() => {
+        if (isInactive) {
+            resetState();
+            setResetCount(curr => curr + 1); // will force a re-render of modal and sidebar.
+        }
+    }, [isInactive]);
 
     /**
      * Wait for the MapsIndoors JS SDK to be initialized, then set the mapsindoorsSDKAvailable state to true.
@@ -514,8 +522,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             active={currentAppView === appStates.VENUE_SELECTOR}
         />}
         {showQRCodeDialog && <QRCodeDialog />}
-        {isMapReady &&
-            <>
+        {isMapPositionKnown &&
+            <Fragment key={resetCount}>
                 {isDesktop &&
                     <Sidebar
                         directionsFromLocation={directionsFromLocation}
