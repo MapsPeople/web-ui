@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 import { calculateBounds } from '../helpers/CalculateBounds';
 import getDesktopPaddingBottom from '../helpers/GetDesktopPaddingBottom';
@@ -20,6 +20,7 @@ import getMobilePaddingBottom from '../helpers/GetMobilePaddingBottom';
 import getDesktopPaddingLeft from '../helpers/GetDesktopPaddingLeft';
 
 import { useInactive } from './useInactive';
+import venueState from '../atoms/venueState';
 
 const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
 
@@ -44,7 +45,8 @@ const useMapBoundsDeterminer = () => {
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const pitch = useRecoilValue(pitchState);
     const startZoomLevel = useRecoilValue(startZoomLevelState);
-    const venueName = useRecoilValue(currentVenueNameState);
+    const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
+    const venue = useRecoilValue(venueState);
     const venues = useRecoilValue(venuesState);
 
     const [kioskLocationDisplayRuleWasChanged, setKioskLocationDisplayRuleWasChanged] = useState(false);
@@ -54,21 +56,31 @@ const useMapBoundsDeterminer = () => {
      */
     useEffect(() => {
         if (isInactive) {
-            determineMapBounds();
+            determineMapBounds(venue);
         }
     }, [isInactive]);
 
     /*
-     * Based on the combination of the states for venueName, locationId & kioskOriginLocationId,
-     * determine what to make the map go to.
+     * When relevant state changes, run code to go to a location in the world.
      */
     useEffect(() =>  {
         determineMapBounds();
-    }, [mapsIndoorsInstance, venueName, venues, locationId, kioskOriginLocationId, pitch, bearing, startZoomLevel]);
+    }, [mapsIndoorsInstance, currentVenueName, venues, locationId, kioskOriginLocationId, pitch, bearing, startZoomLevel]);
 
-    function determineMapBounds() {
+
+    /**
+     * Based on the combination of the states for venueName, locationId & kioskOriginLocationId,
+     * determine what to make the map go to.
+     *
+     * @param {string} [forcedVenue] - If set, this venue will be used instead of the current venue.
+     */
+    function determineMapBounds(forcedVenue) {
         if (mapsIndoorsInstance && venues.length) {
-            const venueToShow = getVenueToShow(venueName, venues);
+            if (forcedVenue) {
+                setCurrentVenueName(forcedVenue);
+            }
+
+            const venueToShow = getVenueToShow(forcedVenue || currentVenueName, venues);
             setMapPositionKnown(true);
 
             if (kioskOriginLocationId && isDesktop) {
@@ -109,7 +121,7 @@ const useMapBoundsDeterminer = () => {
                         }
                     }
                 });
-            } else if (venueName) {
+            } else if (currentVenueName) {
                 // When showing a venue, the map is fitted to the bounds of the Venue with no padding.
                 setVenueOnMap(venueToShow);
                 goToGeometry(mapType, venueToShow.geometry, mapsIndoorsInstance, 0, 0, startZoomLevel, pitch, bearing);

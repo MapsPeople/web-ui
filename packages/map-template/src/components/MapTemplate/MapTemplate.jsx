@@ -43,6 +43,7 @@ import { useInactive } from '../../hooks/useInactive.js';
 import showQRCodeDialogState from '../../atoms/showQRCodeDialogState';
 import QRCodeDialog from '../QRCodeDialog/QRCodeDialog';
 import supportsUrlParametersState from '../../atoms/supportsUrlParametersState';
+import venueState from '../../atoms/venueState.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -79,6 +80,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setMapboxAccessToken] = useRecoilState(mapboxAccessTokenState);
     const [isMapReady, setMapReady] = useRecoilState(isMapReadyState);
     const [venues, setVenues] = useRecoilState(venuesState);
+    const [, setVenue] = useRecoilState(venueState);
     const [, setCurrentVenueName] = useRecoilState(currentVenueNameState);
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const [categories, setCategories] = useRecoilState(categoriesState);
@@ -346,6 +348,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the venue prop.
      */
     useEffect(() => {
+        setVenue(venue);
         setCurrentVenueName(venue);
     }, [venue]);
 
