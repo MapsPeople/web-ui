@@ -27,6 +27,7 @@ import locationIdState from '../../atoms/locationIdState';
 import mapboxAccessTokenState from '../../atoms/mapboxAccessTokenState';
 import filteredLocationsState from '../../atoms/filteredLocationsState';
 import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
+import kioskOriginLocationIdState from '../../atoms/kioskOriginLocationIdState.js';
 import startZoomLevelState from '../../atoms/startZoomLevelState';
 import primaryColorState from '../../atoms/primaryColorState';
 import logoState from '../../atoms/logoState';
@@ -88,6 +89,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const [currentLanguage, setCurrentLanguage] = useRecoilState(languageState);
     const [, setKioskLocation] = useRecoilState(kioskLocationState);
+    const [, setKioskOriginLocationId] = useRecoilState(kioskOriginLocationIdState);
     const [, setTimeoutValue] = useRecoilState(timeoutState);
     const isInactive = useInactive(); // Hook to detect if user is inactive. Used in combination with timeout prop to reset the Map Template to initial values after a specified time.
     const [, setSupportsUrlParameters] = useRecoilState(supportsUrlParametersState);
@@ -97,6 +99,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     const directionsFromLocation = useLocationForWayfinding(directionsFrom);
     const directionsToLocation = useLocationForWayfinding(directionsTo);
+
+    const [isMapPositionKnown, setIsMapPositionKnown] = useState(false);
 
     // The filtered locations by external id, if present.
     const [, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
@@ -408,8 +412,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
+            setKioskOriginLocationId(kioskOriginLocationId);
             if (kioskOriginLocationId) {
                 window.mapsindoors.services.LocationsService.getLocation(kioskOriginLocationId).then(kioskLocation => {
+                    setCurrentVenueName(kioskLocation.properties.venueId);
                     setKioskLocation(kioskLocation);
                 })
             } else {
@@ -542,11 +548,12 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                         appViews={appStates}
                     />
                 }
-            </>
+            </Fragment>
         }
         <MIMap
             useMapProviderModule={useMapProviderModule}
             onVenueChangedOnMap={(venue) => venueChangedOnMap(venue)}
+            onMapPositionKnown={() => setIsMapPositionKnown(true)}
             onLocationClick={(location) => locationClicked(location)}
         />
     </div>
