@@ -8,7 +8,6 @@ const useSetCurrentVenueName = () => {
     const [, setCurrentVenueName] = useRecoilState(currentVenueNameState);
 
     return (venueName) => {
-        console.log('hey do it man');
         window.localStorage.removeItem(localStorageKeyForVenue);
         setCurrentVenueName(venueName);
     };
