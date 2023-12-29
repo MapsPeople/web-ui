@@ -21,14 +21,16 @@ import getDesktopPaddingLeft from '../helpers/GetDesktopPaddingLeft';
 
 import { useInactive } from './useInactive';
 
+const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
+
 /**
- * TODO: Describe
+ * Determine where in the world to pan the map, based on the combination of venueName, locationId and kioskOriginLocationId.
  *
  * Returns two state variables:
  * - mapPositionKnown is set to true when map position is investigating. This is used to instruct the Map Template to start showing UI elements.
  * - venueOnMap is populated with the venue shown on map. This is used to instruct the Map Template to hide the spinner, since the map is now ready to be shown to the user.
  */
-const useMapPositionDeterminer = () => {
+const useMapBoundsDeterminer = () => {
     const [mapPositionKnown, setMapPositionKnown] = useState(false);
     const [venueOnMap, setVenueOnMap] = useState();
 
@@ -52,7 +54,7 @@ const useMapPositionDeterminer = () => {
      */
     useEffect(() => {
         if (isInactive) {
-            determineMapPosition();
+            determineMapBounds();
         }
     }, [isInactive]);
 
@@ -61,18 +63,17 @@ const useMapPositionDeterminer = () => {
      * determine what to make the map go to.
      */
     useEffect(() =>  {
-        determineMapPosition();
+        determineMapBounds();
     }, [mapsIndoorsInstance, venueName, venues, locationId, kioskOriginLocationId, pitch, bearing, startZoomLevel]);
 
-    function determineMapPosition() {
+    function determineMapBounds() {
         if (mapsIndoorsInstance && venues.length) {
+            const venueToShow = getVenueToShow(venueName, venues);
+            setMapPositionKnown(true);
+
             if (kioskOriginLocationId && isDesktop) {
                 // When in Kiosk mode (which can only happen on desktop), the map is fitted to the bounds of the given Location with some bottom padding to accommodate
                 // for the bottom-centered modal.
-
-                const venueToShow = getVenueToShow(venueName, venues);
-                setMapPositionKnown(true);
-
                 window.mapsindoors.services.LocationsService.getLocation(kioskOriginLocationId).then(kioskLocation => {
                     if (kioskLocation) {
                         // Set the floor to the one that the Location belongs to.
@@ -89,8 +90,6 @@ const useMapPositionDeterminer = () => {
             } else if (locationId) {
                 // When a LocationID is set, the map is centered fitted to the bounds of the given Location with some padding,
                 // either bottom (on mobile to accommodate for the bottom sheet) or to the left (on desktop to accommodate for the modal).
-                const venueToShow = getVenueToShow(venueName, venues);
-                setMapPositionKnown(true);
                 window.mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
                     if (location) {
                         // Set the floor to the one that the Location belongs to.
@@ -112,37 +111,37 @@ const useMapPositionDeterminer = () => {
                 });
             } else if (venueName) {
                 // When showing a venue, the map is fitted to the bounds of the Venue with no padding.
-                const venueToShow = getVenueToShow(venueName, venues);
-                setMapPositionKnown(true);
-
                 setVenueOnMap(venueToShow);
                 goToGeometry(mapType, venueToShow.geometry, mapsIndoorsInstance, 0, 0, startZoomLevel, pitch, bearing);
             }
-
-            function setKioskDisplayRule(kioskLocation) {
-                if (kioskLocationDisplayRuleWasChanged) return; // Don't set Display Rule more than once.
-
-                const displayRule = mapsIndoorsInstance.getDisplayRule(kioskLocation);
-
-                displayRule.visible = true;
-                displayRule.iconSize = { width: displayRule.iconSize.width * 2, height: displayRule.iconSize.height * 2 };
-                displayRule.iconVisible = true;
-                displayRule.zoomFrom = 0;
-                displayRule.zoomTo = 999;
-                displayRule.clickable = false;
-                mapsIndoorsInstance.setDisplayRule(kioskLocation.id, displayRule);
-
-                setKioskLocationDisplayRuleWasChanged(true);
-            }
         }
+    }
+
+    /**
+     * Override Display Rule for the Kiosk Location for better visibility.
+     *
+     * @param {object} kioskLocation
+     */
+    function setKioskDisplayRule(kioskLocation) {
+        if (kioskLocationDisplayRuleWasChanged) return; // Don't set Display Rule more than once.
+
+        const displayRule = mapsIndoorsInstance.getDisplayRule(kioskLocation);
+
+        displayRule.visible = true;
+        displayRule.iconSize = { width: displayRule.iconSize.width * 2, height: displayRule.iconSize.height * 2 };
+        displayRule.iconVisible = true;
+        displayRule.zoomFrom = 0;
+        displayRule.zoomTo = 999;
+        displayRule.clickable = false;
+        mapsIndoorsInstance.setDisplayRule(kioskLocation.id, displayRule);
+
+        setKioskLocationDisplayRuleWasChanged(true);
     }
 
     return [mapPositionKnown, venueOnMap];
 };
 
-export default useMapPositionDeterminer;
-
-const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
+export default useMapBoundsDeterminer;
 
 
 /**
@@ -181,6 +180,19 @@ function getVenueToShow(preferredVenueName, venues) {
     return [...venues].sort(function (a, b) { return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0); })[0];
 }
 
+
+/**
+ * Make the map go to specified geometry with optional padding, zoom level, pitch and bearing.
+ *
+ * @param {string} mapType
+ * @param {object} geometry
+ * @param {object} mapsIndoorsInstance
+ * @param {number} paddingBottom
+ * @param {number} paddingLeft
+ * @param {number} zoomLevel
+ * @param {number} pitch
+ * @param {number} bearing
+ */
 function goToGeometry(mapType, geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLevel, pitch, bearing) {
     // Make sure that the given geometry is converted into a bbox.
     let bbox;
@@ -200,6 +212,7 @@ function goToGeometry(mapType, geometry, mapsIndoorsInstance, paddingBottom, pad
 }
 
 /**
+ * Make Mapbox map go to specific place in the world.
  *
  * @param {bbox} bbox
  * @param {object} mapsIndoorsInstance
@@ -228,6 +241,7 @@ function mapboxGotoBBox(bbox, mapsIndoorsInstance, paddingBottom, paddingLeft, z
 };
 
 /**
+ * Make Google Maps map go to specific place in the world.
  *
  * @param {bbox} bbox
  * @param {object} mapsIndoorsInstance
