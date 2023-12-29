@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 
 import { calculateBounds } from '../helpers/CalculateBounds';
 import getDesktopPaddingBottom from '../helpers/GetDesktopPaddingBottom';
@@ -21,6 +21,7 @@ import getDesktopPaddingLeft from '../helpers/GetDesktopPaddingLeft';
 
 import { useInactive } from './useInactive';
 import venueState from '../atoms/venueState';
+import useSetCurrentVenueName from './useSetCurrentVenueName';
 
 const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
 
@@ -45,10 +46,11 @@ const useMapBoundsDeterminer = () => {
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const pitch = useRecoilValue(pitchState);
     const startZoomLevel = useRecoilValue(startZoomLevelState);
-    const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
+    const currentVenueName = useRecoilValue(currentVenueNameState);
     const venue = useRecoilValue(venueState);
     const venues = useRecoilValue(venuesState);
 
+    const setCurrentVenueName = useSetCurrentVenueName();
     const [kioskLocationDisplayRuleWasChanged, setKioskLocationDisplayRuleWasChanged] = useState(false);
 
     /**
@@ -81,6 +83,7 @@ const useMapBoundsDeterminer = () => {
             }
 
             const venueToShow = getVenueToShow(forcedVenue || currentVenueName, venues);
+            window.localStorage.setItem(localStorageKeyForVenue, venueToShow.name);
             setMapPositionKnown(true);
 
             if (kioskOriginLocationId && isDesktop) {

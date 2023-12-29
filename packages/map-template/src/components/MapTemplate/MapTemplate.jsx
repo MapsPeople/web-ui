@@ -16,7 +16,6 @@ import currentLocationState from '../../atoms/currentLocationState';
 import tileStyleState from '../../atoms/tileStyleState';
 import categoriesState from '../../atoms/categoriesState';
 import venuesState from '../../atoms/venuesState';
-import currentVenueNameState from '../../atoms/currentVenueNameState';
 import solutionState from '../../atoms/solutionState.js';
 import { useAppHistory } from '../../hooks/useAppHistory';
 import { useReset } from '../../hooks/useReset.js';
@@ -44,6 +43,7 @@ import showQRCodeDialogState from '../../atoms/showQRCodeDialogState';
 import QRCodeDialog from '../QRCodeDialog/QRCodeDialog';
 import supportsUrlParametersState from '../../atoms/supportsUrlParametersState';
 import venueState from '../../atoms/venueState.js';
+import useSetCurrentVenueName from '../../hooks/useSetCurrentVenueName.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -81,7 +81,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [isMapReady, setMapReady] = useRecoilState(isMapReadyState);
     const [venues, setVenues] = useRecoilState(venuesState);
     const [, setVenue] = useRecoilState(venueState);
-    const [, setCurrentVenueName] = useRecoilState(currentVenueNameState);
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const [categories, setCategories] = useRecoilState(categoriesState);
     const [, setLocationId] = useRecoilState(locationIdState);
@@ -125,6 +124,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const isDesktop = useMediaQuery('(min-width: 992px)');
     const isMobile = useMediaQuery('(max-width: 991px)');
     const resetState = useReset();
+    const setCurrentVenueName = useSetCurrentVenueName();
     const [pushAppView, goBack, currentAppView, currentAppViewPayload, appStates] = useAppHistory();
 
     // Declare the reference to the disabled locations.
