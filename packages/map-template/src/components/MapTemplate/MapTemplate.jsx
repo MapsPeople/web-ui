@@ -439,9 +439,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes to the timout prop
      */
     useEffect(() => {
-        if (timeout !== undefined) {
-            setTimeoutValue(timeout); // TODO: Check that changing this to nothing will stop the timeout functionality.
-        }
+        setTimeoutValue(timeout);
     }, [timeout]);
 
     /*
