@@ -1,12 +1,13 @@
 .route-instructions {
-    width: 100%;
-    height: 100%;
-    display: grid;
-    grid-template-rows: 1fr min-content;
+    // width: 100%;
+    // height: 100%;
+    // display: grid;
+    // grid-template-rows: 1fr min-content;
 
     &__footer {
+
         position: sticky;
-        bottom: 0;
+        bottom: 133px;
         background: white;
         padding-bottom: 16px;
 
@@ -14,14 +15,14 @@
             content: '';
             position: absolute;
             pointer-events: none;
-            bottom: calc(30px + var(--spacing-medium));
+            bottom: calc(24px + var(--spacing-medium));
             left: 0;
             right: 0;
             height: var(--spacing-xx-large);
             background: linear-gradient(rgba(255, 255, 255, 0), white);
         }
     }
-    
+
     &__actions {
         display: grid;
         grid-auto-flow: column;
@@ -51,8 +52,8 @@
     }
 
     mi-route-instructions-step {
-        padding-top: var(--spacing-medium);
-        overflow-y: auto;
+        // padding-top: var(--spacing-medium);
+        // overflow-y: auto;
         height: 100%;
     }
 }

@@ -261,7 +261,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                     </div>
                 </>
             }
-            <hr></hr>
+            {/* <hr></hr> */}
             <div className="directions__actions">
                 <div className="directions__details">
                     {directions?.destinationLocation &&

@@ -24,6 +24,11 @@
         align-items: center;
         justify-content: space-between;
         width: 100%;
+        position: sticky;
+        top: 51px;
+        background: white;
+        z-index: 1000;
+        padding-bottom: 8px;
     }
 
     &__destination {

@@ -32,6 +32,12 @@
     &__minutes {
         font-weight: var(--font-weight-large);
         color: #6B7280;
+        position: sticky;
+        top: 0;
+        background: white;
+        z-index: 10000;
+        padding-bottom: 16px;
+        padding-top: 16px;
     }
 
     &__info {
@@ -103,9 +109,9 @@
         border: none
     }
 
-
     &__steps {
-        padding: 16px;
+        padding: 0 16px;
+        height:160px;
     }
 
     &__actions {
@@ -113,5 +119,6 @@
         position: sticky;
         bottom: 0;
         background: white;
+        border-top: 1px solid #E5E7EB;
     }
 }
