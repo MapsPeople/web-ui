@@ -9,6 +9,9 @@
     &__scrollable {
         overflow: auto;
         display: grid;
+        grid-auto-flow: column;
+        align-items: end;
+        gap: 8px;
     }
 
     &__categories {
@@ -30,6 +33,14 @@
         overflow: auto;
         grid-auto-rows: min-content;
         margin-top: var(--spacing-x-small);
+    }
+
+    &__scroll-button {
+        width: 48px;
+        height: 48px;
+        background-color: white;
+        border: 1px solid #E5E7EB;
+        border-radius: 8px;
     }
 
     @media (max-width: $desktop-breakpoint) {

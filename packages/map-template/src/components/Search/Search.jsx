@@ -19,6 +19,8 @@ import languageState from '../../atoms/languageState';
 import { useTranslation } from 'react-i18next';
 import kioskLocationState from '../../atoms/kioskLocationState';
 import getDesktopPaddingBottom from '../../helpers/GetDesktopPaddingBottom';
+import { ReactComponent as ArrowRight } from '../../assets/arrow-right.svg';
+import { ReactComponent as ArrowLeft } from '../../assets/arrow-left.svg';
 
 /**
  * Show the search results.
@@ -265,6 +267,10 @@ function Search({ onSetSize }) {
         }
     });
 
+    const scroll = (scrollOffset) => {
+        categoriesListRef.current.scrollLeft += scrollOffset;
+    };
+
     return (
         <div className="search"
             ref={searchRef}
@@ -281,18 +287,22 @@ function Search({ onSetSize }) {
             />
             <div className="search__scrollable prevent-scroll" {...scrollableContentSwipePrevent}>
                 {categories.length > 0 &&
-                    <div ref={categoriesListRef} className="search__categories">
-                        {categories?.map(([category, categoryInfo]) =>
-                            <mi-chip
-                                icon={categoryInfo.iconUrl}
-                                background-color={primaryColor}
-                                content={categoryInfo.displayName}
-                                active={selectedCategory === category}
-                                onClick={() => categoryClicked(category)}
-                                key={category}>
-                            </mi-chip>
-                        )}
-                    </div>}
+                    <>
+                        <button className='search__scroll-button' onClick={() => scroll(-50)}><ArrowLeft /></button>
+                        <div ref={categoriesListRef} className="search__categories">
+                            {categories?.map(([category, categoryInfo]) =>
+                                <mi-chip
+                                    icon={categoryInfo.iconUrl}
+                                    background-color={primaryColor}
+                                    content={categoryInfo.displayName}
+                                    active={selectedCategory === category}
+                                    onClick={() => categoryClicked(category)}
+                                    key={category}>
+                                </mi-chip>
+                            )}
+                        </div>
+                        <button className='search__scroll-button' onClick={() => scroll(50)}><ArrowRight /></button>
+                    </>}
                 {showNotFoundMessage && <p className="search__error"> {t('Nothing was found')}</p>}
                 {searchResults.length > 0 &&
                     <div className="search__results">
