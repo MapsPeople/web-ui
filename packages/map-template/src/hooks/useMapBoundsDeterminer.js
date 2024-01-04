@@ -72,7 +72,7 @@ const useMapBoundsDeterminer = () => {
 
     /**
      * Based on the combination of the states for venueName, locationId & kioskOriginLocationId,
-     * determine what to make the map go to.
+     * determine where to make the map go to.
      *
      * @param {string} [forcedVenue] - If set, this venue will be used instead of the current venue.
      */

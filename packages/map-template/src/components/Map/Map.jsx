@@ -34,6 +34,7 @@ let _tileStyle;
  * @param {function} [props.onLocationClick] - Function that is run when a MapsIndoors Location is clicked. the Location will be sent along as first argument.
  * @param {function} props.onVenueChangedOnMap - Function that is run when the map bounds was changed due to fitting to a venue.
  * @param {boolean} props.useMapProviderModule - If you want to use the Map Provider set on your solution in the MapsIndoors CMS, set this to true.
+ * @param {function} onMapPositionKnown - Function that is run when the map position is known.
  * @returns
  */
 function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule, onMapPositionKnown }) {

@@ -8,7 +8,6 @@ import timeoutState from '../atoms/timoutState';
  *
  * Heavily inspired by useIdle from https://www.npmjs.com/package/@uidotdev/usehooks
  *
- * @param {number} seconds
  * @returns {boolean}
  */
 export function useInactive() {
