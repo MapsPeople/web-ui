@@ -19,6 +19,7 @@ export default function getDesktopPaddingBottom() {
                 }
             });
 
+            // Observe changes in the DOM (see https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver/observe#options)
             observer.observe(document, { attributes: false, childList: true, characterData: false, subtree: true });
         } else {
             resolve(mapContainer.offsetHeight - sidebar?.offsetTop); // Subtract the top padding from the height of the map container element.

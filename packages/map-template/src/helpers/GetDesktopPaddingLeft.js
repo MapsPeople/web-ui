@@ -16,6 +16,7 @@ export default function getDesktopPaddingLeft() {
                 }
             });
 
+            // Observe changes in the DOM (see https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver/observe#options)
             observer.observe(document, { attributes: false, childList: true, characterData: false, subtree: true });
         } else {
             resolve(sidebar?.offsetWidth + sidebar?.offsetLeft * 2); // The width of the sidebar plus adequate padding
