@@ -1,0 +1,10 @@
+.mapsindoors-map {
+    // In order to align with UX design, button placement has to be edited
+    .gmnoprint {
+        right: 44px !important;
+
+        div {
+            border-radius: 8px !important;
+        }
+    }
+}
