@@ -67,6 +67,7 @@ export class Keyboard implements ComponentInterface {
         this.simpleKeyboard = new SimpleKeyboard({
             onChange: (input: string) => {
                 if (this.inputElement) {
+                    console.log('running', input);
                     this.inputElement.value = input;
                     this.inputElement.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
                 }

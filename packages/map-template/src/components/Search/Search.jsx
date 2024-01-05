@@ -152,7 +152,10 @@ function Search({ onSetSize }) {
 
         setFilteredLocations([]);
 
-        keyboardRef.current.clearInputField();
+        // If keyboard is not null, clear the input field
+        if (keyboardRef.current !== null) {
+            keyboardRef.current.clearInputField();
+        }
     }
 
     /**
@@ -163,6 +166,7 @@ function Search({ onSetSize }) {
     function searchFieldClicked() {
         setSize(snapPoints.MAX);
         setSearchDisabled(false);
+        searchFieldRef.current.getInputField();
 
         const sheet = searchRef.current.closest('.sheet');
         if (sheet) {
@@ -171,11 +175,6 @@ function Search({ onSetSize }) {
             }, { once: true });
         } else {
             searchFieldRef.current.focusInput();
-        }
-
-        if (useKeyboard) {
-            searchFieldRef.current.getInputField();
-            setIsKeyboardVisible(true);
         }
     }
 
@@ -265,6 +264,29 @@ function Search({ onSetSize }) {
             mapsIndoorsInstance.off('mouseenter', onMouseEnter);
         }
     });
+
+    useEffect(() => {
+        if (useKeyboard) {
+            // console.log('use keyboard', useKeyboard)
+            const onClick = (event) => {
+                if (event.target.tagName.toUpperCase() === 'DIV' || event.target.tagName.toUpperCase() === 'MI-SEARCH' || event.target.tagName.toUpperCase() === 'INPUT') {
+                    // console.log('show keyboard', event.target.tagName)
+                    setIsKeyboardVisible(true)
+
+                    console.log('search input', searchFieldRef.current.getValue())
+
+                } else {
+                    // console.log('dont show keyboard', event.target.tagName);
+                    setIsKeyboardVisible(false);
+                }
+            };
+
+            window.addEventListener("click", onClick, false);
+            return () => {
+                window.removeEventListener("click", onClick, false);
+            };
+        }
+    }, [useKeyboard]);
 
     return (
         <div className="search"

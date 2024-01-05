@@ -53,6 +53,7 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
             elementRef.current.focusInput();
         },
         clear() {
+            console.log('here cleared')
             elementRef.current.clear();
         },
         getInputField() {
@@ -70,6 +71,7 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
         }
 
         function onCleared() {
+            console.log('cleared');
             if (!current.getValue) {
                 current.focusInput();
             }
@@ -91,6 +93,7 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
     }, [placeholder, mapsindoors, results, clicked, cleared, google, mapbox, changed]);
 
     return <mi-search ref={elementRef}
+        id-attribute='id'
         placeholder={placeholder}
         session-token={mapboxPlacesSessionToken}
         user-position={(userPositionCoordinates.latitude !== undefined && userPositionCoordinates.longitude !== undefined) ? Object.values(userPositionCoordinates).join(',') : null}
