@@ -60,6 +60,18 @@ export class Keyboard implements ComponentInterface {
         }
     }
 
+    /**
+     * The keyboard language to use. Supported values are "en" (English), "fr" (French), "de", (German) and "da" (Danish).
+     * If omitted, the browser language will be used. Defaults to English.
+     */
+    @Prop() language: string;
+    @Watch('language')
+    languageChange(): void {
+        this.simpleKeyboard.setOptions({
+            layout: this.getKeyboardLayout(this.layout as KeyboardLayout)
+        });
+    }
+
     private simpleKeyboard: SimpleKeyboard;
     private inputElements = new Set<HTMLInputElement>();
 
@@ -123,7 +135,7 @@ export class Keyboard implements ComponentInterface {
         }
 
         // Alphabetic layout
-        const browserLanguage: string = window.navigator.language;
+        const browserLanguage: string = this.language || window.navigator.language;
         if (!browserLanguage) return defaultAlphabetic; // Return defaultAlphabetic if navigator language isn't available.
         const supportedAlphabeticLayouts: Array<{ layout: { default: string[] }, languages: string[] }> = [ // Mapping multiple languages to a single keyboard layout
             { layout: unitedStatesAlphabetic, languages: ['en', 'en-us'] },

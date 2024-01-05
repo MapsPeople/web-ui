@@ -73,10 +73,11 @@ A table showing which alphabetical layouts and languages are supported and mappe
 
 ## Properties
 
-| Property       | Attribute | Description                                         | Type               | Default                     |
-| -------------- | --------- | --------------------------------------------------- | ------------------ | --------------------------- |
-| `inputElement` | --        | The active input element.                           | `HTMLInputElement` | `undefined`                 |
-| `layout`       | `layout`  | The keyboard layout to use. Defaults to alphabetic. | `string`           | `KeyboardLayout.Alphabetic` |
+| Property       | Attribute  | Description                                                                                                                                                                             | Type               | Default                     |
+| -------------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | --------------------------- |
+| `inputElement` | --         | The active input element.                                                                                                                                                               | `HTMLInputElement` | `undefined`                 |
+| `language`     | `language` | The keyboard language to use. Supported values are "en" (English), "fr" (French), "de", (German) and "da" (Danish). If omitted, the browser language will be used. Defaults to English. | `string`           | `undefined`                 |
+| `layout`       | `layout`   | The keyboard layout to use. Defaults to alphabetic.                                                                                                                                     | `string`           | `KeyboardLayout.Alphabetic` |
 
 
 ## Methods
