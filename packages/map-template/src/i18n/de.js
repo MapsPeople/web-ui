@@ -67,8 +67,8 @@ const de = {
     'Scan the QR code to see the route on your phone': 'Scannen Sie den QR-Code, um die Route auf Ihrem Smartphone anzuzeigen',
     'Done': 'Schließen',
     // Directions
-    'Cancel route': 'Annullere ruten',
-    'Finish route': 'Afslutte ruten',
+    'Cancel route': 'Route abbrechen',
+    'Finish route': 'Route beenden',
 };
 
 export default de;
