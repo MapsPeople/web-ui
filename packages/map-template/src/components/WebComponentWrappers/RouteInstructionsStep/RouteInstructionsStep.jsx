@@ -1,4 +1,5 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useRecoilState } from 'recoil';
 import substepsToggledState from '../../../atoms/substepsToggledState';
 import triggerSubstepsState from '../../../atoms/triggerSubstepsState';
@@ -16,8 +17,10 @@ import kioskLocationState from '../../../atoms/kioskLocationState';
  * @param {object} directions - The directions object.
  *
  */
-const RouteInstructionsStep = forwardRef(({ translations, totalSteps, activeStep, previous, originLocation, directions }, ref) => {
+const RouteInstructionsStep = forwardRef(({ totalSteps, activeStep, previous, originLocation, directions }, ref) => {
     const elementRef = useRef();
+
+    const { t } = useTranslation();
 
     const [substepsOpen, setSubstepsOpen] = useRecoilState(substepsToggledState);
     const [, setTriggerSubsteps] = useRecoilState(triggerSubstepsState);
@@ -35,6 +38,42 @@ const RouteInstructionsStep = forwardRef(({ translations, totalSteps, activeStep
             elementRef.current.closeSubsteps();
         }
     }));
+
+    // Translations required for the mi-route-instructions-step component
+    const translations = {
+        walk: t('Walk'),
+        bike: t('Bike'),
+        transit: t('Transit'),
+        drive: t('Drive'),
+        destination: t('You have arrived'),
+        leave: t('Leave'),
+        from: t('From'),
+        park: t('Park'),
+        at: t('at'),
+        building: t('Building'),
+        venue: t('Venue'),
+        takeStaircaseToLevel: t('Take staircase to level'),
+        takeLadderToLevel: t('Take the ladder to level'),
+        takeElevatorToLevel: t('Take elevator to level'),
+        takeEscalatorToLevel: t('Take escalator to level'),
+        takeWheelchairLiftToLevel: t('Take wheelchair lift to level'),
+        takeWheelchairRampToLevel: t('Take wheelchair ramp to level'),
+        exit: t('Exit'),
+        enter: t('Enter'),
+        stops: t('stops'),
+        andContinue: t('and continue'),
+        continueStraightAhead: t('Continue straight ahead'),
+        goLeft: t('Go left'),
+        goSharpLeft: t('Go sharp left'),
+        goSlightLeft: t('Go slight left'),
+        goRight: t('Go right'),
+        goSharpRight: t('Go sharp right'),
+        goSlightRight: t('Go slight right'),
+        turnAround: t('Turn around'),
+        days: t('d'),
+        hours: t('h'),
+        minutes: t('min')
+    };
 
     useEffect(() => {
         const { current } = elementRef;

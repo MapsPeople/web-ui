@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import './LocationDetails.scss';
+import { useTranslation } from 'react-i18next';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import { useRecoilValue } from 'recoil';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
@@ -27,6 +28,7 @@ import accessibilityOnState from '../../atoms/accessibilityOnState';
  *
  */
 function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped, onStartDirections }) {
+    const { t } = useTranslation();
 
     const locationInfoElement = useRef(null);
     const locationDetailsContainer = useRef(null);
@@ -204,7 +206,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                     <div className='location-info__name'>
                         {location.properties.name}
                     </div>
-                    <mi-location-info ref={locationInfoElement} show-external-id={false} />
+                    <mi-location-info level={t('Level')} ref={locationInfoElement} show-external-id={false} />
                 </div>
                 <button className="location-info__close" onClick={() => back()}>
                     <CloseIcon />
@@ -228,7 +230,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                         {location.properties.description}
                     </div>
                     {(isOverflowing || initialOverflow) && <button onClick={() => toggleDescription()}>
-                        Read full description
+                        {t('Read full description')}
                     </button>}
                 </section>}
                 {location.properties.description && showFullDescription && <section className="location-details__description location-details__description--full prevent-scroll" {...scrollableContentSwipePrevent}>
@@ -236,7 +238,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                         {location.properties.description}
                     </div>
                     {initialOverflow && <button onClick={() => toggleDescription()}>
-                        Close
+                        {t('Close')}
                     </button>}
                 </section>}
             </div>
@@ -247,13 +249,13 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                     onClick={() => startDirections()}
                     className={`location-details__wayfinding ${!hasFoundRoute ? 'location-details--no-route' : ''}`}
                     style={{ background: primaryColor }}>
-                    {!hasFoundRoute ? 'Directions not available' : 'Start directions'}
+                    {!hasFoundRoute ? t('Directions not available') : t('Start directions')}
                 </button>
                 :
                 <button onClick={() => startWayfinding()}
                     style={{ background: primaryColor }}
                     className="location-details__wayfinding">
-                    Start wayfinding
+                    {t('Start wayfinding')}
                 </button>
             }
         </>}

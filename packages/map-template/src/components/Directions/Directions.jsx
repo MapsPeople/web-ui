@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import './Directions.scss';
+import { useTranslation } from 'react-i18next';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import travelModeState from '../../atoms/travelModeState';
@@ -12,9 +13,11 @@ import { snapPoints } from "../../constants/snapPoints";
 import substepsToggledState from "../../atoms/substepsToggledState";
 import getDesktopPaddingLeft from "../../helpers/GetDesktopPaddingLeft";
 import getMobilePaddingBottom from "../../helpers/GetMobilePaddingBottom";
+import distanceUnitSystemSelector from '../../selectors/distanceUnitSystemSelector';
 import getDesktopPaddingBottom from "../../helpers/GetDesktopPaddingBottom";
 import kioskLocationState from "../../atoms/kioskLocationState";
 import showQRCodeDialogState from "../../atoms/showQRCodeDialogState";
+import supportsUrlParametersState from "../../atoms/supportsUrlParametersState";
 import Accessibility from "../Accessibility/Accessibility";
 import isDestinationStepState from "../../atoms/isDestinationStepState";
 import primaryColorState from "../../atoms/primaryColorState";
@@ -32,6 +35,8 @@ let directionsRenderer;
  *
  */
 function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
+    const { t } = useTranslation();
+
     // Holds the MapsIndoors DisplayRule for the destination
     const [destinationDisplayRule, setDestinationDisplayRule] = useState(null);
 
@@ -45,6 +50,8 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
 
     const directions = useRecoilValue(directionsResponseState);
 
+    const distanceUnitSystem = useRecoilValue(distanceUnitSystemSelector);
+
     const [, setActiveStep] = useRecoilState(activeStepState);
 
     const [substepsOpen, setSubstepsOpen] = useRecoilState(substepsToggledState);
@@ -54,6 +61,8 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
     const [, setShowQRCodeDialog] = useRecoilState(showQRCodeDialogState);
+
+    const supportsUrlParameters = useRecoilValue(supportsUrlParametersState)
 
     const isDestinationStep = useRecoilValue(isDestinationStepState);
 
@@ -90,7 +99,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
             destinationInfoElement.current.location = directions.destinationLocation;
 
             // If the destination is My Position, then set the display rule to null.
-            if (directions.destinationLocation.properties.name === 'My Position') {
+            if (directions.destinationLocation.id === 'USER_POSITION') {
                 setDestinationDisplayRule(null)
             } else {
                 setDestinationDisplayRule(mapsIndoorsInstance.getDisplayRule(directions.destinationLocation));
@@ -116,8 +125,8 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
     }
 
     /**
-     * Get left padding when getting directions. 
-     * Calculate all cases depending on the kioskLocation id prop as well. 
+     * Get left padding when getting directions.
+     * Calculate all cases depending on the kioskLocation id prop as well.
      */
     function getLeftPadding(padding) {
         if (isDesktop) {
@@ -257,7 +266,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                     <hr></hr>
                     <div className="directions__kiosk">
                         <Accessibility />
-                        <button className='directions__qr-code' onClick={() => setShowQRCodeDialog(true)}><QRCode /> Scan QR code</button>
+                        <button className='directions__qr-code' onClick={() => setShowQRCodeDialog(true)}><QRCode />{t('Scan QR code')}</button>
                     </div>
                 </>
             }
@@ -280,12 +289,12 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                     }
                 </div>
                 {!isDestinationStep ?
-                    <button className="directions__cancel" onClick={() => onDirectionsClosed()} aria-label="Close">
-                        Cancel route
+                    <button className="directions__cancel" onClick={() => onDirectionsClosed()}>
+                        {t('Cancel route')}
                     </button>
                     :
-                    <button className="directions__finish" onClick={() => onDirectionsClosed()} aria-label="Close" style={{ background: primaryColor }}>
-                        Finish route
+                    <button className="directions__finish" onClick={() => onDirectionsClosed()} style={{ background: primaryColor }}>
+                        {t('Finish route')}
                     </button>
                 }
             </div>

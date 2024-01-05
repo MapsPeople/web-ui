@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import './Wayfinding.scss';
 import { useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
 import { ReactComponent as WalkingIcon } from '../../assets/walk.svg';
@@ -28,6 +29,7 @@ import Dropdown from "../WebComponentWrappers/Dropdown/Dropdown";
 import primaryColorState from "../../atoms/primaryColorState";
 import addMapboxPlaceGeometry from "../Map/MapboxMap/MapboxPlacesHandler";
 import mapboxAccessTokenState from "../../atoms/mapboxAccessTokenState";
+import distanceUnitSystemSelector from '../../selectors/distanceUnitSystemSelector';
 import useDirectionsInfo from "../../hooks/useDirectionsInfo";
 import hasFoundRouteState from "../../atoms/hasFoundRouteState";
 import accessibilityOnState from "../../atoms/accessibilityOnState";
@@ -53,6 +55,8 @@ const externalLocationIcon = "data:image/svg+xml,%3Csvg width='10' height='10' v
  * @returns
  */
 function Wayfinding({ onStartDirections, onBack, directionsToLocation, directionsFromLocation, onSetSize, isActive }) {
+
+    const { t } = useTranslation();
 
     const wayfindingRef = useRef();
 
@@ -97,6 +101,8 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     const [showMyPositionOption, setShowMyPositionOption] = useState(false);
 
     const mapboxAccessToken = useRecoilValue(mapboxAccessTokenState);
+
+    const distanceUnitSystem = useRecoilValue(distanceUnitSystemSelector);
 
     const [totalDistance, totalTime, hasFoundRoute] = useDirectionsInfo(originLocation, destinationLocation, directionsService, travelMode, accessibilityOn)
 
@@ -370,7 +376,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     return (
         <div className="wayfinding" ref={wayfindingRef}>
             <div className="wayfinding__directions">
-                <div className="wayfinding__title">Start wayfinding</div>
+                <div className="wayfinding__title">{t('Start wayfinding')}</div>
                 <button className="wayfinding__close"
                     onClick={() => onBack()}
                     aria-label="Close">
@@ -378,13 +384,13 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                 </button>
                 <div className="wayfinding__locations">
                     <label className="wayfinding__label">
-                        FROM
+                        {t('From').toUpperCase()}
                         <SearchField
                             ref={fromFieldRef}
                             mapsindoors={true}
                             google={selectedMapType === mapTypes.Google}
                             mapbox={selectedMapType === mapTypes.Mapbox}
-                            placeholder="Search by name, category, building..."
+                            placeholder={t('Search by name, category, building...')}
                             results={locations => searchResultsReceived(locations, searchFieldIdentifiers.FROM)}
                             clicked={() => onSearchClicked(searchFieldIdentifiers.FROM)}
                             cleared={() => onSearchCleared(searchFieldIdentifiers.FROM)}
@@ -392,18 +398,18 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                         />
                     </label>
                     <button onClick={() => switchDirectionsHandler()}
-                        aria-label="Switch"
+                        aria-label={t('Switch')}
                         className="wayfinding__switch">
                         <SwitchIcon />
                     </button>
                     <label className="wayfinding__label">
-                        TO
+                        {t('To').toUpperCase()}
                         <SearchField
                             ref={toFieldRef}
                             mapsindoors={true}
                             google={selectedMapType === mapTypes.Google}
                             mapbox={selectedMapType === mapTypes.Mapbox}
-                            placeholder="Search by name, category, building..."
+                            placeholder={t('Search by name, category, building...')}
                             results={locations => searchResultsReceived(locations, searchFieldIdentifiers.TO)}
                             clicked={() => onSearchClicked(searchFieldIdentifiers.TO)}
                             cleared={() => onSearchCleared(searchFieldIdentifiers.TO)}
@@ -413,16 +419,15 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
 
                 </div>
             </div>
-            {!hasFoundRoute && <p className="wayfinding__error">No route found</p>}
-            {!hasSearchResults && !showMyPositionOption && <p className="wayfinding__error">Nothing was found</p>}
+            {!hasFoundRoute && <p className="wayfinding__error">{t('No route found')}</p>}
+            {!hasSearchResults && !showMyPositionOption && <p className="wayfinding__error">{t('Nothing was found')}</p>}
             {userPosition && showMyPositionOption && <button type="button" className="wayfinding__use-current-position" onClick={() => selectMyPosition()}>
                 <CompassArrow />
-                My Position
+                {t('My position')}
             </button>}
             {searchResults.length > 0 &&
                 <div className="wayfinding__scrollable" {...scrollableContentSwipePrevent}>
                     <div className="wayfinding__results">
-
                         {searchResults.map(location =>
                             <ListItemLocation
                                 key={location.id}
@@ -440,15 +445,15 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                         <Dropdown selectionChanged={travelMode => setTravelMode(travelMode[0].value)}>
                             <mi-dropdown-item selected value={travelModes.WALKING}>
                                 <WalkIcon></WalkIcon>
-                                Walk
+                                {t('Walk')}
                             </mi-dropdown-item>
                             <mi-dropdown-item value={travelModes.DRIVING}>
                                 <DriveIcon></DriveIcon>
-                                Drive
+                                {t('Drive')}
                             </mi-dropdown-item>
                             <mi-dropdown-item value={travelModes.BICYCLING}>
                                 <BikeIcon></BikeIcon>
-                                Bike
+                                {t('Bike')}
                             </mi-dropdown-item>
                         </Dropdown>
                     </div>
@@ -459,17 +464,17 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                         {travelMode === travelModes.WALKING && <WalkingIcon />}
                         {travelMode === travelModes.DRIVING && <DriveIcon />}
                         {travelMode === travelModes.BICYCLING && <BikeIcon />}
-                        <div>Distance:</div>
-                        <div className="wayfinding__meters">{totalDistance && <mi-distance meters={totalDistance} />}</div>
+                        <div>{t('Distance')}:</div>
+                        <div className="wayfinding__meters">{totalDistance && <mi-distance unit={distanceUnitSystem} meters={totalDistance} />}</div>
                     </div>
                     <div className="wayfinding__time">
                         <ClockIcon />
-                        <div>Estimated time:</div>
-                        <div className="wayfinding__minutes">{totalTime && <mi-time seconds={totalTime} />}</div>
+                        <div>{t('Estimated time')}:</div>
+                        <div className="wayfinding__minutes">{totalTime && <mi-time translations={JSON.stringify({ days: t('d'), hours: t('h'), minutes: t('min') })}  seconds={totalTime} />}</div>
                     </div>
                 </div>
                 <button className="wayfinding__button" style={{ background: primaryColor }} onClick={() => onStartDirections()}>
-                    Go!
+                    {t('Go!')}
                 </button>
             </div>}
         </div>
