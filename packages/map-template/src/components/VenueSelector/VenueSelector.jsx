@@ -1,4 +1,5 @@
 import { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { CSSTransition } from 'react-transition-group';
 import './VenueSelector.scss';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -17,6 +18,8 @@ import isLocationClickedState from '../../atoms/isLocationClickedState';
  * @returns
  */
 function VenueSelector({ onOpen, onClose, active }) {
+    const { t } = useTranslation();
+
     const venueSelectorContentRef = useRef(null);
     const venues = useRecoilValue(venuesState);
 
@@ -46,8 +49,8 @@ function VenueSelector({ onOpen, onClose, active }) {
 
     /**
      * Handle venue selection.
-     * 
-     * @param {object} venue 
+     *
+     * @param {object} venue
      */
     function onVenueSelected(venue) {
         selectVenue(venue);
@@ -55,12 +58,12 @@ function VenueSelector({ onOpen, onClose, active }) {
     }
 
     return <>
-        <button className={`venue-selector__button ${active ? 'venue-selector__button--open' : ''}`} onClick={() => toggle()} aria-label="Venues">
+        <button className={`venue-selector__button ${active ? 'venue-selector__button--open' : ''}`} onClick={() => toggle()} aria-label={t('Venues')}>
             {active ? <CloseIcon /> : <BuildingIcon />}
         </button>
         <CSSTransition unmountOnExit in={active} nodeRef={venueSelectorContentRef} timeout={400} classNames="venue-selector__content">
             <div className="venue-selector__content" ref={venueSelectorContentRef}>
-                <h1>Select venue</h1>
+                <h1>{t('Select venue')}</h1>
                 <div className="venue-selector__list">
                     {venues.map(venue => (<Venue key={venue.id} isCurrent={currentVenueName === venue.name} venue={venue} onVenueClicked={() => onVenueSelected(venue)} />))}
                 </div>

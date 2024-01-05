@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import './Directions.scss';
+import { useTranslation } from 'react-i18next';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import travelModeState from '../../atoms/travelModeState';
@@ -8,6 +9,7 @@ import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
 import { ReactComponent as WalkingIcon } from '../../assets/walk.svg';
 import { ReactComponent as DriveIcon } from '../../assets/drive.svg';
 import { ReactComponent as BikeIcon } from '../../assets/bike.svg';
+import { ReactComponent as QRCode } from '../../assets/qrcode.svg';
 import RouteInstructions from "../RouteInstructions/RouteInstructions";
 import useMediaQuery from '../../hooks/useMediaQuery';
 import { travelModes } from "../../constants/travelModes";
@@ -17,8 +19,11 @@ import { snapPoints } from "../../constants/snapPoints";
 import substepsToggledState from "../../atoms/substepsToggledState";
 import getDesktopPaddingLeft from "../../helpers/GetDesktopPaddingLeft";
 import getMobilePaddingBottom from "../../helpers/GetMobilePaddingBottom";
+import distanceUnitSystemSelector from '../../selectors/distanceUnitSystemSelector';
 import getDesktopPaddingBottom from "../../helpers/GetDesktopPaddingBottom";
 import kioskLocationState from "../../atoms/kioskLocationState";
+import showQRCodeDialogState from "../../atoms/showQRCodeDialogState";
+import supportsUrlParametersState from "../../atoms/supportsUrlParametersState";
 
 let directionsRenderer;
 
@@ -33,6 +38,8 @@ let directionsRenderer;
  *
  */
 function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
+    const { t } = useTranslation();
+
     // Holds the MapsIndoors DisplayRule for the destination
     const [destinationDisplayRule, setDestinationDisplayRule] = useState(null);
 
@@ -49,6 +56,8 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
 
     const directions = useRecoilValue(directionsResponseState);
 
+    const distanceUnitSystem = useRecoilValue(distanceUnitSystemSelector);
+
     const [, setActiveStep] = useRecoilState(activeStepState);
 
     const [substepsOpen, setSubstepsOpen] = useRecoilState(substepsToggledState);
@@ -56,6 +65,10 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
     const kioskLocation = useRecoilValue(kioskLocationState)
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
+
+    const [, setShowQRCodeDialog] = useRecoilState(showQRCodeDialogState);
+
+    const supportsUrlParameters = useRecoilValue(supportsUrlParametersState)
 
     useEffect(() => {
         setDestinationDisplayRule(null);
@@ -90,7 +103,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
             destinationInfoElement.current.location = directions.destinationLocation;
 
             // If the destination is My Position, then set the display rule to null.
-            if (directions.destinationLocation.properties.name === 'My Position') {
+            if (directions.destinationLocation.id === 'USER_POSITION') {
                 setDestinationDisplayRule(null)
             } else {
                 setDestinationDisplayRule(mapsIndoorsInstance.getDisplayRule(directions.destinationLocation));
@@ -116,8 +129,8 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
     }
 
     /**
-     * Get left padding when getting directions. 
-     * Calculate all cases depending on the kioskLocation id prop as well. 
+     * Get left padding when getting directions.
+     * Calculate all cases depending on the kioskLocation id prop as well.
      */
     function getLeftPadding(padding) {
         if (isDesktop) {
@@ -244,21 +257,21 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
     return (
         <div className="directions">
             <div className="directions__details">
-                <button className="directions__close" onClick={() => onDirectionsClosed()} aria-label="Close">
+                <button className="directions__close" onClick={() => onDirectionsClosed()} aria-label={t('Close')}>
                     <CloseIcon />
                 </button>
                 <div className="directions__locations">
                     <div className="directions__container">
                         <label className="directions__label">
-                            From
+                            {t('From')}
                         </label>
                         {directions?.originLocation &&
                             <div className="directions__info">
                                 <div className="directions__content">
                                     <div className='directions__name'>
                                         {directions?.originLocation.properties.name}
-                                        {directions?.originLocation.properties.name !== 'My Position' && <div>·</div>}
-                                        <mi-location-info ref={originInfoElement} show-external-id={false} />
+                                        {directions?.originLocation.id !== 'USER_POSITION' && <div>·</div>}
+                                        <mi-location-info level={t('Level')} ref={originInfoElement} show-external-id={false} />
                                     </div>
                                 </div>
                             </div>
@@ -266,11 +279,11 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                     </div>
                     <div className="directions__container">
                         <label className="directions__label">
-                            To
+                            {t('To')}
                         </label>
                         {directions?.destinationLocation &&
                             <div className="directions__info">
-                                {destinationDisplayRule && directions.destinationLocation.name !== 'My Position' &&
+                                {destinationDisplayRule && directions.destinationLocation.id !== 'USER_POSITION' &&
                                     <div className="directions__icon">
                                         <img alt="" src={destinationDisplayRule.icon.src ? destinationDisplayRule.icon.src : destinationDisplayRule.icon} />
                                     </div>}
@@ -278,7 +291,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                                     <div className='directions__name'>
                                         {directions?.destinationLocation.properties.name}
                                     </div>
-                                    <mi-location-info ref={destinationInfoElement} show-external-id={false} />
+                                    <mi-location-info level={t('Level')} ref={destinationInfoElement} show-external-id={false} />
                                 </div>
                             </div>
                         }
@@ -286,19 +299,22 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                 </div>
             </div>
             <div ref={guideElement} className="directions__guide">
-                <div className="directions__metrics">
-                    <div className="directions__distance">
-                        {travelMode === travelModes.WALKING && <WalkingIcon />}
-                        {travelMode === travelModes.DRIVING && <DriveIcon />}
-                        {travelMode === travelModes.BICYCLING && <BikeIcon />}
-                        <div>Distance:</div>
-                        <div className="directions__meters">{totalDistance && <mi-distance meters={totalDistance} />}</div>
+                <div className="directions__route">
+                    <div className="directions__metrics">
+                        <div className="directions__distance">
+                            {travelMode === travelModes.WALKING && <WalkingIcon />}
+                            {travelMode === travelModes.DRIVING && <DriveIcon />}
+                            {travelMode === travelModes.BICYCLING && <BikeIcon />}
+                            <div>{t('Distance')}:</div>
+                            <div className="directions__meters">{totalDistance && <mi-distance unit={distanceUnitSystem} meters={totalDistance} />}</div>
+                        </div>
+                        <div className="directions__time">
+                            <ClockIcon />
+                            <div>{t('Estimated time')}:</div>
+                            <div className="directions__minutes">{totalTime && <mi-time translations={JSON.stringify({ days: t('d'), hours: t('h'), minutes: t('min') })} seconds={totalTime} />}</div>
+                        </div>
                     </div>
-                    <div className="directions__time">
-                        <ClockIcon />
-                        <div>Estimated time:</div>
-                        <div className="directions__minutes">{totalTime && <mi-time seconds={totalTime} />}</div>
-                    </div>
+                    {kioskLocation && supportsUrlParameters && <button className='directions__qr-code' onClick={() => setShowQRCodeDialog(true)}><QRCode /> {t('Scan QR code')}</button>}
                 </div>
                 <hr></hr>
                 <RouteInstructions

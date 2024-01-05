@@ -34,6 +34,11 @@ export class ListItemLocation {
      */
     @Prop() icon: string;
 
+    /**
+     * @description The word used for "Level" when showing level info. Default is "Level".
+     */
+    @Prop() level: string = 'Level';
+
     @Watch('icon')
     iconChanged(): void {
         this.iconURLToRender = this.icon ? this.icon : this.location?.properties.imageURL;
@@ -210,7 +215,7 @@ export class ListItemLocation {
 
                 <div class="details">
                     <p class="details-title">{this.location.properties.name}</p>
-                    <mi-location-info ref={(el) => this.infoElement = el as HTMLMiLocationInfoElement} showExternalId={this.showExternalId}></mi-location-info>
+                    <mi-location-info level={this.level} ref={(el) => this.infoElement = el as HTMLMiLocationInfoElement} showExternalId={this.showExternalId}></mi-location-info>
                 </div>
 
                 {this.location.properties.geodesicDistance && this.renderDistance()}

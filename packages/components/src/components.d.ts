@@ -310,6 +310,10 @@ export namespace Components {
          */
         "iconBadgeValue": string;
         /**
+          * @description The word used for "Level" when showing level info. Default is "Level".
+         */
+        "level": string;
+        /**
           * @description Location object.
          */
         "location": any;
@@ -881,6 +885,10 @@ export namespace Components {
           * Id for the input field.
          */
         "idAttribute": string;
+        /**
+          * The language used when retrieving Google Places or Mapbox autocomplete suggestions.
+         */
+        "language": string;
         /**
           * If searching should include Mapbox autocomplete suggestions.
          */
@@ -1673,6 +1681,10 @@ declare namespace LocalJSX {
          */
         "iconBadgeValue"?: string;
         /**
+          * @description The word used for "Level" when showing level info. Default is "Level".
+         */
+        "level"?: string;
+        /**
           * @description Location object.
          */
         "location"?: any;
@@ -2212,6 +2224,10 @@ declare namespace LocalJSX {
           * Id for the input field.
          */
         "idAttribute"?: string;
+        /**
+          * The language used when retrieving Google Places or Mapbox autocomplete suggestions.
+         */
+        "language"?: string;
         /**
           * If searching should include Mapbox autocomplete suggestions.
          */

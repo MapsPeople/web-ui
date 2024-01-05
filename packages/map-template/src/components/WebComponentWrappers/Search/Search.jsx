@@ -2,6 +2,7 @@ import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import useNear from '../../../hooks/useNear';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import userPositionState from '../../../atoms/userPositionState';
+import languageState from '../../../atoms/languageState';
 import searchInputState from '../../../atoms/searchInputState';
 
 /**
@@ -23,6 +24,7 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
     const elementRef = useRef();
 
     const userPosition = useRecoilValue(userPositionState);
+    const language = useRecoilValue(languageState);
 
     const [, setSearchInput] = useRecoilState(searchInputState)
 
@@ -60,6 +62,16 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
             return elementRef.current.getInputField().then((searchInput) => setSearchInput(searchInput));
         }
     }));
+
+    useEffect(() => {
+        const { current } = elementRef;
+
+        if (current.value) {
+            window.mapsindoors.services.LocationsService.once('update_completed', () => {
+                current.triggerSearch();
+            });
+        }
+    }, [language]);
 
     useEffect(() => {
         const searchResultsHandler = customEvent => results(customEvent.detail);
@@ -101,7 +113,8 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
         mi-categories={category}
         disabled={disabled}
         mapbox={mapbox}
-        google={google} />
+        google={google}
+        language={language} />
 });
 
 export default SearchField;

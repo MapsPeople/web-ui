@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import './RouteInstructions.scss';
+import { useTranslation } from 'react-i18next';
 import { ReactComponent as ArrowRight } from '../../assets/arrow-right.svg';
 import { ReactComponent as ArrowLeft } from '../../assets/arrow-left.svg';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -24,6 +25,8 @@ import { usePreventSwipe } from '../../hooks/usePreventSwipe';
  * @returns
  */
 function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, isOpen, onFitCurrentDirections }) {
+
+    const { t } = useTranslation();
 
     const scrollableContentSwipePrevent = usePreventSwipe();
 
@@ -112,48 +115,11 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
         }
     }
 
-    // Translations required for the mi-route-instructions-step component
-    const translations = {
-        walk: 'Walk',
-        bike: 'Bike',
-        transit: 'Transit',
-        drive: 'Drive',
-        destination: 'You have arrived',
-        leave: 'Leave',
-        from: 'From',
-        park: 'Park',
-        at: 'at',
-        building: 'Building',
-        venue: 'Venue',
-        takeStaircaseToLevel: 'Take staircase to level',
-        takeLadderToLevel: 'Take the ladder to level',
-        takeElevatorToLevel: 'Take elevator to level',
-        takeEscalatorToLevel: 'Take escalator to level',
-        takeWheelchairLiftToLevel: 'Take wheelchair lift to level',
-        takeWheelchairRampToLevel: 'Take wheelchair ramp to level',
-        exit: 'Exit',
-        enter: 'Enter',
-        stops: 'stops',
-        andContinue: 'and continue',
-        continueStraightAhead: 'Continue straight ahead',
-        goLeft: 'Go left',
-        goSharpLeft: 'Go sharp left',
-        goSlightLeft: 'Go slight left',
-        goRight: 'Go right',
-        goSharpRight: 'Go sharp right',
-        goSlightRight: 'Go slight right',
-        turnAround: 'Turn around',
-        days: 'd',
-        hours: 'h',
-        minutes: 'min'
-    }
-
     return (
         <div className="route-instructions prevent-scroll" {...scrollableContentSwipePrevent}>
             {totalSteps &&
                 <>
                     <RouteInstructionsStep
-                        translations={translations}
                         totalSteps={totalSteps}
                         activeStep={activeStep}
                         previous={previous}
@@ -173,14 +139,14 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
                         <div className="route-instructions__actions">
                             <button className="route-instructions__button"
                                 onClick={() => previousStep()}
-                                aria-label="Previous"
+                                aria-label={t('Previous')}
                                 disabled={activeStep === 0}>
                                 <ArrowLeft></ArrowLeft>
                             </button>
-                            <div className="route-instructions__overview">Step {activeStep + 1} of {totalSteps.length}</div>
+                            <div className="route-instructions__overview">{t('StepYofX', { activeStep: activeStep + 1, totalSteps: totalSteps.length})}</div>
                             <button className="route-instructions__button"
                                 onClick={() => nextStep()}
-                                aria-label="Next"
+                                aria-label={t('Next')}
                                 disabled={activeStep === totalSteps.length - 1}>
                                 <ArrowRight></ArrowRight>
                             </button>
