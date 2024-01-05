@@ -80,6 +80,9 @@ export class Keyboard implements ComponentInterface {
             },
             theme: 'hg-theme-default hg-layout-numeric numeric-theme'
         });
+
+        // Populate the keyboard's internal input value with any existing value from the input field.
+        this.simpleKeyboard.setInput(this.inputElement.value);
     }
 
     /**
