@@ -19,6 +19,7 @@ import languageState from '../../atoms/languageState';
 import { useTranslation } from 'react-i18next';
 import kioskLocationState from '../../atoms/kioskLocationState';
 import getDesktopPaddingBottom from '../../helpers/GetDesktopPaddingBottom';
+import { createPortal } from 'react-dom';
 
 /**
  * Show the search results.
@@ -34,6 +35,7 @@ function Search({ onSetSize }) {
     const { t } = useTranslation();
 
     const searchRef = useRef();
+    const scrollButtonsRef = useRef();
 
     /** Referencing the search field */
     const searchFieldRef = useRef();
@@ -265,6 +267,13 @@ function Search({ onSetSize }) {
         }
     });
 
+    useEffect(() => {
+        if (searchResults.length > 0) {
+            const searchResultsElement = document.querySelector('.mapsindoors-map .modal');
+            scrollButtonsRef.current.scrollContainerElementRef = searchResultsElement;
+        }
+    }, [searchResults]);
+
     return (
         <div className="search"
             ref={searchRef}
@@ -307,6 +316,13 @@ function Search({ onSetSize }) {
                     </div>
                 }
             </div>
+
+            {searchResults.length > 0 && createPortal(
+                <div className="search__scroll-buttons">
+                    <mi-scroll-buttons ref={scrollButtonsRef}></mi-scroll-buttons>
+                </div>,
+                document.querySelector('.mapsindoors-map')
+            )}
         </div>
     )
 }

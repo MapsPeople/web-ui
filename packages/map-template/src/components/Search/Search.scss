@@ -32,6 +32,12 @@
         margin-top: var(--spacing-x-small);
     }
 
+    &__scroll-buttons {
+        position: fixed;
+        left: calc(50% + 284px + 20px);
+        bottom: var(--spacing-x-large);
+    }
+
     @media (max-width: $desktop-breakpoint) {
         padding: var(--spacing-medium) var(--spacing-x-small) var(--spacing-medium) var(--spacing-x-small);
     }
