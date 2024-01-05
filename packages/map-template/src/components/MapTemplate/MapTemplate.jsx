@@ -165,7 +165,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         if (isInactive) {
             resetState();
-            setResetCount(curr => curr + 1); // will force a re-render of modal and sidebar.
+            setResetCount(curr => curr + 1); // will force a re-render of bottom sheet and sidebar.
         }
     }, [isInactive]);
 
@@ -312,7 +312,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 });
             }
         }
-    }, [locationId, mapsindoorsSDKAvailable]);
+    }, [locationId, mapsindoorsSDKAvailable, resetCount]);
 
     /*
      * React to changes in the gmMapId prop.
