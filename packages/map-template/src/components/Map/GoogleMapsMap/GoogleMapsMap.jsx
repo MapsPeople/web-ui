@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
+import './GoogleMapsMap.scss';
 import mapsIndoorsInstanceState from '../../../atoms/mapsIndoorsInstanceState';
 import { Loader as GoogleMapsApiLoader } from '@googlemaps/js-api-loader';
 import gmApiKeyState from '../../../atoms/gmApiKeyState';
@@ -23,6 +24,7 @@ function GoogleMapsMap({ onMapView, onPositionControl }) {
     const [mapView, setMapView] = useState();
     const [hasFloorSelector, setHasFloorSelector] = useState(false);
     const [hasPositionControl, setHasPositionControl] = useState(false);
+    const [hasZoomControl, setHasZoomControl] = useState(false);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const primaryColor = useRecoilValue(primaryColorState);
     const bearing = useRecoilValue(bearingState);
@@ -81,6 +83,19 @@ function GoogleMapsMap({ onMapView, onPositionControl }) {
             mapView.getMap().controls[google.maps.ControlPosition.RIGHT_TOP].push(floorSelectorElement);
             setHasFloorSelector(true);
         }
+
+        if (mapsIndoorsInstance && mapView && google && !hasZoomControl) {
+            // Enable only the Zoom control
+            mapView.getMap().setOptions({
+                zoomControl: true,
+                zoomControlOptions: {
+                    style: google.maps.ZoomControlStyle.DEFAULT,
+                    position: google.maps.ControlPosition.RIGHT_TOP,
+                }
+            });
+            setHasZoomControl(true);
+        }
+
     }, [mapsIndoorsInstance, mapView, google, hasFloorSelector, hasPositionControl])
 
     return <div className="map-container" id="map"></div>
