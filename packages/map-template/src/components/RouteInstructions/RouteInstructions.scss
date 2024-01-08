@@ -1,13 +1,13 @@
 .route-instructions {
     // width: 100%;
-    // height: 100%;
-    // display: grid;
-    // grid-template-rows: 1fr min-content;
+    height: 100%;
+    display: grid;
+    grid-template-rows: 1fr min-content;
 
     &__footer {
 
         position: sticky;
-        bottom: 133px;
+        bottom: 135px;
         background: white;
         padding-bottom: 16px;
 
