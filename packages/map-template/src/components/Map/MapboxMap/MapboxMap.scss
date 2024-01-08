@@ -1,12 +1,12 @@
 .mapboxgl-control-container {
     .mapboxgl-ctrl {
         &-group {
-            margin: 10px 12px 10px 0 !important;
-            border-radius: 8px;
-            box-shadow: 0 0 0 2px #e5e7eb !important;
+            margin: 10px var(--spacing-small) 10px 0 !important;
+            border-radius: var(--rounding-large);
+            box-shadow: 0 0 0 var(--spacing-xxx-small) #e5e7eb !important;
 
             button {
-                padding: 24px; // UX design
+                padding: var(--spacing-large); // UX design
             }
         }
 

@@ -4,7 +4,7 @@
         right: 44px !important;
 
         div {
-            border-radius: 8px !important;
+            border-radius: var(--rounding-large) !important;
         }
     }
 }
