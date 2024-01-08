@@ -1,3 +1,5 @@
+import { t } from 'i18next';
+
 /**
  * Generates a GeoJSON feature representing user position
  * given a GeolocationPosition object.
@@ -15,7 +17,7 @@ export default function generateMyPositionLocation(userPosition) {
         id: 'USER_POSITION',
         geometry: geometry,
         properties: {
-            name: 'My Position',
+            name: t('My position'),
             anchor: geometry,
         },
         type: 'Feature'

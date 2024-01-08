@@ -22,7 +22,9 @@ import defaultLogo from "../../assets/logo.svg";
  * @param {number} [props.bearing] - The bearing of the map as a number. Not recommended for Google Maps with 2D Models.
  * @param {boolean} [props.supportsUrlParameters] - If you want to support URL Parameters to configure the Map Template.
  * @param {string} [props.gmMapId] - The Google Maps Map ID associated with a specific map style or feature.
+ * @param {boolean} [props.useMapProviderModule] - Set to true if the Map Template should take MapsIndoors solution modules into consideration when determining what map type to use.
  * @param {string} [props.kioskOriginLocationId] - If running the Map Template as a kiosk (upcoming feature), provide the Location ID that represents the location of the kiosk.
+ * @param {string} [props.language] - The language to show textual content in. Supported values are "en" for English, "da" for Danish, "de" for German and "fr" for French. If the prop is not set, the language of the browser will be used (if it is one of the four supported languages - otherwise it will default to English).
  */
 function MapsIndoorsMap(props) {
 
@@ -41,7 +43,8 @@ function MapsIndoorsMap(props) {
             apiKey: '3ddemo',
             venue: 'WEWORK',
             logo: defaultLogo,
-            primaryColor: '#005655' // --brand-colors-dark-pine-100 from MIDT
+            primaryColor: '#005655', // --brand-colors-dark-pine-100 from MIDT
+            useMapProviderModule: false
         };
 
         const apiKeyQueryParameter = queryStringParams.get('apiKey');
@@ -60,7 +63,9 @@ function MapsIndoorsMap(props) {
         const appUserRolesQueryParameter = queryStringParams.get('appUserRoles')?.split(',');
         const externalIDsQueryParameter = queryStringParams.get('externalIDs')?.split(',');
         const gmMapIdQueryParameter = queryStringParams.get('gmMapId');
+        const useMapProviderModuleParameter = getBooleanQueryParameter(queryStringParams.get('useMapProviderModule'));
         const kioskOriginLocationId = queryStringParams.get('kioskOriginLocationId');
+        const languageQueryParameter = queryStringParams.get('language');
 
         setMapTemplateProps({
             apiKey: props.supportsUrlParameters && apiKeyQueryParameter ? apiKeyQueryParameter : (props.apiKey || defaultProps.apiKey),
@@ -79,7 +84,10 @@ function MapsIndoorsMap(props) {
             appUserRoles: props.supportsUrlParameters && appUserRolesQueryParameter ? appUserRolesQueryParameter : props.appUserRoles,
             externalIDs: props.supportsUrlParameters && externalIDsQueryParameter ? externalIDsQueryParameter : props.externalIDs,
             gmMapId: props.supportsUrlParameters && gmMapIdQueryParameter ? gmMapIdQueryParameter : props.gmMapId,
+            useMapProviderModule: props.supportsUrlParameters && useMapProviderModuleParameter ? useMapProviderModuleParameter : (props.useMapProviderModule || defaultProps.useMapProviderModule),
             kioskOriginLocationId: props.supportsUrlParameters && kioskOriginLocationId ? kioskOriginLocationId : props.kioskOriginLocationId,
+            language: props.supportsUrlParameters && languageQueryParameter ? languageQueryParameter : props.language,
+            supportsUrlParameters: props.supportsUrlParameters,
         });
     }, [props]);
 
@@ -91,3 +99,14 @@ function MapsIndoorsMap(props) {
 }
 
 export default MapsIndoorsMap;
+
+/**
+ * Convert query parameter value (which is always a string) into a boolean.
+ * It will only accept the string 'true' as a boolean true. Anything else will return false.
+ *
+ * @param {string} queryParameterValue
+ * @return {boolean}
+ */
+function getBooleanQueryParameter(queryParameterValue) {
+    return queryParameterValue === 'true' ? true : false;
+}

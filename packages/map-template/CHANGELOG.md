@@ -5,11 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.26.0] - 2023-12-20
+
+### Added
+
+- Add support for French, German and Danish languages. The browser language is used to pick one of those, and it can also be forced with a new `language` property.
+
+## [1.25.0] - 2023-12-18
+
+### Added
+
+- Added support for having QR code button when getting directions in Kiosk mode.
+
+## [1.24.1] - 2023-12-14
+
+### Fixed
+
+- Fixed `startZoomLevel`, `pitch` and `bearing` properties not working together with other parameters.
+
+## [1.24.0] - 2023-12-11
+
+### Added
+
+- New prop, `useMapProviderModule`: When set to true, the modules in the MapsIndoors Solution will be used to determine which map type to use.
+
 ## [1.23.0] - 2023-12-06
 
 ### Added
 
-- Add support showing directions immediately after selecting a location in a Kiosk mode. 
+- Add support showing directions immediately after selecting a location in a Kiosk mode.
 
 ## [1.22.0] - 2023-12-06
 
@@ -30,7 +54,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade to MapsIndoors JavaScript SDK v4.26.3.
 
 ## [1.20.1] - 2023-11-28
- 
+
 ### Added
 
 - Upgrade to MapsIndoors JavaScript SDK v4.26.2.
@@ -335,3 +359,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Closing button not being clickable on the Directions page.
 - Resizing of the sheet/modal when no categories are set.
+
