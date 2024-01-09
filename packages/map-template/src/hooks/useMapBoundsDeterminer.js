@@ -7,6 +7,7 @@ import { mapTypes } from '../constants/mapTypes';
 
 // Recoil atoms
 import bearingState from '../atoms/bearingState';
+import categoriesState from '../atoms/categoriesState';
 import currentVenueNameState from '../atoms/currentVenueNameState';
 import kioskOriginLocationIdState from '../atoms/kioskOriginLocationIdState';
 import locationIdState from '../atoms/locationIdState';
@@ -15,12 +16,13 @@ import mapTypeState from '../atoms/mapTypeState';
 import pitchState from '../atoms/pitchState';
 import startZoomLevelState from '../atoms/startZoomLevelState';
 import venuesState from '../atoms/venuesState';
+import venueState from '../atoms/venueState';
+
+// Hooks
 import useMediaQuery from './useMediaQuery';
 import getMobilePaddingBottom from '../helpers/GetMobilePaddingBottom';
 import getDesktopPaddingLeft from '../helpers/GetDesktopPaddingLeft';
-
 import { useInactive } from './useInactive';
-import venueState from '../atoms/venueState';
 import useSetCurrentVenueName from './useSetCurrentVenueName';
 
 const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
@@ -40,6 +42,7 @@ const useMapBoundsDeterminer = () => {
     const isInactive = useInactive();
 
     const bearing = useRecoilValue(bearingState);
+    const categories = useRecoilValue(categoriesState);
     const kioskOriginLocationId = useRecoilValue(kioskOriginLocationIdState);
     const locationId = useRecoilValue(locationIdState);
     const mapType = useRecoilValue(mapTypeState);
@@ -67,7 +70,7 @@ const useMapBoundsDeterminer = () => {
      */
     useEffect(() =>  {
         determineMapBounds();
-    }, [mapsIndoorsInstance, currentVenueName, venues, locationId, kioskOriginLocationId, pitch, bearing, startZoomLevel]);
+    }, [mapsIndoorsInstance, currentVenueName, venues, locationId, kioskOriginLocationId, pitch, bearing, startZoomLevel, categories]);
 
 
     /**
