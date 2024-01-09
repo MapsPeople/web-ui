@@ -16,7 +16,7 @@ const Keyboard = forwardRef(({ searchInputElement }, ref) => {
     const language = useRecoilValue(languageState);
 
     /**
-     * Methods that can be triggered on the mi-search element.
+     * Methods that can be triggered on the mi-keyboard element.
      */
     useImperativeHandle(ref, () => ({
         clearInputField() {
