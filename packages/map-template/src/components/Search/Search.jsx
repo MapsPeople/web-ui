@@ -289,8 +289,13 @@ function Search({ onSetSize }) {
     useEffect(() => {
         if (useKeyboard) {
             const onClick = (event) => {
+                // Detect the className of the keyboard buttons, the space and the backspace
                 // If the user clicks on the keyboard or the search fields, the keyboard should stay visible 
-                if (event.target.tagName.toUpperCase() === 'DIV' || event.target.tagName.toUpperCase() === 'MI-SEARCH' || event.target.tagName.toUpperCase() === 'INPUT') {
+                if (event.target.className === 'hg-button hg-standardBtn' ||
+                    event.target.className === 'hg-button hg-functionBtn hg-button-space' ||
+                    event.target.className === 'hg-button hg-functionBtn hg-button-bksp' ||
+                    event.target.tagName.toUpperCase() === 'MI-SEARCH' ||
+                    event.target.tagName.toUpperCase() === 'INPUT') {
                     setIsKeyboardVisible(true)
                 } else {
                     setIsKeyboardVisible(false);
