@@ -289,11 +289,10 @@ function Search({ onSetSize }) {
     useEffect(() => {
         if (useKeyboard) {
             const onClick = (event) => {
-                // Detect the className of the keyboard buttons, the space and the backspace
-                // If the user clicks on the keyboard or the search fields, the keyboard should stay visible 
-                if (event.target.className === 'hg-button hg-standardBtn' ||
-                    event.target.className === 'hg-button hg-functionBtn hg-button-space' ||
-                    event.target.className === 'hg-button hg-functionBtn hg-button-bksp' ||
+                // Use the closest() method to check if the element that has been clicked traverses the element and its parents 
+                // until it finds a node that matches the 'mi-keyboard' selector.
+                // If the user clicks on the keyboard or the search fields, the keyboard should stay visible.
+                if (event.target.closest('mi-keyboard') ||
                     event.target.tagName.toUpperCase() === 'MI-SEARCH' ||
                     event.target.tagName.toUpperCase() === 'INPUT') {
                     setIsKeyboardVisible(true)
