@@ -125,7 +125,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const isMobile = useMediaQuery('(max-width: 991px)');
     const resetState = useReset();
     const setCurrentVenueName = useSetCurrentVenueName();
-    const [pushAppView, goBack, currentAppView, currentAppViewPayload, appStates] = useAppHistory();
+    const [pushAppView, goBack, currentAppView, currentAppViewPayload, appStates, resetAppHistory] = useAppHistory();
 
     // Declare the reference to the disabled locations.
     const locationsDisabledRef = useRef();
@@ -165,6 +165,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         if (isInactive) {
             resetState();
+            resetAppHistory();
             setResetCount(curr => curr + 1); // will force a re-render of bottom sheet and sidebar.
         }
     }, [isInactive]);
