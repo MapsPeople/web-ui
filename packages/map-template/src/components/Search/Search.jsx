@@ -283,9 +283,13 @@ function Search({ onSetSize }) {
         }
     });
 
+    /*
+     * When useKeyboard parameter is present, add click event listener which determines when the keyboard should be shown or not. 
+     */
     useEffect(() => {
         if (useKeyboard) {
             const onClick = (event) => {
+                // If the user clicks on the keyboard or the search fields, the keyboard should stay visible 
                 if (event.target.tagName.toUpperCase() === 'DIV' || event.target.tagName.toUpperCase() === 'MI-SEARCH' || event.target.tagName.toUpperCase() === 'INPUT') {
                     setIsKeyboardVisible(true)
                 } else {
