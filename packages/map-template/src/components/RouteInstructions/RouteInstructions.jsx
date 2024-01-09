@@ -80,9 +80,9 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
 
             // Check if the substeps are closed or open, and trigger the method on the <route-instructions-step> component.
             if (substepsOpen === false) {
-                routeInstructionsRef.current.closeSubsteps();
+                routeInstructionsRef.current?.closeSubsteps();
             } else if (substepsOpen === true) {
-                routeInstructionsRef.current.openSubsteps();
+                routeInstructionsRef.current?.openSubsteps();
             }
         }
     }, [isOpen, activeStep, totalSteps, substepsOpen]);
