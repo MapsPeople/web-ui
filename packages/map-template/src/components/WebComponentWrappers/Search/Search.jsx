@@ -55,7 +55,6 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
             elementRef.current.focusInput();
         },
         clear() {
-            console.log('here cleared')
             elementRef.current.clear();
         },
         getInputField() {
@@ -83,7 +82,6 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
         }
 
         function onCleared() {
-            console.log('cleared');
             if (!current.getValue) {
                 current.focusInput();
             }

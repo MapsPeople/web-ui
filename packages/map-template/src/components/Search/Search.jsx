@@ -285,16 +285,10 @@ function Search({ onSetSize }) {
 
     useEffect(() => {
         if (useKeyboard) {
-            // console.log('use keyboard', useKeyboard)
             const onClick = (event) => {
                 if (event.target.tagName.toUpperCase() === 'DIV' || event.target.tagName.toUpperCase() === 'MI-SEARCH' || event.target.tagName.toUpperCase() === 'INPUT') {
-                    // console.log('show keyboard', event.target.tagName)
                     setIsKeyboardVisible(true)
-
-                    console.log('search input', searchFieldRef.current.getValue())
-
                 } else {
-                    // console.log('dont show keyboard', event.target.tagName);
                     setIsKeyboardVisible(false);
                 }
             };
