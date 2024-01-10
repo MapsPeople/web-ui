@@ -255,10 +255,18 @@ export namespace Components {
     }
     interface MiKeyboard {
         /**
+          * Clear the input field.
+         */
+        "clearInputField": () => Promise<void>;
+        /**
           * The active input element.
           * @type {HTMLInputElement}
          */
         "inputElement": HTMLInputElement;
+        /**
+          * The keyboard language to use. Supported values are "en" (English), "fr" (French), "de", (German) and "da" (Danish). If omitted, the browser language will be used. Defaults to English.
+         */
+        "language": string;
         /**
           * The keyboard layout to use. Defaults to alphabetic.
           * @type {KeyboardLayout}
@@ -870,6 +878,10 @@ export namespace Components {
           * Set focus on the input field. The preventScroll boolean is passed as true to prevent the browser from scrolling the document to bring the newly-focused element into view.
          */
         "focusInput": () => Promise<void>;
+        /**
+          * Get hold of the search input field.
+         */
+        "getInputField": () => Promise<HTMLInputElement>;
         /**
           * Restrict Google Places search to a specific country (two-character, ISO 3166-1 Alpha-2 compatible country code)
          */
@@ -1621,6 +1633,10 @@ declare namespace LocalJSX {
           * @type {HTMLInputElement}
          */
         "inputElement"?: HTMLInputElement;
+        /**
+          * The keyboard language to use. Supported values are "en" (English), "fr" (French), "de", (German) and "da" (Danish). If omitted, the browser language will be used. Defaults to English.
+         */
+        "language"?: string;
         /**
           * The keyboard layout to use. Defaults to alphabetic.
           * @type {KeyboardLayout}

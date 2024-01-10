@@ -271,6 +271,16 @@ Type: `Promise<void>`
 
 
 
+### `getInputField() => Promise<HTMLInputElement>`
+
+Get hold of the search input field.
+
+#### Returns
+
+Type: `Promise<HTMLInputElement>`
+
+
+
 ### `setDisplayText(displayText: string) => Promise<void>`
 
 Sets text to be shown in the search field.
