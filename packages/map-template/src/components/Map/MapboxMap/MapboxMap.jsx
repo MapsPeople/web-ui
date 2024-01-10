@@ -3,6 +3,7 @@ import { useRecoilValue } from 'recoil';
 import mapsIndoorsInstanceState from '../../../atoms/mapsIndoorsInstanceState';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import './MapboxMap.scss';
 import mapboxAccessTokenState from '../../../atoms/mapboxAccessTokenState';
 import primaryColorState from '../../../atoms/primaryColorState';
 import bearingState from '../../../atoms/bearingState';
@@ -22,6 +23,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
     const [mapView, setMapView] = useState();
     const [hasFloorSelector, setHasFloorSelector] = useState(false);
     const [hasPositionControl, setHasPositionControl] = useState(false);
+    const [hasZoomControl, setHasZoomControl] = useState(false);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const primaryColor = useRecoilValue(primaryColorState);
     const bearing = useRecoilValue(bearingState);
@@ -49,7 +51,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
         // Generate a UUIDv4 and set the Session Token for searching for Mapbox places.
         const uuid = uuidv4();
         sessionStorage.setItem('mapboxPlacesSessionToken', uuid);
-        
+
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
     // We ignore eslint warnings about missing dependencies because onMapView should never change runtime and changing Mapbox Access Token runtime will give other problems.
 
@@ -67,6 +69,14 @@ function MapboxMap({ onMapView, onPositionControl }) {
             onPositionControl(myPositionButtonElement);
         }
 
+        if (mapsIndoorsInstance && mapView && !hasZoomControl) {
+            mapView
+                .getMap()
+                .addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
+
+            setHasZoomControl(true);
+        }
+
         if (mapsIndoorsInstance && mapView && !hasFloorSelector) {
             const floorSelectorElement = document.createElement('mi-floor-selector');
             floorSelectorElement.mapsindoors = mapsIndoorsInstance;
@@ -79,7 +89,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
 
             setHasFloorSelector(true);
         }
-    }, [mapsIndoorsInstance, mapView, hasFloorSelector, hasPositionControl]);
+    }, [mapsIndoorsInstance, mapView, hasFloorSelector, hasPositionControl, hasZoomControl]);
 
     return <div className="map-container" id="map"></div>
 }
