@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { RecoilRoot } from 'recoil';
 import MapTemplate from '../MapTemplate/MapTemplate.jsx';
-import defaultLogo from "../../assets/logo.svg";
+
 /**
  *
  * @param {Object} props
@@ -43,7 +43,7 @@ function MapsIndoorsMap(props) {
         const defaultProps = {
             apiKey: '3ddemo',
             venue: 'WEWORK',
-            logo: defaultLogo,
+            logo: 'https://app.mapsindoors.com/mapsindoors/gfx/mapspeople-logo/mapspeople-pin.svg',
             primaryColor: '#005655', // --brand-colors-dark-pine-100 from MIDT
             useMapProviderModule: false,
             useKeyboard: false
