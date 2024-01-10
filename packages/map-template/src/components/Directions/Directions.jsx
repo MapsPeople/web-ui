@@ -13,11 +13,9 @@ import { snapPoints } from "../../constants/snapPoints";
 import substepsToggledState from "../../atoms/substepsToggledState";
 import getDesktopPaddingLeft from "../../helpers/GetDesktopPaddingLeft";
 import getMobilePaddingBottom from "../../helpers/GetMobilePaddingBottom";
-import distanceUnitSystemSelector from '../../selectors/distanceUnitSystemSelector';
 import getDesktopPaddingBottom from "../../helpers/GetDesktopPaddingBottom";
 import kioskLocationState from "../../atoms/kioskLocationState";
 import showQRCodeDialogState from "../../atoms/showQRCodeDialogState";
-import supportsUrlParametersState from "../../atoms/supportsUrlParametersState";
 import Accessibility from "../Accessibility/Accessibility";
 import isDestinationStepState from "../../atoms/isDestinationStepState";
 import primaryColorState from "../../atoms/primaryColorState";
@@ -50,8 +48,6 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
 
     const directions = useRecoilValue(directionsResponseState);
 
-    const distanceUnitSystem = useRecoilValue(distanceUnitSystemSelector);
-
     const [, setActiveStep] = useRecoilState(activeStepState);
 
     const [substepsOpen, setSubstepsOpen] = useRecoilState(substepsToggledState);
@@ -61,8 +57,6 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
     const [, setShowQRCodeDialog] = useRecoilState(showQRCodeDialogState);
-
-    const supportsUrlParameters = useRecoilValue(supportsUrlParametersState)
 
     const isDestinationStep = useRecoilValue(isDestinationStepState);
 
@@ -270,7 +264,6 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                     </div>
                 </>
             }
-            {/* <hr></hr> */}
             <div className="directions__actions">
                 <div className="directions__details">
                     {directions?.destinationLocation &&
