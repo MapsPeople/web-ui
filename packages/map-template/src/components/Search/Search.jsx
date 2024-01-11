@@ -19,6 +19,9 @@ import languageState from '../../atoms/languageState';
 import { useTranslation } from 'react-i18next';
 import kioskLocationState from '../../atoms/kioskLocationState';
 import getDesktopPaddingBottom from '../../helpers/GetDesktopPaddingBottom';
+import useKeyboardState from '../../atoms/useKeyboardState';
+import Keyboard from '../WebComponentWrappers/Keyboard/Keyboard';
+import searchInputState from '../../atoms/searchInputState';
 
 /**
  * Show the search results.
@@ -38,9 +41,13 @@ function Search({ onSetSize }) {
     /** Referencing the search field */
     const searchFieldRef = useRef();
 
+    /** Referencing the keyboard element */
+    const keyboardRef = useRef();
+
     const [searchDisabled, setSearchDisabled] = useState(true);
     const [searchResults, setSearchResults] = useState([]);
     const categories = useRecoilValue(categoriesState);
+    const useKeyboard = useRecoilValue(useKeyboardState);
 
     /** Indicate if search results have been found */
     const [showNotFoundMessage, setShowNotFoundMessage] = useState(false);
@@ -72,6 +79,10 @@ function Search({ onSetSize }) {
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
     const kioskLocation = useRecoilValue(kioskLocationState);
+
+    const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+
+    const searchInput = useRecoilValue(searchInputState)
 
     /**
      * Get the locations and filter through them based on categories selected.
@@ -147,15 +158,22 @@ function Search({ onSetSize }) {
         }
 
         setFilteredLocations([]);
+
+        // If keyboard is not null, clear the input field
+        if (keyboardRef.current !== null) {
+            keyboardRef.current.clearInputField();
+        }
     }
 
     /**
-     * When search field is clicked, maximize the sheet size and set focus on the from field.
+     * When search field is clicked, maximize the sheet size and set focus on the from field, 
+     * and if the useKeyboard prop is present, show the onscreen keyboard.
      * But wait for any bottom sheet transition to end before doing that to avoid content jumping when virtual keyboard appears.
      */
     function searchFieldClicked() {
         setSize(snapPoints.MAX);
         setSearchDisabled(false);
+        searchFieldRef.current.getInputField();
 
         const sheet = searchRef.current.closest('.sheet');
         if (sheet) {
@@ -265,6 +283,31 @@ function Search({ onSetSize }) {
         }
     });
 
+    /*
+     * When useKeyboard parameter is present, add click event listener which determines when the keyboard should be shown or not. 
+     */
+    useEffect(() => {
+        if (useKeyboard) {
+            const onClick = (event) => {
+                // Use the closest() method to check if the element that has been clicked traverses the element and its parents 
+                // until it finds a node that matches the 'mi-keyboard' selector.
+                // If the user clicks on the keyboard or the search fields, the keyboard should stay visible.
+                if (event.target.closest('mi-keyboard') ||
+                    event.target.tagName.toUpperCase() === 'MI-SEARCH' ||
+                    event.target.tagName.toUpperCase() === 'INPUT') {
+                    setIsKeyboardVisible(true)
+                } else {
+                    setIsKeyboardVisible(false);
+                }
+            };
+
+            window.addEventListener("click", onClick, false);
+            return () => {
+                window.removeEventListener("click", onClick, false);
+            };
+        }
+    }, [useKeyboard]);
+
     return (
         <div className="search"
             ref={searchRef}
@@ -307,6 +350,7 @@ function Search({ onSetSize }) {
                     </div>
                 }
             </div>
+            {isKeyboardVisible && isDesktop && <Keyboard ref={keyboardRef} searchInputElement={searchInput}></Keyboard>}
         </div>
     )
 }

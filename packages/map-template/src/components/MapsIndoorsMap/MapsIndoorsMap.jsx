@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { RecoilRoot } from 'recoil';
 import MapTemplate from '../MapTemplate/MapTemplate.jsx';
-import defaultLogo from "../../assets/logo.svg";
+
 /**
  *
  * @param {Object} props
@@ -25,6 +25,7 @@ import defaultLogo from "../../assets/logo.svg";
  * @param {boolean} [props.useMapProviderModule] - Set to true if the Map Template should take MapsIndoors solution modules into consideration when determining what map type to use.
  * @param {string} [props.kioskOriginLocationId] - If running the Map Template as a kiosk (upcoming feature), provide the Location ID that represents the location of the kiosk.
  * @param {string} [props.language] - The language to show textual content in. Supported values are "en" for English, "da" for Danish, "de" for German and "fr" for French. If the prop is not set, the language of the browser will be used (if it is one of the four supported languages - otherwise it will default to English).
+ * @param {boolean} [props.useKeyboard] - If running the Map Template as a kiosk, set this prop to true and it will prompt a keyboard. 
  */
 function MapsIndoorsMap(props) {
 
@@ -42,9 +43,10 @@ function MapsIndoorsMap(props) {
         const defaultProps = {
             apiKey: '3ddemo',
             venue: 'WEWORK',
-            logo: defaultLogo,
+            logo: 'https://app.mapsindoors.com/mapsindoors/gfx/mapspeople-logo/mapspeople-pin.svg',
             primaryColor: '#005655', // --brand-colors-dark-pine-100 from MIDT
-            useMapProviderModule: false
+            useMapProviderModule: false,
+            useKeyboard: false
         };
 
         const apiKeyQueryParameter = queryStringParams.get('apiKey');
@@ -66,6 +68,7 @@ function MapsIndoorsMap(props) {
         const useMapProviderModuleParameter = getBooleanQueryParameter(queryStringParams.get('useMapProviderModule'));
         const kioskOriginLocationId = queryStringParams.get('kioskOriginLocationId');
         const languageQueryParameter = queryStringParams.get('language');
+		const useKeyboardQueryParameter = getBooleanQueryParameter(queryStringParams.get('useKeyboard'));
 
         setMapTemplateProps({
             apiKey: props.supportsUrlParameters && apiKeyQueryParameter ? apiKeyQueryParameter : (props.apiKey || defaultProps.apiKey),
@@ -88,6 +91,8 @@ function MapsIndoorsMap(props) {
             kioskOriginLocationId: props.supportsUrlParameters && kioskOriginLocationId ? kioskOriginLocationId : props.kioskOriginLocationId,
             language: props.supportsUrlParameters && languageQueryParameter ? languageQueryParameter : props.language,
             supportsUrlParameters: props.supportsUrlParameters,
+			useKeyboard: props.supportsUrlParameters && useKeyboardQueryParameter ? useKeyboardQueryParameter : (props.useKeyboard || defaultProps.useKeyboard),
+
         });
     }, [props]);
 
@@ -108,5 +113,5 @@ export default MapsIndoorsMap;
  * @return {boolean}
  */
 function getBooleanQueryParameter(queryParameterValue) {
-    return queryParameterValue === 'true' ? true : false;
+    return queryParameterValue === 'true';
 }
