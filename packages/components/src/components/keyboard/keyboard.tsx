@@ -1,5 +1,5 @@
 import { Component, ComponentInterface, h } from '@stencil/core';
-import { JSX, Prop, Watch } from '@stencil/core/internal';
+import { JSX, Prop, Watch, Method } from '@stencil/core/internal';
 import SimpleKeyboard from 'simple-keyboard';
 import { danishAlphabetic, defaultAlphabetic, frenchAlphabetic, germanAlphabetic, unitedStatesAlphabetic } from './keyboard-alphabetic-layouts';
 import { KeyboardLayout } from './keyboard-layout.enum';
@@ -60,6 +60,18 @@ export class Keyboard implements ComponentInterface {
         }
     }
 
+    /**
+     * The keyboard language to use. Supported values are "en" (English), "fr" (French), "de", (German) and "da" (Danish).
+     * If omitted, the browser language will be used. Defaults to English.
+     */
+    @Prop() language: string;
+    @Watch('language')
+    languageChange(): void {
+        this.simpleKeyboard.setOptions({
+            layout: this.getKeyboardLayout(this.layout as KeyboardLayout)
+        });
+    }
+
     private simpleKeyboard: SimpleKeyboard;
     private inputElements = new Set<HTMLInputElement>();
 
@@ -79,6 +91,17 @@ export class Keyboard implements ComponentInterface {
             },
             theme: 'hg-theme-default hg-layout-numeric numeric-theme'
         });
+
+        // Populate the keyboard's internal input value with any existing value from the input field.
+        this.simpleKeyboard.setInput(this.inputElement.value);
+    }
+
+    /**
+     * Clear the input field.
+     */
+    @Method()
+    clearInputField(): void {
+        this.simpleKeyboard.clearInput();
     }
 
     /**
@@ -111,7 +134,7 @@ export class Keyboard implements ComponentInterface {
         }
 
         // Alphabetic layout
-        const browserLanguage: string = window.navigator.language;
+        const browserLanguage: string = this.language || window.navigator.language;
         if (!browserLanguage) return defaultAlphabetic; // Return defaultAlphabetic if navigator language isn't available.
         const supportedAlphabeticLayouts: Array<{ layout: { default: string[] }, languages: string[] }> = [ // Mapping multiple languages to a single keyboard layout
             { layout: unitedStatesAlphabetic, languages: ['en', 'en-us'] },
