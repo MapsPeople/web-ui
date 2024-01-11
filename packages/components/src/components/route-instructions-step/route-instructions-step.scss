@@ -28,7 +28,7 @@
         top: 50px;
         background: white;
         z-index: 1000;
-        padding-bottom: 8px;
+        padding-bottom: variables.$spacing-x-small;
     }
 
     &__destination {
@@ -117,8 +117,8 @@
         justify-content: center;
 
         mi-icon {
-            width: 24px;
-            height: 24px;
+            width: variables.$spacing-large;
+            height: variables.$spacing-large;
             display: block;
         }
     }

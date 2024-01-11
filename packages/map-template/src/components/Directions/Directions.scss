@@ -16,9 +16,9 @@
         border-radius: var(--rounding-large);
         width: 100%;
         height: fit-content;
-        padding: 16px;
+        padding: var(--spacing-medium);
         text-transform: uppercase;
-        font-weight: 600;
+        font-weight: var(--font-weight-x-large);
         color: var(--color-gray-70);
 
         &:hover {
@@ -27,18 +27,18 @@
     }
 
     &__finish {
-        color: white;
+        color: var(--color-white-white);
     }
 
     &__minutes {
         font-weight: var(--font-weight-large);
-        color: #6B7280;
+        color: var(--color-gray-60);
         position: sticky;
         top: 0;
-        background: white;
+        background: var(--color-white-white);
         z-index: 10000;
-        padding-bottom: 16px;
-        padding-top: 16px;
+        padding-bottom: var(--spacing-medium);
+        padding-top: var(--spacing-medium);
     }
 
     &__info {
@@ -78,7 +78,6 @@
 
     &__qr-code {
         width: fit-content;
-        font-weight: var(--font-weight-large);
         display: grid;
         gap: var(--spacing-medium);
         grid-auto-flow: column;
@@ -87,7 +86,7 @@
         background-color: var(--tailwind-colors-gray-100);
         border: none;
         border-radius: var(--rounding-large);
-        font-weight: 600;
+        font-weight: var(--font-weight-x-large);
         color: var(--color-gray-90);
 
         &:hover {
@@ -100,26 +99,26 @@
         grid-auto-flow: column;
         align-items: center;
         justify-content: space-between;
-        padding: 8px 16px;
+        padding: var(--spacing-x-small) var(--spacing-medium);
     }
 
     hr {
         width: 100%;
-        background-color: #E5E7EB;
+        background-color: var(--color-gray-30);
         height: 1px;
         border: none
     }
 
     &__steps {
-        padding: 0 16px;
+        padding: 0 var(--spacing-medium);
     }
 
     &__actions {
-        padding: 0 16px 16px 16px;
+        padding: 0 var(--spacing-medium) var(--spacing-medium) var(--spacing-medium);
         position: sticky;
         bottom: 0;
-        background: white;
-        border-top: 1px solid #E5E7EB;
+        background: var(--color-white-white);
+        border-top: 1px solid var(--color-gray-30);
     }
 
     @media (max-width: $desktop-breakpoint) {
