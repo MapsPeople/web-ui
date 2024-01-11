@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.29.0] - 2024-01-11
+
+### Added
+
+- Added support for loading Wayfinding view when having `directionsFrom` prop.
+
+## [1.28.1] - 2024-01-10
+
+### Fixed
+
+- Fixed hosting of default logo to be on Amazon S3 bucket instead of assets folder.
+
 ## [1.28.0] - 2024-01-10
 
 ### Added
