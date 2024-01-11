@@ -4,6 +4,7 @@ import { useRecoilState } from 'recoil';
 import substepsToggledState from '../../../atoms/substepsToggledState';
 import triggerSubstepsState from '../../../atoms/triggerSubstepsState';
 import kioskLocationState from '../../../atoms/kioskLocationState';
+import useMediaQuery from '../../../hooks/useMediaQuery';
 
 /**
  * React wrapper around the custom element <mi-route-instructions-step>.
@@ -26,6 +27,8 @@ const RouteInstructionsStep = forwardRef(({ totalSteps, activeStep, previous, or
     const [, setTriggerSubsteps] = useRecoilState(triggerSubstepsState);
 
     const kioskLocation = useRecoilState(kioskLocationState);
+
+    const isDesktop = useMediaQuery('(min-width: 992px)');
 
     /**
      * Method that can be triggered on the element.
@@ -93,7 +96,7 @@ const RouteInstructionsStep = forwardRef(({ totalSteps, activeStep, previous, or
 
     return <mi-route-instructions-step
         ref={elementRef}
-        show-toggle-button={kioskLocation[0] === undefined ? true : false}
+        show-toggle-button={kioskLocation[0] === undefined || (kioskLocation[0] !== undefined && !isDesktop) ? true : false}
         step={JSON.stringify(totalSteps[activeStep])}
         translations={JSON.stringify(translations)}
         destination-location={directions?.destinationLocation.properties.name}
