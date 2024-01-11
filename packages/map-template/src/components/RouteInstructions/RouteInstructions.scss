@@ -4,7 +4,6 @@
     grid-template-rows: 1fr min-content;
 
     &__footer {
-
         position: sticky;
         bottom: 135px;
         background: white;
@@ -14,11 +13,17 @@
             content: '';
             position: absolute;
             pointer-events: none;
-            bottom: calc(var(--spacing-large) + var(--spacing-medium));
+            bottom: var(--spacing-xx-large);
             left: 0;
             right: 0;
             height: var(--spacing-xx-large);
             background: linear-gradient(rgba(255, 255, 255, 0), white);
+        }
+
+        &--kiosk {
+            &::before {
+                background: transparent;
+            }
         }
     }
 
@@ -42,6 +47,13 @@
         border: none;
         width: var(--icon-size-medium);
         height: var(--icon-size-medium);
+        align-content: center;
+
+        &--kiosk {
+            border-radius: var(--rounding-large);
+            border: 1px solid var(--color-gray-30);
+            padding: 18px;
+        }
     }
 
     button:disabled,

@@ -52,7 +52,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
 
     const [substepsOpen, setSubstepsOpen] = useRecoilState(substepsToggledState);
 
-    const kioskLocation = useRecoilValue(kioskLocationState)
+    const kioskLocation = useRecoilValue(kioskLocationState);
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
