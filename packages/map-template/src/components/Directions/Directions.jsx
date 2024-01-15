@@ -268,7 +268,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                 <div className="directions__details">
                     {directions?.destinationLocation &&
                         <div className="directions__info">
-                            {destinationDisplayRule && directions.destinationLocation.name !== 'My Position' &&
+                            {destinationDisplayRule && directions.destinationLocation.id !== 'USER_POSITION' &&
                                 <div className="directions__icon">
                                     <img alt="" src={destinationDisplayRule.icon.src ? destinationDisplayRule.icon.src : destinationDisplayRule.icon} />
                                 </div>}
