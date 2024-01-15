@@ -21,7 +21,7 @@ function Accessibility({ onAccessibilityChanged }) {
     function handleAccessibilityChanged(event) {
         setAccessibilityOn(event.target.checked);
 
-        // If the component is present, fire the callback
+        // If the callback function is present, fire the callback
         if (onAccessibilityChanged) {
             onAccessibilityChanged();
         }
