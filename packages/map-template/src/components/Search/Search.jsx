@@ -22,6 +22,8 @@ import getDesktopPaddingBottom from '../../helpers/GetDesktopPaddingBottom';
 import useKeyboardState from '../../atoms/useKeyboardState';
 import Keyboard from '../WebComponentWrappers/Keyboard/Keyboard';
 import searchInputState from '../../atoms/searchInputState';
+import { ReactComponent as CloseIcon } from '../../assets/close.svg';
+import showLegendDialogState from '../../atoms/showLegendDialogState';
 
 /**
  * Show the search results.
@@ -82,7 +84,9 @@ function Search({ onSetSize }) {
 
     const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
 
-    const searchInput = useRecoilValue(searchInputState)
+    const searchInput = useRecoilValue(searchInputState);
+
+    const [, setShowLegendDialog] = useRecoilState(showLegendDialogState);
 
     /**
      * Get the locations and filter through them based on categories selected.
@@ -312,16 +316,19 @@ function Search({ onSetSize }) {
         <div className="search"
             ref={searchRef}
             style={{ minHeight: categories.length > 0 ? '136px' : '80px' }}>
-            <SearchField
-                ref={searchFieldRef}
-                mapsindoors={true}
-                placeholder={t('Search by name, category, building...')}
-                results={locations => onResults(locations)}
-                clicked={() => searchFieldClicked()}
-                cleared={() => cleared()}
-                category={selectedCategory}
-                disabled={searchDisabled} // Disabled initially to prevent content jumping when clicking and changing sheet size.
-            />
+            <div className='search__info'>
+                <button className='search__legend' onClick={() => setShowLegendDialog(true)}><CloseIcon /></button>
+                <SearchField
+                    ref={searchFieldRef}
+                    mapsindoors={true}
+                    placeholder={t('Search by name, category, building...')}
+                    results={locations => onResults(locations)}
+                    clicked={() => searchFieldClicked()}
+                    cleared={() => cleared()}
+                    category={selectedCategory}
+                    disabled={searchDisabled} // Disabled initially to prevent content jumping when clicking and changing sheet size.
+                />
+            </div>
             <div className="search__scrollable prevent-scroll" {...scrollableContentSwipePrevent}>
                 {categories.length > 0 &&
                     <div ref={categoriesListRef} className="search__categories">

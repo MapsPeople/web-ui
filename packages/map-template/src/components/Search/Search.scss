@@ -32,6 +32,21 @@
         margin-top: var(--spacing-x-small);
     }
 
+    &__info {
+        display: grid;
+        grid-auto-flow: column;
+        grid-template-columns: min-content 1fr;
+        gap: 8px;
+    }
+
+    &__legend {
+        width: 48px;
+        height: 48px;
+        border: 1px solid var(--color-gray-30);
+        border-radius: 8px;
+        background-color: white;
+    }
+
     @media (max-width: $desktop-breakpoint) {
         padding: var(--spacing-medium) var(--spacing-x-small) var(--spacing-medium) var(--spacing-x-small);
     }

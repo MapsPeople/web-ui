@@ -40,6 +40,8 @@ import showQRCodeDialogState from '../../atoms/showQRCodeDialogState';
 import QRCodeDialog from '../QRCodeDialog/QRCodeDialog';
 import supportsUrlParametersState from '../../atoms/supportsUrlParametersState';
 import useKeyboardState from '../../atoms/useKeyboardState';
+import showLegendDialogState from '../../atoms/showLegendDialogState.js';
+import LegendDialog from '../LegendDialog/LegendDialog.jsx';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -125,6 +127,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [mapsindoorsSDKAvailable, setMapsindoorsSDKAvailable] = useState(false);
 
     const showQRCodeDialog = useRecoilValue(showQRCodeDialogState);
+    const showLegendDialog = useRecoilValue(showLegendDialogState);
 
     /**
      * Ensure that MapsIndoors Web SDK is available.
@@ -509,6 +512,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             active={currentAppView === appStates.VENUE_SELECTOR}
         />}
         {showQRCodeDialog && <QRCodeDialog />}
+        {showLegendDialog && <LegendDialog />}
         {isMapReady &&
             <>
                 {isDesktop &&
