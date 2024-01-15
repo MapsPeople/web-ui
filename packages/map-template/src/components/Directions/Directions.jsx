@@ -245,7 +245,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
     return (
         <div className="directions" style={{ display: !kioskLocation || (kioskLocation && !isDesktop) ? 'grid' : 'block' }}>
             <div className="directions__steps">
-                <div className="directions__minutes">{totalTime && <mi-time seconds={totalTime} />}</div>
+                <div className="directions__minutes">{totalTime && <mi-time translations={JSON.stringify({ days: t('d'), hours: t('h'), minutes: t('min') })} seconds={totalTime} />}</div>
                 <RouteInstructions
                     steps={getRouteSteps()}
                     originLocation={directions?.originLocation}
