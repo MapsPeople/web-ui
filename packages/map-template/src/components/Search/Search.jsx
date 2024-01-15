@@ -75,6 +75,10 @@ function Search({ onSetSize }) {
 
     const kioskLocation = useRecoilValue(kioskLocationState);
 
+    const [isLeftButtonDisabled, setIsLeftButtonDisabled] = useState(true);
+
+    const [isRightButtonDisabled, setIsRightButtonDisabled] = useState(false);
+
     /**
      * Get the locations and filter through them based on categories selected.
      *
@@ -267,9 +271,45 @@ function Search({ onSetSize }) {
         }
     });
 
-    const scroll = (scrollOffset) => {
-        categoriesListRef.current.scrollLeft += scrollOffset;
-    };
+    /**
+     * Update the state of the left and right scroll buttons
+     */
+    function updateScrollButtonsState() {
+        // Disable or enable the scroll left button
+        if (categoriesListRef?.current.scrollLeft === 0) {
+            setIsLeftButtonDisabled(true);
+        } else if (isLeftButtonDisabled) {
+            setIsLeftButtonDisabled(false);
+        }
+
+        // Disable or enable the scroll right button
+        if (categoriesListRef?.current.scrollWidth - categoriesListRef?.current.scrollLeft === categoriesListRef?.current.clientWidth) {
+            setIsRightButtonDisabled(true);
+        } else if (isRightButtonDisabled) {
+            setIsRightButtonDisabled(false);
+        }
+    }
+
+    /**
+     * Update the scroll position based on the value
+     *
+     * @param {number} value
+     */
+    function updateScrollPosition(value) {
+        categoriesListRef?.current.scroll({
+            left: categoriesListRef?.current.scrollLeft + value,
+            behavior: 'smooth'
+        });
+    }
+
+    /**
+     * Add event listener for scrolling in the categories list
+     */
+    if (categoriesListRef.current) {
+        categoriesListRef.current.addEventListener('scroll', () => {
+            updateScrollButtonsState();
+        });
+    }
 
     return (
         <div className="search"
@@ -288,7 +328,13 @@ function Search({ onSetSize }) {
             <div className="search__scrollable prevent-scroll" {...scrollableContentSwipePrevent}>
                 {categories.length > 0 &&
                     <>
-                        <button className='search__scroll-button' onClick={() => scroll(-50)}><ArrowLeft /></button>
+                        {isDesktop &&
+                            <button className={`search__scroll-button`}
+                                onClick={() => updateScrollPosition(-300)}
+                                disabled={isLeftButtonDisabled}>
+                                <ArrowLeft />
+                            </button>
+                        }
                         <div ref={categoriesListRef} className="search__categories">
                             {categories?.map(([category, categoryInfo]) =>
                                 <mi-chip
@@ -301,7 +347,13 @@ function Search({ onSetSize }) {
                                 </mi-chip>
                             )}
                         </div>
-                        <button className='search__scroll-button' onClick={() => scroll(50)}><ArrowRight /></button>
+                        {isDesktop &&
+                            <button className={`search__scroll-button`}
+                                onClick={() => updateScrollPosition(300)}
+                                disabled={isRightButtonDisabled}>
+                                <ArrowRight />
+                            </button>
+                        }
                     </>}
                 {showNotFoundMessage && <p className="search__error"> {t('Nothing was found')}</p>}
                 {searchResults.length > 0 &&
@@ -317,6 +369,7 @@ function Search({ onSetSize }) {
                     </div>
                 }
             </div>
+
         </div>
     )
 }

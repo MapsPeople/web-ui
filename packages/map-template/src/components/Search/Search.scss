@@ -41,6 +41,11 @@
         background-color: white;
         border: 1px solid #E5E7EB;
         border-radius: 8px;
+
+        &:disabled {
+            cursor: not-allowed;
+            opacity: 0.3;
+        }
     }
 
     @media (max-width: $desktop-breakpoint) {
