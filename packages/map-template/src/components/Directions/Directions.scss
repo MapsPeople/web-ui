@@ -99,7 +99,7 @@
         grid-auto-flow: column;
         align-items: center;
         justify-content: space-between;
-        padding-bottom: var(--spacing-x-small);
+        padding: var(--spacing-x-small) var(--spacing-medium) var(--spacing-medium) var(--spacing-medium);
     }
 
     hr {
