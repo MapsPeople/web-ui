@@ -135,7 +135,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
             }, () => setHasFoundRoute(false));
         } else if (activeSearchField === searchFieldIdentifiers.FROM) {
             decorateLocation(location).then(decoratedLocation => {
-                originLocationRef.current = decorateLocation;
+                originLocationRef.current = decoratedLocation;
                 fromFieldRef.current.setDisplayText(decoratedLocation.properties.name);
             }, () => setHasFoundRoute(false));
         }
