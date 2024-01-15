@@ -245,7 +245,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
     return (
         <div className="directions" style={{ display: !kioskLocation || (kioskLocation && !isDesktop) ? 'grid' : 'block' }}>
             <div className="directions__steps">
-                <div className="directions__minutes">{totalTime && <mi-time seconds={totalTime} />}</div>
+                <div className="directions__minutes">{totalTime && <mi-time translations={JSON.stringify({ days: t('d'), hours: t('h'), minutes: t('min') })} seconds={totalTime} />}</div>
                 <RouteInstructions
                     steps={getRouteSteps()}
                     originLocation={directions?.originLocation}
@@ -257,10 +257,10 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
             </div>
             {kioskLocation && isDesktop &&
                 <>
-                    <hr></hr>
+                    <hr />
                     <div className="directions__kiosk">
                         <Accessibility onAccessibilityClicked={() => resetSubsteps()} />
-                        <button className='directions__qr-code' onClick={() => setShowQRCodeDialog(true)}><QRCode />{t('Scan QR code')}</button>
+                        <button className="directions__qr-code" onClick={() => setShowQRCodeDialog(true)}><QRCode />{t('Scan QR code')}</button>
                     </div>
                 </>
             }
@@ -268,7 +268,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                 <div className="directions__details">
                     {directions?.destinationLocation &&
                         <div className="directions__info">
-                            {destinationDisplayRule && directions.destinationLocation.name !== 'My Position' &&
+                            {destinationDisplayRule && directions.destinationLocation.id !== 'USER_POSITION' &&
                                 <div className="directions__icon">
                                     <img alt="" src={destinationDisplayRule.icon.src ? destinationDisplayRule.icon.src : destinationDisplayRule.icon} />
                                 </div>}
