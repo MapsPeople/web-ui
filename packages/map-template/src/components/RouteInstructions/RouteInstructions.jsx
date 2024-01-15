@@ -12,8 +12,6 @@ import substepsToggledState from '../../atoms/substepsToggledState';
 import useSetMaxZoomLevel from '../../hooks/useSetMaxZoomLevel';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import isDestinationStepState from '../../atoms/isDestinationStepState';
-import kioskLocationState from '../../atoms/kioskLocationState';
-import useMediaQuery from '../../hooks/useMediaQuery';
 import { useKioskContext } from '../../hooks/useKioskContext';
 
 /**
