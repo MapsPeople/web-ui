@@ -317,12 +317,14 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
             setDestinationLocation(directionsToLocation);
         }
 
-        // If there is a directionsFromLocation, use that as the 'from' field. Otherwise trigger focus on search field.
-        if (directionsFromLocation?.properties) {
-            fromFieldRef.current.setDisplayText(directionsFromLocation.properties.name);
-            originLocationRef.current = directionsFromLocation;
-        } else {
-            setActiveSearchField(searchFieldIdentifiers.FROM);
+        if (isActive) {
+            // If there is a directionsFromLocation, use that as the 'from' field. Otherwise trigger focus on search field.
+            if (directionsFromLocation?.properties) {
+                fromFieldRef.current.setDisplayText(directionsFromLocation.properties.name);
+                originLocationRef.current = directionsFromLocation;
+            } else {
+                setActiveSearchField(searchFieldIdentifiers.FROM);
+            }
         }
 
         if (isActive && !fromFieldRef.current?.getValue()) {
