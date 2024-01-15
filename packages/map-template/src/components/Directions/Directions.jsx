@@ -211,7 +211,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
      * Stop rendering directions on the map.
      */
     function stopRendering() {
-        directionsRenderer.setRoute(null);
+        directionsRenderer?.setRoute(null);
         directionsRenderer = null;
     }
 
