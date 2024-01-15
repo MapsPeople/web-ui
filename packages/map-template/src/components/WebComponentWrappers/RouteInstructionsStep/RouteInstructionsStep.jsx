@@ -1,6 +1,6 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import substepsToggledState from '../../../atoms/substepsToggledState';
 import triggerSubstepsState from '../../../atoms/triggerSubstepsState';
 import kioskLocationState from '../../../atoms/kioskLocationState';
@@ -26,7 +26,7 @@ const RouteInstructionsStep = forwardRef(({ totalSteps, activeStep, previous, or
     const [substepsOpen, setSubstepsOpen] = useRecoilState(substepsToggledState);
     const [, setTriggerSubsteps] = useRecoilState(triggerSubstepsState);
 
-    const kioskLocation = useRecoilState(kioskLocationState);
+    const kioskLocation = useRecoilValue(kioskLocationState);
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
@@ -96,7 +96,7 @@ const RouteInstructionsStep = forwardRef(({ totalSteps, activeStep, previous, or
 
     return <mi-route-instructions-step
         ref={elementRef}
-        show-toggle-button={kioskLocation[0] === undefined || (kioskLocation[0] !== undefined && !isDesktop)}
+        show-toggle-button={kioskLocation === undefined || (kioskLocation !== undefined && !isDesktop)}
         step={JSON.stringify(totalSteps[activeStep])}
         translations={JSON.stringify(translations)}
         destination-location={directions?.destinationLocation.properties.name}
