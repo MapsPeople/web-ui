@@ -276,7 +276,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                                     <img alt="" src={destinationDisplayRule.icon.src ? destinationDisplayRule.icon.src : destinationDisplayRule.icon} />
                                 </div>}
                             <div className="directions__content">
-                                <div className='directions__name'>
+                                <div className="directions__name">
                                     {directions?.destinationLocation.properties.name}
                                 </div>
                                 <mi-location-info ref={destinationInfoElement} show-external-id={false} />
