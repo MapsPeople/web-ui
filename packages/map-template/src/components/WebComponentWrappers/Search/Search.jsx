@@ -1,8 +1,9 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import useNear from '../../../hooks/useNear';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useRecoilState } from 'recoil';
 import userPositionState from '../../../atoms/userPositionState';
 import languageState from '../../../atoms/languageState';
+import searchInputState from '../../../atoms/searchInputState';
 
 /**
  * React wrapper around the custom element <mi-search>.
@@ -24,6 +25,8 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
 
     const userPosition = useRecoilValue(userPositionState);
     const language = useRecoilValue(languageState);
+
+    const [, setSearchInput] = useRecoilState(searchInputState)
 
     const mapboxPlacesSessionToken = sessionStorage.getItem('mapboxPlacesSessionToken');
 
@@ -53,6 +56,9 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
         },
         clear() {
             elementRef.current.clear();
+        },
+        getInputField() {
+            return elementRef.current.getInputField().then((searchInput) => setSearchInput(searchInput));
         }
     }));
 
@@ -97,6 +103,7 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
     }, [placeholder, mapsindoors, results, clicked, cleared, google, mapbox, changed]);
 
     return <mi-search ref={elementRef}
+        id-attribute='search'
         placeholder={placeholder}
         session-token={mapboxPlacesSessionToken}
         user-position={(userPositionCoordinates.latitude !== undefined && userPositionCoordinates.longitude !== undefined) ? Object.values(userPositionCoordinates).join(',') : null}

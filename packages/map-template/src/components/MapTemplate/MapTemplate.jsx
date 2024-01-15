@@ -39,6 +39,7 @@ import kioskLocationState from '../../atoms/kioskLocationState';
 import showQRCodeDialogState from '../../atoms/showQRCodeDialogState';
 import QRCodeDialog from '../QRCodeDialog/QRCodeDialog';
 import supportsUrlParametersState from '../../atoms/supportsUrlParametersState';
+import useKeyboardState from '../../atoms/useKeyboardState';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -66,8 +67,9 @@ defineCustomElements();
  * @param {string} [props.kioskOriginLocationId] - If running the Map Template as a kiosk (upcoming feature), provide the Location ID that represents the location of the kiosk.
  * @param {string} [props.language] - The language to show textual content in. Supported values are "en" for English, "da" for Danish, "de" for German and "fr" for French. If the prop is not set, the language of the browser will be used (if it is one of the four supported languages - otherwise it will default to English).
  * @param {boolean} [props.supportsUrlParameters] - Set to true if you want to support URL Parameters to configure the Map Template.
+ * @param {boolean} [props.useKeyboard] - If running the Map Template as a kiosk, set this prop to true and it will prompt a keyboard. 
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard }) {
 
     const [, setApiKey] = useRecoilState(apiKeyState);
     const [, setGmApiKey] = useRecoilState(gmApiKeyState);
@@ -85,6 +87,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [currentLanguage, setCurrentLanguage] = useRecoilState(languageState);
     const [, setKioskLocation] = useRecoilState(kioskLocationState);
     const [, setSupportsUrlParameters] = useRecoilState(supportsUrlParametersState);
+    const [, setUseKeyboard] = useRecoilState(useKeyboardState);
 
     const [showVenueSelector, setShowVenueSelector] = useState(true);
     const [showPositionControl, setShowPositionControl] = useState(true);
@@ -413,6 +416,18 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         setSupportsUrlParameters(supportsUrlParameters);
     }, [supportsUrlParameters]);
+
+    /*
+     * React on changes to the useKeyboard prop.
+     * Show keyboard only in a kiosk context.
+     */
+    useEffect(() => {
+        if (mapsindoorsSDKAvailable) {
+            if (useKeyboard && kioskOriginLocationId) {
+                setUseKeyboard(useKeyboard);
+            }
+        }
+    }, [useKeyboard, kioskOriginLocationId, mapsindoorsSDKAvailable]);
 
     /**
      * When venue is fitted while initializing the data,
