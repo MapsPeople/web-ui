@@ -36,11 +36,11 @@
     }
 
     &__scroll-button {
-        width: 48px;
-        height: 48px;
-        background-color: white;
-        border: 1px solid #E5E7EB;
-        border-radius: 8px;
+        width: var(--spacing-xxx-large);
+        height: var(--spacing-xxx-large);
+        background-color: var(--brand-colors-white-100);
+        border: 1px solid var(--color-gray-30);
+        border-radius: var(--spacing-x-small);
 
         &:disabled {
             cursor: not-allowed;
