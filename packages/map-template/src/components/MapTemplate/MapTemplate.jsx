@@ -167,9 +167,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         if (isInactive) {
-            resetState();
-            resetAppHistory();
-            setResetCount(curr => curr + 1); // will force a re-render of bottom sheet and sidebar.
+            resetStateAndUI();
         }
     }, [isInactive]);
 
@@ -504,9 +502,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }
 
     /**
-     * Function that handles the reset of the state when the route has finished.
+     * Function that handles the reset of the state and UI.
      */
-    function onRouteFinished() {
+    function resetStateAndUI() {
         resetState();
         resetAppHistory();
         setResetCount(curr => curr + 1); // will force a re-render of bottom sheet and sidebar.
@@ -563,7 +561,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                         pushAppView={pushAppView}
                         currentAppView={currentAppView}
                         appViews={appStates}
-                        onFinishedRoute={() => onRouteFinished()}
+                        onFinishedRoute={() => resetStateAndUI()}
                     />
                 }
                 {isMobile &&
@@ -573,7 +571,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                         pushAppView={pushAppView}
                         currentAppView={currentAppView}
                         appViews={appStates}
-                        onFinishedRoute={() => onRouteFinished()}
+                        onFinishedRoute={() => resetStateAndUI()}
                     />
                 }
             </Fragment>
