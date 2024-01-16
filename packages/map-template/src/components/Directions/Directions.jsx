@@ -19,7 +19,7 @@ import showQRCodeDialogState from "../../atoms/showQRCodeDialogState";
 import Accessibility from "../Accessibility/Accessibility";
 import isDestinationStepState from "../../atoms/isDestinationStepState";
 import primaryColorState from "../../atoms/primaryColorState";
-import { useKioskContext } from "../../hooks/useKioskContext";
+import { useIsKioskContext } from "../../hooks/useIsKioskContext";
 
 let directionsRenderer;
 
@@ -63,7 +63,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
 
     const primaryColor = useRecoilValue(primaryColorState);
 
-    const isKioskContext = useKioskContext();
+    const isKioskContext = useIsKioskContext();
 
     useEffect(() => {
         setDestinationDisplayRule(null);

@@ -12,7 +12,7 @@ import substepsToggledState from '../../atoms/substepsToggledState';
 import useSetMaxZoomLevel from '../../hooks/useSetMaxZoomLevel';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import isDestinationStepState from '../../atoms/isDestinationStepState';
-import { useKioskContext } from '../../hooks/useKioskContext';
+import { useIsKioskContext } from '../../hooks/useIsKioskContext';
 
 /**
  * Route instructions step by step component.
@@ -51,7 +51,7 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
 
     const setMaxZoomLevel = useSetMaxZoomLevel();
 
-    const isKioskContext = useKioskContext();
+    const isKioskContext = useIsKioskContext();
 
     /**
      * Clone the last step in the directions in order to create a destination step.

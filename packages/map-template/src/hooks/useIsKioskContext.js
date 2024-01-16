@@ -5,7 +5,7 @@ import useMediaQuery from "./useMediaQuery";
 /**
  * React hook that can be used indicate if we are on a kiosk context.
  */
-export const useKioskContext = () => {
+export const useIsKioskContext = () => {
 
     const kioskLocation = useRecoilValue(kioskLocationState);
 
@@ -16,5 +16,4 @@ export const useKioskContext = () => {
     } else {
         return false
     }
-
 };
