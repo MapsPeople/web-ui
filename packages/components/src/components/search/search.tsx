@@ -373,7 +373,8 @@ export class Search implements ComponentInterface {
         if (this.mapbox && mapboxgl.accessToken) {
             if (query) {
                 return new Promise((resolve) => {
-                    let url = `https://api.mapbox.com/search/searchbox/v1/suggest?q=${query}&session_token=${this.sessionToken}&access_token=${mapboxgl.accessToken}&language=${this.language}`;
+                    const language = this.language.split('-')[0]; // Mapbox seemingly only supports the primary language subtag.
+                    let url = `https://api.mapbox.com/search/searchbox/v1/suggest?q=${query}&session_token=${this.sessionToken}&access_token=${mapboxgl.accessToken}&language=${language}`;
 
                     if (this.userPosition) {
                         url = url.concat(`&proximity=${this.userPosition}`);
