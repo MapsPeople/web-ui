@@ -270,7 +270,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
                 <>
                     <hr />
                     <div className="directions__kiosk">
-                        <Accessibility onAccessibilityClicked={() => resetSubsteps()} />
+                        <Accessibility onAccessibilityChanged={() => resetSubsteps()} />
                         <button className="directions__qr-code" onClick={() => setShowQRCodeDialog(true)}><QRCode />{t('Scan QR code')}</button>
                     </div>
                 </>
