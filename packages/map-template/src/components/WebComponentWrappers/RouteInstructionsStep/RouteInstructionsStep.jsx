@@ -1,10 +1,9 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import substepsToggledState from '../../../atoms/substepsToggledState';
 import triggerSubstepsState from '../../../atoms/triggerSubstepsState';
-import kioskLocationState from '../../../atoms/kioskLocationState';
-import useMediaQuery from '../../../hooks/useMediaQuery';
+import { useIsKioskContext } from '../../../hooks/useIsKioskContext';
 
 /**
  * React wrapper around the custom element <mi-route-instructions-step>.
@@ -26,9 +25,7 @@ const RouteInstructionsStep = forwardRef(({ totalSteps, activeStep, previous, or
     const [substepsOpen, setSubstepsOpen] = useRecoilState(substepsToggledState);
     const [, setTriggerSubsteps] = useRecoilState(triggerSubstepsState);
 
-    const kioskLocation = useRecoilValue(kioskLocationState);
-
-    const isDesktop = useMediaQuery('(min-width: 992px)');
+    const isKioskContext = useIsKioskContext();
 
     /**
      * Method that can be triggered on the element.
@@ -96,7 +93,7 @@ const RouteInstructionsStep = forwardRef(({ totalSteps, activeStep, previous, or
 
     return <mi-route-instructions-step
         ref={elementRef}
-        show-toggle-button={kioskLocation === undefined || (kioskLocation !== undefined && !isDesktop)}
+        show-toggle-button={isKioskContext}
         step={JSON.stringify(totalSteps[activeStep])}
         translations={JSON.stringify(translations)}
         destination-location={directions?.destinationLocation.properties.name}
