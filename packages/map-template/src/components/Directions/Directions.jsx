@@ -258,7 +258,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                     onFitCurrentDirections={() => onFitCurrentDirections()} >
                 </RouteInstructions>
             </div>
-            {kioskLocation && isDesktop &&
+            {!isKioskContext &&
                 <>
                     <hr />
                     <div className="directions__kiosk">
