@@ -22,7 +22,7 @@ import getDesktopPaddingBottom from '../../helpers/GetDesktopPaddingBottom';
 import useKeyboardState from '../../atoms/useKeyboardState';
 import Keyboard from '../WebComponentWrappers/Keyboard/Keyboard';
 import searchInputState from '../../atoms/searchInputState';
-import { ReactComponent as CloseIcon } from '../../assets/close.svg';
+import { ReactComponent as Legend } from '../../assets/legend.svg';
 import showLegendDialogState from '../../atoms/showLegendDialogState';
 
 /**
@@ -317,7 +317,7 @@ function Search({ onSetSize }) {
             ref={searchRef}
             style={{ minHeight: categories.length > 0 ? '136px' : '80px' }}>
             <div className='search__info'>
-                <button className='search__legend' onClick={() => setShowLegendDialog(true)}><CloseIcon /></button>
+                <button className='search__legend' onClick={() => setShowLegendDialog(true)}><Legend /></button>
                 <SearchField
                     ref={searchFieldRef}
                     mapsindoors={true}
