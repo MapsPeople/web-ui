@@ -561,7 +561,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                         pushAppView={pushAppView}
                         currentAppView={currentAppView}
                         appViews={appStates}
-                        onFinishedRoute={() => resetStateAndUI()}
+                        onRouteFinished={() => resetStateAndUI()}
                     />
                 }
                 {isMobile &&
@@ -571,7 +571,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                         pushAppView={pushAppView}
                         currentAppView={currentAppView}
                         appViews={appStates}
-                        onFinishedRoute={() => resetStateAndUI()}
+                        onRouteFinished={() => resetStateAndUI()}
                     />
                 }
             </Fragment>
