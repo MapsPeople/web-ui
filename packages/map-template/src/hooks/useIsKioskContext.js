@@ -12,8 +12,8 @@ export const useIsKioskContext = () => {
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
     if (!kioskLocation || (kioskLocation && !isDesktop)) {
-        return true;
+        return false;
     } else {
-        return false
+        return true;
     }
 };

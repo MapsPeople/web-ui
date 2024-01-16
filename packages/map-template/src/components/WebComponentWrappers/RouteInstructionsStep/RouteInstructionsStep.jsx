@@ -93,7 +93,7 @@ const RouteInstructionsStep = forwardRef(({ totalSteps, activeStep, previous, or
 
     return <mi-route-instructions-step
         ref={elementRef}
-        show-toggle-button={isKioskContext}
+        show-toggle-button={!isKioskContext}
         step={JSON.stringify(totalSteps[activeStep])}
         translations={JSON.stringify(translations)}
         destination-location={directions?.destinationLocation.properties.name}

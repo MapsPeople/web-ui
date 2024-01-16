@@ -246,7 +246,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
     }, [isOpen, snapPointSwiped]); // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
-        <div className="directions" style={{ display: isKioskContext ? 'grid' : 'block' }}>
+        <div className="directions" style={{ display: !isKioskContext ? 'grid' : 'block' }}>
             <div className="directions__steps">
                 <div className="directions__minutes">{totalTime && <mi-time translations={JSON.stringify({ days: t('d'), hours: t('h'), minutes: t('min') })} seconds={totalTime} />}</div>
                 <RouteInstructions
@@ -258,7 +258,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                     onFitCurrentDirections={() => onFitCurrentDirections()} >
                 </RouteInstructions>
             </div>
-            {!isKioskContext &&
+            {isKioskContext &&
                 <>
                     <hr />
                     <div className="directions__kiosk">

@@ -140,16 +140,16 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
                         ref={routeInstructionsRef}
                     >
                     </RouteInstructionsStep>
-                    <div className={`route-instructions__footer ${isKioskContext ? '' : 'route-instructions__footer--kiosk'}`}>
+                    <div className={`route-instructions__footer ${!isKioskContext ? '' : 'route-instructions__footer--kiosk'}`}>
                         <div className="route-instructions__actions">
-                            <button className={`route-instructions__button ${isKioskContext ? '' : 'route-instructions__button--kiosk'}`}
+                            <button className={`route-instructions__button ${!isKioskContext ? '' : 'route-instructions__button--kiosk'}`}
                                 onClick={() => previousStep()}
                                 aria-label={t('Previous')}
                                 disabled={activeStep === 0}>
                                 <ArrowLeft></ArrowLeft>
                             </button>
                             <div className="route-instructions__overview">{t('StepYofX', { activeStep: activeStep + 1, totalSteps: totalSteps.length })}</div>
-                            <button className={`route-instructions__button ${isKioskContext ? '' : 'route-instructions__button--kiosk'}`}
+                            <button className={`route-instructions__button ${!isKioskContext ? '' : 'route-instructions__button--kiosk'}`}
                                 onClick={() => nextStep()}
                                 aria-label={t('Next')}
                                 disabled={activeStep === totalSteps.length - 1}>
