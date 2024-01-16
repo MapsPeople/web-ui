@@ -31,9 +31,10 @@ let directionsRenderer;
  * @param {function} props.onBack - Callback that fires when the directions view is closed by the user.
  * @param {function} props.onSetSize - Callback that is fired when the component has loaded.
  * @param {function} props.snapPointSwiped - Changes value when user has swiped a Bottom sheet to a new snap point.
+ * @param {function} props.onRouteFinished - Callback that fires when the route has finished.
  *
  */
-function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
+function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinished }) {
     const { t } = useTranslation();
 
     // Holds the MapsIndoors DisplayRule for the destination
@@ -296,7 +297,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                         {t('Cancel route')}
                     </button>
                     :
-                    <button className="directions__finish" onClick={() => onDirectionsClosed()} style={{ background: primaryColor }}>
+                    <button className="directions__finish" onClick={() => onRouteFinished()} style={{ background: primaryColor }}>
                         {t('Finish route')}
                     </button>
                 }

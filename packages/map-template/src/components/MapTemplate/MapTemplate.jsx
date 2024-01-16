@@ -504,6 +504,15 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }
 
     /**
+     * Function that handles the reset of the state when the route has finished.
+     */
+    function onRouteFinished() {
+        resetState();
+        resetAppHistory();
+        setResetCount(curr => curr + 1); // will force a re-render of bottom sheet and sidebar.
+    }
+
+    /**
      * Get the unique categories and the count of the categories with locations associated.
      *
      * @param {array} locationsResult
@@ -554,6 +563,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                         pushAppView={pushAppView}
                         currentAppView={currentAppView}
                         appViews={appStates}
+                        onFinishedRoute={() => onRouteFinished()}
                     />
                 }
                 {isMobile &&
@@ -563,6 +573,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                         pushAppView={pushAppView}
                         currentAppView={currentAppView}
                         appViews={appStates}
+                        onFinishedRoute={() => onRouteFinished()}
                     />
                 }
             </Fragment>
