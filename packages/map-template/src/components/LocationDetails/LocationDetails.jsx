@@ -14,6 +14,7 @@ import useMediaQuery from '../../hooks/useMediaQuery';
 import useDirectionsInfo from "../../hooks/useDirectionsInfo";
 import travelModeState from '../../atoms/travelModeState';
 import kioskLocationState from '../../atoms/kioskLocationState';
+import accessibilityOnState from '../../atoms/accessibilityOnState';
 
 /**
  * Shows details for a MapsIndoors Location.
@@ -61,7 +62,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
 
     const travelMode = useRecoilValue(travelModeState);
 
-    const accessibilityOn = useState(false);
+    const accessibilityOn = useRecoilValue(accessibilityOnState);
 
     const [, , hasFoundRoute] = useDirectionsInfo(originLocation, destinationLocation, directionsService, travelMode, accessibilityOn)
 

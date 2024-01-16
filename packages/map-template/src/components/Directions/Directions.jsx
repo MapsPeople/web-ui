@@ -4,26 +4,22 @@ import { useTranslation } from 'react-i18next';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import travelModeState from '../../atoms/travelModeState';
-import { ReactComponent as CloseIcon } from '../../assets/close.svg';
-import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
-import { ReactComponent as WalkingIcon } from '../../assets/walk.svg';
-import { ReactComponent as DriveIcon } from '../../assets/drive.svg';
-import { ReactComponent as BikeIcon } from '../../assets/bike.svg';
 import { ReactComponent as QRCode } from '../../assets/qrcode.svg';
 import RouteInstructions from "../RouteInstructions/RouteInstructions";
 import useMediaQuery from '../../hooks/useMediaQuery';
-import { travelModes } from "../../constants/travelModes";
 import directionsResponseState from "../../atoms/directionsResponseState";
 import activeStepState from "../../atoms/activeStep";
 import { snapPoints } from "../../constants/snapPoints";
 import substepsToggledState from "../../atoms/substepsToggledState";
 import getDesktopPaddingLeft from "../../helpers/GetDesktopPaddingLeft";
 import getMobilePaddingBottom from "../../helpers/GetMobilePaddingBottom";
-import distanceUnitSystemSelector from '../../selectors/distanceUnitSystemSelector';
 import getDesktopPaddingBottom from "../../helpers/GetDesktopPaddingBottom";
 import kioskLocationState from "../../atoms/kioskLocationState";
 import showQRCodeDialogState from "../../atoms/showQRCodeDialogState";
-import supportsUrlParametersState from "../../atoms/supportsUrlParametersState";
+import Accessibility from "../Accessibility/Accessibility";
+import isDestinationStepState from "../../atoms/isDestinationStepState";
+import primaryColorState from "../../atoms/primaryColorState";
+import { useIsKioskContext } from "../../hooks/useIsKioskContext";
 
 let directionsRenderer;
 
@@ -44,10 +40,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
     const [destinationDisplayRule, setDestinationDisplayRule] = useState(null);
 
     const destinationInfoElement = useRef(null);
-    const originInfoElement = useRef(null);
-    const guideElement = useRef(null);
 
-    const [totalDistance, setTotalDistance] = useState();
     const [totalTime, setTotalTime] = useState();
 
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
@@ -56,25 +49,26 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
 
     const directions = useRecoilValue(directionsResponseState);
 
-    const distanceUnitSystem = useRecoilValue(distanceUnitSystemSelector);
-
     const [, setActiveStep] = useRecoilState(activeStepState);
 
     const [substepsOpen, setSubstepsOpen] = useRecoilState(substepsToggledState);
 
-    const kioskLocation = useRecoilValue(kioskLocationState)
+    const kioskLocation = useRecoilValue(kioskLocationState);
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
 
     const [, setShowQRCodeDialog] = useRecoilState(showQRCodeDialogState);
 
-    const supportsUrlParameters = useRecoilValue(supportsUrlParametersState)
+    const isDestinationStep = useRecoilValue(isDestinationStepState);
+
+    const primaryColor = useRecoilValue(primaryColorState);
+
+    const isKioskContext = useIsKioskContext();
 
     useEffect(() => {
         setDestinationDisplayRule(null);
 
         if (isOpen && directions) {
-            setTotalDistance(directions.totalDistance);
             setTotalTime(directions.totalTime);
 
             // 6 percent of smallest of viewport height or width
@@ -100,7 +94,6 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
                 // Set the step index to be 0 in order to display the correct instruction on the map.
                 directionsRenderer.setStepIndex(0);
 
-                originInfoElement.current.location = directions.originLocation;
                 destinationInfoElement.current.location = directions.destinationLocation;
 
                 // If the destination is My Position, then set the display rule to null.
@@ -182,7 +175,6 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
      * Render the next navigation step on the map.
      */
     function onNext() {
-        guideElement.current.scrollTop = 0;
         if (directionsRenderer) {
             directionsRenderer.nextStep();
         }
@@ -192,7 +184,6 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
      * Render the previous navigation step on the map.
      */
     function onPrevious() {
-        guideElement.current.scrollTop = 0;
         if (directionsRenderer) {
             directionsRenderer.previousStep();
         }
@@ -262,78 +253,55 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
     }, [isOpen, snapPointSwiped]); // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
-        <div className="directions">
-            <div className="directions__details">
-                <button className="directions__close" onClick={() => onDirectionsClosed()} aria-label={t('Close')}>
-                    <CloseIcon />
-                </button>
-                <div className="directions__locations">
-                    <div className="directions__container">
-                        <label className="directions__label">
-                            {t('From')}
-                        </label>
-                        {directions?.originLocation &&
-                            <div className="directions__info">
-                                <div className="directions__content">
-                                    <div className='directions__name'>
-                                        {directions?.originLocation.properties.name}
-                                        {directions?.originLocation.id !== 'USER_POSITION' && <div>·</div>}
-                                        <mi-location-info level={t('Level')} ref={originInfoElement} show-external-id={false} />
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                    </div>
-                    <div className="directions__container">
-                        <label className="directions__label">
-                            {t('To')}
-                        </label>
-                        {directions?.destinationLocation &&
-                            <div className="directions__info">
-                                {destinationDisplayRule && directions.destinationLocation.id !== 'USER_POSITION' &&
-                                    <div className="directions__icon">
-                                        <img alt="" src={destinationDisplayRule.icon.src ? destinationDisplayRule.icon.src : destinationDisplayRule.icon} />
-                                    </div>}
-                                <div className="directions__content">
-                                    <div className='directions__name'>
-                                        {directions?.destinationLocation.properties.name}
-                                    </div>
-                                    <mi-location-info level={t('Level')} ref={destinationInfoElement} show-external-id={false} />
-                                </div>
-                            </div>
-                        }
-                    </div>
-                </div>
-            </div>
-            <div ref={guideElement} className="directions__guide">
-                <div className="directions__route">
-                    <div className="directions__metrics">
-                        <div className="directions__distance">
-                            {travelMode === travelModes.WALKING && <WalkingIcon />}
-                            {travelMode === travelModes.DRIVING && <DriveIcon />}
-                            {travelMode === travelModes.BICYCLING && <BikeIcon />}
-                            <div>{t('Distance')}:</div>
-                            <div className="directions__meters">{totalDistance && <mi-distance unit={distanceUnitSystem} meters={totalDistance} />}</div>
-                        </div>
-                        <div className="directions__time">
-                            <ClockIcon />
-                            <div>{t('Estimated time')}:</div>
-                            <div className="directions__minutes">{totalTime && <mi-time translations={JSON.stringify({ days: t('d'), hours: t('h'), minutes: t('min') })} seconds={totalTime} />}</div>
-                        </div>
-                    </div>
-                    {kioskLocation && supportsUrlParameters && <button className='directions__qr-code' onClick={() => setShowQRCodeDialog(true)}><QRCode /> {t('Scan QR code')}</button>}
-                </div>
-                <hr></hr>
+        <div className="directions" style={{ display: !isKioskContext ? 'grid' : 'block' }}>
+            <div className="directions__steps">
+                <div className="directions__minutes">{totalTime && <mi-time translations={JSON.stringify({ days: t('d'), hours: t('h'), minutes: t('min') })} seconds={totalTime} />}</div>
                 <RouteInstructions
                     steps={getRouteSteps()}
                     originLocation={directions?.originLocation}
                     onNextStep={() => onNext()}
                     isOpen={isOpen}
                     onPreviousStep={() => onPrevious()}
-                    onFitCurrentDirections={() => onFitCurrentDirections()}
-                >
+                    onFitCurrentDirections={() => onFitCurrentDirections()} >
                 </RouteInstructions>
             </div>
+            {isKioskContext &&
+                <>
+                    <hr />
+                    <div className="directions__kiosk">
+                        <Accessibility onAccessibilityClicked={() => resetSubsteps()} />
+                        <button className="directions__qr-code" onClick={() => setShowQRCodeDialog(true)}><QRCode />{t('Scan QR code')}</button>
+                    </div>
+                </>
+            }
+            <div className="directions__actions">
+                <div className="directions__details">
+                    {directions?.destinationLocation &&
+                        <div className="directions__info">
+                            {destinationDisplayRule && directions.destinationLocation.id !== 'USER_POSITION' &&
+                                <div className="directions__icon">
+                                    <img alt="" src={destinationDisplayRule.icon.src ? destinationDisplayRule.icon.src : destinationDisplayRule.icon} />
+                                </div>}
+                            <div className="directions__content">
+                                <div className="directions__name">
+                                    {directions?.destinationLocation.properties.name}
+                                </div>
+                                <mi-location-info ref={destinationInfoElement} show-external-id={false} />
+                            </div>
+                        </div>
+                    }
+                </div>
+                {!isDestinationStep ?
+                    <button className="directions__cancel" onClick={() => onDirectionsClosed()}>
+                        {t('Cancel route')}
+                    </button>
+                    :
+                    <button className="directions__finish" onClick={() => onDirectionsClosed()} style={{ background: primaryColor }}>
+                        {t('Finish route')}
+                    </button>
+                }
+            </div>
+
         </div>
     )
 }

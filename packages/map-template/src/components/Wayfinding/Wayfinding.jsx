@@ -12,7 +12,6 @@ import directionsServiceState from '../../atoms/directionsServiceState';
 import currentLocationState from '../../atoms/currentLocationState';
 import travelModeState from '../../atoms/travelModeState';
 import mapTypeState from '../../atoms/mapTypeState';
-import Tooltip from '../Tooltip/Tooltip';
 import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
 import SearchField from '../WebComponentWrappers/Search/Search';
 import { snapPoints } from '../../constants/snapPoints';
@@ -33,6 +32,8 @@ import mapboxAccessTokenState from "../../atoms/mapboxAccessTokenState";
 import distanceUnitSystemSelector from '../../selectors/distanceUnitSystemSelector';
 import useDirectionsInfo from "../../hooks/useDirectionsInfo";
 import hasFoundRouteState from "../../atoms/hasFoundRouteState";
+import accessibilityOnState from "../../atoms/accessibilityOnState";
+import Accessibility from "../Accessibility/Accessibility";
 
 const searchFieldIdentifiers = {
     TO: 'TO',
@@ -88,7 +89,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     const [destinationLocation, setDestinationLocation] = useState();
     const originLocationRef = useRef();
 
-    const [accessibilityOn, setAccessibilityOn] = useState(false);
+    const accessibilityOn = useRecoilValue(accessibilityOnState)
 
     const scrollableContentSwipePrevent = usePreventSwipe();
 
@@ -441,11 +442,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                 </div>}
             {!searchTriggered && !showMyPositionOption && hasFoundRoute && !hasGooglePlaces && originLocationRef.current && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
                 <div className="wayfinding__settings">
-                    <div className="wayfinding__accessibility">
-                        <input className="mi-toggle" type="checkbox" checked={accessibilityOn} onChange={e => setAccessibilityOn(e.target.checked)} style={{ backgroundColor: accessibilityOn ? primaryColor : '' }} />
-                        <div>{t('Accessibility')}</div>
-                        <Tooltip text={t('Turn on Accessibility to get directions that avoid stairs and escalators.')}></Tooltip>
-                    </div>
+                    <Accessibility />
                     <div className="wayfinding__travel">
                         <Dropdown selectionChanged={travelMode => setTravelMode(travelMode[0].value)}>
                             <mi-dropdown-item selected value={travelModes.WALKING}>
@@ -475,7 +472,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                     <div className="wayfinding__time">
                         <ClockIcon />
                         <div>{t('Estimated time')}:</div>
-                        <div className="wayfinding__minutes">{totalTime && <mi-time translations={JSON.stringify({ days: t('d'), hours: t('h'), minutes: t('min') })}  seconds={totalTime} />}</div>
+                        <div className="wayfinding__minutes">{totalTime && <mi-time translations={JSON.stringify({ days: t('d'), hours: t('h'), minutes: t('min') })} seconds={totalTime} />}</div>
                     </div>
                 </div>
                 <button className="wayfinding__button" style={{ background: primaryColor }} onClick={() => onStartDirections()}>

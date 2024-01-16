@@ -45,7 +45,7 @@ const useDirectionsInfo = (originLocation, destinationLocation, directionsServic
                 setHasFoundRoute(false);
             });
         }
-    }, [originLocation, destinationLocation, directionsService]);
+    }, [originLocation, destinationLocation, directionsService, accessibilityOn, travelMode]);
 
     return [totalDistance, totalTime, hasFoundRoute];
 }
