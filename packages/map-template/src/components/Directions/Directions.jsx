@@ -84,30 +84,32 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
             directionsRenderer?.setRoute(null);
             directionsRenderer = null;
 
-            directionsRenderer = new window.mapsindoors.directions.DirectionsRenderer({
-                mapsIndoors: mapsIndoorsInstance,
-                fitBoundsPadding: {
-                    top: padding,
-                    bottom: getBottomPadding(padding),
-                    left: getLeftPadding(padding),
-                    right: padding
+            Promise.all([getBottomPadding(padding), getLeftPadding(padding)]).then(([bottomPadding, leftPadding]) => {
+                directionsRenderer = new window.mapsindoors.directions.DirectionsRenderer({
+                    mapsIndoors: mapsIndoorsInstance,
+                    fitBoundsPadding: {
+                        top: padding,
+                        bottom: bottomPadding,
+                        left: leftPadding,
+                        right: padding
+                    }
+                });
+
+                directionsRenderer.setRoute(directions.directionsResult);
+
+                // Set the step index to be 0 in order to display the correct instruction on the map.
+                directionsRenderer.setStepIndex(0);
+
+                originInfoElement.current.location = directions.originLocation;
+                destinationInfoElement.current.location = directions.destinationLocation;
+
+                // If the destination is My Position, then set the display rule to null.
+                if (directions.destinationLocation.id === 'USER_POSITION') {
+                    setDestinationDisplayRule(null)
+                } else {
+                    setDestinationDisplayRule(mapsIndoorsInstance.getDisplayRule(directions.destinationLocation));
                 }
             });
-
-            directionsRenderer.setRoute(directions.directionsResult);
-
-            // Set the step index to be 0 in order to display the correct instruction on the map.
-            directionsRenderer.setStepIndex(0);
-
-            originInfoElement.current.location = directions.originLocation;
-            destinationInfoElement.current.location = directions.destinationLocation;
-
-            // If the destination is My Position, then set the display rule to null.
-            if (directions.destinationLocation.id === 'USER_POSITION') {
-                setDestinationDisplayRule(null)
-            } else {
-                setDestinationDisplayRule(mapsIndoorsInstance.getDisplayRule(directions.destinationLocation));
-            }
         }
     }, [isOpen, directions, mapsIndoorsInstance, travelMode]);
 
@@ -117,15 +119,18 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
      * Calculate all cases depending on the kioskLocation id prop as well.
      */
     function getBottomPadding(padding) {
-        if (isDesktop) {
-            if (kioskLocation) {
-                return getDesktopPaddingBottom();
+        return new Promise((resolve) => {
+            if (isDesktop) {
+                if (kioskLocation) {
+                    getDesktopPaddingBottom().then(result => resolve(result));
+                } else {
+                    resolve(padding);
+                }
             } else {
-                return padding;
+                return getMobilePaddingBottom();
             }
-        } else {
-            return getMobilePaddingBottom();
-        }
+
+        });
     }
 
     /**
@@ -133,15 +138,17 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
      * Calculate all cases depending on the kioskLocation id prop as well.
      */
     function getLeftPadding(padding) {
-        if (isDesktop) {
-            if (kioskLocation) {
-                return padding;
+        return new Promise((resolve) => {
+            if (isDesktop) {
+                if (kioskLocation) {
+                    resolve(padding);
+                } else {
+                    getDesktopPaddingLeft().then(result => resolve(result));
+                }
             } else {
-                return getDesktopPaddingLeft();
+                resolve(padding);
             }
-        } else {
-            return padding;
-        }
+        });
     }
 
     /*
@@ -204,7 +211,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
      * Stop rendering directions on the map.
      */
     function stopRendering() {
-        directionsRenderer.setRoute(null);
+        directionsRenderer?.setRoute(null);
         directionsRenderer = null;
     }
 
