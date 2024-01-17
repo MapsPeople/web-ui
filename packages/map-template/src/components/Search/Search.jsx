@@ -368,36 +368,38 @@ function Search({ onSetSize }) {
                 category={selectedCategory}
                 disabled={searchDisabled} // Disabled initially to prevent content jumping when clicking and changing sheet size.
             />
-            <div className="search__scrollable prevent-scroll" {...scrollableContentSwipePrevent}>
-                {categories.length > 0 &&
-                    <>
-                        {isDesktop &&
-                            <button className={`search__scroll-button`}
-                                onClick={() => updateScrollPosition(-300)}
-                                disabled={isLeftButtonDisabled}>
-                                <ArrowLeft />
-                            </button>
-                        }
-                        <div ref={categoriesListRef} className="search__categories">
-                            {categories?.map(([category, categoryInfo]) =>
-                                <mi-chip
-                                    icon={categoryInfo.iconUrl}
-                                    background-color={primaryColor}
-                                    content={categoryInfo.displayName}
-                                    active={selectedCategory === category}
-                                    onClick={() => categoryClicked(category)}
-                                    key={category}>
-                                </mi-chip>
-                            )}
-                        </div>
-                        {isDesktop &&
-                            <button className={`search__scroll-button`}
-                                onClick={() => updateScrollPosition(300)}
-                                disabled={isRightButtonDisabled}>
-                                <ArrowRight />
-                            </button>
-                        }
-                    </>}
+            <div className="prevent-scroll" {...scrollableContentSwipePrevent}>
+                <div className="search__scrollable">
+                    {categories.length > 0 &&
+                        <>
+                            {isDesktop &&
+                                <button className={`search__scroll-button`}
+                                    onClick={() => updateScrollPosition(-300)}
+                                    disabled={isLeftButtonDisabled}>
+                                    <ArrowLeft />
+                                </button>
+                            }
+                            <div ref={categoriesListRef} className="search__categories">
+                                {categories?.map(([category, categoryInfo]) =>
+                                    <mi-chip
+                                        icon={categoryInfo.iconUrl}
+                                        background-color={primaryColor}
+                                        content={categoryInfo.displayName}
+                                        active={selectedCategory === category}
+                                        onClick={() => categoryClicked(category)}
+                                        key={category}>
+                                    </mi-chip>
+                                )}
+                            </div>
+                            {isDesktop &&
+                                <button className={`search__scroll-button`}
+                                    onClick={() => updateScrollPosition(300)}
+                                    disabled={isRightButtonDisabled}>
+                                    <ArrowRight />
+                                </button>
+                            }
+                        </>}
+                </div>
                 {showNotFoundMessage && <p className="search__error"> {t('Nothing was found')}</p>}
                 {searchResults.length > 0 &&
                     <div className="search__results">
