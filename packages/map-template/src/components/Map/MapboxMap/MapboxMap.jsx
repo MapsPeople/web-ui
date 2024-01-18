@@ -30,7 +30,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
     const pitch = useRecoilValue(pitchState);
 
     useEffect(() => {
-        // Initialize MapboxView MapView
+        // Initialize MapboxV3View MapView
         window.mapboxgl = mapboxgl;
         const mapViewOptions = {
             accessToken: mapboxAccessToken,
@@ -39,7 +39,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
             pitch: !isNaN(parseInt(pitch)) ? parseInt(pitch) : 0,
         };
 
-        const mapViewInstance = new window.mapsindoors.mapView.MapboxView(mapViewOptions);
+        const mapViewInstance = new window.mapsindoors.mapView.MapboxV3View(mapViewOptions);
         setMapView(mapViewInstance);
 
         // Setup an external directions provider that will be used to calculate directions
