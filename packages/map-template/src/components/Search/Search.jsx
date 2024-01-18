@@ -23,6 +23,7 @@ import { createPortal } from 'react-dom';
 import useKeyboardState from '../../atoms/useKeyboardState';
 import Keyboard from '../WebComponentWrappers/Keyboard/Keyboard';
 import searchInputState from '../../atoms/searchInputState';
+import { useIsKioskContext } from "../../hooks/useIsKioskContext";
 
 /**
  * Show the search results.
@@ -84,7 +85,9 @@ function Search({ onSetSize }) {
 
     const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
 
-    const searchInput = useRecoilValue(searchInputState)
+    const searchInput = useRecoilValue(searchInputState);
+
+    const isKioskContext = useIsKioskContext();
 
     /**
      * Get the locations and filter through them based on categories selected.
@@ -259,6 +262,26 @@ function Search({ onSetSize }) {
         });
     }
 
+    /**
+     * Calculate the CSS for the container based on context.
+     */
+    function calculateContainerStyle() {
+        if (searchResults.length > 0) {
+            let maxHeight;
+            if (isDesktop) {
+                // On desktop-sized viewports, we want the container to have a max height of 60% of the Map Template.
+                maxHeight = document.querySelector('.mapsindoors-map').clientHeight * 0.6 + 'px';
+            } else {
+                // On mobile-sized viewports, take up all available space if needed.
+                maxHeight = '100%';
+            }
+
+            return { display: 'flex', flexDirection: 'column', maxHeight, overflow: 'hidden' };
+        } else {
+            return { minHeight: categories.length > 0 ? '136px' : '80px'};
+        }
+    }
+
     /*
      * React on changes in the venue prop.
      * Deselect category and clear results list.
@@ -291,9 +314,12 @@ function Search({ onSetSize }) {
         }
     });
 
+    /*
+     * Setup scroll buttons to scroll in search results list when in kiosk mode.
+     */
     useEffect(() => {
-        if (searchResults.length > 0) {
-            const searchResultsElement = document.querySelector('.mapsindoors-map .modal');
+        if (isKioskContext && searchResults.length > 0) {
+            const searchResultsElement = document.querySelector('.mapsindoors-map .search__results');
             scrollButtonsRef.current.scrollContainerElementRef = searchResultsElement;
         }
     }, [searchResults]);
@@ -326,18 +352,26 @@ function Search({ onSetSize }) {
     return (
         <div className="search"
             ref={searchRef}
-            style={{ minHeight: categories.length > 0 ? '136px' : '80px' }}>
-            <SearchField
-                ref={searchFieldRef}
-                mapsindoors={true}
-                placeholder={t('Search by name, category, building...')}
-                results={locations => onResults(locations)}
-                clicked={() => searchFieldClicked()}
-                cleared={() => cleared()}
-                category={selectedCategory}
-                disabled={searchDisabled} // Disabled initially to prevent content jumping when clicking and changing sheet size.
-            />
-            <div className="search__scrollable prevent-scroll" {...scrollableContentSwipePrevent}>
+            style={calculateContainerStyle()}
+            >
+
+                { /* Search field that allows users to search for locations (MapsIndoors Locations and external) */ }
+
+                <SearchField
+                    ref={searchFieldRef}
+                    mapsindoors={true}
+                    placeholder={t('Search by name, category, building...')}
+                    results={locations => onResults(locations)}
+                    clicked={() => searchFieldClicked()}
+                    cleared={() => cleared()}
+                    category={selectedCategory}
+                    disabled={searchDisabled} // Disabled initially to prevent content jumping when clicking and changing sheet size.
+                />
+
+
+
+                { /* Horizontal list of Categories */ }
+
                 {categories.length > 0 &&
                     <div ref={categoriesListRef} className="search__categories">
                         {categories?.map(([category, categoryInfo]) =>
@@ -350,10 +384,21 @@ function Search({ onSetSize }) {
                                 key={category}>
                             </mi-chip>
                         )}
-                    </div>}
+                    </div>
+                }
+
+
+
+                { /* Message shown if no search results were found */ }
+
                 {showNotFoundMessage && <p className="search__error"> {t('Nothing was found')}</p>}
+
+
+
+                { /* Vertical list of search results. Scrollable. */ }
+
                 {searchResults.length > 0 &&
-                    <div className="search__results">
+                    <div className="search__results prevent-scroll" {...scrollableContentSwipePrevent}>
                         {searchResults.map(location =>
                             <ListItemLocation
                                 key={location.id}
@@ -364,15 +409,23 @@ function Search({ onSetSize }) {
                         )}
                     </div>
                 }
-            </div>
 
-            {searchResults.length > 0 && createPortal(
-                <div className="search__scroll-buttons">
-                    <mi-scroll-buttons ref={scrollButtonsRef}></mi-scroll-buttons>
-                </div>,
-                document.querySelector('.mapsindoors-map')
-            )}
-            {isKeyboardVisible && isDesktop && <Keyboard ref={keyboardRef} searchInputElement={searchInput}></Keyboard>}
+
+
+                { /* Keyboard */ }
+
+                {isKeyboardVisible && isDesktop && <Keyboard ref={keyboardRef} searchInputElement={searchInput}></Keyboard>}
+
+
+
+                { /* Buttons to scroll in the list of search results if in kiosk context */ }
+
+                {isKioskContext && searchResults.length > 0 && createPortal(
+                    <div className="search__scroll-buttons">
+                        <mi-scroll-buttons ref={scrollButtonsRef}></mi-scroll-buttons>
+                    </div>,
+                    document.querySelector('.mapsindoors-map')
+                )}
         </div>
     )
 }

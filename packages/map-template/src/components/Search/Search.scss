@@ -2,22 +2,19 @@
 
 .search {
     padding: var(--spacing-medium);
-    display: grid;
-    grid-auto-rows: min-content;
-    overflow: auto;
 
-    &__scrollable {
-        overflow: auto;
-        display: grid;
+    @media (max-width: $desktop-breakpoint) {
+        padding: var(--spacing-medium) var(--spacing-x-small) var(--spacing-medium) var(--spacing-x-small);
     }
 
     &__categories {
         display: grid;
         grid-auto-flow: column;
-        gap: var(--spacing-x-small);
-        overflow: auto hidden;
         grid-auto-columns: min-content;
+        gap: var(--spacing-x-small);
         margin-top: var(--spacing-x-small);
+        overflow: auto;
+        flex-shrink: 0;
     }
 
     &__error {
@@ -28,17 +25,13 @@
         display: grid;
         gap: var(--spacing-x-small);
         overflow: auto;
-        grid-auto-rows: min-content;
+        flex: 1 1 auto;
         margin-top: var(--spacing-x-small);
     }
 
     &__scroll-buttons {
         position: fixed;
-        left: calc(50% + 284px + 20px);
+        left: calc(50% + 284px + 20px); // TODO: Explain magic numbers
         bottom: var(--spacing-x-large);
-    }
-
-    @media (max-width: $desktop-breakpoint) {
-        padding: var(--spacing-medium) var(--spacing-x-small) var(--spacing-medium) var(--spacing-x-small);
     }
 }
