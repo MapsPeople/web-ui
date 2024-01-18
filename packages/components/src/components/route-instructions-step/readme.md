@@ -350,6 +350,7 @@ mi-route-instructions-step::part(step-toggle) {
 | `fromTransitStop`     | `from-transit-stop`    | The transit stop of previous step if any.                                                                                         | `string`                                   | `undefined`                                                                |
 | `fromTravelMode`      | `from-travel-mode`     | The travel mode of previous step, if any.                                                                                         | `string`                                   | `undefined`                                                                |
 | `hideIndoorSubsteps`  | `hide-indoor-substeps` | If indoor substeps/maneuvers should be hidden.                                                                                    | `boolean`                                  | `true`                                                                     |
+| `showToggleButton`    | `show-toggle-button`   | Indicates if it should show the toggle button.                                                                                    | `boolean`                                  | `true`                                                                     |
 | `step`                | `step`                 | The step data object to render from. Must be passed as stringified JSON.                                                          | `string`                                   | `undefined`                                                                |
 | `translations`        | `translations`         | Object with translation strings as stringified JSON.                                                                              | `string`                                   | `undefined`                                                                |
 | `unit`                | `unit`                 | Set imperial or metric as default unit system. Default is Metric unless the browser is running US English. In that case Imperial. | `UnitSystem.Imperial \| UnitSystem.Metric` | `navigator.language === 'en-US' ? UnitSystem.Imperial : UnitSystem.Metric` |
@@ -393,7 +394,6 @@ Type: `Promise<void>`
 | `"step-description"`      |             |
 | `"step-heading"`          |             |
 | `"step-info"`             |             |
-| `"step-location"`         |             |
 | `"step-toggle"`           |             |
 | `"step-travel-mode"`      |             |
 | `"step-travel-mode-icon"` |             |
