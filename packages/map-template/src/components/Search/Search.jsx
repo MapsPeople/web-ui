@@ -31,10 +31,11 @@ import { useIsKioskContext } from "../../hooks/useIsKioskContext";
  * @param {Object} props
  * @param {[[string, number]]} props.categories - All the unique categories that users can filter through.
  * @param {function} props.onSetSize - Callback that is fired when the search field takes focus.
+ * @param {boolean} props.isOpen - Boolean that describes if the search page is open or not.
  *
  * @returns
  */
-function Search({ onSetSize }) {
+function Search({ onSetSize, isOpen }) {
 
     const { t } = useTranslation();
 
@@ -420,7 +421,7 @@ function Search({ onSetSize }) {
 
                 { /* Buttons to scroll in the list of search results if in kiosk context */ }
 
-                {isKioskContext && searchResults.length > 0 && createPortal(
+                {isOpen && isKioskContext && searchResults.length > 0 && createPortal(
                     <div className="search__scroll-buttons">
                         <mi-scroll-buttons ref={scrollButtonsRef}></mi-scroll-buttons>
                     </div>,
