@@ -13,7 +13,7 @@ export class ScrollButtons {
     @Prop() scrollContainerElementRef: HTMLDivElement;
     @Watch('scrollContainerElementRef')
     addScrollEventListener(): void {
-        this.scrollContainerElementRef.addEventListener('scroll', () => {
+        this.scrollContainerElementRef?.addEventListener('scroll', () => {
             this.updateScrollButtonsState();
         });
     }
