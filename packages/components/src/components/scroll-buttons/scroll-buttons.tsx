@@ -72,15 +72,15 @@ export class ScrollButtons {
 
     render(): JSX.Element {
         return (
-            <div class="scroll-buttons">
-                <button class="mi-button mi-button--base btn btn-up"
+            <div part="container" class="scroll-buttons">
+                <button part="button button-up" class="mi-button mi-button--base btn btn-up"
                     type="button"
                     disabled
                     aria-label="Scroll Up"
                     ref={(el) => this.upButtonElement = el as HTMLButtonElement}
                     onClick={() => this.updateScrollPosition(-this.scrollLength)}>
                 </button>
-                <button class="mi-button mi-button--base btn btn-down"
+                <button part="button button-down" class="mi-button mi-button--base btn btn-down"
                     type="button"
                     aria-label="Scroll Down"
                     ref={(el) => this.downButtonElement = el as HTMLButtonElement}
