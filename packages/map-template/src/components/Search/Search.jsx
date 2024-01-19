@@ -374,7 +374,7 @@ function Search({ onSetSize, isOpen }) {
                 { /* Horizontal list of Categories */ }
 
                 {categories.length > 0 &&
-                    <div ref={categoriesListRef} className="search__categories">
+                    <div ref={categoriesListRef} className="search__categories  prevent-scroll" {...scrollableContentSwipePrevent}>
                         {categories?.map(([category, categoryInfo]) =>
                             <mi-chip
                                 icon={categoryInfo.iconUrl}
