@@ -8,7 +8,6 @@ import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
 import SearchField from '../WebComponentWrappers/Search/Search';
 import filteredLocationsState from '../../atoms/filteredLocationsState';
-import primaryColorState from '../../atoms/primaryColorState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import currentLocationState from '../../atoms/currentLocationState';
 import isLocationClickedState from '../../atoms/isLocationClickedState';
@@ -22,15 +21,16 @@ import getDesktopPaddingBottom from '../../helpers/GetDesktopPaddingBottom';
 import useKeyboardState from '../../atoms/useKeyboardState';
 import Keyboard from '../WebComponentWrappers/Keyboard/Keyboard';
 import searchInputState from '../../atoms/searchInputState';
-import { ReactComponent as ArrowRight } from '../../assets/arrow-right.svg';
-import { ReactComponent as ArrowLeft } from '../../assets/arrow-left.svg';
+import Categories from '../Categories/Categories';
+import searchResultsState from '../../atoms/searchResultsState';
+import selectedCategoryState from '../../atoms/selectedCategoryState';
 
 /**
  * Show the search results.
  *
  * @param {Object} props
  * @param {[[string, number]]} props.categories - All the unique categories that users can filter through.
- * @param {function} props.onSetSize - Callback that is fired when the search field takes focus.
+ * @param {function} props.onSetSize - Callback that is fired when the categories are clicked.
  *
  * @returns
  */
@@ -47,22 +47,16 @@ function Search({ onSetSize }) {
     const keyboardRef = useRef();
 
     const [searchDisabled, setSearchDisabled] = useState(true);
-    const [searchResults, setSearchResults] = useState([]);
+    const [searchResults, setSearchResults] = useRecoilState(searchResultsState);
     const categories = useRecoilValue(categoriesState);
     const useKeyboard = useRecoilValue(useKeyboardState);
 
     /** Indicate if search results have been found */
     const [showNotFoundMessage, setShowNotFoundMessage] = useState(false);
 
-    /** Referencing the categories results container DOM element */
-    const categoriesListRef = useRef();
-
-    /** Determines which category has been selected */
-    const [selectedCategory, setSelectedCategory] = useState();
+    const [selectedCategory, setSelectedCategory] = useRecoilState(selectedCategoryState);
 
     const scrollableContentSwipePrevent = usePreventSwipe();
-
-    const primaryColor = useRecoilValue(primaryColorState);
 
     const [hoveredLocation, setHoveredLocation] = useState();
 
@@ -86,10 +80,6 @@ function Search({ onSetSize }) {
 
     const searchInput = useRecoilValue(searchInputState);
 
-    const [isLeftButtonDisabled, setIsLeftButtonDisabled] = useState(true);
-
-    const [isRightButtonDisabled, setIsRightButtonDisabled] = useState(false);
-
     /**
      * Get the locations and filter through them based on categories selected.
      *
@@ -99,36 +89,6 @@ function Search({ onSetSize }) {
         window.mapsindoors.services.LocationsService.getLocations({
             categories: category,
         }).then(onResults);
-    }
-
-    /**
-     * Handles the click events on the categories list.
-     *
-     * @param {string} category
-     */
-    function categoryClicked(category) {
-        setSelectedCategory(category);
-        setSize(snapPoints.MAX);
-
-        if (selectedCategory === category) {
-            // If the clicked category is the same as currently selected, "deselect" it.
-            setSearchResults([]);
-            setSelectedCategory(null);
-
-            // Pass an empty array to the filtered locations in order to reset the locations.
-            setFilteredLocations([]);
-
-            // Check if the search field has a value and trigger the search again.
-            if (searchFieldRef.current.getValue()) {
-                searchFieldRef.current.triggerSearch();
-            }
-        } else if (searchFieldRef.current.getValue()) {
-            // If the search field has a value, trigger a research based on the new category.
-            searchFieldRef.current.triggerSearch();
-        } else {
-            // If the search field is empty, show all locations with that category.
-            getFilteredLocations(category);
-        }
     }
 
     /**
@@ -314,45 +274,6 @@ function Search({ onSetSize }) {
         }
     }, [useKeyboard]);
 
-    /**
-     * Update the state of the left and right scroll buttons
-     */
-    function updateScrollButtonsState() {
-        // Disable or enable the scroll left button
-        if (categoriesListRef?.current.scrollLeft === 0) {
-            setIsLeftButtonDisabled(true);
-        } else if (isLeftButtonDisabled) {
-            setIsLeftButtonDisabled(false);
-        }
-
-        // Disable or enable the scroll right button
-        if (categoriesListRef?.current.scrollWidth - categoriesListRef?.current.scrollLeft === categoriesListRef?.current.clientWidth) {
-            setIsRightButtonDisabled(true);
-        } else if (isRightButtonDisabled) {
-            setIsRightButtonDisabled(false);
-        }
-    }
-
-    /**
-     * Update the scroll position based on the value
-     *
-     * @param {number} value
-     */
-    function updateScrollPosition(value) {
-        categoriesListRef?.current.scroll({
-            left: categoriesListRef?.current.scrollLeft + value,
-            behavior: 'smooth'
-        });
-    }
-
-    /**
-     * Add event listener for scrolling in the categories list
-     */
-    if (categoriesListRef.current) {
-        categoriesListRef.current.addEventListener('scroll', () => {
-            updateScrollButtonsState();
-        });
-    }
 
     return (
         <div className="search"
@@ -369,37 +290,9 @@ function Search({ onSetSize }) {
                 disabled={searchDisabled} // Disabled initially to prevent content jumping when clicking and changing sheet size.
             />
             <div className="prevent-scroll" {...scrollableContentSwipePrevent}>
-                <div className="search__scrollable">
-                    {categories.length > 0 &&
-                        <>
-                            {isDesktop &&
-                                <button className={`search__scroll-button`}
-                                    onClick={() => updateScrollPosition(-300)}
-                                    disabled={isLeftButtonDisabled}>
-                                    <ArrowLeft />
-                                </button>
-                            }
-                            <div ref={categoriesListRef} className="search__categories">
-                                {categories?.map(([category, categoryInfo]) =>
-                                    <mi-chip
-                                        icon={categoryInfo.iconUrl}
-                                        background-color={primaryColor}
-                                        content={categoryInfo.displayName}
-                                        active={selectedCategory === category}
-                                        onClick={() => categoryClicked(category)}
-                                        key={category}>
-                                    </mi-chip>
-                                )}
-                            </div>
-                            {isDesktop &&
-                                <button className={`search__scroll-button`}
-                                    onClick={() => updateScrollPosition(300)}
-                                    disabled={isRightButtonDisabled}>
-                                    <ArrowRight />
-                                </button>
-                            }
-                        </>}
-                </div>
+                <Categories onSetSize={onSetSize}
+                    searchFieldRef={searchFieldRef}
+                    getFilteredLocations={category => getFilteredLocations(category)} />
                 {showNotFoundMessage && <p className="search__error"> {t('Nothing was found')}</p>}
                 {searchResults.length > 0 &&
                     <div className="search__results">

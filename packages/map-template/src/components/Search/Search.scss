@@ -6,23 +6,6 @@
     grid-auto-rows: min-content;
     overflow: auto;
 
-    &__scrollable {
-        overflow: auto;
-        display: grid;
-        grid-auto-flow: column;
-        align-items: end;
-        gap: var(--spacing-x-small);
-    }
-
-    &__categories {
-        display: grid;
-        grid-auto-flow: column;
-        gap: var(--spacing-x-small);
-        overflow: auto hidden;
-        grid-auto-columns: min-content;
-        margin-top: var(--spacing-x-small);
-    }
-
     &__error {
         text-align: center;
     }
@@ -33,19 +16,6 @@
         overflow: auto;
         grid-auto-rows: min-content;
         margin-top: var(--spacing-x-small);
-    }
-
-    &__scroll-button {
-        width: var(--spacing-xxx-large);
-        height: var(--spacing-xxx-large);
-        background-color: var(--brand-colors-white-100);
-        border: 1px solid var(--color-gray-30);
-        border-radius: var(--spacing-x-small);
-
-        &:disabled {
-            cursor: not-allowed;
-            opacity: 0.3;
-        }
     }
 
     @media (max-width: $desktop-breakpoint) {
