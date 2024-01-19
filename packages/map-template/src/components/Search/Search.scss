@@ -13,7 +13,7 @@
         grid-auto-columns: min-content;
         gap: var(--spacing-x-small);
         margin-top: var(--spacing-x-small);
-        overflow: auto;
+        overflow: auto hidden;
         flex-shrink: 0;
     }
 
