@@ -12,7 +12,6 @@ import directionsServiceState from '../../atoms/directionsServiceState';
 import currentLocationState from '../../atoms/currentLocationState';
 import travelModeState from '../../atoms/travelModeState';
 import mapTypeState from '../../atoms/mapTypeState';
-import Tooltip from '../Tooltip/Tooltip';
 import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
 import SearchField from '../WebComponentWrappers/Search/Search';
 import { snapPoints } from '../../constants/snapPoints';
@@ -33,6 +32,8 @@ import mapboxAccessTokenState from "../../atoms/mapboxAccessTokenState";
 import distanceUnitSystemSelector from '../../selectors/distanceUnitSystemSelector';
 import useDirectionsInfo from "../../hooks/useDirectionsInfo";
 import hasFoundRouteState from "../../atoms/hasFoundRouteState";
+import accessibilityOnState from "../../atoms/accessibilityOnState";
+import Accessibility from "../Accessibility/Accessibility";
 
 const searchFieldIdentifiers = {
     TO: 'TO',
@@ -88,7 +89,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     const [destinationLocation, setDestinationLocation] = useState();
     const [originLocation, setOriginLocation] = useState();
 
-    const [accessibilityOn, setAccessibilityOn] = useState(false);
+    const accessibilityOn = useRecoilValue(accessibilityOnState)
 
     const scrollableContentSwipePrevent = usePreventSwipe();
 
@@ -305,6 +306,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
 
     useEffect(() => {
         setSize(snapPoints.MAX);
+        let originLocationWasSet = false;
 
         // In case both the from and to locations are the user's position, unset the directionsToLocation. We don't want the user to be able to navigate to and from the user's position.
         if (directionsFromLocation?.id === 'USER_POSITION' && directionsToLocation?.id === 'USER_POSITION') {
@@ -317,10 +319,13 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
             setDestinationLocation(directionsToLocation);
         }
 
-        // If there is a directionsFromLocation, use that as the 'from' field. Otherwise trigger focus on search field.
+        // If there is a directionsFromLocation, use that as the 'from' field (if it has not been overridden). Otherwise trigger focus on search field.
         if (directionsFromLocation?.properties) {
-            fromFieldRef.current.setDisplayText(directionsFromLocation.properties.name);
-            setOriginLocation(directionsFromLocation);
+            if (!originLocation) {
+                fromFieldRef.current.setDisplayText(directionsFromLocation.properties.name);
+                setOriginLocation(directionsFromLocation);
+                originLocationWasSet = true;
+            }
         } else {
             setActiveSearchField(searchFieldIdentifiers.FROM);
         }
@@ -339,7 +344,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                 fromFieldRef.current.focusInput();
             }
 
-            if (userPosition && !originLocation && directionsToLocation?.id !== 'USER_POSITION') {
+            if (userPosition && !originLocation && directionsToLocation?.id !== 'USER_POSITION' && !originLocationWasSet) {
                 // If the user's position is known and no origin location is set, use the position as Origin.
 
                 const myPositionLocation = generateMyPositionLocation(userPosition);
@@ -439,11 +444,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                 </div>}
             {!searchTriggered && !showMyPositionOption && hasFoundRoute && !hasGooglePlaces && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
                 <div className="wayfinding__settings">
-                    <div className="wayfinding__accessibility">
-                        <input className="mi-toggle" type="checkbox" checked={accessibilityOn} onChange={e => setAccessibilityOn(e.target.checked)} style={{ backgroundColor: accessibilityOn ? primaryColor : '' }} />
-                        <div>{t('Accessibility')}</div>
-                        <Tooltip text={t('Turn on Accessibility to get directions that avoid stairs and escalators.')}></Tooltip>
-                    </div>
+                    <Accessibility />
                     <div className="wayfinding__travel">
                         <Dropdown selectionChanged={travelMode => setTravelMode(travelMode[0].value)}>
                             <mi-dropdown-item selected value={travelModes.WALKING}>
@@ -473,7 +474,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                     <div className="wayfinding__time">
                         <ClockIcon />
                         <div>{t('Estimated time')}:</div>
-                        <div className="wayfinding__minutes">{totalTime && <mi-time translations={JSON.stringify({ days: t('d'), hours: t('h'), minutes: t('min') })}  seconds={totalTime} />}</div>
+                        <div className="wayfinding__minutes">{totalTime && <mi-time translations={JSON.stringify({ days: t('d'), hours: t('h'), minutes: t('min') })} seconds={totalTime} />}</div>
                     </div>
                 </div>
                 <button className="wayfinding__button" style={{ background: primaryColor }} onClick={() => onStartDirections()}>

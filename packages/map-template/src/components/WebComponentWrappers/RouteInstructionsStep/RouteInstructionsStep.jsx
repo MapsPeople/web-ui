@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useRecoilState } from 'recoil';
 import substepsToggledState from '../../../atoms/substepsToggledState';
 import triggerSubstepsState from '../../../atoms/triggerSubstepsState';
+import { useIsKioskContext } from '../../../hooks/useIsKioskContext';
 
 /**
  * React wrapper around the custom element <mi-route-instructions-step>.
@@ -23,6 +24,8 @@ const RouteInstructionsStep = forwardRef(({ totalSteps, activeStep, previous, or
 
     const [substepsOpen, setSubstepsOpen] = useRecoilState(substepsToggledState);
     const [, setTriggerSubsteps] = useRecoilState(triggerSubstepsState);
+
+    const isKioskContext = useIsKioskContext();
 
     /**
      * Method that can be triggered on the element.
@@ -87,8 +90,10 @@ const RouteInstructionsStep = forwardRef(({ totalSteps, activeStep, previous, or
         }
     }, [substepsOpen]);
 
+
     return <mi-route-instructions-step
         ref={elementRef}
+        show-toggle-button={!isKioskContext}
         step={JSON.stringify(totalSteps[activeStep])}
         translations={JSON.stringify(translations)}
         destination-location={directions?.destinationLocation.properties.name}

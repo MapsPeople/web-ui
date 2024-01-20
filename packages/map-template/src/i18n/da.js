@@ -65,7 +65,10 @@ const da = {
     // QR code dialog
     'Scan QR code': 'Scan QR-kode',
     'Scan the QR code to see the route on your phone': 'Scan QR-koden for at se ruten på din mobil',
-    'Done': 'Afslut'
+    'Done': 'Afslut',
+    // Directions
+    'Cancel route': 'Annullér ruten',
+    'Finish route': 'Afslut ruten',
 };
 
 export default da;

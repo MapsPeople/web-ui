@@ -65,7 +65,10 @@ const fr = {
     // QR code dialog
     'Scan QR code': 'Scanne le code QR',
     'Scan the QR code to see the route on your phone': 'Scannez le code QR pour voir l\'itinéraire sur votre téléphone',
-    'Done': 'Fini'
+    'Done': 'Fini',
+     // Directions
+     'Cancel route': 'Annuler l\'itinéraire',
+     'Finish route': 'Terminer l\'itinéraire',
 };
 
 export default fr;
