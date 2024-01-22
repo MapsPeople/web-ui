@@ -1,15 +1,15 @@
 import React, { useRef, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import './Categories.scss';
-import categoriesState from "../../atoms/categoriesState";
-import useMediaQuery from "../../hooks/useMediaQuery";
-import { ReactComponent as ArrowRight } from '../../assets/arrow-right.svg';
-import { ReactComponent as ArrowLeft } from '../../assets/arrow-left.svg';
-import primaryColorState from "../../atoms/primaryColorState";
-import { snapPoints } from "../../constants/snapPoints";
-import searchResultsState from "../../atoms/searchResultsState";
-import selectedCategoryState from "../../atoms/selectedCategoryState";
-import filteredLocationsState from "../../atoms/filteredLocationsState";
+import { ReactComponent as ArrowRight } from '../../../assets/arrow-right.svg';
+import { ReactComponent as ArrowLeft } from '../../../assets/arrow-left.svg';
+import categoriesState from "../../../atoms/categoriesState";
+import useMediaQuery from "../../../hooks/useMediaQuery";
+import primaryColorState from "../../../atoms/primaryColorState";
+import { snapPoints } from "../../../constants/snapPoints";
+import searchResultsState from "../../../atoms/searchResultsState";
+import filteredLocationsState from "../../../atoms/filteredLocationsState";
+import selectedCategoryState from "../../../atoms/selectedCategoryState";
 
 /**
  * Show the categories list.

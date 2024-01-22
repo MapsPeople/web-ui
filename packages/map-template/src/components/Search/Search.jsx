@@ -21,9 +21,9 @@ import getDesktopPaddingBottom from '../../helpers/GetDesktopPaddingBottom';
 import useKeyboardState from '../../atoms/useKeyboardState';
 import Keyboard from '../WebComponentWrappers/Keyboard/Keyboard';
 import searchInputState from '../../atoms/searchInputState';
-import Categories from '../Categories/Categories';
 import searchResultsState from '../../atoms/searchResultsState';
 import selectedCategoryState from '../../atoms/selectedCategoryState';
+import Categories from './Categories/Categories';
 
 /**
  * Show the search results.
