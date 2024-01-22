@@ -303,6 +303,16 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         }
     }
 
+    /**
+     * Function that handles the closing of the Wayfinding page.
+     * Reset the originLocation and the display text of the input field.
+     */
+    function closeWayfinding() {
+        setOriginLocation();
+        fromFieldRef.current.setDisplayText('');
+        onBack();
+    }
+
     useEffect(() => {
         setSize(snapPoints.MAX);
 
@@ -377,7 +387,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
             <div className="wayfinding__directions">
                 <div className="wayfinding__title">{t('Start wayfinding')}</div>
                 <button className="wayfinding__close"
-                    onClick={() => onBack()}
+                    onClick={() => closeWayfinding()}
                     aria-label="Close">
                     <CloseIcon />
                 </button>
@@ -473,7 +483,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                     <div className="wayfinding__time">
                         <ClockIcon />
                         <div>{t('Estimated time')}:</div>
-                        <div className="wayfinding__minutes">{totalTime && <mi-time translations={JSON.stringify({ days: t('d'), hours: t('h'), minutes: t('min') })}  seconds={totalTime} />}</div>
+                        <div className="wayfinding__minutes">{totalTime && <mi-time translations={JSON.stringify({ days: t('d'), hours: t('h'), minutes: t('min') })} seconds={totalTime} />}</div>
                     </div>
                 </div>
                 <button className="wayfinding__button" style={{ background: primaryColor }} onClick={() => onStartDirections()}>
