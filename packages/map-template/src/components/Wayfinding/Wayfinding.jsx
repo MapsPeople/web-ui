@@ -306,6 +306,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
 
     /**
      * Function that handles the closing of the Wayfinding page.
+     * Reset the originLocation and the display text of the input field.
      */
     function closeWayfinding() {
         setOriginLocation();
