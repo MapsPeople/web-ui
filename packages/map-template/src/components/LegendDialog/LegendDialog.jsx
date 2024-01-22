@@ -20,7 +20,6 @@ function LegendDialog() {
 
     const [legendSections, setLegendSections] = useState([]);
 
-
     useEffect(() => {
         if (!kioskLocation?.properties.fields) return;
         const legendFields = [];
@@ -61,8 +60,8 @@ function LegendDialog() {
         <div className="legend">
             {legendSections.length > 0 && <div className="legend">
                 {legendSections.map((legendSection, index) => <div key={index} className="legend__section">
-                    <h2>{legendSection.heading}</h2>
-                    <p>{legendSection.content}</p>
+                    <div className="legend__heading">{legendSection.heading}</div>
+                    <div className="legend__content">{legendSection.content}</div>
                 </div>)}
                 <button className="legend__button" style={{ background: primaryColorProp }} onClick={() => setShowLegendDialog(false)}>{t('Close')}</button>
             </div>}

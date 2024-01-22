@@ -22,7 +22,7 @@
     z-index: 1000000;
     display: grid;
     width: 400px;
-    height: 200px;
+    height: fit-content;
 
     &__button {
         color: var(--color-white-white);
@@ -39,6 +39,18 @@
         &:hover {
             filter: brightness(90%);
         }
+    }
+
+    &__heading {
+        font-size: var(--spacing-x-large);
+        font-weight: var(--font-weight-xx-large);
+        color: var(--color-gray-90);
+        padding-top: var(--spacing-medium);
+    }
+
+    &__section {
+        display: grid;
+        gap: var(--spacing-medium);
     }
 
 }
