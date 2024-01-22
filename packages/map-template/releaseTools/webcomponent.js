@@ -27,7 +27,8 @@ MapsIndoorsMap.propTypes = {
     bearing: PropTypes.number,
     pitch: PropTypes.number,
     kioskOriginLocationId: PropTypes.string,
-    useMapProviderModule: PropTypes.bool
+    useMapProviderModule: PropTypes.bool,
+    timeout: PropTypes.number
 };
 
 const WebMapsIndoorsMap = reactToWebComponent(MapsIndoorsMap, React, ReactDOM);

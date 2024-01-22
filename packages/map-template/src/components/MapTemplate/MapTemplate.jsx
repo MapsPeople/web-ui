@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react';
+import { Fragment, useEffect, useRef } from 'react';
 import { useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
 import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
 import i18n from 'i18next';
 import initI18n from '../../i18n/initialize.js';
@@ -16,9 +16,9 @@ import currentLocationState from '../../atoms/currentLocationState';
 import tileStyleState from '../../atoms/tileStyleState';
 import categoriesState from '../../atoms/categoriesState';
 import venuesState from '../../atoms/venuesState';
-import currentVenueNameState from '../../atoms/currentVenueNameState';
 import solutionState from '../../atoms/solutionState.js';
 import { useAppHistory } from '../../hooks/useAppHistory';
+import { useReset } from '../../hooks/useReset.js';
 import useMediaQuery from '../../hooks/useMediaQuery';
 import Sidebar from '../Sidebar/Sidebar';
 import useLocationForWayfinding from '../../hooks/useLocationForWayfinding';
@@ -26,6 +26,7 @@ import locationIdState from '../../atoms/locationIdState';
 import mapboxAccessTokenState from '../../atoms/mapboxAccessTokenState';
 import filteredLocationsState from '../../atoms/filteredLocationsState';
 import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
+import kioskOriginLocationIdState from '../../atoms/kioskOriginLocationIdState.js';
 import startZoomLevelState from '../../atoms/startZoomLevelState';
 import primaryColorState from '../../atoms/primaryColorState';
 import logoState from '../../atoms/logoState';
@@ -36,9 +37,13 @@ import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import languageState from '../../atoms/languageState.js';
 import Notification from '../WebComponentWrappers/Notification/Notification.jsx';
 import kioskLocationState from '../../atoms/kioskLocationState';
+import timeoutState from '../../atoms/timoutState.js';
+import { useInactive } from '../../hooks/useInactive.js';
 import showQRCodeDialogState from '../../atoms/showQRCodeDialogState';
 import QRCodeDialog from '../QRCodeDialog/QRCodeDialog';
 import supportsUrlParametersState from '../../atoms/supportsUrlParametersState';
+import venueState from '../../atoms/venueState.js';
+import useSetCurrentVenueName from '../../hooks/useSetCurrentVenueName.js';
 import useKeyboardState from '../../atoms/useKeyboardState';
 
 // Define the Custom Elements from our components package.
@@ -68,15 +73,16 @@ defineCustomElements();
  * @param {string} [props.language] - The language to show textual content in. Supported values are "en" for English, "da" for Danish, "de" for German and "fr" for French. If the prop is not set, the language of the browser will be used (if it is one of the four supported languages - otherwise it will default to English).
  * @param {boolean} [props.supportsUrlParameters] - Set to true if you want to support URL Parameters to configure the Map Template.
  * @param {boolean} [props.useKeyboard] - If running the Map Template as a kiosk, set this prop to true and it will prompt a keyboard.
+ * @param {number} [props.timeout] - If you want the Map Template to reset map position and UI elements to the initial state after some time of inactivity, use this to specify the number of seconds of inactivity before resetting.
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout }) {
 
     const [, setApiKey] = useRecoilState(apiKeyState);
     const [, setGmApiKey] = useRecoilState(gmApiKeyState);
     const [, setMapboxAccessToken] = useRecoilState(mapboxAccessTokenState);
     const [isMapReady, setMapReady] = useRecoilState(isMapReadyState);
     const [venues, setVenues] = useRecoilState(venuesState);
-    const [, setCurrentVenueName] = useRecoilState(currentVenueNameState);
+    const [, setVenue] = useRecoilState(venueState);
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const [categories, setCategories] = useRecoilState(categoriesState);
     const [, setLocationId] = useRecoilState(locationIdState);
@@ -86,6 +92,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const [currentLanguage, setCurrentLanguage] = useRecoilState(languageState);
     const [, setKioskLocation] = useRecoilState(kioskLocationState);
+    const [, setKioskOriginLocationId] = useRecoilState(kioskOriginLocationIdState);
+    const [, setTimeoutValue] = useRecoilState(timeoutState);
+    const isInactive = useInactive(); // Hook to detect if user is inactive. Used in combination with timeout prop to reset the Map Template to initial values after a specified time.
     const [, setSupportsUrlParameters] = useRecoilState(supportsUrlParametersState);
     const [, setUseKeyboard] = useRecoilState(useKeyboardState);
 
@@ -94,6 +103,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     const directionsFromLocation = useLocationForWayfinding(directionsFrom);
     const directionsToLocation = useLocationForWayfinding(directionsTo);
+
+    const [isMapPositionKnown, setIsMapPositionKnown] = useState(false);
 
     // The filtered locations by external id, if present.
     const [, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
@@ -115,8 +126,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     const isDesktop = useMediaQuery('(min-width: 992px)');
     const isMobile = useMediaQuery('(max-width: 991px)');
-
-    const [pushAppView, goBack, currentAppView, currentAppViewPayload, appStates] = useAppHistory();
+    const resetState = useReset();
+    const setCurrentVenueName = useSetCurrentVenueName();
+    const [pushAppView, goBack, currentAppView, currentAppViewPayload, appStates, resetAppHistory] = useAppHistory();
 
     // Declare the reference to the disabled locations.
     const locationsDisabledRef = useRef();
@@ -125,6 +137,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [mapsindoorsSDKAvailable, setMapsindoorsSDKAvailable] = useState(false);
 
     const showQRCodeDialog = useRecoilValue(showQRCodeDialogState);
+
+    // The reset count is used to add a new key to the sidebar or bottomsheet, forcing it to re-render from scratch when resetting the Map Template.
+    const [resetCount, setResetCount] = useState(0);
 
     /**
      * Ensure that MapsIndoors Web SDK is available.
@@ -139,13 +154,22 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             const miSdkApiTag = document.createElement('script');
             miSdkApiTag.setAttribute('type', 'text/javascript');
-            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.26.4/mapsindoors-4.26.4.js.gz');
+            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.27.0/mapsindoors-4.27.0.js.gz');
             document.body.appendChild(miSdkApiTag);
             miSdkApiTag.onload = () => {
                 resolve();
             }
         });
     }
+
+    /*
+     * If the app is inactive, run code to reset UI and state.
+     */
+    useEffect(() => {
+        if (isInactive) {
+            resetStateAndUI();
+        }
+    }, [isInactive]);
 
     /**
      * Wait for the MapsIndoors JS SDK to be initialized, then set the mapsindoorsSDKAvailable state to true.
@@ -290,7 +314,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 });
             }
         }
-    }, [locationId, mapsindoorsSDKAvailable]);
+    }, [locationId, mapsindoorsSDKAvailable, resetCount]);
 
     /*
      * React to changes in the gmMapId prop.
@@ -326,6 +350,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the venue prop.
      */
     useEffect(() => {
+        setVenue(venue);
         setCurrentVenueName(venue);
     }, [venue]);
 
@@ -392,8 +417,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
+            setKioskOriginLocationId(kioskOriginLocationId);
             if (kioskOriginLocationId) {
                 window.mapsindoors.services.LocationsService.getLocation(kioskOriginLocationId).then(kioskLocation => {
+                    setCurrentVenueName(kioskLocation.properties.venueId);
                     setKioskLocation(kioskLocation);
                 })
             } else {
@@ -409,6 +436,13 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             }
         }
     }, [kioskOriginLocationId, mapsindoorsSDKAvailable]);
+
+    /*
+     * React on changes to the timout prop
+     */
+    useEffect(() => {
+        setTimeoutValue(timeout);
+    }, [timeout]);
 
     /*
      * React on changes in the supportsUrlParameters prop.
@@ -468,6 +502,15 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }
 
     /**
+     * Function that handles the reset of the state and UI.
+     */
+    function resetStateAndUI() {
+        resetState();
+        resetAppHistory();
+        setResetCount(curr => curr + 1); // will force a re-render of bottom sheet and sidebar.
+    }
+
+    /**
      * Get the unique categories and the count of the categories with locations associated.
      *
      * @param {array} locationsResult
@@ -509,8 +552,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             active={currentAppView === appStates.VENUE_SELECTOR}
         />}
         {showQRCodeDialog && <QRCodeDialog />}
-        {isMapReady &&
-            <>
+        {isMapPositionKnown &&
+            <Fragment key={resetCount}>
                 {isDesktop &&
                     <Sidebar
                         directionsFromLocation={directionsFromLocation}
@@ -518,6 +561,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                         pushAppView={pushAppView}
                         currentAppView={currentAppView}
                         appViews={appStates}
+                        onRouteFinished={() => resetStateAndUI()}
                     />
                 }
                 {isMobile &&
@@ -527,13 +571,15 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                         pushAppView={pushAppView}
                         currentAppView={currentAppView}
                         appViews={appStates}
+                        onRouteFinished={() => resetStateAndUI()}
                     />
                 }
-            </>
+            </Fragment>
         }
         <MIMap
             useMapProviderModule={useMapProviderModule}
             onVenueChangedOnMap={(venue) => venueChangedOnMap(venue)}
+            onMapPositionKnown={() => setIsMapPositionKnown(true)}
             onLocationClick={(location) => locationClicked(location)}
         />
     </div>
