@@ -86,14 +86,17 @@ Updates enable/disable state for scroll up and down buttons.
 
 Type: `Promise<void>`
 
+
+
+
 ## Shadow Parts
 
-| Part            | Description                                     |
-| --------------- | ----------------------------------------------- |
-| `"button"`      | Styles any of the scroll buttons.               |
-| `"button-down"` | Styles the down button.                         |
-| `"button-up"`   | Styles the up button.                           |
-| `"container"`   | Styles the container around the scroll buttons. |
+| Part            | Description |
+| --------------- | ----------- |
+| `"button"`      |             |
+| `"button-down"` |             |
+| `"button-up"`   |             |
+| `"container"`   |             |
 
 
 ----------------------------------------------

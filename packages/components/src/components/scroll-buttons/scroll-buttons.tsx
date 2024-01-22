@@ -16,6 +16,16 @@ export class ScrollButtons {
         this.scrollContainerElementRef?.addEventListener('scroll', () => {
             this.updateScrollButtonsState();
         });
+
+        if (!this.resizeObserver) {
+            this.resizeObserver = new ResizeObserver(() => {
+                this.updateScrollButtonsState();
+            });
+
+            if (this.scrollContainerElementRef) {
+                this.resizeObserver.observe(this.scrollContainerElementRef);
+            }
+        }
     }
 
     /**
@@ -23,6 +33,10 @@ export class ScrollButtons {
      */
     connectedCallback(): void {
         this.addScrollEventListener();
+    }
+
+    disconnectedCallback(): void {
+        this.resizeObserver?.disconnect();
     }
 
     /**
@@ -33,6 +47,8 @@ export class ScrollButtons {
 
     upButtonElement: HTMLButtonElement;
     downButtonElement: HTMLButtonElement;
+
+    resizeObserver: ResizeObserver;
 
     /**
      * Updates enable/disable state for scroll up and down buttons.
