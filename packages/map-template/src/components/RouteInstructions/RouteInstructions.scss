@@ -1,82 +1,28 @@
 .route-instructions {
-    width: 100%;
-    gap: var(--spacing-medium);
     height: 100%;
     display: grid;
     grid-template-rows: 1fr min-content;
 
-    &__progress {
-        display: flex;
-    }
-
     &__footer {
         position: sticky;
-        bottom: 0;
+        bottom: 134px;
         background: white;
-        padding: 16px 0;
+        padding-bottom: var(--spacing-medium);
 
         &::before {
             content: '';
             position: absolute;
             pointer-events: none;
-            bottom: calc(64px + var(--spacing-medium));
+            bottom: var(--spacing-xx-large);
             left: 0;
             right: 0;
             height: var(--spacing-xx-large);
             background: linear-gradient(rgba(255, 255, 255, 0), white);
         }
-    }
 
-    &__step {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        flex: 1;
-
-        .step-counter {
-            z-index: 100;
-            width: var(--spacing-x-small);
-            height: var(--spacing-x-small);
-            border-radius: 50%;
-            background: var(--color-gray-30);
-        }
-
-        // Rendering the progress line
-        &::after {
-            position: absolute;
-            content: "";
-            border-bottom: 2px solid var(--color-gray-30);
-            width: 100%;
-            top: 3px;
-            left: 50%;
-        }
-
-        &.completed {
-            .step-counter {
-                background-color: var(--color-gray-60);
-            }
-
-            // Rendering the completed progress line
+        &--kiosk {
             &::before {
-                position: absolute;
-                content: "";
-                border-bottom: 2px solid var(--color-gray-60);
-                width: 100%;
-                top: 3px;
-                left: -50%;
-            }
-        }
-
-        &:first-child {
-            &::before {
-                content: none;
-            }
-        }
-
-        &:last-child {
-            &::after {
-                content: none;
+                background: transparent;
             }
         }
     }
@@ -89,21 +35,23 @@
     }
 
     &__overview {
-        color: var(--color-gray-60);
+        color: var(--color-gray-90);
+        font-weight: var(--font-weight-large);
     }
 
     &__button {
         display: grid;
         justify-content: center;
-        align-items: center;
         background: none;
-        border: 1px solid var(--tailwind-colors-gray-200);
-        width: var(--spacing-xx-large);
-        height: var(--spacing-xx-large);
-        border-radius: var(--rounding-large);
+        border: none;
+        width: var(--icon-size-medium);
+        height: var(--icon-size-medium);
+        align-content: center;
 
-        &:hover {
-            background-color: var(--tailwind-colors-gray-50);
+        &--kiosk {
+            border-radius: var(--rounding-large);
+            border: 1px solid var(--color-gray-30);
+            padding: 18px;
         }
     }
 
@@ -114,8 +62,6 @@
     }
 
     mi-route-instructions-step {
-        padding: var(--spacing-medium) 0;
-        overflow-y: auto;
         height: 100%;
     }
 }

@@ -9,6 +9,7 @@ import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import Venue from './Venue/Venue';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
 import isLocationClickedState from '../../atoms/isLocationClickedState';
+import useSetCurrentVenueName from '../../hooks/useSetCurrentVenueName';
 
 /**
  * Show a list of Venues. The user can click on a Venue to select it.
@@ -23,7 +24,9 @@ function VenueSelector({ onOpen, onClose, active }) {
     const venueSelectorContentRef = useRef(null);
     const venues = useRecoilValue(venuesState);
 
-    const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
+    const setCurrentVenueName = useSetCurrentVenueName();
+
+    const currentVenueName = useRecoilValue(currentVenueNameState);
     const [, setIsLocationClicked] = useRecoilState(isLocationClickedState);
 
     /**
