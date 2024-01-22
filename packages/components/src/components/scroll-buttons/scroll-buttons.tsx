@@ -18,6 +18,7 @@ export class ScrollButtons {
         });
 
         if (!this.resizeObserver) {
+            // Setup a ResizeObserver to update scroll buttons state whenever the dimensions of the scroll container changes.
             this.resizeObserver = new ResizeObserver(() => {
                 this.updateScrollButtonsState();
             });
