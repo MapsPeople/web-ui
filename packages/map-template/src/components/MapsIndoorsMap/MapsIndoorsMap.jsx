@@ -42,8 +42,8 @@ function MapsIndoorsMap(props) {
         const queryStringParams = new URLSearchParams(queryString);
 
         const defaultProps = {
-            apiKey: '3ddemo',
-            venue: 'WEWORK',
+            apiKey: '02c329e6777d431a88480a09',
+            venue: 'AUSTIN',
             logo: 'https://app.mapsindoors.com/mapsindoors/gfx/mapspeople-logo/mapspeople-pin.svg',
             primaryColor: '#005655', // --brand-colors-dark-pine-100 from MIDT
             useMapProviderModule: false,
