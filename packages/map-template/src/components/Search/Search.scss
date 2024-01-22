@@ -35,7 +35,7 @@
 
     &__scroll-buttons {
         position: fixed;
-        left: calc(50% + 284px + 20px); // TODO: Explain magic numbers
+        left: calc(50% + 284px + 20px); /* Half viewport width + half modal width + gap */
         bottom: var(--spacing-x-large);
 
         mi-scroll-buttons::part(container) {
