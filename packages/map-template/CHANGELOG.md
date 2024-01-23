@@ -5,6 +5,37 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.31.2] - 2024-01-23
+
+### Fix
+
+- Fixed the directions not working on a mobile device.
+
+## [1.31.1] - 2024-01-22
+
+### Fix
+
+- Updated default values for `apiKey` and `venue` in the Map Template.
+
+## [1.31.0] - 2024-01-22
+
+### Added
+
+- Map Template is using Mapbox GL JS 3.
+
+## [1.30.0] - 2024-01-22
+
+### Added
+
+- Added support for a `timeout` property that can be used to reset the map and the UI to initial state after some seconds of inactivity.
+- Updated directions design.
+
+## [1.29.1] - 2024-01-22
+
+### Fixed
+
+- Fixed resetting the origin location when exiting the Wayfinding page.
+
 ## [1.29.0] - 2024-01-11
 
 ### Added

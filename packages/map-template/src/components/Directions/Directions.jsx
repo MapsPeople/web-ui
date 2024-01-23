@@ -121,7 +121,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
                     resolve(padding);
                 }
             } else {
-                return getMobilePaddingBottom();
+                return getMobilePaddingBottom().then(result => resolve(result));
             }
 
         });
