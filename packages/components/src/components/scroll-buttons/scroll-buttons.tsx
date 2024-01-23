@@ -96,12 +96,14 @@ export class ScrollButtons {
                     aria-label="Scroll Up"
                     ref={(el) => this.upButtonElement = el as HTMLButtonElement}
                     onClick={() => this.updateScrollPosition(-this.scrollLength)}>
+                    <mi-icon icon-name="chevron-up" />
                 </button>
                 <button part="button button-down" class="mi-button mi-button--base btn btn-down"
                     type="button"
                     aria-label="Scroll Down"
                     ref={(el) => this.downButtonElement = el as HTMLButtonElement}
                     onClick={() => this.updateScrollPosition(this.scrollLength)}>
+                    <mi-icon icon-name="chevron-down" />
                 </button>
             </div>
         );
