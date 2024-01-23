@@ -13,19 +13,19 @@ export class ScrollButtons {
     @Prop() scrollContainerElementRef: HTMLDivElement;
     @Watch('scrollContainerElementRef')
     addScrollEventListener(): void {
+        this.resizeObserver?.disconnect();
+
         this.scrollContainerElementRef?.addEventListener('scroll', () => {
             this.updateScrollButtonsState();
         });
 
-        if (!this.resizeObserver) {
+        if (this.scrollContainerElementRef) {
             // Setup a ResizeObserver to update scroll buttons state whenever the dimensions of the scroll container changes.
             this.resizeObserver = new ResizeObserver(() => {
                 this.updateScrollButtonsState();
             });
 
-            if (this.scrollContainerElementRef) {
-                this.resizeObserver.observe(this.scrollContainerElementRef);
-            }
+            this.resizeObserver.observe(this.scrollContainerElementRef);
         }
     }
 
