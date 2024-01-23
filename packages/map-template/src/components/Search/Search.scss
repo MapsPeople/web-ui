@@ -37,49 +37,5 @@
         position: fixed;
         left: calc(50% + 284px + 20px); /* Half viewport width + half modal width + gap */
         bottom: var(--spacing-x-large);
-
-        mi-scroll-buttons::part(container) {
-            background-color: transparent;
-            border: none;
-            padding: 0;
-            gap: var(--spacing-medium);
-        }
-
-        mi-scroll-buttons::part(button) {
-            margin: 0;
-            width: var(--spacing-xxxx-large);
-            height: var(--spacing-xxxx-large);
-            background: white;
-            border: none;
-            border-radius: var(--spacing-x-small);
-
-            &:disabled {
-                opacity: 1;
-            }
-
-            &::after {
-                width: 100%;
-                height: 100%;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
-        }
-
-        mi-scroll-buttons::part(button-up)::after {
-            content: url('../../assets/arrow-up.svg');
-        }
-
-        mi-scroll-buttons::part(button-down)::after {
-            content: url('../../assets/arrow-down.svg');
-        }
-
-        mi-scroll-buttons::part(button-up):disabled::after {
-            content: url('../../assets/arrow-up-disabled.svg');
-        }
-
-        mi-scroll-buttons::part(button-down):disabled::after {
-            content: url('../../assets/arrow-down-disabled.svg');
-        }
     }
 }
