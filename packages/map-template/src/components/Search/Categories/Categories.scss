@@ -1,5 +1,6 @@
 .categories {
-    overflow: auto;
+    overflow: auto hidden;
+    flex-shrink: 0;
     display: grid;
     grid-auto-flow: column;
     align-items: end;

@@ -340,13 +340,11 @@ function Search({ onSetSize, isOpen }) {
 
                 { /* Horizontal list of Categories */ }
 
-                {categories.length > 0 &&
-                    <div className="prevent-scroll" {...scrollableContentSwipePrevent}>
-                         <Categories onSetSize={onSetSize}
-                         searchFieldRef={searchFieldRef}
-                         getFilteredLocations={category => getFilteredLocations(category)} />
-                    </div>
-                }
+                {categories.length > 0 && <Categories onSetSize={onSetSize}
+                    searchFieldRef={searchFieldRef}
+                    getFilteredLocations={category => getFilteredLocations(category)}
+                />}
+
 
 
 

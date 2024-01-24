@@ -10,10 +10,11 @@ import { snapPoints } from "../../../constants/snapPoints";
 import searchResultsState from "../../../atoms/searchResultsState";
 import filteredLocationsState from "../../../atoms/filteredLocationsState";
 import selectedCategoryState from "../../../atoms/selectedCategoryState";
+import { usePreventSwipe } from '../../../hooks/usePreventSwipe';
 
 /**
  * Show the categories list.
- * 
+ *
  * @param {object} props
  * @param {function} props.onSetSize - Callback that is fired when the categories are clicked.
  * @param {function} props.getFilteredLocations - Function that gets the filtered locations based on the category selected.
@@ -38,6 +39,8 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef }) {
     const [, setSearchResults] = useRecoilState(searchResultsState);
 
     const [, setFilteredLocations] = useRecoilState(filteredLocationsState);
+
+    const scrollableContentSwipePrevent = usePreventSwipe();
 
     /**
      * Communicate size change to parent component.
@@ -122,7 +125,7 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef }) {
     }
 
     return (
-        <div className="categories">
+        <div className="categories prevent-scroll" {...scrollableContentSwipePrevent}>
             {categories.length > 0 &&
                 <>
                     {isDesktop &&
