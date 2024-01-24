@@ -8,7 +8,6 @@ import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
 import SearchField from '../WebComponentWrappers/Search/Search';
 import filteredLocationsState from '../../atoms/filteredLocationsState';
-import primaryColorState from '../../atoms/primaryColorState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import currentLocationState from '../../atoms/currentLocationState';
 import isLocationClickedState from '../../atoms/isLocationClickedState';
@@ -23,6 +22,9 @@ import { createPortal } from 'react-dom';
 import useKeyboardState from '../../atoms/useKeyboardState';
 import Keyboard from '../WebComponentWrappers/Keyboard/Keyboard';
 import searchInputState from '../../atoms/searchInputState';
+import searchResultsState from '../../atoms/searchResultsState';
+import selectedCategoryState from '../../atoms/selectedCategoryState';
+import Categories from './Categories/Categories';
 import { useIsKioskContext } from "../../hooks/useIsKioskContext";
 
 /**
@@ -30,7 +32,7 @@ import { useIsKioskContext } from "../../hooks/useIsKioskContext";
  *
  * @param {Object} props
  * @param {[[string, number]]} props.categories - All the unique categories that users can filter through.
- * @param {function} props.onSetSize - Callback that is fired when the search field takes focus.
+ * @param {function} props.onSetSize - Callback that is fired when the search field takes focus and when categories are clicked.
  * @param {boolean} props.isOpen - Boolean that describes if the search page is open or not.
  *
  * @returns
@@ -49,22 +51,16 @@ function Search({ onSetSize, isOpen }) {
     const keyboardRef = useRef();
 
     const [searchDisabled, setSearchDisabled] = useState(true);
-    const [searchResults, setSearchResults] = useState([]);
+    const [searchResults, setSearchResults] = useRecoilState(searchResultsState);
     const categories = useRecoilValue(categoriesState);
     const useKeyboard = useRecoilValue(useKeyboardState);
 
     /** Indicate if search results have been found */
     const [showNotFoundMessage, setShowNotFoundMessage] = useState(false);
 
-    /** Referencing the categories results container DOM element */
-    const categoriesListRef = useRef();
-
-    /** Determines which category has been selected */
-    const [selectedCategory, setSelectedCategory] = useState();
+    const [selectedCategory, setSelectedCategory] = useRecoilState(selectedCategoryState);
 
     const scrollableContentSwipePrevent = usePreventSwipe();
-
-    const primaryColor = useRecoilValue(primaryColorState);
 
     const [hoveredLocation, setHoveredLocation] = useState();
 
@@ -99,36 +95,6 @@ function Search({ onSetSize, isOpen }) {
         window.mapsindoors.services.LocationsService.getLocations({
             categories: category,
         }).then(onResults);
-    }
-
-    /**
-     * Handles the click events on the categories list.
-     *
-     * @param {string} category
-     */
-    function categoryClicked(category) {
-        setSelectedCategory(category);
-        setSize(snapPoints.MAX);
-
-        if (selectedCategory === category) {
-            // If the clicked category is the same as currently selected, "deselect" it.
-            setSearchResults([]);
-            setSelectedCategory(null);
-
-            // Pass an empty array to the filtered locations in order to reset the locations.
-            setFilteredLocations([]);
-
-            // Check if the search field has a value and trigger the search again.
-            if (searchFieldRef.current.getValue()) {
-                searchFieldRef.current.triggerSearch();
-            }
-        } else if (searchFieldRef.current.getValue()) {
-            // If the search field has a value, trigger a research based on the new category.
-            searchFieldRef.current.triggerSearch();
-        } else {
-            // If the search field is empty, show all locations with that category.
-            getFilteredLocations(category);
-        }
     }
 
     /**
@@ -350,6 +316,7 @@ function Search({ onSetSize, isOpen }) {
         }
     }, [useKeyboard]);
 
+
     return (
         <div className="search"
             ref={searchRef}
@@ -374,17 +341,10 @@ function Search({ onSetSize, isOpen }) {
                 { /* Horizontal list of Categories */ }
 
                 {categories.length > 0 &&
-                    <div ref={categoriesListRef} className="search__categories  prevent-scroll" {...scrollableContentSwipePrevent}>
-                        {categories?.map(([category, categoryInfo]) =>
-                            <mi-chip
-                                icon={categoryInfo.iconUrl}
-                                background-color={primaryColor}
-                                content={categoryInfo.displayName}
-                                active={selectedCategory === category}
-                                onClick={() => categoryClicked(category)}
-                                key={category}>
-                            </mi-chip>
-                        )}
+                    <div className="prevent-scroll" {...scrollableContentSwipePrevent}>
+                         <Categories onSetSize={onSetSize}
+                         searchFieldRef={searchFieldRef}
+                         getFilteredLocations={category => getFilteredLocations(category)} />
                     </div>
                 }
 
