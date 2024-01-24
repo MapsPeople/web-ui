@@ -285,11 +285,11 @@ function Search({ onSetSize, isOpen }) {
      * Setup scroll buttons to scroll in search results list when in kiosk mode.
      */
     useEffect(() => {
-        if (isKioskContext && searchResults.length > 0) {
+        if (isOpen && isKioskContext && searchResults.length > 0) {
             const searchResultsElement = document.querySelector('.mapsindoors-map .search__results');
             scrollButtonsRef.current.scrollContainerElementRef = searchResultsElement;
         }
-    }, [searchResults]);
+    }, [searchResults, isOpen]);
 
     /*
      * When useKeyboard parameter is present, add click event listener which determines when the keyboard should be shown or not.
