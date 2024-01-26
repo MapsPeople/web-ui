@@ -1,8 +1,8 @@
 import React, { useRef, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import './Categories.scss';
-import { ReactComponent as ArrowRight } from '../../../assets/arrow-right.svg';
-import { ReactComponent as ArrowLeft } from '../../../assets/arrow-left.svg';
+import { ReactComponent as ChevronRight } from '../../../assets/chevron-right.svg';
+import { ReactComponent as ChevronLeft } from '../../../assets/chevron-left.svg';
 import categoriesState from "../../../atoms/categoriesState";
 import useMediaQuery from "../../../hooks/useMediaQuery";
 import primaryColorState from "../../../atoms/primaryColorState";
@@ -132,7 +132,7 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef }) {
                         <button className={`categories__scroll-button`}
                             onClick={() => updateScrollPosition(-300)}
                             disabled={isLeftButtonDisabled}>
-                            <ArrowLeft />
+                            <ChevronLeft />
                         </button>
                     }
                     <div ref={categoriesListRef} className="categories__list">
@@ -151,7 +151,7 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef }) {
                         <button className={`categories__scroll-button`}
                             onClick={() => updateScrollPosition(300)}
                             disabled={isRightButtonDisabled}>
-                            <ArrowRight />
+                            <ChevronRight />
                         </button>
                     }
                 </>}

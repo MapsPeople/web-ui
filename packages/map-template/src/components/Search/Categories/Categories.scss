@@ -3,16 +3,21 @@
     flex-shrink: 0;
     display: grid;
     grid-auto-flow: column;
-    align-items: end;
     gap: var(--spacing-x-small);
+    margin-top: var(--spacing-x-small);
 
+    ::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+        background: transparent;
+    }
+    
     &__list {
         display: grid;
         grid-auto-flow: column;
         gap: var(--spacing-x-small);
         overflow: auto hidden;
         grid-auto-columns: min-content;
-        margin-top: var(--spacing-x-small);
     }
 
     &__scroll-button {
