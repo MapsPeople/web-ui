@@ -18,6 +18,7 @@
         gap: var(--spacing-x-small);
         overflow: auto hidden;
         grid-auto-columns: min-content;
+        scrollbar-width: none;
     }
 
     &__scroll-button {
