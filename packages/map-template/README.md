@@ -133,7 +133,7 @@ Note that when using the React component, the properties should conform to JSX p
 |`language`|`language`|`string`|The language to show textual content in. Supported values are "en" for English, "da" for Danish, "de" for German and "fr" for French. If the prop is not set, the language of the browser will be used (if it is one of the four supported languages - otherwise it will default to English). |
 |`kiosk-origin-location-id`|`kioskOriginLocationId`|`string`|If running the Map Template as a Kiosk, provide the Location ID that represents the location of the Kiosk. |
 |`timeout`|`timeout`|`number`|If you want the Map Template to reset the map position and the UI elements to the initial state after some time of inactivity, use this to specify the number of seconds of inactivity before resetting. This property is not dependent on the `kioskOriginLocationId`. |
-|`use-keyboard`|`useKeyboard`|`bool`|If running the Map Template as a Kiosk, set this prop to true and it will prompt a virtual keyboard. This property is dependent on the `kioskOriginLocationId`. |
+|`use-keyboard`|`useKeyboard`|`bool`|If running the Map Template as a Kiosk, set this prop to `true` and it will display a virtual keyboard. This property is dependent on the `kioskOriginLocationId`. |
 
 ## Using Query Parameters
 
