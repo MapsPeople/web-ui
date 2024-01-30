@@ -80,6 +80,7 @@ When loading the MapsIndoors Map component for the first time, the map will resp
 |`bearing`|`number`|The bearing (Mapbox) or heading (Google) value of the map. It accepts any value, and will modify it to fit into the range [0, 360]. |
 |`use-map-provider-module`|`useMapProviderModule`| Set to true if the Map Template should take MapsIndoors solution modules into consideration when determining what map type to use.|
 |`language`|`language`|`string`|The language to show textual content in. Supported values are "en" for English, "da" for Danish, "de" for German and "fr" for French. If the prop is not set, the language of the browser will be used (if it is one of the four supported languages - otherwise it will default to English). |
+|`timeout`|`timeout`|`number`|If you want the Map Template to reset map position and UI elements to the initial state after some time of inactivity, use this to specify the number of seconds of inactivity before resetting. |
 
 ## Using Query Parameters
 
@@ -87,7 +88,7 @@ The Map Template supports using query parameters for all the properties provided
 
 The supported query parameters are the following:
 
-1. `apiKey` - Used like this `apiKey=yourApiKey`. If no apiKey is provided, the app will default to `3ddemo`.
+1. `apiKey` - Used like this `apiKey=yourApiKey`. If no apiKey is provided, the app will default to `mapspeople3d`.
 2. `venue` - Used like this `venue=yourVenueName` - the Venue property is case sensitive. If no venue is provided, the app will select the first venue from the solution in alphabetical order.
 3. `locationId` - Used like this `locationId=yourLocationId`
 4. `primaryColor` - Used like this `primaryColor=000000`. **Note!** You need to provide a hex color value, without the `#`, due to the hashtag being a reserved symbol that has a predefined purpose in a query string. If no primary color is provided, the app will default to the MapsPeople brand color.
@@ -105,6 +106,7 @@ The supported query parameters are the following:
 16. `bearing` - Used like this `bearing=180`. Not compatible with MapsIndoors 2D models and MapsIndoors labels on Google Maps.  It accepts any value, and will modify it to fit into the range [0, 360].
 17. `useMapProviderModule` - Set to "true" if the Map Template should take MapsIndoors solution modules into consideration when determining what map type to use.
 18. `language` - The language to show textual content in. Supported values are "en" for English, "da" for Danish, "de" for German and "fr" for French. If the prop is not set, the language of the browser will be used (if it is one of the four supported languages - otherwise it will default to English).
+19. `timeout` - If you want the Map Template to reset map position and UI elements to the initial state after some time of inactivity, use this to specify the number of seconds of inactivity before resetting.
 
 **Note!** All the query parameters need to be separated with the `&` symbol, without any spaces in between.
 **Note!** When using parameters such as `directionsTo`, `directionsFrom`, `locationId`, `externalIDs`, and `tileStyle` make sure you are using the correct `apiKey` parameter to which they belong.

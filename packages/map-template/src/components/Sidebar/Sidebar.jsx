@@ -19,9 +19,10 @@ import kioskLocationState from '../../atoms/kioskLocationState';
  * @param {string} props.currentAppView - Holds the current view/state of the Map Template.
  * @param {array} props.appViews - Array of all possible views.
  * @param {array} props.filteredLocationsByExternalIDs - Array of locations filtered based on the external ID.
+ * @param {function} props.onRouteFinished - Callback that fires when the route has finished.
  *
  */
-function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews }) {
+function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews, onRouteFinished }) {
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
     const [, setLocationId] = useRecoilState(locationIdState);
@@ -89,7 +90,7 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
 
     const pages = [
         <Modal isOpen={currentAppView === appViews.SEARCH} key="A">
-            <Search />
+            <Search isOpen={currentAppView === appViews.SEARCH} />
         </Modal>,
         <Modal isOpen={currentAppView === appViews.EXTERNALIDS} key="B">
             <LocationsList
@@ -119,6 +120,7 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
             <Directions
                 isOpen={currentAppView === appViews.DIRECTIONS}
                 onBack={() => closeDirections()}
+                onRouteFinished={() => onRouteFinished()}
             />
         </Modal>
     ]

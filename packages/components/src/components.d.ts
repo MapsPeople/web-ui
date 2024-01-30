@@ -791,6 +791,11 @@ export namespace Components {
          */
         "openSubsteps": () => Promise<void>;
         /**
+          * Indicates if it should show the toggle button.
+          * @type {boolean}
+         */
+        "showToggleButton": boolean;
+        /**
           * The step data object to render from. Must be passed as stringified JSON.
          */
         "step": string;
@@ -2143,6 +2148,11 @@ declare namespace LocalJSX {
           * Event emitted when substeps are toggled.
          */
         "onSubstepsToggled"?: (event: MiRouteInstructionsStepCustomEvent<void>) => void;
+        /**
+          * Indicates if it should show the toggle button.
+          * @type {boolean}
+         */
+        "showToggleButton"?: boolean;
         /**
           * The step data object to render from. Must be passed as stringified JSON.
          */

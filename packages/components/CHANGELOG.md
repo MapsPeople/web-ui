@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [13.17.0] - 2024-01-30
+
+### Added
+
+- Adjust `scroll-buttons` component to fit the new design.
+
+## [13.16.0] - 2024-01-22
+
+### Added
+
+- Refactor the `route-instructions-step` component to fit the new design.
+
+## [13.15.2] - 2024-01-22
+
+### Fixed
+
+- **mi-search** Make sure the display text is set on the input element value.
+
+## [13.15.1] - 2024-01-16
+
+### Fixed
+
+- **mi-search** Make sure to use valid language tag when requesting search suggestions from Mapbox.
+
 ## [13.15.0] - 2024-01-10
 
 ### Added

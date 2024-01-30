@@ -5,6 +5,56 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.33.0] - 2024-01-30
+
+### Added
+
+- Added vertical scroll buttons to the search results list
+- Added horizontal scroll buttons to the categories list 
+
+## [1.32.0] - 2024-01-24
+
+### Added
+
+- Updated to MapsIndoors SDK v4.29.0
+
+## [1.31.3] - 2024-01-24
+
+### Fixed
+
+- Fixed a bug where map would not always pan to a Location when clicked on it in a list of search results.
+
+## [1.31.2] - 2024-01-23
+
+### Fixed
+
+- Fixed the directions not working on a mobile device.
+
+## [1.31.1] - 2024-01-22
+
+### Fixed
+
+- Updated default values for `apiKey` and `venue` in the Map Template.
+
+## [1.31.0] - 2024-01-22
+
+### Added
+
+- Map Template is using Mapbox GL JS 3.
+
+## [1.30.0] - 2024-01-22
+
+### Added
+
+- Added support for a `timeout` property that can be used to reset the map and the UI to initial state after some seconds of inactivity.
+- Updated directions design.
+
+## [1.29.1] - 2024-01-22
+
+### Fixed
+
+- Fixed resetting the origin location when exiting the Wayfinding page.
+
 ## [1.29.0] - 2024-01-11
 
 ### Added
