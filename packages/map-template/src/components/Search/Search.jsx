@@ -8,7 +8,6 @@ import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
 import SearchField from '../WebComponentWrappers/Search/Search';
 import filteredLocationsState from '../../atoms/filteredLocationsState';
-import primaryColorState from '../../atoms/primaryColorState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import currentLocationState from '../../atoms/currentLocationState';
 import isLocationClickedState from '../../atoms/isLocationClickedState';
@@ -19,24 +18,31 @@ import languageState from '../../atoms/languageState';
 import { useTranslation } from 'react-i18next';
 import kioskLocationState from '../../atoms/kioskLocationState';
 import getDesktopPaddingBottom from '../../helpers/GetDesktopPaddingBottom';
+import { createPortal } from 'react-dom';
 import useKeyboardState from '../../atoms/useKeyboardState';
 import Keyboard from '../WebComponentWrappers/Keyboard/Keyboard';
 import searchInputState from '../../atoms/searchInputState';
+import searchResultsState from '../../atoms/searchResultsState';
+import selectedCategoryState from '../../atoms/selectedCategoryState';
+import Categories from './Categories/Categories';
+import { useIsKioskContext } from "../../hooks/useIsKioskContext";
 
 /**
  * Show the search results.
  *
  * @param {Object} props
  * @param {[[string, number]]} props.categories - All the unique categories that users can filter through.
- * @param {function} props.onSetSize - Callback that is fired when the search field takes focus.
+ * @param {function} props.onSetSize - Callback that is fired when the search field takes focus and when categories are clicked.
+ * @param {boolean} props.isOpen - Boolean that describes if the search page is open or not.
  *
  * @returns
  */
-function Search({ onSetSize }) {
+function Search({ onSetSize, isOpen }) {
 
     const { t } = useTranslation();
 
     const searchRef = useRef();
+    const scrollButtonsRef = useRef();
 
     /** Referencing the search field */
     const searchFieldRef = useRef();
@@ -45,22 +51,16 @@ function Search({ onSetSize }) {
     const keyboardRef = useRef();
 
     const [searchDisabled, setSearchDisabled] = useState(true);
-    const [searchResults, setSearchResults] = useState([]);
+    const [searchResults, setSearchResults] = useRecoilState(searchResultsState);
     const categories = useRecoilValue(categoriesState);
     const useKeyboard = useRecoilValue(useKeyboardState);
 
     /** Indicate if search results have been found */
     const [showNotFoundMessage, setShowNotFoundMessage] = useState(false);
 
-    /** Referencing the categories results container DOM element */
-    const categoriesListRef = useRef();
-
-    /** Determines which category has been selected */
-    const [selectedCategory, setSelectedCategory] = useState();
+    const [selectedCategory, setSelectedCategory] = useRecoilState(selectedCategoryState);
 
     const scrollableContentSwipePrevent = usePreventSwipe();
-
-    const primaryColor = useRecoilValue(primaryColorState);
 
     const [hoveredLocation, setHoveredLocation] = useState();
 
@@ -82,7 +82,9 @@ function Search({ onSetSize }) {
 
     const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
 
-    const searchInput = useRecoilValue(searchInputState)
+    const searchInput = useRecoilValue(searchInputState);
+
+    const isKioskContext = useIsKioskContext();
 
     /**
      * Get the locations and filter through them based on categories selected.
@@ -93,36 +95,6 @@ function Search({ onSetSize }) {
         window.mapsindoors.services.LocationsService.getLocations({
             categories: category,
         }).then(onResults);
-    }
-
-    /**
-     * Handles the click events on the categories list.
-     *
-     * @param {string} category
-     */
-    function categoryClicked(category) {
-        setSelectedCategory(category);
-        setSize(snapPoints.MAX);
-
-        if (selectedCategory === category) {
-            // If the clicked category is the same as currently selected, "deselect" it.
-            setSearchResults([]);
-            setSelectedCategory(null);
-
-            // Pass an empty array to the filtered locations in order to reset the locations.
-            setFilteredLocations([]);
-
-            // Check if the search field has a value and trigger the search again.
-            if (searchFieldRef.current.getValue()) {
-                searchFieldRef.current.triggerSearch();
-            }
-        } else if (searchFieldRef.current.getValue()) {
-            // If the search field has a value, trigger a research based on the new category.
-            searchFieldRef.current.triggerSearch();
-        } else {
-            // If the search field is empty, show all locations with that category.
-            getFilteredLocations(category);
-        }
     }
 
     /**
@@ -166,7 +138,7 @@ function Search({ onSetSize }) {
     }
 
     /**
-     * When search field is clicked, maximize the sheet size and set focus on the from field, 
+     * When search field is clicked, maximize the sheet size and set focus on the from field,
      * and if the useKeyboard prop is present, show the onscreen keyboard.
      * But wait for any bottom sheet transition to end before doing that to avoid content jumping when virtual keyboard appears.
      */
@@ -257,6 +229,26 @@ function Search({ onSetSize }) {
         });
     }
 
+    /**
+     * Calculate the CSS for the container based on context.
+     */
+    function calculateContainerStyle() {
+        if (searchResults.length > 0) {
+            let maxHeight;
+            if (isDesktop) {
+                // On desktop-sized viewports, we want the container to have a max height of 60% of the Map Template.
+                maxHeight = document.querySelector('.mapsindoors-map').clientHeight * 0.6 + 'px';
+            } else {
+                // On mobile-sized viewports, take up all available space if needed.
+                maxHeight = '100%';
+            }
+
+            return { display: 'flex', flexDirection: 'column', maxHeight, overflow: 'hidden' };
+        } else {
+            return { minHeight: categories.length > 0 ? '136px' : '80px'};
+        }
+    }
+
     /*
      * React on changes in the venue prop.
      * Deselect category and clear results list.
@@ -290,12 +282,22 @@ function Search({ onSetSize }) {
     });
 
     /*
-     * When useKeyboard parameter is present, add click event listener which determines when the keyboard should be shown or not. 
+     * Setup scroll buttons to scroll in search results list when in kiosk mode.
+     */
+    useEffect(() => {
+        if (isOpen && isKioskContext && searchResults.length > 0) {
+            const searchResultsElement = document.querySelector('.mapsindoors-map .search__results');
+            scrollButtonsRef.current.scrollContainerElementRef = searchResultsElement;
+        }
+    }, [searchResults, isOpen]);
+
+    /*
+     * When useKeyboard parameter is present, add click event listener which determines when the keyboard should be shown or not.
      */
     useEffect(() => {
         if (useKeyboard) {
             const onClick = (event) => {
-                // Use the closest() method to check if the element that has been clicked traverses the element and its parents 
+                // Use the closest() method to check if the element that has been clicked traverses the element and its parents
                 // until it finds a node that matches the 'mi-keyboard' selector.
                 // If the user clicks on the keyboard or the search fields, the keyboard should stay visible.
                 if (event.target.closest('mi-keyboard') ||
@@ -314,37 +316,48 @@ function Search({ onSetSize }) {
         }
     }, [useKeyboard]);
 
+
     return (
         <div className="search"
             ref={searchRef}
-            style={{ minHeight: categories.length > 0 ? '136px' : '80px' }}>
-            <SearchField
-                ref={searchFieldRef}
-                mapsindoors={true}
-                placeholder={t('Search by name, category, building...')}
-                results={locations => onResults(locations)}
-                clicked={() => searchFieldClicked()}
-                cleared={() => cleared()}
-                category={selectedCategory}
-                disabled={searchDisabled} // Disabled initially to prevent content jumping when clicking and changing sheet size.
-            />
-            <div className="search__scrollable prevent-scroll" {...scrollableContentSwipePrevent}>
-                {categories.length > 0 &&
-                    <div ref={categoriesListRef} className="search__categories">
-                        {categories?.map(([category, categoryInfo]) =>
-                            <mi-chip
-                                icon={categoryInfo.iconUrl}
-                                background-color={primaryColor}
-                                content={categoryInfo.displayName}
-                                active={selectedCategory === category}
-                                onClick={() => categoryClicked(category)}
-                                key={category}>
-                            </mi-chip>
-                        )}
-                    </div>}
+            style={calculateContainerStyle()}
+            >
+
+                { /* Search field that allows users to search for locations (MapsIndoors Locations and external) */ }
+
+                <SearchField
+                    ref={searchFieldRef}
+                    mapsindoors={true}
+                    placeholder={t('Search by name, category, building...')}
+                    results={locations => onResults(locations)}
+                    clicked={() => searchFieldClicked()}
+                    cleared={() => cleared()}
+                    category={selectedCategory}
+                    disabled={searchDisabled} // Disabled initially to prevent content jumping when clicking and changing sheet size.
+                />
+
+
+
+                { /* Horizontal list of Categories */ }
+
+                {categories.length > 0 && <Categories onSetSize={onSetSize}
+                    searchFieldRef={searchFieldRef}
+                    getFilteredLocations={category => getFilteredLocations(category)}
+                />}
+
+
+
+
+                { /* Message shown if no search results were found */ }
+
                 {showNotFoundMessage && <p className="search__error"> {t('Nothing was found')}</p>}
+
+
+
+                { /* Vertical list of search results. Scrollable. */ }
+
                 {searchResults.length > 0 &&
-                    <div className="search__results">
+                    <div className="search__results prevent-scroll" {...scrollableContentSwipePrevent}>
                         {searchResults.map(location =>
                             <ListItemLocation
                                 key={location.id}
@@ -355,8 +368,23 @@ function Search({ onSetSize }) {
                         )}
                     </div>
                 }
-            </div>
-            {isKeyboardVisible && isDesktop && <Keyboard ref={keyboardRef} searchInputElement={searchInput}></Keyboard>}
+
+
+
+                { /* Keyboard */ }
+
+                {isKeyboardVisible && isDesktop && <Keyboard ref={keyboardRef} searchInputElement={searchInput}></Keyboard>}
+
+
+
+                { /* Buttons to scroll in the list of search results if in kiosk context */ }
+
+                {isOpen && isKioskContext && searchResults.length > 0 && createPortal(
+                    <div className="search__scroll-buttons">
+                        <mi-scroll-buttons ref={scrollButtonsRef}></mi-scroll-buttons>
+                    </div>,
+                    document.querySelector('.mapsindoors-map')
+                )}
         </div>
     )
 }

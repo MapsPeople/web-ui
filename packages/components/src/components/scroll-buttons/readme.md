@@ -89,6 +89,16 @@ Type: `Promise<void>`
 
 
 
+## Shadow Parts
+
+| Part            | Description |
+| --------------- | ----------- |
+| `"button"`      |             |
+| `"button-down"` |             |
+| `"button-up"`   |             |
+| `"container"`   |             |
+
+
 ----------------------------------------------
 
 
