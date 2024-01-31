@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import './LegendDialog.scss';
 import { useRecoilState, useRecoilValue } from "recoil";
 import primaryColorState from "../../atoms/primaryColorState";
 import showLegendDialogState from "../../atoms/showLegendDialogState";
 import { useTranslation } from "react-i18next";
 import kioskLocationState from "../../atoms/kioskLocationState";
+import { useIsKioskContext } from "../../hooks/useIsKioskContext";
+import { createPortal } from "react-dom";
 
 
 /**
@@ -13,12 +15,23 @@ import kioskLocationState from "../../atoms/kioskLocationState";
  */
 function LegendDialog() {
     const { t } = useTranslation();
-    const [, setShowLegendDialog] = useRecoilState(showLegendDialogState);
     const primaryColorProp = useRecoilValue(primaryColorState);
 
     const kioskLocation = useRecoilValue(kioskLocationState)
 
     const [legendSections, setLegendSections] = useState([]);
+
+    const isKioskContext = useIsKioskContext();
+
+    const legendModalRef = useRef();
+
+    const legendSectionRef = useRef();
+
+    const scrollButtonsRef = useRef();
+
+    const [showLegendDialog, setShowLegendDialog] = useRecoilState(showLegendDialogState);
+
+    // const [showScrollButtons, setShowScrollButtons] = useState(false);
 
     useEffect(() => {
         if (!kioskLocation?.properties.fields) return;
@@ -55,18 +68,45 @@ function LegendDialog() {
         setLegendSections(sortedFields);
     }, [kioskLocation]);
 
+    /*
+   * Setup scroll buttons to scroll in search results list when in kiosk mode.
+   */
+    useEffect(() => {
+        if (showLegendDialog && isKioskContext) {
+            const legendContent = document.querySelector('.legend__sections');
+            scrollButtonsRef.current.scrollContainerElementRef = legendContent;
+
+            // if (legendSectionRef.current.clientHeight > 700) {
+            //     setShowScrollButtons(true);
+            // }
+        }
+    }, [showLegendDialog, legendSections]);
+
+
     return (<>
         <div className="background"></div>
-        <div className="legend">
-            {legendSections.length > 0 && <div className="legend">
-                {legendSections.map((legendSection, index) => <div key={index} className="legend__section">
+        <div className="legend" ref={legendModalRef}>
+            {legendSections.length > 0 && <div className="legend__sections">
+                {legendSections.map((legendSection, index) => <div key={index} className="legend__section" ref={legendSectionRef}>
                     <div className="legend__heading">{legendSection.heading}</div>
                     <div className="legend__content">{legendSection.content}</div>
                 </div>)}
-                <button className="legend__button" style={{ background: primaryColorProp }} onClick={() => setShowLegendDialog(false)}>{t('Close')}</button>
             </div>}
-
+            <button className="legend__button" style={{ background: primaryColorProp }} onClick={() => setShowLegendDialog(false)}>{t('Close')}</button>
         </div>
+
+
+
+        { /* Buttons to scroll in the list of search results if in kiosk context */}
+
+        {isKioskContext && showLegendDialog && createPortal(
+            <div className="scroll-buttons">
+                <mi-scroll-buttons ref={scrollButtonsRef}></mi-scroll-buttons>
+            </div>,
+            document.querySelector('.legend')
+        )}
+
+
     </>
     )
 }

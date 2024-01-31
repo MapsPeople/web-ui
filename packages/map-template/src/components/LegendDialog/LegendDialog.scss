@@ -22,7 +22,6 @@
     z-index: 1000000;
     display: grid;
     width: 500px;
-    height: fit-content;
 
     &__button {
         color: var(--color-white-white);
@@ -52,5 +51,25 @@
         display: grid;
         gap: var(--spacing-medium);
     }
+    
+    &__sections {
+        overflow: scroll;
+        max-height: 700px;
 
+        &::before {
+            content: '';
+            position: absolute;
+            bottom: calc(64px + var(--spacing-small));
+            left: 0;
+            right: 0;
+            height: var(--spacing-xx-large);
+            background: linear-gradient(rgba(255, 255, 255, 0), white);
+        }
+    }
+
+    .scroll-buttons {
+        position: fixed;
+        left: 520px;
+        bottom: 0;
+    }
 }
