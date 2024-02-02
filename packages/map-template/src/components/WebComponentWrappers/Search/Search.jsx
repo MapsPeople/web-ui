@@ -4,6 +4,8 @@ import { useRecoilValue, useRecoilState } from 'recoil';
 import userPositionState from '../../../atoms/userPositionState';
 import languageState from '../../../atoms/languageState';
 import searchInputState from '../../../atoms/searchInputState';
+import kioskLocationState from '../../../atoms/kioskLocationState';
+import { useIsKioskContext } from '../../../hooks/useIsKioskContext';
 
 /**
  * React wrapper around the custom element <mi-search>.
@@ -27,6 +29,10 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
     const language = useRecoilValue(languageState);
 
     const [, setSearchInput] = useRecoilState(searchInputState)
+
+    const kioskLocation = useRecoilValue(kioskLocationState);
+
+    const isKioskContext = useIsKioskContext();
 
     const mapboxPlacesSessionToken = sessionStorage.getItem('mapboxPlacesSessionToken');
 
@@ -112,6 +118,7 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
         disabled={disabled}
         mapbox={mapbox}
         google={google}
+        mi-venue={kioskLocation && isKioskContext ? kioskLocation.properties.venueId : undefined}
         language={language} />
 });
 
