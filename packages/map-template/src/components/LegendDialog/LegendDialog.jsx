@@ -8,7 +8,6 @@ import kioskLocationState from "../../atoms/kioskLocationState";
 import { useIsKioskContext } from "../../hooks/useIsKioskContext";
 import { createPortal } from "react-dom";
 
-
 /**
  * Handle the Legend dialog.
  *
@@ -35,6 +34,7 @@ function LegendDialog() {
 
     useEffect(() => {
         if (!kioskLocation?.properties.fields) return;
+
         const legendFields = [];
 
         for (const customPropertyKey of Object.keys(kioskLocation.properties.fields)) {
@@ -66,6 +66,7 @@ function LegendDialog() {
 
         const sortedFields = legendFields.sort((a, b) => a.index - b.index);
         setLegendSections(sortedFields);
+        console.log('sorted fields', sortedFields)
     }, [kioskLocation]);
 
     /*

@@ -34,7 +34,6 @@
     &__info {
         display: grid;
         grid-auto-flow: column;
-        grid-template-columns: min-content 1fr;
         gap: 8px;
     }
 

@@ -90,6 +90,7 @@ function Search({ onSetSize, isOpen }) {
 
     const [, setShowLegendDialog] = useRecoilState(showLegendDialogState);
 
+    const [showLegendButton, setShowLegendButton] = useState(false);
     /**
      * Get the locations and filter through them based on categories selected.
      *
@@ -320,6 +321,23 @@ function Search({ onSetSize, isOpen }) {
         }
     }, [useKeyboard]);
 
+    /*
+     * Check if the kiosk includes 'legendheading' or 'legendcontent' fields 
+     *  in order to determine if the legend button should be shown. 
+     */
+    useEffect(() => {
+        if (kioskLocation && kioskLocation.properties.fields) {
+            for (const customPropertyKey of Object.keys(kioskLocation.properties.fields)) {
+                if (customPropertyKey.toLowerCase().includes('legendheading') || customPropertyKey.toLowerCase().includes('legendcontent')) {
+                    setShowLegendButton(true);
+                } else {
+                    setShowLegendButton(false);
+                }
+            }
+        } else {
+            return;
+        }
+    }, [kioskLocation]);
 
     return (
         <div className="search"
@@ -328,8 +346,8 @@ function Search({ onSetSize, isOpen }) {
 
             { /* Search info which includes legend button if in a Kiosk context. */}
 
-            <div className='search__info'>
-                <button className='search__legend' onClick={() => setShowLegendDialog(true)}><Legend /></button>
+            <div className='search__info' style={{ gridTemplateColumns: isKioskContext && showLegendButton ? 'min-content 1fr' : 'auto' }}>
+                {isKioskContext && showLegendButton && <button className='search__legend' onClick={() => setShowLegendDialog(true)}><Legend /></button>}
 
                 { /* Search field that allows users to search for locations (MapsIndoors Locations and external) */}
 
