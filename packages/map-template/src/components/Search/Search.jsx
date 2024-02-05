@@ -28,6 +28,8 @@ import Categories from './Categories/Categories';
 import { useIsKioskContext } from "../../hooks/useIsKioskContext";
 import { ReactComponent as Legend } from '../../assets/legend.svg';
 import showLegendDialogState from '../../atoms/showLegendDialogState';
+import getLegendSections from '../../helpers/GetLegendSections';
+import legendSizeState from '../../atoms/legendSizeState';
 
 /**
  * Show the search results.
@@ -91,7 +93,11 @@ function Search({ onSetSize, isOpen }) {
     const [, setShowLegendDialog] = useRecoilState(showLegendDialogState);
 
     const [showLegendButton, setShowLegendButton] = useState(false);
+
+    const [, setLegendSize] = useRecoilState(legendSizeState);
+
     /**
+     * 
      * Get the locations and filter through them based on categories selected.
      *
      * @param {string} category
@@ -347,7 +353,7 @@ function Search({ onSetSize, isOpen }) {
             { /* Search info which includes legend button if in a Kiosk context. */}
 
             <div className='search__info' style={{ gridTemplateColumns: isKioskContext && showLegendButton ? 'min-content 1fr' : 'auto' }}>
-                {isKioskContext && showLegendButton && <button className='search__legend' onClick={() => setShowLegendDialog(true)}><Legend /></button>}
+                {isKioskContext && showLegendButton && <button className='search__legend' onClick={() =>   setShowLegendDialog(true)}><Legend /></button>}
 
                 { /* Search field that allows users to search for locations (MapsIndoors Locations and external) */}
 

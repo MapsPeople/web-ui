@@ -7,6 +7,8 @@ import { useTranslation } from "react-i18next";
 import kioskLocationState from "../../atoms/kioskLocationState";
 import { useIsKioskContext } from "../../hooks/useIsKioskContext";
 import { createPortal } from "react-dom";
+import legendSizeState from "../../atoms/legendSizeState";
+import getLegendSections from "../../helpers/GetLegendSections";
 
 /**
  * Handle the Legend dialog.
@@ -30,7 +32,9 @@ function LegendDialog() {
 
     const [showLegendDialog, setShowLegendDialog] = useRecoilState(showLegendDialogState);
 
-    // const [showScrollButtons, setShowScrollButtons] = useState(false);
+    const [legendSize, setLegendSize] = useRecoilState(legendSizeState);
+
+    const [showScrollButtons, setShowScrollButtons] = useState(false);
 
     useEffect(() => {
         if (!kioskLocation?.properties.fields) return;
@@ -66,7 +70,6 @@ function LegendDialog() {
 
         const sortedFields = legendFields.sort((a, b) => a.index - b.index);
         setLegendSections(sortedFields);
-        console.log('sorted fields', sortedFields)
     }, [kioskLocation]);
 
     /*
@@ -74,20 +77,34 @@ function LegendDialog() {
    */
     useEffect(() => {
         if (showLegendDialog && isKioskContext) {
+            getLegendSections().then(padding => {
+                if (padding > 700) {
+                    setLegendSize(padding);
+                    setShowScrollButtons(true);
+                } else {
+                    setShowScrollButtons(false);
+                }
+            });
+
+        }
+    }, [showLegendDialog, isKioskContext]);
+
+    /*
+  * Setup scroll buttons to scroll in search results list when in kiosk mode.
+  */
+    useEffect(() => {
+        if (showLegendDialog && isKioskContext && showScrollButtons) {
             const legendContent = document.querySelector('.legend__sections');
             scrollButtonsRef.current.scrollContainerElementRef = legendContent;
-
-            // if (legendSectionRef.current.clientHeight > 700) {
-            //     setShowScrollButtons(true);
-            // }
         }
-    }, [showLegendDialog, legendSections]);
+    }, [showLegendDialog, legendSections, showScrollButtons]);
+
 
 
     return (<>
         <div className="background"></div>
         <div className="legend" ref={legendModalRef}>
-            {legendSections.length > 0 && <div className="legend__sections">
+            {legendSections.length > 0 && <div className="legend__sections" style={{ maxHeight: legendSize > 700 ? '700px' : 'auto' }}>
                 {legendSections.map((legendSection, index) => <div key={index} className="legend__section" ref={legendSectionRef}>
                     <div className="legend__heading">{legendSection.heading}</div>
                     <div className="legend__content">{legendSection.content}</div>
@@ -100,7 +117,7 @@ function LegendDialog() {
 
         { /* Buttons to scroll in the list of search results if in kiosk context */}
 
-        {isKioskContext && showLegendDialog && createPortal(
+        {isKioskContext && showLegendDialog && showScrollButtons && createPortal(
             <div className="scroll-buttons">
                 <mi-scroll-buttons ref={scrollButtonsRef}></mi-scroll-buttons>
             </div>,
