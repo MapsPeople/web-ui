@@ -28,7 +28,6 @@ import Categories from './Categories/Categories';
 import { useIsKioskContext } from "../../hooks/useIsKioskContext";
 import { ReactComponent as Legend } from '../../assets/legend.svg';
 import showLegendDialogState from '../../atoms/showLegendDialogState';
-import getLegendSections from '../../helpers/GetLegendSections';
 import legendSizeState from '../../atoms/legendSizeState';
 
 /**
@@ -93,8 +92,6 @@ function Search({ onSetSize, isOpen }) {
     const [, setShowLegendDialog] = useRecoilState(showLegendDialogState);
 
     const [showLegendButton, setShowLegendButton] = useState(false);
-
-    const [, setLegendSize] = useRecoilState(legendSizeState);
 
     /**
      * 

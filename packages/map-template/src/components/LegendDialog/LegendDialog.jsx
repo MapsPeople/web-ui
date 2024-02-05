@@ -8,7 +8,7 @@ import kioskLocationState from "../../atoms/kioskLocationState";
 import { useIsKioskContext } from "../../hooks/useIsKioskContext";
 import { createPortal } from "react-dom";
 import legendSizeState from "../../atoms/legendSizeState";
-import getLegendSections from "../../helpers/GetLegendSections";
+import getLegendSectionsHeight from "../../helpers/GetLegendSectionsHeight";
 
 /**
  * Handle the Legend dialog.
@@ -73,11 +73,13 @@ function LegendDialog() {
     }, [kioskLocation]);
 
     /*
-   * Setup scroll buttons to scroll in search results list when in kiosk mode.
-   */
+     * Get the height of the legend sections. 
+     * Set the legend size atom and determine 
+     * if the scroll buttons should be shown.
+     */
     useEffect(() => {
         if (showLegendDialog && isKioskContext) {
-            getLegendSections().then(padding => {
+            getLegendSectionsHeight().then(padding => {
                 if (padding > 700) {
                     setLegendSize(padding);
                     setShowScrollButtons(true);
@@ -90,16 +92,14 @@ function LegendDialog() {
     }, [showLegendDialog, isKioskContext]);
 
     /*
-  * Setup scroll buttons to scroll in search results list when in kiosk mode.
-  */
+     * Setup scroll buttons to scroll in legend sections when in kiosk mode.
+     */
     useEffect(() => {
         if (showLegendDialog && isKioskContext && showScrollButtons) {
             const legendContent = document.querySelector('.legend__sections');
             scrollButtonsRef.current.scrollContainerElementRef = legendContent;
         }
     }, [showLegendDialog, legendSections, showScrollButtons]);
-
-
 
     return (<>
         <div className="background"></div>
@@ -113,18 +113,13 @@ function LegendDialog() {
             <button className="legend__button" style={{ background: primaryColorProp }} onClick={() => setShowLegendDialog(false)}>{t('Close')}</button>
         </div>
 
-
-
         { /* Buttons to scroll in the list of search results if in kiosk context */}
-
         {isKioskContext && showLegendDialog && showScrollButtons && createPortal(
             <div className="scroll-buttons">
                 <mi-scroll-buttons ref={scrollButtonsRef}></mi-scroll-buttons>
             </div>,
             document.querySelector('.legend')
         )}
-
-
     </>
     )
 }

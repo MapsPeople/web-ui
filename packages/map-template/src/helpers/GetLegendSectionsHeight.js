@@ -1,10 +1,10 @@
 /**
- * Get bottom padding on desktop.
- * Returns a promise with the padding in pixels.
+ * Get height of the legend sections.
+ * Returns a promise with the height in pixels.
  *
  * @returns {Promise}
  */
-export default function getLegendSections() {
+export default function getLegendSectionsHeight() {
     return new Promise(resolve => {
         const legend = document.querySelector('.legend__sections');
 
