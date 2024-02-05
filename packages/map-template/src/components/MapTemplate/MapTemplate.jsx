@@ -45,6 +45,7 @@ import supportsUrlParametersState from '../../atoms/supportsUrlParametersState';
 import venueState from '../../atoms/venueState.js';
 import useSetCurrentVenueName from '../../hooks/useSetCurrentVenueName.js';
 import useKeyboardState from '../../atoms/useKeyboardState';
+import Switch from '../Switch/Switch.jsx';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -551,6 +552,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             onClose={() => goBack()}
             active={currentAppView === appStates.VENUE_SELECTOR}
         />}
+        <Switch />
         {showQRCodeDialog && <QRCodeDialog />}
         {isMapPositionKnown &&
             <Fragment key={resetCount}>
