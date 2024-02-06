@@ -118,7 +118,7 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
         disabled={disabled}
         mapbox={mapbox}
         google={google}
-        mi-venue={kioskLocation && isKioskContext ? kioskLocation.properties.venueId : undefined}
+        mi-venue={kioskLocation && isKioskContext ? kioskLocation.properties.venueId : undefined} // Restrict the search to the kiosk location venue when in kiosk mode.
         language={language} />
 });
 
