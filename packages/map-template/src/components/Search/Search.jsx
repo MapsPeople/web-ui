@@ -325,7 +325,7 @@ function Search({ onSetSize, isOpen }) {
 
 
             { /* Search field that allows users to search for locations (MapsIndoors Locations and external) */}
-            
+
             <SearchField
                 ref={searchFieldRef}
                 mapsindoors={true}
@@ -351,11 +351,11 @@ function Search({ onSetSize, isOpen }) {
             { /* Message shown if no search results were found */}
 
             {showNotFoundMessage && <p className="search__error"> {t('Nothing was found')}</p>}
-            
-            
+
+
 
             { /* Vertical list of search results. Scrollable. */}
-            
+
             {searchResults.length > 0 &&
                 <div className="search__results prevent-scroll" {...scrollableContentSwipePrevent}>
                     {searchResults.map(location =>
@@ -373,8 +373,8 @@ function Search({ onSetSize, isOpen }) {
             { /* Keyboard */}
 
             {isKeyboardVisible && isDesktop && <Keyboard ref={keyboardRef} searchInputElement={searchInput}></Keyboard>}
-            
-            
+
+
 
             { /* Buttons to scroll in the list of search results if in kiosk context */}
 
