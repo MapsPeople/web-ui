@@ -21,7 +21,7 @@ function LegendDialog() {
 
     const kioskLocation = useRecoilValue(kioskLocationState)
 
-    const legendSections = useState(getLegendSortedFields(kioskLocation));
+    const legendSections = getLegendSortedFields(kioskLocation);
 
     const isKioskContext = useIsKioskContext();
 
