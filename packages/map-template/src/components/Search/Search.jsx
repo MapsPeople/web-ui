@@ -323,8 +323,8 @@ function Search({ onSetSize, isOpen }) {
             style={calculateContainerStyle()}>
 
 
+
             { /* Search field that allows users to search for locations (MapsIndoors Locations and external) */}
-            
             
             <SearchField
                 ref={searchFieldRef}
@@ -338,8 +338,8 @@ function Search({ onSetSize, isOpen }) {
             />
 
 
-            { /* Horizontal list of Categories */}
 
+            { /* Horizontal list of Categories */}
 
             {categories.length > 0 && <Categories onSetSize={onSetSize}
                 searchFieldRef={searchFieldRef}
@@ -347,14 +347,14 @@ function Search({ onSetSize, isOpen }) {
             />}
 
 
-            { /* Message shown if no search results were found */}
 
+            { /* Message shown if no search results were found */}
 
             {showNotFoundMessage && <p className="search__error"> {t('Nothing was found')}</p>}
             
             
+
             { /* Vertical list of search results. Scrollable. */}
-            
             
             {searchResults.length > 0 &&
                 <div className="search__results prevent-scroll" {...scrollableContentSwipePrevent}>
@@ -369,15 +369,15 @@ function Search({ onSetSize, isOpen }) {
             }
 
 
-            { /* Keyboard */}
 
+            { /* Keyboard */}
 
             {isKeyboardVisible && isDesktop && <Keyboard ref={keyboardRef} searchInputElement={searchInput}></Keyboard>}
             
             
+
             { /* Buttons to scroll in the list of search results if in kiosk context */}
 
-            
             {isOpen && isKioskContext && searchResults.length > 0 && createPortal(
                 <div className="search__scroll-buttons">
                     <mi-scroll-buttons ref={scrollButtonsRef}></mi-scroll-buttons>
