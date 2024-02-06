@@ -555,7 +555,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             active={currentAppView === appStates.VENUE_SELECTOR}
         />}
         {showQRCodeDialog && <QRCodeDialog />}
-  		{showLegendDialog && <LegendDialog />}
+        {showLegendDialog && <LegendDialog />}
         {isMapPositionKnown &&
             <Fragment key={resetCount}>
                 {isDesktop &&
