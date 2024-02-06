@@ -68,12 +68,14 @@ function LegendDialog() {
     return (<>
         <div className="background"></div>
         <div className="legend" ref={legendModalRef}>
-            {legendSections.length > 0 && <div className="legend__sections" style={{ maxHeight: legendSize > 700 ? '700px' : 'auto' }}>
-                {legendSections.map((legendSection, index) => <div key={index} className="legend__section" ref={legendSectionRef}>
-                    <div className="legend__heading">{legendSection.heading}</div>
-                    <div className="legend__content">{legendSection.content}</div>
-                </div>)}
-            </div>}
+            {legendSections.length > 0 &&
+                <div className={`legend__sections ${legendSize > 700 ? 'legend__sections--scrollable' : ''}`}
+                    style={{ maxHeight: legendSize > 700 ? '700px' : 'auto' }}>
+                    {legendSections.map((legendSection, index) => <div key={index} className="legend__section" ref={legendSectionRef}>
+                        <div className="legend__heading">{legendSection.heading}</div>
+                        <div className="legend__content">{legendSection.content}</div>
+                    </div>)}
+                </div>}
             <button className="legend__button" style={{ background: primaryColorProp }} onClick={() => setShowLegendDialog(false)}>{t('Close')}</button>
         </div>
 

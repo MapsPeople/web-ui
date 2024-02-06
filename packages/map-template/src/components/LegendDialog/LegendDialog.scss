@@ -51,18 +51,20 @@
         display: grid;
         gap: var(--spacing-medium);
     }
-    
+
     &__sections {
         overflow: scroll;
 
-        &::before {
-            content: '';
-            position: absolute;
-            bottom: calc(64px + var(--spacing-small));
-            left: 0;
-            right: 0;
-            height: var(--spacing-xx-large);
-            background: linear-gradient(rgba(255, 255, 255, 0), white);
+        &--scrollable {
+            &::before {
+                content: '';
+                position: absolute;
+                bottom: calc(64px + var(--spacing-small));
+                left: 0;
+                right: 0;
+                height: var(--spacing-xx-large);
+                background: linear-gradient(rgba(255, 255, 255, 0), white);
+            }
         }
     }
 
