@@ -321,7 +321,11 @@ function Search({ onSetSize, isOpen }) {
         <div className="search"
             ref={searchRef}
             style={calculateContainerStyle()}>
+
+
             { /* Search field that allows users to search for locations (MapsIndoors Locations and external) */}
+            
+            
             <SearchField
                 ref={searchFieldRef}
                 mapsindoors={true}
@@ -332,14 +336,26 @@ function Search({ onSetSize, isOpen }) {
                 category={selectedCategory}
                 disabled={searchDisabled} // Disabled initially to prevent content jumping when clicking and changing sheet size.
             />
+
+
             { /* Horizontal list of Categories */}
+
+
             {categories.length > 0 && <Categories onSetSize={onSetSize}
                 searchFieldRef={searchFieldRef}
                 getFilteredLocations={category => getFilteredLocations(category)}
             />}
+
+
             { /* Message shown if no search results were found */}
+
+
             {showNotFoundMessage && <p className="search__error"> {t('Nothing was found')}</p>}
+            
+            
             { /* Vertical list of search results. Scrollable. */}
+            
+            
             {searchResults.length > 0 &&
                 <div className="search__results prevent-scroll" {...scrollableContentSwipePrevent}>
                     {searchResults.map(location =>
@@ -351,9 +367,17 @@ function Search({ onSetSize, isOpen }) {
                         />)}
                 </div>
             }
+
+
             { /* Keyboard */}
+
+
             {isKeyboardVisible && isDesktop && <Keyboard ref={keyboardRef} searchInputElement={searchInput}></Keyboard>}
+            
+            
             { /* Buttons to scroll in the list of search results if in kiosk context */}
+
+            
             {isOpen && isKioskContext && searchResults.length > 0 && createPortal(
                 <div className="search__scroll-buttons">
                     <mi-scroll-buttons ref={scrollButtonsRef}></mi-scroll-buttons>
