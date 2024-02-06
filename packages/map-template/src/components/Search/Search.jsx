@@ -28,7 +28,7 @@ import Categories from './Categories/Categories';
 import { useIsKioskContext } from "../../hooks/useIsKioskContext";
 import { ReactComponent as Legend } from '../../assets/legend.svg';
 import showLegendDialogState from '../../atoms/showLegendDialogState';
-import legendSizeState from '../../atoms/legendSizeState';
+import getLegendSections from '../../helpers/GetLegendSortedFields';
 
 /**
  * Show the search results.
@@ -325,20 +325,15 @@ function Search({ onSetSize, isOpen }) {
     }, [useKeyboard]);
 
     /*
-     * Check if the kiosk includes 'legendheading' or 'legendcontent' fields 
-     *  in order to determine if the legend button should be shown. 
+     * Get the legend sections and determine 
+     * If the legend button should be shown.
      */
     useEffect(() => {
-        if (kioskLocation && kioskLocation.properties.fields) {
-            for (const customPropertyKey of Object.keys(kioskLocation.properties.fields)) {
-                if (customPropertyKey.toLowerCase().includes('legendheading') || customPropertyKey.toLowerCase().includes('legendcontent')) {
-                    setShowLegendButton(true);
-                } else {
-                    setShowLegendButton(false);
-                }
-            }
+        const sections = getLegendSections(kioskLocation);
+        if (sections.length > 0) {
+            setShowLegendButton(true);
         } else {
-            return;
+            setShowLegendButton(false);
         }
     }, [kioskLocation]);
 
@@ -350,7 +345,7 @@ function Search({ onSetSize, isOpen }) {
             { /* Search info which includes legend button if in a Kiosk context. */}
 
             <div className='search__info' style={{ gridTemplateColumns: isKioskContext && showLegendButton ? 'min-content 1fr' : 'auto' }}>
-                {isKioskContext && showLegendButton && <button className='search__legend' onClick={() =>   setShowLegendDialog(true)}><Legend /></button>}
+                {isKioskContext && showLegendButton && <button className='search__legend' onClick={() => setShowLegendDialog(true)}><Legend /></button>}
 
                 { /* Search field that allows users to search for locations (MapsIndoors Locations and external) */}
 
