@@ -37,15 +37,10 @@ function QRCodeDialog() {
             
             // Get the last character of the pathname
             const lastCharacter = window.location.pathname.slice(-1);
-            let pathname;
             
             // Check if the pathname is a '/' before appending it to the targetUrl
-            if (lastCharacter === '/') {
-                pathname = window.location.pathname.slice(0, -1)
-            } else {
-                pathname = window.location.pathname;
-            }
-
+            let pathname = (lastCharacter === '/') ? window.location.pathname.slice(0, -1) : window.location.pathname;
+             
             let targetUrl = window.location.origin + pathname;
             
             // The interface for the existing URL search params
