@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import kioskLocationState from "../../atoms/kioskLocationState";
 import { useIsKioskContext } from "../../hooks/useIsKioskContext";
 import { createPortal } from "react-dom";
-import legendSizeState from "../../atoms/legendSizeState";
+import legendHeightState from "../../atoms/legendHeightState";
 import getLegendSectionsHeight from "../../helpers/GetLegendSectionsHeight";
 import getLegendSortedFields from "../../helpers/GetLegendSortedFields";
 
@@ -33,7 +33,7 @@ function LegendDialog() {
 
     const [showLegendDialog, setShowLegendDialog] = useRecoilState(showLegendDialogState);
 
-    const [legendSize, setLegendSize] = useRecoilState(legendSizeState);
+    const [legendHeight, setLegendHeight] = useRecoilState(legendHeightState);
 
     const [showScrollButtons, setShowScrollButtons] = useState(false);
 
@@ -44,9 +44,9 @@ function LegendDialog() {
      */
     useEffect(() => {
         if (showLegendDialog && isKioskContext) {
-            getLegendSectionsHeight().then(padding => {
-                if (padding > 700) {
-                    setLegendSize(padding);
+            getLegendSectionsHeight().then(height => {
+                if (height > 700) {
+                    setLegendHeight(height);
                     setShowScrollButtons(true);
                 } else {
                     setShowScrollButtons(false);
@@ -69,8 +69,8 @@ function LegendDialog() {
         <div className="background"></div>
         <div className="legend" ref={legendModalRef}>
             {legendSections.length > 0 &&
-                <div className={`legend__sections ${legendSize > 700 ? 'legend__sections--scrollable' : ''}`}
-                    style={{ maxHeight: legendSize > 700 ? '700px' : 'auto' }}>
+                <div className={`legend__sections ${legendHeight > 700 ? 'legend__sections--scrollable' : ''}`}
+                    style={{ maxHeight: legendHeight > 700 ? '700px' : 'auto' }}>
                     {legendSections.map((legendSection, index) => <div key={index} className="legend__section" ref={legendSectionRef}>
                         <div className="legend__heading">{legendSection.heading}</div>
                         <div className="legend__content">{legendSection.content}</div>
