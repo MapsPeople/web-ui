@@ -36,7 +36,7 @@ function QRCodeDialog() {
             const lastCharacter = window.location.pathname.slice(-1);
 
             // Check if the pathname is a '/' before appending it to the targetUrl
-            let pathname = (lastCharacter === '/') ? window.location.pathname.slice(0, -1) : window.location.pathname;
+            let pathname = (lastCharacter === '/') ? window.location.pathname.replace(/\/$/, "") : window.location.pathname;
              
             // Create the target URL when the user opens the QR code dialog
             let targetUrl = window.location.origin + pathname;
