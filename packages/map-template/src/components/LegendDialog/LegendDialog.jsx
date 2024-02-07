@@ -8,7 +8,7 @@ import kioskLocationState from "../../atoms/kioskLocationState";
 import { useIsKioskContext } from "../../hooks/useIsKioskContext";
 import { createPortal } from "react-dom";
 import legendHeightState from "../../atoms/legendHeightState";
-import getLegendSectionsHeight from "../../helpers/GetLegendSectionsHeight";
+import getLegendSectionsHeight from "./GetLegendSectionsHeight";
 import getLegendSortedFields from "../../helpers/GetLegendSortedFields";
 
 /**
