@@ -19,11 +19,11 @@ import venuesState from '../atoms/venuesState';
 import venueState from '../atoms/venueState';
 
 // Hooks
-import useMediaQuery from './useMediaQuery';
 import getMobilePaddingBottom from '../helpers/GetMobilePaddingBottom';
 import getDesktopPaddingLeft from '../helpers/GetDesktopPaddingLeft';
 import { useInactive } from './useInactive';
 import useSetCurrentVenueName from './useSetCurrentVenueName';
+import { useIsDesktop } from './useIsDesktop';
 
 const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
 
@@ -38,7 +38,7 @@ const useMapBoundsDeterminer = () => {
     const [mapPositionKnown, setMapPositionKnown] = useState(false);
     const [venueOnMap, setVenueOnMap] = useState();
 
-    const isDesktop = useMediaQuery('(min-width: 992px)');
+    const isDesktop = useIsDesktop();
     const isInactive = useInactive();
 
     const bearing = useRecoilValue(bearingState);

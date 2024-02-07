@@ -10,11 +10,11 @@ import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import { snapPoints } from '../../constants/snapPoints';
 import primaryColorState from '../../atoms/primaryColorState';
 import directionsServiceState from '../../atoms/directionsServiceState';
-import useMediaQuery from '../../hooks/useMediaQuery';
 import useDirectionsInfo from "../../hooks/useDirectionsInfo";
 import travelModeState from '../../atoms/travelModeState';
 import kioskLocationState from '../../atoms/kioskLocationState';
 import accessibilityOnState from '../../atoms/accessibilityOnState';
+import { useIsDesktop } from '../../hooks/useIsDesktop';
 
 /**
  * Shows details for a MapsIndoors Location.
@@ -58,7 +58,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
     const [destinationLocation, setDestinationLocation] = useState();
     const [originLocation, setOriginLocation] = useState();
 
-    const isDesktop = useMediaQuery('(min-width: 992px)');
+    const isDesktop = useIsDesktop();
 
     const travelMode = useRecoilValue(travelModeState);
 

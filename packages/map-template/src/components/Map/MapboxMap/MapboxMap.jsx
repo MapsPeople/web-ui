@@ -9,7 +9,7 @@ import primaryColorState from '../../../atoms/primaryColorState';
 import bearingState from '../../../atoms/bearingState';
 import pitchState from '../../../atoms/pitchState';
 import { v4 as uuidv4 } from 'uuid';
-import useMediaQuery from '../../../hooks/useMediaQuery';
+import { useIsDesktop } from '../../../hooks/useIsDesktop';
 
 /**
  * Takes care of instantiating a MapsIndoors Mapbox MapView.
@@ -29,7 +29,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
     const primaryColor = useRecoilValue(primaryColorState);
     const bearing = useRecoilValue(bearingState);
     const pitch = useRecoilValue(pitchState);
-    const isDesktop = useMediaQuery('(min-width: 992px)');
+    const isDesktop = useIsDesktop();
 
     useEffect(() => {
         // Initialize MapboxV3View MapView

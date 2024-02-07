@@ -4,13 +4,13 @@ import './Categories.scss';
 import { ReactComponent as ChevronRight } from '../../../assets/chevron-right.svg';
 import { ReactComponent as ChevronLeft } from '../../../assets/chevron-left.svg';
 import categoriesState from "../../../atoms/categoriesState";
-import useMediaQuery from "../../../hooks/useMediaQuery";
 import primaryColorState from "../../../atoms/primaryColorState";
 import { snapPoints } from "../../../constants/snapPoints";
 import searchResultsState from "../../../atoms/searchResultsState";
 import filteredLocationsState from "../../../atoms/filteredLocationsState";
 import selectedCategoryState from "../../../atoms/selectedCategoryState";
 import { usePreventSwipe } from '../../../hooks/usePreventSwipe';
+import { useIsDesktop } from "../../../hooks/useIsDesktop";
 
 /**
  * Show the categories list.
@@ -26,7 +26,7 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef }) {
 
     const categories = useRecoilValue(categoriesState);
 
-    const isDesktop = useMediaQuery('(min-width: 992px)');
+    const isDesktop = useIsDesktop();
 
     const [isLeftButtonDisabled, setIsLeftButtonDisabled] = useState(true);
 

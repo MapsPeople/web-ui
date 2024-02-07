@@ -8,7 +8,7 @@ import primaryColorState from '../../../atoms/primaryColorState';
 import gmMapIdState from '../../../atoms/gmMapIdState';
 import bearingState from '../../../atoms/bearingState';
 import pitchState from '../../../atoms/pitchState';
-import useMediaQuery from '../../../hooks/useMediaQuery';
+import { useIsDesktop } from '../../../hooks/useIsDesktop';
 
 /**
  * Takes care of instantiating a MapsIndoors Google Maps MapView.
@@ -30,7 +30,7 @@ function GoogleMapsMap({ onMapView, onPositionControl }) {
     const primaryColor = useRecoilValue(primaryColorState);
     const bearing = useRecoilValue(bearingState);
     const pitch = useRecoilValue(pitchState);
-    const isDesktop = useMediaQuery('(min-width: 992px)');
+    const isDesktop = useIsDesktop();
 
     useEffect(() => {
         const loader = new GoogleMapsApiLoader({
