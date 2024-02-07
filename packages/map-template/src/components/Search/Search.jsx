@@ -102,6 +102,7 @@ function Search({ onSetSize, isOpen }) {
     function getFilteredLocations(category) {
         window.mapsindoors.services.LocationsService.getLocations({
             categories: category,
+            venue: kioskLocation && isKioskContext ? kioskLocation.properties.venueId : undefined,
         }).then(onResults);
     }
 
@@ -372,6 +373,7 @@ function Search({ onSetSize, isOpen }) {
 
 
 
+            { /* Horizontal list of Categories */}
 
             { /* Message shown if no search results were found */}
 
