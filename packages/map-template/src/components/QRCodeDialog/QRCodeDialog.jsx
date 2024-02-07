@@ -34,9 +34,20 @@ function QRCodeDialog() {
         if (directionsFrom && directionsTo) {
             // The target URL when the user opens the QR code dialog
             // Create the URL by combining the origin and the pathname
-            // Check if the pathname is a '/' before appending it.
-            let targetUrl = window.location.origin + (window.location.pathname === '/' ? '' : window.location.pathname)
+            
+            // Get the last character of the pathname
+            const lastCharacter = window.location.pathname.slice(-1);
+            let pathname;
+            
+            // Check if the pathname is a '/' before appending it to the targetUrl
+            if (lastCharacter === '/') {
+                pathname = window.location.pathname.slice(0, -1)
+            } else {
+                pathname = window.location.pathname;
+            }
 
+            let targetUrl = window.location.origin + pathname;
+            
             // The interface for the existing URL search params
             const currentParams = new URLSearchParams(window.location.search);
 
