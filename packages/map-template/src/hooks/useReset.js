@@ -8,6 +8,7 @@ import notificationMessageState from '../atoms/notificationMessageState';
 import showQRCodeDialogState from '../atoms/showQRCodeDialogState';
 import substepsToggledState from '../atoms/substepsToggledState';
 import travelModeState from '../atoms/travelModeState';
+import searchResultsState from '../atoms/searchResultsState';
 
 /**
  * Reset a number of Recoil atoms to initial values.
@@ -25,6 +26,7 @@ export function useReset() {
     const showQRCodeDialog = useResetRecoilState(showQRCodeDialogState);
     const substepsToggled = useResetRecoilState(substepsToggledState);
     const travelMode = useResetRecoilState(travelModeState);
+    const searchResults = useResetRecoilState(searchResultsState);
 
     return () => {
         activeStep();
@@ -36,5 +38,6 @@ export function useReset() {
         showQRCodeDialog();
         substepsToggled();
         travelMode();
+        searchResults();
     };
 }
