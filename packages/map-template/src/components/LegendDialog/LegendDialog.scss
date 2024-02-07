@@ -1,5 +1,5 @@
 .background {
-    z-index: 10000;
+    z-index: var(--z-index-overlay);
     background-color: var(--color-black-black);
     opacity: 0.5;
     position: fixed;
@@ -16,10 +16,9 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 100;
     border-radius: var(--rounding-large);
     padding: var(--spacing-medium);
-    z-index: 10000;
+    z-index: var(--z-index-modal);
     display: grid;
     width: 500px;
 
