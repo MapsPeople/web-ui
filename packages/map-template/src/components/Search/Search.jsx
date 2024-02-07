@@ -330,11 +330,13 @@ function Search({ onSetSize, isOpen }) {
      * If the legend button should be shown.
      */
     useEffect(() => {
-        const sections = getLegendSections(kioskLocation);
-        if (sections.length > 0) {
-            setShowLegendButton(true);
-        } else {
-            setShowLegendButton(false);
+        if (kioskLocation) {
+            const sections = getLegendSections(kioskLocation);
+            if (sections.length > 0) {
+                setShowLegendButton(true);
+            } else {
+                setShowLegendButton(false);
+            }
         }
     }, [kioskLocation]);
 
