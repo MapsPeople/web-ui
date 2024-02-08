@@ -69,7 +69,7 @@ function LegendDialog() {
             {legendSections.length > 0 &&
                 <div className={`legend__sections ${legendHeight > 700 ? 'legend__sections--scrollable' : ''}`}
                     ref={legendSectionsRef}
-                    style={{ maxHeight: legendHeight > 700 ? '700px' : 'auto' }}>
+                    style={{ maxHeight: legendHeight > 700 ? '700px' : 'auto', overflowY: legendHeight > 700 ? 'scroll' : 'auto' }}>
                     {legendSections.map((legendSection, index) => <div key={index} className="legend__section" ref={legendSectionRef}>
                         <div className="legend__heading">{legendSection.heading}</div>
                         <div className="legend__content">{legendSection.content}</div>

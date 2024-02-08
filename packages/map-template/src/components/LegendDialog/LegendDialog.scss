@@ -52,8 +52,6 @@
     }
 
     &__sections {
-        overflow: scroll;
-
         &--scrollable {
             &::before {
                 content: '';
