@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import './Categories.scss';
 import { ReactComponent as ChevronRight } from '../../../assets/chevron-right.svg';
@@ -11,6 +11,7 @@ import filteredLocationsState from "../../../atoms/filteredLocationsState";
 import selectedCategoryState from "../../../atoms/selectedCategoryState";
 import { usePreventSwipe } from '../../../hooks/usePreventSwipe';
 import { useIsDesktop } from "../../../hooks/useIsDesktop";
+import getActiveCategory from "../../../helpers/GetActiveCategory";
 
 /**
  * Show the categories list.
@@ -23,7 +24,7 @@ import { useIsDesktop } from "../../../hooks/useIsDesktop";
 function Categories({ onSetSize, getFilteredLocations, searchFieldRef }) {
     /** Referencing the categories results container DOM element */
     const categoriesListRef = useRef();
-
+    
     const categories = useRecoilValue(categoriesState);
 
     const isDesktop = useIsDesktop();
@@ -41,6 +42,8 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef }) {
     const [, setFilteredLocations] = useRecoilState(filteredLocationsState);
 
     const scrollableContentSwipePrevent = usePreventSwipe();
+
+    const [activeChip, setActiveChip] = useState();
 
     /**
      * Communicate size change to parent component.
@@ -83,7 +86,6 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef }) {
         }
     }
 
-
     /**
      * Update the state of the left and right scroll buttons
      */
@@ -123,6 +125,24 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef }) {
             updateScrollButtonsState();
         });
     }
+
+    /**
+     * Get the active chip element.
+     */
+    useEffect(() => {
+        if (selectedCategory) {
+            getActiveCategory().then(chip => setActiveChip(chip));
+        }
+    }, [selectedCategory]);
+
+    /**
+     * Use the active chip to scroll into view.
+     */
+    useEffect(() => {
+        if (activeChip) {
+            activeChip.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' })
+        }
+    }, [activeChip]);
 
     return (
         <div className="categories prevent-scroll" {...scrollableContentSwipePrevent}>

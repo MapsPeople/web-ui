@@ -317,6 +317,17 @@ function Search({ onSetSize, isOpen }) {
         }
     }, [useKeyboard]);
 
+    /*
+   * React on changes in the app language. Any existing category search needs to update with translated Locations.
+   */
+    useEffect(() => {
+        if (selectedCategory) {
+            setSelectedCategory(selectedCategory);
+            getFilteredLocations(selectedCategory);
+        }
+    }, [selectedCategory]);
+
+
     return (
         <div className="search"
             ref={searchRef}
