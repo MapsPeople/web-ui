@@ -9,6 +9,7 @@ import primaryColorState from '../../../atoms/primaryColorState';
 import bearingState from '../../../atoms/bearingState';
 import pitchState from '../../../atoms/pitchState';
 import { v4 as uuidv4 } from 'uuid';
+import { useIsDesktop } from '../../../hooks/useIsDesktop';
 
 /**
  * Takes care of instantiating a MapsIndoors Mapbox MapView.
@@ -28,6 +29,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
     const primaryColor = useRecoilValue(primaryColorState);
     const bearing = useRecoilValue(bearingState);
     const pitch = useRecoilValue(pitchState);
+    const isDesktop = useIsDesktop();
 
     useEffect(() => {
         // Initialize MapboxV3View MapView
@@ -69,7 +71,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
             onPositionControl(myPositionButtonElement);
         }
 
-        if (mapsIndoorsInstance && mapView && !hasZoomControl) {
+        if (mapsIndoorsInstance && mapView && !hasZoomControl && isDesktop) {
             mapView
                 .getMap()
                 .addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
