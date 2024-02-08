@@ -28,7 +28,7 @@ import Categories from './Categories/Categories';
 import { useIsKioskContext } from "../../hooks/useIsKioskContext";
 import { ReactComponent as Legend } from '../../assets/legend.svg';
 import isLegendDialogVisibleState from '../../atoms/isLegendDialogVisibleState';
-import getLegendSections from '../../helpers/GetLegendSortedFields';
+import legendSortedFieldsSelector from '../../selectors/legendSortedFieldsSelector';
 
 /**
  * Show the search results.
@@ -92,6 +92,8 @@ function Search({ onSetSize, isOpen }) {
     const [, setShowLegendDialog] = useRecoilState(isLegendDialogVisibleState);
 
     const [showLegendButton, setShowLegendButton] = useState(false);
+
+    const legendSections = useRecoilValue(legendSortedFieldsSelector);
 
     /**
      * 
@@ -331,8 +333,7 @@ function Search({ onSetSize, isOpen }) {
      */
     useEffect(() => {
         if (kioskLocation) {
-            const sections = getLegendSections(kioskLocation);
-            if (sections.length > 0) {
+            if (legendSections.length > 0) {
                 setShowLegendButton(true);
             } else {
                 setShowLegendButton(false);

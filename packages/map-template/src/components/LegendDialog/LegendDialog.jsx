@@ -4,10 +4,9 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import primaryColorState from "../../atoms/primaryColorState";
 import isLegendDialogVisibleState from "../../atoms/isLegendDialogVisibleState";
 import { useTranslation } from "react-i18next";
-import kioskLocationState from "../../atoms/kioskLocationState";
 import { useIsKioskContext } from "../../hooks/useIsKioskContext";
 import legendHeightState from "../../atoms/legendHeightState";
-import getLegendSortedFields from "../../helpers/GetLegendSortedFields";
+import legendSortedFieldsSelector from "../../selectors/legendSortedFieldsSelector";
 
 /**
  * Handle the Legend dialog.
@@ -17,9 +16,7 @@ function LegendDialog() {
     const { t } = useTranslation();
     const primaryColorProp = useRecoilValue(primaryColorState);
 
-    const kioskLocation = useRecoilValue(kioskLocationState)
-
-    const legendSections = getLegendSortedFields(kioskLocation);
+    const legendSections = useRecoilValue(legendSortedFieldsSelector);
 
     const isKioskContext = useIsKioskContext();
 
