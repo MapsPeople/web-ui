@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useRef } from 'react';
 import { useState } from 'react';
-import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
 import i18n from 'i18next';
 import initI18n from '../../i18n/initialize.js';
@@ -45,8 +45,8 @@ import supportsUrlParametersState from '../../atoms/supportsUrlParametersState';
 import venueState from '../../atoms/venueState.js';
 import useSetCurrentVenueName from '../../hooks/useSetCurrentVenueName.js';
 import useKeyboardState from '../../atoms/useKeyboardState';
-import isLegendDialogVisibleState from '../../atoms/isLegendDialogVisibleState.js';
 import LegendDialog from '../LegendDialog/LegendDialog.jsx';
+import isLegendDialogVisibleState from '../../atoms/isLegendDialogVisibleState.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();

@@ -6,9 +6,7 @@ import isLegendDialogVisibleState from "../../atoms/isLegendDialogVisibleState";
 import { useTranslation } from "react-i18next";
 import kioskLocationState from "../../atoms/kioskLocationState";
 import { useIsKioskContext } from "../../hooks/useIsKioskContext";
-import { createPortal } from "react-dom";
 import legendHeightState from "../../atoms/legendHeightState";
-import getLegendSectionsHeight from "./GetLegendSectionsHeight";
 import getLegendSortedFields from "../../helpers/GetLegendSortedFields";
 
 /**
@@ -37,6 +35,8 @@ function LegendDialog() {
 
     const [showScrollButtons, setShowScrollButtons] = useState(false);
 
+    const legendSectionsRef = useRef();
+
     /*
      * Get the height of the legend sections. 
      * Set the legend size atom and determine 
@@ -44,14 +44,12 @@ function LegendDialog() {
      */
     useEffect(() => {
         if (showLegendDialog && isKioskContext) {
-            getLegendSectionsHeight().then(height => {
-                if (height > 700) {
-                    setLegendHeight(height);
-                    setShowScrollButtons(true);
-                } else {
-                    setShowScrollButtons(false);
-                }
-            });
+            if (legendSectionRef.current.clientHeight > 700) {
+                setLegendHeight(legendSectionRef.current.clientHeight);
+                setShowScrollButtons(true);
+            } else {
+                setShowScrollButtons(false);
+            }
         }
     }, [showLegendDialog, isKioskContext]);
 
@@ -70,6 +68,7 @@ function LegendDialog() {
         <div className="legend" ref={legendModalRef}>
             {legendSections.length > 0 &&
                 <div className={`legend__sections ${legendHeight > 700 ? 'legend__sections--scrollable' : ''}`}
+                    ref={legendSectionsRef}
                     style={{ maxHeight: legendHeight > 700 ? '700px' : 'auto' }}>
                     {legendSections.map((legendSection, index) => <div key={index} className="legend__section" ref={legendSectionRef}>
                         <div className="legend__heading">{legendSection.heading}</div>
@@ -77,15 +76,15 @@ function LegendDialog() {
                     </div>)}
                 </div>}
             <button className="legend__button" style={{ background: primaryColorProp }} onClick={() => setShowLegendDialog(false)}>{t('Close')}</button>
+
+            { /* Buttons to scroll in the list of search results if in kiosk context */}
+            {isKioskContext && showLegendDialog && showScrollButtons &&
+                <div className="scroll-buttons">
+                    <mi-scroll-buttons ref={scrollButtonsRef}></mi-scroll-buttons>
+                </div>
+            }
         </div>
 
-        { /* Buttons to scroll in the list of search results if in kiosk context */}
-        {isKioskContext && showLegendDialog && showScrollButtons && createPortal(
-            <div className="scroll-buttons">
-                <mi-scroll-buttons ref={scrollButtonsRef}></mi-scroll-buttons>
-            </div>,
-            document.querySelector('.legend')
-        )}
     </>
     )
 }
