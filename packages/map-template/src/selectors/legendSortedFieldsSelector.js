@@ -5,7 +5,7 @@ import kioskLocationState from '../atoms/kioskLocationState.js';
  * Selector to get the sorted fields based on the kioskLocationState.
  */
 const legendSortedFieldsSelector = selector({
-    key: 'legendSortedFields',
+    key: 'legendFields',
     get: ({ get }) => {
         const kioskLocation = get(kioskLocationState);
 
