@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import './LegendDialog.scss';
 import { useRecoilState, useRecoilValue } from "recoil";
 import primaryColorState from "../../atoms/primaryColorState";
-import showLegendDialogState from "../../atoms/showLegendDialogState";
+import isLegendDialogVisibleState from "../../atoms/isLegendDialogVisibleState";
 import { useTranslation } from "react-i18next";
 import kioskLocationState from "../../atoms/kioskLocationState";
 import { useIsKioskContext } from "../../hooks/useIsKioskContext";
@@ -31,7 +31,7 @@ function LegendDialog() {
 
     const scrollButtonsRef = useRef();
 
-    const [showLegendDialog, setShowLegendDialog] = useRecoilState(showLegendDialogState);
+    const [showLegendDialog, setShowLegendDialog] = useRecoilState(isLegendDialogVisibleState);
 
     const [legendHeight, setLegendHeight] = useRecoilState(legendHeightState);
 

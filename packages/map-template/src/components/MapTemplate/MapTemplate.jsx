@@ -45,7 +45,7 @@ import supportsUrlParametersState from '../../atoms/supportsUrlParametersState';
 import venueState from '../../atoms/venueState.js';
 import useSetCurrentVenueName from '../../hooks/useSetCurrentVenueName.js';
 import useKeyboardState from '../../atoms/useKeyboardState';
-import showLegendDialogState from '../../atoms/showLegendDialogState.js';
+import isLegendDialogVisibleState from '../../atoms/isLegendDialogVisibleState.js';
 import LegendDialog from '../LegendDialog/LegendDialog.jsx';
 
 // Define the Custom Elements from our components package.
@@ -139,7 +139,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [mapsindoorsSDKAvailable, setMapsindoorsSDKAvailable] = useState(false);
 
     const showQRCodeDialog = useRecoilValue(showQRCodeDialogState);
-    const showLegendDialog = useRecoilValue(showLegendDialogState);
+    const showLegendDialog = useRecoilValue(isLegendDialogVisibleState);
 
     // The reset count is used to add a new key to the sidebar or bottomsheet, forcing it to re-render from scratch when resetting the Map Template.
     const [resetCount, setResetCount] = useState(0);
