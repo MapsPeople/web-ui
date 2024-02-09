@@ -401,13 +401,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [logo]);
 
     /*
-     * React on changes in the category prop.
-     */
-    useEffect(() => {
-        setSelectedCategory(category);
-    }, [category]);
-
-    /*
      * React on changes in the current location prop.
      * Apply location selection if the current location exists and is not the same as the kioskOriginLocationId.
      */
@@ -553,6 +546,21 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
         setCategories(uniqueCategories);
     }
+
+    /*
+     * React on changes in the category prop.
+     * Check if the category property matches with any of the existing categories.
+     */
+    useEffect(() => {
+        if (mapsindoorsSDKAvailable) {
+            if (category) {
+                const existingCategory = categories.find((matched) => matched[0] === category)
+                if (existingCategory !== undefined) {
+                    setSelectedCategory(category);
+                }
+            }
+        }
+    }, [category, categories, mapsindoorsSDKAvailable]);
 
     return <div className={`mapsindoors-map ${locationsDisabledRef.current ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'} ${showPositionControl ? 'mapsindoors-map--show-my-position' : 'mapsindoors-map--hide-my-position'}`}>
         <Notification />
