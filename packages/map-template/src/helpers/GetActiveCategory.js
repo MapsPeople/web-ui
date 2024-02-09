@@ -1,26 +1,26 @@
 /**
- * Get the active chip element.
+ * Get the active category element.
  *
  * @returns {Promise}
  */
 export default function getActiveCategory() {
     return new Promise(resolve => {
-        const activeChip = document.querySelector('.chip--active');
+        const activeCategory = document.querySelector('.chip--active');
 
         // If there is no active chip element (yet), setup a MutationObserver that listens for the appearance of it.
-        if (!activeChip) {
+        if (!activeCategory) {
             const observer = new MutationObserver(() => {
-                const activeChip = document.querySelector('.chip--active');
-                if (activeChip) {
+                const activeCategory = document.querySelector('.chip--active');
+                if (activeCategory) {
                     observer.disconnect();
-                    resolve(activeChip);
+                    resolve(activeCategory);
                 }
             });
 
             // Observe changes in the DOM (see https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver/observe#options)
             observer.observe(document, { attributes: false, childList: true, characterData: false, subtree: true });
         } else {
-            resolve(activeChip); 
+            resolve(activeCategory); 
         }
     });
 }
