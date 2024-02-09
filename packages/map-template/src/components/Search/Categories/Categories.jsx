@@ -24,7 +24,7 @@ import getActiveCategory from "../../../helpers/GetActiveCategory";
 function Categories({ onSetSize, getFilteredLocations, searchFieldRef }) {
     /** Referencing the categories results container DOM element */
     const categoriesListRef = useRef();
-    
+
     const categories = useRecoilValue(categoriesState);
 
     const isDesktop = useIsDesktop();
@@ -43,7 +43,7 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef }) {
 
     const scrollableContentSwipePrevent = usePreventSwipe();
 
-    const [activeChip, setActiveChip] = useState();
+    const [activeCategory, setActiveCategory] = useState();
 
     /**
      * Communicate size change to parent component.
@@ -127,22 +127,23 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef }) {
     }
 
     /**
-     * Get the active chip element.
+     * Get the active category element.
      */
     useEffect(() => {
         if (selectedCategory) {
-            getActiveCategory().then(chip => setActiveChip(chip));
+            getActiveCategory().then(activeCategory => setActiveCategory(activeCategory));
         }
     }, [selectedCategory]);
 
     /**
-     * Use the active chip to scroll into view.
+     * Use the active category state to scroll into view
+     * and center the category.
      */
     useEffect(() => {
-        if (activeChip) {
-            activeChip.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' })
+        if (activeCategory) {
+            activeCategory.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' })
         }
-    }, [activeChip]);
+    }, [activeCategory]);
 
     return (
         <div className="categories prevent-scroll" {...scrollableContentSwipePrevent}>

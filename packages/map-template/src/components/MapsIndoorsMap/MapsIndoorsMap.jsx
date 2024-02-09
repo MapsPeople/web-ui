@@ -27,7 +27,7 @@ import MapTemplate from '../MapTemplate/MapTemplate.jsx';
  * @param {number} [props.timeout] - If you want the Map Template to reset map position and UI elements to the initial state after some time of inactivity, use this to specify the number of seconds of inactivity before resetting.
  * @param {string} [props.language] - The language to show textual content in. Supported values are "en" for English, "da" for Danish, "de" for German and "fr" for French. If the prop is not set, the language of the browser will be used (if it is one of the four supported languages - otherwise it will default to English).
  * @param {boolean} [props.useKeyboard] - If running the Map Template as a kiosk, set this prop to true and it will prompt a keyboard. 
- * @param {string} [props.category] - If you want to indicate an active category on the map.
+ * @param {string} [props.category] - If you want to indicate an active category on the map. The value should be the Key (Administrative ID).
  */
 function MapsIndoorsMap(props) {
 

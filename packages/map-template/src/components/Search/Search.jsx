@@ -318,15 +318,14 @@ function Search({ onSetSize, isOpen }) {
     }, [useKeyboard]);
 
     /*
-   * React on changes in the app language. Any existing category search needs to update with translated Locations.
-   */
+     * React on changes in the selected category state. 
+     * If the selected category is present, get the filtered locations based on the selected category.
+     */
     useEffect(() => {
         if (selectedCategory) {
-            setSelectedCategory(selectedCategory);
             getFilteredLocations(selectedCategory);
         }
     }, [selectedCategory]);
-
 
     return (
         <div className="search"
