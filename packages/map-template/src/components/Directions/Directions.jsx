@@ -6,7 +6,6 @@ import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import travelModeState from '../../atoms/travelModeState';
 import { ReactComponent as QRCode } from '../../assets/qrcode.svg';
 import RouteInstructions from "../RouteInstructions/RouteInstructions";
-import useMediaQuery from '../../hooks/useMediaQuery';
 import directionsResponseState from "../../atoms/directionsResponseState";
 import activeStepState from "../../atoms/activeStep";
 import { snapPoints } from "../../constants/snapPoints";
@@ -20,6 +19,7 @@ import Accessibility from "../Accessibility/Accessibility";
 import isDestinationStepState from "../../atoms/isDestinationStepState";
 import primaryColorState from "../../atoms/primaryColorState";
 import { useIsKioskContext } from "../../hooks/useIsKioskContext";
+import { useIsDesktop } from "../../hooks/useIsDesktop";
 
 let directionsRenderer;
 
@@ -56,7 +56,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
 
     const kioskLocation = useRecoilValue(kioskLocationState);
 
-    const isDesktop = useMediaQuery('(min-width: 992px)');
+    const isDesktop = useIsDesktop();
 
     const [, setShowQRCodeDialog] = useRecoilState(showQRCodeDialogState);
 

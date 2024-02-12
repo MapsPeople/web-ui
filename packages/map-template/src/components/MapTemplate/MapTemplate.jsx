@@ -45,6 +45,7 @@ import supportsUrlParametersState from '../../atoms/supportsUrlParametersState';
 import venueState from '../../atoms/venueState.js';
 import useSetCurrentVenueName from '../../hooks/useSetCurrentVenueName.js';
 import useKeyboardState from '../../atoms/useKeyboardState';
+import { useIsDesktop } from '../../hooks/useIsDesktop.js';
 import LegendDialog from '../LegendDialog/LegendDialog.jsx';
 import isLegendDialogVisibleState from '../../atoms/isLegendDialogVisibleState.js';
 
@@ -126,7 +127,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setBearing] = useRecoilState(bearingState);
     const [, setPitch] = useRecoilState(pitchState);
 
-    const isDesktop = useMediaQuery('(min-width: 992px)');
+    const isDesktop = useIsDesktop();
     const isMobile = useMediaQuery('(max-width: 991px)');
     const resetState = useReset();
     const setCurrentVenueName = useSetCurrentVenueName();

@@ -11,7 +11,6 @@ import filteredLocationsState from '../../atoms/filteredLocationsState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import currentLocationState from '../../atoms/currentLocationState';
 import isLocationClickedState from '../../atoms/isLocationClickedState';
-import useMediaQuery from '../../hooks/useMediaQuery';
 import fitBoundsLocation from '../../helpers/fitBoundsLocation';
 import getDesktopPaddingLeft from '../../helpers/GetDesktopPaddingLeft';
 import languageState from '../../atoms/languageState';
@@ -26,6 +25,7 @@ import searchResultsState from '../../atoms/searchResultsState';
 import selectedCategoryState from '../../atoms/selectedCategoryState';
 import Categories from './Categories/Categories';
 import { useIsKioskContext } from "../../hooks/useIsKioskContext";
+import { useIsDesktop } from '../../hooks/useIsDesktop';
 import { ReactComponent as Legend } from '../../assets/legend.svg';
 import isLegendDialogVisibleState from '../../atoms/isLegendDialogVisibleState';
 import legendSortedFieldsSelector from '../../selectors/legendSortedFieldsSelector';
@@ -79,7 +79,7 @@ function Search({ onSetSize, isOpen }) {
 
     const currentLanguage = useRecoilValue(languageState);
 
-    const isDesktop = useMediaQuery('(min-width: 992px)');
+    const isDesktop = useIsDesktop();
 
     const kioskLocation = useRecoilValue(kioskLocationState);
 
