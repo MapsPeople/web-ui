@@ -46,6 +46,7 @@ import venueState from '../../atoms/venueState.js';
 import useSetCurrentVenueName from '../../hooks/useSetCurrentVenueName.js';
 import useKeyboardState from '../../atoms/useKeyboardState';
 import { useIsDesktop } from '../../hooks/useIsDesktop.js';
+import miTransitionLevelState from '../../atoms/miTransitionLevelState.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -75,8 +76,9 @@ defineCustomElements();
  * @param {boolean} [props.supportsUrlParameters] - Set to true if you want to support URL Parameters to configure the Map Template.
  * @param {boolean} [props.useKeyboard] - If running the Map Template as a kiosk, set this prop to true and it will prompt a keyboard.
  * @param {number} [props.timeout] - If you want the Map Template to reset map position and UI elements to the initial state after some time of inactivity, use this to specify the number of seconds of inactivity before resetting.
+ * @param {number} [props.miTransitionLevel] - The zoom level on which to transition from Mapbox to MapsIndoors data. Default value is 17. This feature is only available for Mapbox.
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel }) {
 
     const [, setApiKey] = useRecoilState(apiKeyState);
     const [, setGmApiKey] = useRecoilState(gmApiKeyState);
@@ -98,6 +100,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const isInactive = useInactive(); // Hook to detect if user is inactive. Used in combination with timeout prop to reset the Map Template to initial values after a specified time.
     const [, setSupportsUrlParameters] = useRecoilState(supportsUrlParametersState);
     const [, setUseKeyboard] = useRecoilState(useKeyboardState);
+    const [, setMiTransitionLevel] = useRecoilState(miTransitionLevelState);
 
     const [showVenueSelector, setShowVenueSelector] = useState(true);
     const [showPositionControl, setShowPositionControl] = useState(true);
@@ -396,6 +399,13 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         setLogo(logo);
     }, [logo]);
+
+    /*
+     * React on changes in the miTransitionLevel prop.
+     */
+    useEffect(() => {
+        setMiTransitionLevel(miTransitionLevel);
+    }, [miTransitionLevel]);
 
     /*
      * React on changes in the current location prop.

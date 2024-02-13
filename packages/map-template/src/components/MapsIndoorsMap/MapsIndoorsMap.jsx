@@ -27,6 +27,7 @@ import MapTemplate from '../MapTemplate/MapTemplate.jsx';
  * @param {number} [props.timeout] - If you want the Map Template to reset map position and UI elements to the initial state after some time of inactivity, use this to specify the number of seconds of inactivity before resetting.
  * @param {string} [props.language] - The language to show textual content in. Supported values are "en" for English, "da" for Danish, "de" for German and "fr" for French. If the prop is not set, the language of the browser will be used (if it is one of the four supported languages - otherwise it will default to English).
  * @param {boolean} [props.useKeyboard] - If running the Map Template as a kiosk, set this prop to true and it will prompt a keyboard. 
+ * @param {number} [props.miTransitionLevel] - The zoom level on which to transition from Mapbox to MapsIndoors data. Default value is 17. This feature is only available for Mapbox.
  */
 function MapsIndoorsMap(props) {
 
@@ -70,7 +71,8 @@ function MapsIndoorsMap(props) {
         const kioskOriginLocationId = queryStringParams.get('kioskOriginLocationId');
         const timeoutQueryParameter = queryStringParams.get('timeout');
         const languageQueryParameter = queryStringParams.get('language');
-		const useKeyboardQueryParameter = getBooleanQueryParameter(queryStringParams.get('useKeyboard'));
+        const useKeyboardQueryParameter = getBooleanQueryParameter(queryStringParams.get('useKeyboard'));
+        const miTransitionLevelQueryParameter = queryStringParams.get('miTransitionLevel');
 
         setMapTemplateProps({
             apiKey: props.supportsUrlParameters && apiKeyQueryParameter ? apiKeyQueryParameter : (props.apiKey || defaultProps.apiKey),
@@ -94,8 +96,8 @@ function MapsIndoorsMap(props) {
             timeout: props.supportsUrlParameters && timeoutQueryParameter ? timeoutQueryParameter : props.timeout,
             language: props.supportsUrlParameters && languageQueryParameter ? languageQueryParameter : props.language,
             supportsUrlParameters: props.supportsUrlParameters,
-			useKeyboard: props.supportsUrlParameters && useKeyboardQueryParameter ? useKeyboardQueryParameter : (props.useKeyboard || defaultProps.useKeyboard),
-
+            useKeyboard: props.supportsUrlParameters && useKeyboardQueryParameter ? useKeyboardQueryParameter : (props.useKeyboard || defaultProps.useKeyboard),
+            miTransitionLevel: props.supportsUrlParameters && miTransitionLevelQueryParameter ? miTransitionLevelQueryParameter : props.miTransitionLevel,
         });
     }, [props]);
 
