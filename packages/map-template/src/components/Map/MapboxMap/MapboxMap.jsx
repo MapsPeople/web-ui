@@ -33,7 +33,6 @@ function MapboxMap({ onMapView, onPositionControl }) {
     const isDesktop = useIsDesktop();
     const miTransitionLevel = useRecoilValue(miTransitionLevelState);
 
-
     useEffect(() => {
         // Initialize MapboxV3View MapView
         window.mapboxgl = mapboxgl;

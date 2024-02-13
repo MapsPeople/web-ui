@@ -102,7 +102,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setUseKeyboard] = useRecoilState(useKeyboardState);
     const [, setMiTransitionLevel] = useRecoilState(miTransitionLevelState);
 
-
     const [showVenueSelector, setShowVenueSelector] = useState(true);
     const [showPositionControl, setShowPositionControl] = useState(true);
 
