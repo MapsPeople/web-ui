@@ -10,6 +10,7 @@ import bearingState from '../../../atoms/bearingState';
 import pitchState from '../../../atoms/pitchState';
 import { v4 as uuidv4 } from 'uuid';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
+import miTransitionLevelState from '../../../atoms/miTransitionLevelState';
 
 /**
  * Takes care of instantiating a MapsIndoors Mapbox MapView.
@@ -30,6 +31,8 @@ function MapboxMap({ onMapView, onPositionControl }) {
     const bearing = useRecoilValue(bearingState);
     const pitch = useRecoilValue(pitchState);
     const isDesktop = useIsDesktop();
+    const miTransitionLevel = useRecoilValue(miTransitionLevelState);
+
 
     useEffect(() => {
         // Initialize MapboxV3View MapView
@@ -39,6 +42,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
             element: document.getElementById('map'),
             bearing: !isNaN(parseInt(bearing)) ? parseInt(bearing) : 0,
             pitch: !isNaN(parseInt(pitch)) ? parseInt(pitch) : 0,
+            mapsIndoorsTransitionLevel: !isNaN(parseInt(miTransitionLevel)) ? parseInt(miTransitionLevel) : 17,
         };
 
         const mapViewInstance = new window.mapsindoors.mapView.MapboxV3View(mapViewOptions);
