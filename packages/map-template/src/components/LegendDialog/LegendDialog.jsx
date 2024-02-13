@@ -5,7 +5,6 @@ import primaryColorState from "../../atoms/primaryColorState";
 import isLegendDialogVisibleState from "../../atoms/isLegendDialogVisibleState";
 import { useTranslation } from "react-i18next";
 import { useIsKioskContext } from "../../hooks/useIsKioskContext";
-import legendHeightState from "../../atoms/legendHeightState";
 import legendSortedFieldsSelector from "../../selectors/legendSortedFieldsSelector";
 
 /**
@@ -28,7 +27,7 @@ function LegendDialog() {
 
     const [showLegendDialog, setShowLegendDialog] = useRecoilState(isLegendDialogVisibleState);
 
-    const [legendHeight, setLegendHeight] = useRecoilState(legendHeightState);
+    const [legendHeight, setLegendHeight] = useState();
 
     const [showScrollButtons, setShowScrollButtons] = useState(false);
 
