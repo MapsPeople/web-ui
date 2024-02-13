@@ -553,8 +553,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
-            if (category) {
-                const existingCategory = categories.find((matched) => matched[0] === category)
+            if (category && categories.includes(matched => matched[0] === category) {
                 if (existingCategory !== undefined) {
                     setSelectedCategory(category);
                 }
