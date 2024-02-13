@@ -41,8 +41,12 @@ function MapboxMap({ onMapView, onPositionControl }) {
             element: document.getElementById('map'),
             bearing: !isNaN(parseInt(bearing)) ? parseInt(bearing) : 0,
             pitch: !isNaN(parseInt(pitch)) ? parseInt(pitch) : 0,
-            mapsIndoorsTransitionLevel: !isNaN(parseInt(miTransitionLevel)) ? parseInt(miTransitionLevel) : 17,
         };
+
+        // If miTransitionLevel exists and it's a number, set it in the mapViewOptions
+        if (miTransitionLevel && !isNaN(parseInt(miTransitionLevel))) {
+            mapViewOptions.mapsIndoorsTransitionLevel = parseInt(miTransitionLevel);
+        }
 
         const mapViewInstance = new window.mapsindoors.mapView.MapboxV3View(mapViewOptions);
         setMapView(mapViewInstance);
