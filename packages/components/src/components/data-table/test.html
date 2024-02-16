@@ -23,21 +23,35 @@
 
     <hr />
 
+    <input type="number" id="myInput">
+
     <mi-data-table id="demo-table" max-rows="10" selectable>
         <mi-column label="Name" binding="name" sortable fit-content width="33%"></mi-column>
+        <mi-column label="Number" binding="number" sortable fit-content width="33%"></mi-column>
         <mi-column id="test-1" label="Button"><button class="mi-button mi-button--primary mi-button--full-width"
                 type="button">Click me! {name}</button></mi-column>
-        <mi-column align-content="center" width="350px"><input type="checkbox" onclick="inputChecked({id})" /><span class="color-red-base">Check me!</span>
+        <mi-column align-content="center" width="350px"><input type="checkbox" onclick="inputChecked({id})" /><span
+                class="color-red-base">Check me!</span>
         </mi-column>
-        <mi-column label="Has funny name" sortable binding="hasFunnyName" sort="asc"><input class="mycheckbox"
+        <!-- <mi-column label="Has funny name" sortable binding="hasFunnyName" sort="asc"><input class="mycheckbox"
                 type="checkbox" checked="{hasFunnyName}" />
-        </mi-column>
+        </mi-column> -->
     </mi-data-table>
 
     <script>
         // Listen for clicks via the clicked event on <mi-column>
         document.getElementById('test-1').addEventListener('clicked', e => {
             console.log(e.detail);
+        });
+
+        let num = 1;
+        document.getElementById('myInput').addEventListener('input', e => {
+            console.log(e.target.value);
+            num = e.target.value;
+
+            document
+                .getElementById('demo-table')
+                .section = num;
         });
 
         // Listen for clicks via mi-column content
@@ -50,31 +64,44 @@
             .rows = [
                 {
                     id: 10,
-                    name: 'Elvis Presley',
-                    hasFunnyName: false,
+                    name: 'A',
+                    number: 4,
                 },
                 {
                     id: 11,
-                    name: 'Engelbert Humperdinck',
-                    hasFunnyName: true,
+                    name: 'B',
+                    number: 6,
                 },
                 {
                     id: 12,
-                    name: 'Conway Twitty',
-                    hasFunnyName: true,
+                    name: 'C',
+                    number: 2,
                     selected: false
                 },
                 {
                     id: 13,
-                    name: 'James Dean',
-                    hasFunnyName: false,
+                    name: 'D',
+                    number: 1,
                 },
                 {
                     id: 13,
-                    name: 'James Dean',
-                    hasFunnyName: false,
+                    name: 'E',
+                    number: 5,
+                },
+                {
+                    id: 13,
+                    name: 'F',
+                    number: 3,
                 }
             ];
+
+        document
+            .getElementById('demo-table')
+            .maxRows = 2;
+
+        document
+            .getElementById('demo-table')
+            .section = num;
 
         function setCheckboxValues(value) {
             const checkboxes = document.querySelector('mi-data-table').shadowRoot.querySelectorAll('.mycheckbox');
@@ -85,6 +112,34 @@
         function logSelectedRows() {
             console.log(document.querySelector('mi-data-table').selected)
         }
+
+
+        // {
+        //     id: 10,
+        //         name: 'Elvis Presley',
+        //             hasFunnyName: false,
+        //         },
+        // {
+        //     id: 11,
+        //         name: 'Engelbert Humperdinck',
+        //             hasFunnyName: true,
+        //         },
+        // {
+        //     id: 12,
+        //         name: 'Conway Twitty',
+        //             hasFunnyName: true,
+        //                 selected: false
+        // },
+        // {
+        //     id: 13,
+        //         name: 'James Dean',
+        //             hasFunnyName: false,
+        //         },
+        // {
+        //     id: 13,
+        //         name: 'James Dean',
+        //             hasFunnyName: false,
+        //         }
     </script>
 
 </body>

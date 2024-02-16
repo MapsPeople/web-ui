@@ -43,10 +43,24 @@ export class DataTable {
         this.tableRows = Array.from(this.rows);
         this.setHeaderCheckboxState();
     }
+
     /**
      * The maximum number of rows to be displayed.
      */
     @Prop() maxRows: number;
+
+    /**
+     * The section of rows to be displayed.
+     */
+    @Prop() section: number;
+    /**
+     * When the section is set from outside of the components the table needs to show the newly specified section of rows.
+     */
+    @Watch('section')
+    onSectionChangedHandler(): void {
+        this.currentSection = Math.abs(this.section);
+        this.renderTableContent();
+    }
 
     /**
      * The selectable attribute specifies whether the first column in the table should be checkboxes. The header will be a select all or none checkbox.
@@ -74,6 +88,8 @@ export class DataTable {
     @Prop({ attribute: 'sticky-header' }) isHeaderSticky = true;
 
     @State() tableRows = [];
+
+    @State() currentSection = 1;
 
     /**
      * State to keep track of the table sorting.
@@ -272,6 +288,7 @@ export class DataTable {
      *
      * @private
      * @param {object} row
+     * @returns {JSX.Element}
      */
     private renderSelectRow(row): JSX.Element {
         if (this.selectable) {
@@ -291,11 +308,16 @@ export class DataTable {
      * Helper method to render the tables content.
      *
      * @private
-     * @return {[JSX.Element]}
+     * @returns {[JSX.Element]}
      */
     private renderTableContent(): Array<JSX.Element> {
         let tableRows = this.sortTableRows();
-        tableRows = isNumber(this.maxRows) && this.maxRows > 0 ? tableRows.slice(0, this.maxRows) : tableRows;
+
+        tableRows = isNumber(this.maxRows) && this.maxRows > 0 ?
+            tableRows.slice(
+                this.maxRows * (this.currentSection - 1),
+                this.maxRows * this.currentSection)
+            : tableRows;
 
         return tableRows.map(row => this.renderTableRow(row));
     }
@@ -305,7 +327,7 @@ export class DataTable {
      *
      * @private
      * @param {*} tableRow
-     * @return {JSX.Element}
+     * @returns {JSX.Element}
      */
     private renderTableRow(tableRow): JSX.Element {
         const rowData = [];

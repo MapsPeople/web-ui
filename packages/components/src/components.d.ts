@@ -157,6 +157,10 @@ export namespace Components {
          */
         "rows": Array<any>;
         /**
+          * The section of rows to be displayed.
+         */
+        "section": number;
+        /**
           * The selectable attribute specifies whether the first column in the table should be checkboxes. The header will be a select all or none checkbox.
          */
         "selectable": boolean;
@@ -1525,6 +1529,10 @@ declare namespace LocalJSX {
           * Array of objects for each row in the table.
          */
         "rows"?: Array<any>;
+        /**
+          * The section of rows to be displayed.
+         */
+        "section"?: number;
         /**
           * The selectable attribute specifies whether the first column in the table should be checkboxes. The header will be a select all or none checkbox.
          */

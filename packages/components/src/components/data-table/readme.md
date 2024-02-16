@@ -77,6 +77,7 @@ An `emptyPageSubheader` attribute is available on the `<mi-data-table>` element 
 | `isHeaderSticky`     | `sticky-header`        | Whether or not the table header should be sticky.                                                                                                | `boolean`  | `true`               |
 | `maxRows`            | `max-rows`             | The maximum number of rows to be displayed.                                                                                                      | `number`   | `undefined`          |
 | `rows`               | --                     | Array of objects for each row in the table.                                                                                                      | `any[]`    | `[]`                 |
+| `section`            | `section`              | The section of rows to be displayed.                                                                                                             | `number`   | `undefined`          |
 | `selectable`         | `selectable`           | The selectable attribute specifies whether the first column in the table should be checkboxes. The header will be a select all or none checkbox. | `boolean`  | `false`              |
 | `selected`           | --                     | The selected property contains a Set of all selected rows. This property is only relevant if the selectable attribute is present.                | `Set<any>` | `new Set()`          |
 
