@@ -58,6 +58,7 @@ export class DataTable {
      */
     @Watch('section')
     onSectionChangedHandler(): void {
+        this.currentSection = this.section;
         this.renderTableContent();
     }
 
@@ -87,6 +88,8 @@ export class DataTable {
     @Prop({ attribute: 'sticky-header' }) isHeaderSticky = true;
 
     @State() tableRows = [];
+
+    @State() currentSection = 1;
 
     /**
      * State to keep track of the table sorting.
@@ -312,8 +315,8 @@ export class DataTable {
 
         tableRows = isNumber(this.maxRows) && this.maxRows > 0 ?
             tableRows.slice(
-                this.maxRows * (this.section - 1),
-                this.maxRows * this.section)
+                this.maxRows * (this.currentSection - 1),
+                this.maxRows * this.currentSection)
             : tableRows;
 
         return tableRows.map(row => this.renderTableRow(row));
