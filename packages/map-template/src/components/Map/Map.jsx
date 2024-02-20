@@ -203,6 +203,15 @@ function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule, onMap
             mapView
         });
 
+        // If the location where the mouse entered is non-selectable, do not hover it.
+        miInstance.on('mouseenter', () => {
+            const hoveredLocation = miInstance.getHoveredLocation()
+
+            if (hoveredLocation?.properties.locationSettings?.selectable === false) {
+                miInstance.unhoverLocation();
+            }
+        });
+
         // TODO: Turn off visibility for building outline for demo purposes until the SDK supports Display Rules for Buildings too.
         miInstance.setDisplayRule(['MI_BUILDING_OUTLINE'], { visible: false });
 

@@ -20,10 +20,14 @@ function ListItemLocation({ location, locationClicked, icon, isHovered }) {
     useEffect(() => {
         const clickHandler = customEvent => locationClicked(customEvent.detail);
         const hoverHandler = () => {
-            mapsIndoorsInstance.hoverLocation(location);
+            if (location.properties.locationSettings?.selectable !== false) {
+                mapsIndoorsInstance.hoverLocation(location);
+            }
         }
         const unhoverHandler = () => {
-            mapsIndoorsInstance.unhoverLocation(location);
+            if (!location.properties.locationSettings?.selectable !== false) {
+                mapsIndoorsInstance.unhoverLocation(location);
+            }
         }
 
         const { current } = elementRef;
