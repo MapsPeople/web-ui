@@ -27,7 +27,7 @@ function LegendDialog() {
 
     const [showLegendDialog, setShowLegendDialog] = useRecoilState(isLegendDialogVisibleState);
 
-    const [legendHeight, setLegendHeight] = useState();
+    const [isLegendScrollable, setIsLegendScrollable] = useState(false);
 
     const [showScrollButtons, setShowScrollButtons] = useState(false);
 
@@ -41,7 +41,7 @@ function LegendDialog() {
     useEffect(() => {
         if (showLegendDialog && isKioskContext) {
             if (legendSectionRef.current.clientHeight > 700) {
-                setLegendHeight(legendSectionRef.current.clientHeight);
+                setIsLegendScrollable(true);
                 setShowScrollButtons(true);
             } else {
                 setShowScrollButtons(false);
@@ -63,9 +63,9 @@ function LegendDialog() {
         <div className="legend__background"></div>
         <div className="legend" ref={legendModalRef}>
             {legendSections.length > 0 &&
-                <div className={`legend__sections ${legendHeight > 700 ? 'legend__sections--scrollable' : ''}`}
+                <div className={`legend__sections ${isLegendScrollable ? 'legend__sections--scrollable' : ''}`}
                     ref={legendSectionsRef}
-                    style={{ maxHeight: legendHeight > 700 ? '700px' : 'auto', overflowY: legendHeight > 700 ? 'scroll' : 'auto' }}>
+                    style={{ maxHeight: isLegendScrollable ? '700px' : 'auto', overflowY: isLegendScrollable ? 'scroll' : 'auto' }}>
                     {legendSections.map((legendSection, index) => <div key={index} className="legend__section" ref={legendSectionRef}>
                         <div className="legend__heading">{legendSection.heading}</div>
                         <div className="legend__content">{legendSection.content}</div>
