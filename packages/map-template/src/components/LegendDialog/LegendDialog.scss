@@ -1,15 +1,3 @@
-.background {
-    z-index: var(--z-index-spinner);
-    background-color: var(--color-black-black);
-    opacity: 0.5;
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    top: 0px;
-    left: 0px;
-    overflow: hidden;
-}
-
 .legend {
     position: absolute;
     background: white;
@@ -21,6 +9,18 @@
     z-index: var(--z-index-modal);
     display: grid;
     width: 500px;
+
+    &__background {
+        z-index: var(--z-index-spinner);
+        background-color: var(--color-black-black);
+        opacity: 0.5;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0px;
+        left: 0px;
+        overflow: hidden;
+    }
 
     &__button {
         color: var(--color-white-white);

@@ -60,7 +60,7 @@ function LegendDialog() {
     }, [showLegendDialog, legendSections, showScrollButtons]);
 
     return (<>
-        <div className="background"></div>
+        <div className="legend__background"></div>
         <div className="legend" ref={legendModalRef}>
             {legendSections.length > 0 &&
                 <div className={`legend__sections ${legendHeight > 700 ? 'legend__sections--scrollable' : ''}`}

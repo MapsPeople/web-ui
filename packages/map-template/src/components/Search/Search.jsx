@@ -376,8 +376,6 @@ function Search({ onSetSize, isOpen }) {
 
 
 
-            { /* Horizontal list of Categories */}
-
             { /* Message shown if no search results were found */}
 
             {showNotFoundMessage && <p className="search__error"> {t('Nothing was found')}</p>}
