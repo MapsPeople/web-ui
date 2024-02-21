@@ -9,6 +9,8 @@ import primaryColorState from '../../../atoms/primaryColorState';
 import bearingState from '../../../atoms/bearingState';
 import pitchState from '../../../atoms/pitchState';
 import { v4 as uuidv4 } from 'uuid';
+import { useIsDesktop } from '../../../hooks/useIsDesktop';
+import miTransitionLevelState from '../../../atoms/miTransitionLevelState';
 
 /**
  * Takes care of instantiating a MapsIndoors Mapbox MapView.
@@ -28,9 +30,11 @@ function MapboxMap({ onMapView, onPositionControl }) {
     const primaryColor = useRecoilValue(primaryColorState);
     const bearing = useRecoilValue(bearingState);
     const pitch = useRecoilValue(pitchState);
+    const isDesktop = useIsDesktop();
+    const miTransitionLevel = useRecoilValue(miTransitionLevelState);
 
     useEffect(() => {
-        // Initialize MapboxView MapView
+        // Initialize MapboxV3View MapView
         window.mapboxgl = mapboxgl;
         const mapViewOptions = {
             accessToken: mapboxAccessToken,
@@ -39,7 +43,12 @@ function MapboxMap({ onMapView, onPositionControl }) {
             pitch: !isNaN(parseInt(pitch)) ? parseInt(pitch) : 0,
         };
 
-        const mapViewInstance = new window.mapsindoors.mapView.MapboxView(mapViewOptions);
+        // If miTransitionLevel exists and it's a number, set it in the mapViewOptions
+        if (miTransitionLevel && !isNaN(parseInt(miTransitionLevel))) {
+            mapViewOptions.mapsIndoorsTransitionLevel = parseInt(miTransitionLevel);
+        }
+
+        const mapViewInstance = new window.mapsindoors.mapView.MapboxV3View(mapViewOptions);
         setMapView(mapViewInstance);
 
         // Setup an external directions provider that will be used to calculate directions
@@ -69,7 +78,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
             onPositionControl(myPositionButtonElement);
         }
 
-        if (mapsIndoorsInstance && mapView && !hasZoomControl) {
+        if (mapsIndoorsInstance && mapView && !hasZoomControl && isDesktop) {
             mapView
                 .getMap()
                 .addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');

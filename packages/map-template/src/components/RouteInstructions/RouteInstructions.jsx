@@ -11,6 +11,8 @@ import RouteInstructionsStep from '../WebComponentWrappers/RouteInstructionsStep
 import substepsToggledState from '../../atoms/substepsToggledState';
 import useSetMaxZoomLevel from '../../hooks/useSetMaxZoomLevel';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
+import isDestinationStepState from '../../atoms/isDestinationStepState';
+import { useIsKioskContext } from '../../hooks/useIsKioskContext';
 
 /**
  * Route instructions step by step component.
@@ -45,7 +47,11 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
 
     const substepsOpen = useRecoilValue(substepsToggledState);
 
+    const [, setIsDestinationStep] = useRecoilState(isDestinationStepState);
+
     const setMaxZoomLevel = useSetMaxZoomLevel();
+
+    const isKioskContext = useIsKioskContext();
 
     /**
      * Clone the last step in the directions in order to create a destination step.
@@ -67,6 +73,9 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
     useEffect(() => {
         if (isOpen) {
             if (activeStep === totalSteps?.length - 1 && directions?.destinationLocation) {
+                // Set the destination step boolean to true
+                setIsDestinationStep(true);
+
                 // Get the destination location
                 const destinationLocation = directions?.destinationLocation;
 
@@ -76,13 +85,16 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
 
                 // Call function to set the map zoom level depeding on the max zoom supported on the solution
                 setMaxZoomLevel();
+            } else {
+                // Reset the destination step boolean to false
+                setIsDestinationStep(false);
             }
 
             // Check if the substeps are closed or open, and trigger the method on the <route-instructions-step> component.
             if (substepsOpen === false) {
-                routeInstructionsRef.current.closeSubsteps();
+                routeInstructionsRef.current?.closeSubsteps();
             } else if (substepsOpen === true) {
-                routeInstructionsRef.current.openSubsteps();
+                routeInstructionsRef.current?.openSubsteps();
             }
         }
     }, [isOpen, activeStep, totalSteps, substepsOpen]);
@@ -128,23 +140,16 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
                         ref={routeInstructionsRef}
                     >
                     </RouteInstructionsStep>
-                    <div className='route-instructions__footer'>
-                        <div className="route-instructions__progress">
-                            {totalSteps.map((_, index) => (
-                                <div className={`route-instructions__step ${(activeStep) >= index ? "completed" : ""}`} key={index}>
-                                    <div className="step-counter"></div>
-                                </div>
-                            ))}
-                        </div>
+                    <div className={`route-instructions__footer ${!isKioskContext ? '' : 'route-instructions__footer--kiosk'}`}>
                         <div className="route-instructions__actions">
-                            <button className="route-instructions__button"
+                            <button className={`route-instructions__button ${!isKioskContext ? '' : 'route-instructions__button--kiosk'}`}
                                 onClick={() => previousStep()}
                                 aria-label={t('Previous')}
                                 disabled={activeStep === 0}>
                                 <ArrowLeft></ArrowLeft>
                             </button>
-                            <div className="route-instructions__overview">{t('StepYofX', { activeStep: activeStep + 1, totalSteps: totalSteps.length})}</div>
-                            <button className="route-instructions__button"
+                            <div className="route-instructions__overview">{t('StepYofX', { activeStep: activeStep + 1, totalSteps: totalSteps.length })}</div>
+                            <button className={`route-instructions__button ${!isKioskContext ? '' : 'route-instructions__button--kiosk'}`}
                                 onClick={() => nextStep()}
                                 aria-label={t('Next')}
                                 disabled={activeStep === totalSteps.length - 1}>

@@ -188,6 +188,7 @@ export class Search implements ComponentInterface {
     @Method()
     setDisplayText(displayText: string): void {
         this.preventSearch = true;
+        this.inputElement.value = displayText;
         this.value = displayText;
         this.preventSearch = false;
     }

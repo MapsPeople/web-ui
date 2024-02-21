@@ -1,0 +1,277 @@
+name: "Bump version and release"
+
+# Run only on closed Pull Requests targeting the main branch, and has changes in files or folders in the packages folders.
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+    paths:
+      - packages/midt/**
+      - packages/components/**
+      - packages/map-template/**
+      - .github/workflows/bump-version-release.yml
+
+jobs:
+  check-labels:
+    name: "Check Pull Requst Labels"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: mheap/github-action-required-labels@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # This workflow fails if there is not exactly one label of the ones listed here (both zero and multiple will cause a failure).
+        with:
+          mode: exactly
+          count: 1
+          labels: "major, minor, patch"
+
+  midt-release-npm:
+    name: Release MIDT to npm
+    needs: check-labels
+    outputs:
+      has_changed_files: ${{ steps.changed-files-midt.outputs.any_changed }}
+    runs-on: ubuntu-latest
+    # This ensures the job only runs for Pull Requests that are merged.
+    if: github.event.pull_request.merged == true
+    env:
+      token: ${{ secrets.GITHUB_TOKEN }}
+      NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get changed files in the midt folder
+        id: changed-files-midt
+        uses: tj-actions/changed-files@v41
+        with:
+          files: packages/midt/**
+
+      - name: Run step if any file(s) in the midt folder change
+        if: steps.changed-files-midt.outputs.any_changed == 'true'
+        env:
+          ALL_CHANGED_FILES: ${{ steps.changed-files-midt.outputs.all_changed_files }}
+        run: |
+          echo "One or more files in the midt folder has changed."
+          echo "List all the files that have changed: $ALL_CHANGED_FILES"
+
+      # Check out the repository code.
+      - uses: actions/checkout@v3
+        if: steps.changed-files-midt.outputs.any_changed == 'true'
+
+      # Set up a node environment in the container.
+      - uses: actions/setup-node@v3
+        if: steps.changed-files-midt.outputs.any_changed == 'true'
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org/
+          # Despite the package name including this scope, it's also necessary to set here
+          scope: "@mapsindoors"
+
+      # Build the project to ensure it's up to date. If this steps fails, the job fails.
+      - name: Build
+        if: steps.changed-files-midt.outputs.any_changed == 'true'
+        run: cd packages/midt && npm ci && npm run build
+
+      # Set the git config in order to commit the changes later.
+      # The name and email here is for the GitHub Actions user.
+      - name: Set git config
+        if: steps.changed-files-midt.outputs.any_changed == 'true'
+        run: git config user.name github-actions[bot] && git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+
+      # The following steps will determine, based on a label, what version to bump to.
+      - name: Major version bump
+        if: contains(github.event.pull_request.labels.*.name, 'major') && steps.changed-files-midt.outputs.any_changed == 'true'
+        run: npm -w @mapsindoors/midt run release -- major
+      - name: Minor version bump
+        if: contains(github.event.pull_request.labels.*.name, 'minor') && steps.changed-files-midt.outputs.any_changed == 'true'
+        run: npm -w @mapsindoors/midt run release -- minor
+      - name: Patch version bump
+        if: contains(github.event.pull_request.labels.*.name, 'patch') && steps.changed-files-midt.outputs.any_changed == 'true'
+        run: npm -w @mapsindoors/midt run release -- patch
+
+      - name: Publish to npm
+        if: steps.changed-files-midt.outputs.any_changed == 'true'
+        run: npm -w @mapsindoors/midt publish --access public
+
+  components-release-npm:
+    name: Release Components to npm
+    runs-on: ubuntu-latest
+    outputs:
+      has_files_changed: ${{ steps.changed-files-components.outputs.any_changed }}
+    # This ensures the job only runs for Pull Requests that are merged.
+    if: github.event.pull_request.merged == true
+    needs: [ 'midt-release-npm' ]
+    env:
+      token: ${{ secrets.GITHUB_TOKEN }}
+      NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get changed files in the components folder
+        id: changed-files-components
+        uses: tj-actions/changed-files@v41
+        with:
+          files: packages/components/**
+
+      - name: Run step if any file(s) in the components folder change
+        if: steps.changed-files-components.outputs.any_changed == 'true'
+        env:
+          ALL_CHANGED_FILES: ${{ steps.changed-files-components.outputs.all_changed_files }}
+        run: |
+          echo "One or more files in the components folder has changed."
+          echo "List all the files that have changed: $ALL_CHANGED_FILES"
+
+      # Check out the repository code.
+      - uses: actions/checkout@v3
+        if: steps.changed-files-components.outputs.any_changed == 'true'
+
+      # Set up a node environment in the container.
+      - uses: actions/setup-node@v3
+        if: steps.changed-files-components.outputs.any_changed == 'true'
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org/
+          # Despite the package name including this scope, it's also necessary to set here
+          scope: "@mapsindoors"
+
+      # Build the project to ensure it's up to date. If this steps fails, the job fails.
+      - name: Build
+        if: steps.changed-files-components.outputs.any_changed == 'true'
+        run: npm ci && npx lerna run build
+
+      # Set the git config in order to commit the changes later.
+      # The name and email here is for the GitHub Actions user.
+      - name: Set git config
+        if: steps.changed-files-components.outputs.any_changed == 'true'
+        run: git config user.name github-actions[bot] && git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+
+      # The following steps will determine, based on a label, what version to bump to.
+      - name: Major version bump
+        if: contains(github.event.pull_request.labels.*.name, 'major') && steps.changed-files-components.outputs.any_changed == 'true'
+        run: npm -w @mapsindoors/components run release -- major
+      - name: Minor version bump
+        if: contains(github.event.pull_request.labels.*.name, 'minor') && steps.changed-files-components.outputs.any_changed == 'true'
+        run: npm -w @mapsindoors/components run release -- minor
+      - name: Patch version bump
+        if: contains(github.event.pull_request.labels.*.name, 'patch') && steps.changed-files-components.outputs.any_changed == 'true'
+        run: npm -w @mapsindoors/components run release -- patch
+
+      - name: Publish to npm
+        if: steps.changed-files-components.outputs.any_changed == 'true'
+        run: npm -w @mapsindoors/components publish --access public
+
+  # This job will release the Component documentation
+  components-docs-release:
+    name: Release Components Docs
+    needs: components-release-npm
+    runs-on: ubuntu-latest
+    if: ${{needs.components-release-npm.outputs.has_files_changed}} == 'true'
+    # Check out the repository code, but only the latest version.
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: refs/heads/main
+          fetch-depth: 1
+
+      # Set up a node environment in the container.
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+      - run: npm ci
+
+      # It is absolutely essential to use "CI=" as the first part of the lerna command, or it won't build properly.
+      - run: CI= npx lerna run build && cd packages/components && npm run build && npm run docs.build
+
+      - name: "Authenticate on Google Cloud Storage"
+        uses: google-github-actions/auth@v1
+        with:
+          service_account: ${{ secrets.GCP_SA_EMAIL }}
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: "Set up Cloud SDK"
+        uses: "google-github-actions/setup-gcloud@v1"
+
+      # This command uses gsutil CLI to sync the local folder with the one on the bucket.
+      # "-m" ensures parallel upload of files, "-d" mirrors the folders, "-c" compares checksums to avoid unnecessary uploads, "-r" is for a recursive sync into all folders.
+      - run: gsutil -m rsync -d -c -r packages/components/docs gs://mi-components-documentation
+
+      # This is to control cache and set it as low as possible so new changes are instantly available.
+      - run: gsutil -m setmeta -h "Cache-Control:public, max-age=0"
+          gs://mi-components-documentation/**/*.html
+      - run: gsutil -m setmeta -h "Cache-Control:public, max-age=0"
+          gs://mi-components-documentation/**/*.js
+      - run: gsutil -m setmeta -h "Cache-Control:public, max-age=0"
+          gs://mi-components-documentation/**/*.css
+
+  map-template-release-npm:
+    name: Release Map Template to npm
+    runs-on: ubuntu-latest
+    # This ensures the job only runs for Pull Requests that are merged.
+    if: github.event.pull_request.merged == true
+    needs: [ 'components-release-npm' ]
+    env:
+      token: ${{ secrets.GITHUB_TOKEN }}
+      NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get changed files in the map-template folder
+        id: changed-files-map-template
+        uses: tj-actions/changed-files@v41
+        with:
+          files: packages/map-template/**
+
+      - name: Run step if any file(s) in the map-template folder change
+        if: steps.changed-files-map-template.outputs.any_changed == 'true'
+        env:
+          ALL_CHANGED_FILES: ${{ steps.changed-files-map-template.outputs.all_changed_files }}
+        run: |
+          echo "One or more files in the map-template folder has changed."
+          echo "List all the files that have changed: $ALL_CHANGED_FILES"
+
+      # Check out the repository code.
+      - uses: actions/checkout@v3
+        if: steps.changed-files-map-template.outputs.any_changed == 'true'
+
+      # Set up a node environment in the container.
+      - uses: actions/setup-node@v3
+        if: steps.changed-files-map-template.outputs.any_changed == 'true'
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org/
+          # Despite the package name including this scope, it's also necessary to set here
+          scope: "@mapsindoors"
+
+      # Build the project to ensure it's up to date. If this steps fails, the job fails.
+      - name: Build
+        if: steps.changed-files-map-template.outputs.any_changed == 'true'
+        run: npm ci && npx lerna run build && cd packages/map-template && npm run build-for-npm
+
+      # Set the git config in order to commit the changes later.
+      # The name and email here is for the GitHub Actions user.
+      - name: Set git config
+        if: steps.changed-files-map-template.outputs.any_changed == 'true'
+        run: git config user.name github-actions[bot] && git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+
+      # The following steps will determine, based on a label, what version to bump to.
+      - name: Major version bump
+        if: contains(github.event.pull_request.labels.*.name, 'major') && steps.changed-files-map-template.outputs.any_changed == 'true'
+        run: npm -w @mapsindoors/map-template run release -- major
+      - name: Minor version bump
+        if: contains(github.event.pull_request.labels.*.name, 'minor') && steps.changed-files-map-template.outputs.any_changed == 'true'
+        run: npm -w @mapsindoors/map-template run release -- minor
+      - name: Patch version bump
+        if: contains(github.event.pull_request.labels.*.name, 'patch') && steps.changed-files-map-template.outputs.any_changed == 'true'
+        run: npm -w @mapsindoors/map-template run release -- patch
+
+      - name: Publish to npm
+        if: steps.changed-files-map-template.outputs.any_changed == 'true'
+        run: npm -w @mapsindoors/map-template publish --access public

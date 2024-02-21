@@ -78,8 +78,12 @@ When loading the MapsIndoors Map component for the first time, the map will resp
 |`gmMapId`|`string`|The Google Maps Map ID associated with a specific map style or feature. |
 |`pitch`|`number`|The pitch (Mapbox) or tilt (Google) value of the map. The value of the pitch can be between 0-85 degrees on a Mapbox map. |
 |`bearing`|`number`|The bearing (Mapbox) or heading (Google) value of the map. It accepts any value, and will modify it to fit into the range [0, 360]. |
-|`use-map-provider-module`|`useMapProviderModule`| Set to true if the Map Template should take MapsIndoors solution modules into consideration when determining what map type to use.|
-|`language`|`language`|`string`|The language to show textual content in. Supported values are "en" for English, "da" for Danish, "de" for German and "fr" for French. If the prop is not set, the language of the browser will be used (if it is one of the four supported languages - otherwise it will default to English). |
+|`useMapProviderModule`|`bool`|Set to `true` if the Map Template should take MapsIndoors Solution Modules into consideration when determining what map type to use.|
+|`language``string`|The language to show textual content in. Supported values are "en" for English, "da" for Danish, "de" for German and "fr" for French. If the prop is not set, the language of the browser will be used (if it is one of the four supported languages - otherwise it will default to English). |
+|`kioskOriginLocationId`|`string`|If running the Map Template as a Kiosk, provide the Location ID that represents the location of the Kiosk. |
+|`timeout`|`number`|If you want the Map Template to reset the map position and the UI elements to the initial state after some time of inactivity, use this to specify the number of seconds of inactivity before resetting. This property is not dependent on the `kioskOriginLocationId`. |
+|`useKeyboard`|`bool`|If running the Map Template as a Kiosk, set this prop to `true` and it will display a virtual keyboard. This property is dependent on the `kioskOriginLocationId`. |
+|`miTransitionLevel`|`number`|The zoom level on which to transition from Mapbox to MapsIndoors data. Default value is 17. This feature is only available for Mapbox. |
 
 ## Using Query Parameters
 
@@ -87,7 +91,7 @@ The Map Template supports using query parameters for all the properties provided
 
 The supported query parameters are the following:
 
-1. `apiKey` - Used like this `apiKey=yourApiKey`. If no apiKey is provided, the app will default to `3ddemo`.
+1. `apiKey` - Used like this `apiKey=yourApiKey`. If no apiKey is provided, the app will default to `mapspeople3d`.
 2. `venue` - Used like this `venue=yourVenueName` - the Venue property is case sensitive. If no venue is provided, the app will select the first venue from the solution in alphabetical order.
 3. `locationId` - Used like this `locationId=yourLocationId`
 4. `primaryColor` - Used like this `primaryColor=000000`. **Note!** You need to provide a hex color value, without the `#`, due to the hashtag being a reserved symbol that has a predefined purpose in a query string. If no primary color is provided, the app will default to the MapsPeople brand color.
@@ -105,6 +109,10 @@ The supported query parameters are the following:
 16. `bearing` - Used like this `bearing=180`. Not compatible with MapsIndoors 2D models and MapsIndoors labels on Google Maps.  It accepts any value, and will modify it to fit into the range [0, 360].
 17. `useMapProviderModule` - Set to "true" if the Map Template should take MapsIndoors solution modules into consideration when determining what map type to use.
 18. `language` - The language to show textual content in. Supported values are "en" for English, "da" for Danish, "de" for German and "fr" for French. If the prop is not set, the language of the browser will be used (if it is one of the four supported languages - otherwise it will default to English).
+19. `kioskOriginLocationId` - If running the Map Template as a Kiosk, provide the Location ID that represents the location of the Kiosk.
+20. `timeout` - If you want the Map Template to reset the map position and the UI elements to the initial state after some time of inactivity, use this to specify the number of seconds of inactivity before resetting. This property is not dependent on the `kioskOriginLocationId`.
+21. `useKeyboard` -  If running the Map Template as a Kiosk, set this prop to `true` and it will display a virtual keyboard. This property is dependent on the `kioskOriginLocationId`.
+22. `miTransitionLevel` - The zoom level on which to transition from Mapbox to MapsIndoors data. Default value is 17. This feature is only available for Mapbox.
 
 **Note!** All the query parameters need to be separated with the `&` symbol, without any spaces in between.
 **Note!** When using parameters such as `directionsTo`, `directionsFrom`, `locationId`, `externalIDs`, and `tileStyle` make sure you are using the correct `apiKey` parameter to which they belong.

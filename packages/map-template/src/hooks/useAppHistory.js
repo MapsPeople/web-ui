@@ -17,6 +17,7 @@ export const useAppHistory = () => {
 
     const [currentAppView, setCurrentAppView] = useState(undefined);
     const [currentAppViewPayload, setCurrentAppViewPayload] = useState();
+    const [initialAppView, setInitialAppView] = useState(null);
 
     useEffect(() => {
         function popstateHandler(event) {
@@ -40,6 +41,9 @@ export const useAppHistory = () => {
     const pushAppView = (value, payload) => {
         window.history.pushState({ value, payload }, '');
         setCurrentAppView(value);
+        if (initialAppView === null) {
+            setInitialAppView({ value, payload });
+        }
     }
 
     /**
@@ -49,5 +53,12 @@ export const useAppHistory = () => {
         window.history.back();
     };
 
-    return [pushAppView, goBack, currentAppView, currentAppViewPayload, appViews]
+    /**
+     * Push the initial app view in order to appear to reset the app.
+     */
+    const resetAppHistory = () => {
+        pushAppView(initialAppView.value, initialAppView.payload);
+    };
+
+    return [pushAppView, goBack, currentAppView, currentAppViewPayload, appViews, resetAppHistory];
 }
