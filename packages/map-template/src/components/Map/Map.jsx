@@ -203,7 +203,8 @@ function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule, onMap
             mapView
         });
 
-        // If the location where the mouse entered is non-selectable, do not hover it.
+        // Detect when the mouse hovers over a location and store the hovered location
+        // If the location is non-selectable, remove the hovering by calling the unhoverLocation() method.
         miInstance.on('mouseenter', () => {
             const hoveredLocation = miInstance.getHoveredLocation()
 
