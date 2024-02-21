@@ -333,11 +333,7 @@ function Search({ onSetSize, isOpen }) {
      */
     useEffect(() => {
         if (kioskLocation) {
-            if (legendSections.length > 0) {
-                setShowLegendButton(true);
-            } else {
-                setShowLegendButton(false);
-            }
+            setShowLegendButton(legendSections.length > 0);
         }
     }, [kioskLocation]);
 
