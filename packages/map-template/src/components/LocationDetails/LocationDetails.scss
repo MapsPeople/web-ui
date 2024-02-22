@@ -51,7 +51,7 @@
         width: 100%;
         border-radius: var(--rounding-large);
         object-fit: contain;
-        padding: 16px 0;
+        padding: var(--spacing-medium) 0;
     }
 
     &__categories {
