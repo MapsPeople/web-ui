@@ -29,8 +29,6 @@ function LegendDialog() {
 
     const [isLegendScrollable, setIsLegendScrollable] = useState(false);
 
-    const [showScrollButtons, setShowScrollButtons] = useState(false);
-
     const legendSectionsRef = useRef();
 
     /*
@@ -40,12 +38,7 @@ function LegendDialog() {
      */
     useEffect(() => {
         if (showLegendDialog && isKioskContext) {
-            if (legendSectionRef.current.clientHeight > 700) {
-                setIsLegendScrollable(true);
-                setShowScrollButtons(true);
-            } else {
-                setShowScrollButtons(false);
-            }
+            legendSectionRef.current.clientHeight > 700 ? setIsLegendScrollable(true) : setIsLegendScrollable(false);
         }
     }, [showLegendDialog, isKioskContext]);
 
@@ -53,11 +46,11 @@ function LegendDialog() {
      * Setup scroll buttons to scroll in legend sections when in kiosk mode.
      */
     useEffect(() => {
-        if (showLegendDialog && isKioskContext && showScrollButtons) {
+        if (showLegendDialog && isKioskContext && isLegendScrollable) {
             const legendContent = document.querySelector('.legend__sections');
             scrollButtonsRef.current.scrollContainerElementRef = legendContent;
         }
-    }, [showLegendDialog, legendSections, showScrollButtons]);
+    }, [showLegendDialog, legendSections, isLegendScrollable]);
 
     return (<>
         <div className="legend__background"></div>
@@ -74,7 +67,7 @@ function LegendDialog() {
             <button className="legend__button" style={{ background: primaryColorProp }} onClick={() => setShowLegendDialog(false)}>{t('Close')}</button>
 
             { /* Buttons to scroll in the list of search results if in kiosk context */}
-            {isKioskContext && showLegendDialog && showScrollButtons &&
+            {isKioskContext && showLegendDialog && isLegendScrollable &&
                 <div className="scroll-buttons">
                     <mi-scroll-buttons ref={scrollButtonsRef}></mi-scroll-buttons>
                 </div>
