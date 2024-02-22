@@ -19,8 +19,14 @@
     <button onclick="setCheckboxValues(true)" class="some">Check all in last column</button>
     <button onclick="setCheckboxValues(false)" class="some">Uncheck all in last column</button>
     <button onclick="logSelectedRows()" class="some">Log selected rows to console</button>
+    
     Clicked buttons and checkboxes will write to the console.
-
+    
+    <label for="sectionNumber">
+        Specify which section of rows to show:
+        <input id="sectionNumber" type="number" value="1">
+    </label>
+    
     <hr />
 
     <mi-data-table id="demo-table" max-rows="10" selectable>
@@ -32,7 +38,7 @@
         <mi-column label="Has funny name" sortable binding="hasFunnyName" sort="asc"><input class="mycheckbox"
                 type="checkbox" checked="{hasFunnyName}" />
         </mi-column>
-    </mi-data-table>
+    </mi-data-table> 
 
     <script>
         // Listen for clicks via the clicked event on <mi-column>
@@ -44,6 +50,27 @@
         function inputChecked(id) {
             console.log('Checkbox clicked for row with ID:', id);
         }
+
+        function setCheckboxValues(value) {
+            const checkboxes = document.querySelector('mi-data-table').shadowRoot.querySelectorAll('.mycheckbox');
+            for (const checkbox of checkboxes) {
+                checkbox.checked = !!value;
+            }
+        }
+
+        function logSelectedRows() {
+            console.log(document.querySelector('mi-data-table').selected)
+        }
+
+        let sectionToShow = 1;
+        document.getElementById('sectionNumber').addEventListener('input', e => {
+            console.log(e.target.value);
+            sectionToShow = e.target.value;
+
+            document
+                .getElementById('demo-table')
+                .section = sectionToShow;
+        });
 
         document
             .getElementById('demo-table')
@@ -76,15 +103,13 @@
                 }
             ];
 
-        function setCheckboxValues(value) {
-            const checkboxes = document.querySelector('mi-data-table').shadowRoot.querySelectorAll('.mycheckbox');
-            for (const checkbox of checkboxes) {
-                checkbox.checked = !!value;
-            }
-        }
-        function logSelectedRows() {
-            console.log(document.querySelector('mi-data-table').selected)
-        }
+        document
+            .getElementById('demo-table')
+            .maxRows = 3;
+
+        document
+            .getElementById('demo-table')
+            .section = sectionToShow;
     </script>
 
 </body>
