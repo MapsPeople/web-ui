@@ -34,13 +34,6 @@
         </mi-column>
     </mi-data-table>
 
-    <!-- <input type="number" id="myInput">
-
-    <mi-data-table id="demo-table-2" max-rows="10" selectable>
-        <mi-column label="Name" binding="name" sortable fit-content width="33%"></mi-column>
-        <mi-column label="Number" binding="number" sortable fit-content width="33%"></mi-column>
-    </mi-data-table>  -->
-
     <script>
         // Listen for clicks via the clicked event on <mi-column>
         document.getElementById('test-1').addEventListener('clicked', e => {
@@ -92,61 +85,6 @@
         function logSelectedRows() {
             console.log(document.querySelector('mi-data-table').selected)
         }
-
-        // demo-table-2
-        // let num = 1;
-        // document.getElementById('myInput').addEventListener('input', e => {
-        //     console.log(e.target.value);
-        //     num = e.target.value;
-
-        //     document
-        //         .getElementById('demo-table')
-        //         .section = num;
-        // });
-
-        // document
-        //     .getElementById('demo-table-2')
-        //     .rows = [
-        //         {
-        //             id: 10,
-        //             name: 'A',
-        //             number: 4,
-        //         },
-        //         {
-        //             id: 11,
-        //             name: 'B',
-        //             number: 6,
-        //         },
-        //         {
-        //             id: 12,
-        //             name: 'C',
-        //             number: 2,
-        //             selected: false
-        //         },
-        //         {
-        //             id: 13,
-        //             name: 'D',
-        //             number: 1,
-        //         },
-        //         {
-        //             id: 13,
-        //             name: 'E',
-        //             number: 5,
-        //         },
-        //         {
-        //             id: 13,
-        //             name: 'F',
-        //             number: 3,
-        //         }
-        //     ];
-
-        // document
-        //     .getElementById('demo-table-2')
-        //     .maxRows = 2;
-
-        // document
-        //     .getElementById('demo-table-2')
-        //     .section = num;
     </script>
 
 </body>

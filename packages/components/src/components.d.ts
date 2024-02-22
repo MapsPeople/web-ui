@@ -157,7 +157,7 @@ export namespace Components {
          */
         "rows": Array<any>;
         /**
-          * The section of rows to be displayed.
+          * The section of rows to be displayed. Eg. If the maxRows is set to be less the total number of rows, the section property can specify which chunk of rows to show.
          */
         "section": number;
         /**
@@ -1530,7 +1530,7 @@ declare namespace LocalJSX {
          */
         "rows"?: Array<any>;
         /**
-          * The section of rows to be displayed.
+          * The section of rows to be displayed. Eg. If the maxRows is set to be less the total number of rows, the section property can specify which chunk of rows to show.
          */
         "section"?: number;
         /**

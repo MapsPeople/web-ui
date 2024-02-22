@@ -51,6 +51,7 @@ export class DataTable {
 
     /**
      * The section of rows to be displayed.
+     * Eg. If the maxRows is set to be less the total number of rows, the section property can specify which chunk of rows to show.
      */
     @Prop() section: number;
     /**
