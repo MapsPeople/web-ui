@@ -9,6 +9,7 @@ import primaryColorState from '../../../atoms/primaryColorState';
 import bearingState from '../../../atoms/bearingState';
 import pitchState from '../../../atoms/pitchState';
 import { v4 as uuidv4 } from 'uuid';
+import is3DToggledState from '../../../atoms/is3DToggledState';
 
 /**
  * Takes care of instantiating a MapsIndoors Mapbox MapView.
@@ -28,6 +29,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
     const primaryColor = useRecoilValue(primaryColorState);
     const bearing = useRecoilValue(bearingState);
     const pitch = useRecoilValue(pitchState);
+    const is3DToggled = useRecoilValue(is3DToggledState);
 
     useEffect(() => {
         // Initialize MapboxV3View MapView
@@ -54,6 +56,24 @@ function MapboxMap({ onMapView, onPositionControl }) {
 
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
     // We ignore eslint warnings about missing dependencies because onMapView should never change runtime and changing Mapbox Access Token runtime will give other problems.
+
+    useEffect(() => {
+        if (mapView && mapView.isReady) {
+            if (is3DToggled) {
+                if (mapView.get2DFeaturesVisibility()) {
+                    mapView.set2DFeaturesVisibility(false);
+                }
+                mapView.set3DFeaturesVisibility(true);
+            }
+            else {
+                if (mapView.get3DFeaturesVisibility()) {
+                    mapView.set3DFeaturesVisibility(false);
+                }
+                mapView.set2DFeaturesVisibility(true);
+            }
+        }
+    }, [mapView, is3DToggled]);
+
 
     // Add Floor Selector to the Map when ready.
     useEffect(() => {

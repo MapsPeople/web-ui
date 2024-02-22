@@ -1,6 +1,5 @@
 .switch {
     display: grid;
-    width: fit-content;
     background-color: white;
     height: fit-content;
     border-radius: 12px;
@@ -9,13 +8,13 @@
     padding: 4px;
     position: absolute;
     z-index: var(--z-index-popup);
-    top: 80px;
+    top: 100px;
     left: var(--spacing-x-large);
 
     &__button {
         border-radius: 8px;
-        width: 48px;
-        height: 48px;
+        width: 40px;
+        height: 40px;
         display: grid;
         align-items: center;
         justify-content: center;

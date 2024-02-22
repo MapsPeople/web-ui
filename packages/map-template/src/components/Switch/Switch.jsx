@@ -1,38 +1,38 @@
-import React, { useState } from "react";
-import { useRecoilValue } from "recoil";
+import React from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 import primaryColorState from "../../atoms/primaryColorState";
 import './Switch.scss';
 import { ReactComponent as Light2D } from '../../assets/2d-light.svg';
 import { ReactComponent as Dark2D } from '../../assets/2d-dark.svg';
 import { ReactComponent as Light3D } from '../../assets/3d-light.svg';
 import { ReactComponent as Dark3D } from '../../assets/3d-dark.svg';
+import is3DToggledState from "../../atoms/is3DToggledState";
 
 /**
- * Creates the splash screen loading initially in the app.
- * The default color and logo are MapsIndoors' visual identity.
+ * Component responsible for switching between the 2D and 3D features.
  */
 function Switch() {
     const primaryColor = useRecoilValue(primaryColorState);
 
-    const [active, setActive] = useState('3D');
+    const [is3DToggled, setIs3DToggled] = useRecoilState(is3DToggledState);
 
-    function setActiveTab(prop) {
-        setActive(prop);
+    function handleToggle() {
+        setIs3DToggled(!is3DToggled);
     }
 
     return (
         <div className="switch">
             <div className="switch__button"
-                onClick={() => setActiveTab('2D')}
-                style={{ backgroundColor: active === '2D' ? primaryColor : 'white' }}
+                onClick={() => handleToggle()}
+                style={{ backgroundColor: !is3DToggled ? primaryColor : 'white' }}
             >
-                {active === '2D' ? <Light2D /> : <Dark2D />}
+                {!is3DToggled ? <Light2D /> : <Dark2D />}
             </div>
             <div className="switch__button"
-                onClick={() => setActiveTab('3D')}
-                style={{ backgroundColor: active === '3D' ? primaryColor : 'white' }}
+                onClick={() => handleToggle()}
+                style={{ backgroundColor: is3DToggled ? primaryColor : 'white' }}
             >
-                {active === '3D' ? <Light3D /> : <Dark3D />}
+                {is3DToggled ? <Light3D /> : <Dark3D />}
             </div>
         </div>
     )
