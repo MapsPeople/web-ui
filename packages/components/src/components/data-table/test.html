@@ -22,9 +22,9 @@
     
     Clicked buttons and checkboxes will write to the console.
     
-    <label for="sectionNumber">
-        Specify which section of rows to show:
-        <input id="sectionNumber" type="number" value="1">
+    <label for="pageNumber">
+        Specify which page/section of rows to show:
+        <input id="pageNumber" type="number" value="1">
     </label>
     
     <hr />
@@ -62,14 +62,13 @@
             console.log(document.querySelector('mi-data-table').selected)
         }
 
-        let sectionToShow = 1;
-        document.getElementById('sectionNumber').addEventListener('input', e => {
-            console.log(e.target.value);
-            sectionToShow = e.target.value;
+        let pageToShow = 1;
+        document.getElementById('pageNumber').addEventListener('input', e => {
+            pageToShow = e.target.value;
 
             document
                 .getElementById('demo-table')
-                .section = sectionToShow;
+                .page = pageToShow;
         });
 
         document
@@ -109,7 +108,7 @@
 
         document
             .getElementById('demo-table')
-            .section = sectionToShow;
+            .page = pageToShow;
     </script>
 
 </body>

@@ -50,16 +50,16 @@ export class DataTable {
     @Prop() maxRows: number;
 
     /**
-     * The section of rows to be displayed.
-     * Eg. If the maxRows is set to be less the total number of rows, the section property can specify which chunk of rows to show.
+     * The page of rows to be displayed.
+     * Eg. If the maxRows is set to be less the total number of rows, the page property can specify which chunk of rows to show.
      */
-    @Prop() section: number;
+    @Prop() page: number;
     /**
-     * When the section is set from outside of the components the table needs to show the newly specified section of rows.
+     * When the page is set from outside of the components the table needs to show the newly specified page of rows.
      */
-    @Watch('section')
-    onSectionChangedHandler(): void {
-        this.currentSection = this.section;
+    @Watch('page')
+    onPageChangedHandler(): void {
+        this.currentPage = this.page;
         this.renderTableContent();
     }
 
@@ -90,7 +90,7 @@ export class DataTable {
 
     @State() tableRows = [];
 
-    @State() currentSection = 1;
+    @State() currentPage = 1;
 
     /**
      * State to keep track of the table sorting.
@@ -316,8 +316,8 @@ export class DataTable {
 
         tableRows = isNumber(this.maxRows) && this.maxRows > 0 ?
             tableRows.slice(
-                this.maxRows * (this.currentSection - 1),
-                this.maxRows * this.currentSection)
+                this.maxRows * (this.currentPage - 1),
+                this.maxRows * this.currentPage)
             : tableRows;
 
         return tableRows.map(row => this.renderTableRow(row));

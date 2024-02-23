@@ -153,13 +153,13 @@ export namespace Components {
          */
         "maxRows": number;
         /**
+          * The page of rows to be displayed. Eg. If the maxRows is set to be less the total number of rows, the page property can specify which chunk of rows to show.
+         */
+        "page": number;
+        /**
           * Array of objects for each row in the table.
          */
         "rows": Array<any>;
-        /**
-          * The section of rows to be displayed. Eg. If the maxRows is set to be less the total number of rows, the section property can specify which chunk of rows to show.
-         */
-        "section": number;
         /**
           * The selectable attribute specifies whether the first column in the table should be checkboxes. The header will be a select all or none checkbox.
          */
@@ -1526,13 +1526,13 @@ declare namespace LocalJSX {
          */
         "onSelectionChanged"?: (event: MiDataTableCustomEvent<object>) => void;
         /**
+          * The page of rows to be displayed. Eg. If the maxRows is set to be less the total number of rows, the page property can specify which chunk of rows to show.
+         */
+        "page"?: number;
+        /**
           * Array of objects for each row in the table.
          */
         "rows"?: Array<any>;
-        /**
-          * The section of rows to be displayed. Eg. If the maxRows is set to be less the total number of rows, the section property can specify which chunk of rows to show.
-         */
-        "section"?: number;
         /**
           * The selectable attribute specifies whether the first column in the table should be checkboxes. The header will be a select all or none checkbox.
          */
