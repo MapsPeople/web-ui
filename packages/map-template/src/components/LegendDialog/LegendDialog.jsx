@@ -38,7 +38,7 @@ function LegendDialog() {
      */
     useEffect(() => {
         if (showLegendDialog && isKioskContext) {
-            legendSectionRef.current.clientHeight > 700 ? setIsLegendScrollable(true) : setIsLegendScrollable(false);
+            setIsLegendScrollable(legendSectionRef.current.clientHeight > 700);
         }
     }, [showLegendDialog, isKioskContext]);
 
