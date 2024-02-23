@@ -31,6 +31,9 @@ function LegendDialog() {
 
     const legendSectionsRef = useRef();
 
+    // Indicates the max height of the legend after which the dialog becomes scrollable.
+    let legendHeight = 700;
+
     /*
      * Get the height of the legend sections. 
      * Set the legend size atom and determine 
@@ -38,7 +41,7 @@ function LegendDialog() {
      */
     useEffect(() => {
         if (showLegendDialog && isKioskContext) {
-            setIsLegendScrollable(legendSectionRef.current.clientHeight > 700);
+            setIsLegendScrollable(legendSectionRef.current.clientHeight > legendHeight);
         }
     }, [showLegendDialog, isKioskContext]);
 
@@ -58,7 +61,7 @@ function LegendDialog() {
             {legendSections.length > 0 &&
                 <div className={`legend__sections ${isLegendScrollable ? 'legend__sections--scrollable' : ''}`}
                     ref={legendSectionsRef}
-                    style={{ maxHeight: isLegendScrollable ? '700px' : 'auto', overflowY: isLegendScrollable ? 'scroll' : 'auto' }}>
+                    style={{ maxHeight: isLegendScrollable ? `${legendHeight}px` : 'auto', overflowY: isLegendScrollable ? 'scroll' : 'auto' }}>
                     {legendSections.map((legendSection, index) => <div key={index} className="legend__section" ref={legendSectionRef}>
                         <div className="legend__heading">{legendSection.heading}</div>
                         <div className="legend__content">{legendSection.content}</div>
