@@ -135,7 +135,7 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef }) {
         }
     }, [selectedCategory]);
 
-    /**
+    /*
      * Use the active category state to scroll into view
      * and center the category.
      */
