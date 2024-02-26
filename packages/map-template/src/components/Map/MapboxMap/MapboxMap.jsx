@@ -33,7 +33,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
     const pitch = useRecoilValue(pitchState);
     const isDesktop = useIsDesktop();
     const miTransitionLevel = useRecoilValue(miTransitionLevelState);
-   const is3DToggled = useRecoilValue(is3DToggledState);
+    const is3DToggled = useRecoilValue(is3DToggledState);
 
     useEffect(() => {
         // Initialize MapboxV3View MapView
@@ -73,12 +73,14 @@ function MapboxMap({ onMapView, onPositionControl }) {
                     mapView.set2DFeaturesVisibility(false);
                 }
                 mapView.set3DFeaturesVisibility(true);
+                mapView.tilt(45, 2000);
             }
             else {
                 if (mapView.get3DFeaturesVisibility()) {
                     mapView.set3DFeaturesVisibility(false);
                 }
                 mapView.set2DFeaturesVisibility(true);
+                mapView.tilt(0, 2000);
             }
         }
     }, [mapView, is3DToggled]);
