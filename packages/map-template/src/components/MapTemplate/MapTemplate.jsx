@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useRef } from 'react';
 import { useState } from 'react';
-import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
 import i18n from 'i18next';
 import initI18n from '../../i18n/initialize.js';
@@ -45,6 +45,8 @@ import supportsUrlParametersState from '../../atoms/supportsUrlParametersState';
 import venueState from '../../atoms/venueState.js';
 import useSetCurrentVenueName from '../../hooks/useSetCurrentVenueName.js';
 import useKeyboardState from '../../atoms/useKeyboardState';
+import { useIsDesktop } from '../../hooks/useIsDesktop.js';
+import miTransitionLevelState from '../../atoms/miTransitionLevelState.js';
 import Switch from '../Switch/Switch.jsx';
 
 // Define the Custom Elements from our components package.
@@ -75,8 +77,9 @@ defineCustomElements();
  * @param {boolean} [props.supportsUrlParameters] - Set to true if you want to support URL Parameters to configure the Map Template.
  * @param {boolean} [props.useKeyboard] - If running the Map Template as a kiosk, set this prop to true and it will prompt a keyboard.
  * @param {number} [props.timeout] - If you want the Map Template to reset map position and UI elements to the initial state after some time of inactivity, use this to specify the number of seconds of inactivity before resetting.
+ * @param {number} [props.miTransitionLevel] - The zoom level on which to transition from Mapbox to MapsIndoors data. Default value is 17. This feature is only available for Mapbox.
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel }) {
 
     const [, setApiKey] = useRecoilState(apiKeyState);
     const [, setGmApiKey] = useRecoilState(gmApiKeyState);
@@ -98,6 +101,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const isInactive = useInactive(); // Hook to detect if user is inactive. Used in combination with timeout prop to reset the Map Template to initial values after a specified time.
     const [, setSupportsUrlParameters] = useRecoilState(supportsUrlParametersState);
     const [, setUseKeyboard] = useRecoilState(useKeyboardState);
+    const [, setMiTransitionLevel] = useRecoilState(miTransitionLevelState);
 
     const [showVenueSelector, setShowVenueSelector] = useState(true);
     const [showPositionControl, setShowPositionControl] = useState(true);
@@ -125,7 +129,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setBearing] = useRecoilState(bearingState);
     const [, setPitch] = useRecoilState(pitchState);
 
-    const isDesktop = useMediaQuery('(min-width: 992px)');
+    const isDesktop = useIsDesktop();
     const isMobile = useMediaQuery('(max-width: 991px)');
     const resetState = useReset();
     const setCurrentVenueName = useSetCurrentVenueName();
@@ -155,7 +159,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             const miSdkApiTag = document.createElement('script');
             miSdkApiTag.setAttribute('type', 'text/javascript');
-            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/CandidateReleases/2024.22.02-rc0/mapsindoors-2024.22.2-rc0.js.gz');
+            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.30.0/mapsindoors-4.30.0.js.gz');
+            miSdkApiTag.setAttribute('integrity', 'sha384-QNeuSSN5hFRZ8W3bz+zYa75qLWvbci+FuIzmRbQOmaPMyHi7R9XgQXiFjKYvW2n+');
+            miSdkApiTag.setAttribute('crossorigin', 'anonymous');
             document.body.appendChild(miSdkApiTag);
             miSdkApiTag.onload = () => {
                 resolve();
@@ -396,6 +402,13 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         setLogo(logo);
     }, [logo]);
+
+    /*
+     * React on changes in the miTransitionLevel prop.
+     */
+    useEffect(() => {
+        setMiTransitionLevel(miTransitionLevel);
+    }, [miTransitionLevel]);
 
     /*
      * React on changes in the current location prop.

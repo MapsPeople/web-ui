@@ -32,9 +32,11 @@ function QRCodeDialog() {
 
     useEffect(() => {
         if (directionsFrom && directionsTo) {
-            // The target URL when the user opens the QR code dialog
-            let targetUrl = window.location.origin;
-
+            // Get the last character of the pathname
+            // Create the target URL when the user opens the QR code dialog
+            // Replace the '/' at the end of the line
+            let targetUrl = window.location.origin + window.location.pathname.replace(/\/$/, "");
+            
             // The interface for the existing URL search params
             const currentParams = new URLSearchParams(window.location.search);
 

@@ -11,7 +11,6 @@ import filteredLocationsState from '../../atoms/filteredLocationsState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import currentLocationState from '../../atoms/currentLocationState';
 import isLocationClickedState from '../../atoms/isLocationClickedState';
-import useMediaQuery from '../../hooks/useMediaQuery';
 import fitBoundsLocation from '../../helpers/fitBoundsLocation';
 import getDesktopPaddingLeft from '../../helpers/GetDesktopPaddingLeft';
 import languageState from '../../atoms/languageState';
@@ -26,6 +25,7 @@ import searchResultsState from '../../atoms/searchResultsState';
 import selectedCategoryState from '../../atoms/selectedCategoryState';
 import Categories from './Categories/Categories';
 import { useIsKioskContext } from "../../hooks/useIsKioskContext";
+import { useIsDesktop } from '../../hooks/useIsDesktop';
 
 /**
  * Show the search results.
@@ -76,7 +76,7 @@ function Search({ onSetSize, isOpen }) {
 
     const currentLanguage = useRecoilValue(languageState);
 
-    const isDesktop = useMediaQuery('(min-width: 992px)');
+    const isDesktop = useIsDesktop();
 
     const kioskLocation = useRecoilValue(kioskLocationState);
 
@@ -94,6 +94,7 @@ function Search({ onSetSize, isOpen }) {
     function getFilteredLocations(category) {
         window.mapsindoors.services.LocationsService.getLocations({
             categories: category,
+            venue: kioskLocation && isKioskContext ? kioskLocation.properties.venueId : undefined,
         }).then(onResults);
     }
 
@@ -245,7 +246,7 @@ function Search({ onSetSize, isOpen }) {
 
             return { display: 'flex', flexDirection: 'column', maxHeight, overflow: 'hidden' };
         } else {
-            return { minHeight: categories.length > 0 ? '136px' : '80px'};
+            return { minHeight: categories.length > 0 ? '136px' : '80px' };
         }
     }
 
@@ -316,75 +317,73 @@ function Search({ onSetSize, isOpen }) {
         }
     }, [useKeyboard]);
 
-
     return (
         <div className="search"
             ref={searchRef}
-            style={calculateContainerStyle()}
-            >
-
-                { /* Search field that allows users to search for locations (MapsIndoors Locations and external) */ }
-
-                <SearchField
-                    ref={searchFieldRef}
-                    mapsindoors={true}
-                    placeholder={t('Search by name, category, building...')}
-                    results={locations => onResults(locations)}
-                    clicked={() => searchFieldClicked()}
-                    cleared={() => cleared()}
-                    category={selectedCategory}
-                    disabled={searchDisabled} // Disabled initially to prevent content jumping when clicking and changing sheet size.
-                />
+            style={calculateContainerStyle()}>
 
 
 
-                { /* Horizontal list of Categories */ }
+            { /* Search field that allows users to search for locations (MapsIndoors Locations and external) */}
 
-                {categories.length > 0 && <Categories onSetSize={onSetSize}
-                    searchFieldRef={searchFieldRef}
-                    getFilteredLocations={category => getFilteredLocations(category)}
-                />}
-
-
-
-
-                { /* Message shown if no search results were found */ }
-
-                {showNotFoundMessage && <p className="search__error"> {t('Nothing was found')}</p>}
-
-
-
-                { /* Vertical list of search results. Scrollable. */ }
-
-                {searchResults.length > 0 &&
-                    <div className="search__results prevent-scroll" {...scrollableContentSwipePrevent}>
-                        {searchResults.map(location =>
-                            <ListItemLocation
-                                key={location.id}
-                                location={location}
-                                locationClicked={() => onLocationClicked(location)}
-                                isHovered={location?.id === hoveredLocation?.id}
-                            />
-                        )}
-                    </div>
-                }
+            <SearchField
+                ref={searchFieldRef}
+                mapsindoors={true}
+                placeholder={t('Search by name, category, building...')}
+                results={locations => onResults(locations)}
+                clicked={() => searchFieldClicked()}
+                cleared={() => cleared()}
+                category={selectedCategory}
+                disabled={searchDisabled} // Disabled initially to prevent content jumping when clicking and changing sheet size.
+            />
 
 
 
-                { /* Keyboard */ }
+            { /* Horizontal list of Categories */}
 
-                {isKeyboardVisible && isDesktop && <Keyboard ref={keyboardRef} searchInputElement={searchInput}></Keyboard>}
+            {categories.length > 0 && <Categories onSetSize={onSetSize}
+                searchFieldRef={searchFieldRef}
+                getFilteredLocations={category => getFilteredLocations(category)}
+            />}
 
 
 
-                { /* Buttons to scroll in the list of search results if in kiosk context */ }
+            { /* Message shown if no search results were found */}
 
-                {isOpen && isKioskContext && searchResults.length > 0 && createPortal(
-                    <div className="search__scroll-buttons">
-                        <mi-scroll-buttons ref={scrollButtonsRef}></mi-scroll-buttons>
-                    </div>,
-                    document.querySelector('.mapsindoors-map')
-                )}
+            {showNotFoundMessage && <p className="search__error"> {t('Nothing was found')}</p>}
+
+
+
+            { /* Vertical list of search results. Scrollable. */}
+
+            {searchResults.length > 0 &&
+                <div className="search__results prevent-scroll" {...scrollableContentSwipePrevent}>
+                    {searchResults.map(location =>
+                        <ListItemLocation
+                            key={location.id}
+                            location={location}
+                            locationClicked={() => onLocationClicked(location)}
+                            isHovered={location?.id === hoveredLocation?.id}
+                        />)}
+                </div>
+            }
+
+
+
+            { /* Keyboard */}
+
+            {isKeyboardVisible && isDesktop && <Keyboard ref={keyboardRef} searchInputElement={searchInput}></Keyboard>}
+
+
+
+            { /* Buttons to scroll in the list of search results if in kiosk context */}
+
+            {isOpen && isKioskContext && searchResults.length > 0 && createPortal(
+                <div className="search__scroll-buttons">
+                    <mi-scroll-buttons ref={scrollButtonsRef}></mi-scroll-buttons>
+                </div>,
+                document.querySelector('.mapsindoors-map')
+            )}
         </div>
     )
 }

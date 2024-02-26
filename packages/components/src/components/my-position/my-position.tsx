@@ -254,7 +254,6 @@ export class MyPositionComponent {
                         this.setPositionState(PositionStateTypes.POSITION_UNTRACKED);
                     } else if (this.positionState !== PositionStateTypes.POSITION_UNTRACKED) {
                         this.setPositionState(PositionStateTypes.POSITION_KNOWN);
-                        this.mapView.tilt(0);
                     }
                     window.removeEventListener('deviceorientation', this.handleDeviceOrientationReference);
                 }

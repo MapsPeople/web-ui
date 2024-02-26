@@ -21,7 +21,7 @@ In your styles make sure to give it a size. For example:
 mapsindoors-map {
     display: block;
     width: 100vw;
-    height: 100svh;
+    height: 100dvh;
 }
 ```
 
@@ -67,7 +67,7 @@ Use query parameters to configure the Web Component by setting the `supports-url
         mapsindoors-map {
             display: block;
             width: 100vw;
-            height: 100svh;
+            height: 100dvh;
         }
     </style>
 </head>
@@ -97,7 +97,7 @@ import MapsIndoorsMap from '@mapsindoors/map-template/dist/mapsindoors-react.es.
 <div style={{
       display: 'block',
       width: '100vw',
-      height: '100svh'
+      height: '100dvh'
 }}>
       <MapsIndoorsMap></MapsIndoorsMap>
 </div>
@@ -134,6 +134,7 @@ Note that when using the React component, the properties should conform to JSX p
 |`kiosk-origin-location-id`|`kioskOriginLocationId`|`string`|If running the Map Template as a Kiosk, provide the Location ID that represents the location of the Kiosk. |
 |`timeout`|`timeout`|`number`|If you want the Map Template to reset the map position and the UI elements to the initial state after some time of inactivity, use this to specify the number of seconds of inactivity before resetting. This property is not dependent on the `kioskOriginLocationId`. |
 |`use-keyboard`|`useKeyboard`|`bool`|If running the Map Template as a Kiosk, set this prop to `true` and it will display a virtual keyboard. This property is dependent on the `kioskOriginLocationId`. |
+|`mi-transition-level`|`miTransitionLevel`|`number`|The zoom level on which to transition from Mapbox to MapsIndoors data. Default value is 17. This feature is only available for Mapbox. |
 
 ## Using Query Parameters
 
@@ -162,6 +163,7 @@ The supported query parameters are the following:
 19. `kioskOriginLocationId` - If running the Map Template as a Kiosk, provide the Location ID that represents the location of the Kiosk.
 20. `timeout` - If you want the Map Template to reset the map position and the UI elements to the initial state after some time of inactivity, use this to specify the number of seconds of inactivity before resetting. This property is not dependent on the `kioskOriginLocationId`.
 21. `useKeyboard` -  If running the Map Template as a Kiosk, set this prop to `true` and it will display a virtual keyboard. This property is dependent on the `kioskOriginLocationId`.
+22. `miTransitionLevel` - The zoom level on which to transition from Mapbox to MapsIndoors data. Default value is 17. This feature is only available for Mapbox.
 
 **Note!** All the query parameters need to be separated with the `&` symbol, without any spaces in between.
 **Note!** When using parameters such as `directionsTo`, `directionsFrom`, `locationId`, `externalIDs`, and `tileStyle` make sure you are using the correct `apiKey` parameter to which they belong.
