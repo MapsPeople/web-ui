@@ -4,6 +4,11 @@ The `<mi-data-table>` element can be used to display a styled table given an arr
 
 Working example:
 
+<label for="pageNumber">
+    Specify which page/section of rows to show:
+    <input id="pageNumber" type="number" value="1">
+</label>
+
 <mi-data-table selectable>
     <mi-column label="ID" binding="id"></mi-column>
     <mi-column label="Title" binding="title" sortable sort="asc"></mi-column>
@@ -16,15 +21,28 @@ const tableData = [
     { id: 2, title: 'Living Room'},
     { id: 3, title: 'Bedroom'},
 ];
+
+let pageToShow = 1;
+
 document.querySelector('mi-data-table').rows = tableData;
+document.querySelector('mi-data-table').maxRows = 2;
+document.querySelector('mi-data-table').page = pageToShow;
+
 document.getElementById('button-column').addEventListener('clicked', event => alert(event.detail.title));
+document.getElementById('pageNumber').addEventListener('input', event => {
+    pageToShow = event.target.value;
+    document.querySelector('mi-data-table').page = pageToShow;
+});
 </script>
 
 Example usage:
 
 ```html
 <!-- HTML -->
-
+<label for="pageNumber">
+    Specify which page/section of rows to show:
+    <input id="pageNumber" type="number" value="1">
+</label>
 <mi-data-table selectable>
     <mi-column label="ID" binding="id"></mi-column>
     <mi-column label="Title" binding="title" sortable sort="asc"></mi-column>
@@ -40,8 +58,18 @@ const tableData = [
     { id: 2, title: 'Living Room'},
     { id: 3, title: 'Bedroom'},
 ];
+
+let pageToShow = 1;
+
 document.querySelector('mi-data-table').rows = tableData;
+document.querySelector('mi-data-table').maxRows = 2;
+document.querySelector('mi-data-table').page = pageToShow;
+
 document.getElementById('button-column').addEventListener('clicked', event => alert(event.detail.title));
+document.getElementById('pageNumber').addEventListener('input', event => {
+    pageToShow = event.target.value;
+    document.querySelector('mi-data-table').page = pageToShow;
+});
 ```
 
 ## `rows` attribute
@@ -51,6 +79,10 @@ A `rows` attribute is available on the `<mi-data-table>` element, where you set 
 ## `selectable` attribute
 
 A `selectable` attribute is available on the `<mi-data-table>` element. When present the first column in the table will be checkboxes. The checkbox in the header is a select all or none checkbox. It is possible to get the selected rows from the `selected` property on the table.
+
+## `page` attribute
+
+A `page` attribute is available on the `<mi-data-table>` element, which can be used to set which page of rows to show. When using the `<mi-data-table>` with pagination and the maxRows is set to be less the total number of rows, the page property can specify which chunk of rows to show.
 
 ## `maxRows` attribute
 
@@ -77,6 +109,7 @@ An `emptyPageSubheader` attribute is available on the `<mi-data-table>` element 
 | `isHeaderSticky`     | `sticky-header`        | Whether or not the table header should be sticky.                                                                                                | `boolean`  | `true`               |
 | `maxRows`            | `max-rows`             | The maximum number of rows to be displayed.                                                                                                      | `number`   | `undefined`          |
 | `rows`               | --                     | Array of objects for each row in the table.                                                                                                      | `any[]`    | `[]`                 |
+| `page`                | `page`                | The page of rows to be displayed.                                                                                                             | `number`   | `undefined`          |
 | `selectable`         | `selectable`           | The selectable attribute specifies whether the first column in the table should be checkboxes. The header will be a select all or none checkbox. | `boolean`  | `false`              |
 | `selected`           | --                     | The selected property contains a Set of all selected rows. This property is only relevant if the selectable attribute is present.                | `Set<any>` | `new Set()`          |
 
