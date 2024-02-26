@@ -563,13 +563,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * Check if the category property matches with any of the existing categories.
      */
     useEffect(() => {
-        if (mapsindoorsSDKAvailable) {
-            if (category) {
-                const existingCategory = categories.find((matched) => matched[0] === category);
-                if (existingCategory !== undefined) {
-                    setSelectedCategory(category);
-                }
-            }
+        if (mapsindoorsSDKAvailable && category && categories.find((matched) => matched[0] === category)) {
+            setSelectedCategory(category);
         }
     }, [category, categories, mapsindoorsSDKAvailable]);
 
