@@ -126,7 +126,7 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef }) {
         });
     }
 
-    /**
+    /*
      * Get the active category element.
      */
     useEffect(() => {
