@@ -75,6 +75,10 @@
         }
     }
 
+    &__content {
+        padding-bottom: var(--spacing-medium);
+    }
+
     .scroll-buttons {
         position: fixed;
         left: 520px;
