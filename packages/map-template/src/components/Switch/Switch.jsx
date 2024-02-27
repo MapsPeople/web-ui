@@ -16,20 +16,16 @@ function Switch() {
 
     const [is3DToggled, setIs3DToggled] = useRecoilState(is3DToggledState);
 
-    function handleToggle() {
-        setIs3DToggled(!is3DToggled);
-    }
-
     return (
         <div className="switch">
             <div className="switch__button"
-                onClick={() => handleToggle()}
+                onClick={() => setIs3DToggled(!is3DToggled)}
                 style={{ backgroundColor: !is3DToggled ? primaryColor : 'white' }}
             >
                 {!is3DToggled ? <Light2D /> : <Dark2D />}
             </div>
             <div className="switch__button"
-                onClick={() => handleToggle()}
+                onClick={() => setIs3DToggled(!is3DToggled)}
                 style={{ backgroundColor: is3DToggled ? primaryColor : 'white' }}
             >
                 {is3DToggled ? <Light3D /> : <Dark3D />}

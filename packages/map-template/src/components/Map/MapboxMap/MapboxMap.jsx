@@ -66,19 +66,21 @@ function MapboxMap({ onMapView, onPositionControl }) {
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
     // We ignore eslint warnings about missing dependencies because onMapView should never change runtime and changing Mapbox Access Token runtime will give other problems.
 
+
+    // If the map is ready, check if the 3D features are toggled 
+
     useEffect(() => {
         if (mapView && mapView.isReady) {
+            // Check if the 3D features are switched on
+            // Conditionally render either 2D or 3D features depending on the Recoil Value of is3DToggled
+            // Tilt the map to 45 degrees when the 3D features are switched on, and to 0 degrees when the 2D features are switched on.
             if (is3DToggled) {
-                if (mapView.get2DFeaturesVisibility()) {
-                    mapView.set2DFeaturesVisibility(false);
-                }
+                mapView.set2DFeaturesVisibility(false);
                 mapView.set3DFeaturesVisibility(true);
                 mapView.tilt(45, 2000);
             }
             else {
-                if (mapView.get3DFeaturesVisibility()) {
-                    mapView.set3DFeaturesVisibility(false);
-                }
+                mapView.set3DFeaturesVisibility(false);
                 mapView.set2DFeaturesVisibility(true);
                 mapView.tilt(0, 2000);
             }
