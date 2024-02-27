@@ -121,7 +121,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [initialFilteredLocations, setInitialFilteredLocations] = useState();
 
     const [appConfig, setAppConfig] = useState();
-    const [, setSolution] = useRecoilState(solutionState);
+    const [solution, setSolution] = useRecoilState(solutionState);
 
     const [, setTileStyle] = useRecoilState(tileStyleState);
     const [, setStartZoomLevel] = useRecoilState(startZoomLevelState);
@@ -145,6 +145,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     // The reset count is used to add a new key to the sidebar or bottomsheet, forcing it to re-render from scratch when resetting the Map Template.
     const [resetCount, setResetCount] = useState(0);
+
+    const [showSwitch, setShowSwitch] = useState(false);
 
     /**
      * Ensure that MapsIndoors Web SDK is available.
@@ -477,6 +479,23 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         }
     }, [useKeyboard, kioskOriginLocationId, mapsindoorsSDKAvailable]);
 
+    /*
+     * React on changes to the solution.
+     * Decide whether to show the Switch component depending on the modules enabled on the solution.
+     */
+    useEffect(() => {
+        if (solution) {
+            const isMapboxModuleEnabled = solution.modules.map(module => module.toLowerCase()).includes('mapbox');
+            const is3DWallsModuleEnabled = solution.modules.map(module => module.toLowerCase()).includes('3dwalls');
+            // The module floorplan refers to 2D Walls 
+            const is2DWallsModuleEnabled = solution.modules.map(module => module.toLowerCase()).includes('floorplan');
+
+            if (isMapboxModuleEnabled && is3DWallsModuleEnabled && is2DWallsModuleEnabled) {
+                setShowSwitch(true);
+            }
+        }
+    }, [solution]);
+
     /**
      * When venue is fitted while initializing the data,
      * set map to be ready and get the venue categories.
@@ -565,7 +584,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             onClose={() => goBack()}
             active={currentAppView === appStates.VENUE_SELECTOR}
         />}
-        <Switch />
+        {showSwitch && <Switch />}
         {showQRCodeDialog && <QRCodeDialog />}
         {isMapPositionKnown &&
             <Fragment key={resetCount}>
