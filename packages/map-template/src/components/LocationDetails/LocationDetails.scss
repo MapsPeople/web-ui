@@ -48,11 +48,10 @@
     }
 
     &__image {
-        max-width: 400px;
         width: 100%;
         border-radius: var(--rounding-large);
-        aspect-ratio: 16 / 9;
-        object-fit: cover;
+        object-fit: contain;
+        margin: var(--spacing-medium) 0;
     }
 
     &__categories {
