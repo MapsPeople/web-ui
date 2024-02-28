@@ -328,6 +328,16 @@ function Search({ onSetSize, isOpen }) {
     }, [useKeyboard]);
 
     /*
+     * React on changes in the selected category state. 
+     * If the selected category is present, get the filtered locations based on the selected category.
+     */
+    useEffect(() => {
+        if (selectedCategory) {
+            getFilteredLocations(selectedCategory);
+        }
+    }, [selectedCategory]);
+
+    /*
      * Get the legend sections and determine 
      * If the legend button should be shown.
      */

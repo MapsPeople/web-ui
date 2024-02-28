@@ -28,6 +28,7 @@ import MapTemplate from '../MapTemplate/MapTemplate.jsx';
  * @param {string} [props.language] - The language to show textual content in. Supported values are "en" for English, "da" for Danish, "de" for German and "fr" for French. If the prop is not set, the language of the browser will be used (if it is one of the four supported languages - otherwise it will default to English).
  * @param {boolean} [props.useKeyboard] - If running the Map Template as a kiosk, set this prop to true and it will prompt a keyboard. 
  * @param {number} [props.miTransitionLevel] - The zoom level on which to transition from Mapbox to MapsIndoors data. Default value is 17. This feature is only available for Mapbox.
+ * @param {string} [props.category] - If you want to indicate an active category on the map. The value should be the Key (Administrative ID).
  */
 function MapsIndoorsMap(props) {
 
@@ -68,11 +69,12 @@ function MapsIndoorsMap(props) {
         const externalIDsQueryParameter = queryStringParams.get('externalIDs')?.split(',');
         const gmMapIdQueryParameter = queryStringParams.get('gmMapId');
         const useMapProviderModuleParameter = getBooleanQueryParameter(queryStringParams.get('useMapProviderModule'));
-        const kioskOriginLocationId = queryStringParams.get('kioskOriginLocationId');
+        const kioskOriginLocationIdQueryParameter = queryStringParams.get('kioskOriginLocationId');
         const timeoutQueryParameter = queryStringParams.get('timeout');
         const languageQueryParameter = queryStringParams.get('language');
         const useKeyboardQueryParameter = getBooleanQueryParameter(queryStringParams.get('useKeyboard'));
         const miTransitionLevelQueryParameter = queryStringParams.get('miTransitionLevel');
+		const categoryQueryParameter = queryStringParams.get('category');
 
         setMapTemplateProps({
             apiKey: props.supportsUrlParameters && apiKeyQueryParameter ? apiKeyQueryParameter : (props.apiKey || defaultProps.apiKey),
@@ -92,12 +94,13 @@ function MapsIndoorsMap(props) {
             externalIDs: props.supportsUrlParameters && externalIDsQueryParameter ? externalIDsQueryParameter : props.externalIDs,
             gmMapId: props.supportsUrlParameters && gmMapIdQueryParameter ? gmMapIdQueryParameter : props.gmMapId,
             useMapProviderModule: props.supportsUrlParameters && useMapProviderModuleParameter ? useMapProviderModuleParameter : (props.useMapProviderModule || defaultProps.useMapProviderModule),
-            kioskOriginLocationId: props.supportsUrlParameters && kioskOriginLocationId ? kioskOriginLocationId : props.kioskOriginLocationId,
+            kioskOriginLocationId: props.supportsUrlParameters && kioskOriginLocationIdQueryParameter ? kioskOriginLocationIdQueryParameter : props.kioskOriginLocationId,
             timeout: props.supportsUrlParameters && timeoutQueryParameter ? timeoutQueryParameter : props.timeout,
             language: props.supportsUrlParameters && languageQueryParameter ? languageQueryParameter : props.language,
             supportsUrlParameters: props.supportsUrlParameters,
             useKeyboard: props.supportsUrlParameters && useKeyboardQueryParameter ? useKeyboardQueryParameter : (props.useKeyboard || defaultProps.useKeyboard),
             miTransitionLevel: props.supportsUrlParameters && miTransitionLevelQueryParameter ? miTransitionLevelQueryParameter : props.miTransitionLevel,
+			category: props.supportsUrlParameters && categoryQueryParameter ? categoryQueryParameter : props.category,
         });
     }, [props]);
 

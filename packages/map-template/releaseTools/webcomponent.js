@@ -30,6 +30,7 @@ MapsIndoorsMap.propTypes = {
     useMapProviderModule: PropTypes.bool,
     timeout: PropTypes.number, 
     miTransitionLevel: PropTypes.number,
+    category: PropTypes.string,
 };
 
 const WebMapsIndoorsMap = reactToWebComponent(MapsIndoorsMap, React, ReactDOM);
