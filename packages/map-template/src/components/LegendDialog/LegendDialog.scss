@@ -49,6 +49,7 @@
     &__section {
         display: grid;
         gap: var(--spacing-medium);
+        word-break: break-all;
     }
 
     &__sections {
