@@ -57,7 +57,7 @@
             &::before {
                 content: '';
                 position: absolute;
-                bottom: calc(64px + var(--spacing-small));
+                bottom: calc(56px + var(--spacing-small));
                 left: 0;
                 right: 0;
                 height: var(--spacing-xx-large);
