@@ -41,7 +41,7 @@ function LegendDialog() {
      */
     useEffect(() => {
         if (showLegendDialog && isKioskContext) {
-            setIsLegendScrollable(legendSectionRef.current.clientHeight > legendHeight);
+            setIsLegendScrollable(legendSectionsRef.current.clientHeight > legendHeight);
         }
     }, [showLegendDialog, isKioskContext]);
 
