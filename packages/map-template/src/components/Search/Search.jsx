@@ -26,6 +26,9 @@ import selectedCategoryState from '../../atoms/selectedCategoryState';
 import Categories from './Categories/Categories';
 import { useIsKioskContext } from "../../hooks/useIsKioskContext";
 import { useIsDesktop } from '../../hooks/useIsDesktop';
+import { ReactComponent as Legend } from '../../assets/legend.svg';
+import isLegendDialogVisibleState from '../../atoms/isLegendDialogVisibleState';
+import legendSortedFieldsSelector from '../../selectors/legendSortedFieldsSelector';
 
 /**
  * Show the search results.
@@ -86,7 +89,14 @@ function Search({ onSetSize, isOpen }) {
 
     const isKioskContext = useIsKioskContext();
 
+    const [, setShowLegendDialog] = useRecoilState(isLegendDialogVisibleState);
+
+    const [showLegendButton, setShowLegendButton] = useState(false);
+
+    const legendSections = useRecoilValue(legendSortedFieldsSelector);
+
     /**
+     * 
      * Get the locations and filter through them based on categories selected.
      *
      * @param {string} category
@@ -327,25 +337,39 @@ function Search({ onSetSize, isOpen }) {
         }
     }, [selectedCategory]);
 
+    /*
+     * Get the legend sections and determine 
+     * If the legend button should be shown.
+     */
+    useEffect(() => {
+        if (kioskLocation) {
+            setShowLegendButton(legendSections.length > 0);
+        }
+    }, [kioskLocation]);
+
     return (
         <div className="search"
             ref={searchRef}
             style={calculateContainerStyle()}>
 
+            { /* Search info which includes legend button if in a Kiosk context. */}
 
+            <div className='search__info' style={{ gridTemplateColumns: isKioskContext && showLegendButton ? 'min-content 1fr' : 'auto' }}>
+                {isKioskContext && showLegendButton && <button className='search__legend' onClick={() => setShowLegendDialog(true)}><Legend /></button>}
 
-            { /* Search field that allows users to search for locations (MapsIndoors Locations and external) */}
+                { /* Search field that allows users to search for locations (MapsIndoors Locations and external) */}
 
-            <SearchField
-                ref={searchFieldRef}
-                mapsindoors={true}
-                placeholder={t('Search by name, category, building...')}
-                results={locations => onResults(locations)}
-                clicked={() => searchFieldClicked()}
-                cleared={() => cleared()}
-                category={selectedCategory}
-                disabled={searchDisabled} // Disabled initially to prevent content jumping when clicking and changing sheet size.
-            />
+                <SearchField
+                    ref={searchFieldRef}
+                    mapsindoors={true}
+                    placeholder={t('Search by name, category, building...')}
+                    results={locations => onResults(locations)}
+                    clicked={() => searchFieldClicked()}
+                    cleared={() => cleared()}
+                    category={selectedCategory}
+                    disabled={searchDisabled} // Disabled initially to prevent content jumping when clicking and changing sheet size.
+                />
+            </div>
 
 
 
@@ -374,7 +398,8 @@ function Search({ onSetSize, isOpen }) {
                             location={location}
                             locationClicked={() => onLocationClicked(location)}
                             isHovered={location?.id === hoveredLocation?.id}
-                        />)}
+                        />
+                    )}
                 </div>
             }
 

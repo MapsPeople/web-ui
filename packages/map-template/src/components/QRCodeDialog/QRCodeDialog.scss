@@ -1,5 +1,5 @@
 .background {
-    z-index: 10000;
+    z-index: var(--z-index-spinner);
     background-color: var(--color-black-black);
     opacity: 0.5;
     position: fixed;
@@ -19,7 +19,7 @@
     z-index: 100;
     border-radius: var(--rounding-large);
     padding: var(--spacing-medium);
-    z-index: 1000000;
+    z-index: var(--z-index-modal);
     display: grid;
 
     &__button {

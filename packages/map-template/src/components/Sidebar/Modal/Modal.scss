@@ -1,6 +1,6 @@
 .modal {
     position: absolute;
-    z-index: var(--z-index-modal);
+    z-index: var(--z-index-overlay);
     width: 568px;
     left: var(--spacing-x-large);
     bottom: var(--spacing-x-large);

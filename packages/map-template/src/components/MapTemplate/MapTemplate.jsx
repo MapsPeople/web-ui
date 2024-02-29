@@ -48,6 +48,8 @@ import useKeyboardState from '../../atoms/useKeyboardState';
 import { useIsDesktop } from '../../hooks/useIsDesktop.js';
 import miTransitionLevelState from '../../atoms/miTransitionLevelState.js';
 import selectedCategoryState from '../../atoms/selectedCategoryState.js';
+import LegendDialog from '../LegendDialog/LegendDialog.jsx';
+import isLegendDialogVisibleState from '../../atoms/isLegendDialogVisibleState.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -143,6 +145,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [mapsindoorsSDKAvailable, setMapsindoorsSDKAvailable] = useState(false);
 
     const showQRCodeDialog = useRecoilValue(showQRCodeDialogState);
+    const showLegendDialog = useRecoilValue(isLegendDialogVisibleState);
 
     // The reset count is used to add a new key to the sidebar or bottomsheet, forcing it to re-render from scratch when resetting the Map Template.
     const [resetCount, setResetCount] = useState(0);
@@ -577,6 +580,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             active={currentAppView === appStates.VENUE_SELECTOR}
         />}
         {showQRCodeDialog && <QRCodeDialog />}
+        {showLegendDialog && <LegendDialog />}
         {isMapPositionKnown &&
             <Fragment key={resetCount}>
                 {isDesktop &&

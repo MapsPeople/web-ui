@@ -1,0 +1,88 @@
+.legend {
+    position: absolute;
+    background: white;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: var(--rounding-large);
+    padding: var(--spacing-medium);
+    z-index: var(--z-index-modal);
+    display: grid;
+    width: 500px;
+
+    &__background {
+        z-index: var(--z-index-spinner);
+        background-color: var(--color-black-black);
+        opacity: 0.5;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0px;
+        left: 0px;
+        overflow: hidden;
+    }
+
+    &__button {
+        color: var(--color-white-white);
+        border-radius: var(--rounding-large);
+        border: none;
+        font-size: var(--font-size-small);
+        width: 100%;
+        height: var(--spacing-xxx-large);
+        position: relative;
+        margin-top: var(--spacing-medium);
+        font-weight: var(--font-weight-x-large);
+        text-transform: uppercase;
+
+        &:hover {
+            filter: brightness(90%);
+        }
+    }
+
+    &__heading {
+        font-size: var(--spacing-x-large);
+        font-weight: var(--font-weight-xx-large);
+        color: var(--color-gray-90);
+        padding-top: var(--spacing-medium);
+    }
+
+    &__section {
+        display: grid;
+        gap: var(--spacing-medium);
+        word-break: break-all;
+    }
+
+    &__sections {
+        &--scrollable {
+            &::before {
+                content: '';
+                position: absolute;
+                bottom: calc(56px + var(--spacing-small));
+                left: 0;
+                right: 0;
+                height: var(--spacing-xx-large);
+                background: linear-gradient(rgba(255, 255, 255, 0), white);
+            }
+
+            &::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: var(--spacing-xx-large);
+                background: linear-gradient(white, rgba(255, 255, 255, 0));
+            }
+        }
+    }
+
+    &__content {
+        padding-bottom: var(--spacing-medium);
+    }
+
+    .scroll-buttons {
+        position: fixed;
+        left: 520px;
+        bottom: 0;
+    }
+}
