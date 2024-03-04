@@ -21,11 +21,11 @@ export default defineConfig(() => {
             ViteFaviconsPlugin('./public/favicon.png'),
             eslint(),
             sentryVitePlugin({
-                org: 'mapspeople-gx',
-                project: 'map-mapsindoors',
+                org: process.env.SENTRY_ORG,
+                project: process.env.SENTRY_PROJECT,
           
                 // Auth tokens can be obtained from https://sentry.io/orgredirect/organizations/:orgslug/settings/auth-tokens/
-                authToken: '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',
+                authToken: process.env.SENTRY_AUTH_TOKEN,
                 reactComponentAnnotation: { enabled: true },
             }),
         ]
