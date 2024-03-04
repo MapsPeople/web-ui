@@ -14,5 +14,4 @@ function App() {
     );
 }
 
-export default Sentry.withProfiler(App, { name: "MapsIndoorsMap" });
-
+export default Sentry.withProfiler(App, { name: "App" });
