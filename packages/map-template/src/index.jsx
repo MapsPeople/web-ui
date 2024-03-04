@@ -1,7 +1,6 @@
 import * as Sentry from "@sentry/react";
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-// import { createRoutesFromChildren, matchRoutes, useLocation, useNavigationType } from 'react-dom/client';
+import ReactDOM, { createRoutesFromChildren, matchRoutes, useLocation, useNavigationType } from 'react-dom/client';
 import App from './App';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
@@ -13,13 +12,13 @@ Sentry.init({
     integrations: [
         // See docs for support of different versions of variation of react router
         // https://docs.sentry.io/platforms/javascript/guides/react/configuration/integrations/react-router/
-        // Sentry.reactRouterV6BrowserTracingIntegration({
-        //     useEffect: React.useEffect,
-        //     useLocation,
-        //     useNavigationType,
-        //     createRoutesFromChildren,
-        //     matchRoutes
-        // }),
+        Sentry.reactRouterV6BrowserTracingIntegration({
+            useEffect: React.useEffect,
+            useLocation,
+            useNavigationType,
+            createRoutesFromChildren,
+            matchRoutes
+        }),
         Sentry.replayIntegration()
     ],
 
