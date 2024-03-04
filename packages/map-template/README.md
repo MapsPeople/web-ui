@@ -135,6 +135,7 @@ Note that when using the React component, the properties should conform to JSX p
 |`timeout`|`timeout`|`number`|If you want the Map Template to reset the map position and the UI elements to the initial state after some time of inactivity, use this to specify the number of seconds of inactivity before resetting. This property is not dependent on the `kioskOriginLocationId`. |
 |`use-keyboard`|`useKeyboard`|`bool`|If running the Map Template as a Kiosk, set this prop to `true` and it will display a virtual keyboard. This property is dependent on the `kioskOriginLocationId`. |
 |`mi-transition-level`|`miTransitionLevel`|`number`|The zoom level on which to transition from Mapbox to MapsIndoors data. Default value is 17. This feature is only available for Mapbox. |
+|`category`|`category`|`string`|If you want to indicate an active category on the map. The value should be the Key (Administrative ID). |
 
 ## Using Query Parameters
 
@@ -164,6 +165,7 @@ The supported query parameters are the following:
 20. `timeout` - If you want the Map Template to reset the map position and the UI elements to the initial state after some time of inactivity, use this to specify the number of seconds of inactivity before resetting. This property is not dependent on the `kioskOriginLocationId`.
 21. `useKeyboard` -  If running the Map Template as a Kiosk, set this prop to `true` and it will display a virtual keyboard. This property is dependent on the `kioskOriginLocationId`.
 22. `miTransitionLevel` - The zoom level on which to transition from Mapbox to MapsIndoors data. Default value is 17. This feature is only available for Mapbox.
+23. `category` - If you want to indicate an active category on the map. The value should be the Key (Administrative ID).
 
 **Note!** All the query parameters need to be separated with the `&` symbol, without any spaces in between.
 **Note!** When using parameters such as `directionsTo`, `directionsFrom`, `locationId`, `externalIDs`, and `tileStyle` make sure you are using the correct `apiKey` parameter to which they belong.
