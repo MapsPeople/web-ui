@@ -12,6 +12,8 @@
     "@mapsindoors/components": "*",
     "@mapsindoors/css": "^3.0.0",
     "@mapsindoors/midt": "*",
+    "@sentry/react": "^7.105.0",
+    "@sentry/vite-plugin": "^2.14.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
