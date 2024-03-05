@@ -120,6 +120,8 @@ Sentry.init({
     integrations: [
         // See docs for support of different versions of variation of react router
         // https://docs.sentry.io/platforms/javascript/guides/react/configuration/integrations/react-router/
+        // Note: While we don't use React Router in the Map Template project, this is needed to instrument
+        // the `/` route properly. Without this, Sentry will not log anything on the main page of this app.
         Sentry.reactRouterV6BrowserTracingIntegration({
             useEffect: React.useEffect,
             useLocation,
