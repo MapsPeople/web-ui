@@ -43,6 +43,7 @@ jobs:
       - name: Get npm package version
         id: npm-version
         run: |
+          cd packages/map-template
           echo "NPM_VERSION=$(npm pkg get version --workspaces=false | tr -d \")" >> $GITHUB_ENV
 
       # This command uses gsutil CLI to sync the built React and Web Component with the bucket.
