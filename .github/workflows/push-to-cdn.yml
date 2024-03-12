@@ -29,7 +29,6 @@ jobs:
 
       # Build the project to ensure it's up to date. If this steps fails, the job fails.
       - name: Build
-        if: steps.changed-files-map-template.outputs.any_changed == 'true'
         run: npm ci && npx lerna run build && cd packages/map-template && npm run build-for-npm
 
       - name: "Authenticate on Google Cloud Storage"
