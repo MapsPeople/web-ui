@@ -19,6 +19,7 @@ const libraries = [
                 formats: ['es', 'umd']
             },
             emptyOutDir: false,
+            minify: true, // Enable minification
             rollupOptions: {
                 output: {
                     manualChunks: false,
@@ -44,6 +45,7 @@ const libraries = [
                 formats: ['es', 'umd']
             },
             emptyOutDir: false,
+            minify: true, // Enable minification
             rollupOptions: {
                 external: ['react', 'react-dom'],
                 output: {
