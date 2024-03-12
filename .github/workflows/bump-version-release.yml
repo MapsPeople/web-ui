@@ -276,6 +276,27 @@ jobs:
         if: steps.changed-files-map-template.outputs.any_changed == 'true'
         run: npm -w @mapsindoors/map-template publish --access public
 
+  map-template-release-cdn:
+    name: Release Map Template to CDN
+    runs-on: ubuntu-latest
+    # This ensures the job only runs for Pull Requests that are merged.
+    env:
+      token: ${{ secrets.GITHUB_TOKEN }}
+      NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Set up a node environment in the container.
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      # Build the project to ensure it's up to date. If this steps fails, the job fails.
+      - name: Build
+        run: npm ci && npx lerna run build && cd packages/map-template && npm run build-for-npm
+
       - name: "Authenticate on Google Cloud Storage"
         uses: google-github-actions/auth@v1
         with:
@@ -286,16 +307,19 @@ jobs:
         uses: "google-github-actions/setup-gcloud@v1"
 
       - name: Get npm package version
+        id: npm-version
         run: |
-          export NPM_VERSION=$(npm pkg get version --workspaces=false | tr -d \")
-          echo "::set-output name=npm_version::$NPM_VERSION"
+          cd packages/map-template
+          echo "NPM_VERSION=$(npm pkg get version --workspaces=false | tr -d \")" >> $GITHUB_ENV
 
       # This command uses gsutil CLI to sync the built React and Web Component with the bucket.
       # "-m" ensures parallel upload of files.
       - name: Upload React and Web Components to Google Cloud Storage
         run: |
-          gsutil -m cp mapsindoors-react.es.js mapsindoors-react.es.js.map mapsindoors-react.umd.js mapsindoors-react.umd.js.map mapsindoors-webcomponent.es.js mapsindoors-webcomponent.es.js.map mapsindoors-webcomponent.umd.js mapsindoors-webcomponent.umd.js.map gs://map-template-component/v${{ steps.npm_version.outputs.npm_version }}
-          gsutil -m cp mapsindoors-react.es.js mapsindoors-react.es.js.map mapsindoors-react.umd.js mapsindoors-react.umd.js.map mapsindoors-webcomponent.es.js mapsindoors-webcomponent.es.js.map mapsindoors-webcomponent.umd.js mapsindoors-webcomponent.umd.js.map gs://map-template-component/latest
+          cd packages/map-template/dist
+          npm_version=$(echo "${NPM_VERSION}")
+          gsutil -m cp mapsindoors-react.es.js mapsindoors-react.es.js.map mapsindoors-react.umd.js mapsindoors-react.umd.js.map mapsindoors-webcomponent.es.js mapsindoors-webcomponent.es.js.map mapsindoors-webcomponent.umd.js mapsindoors-webcomponent.umd.js.map gs://map-template-component/v${npm_version}/
+          gsutil -m cp mapsindoors-react.es.js mapsindoors-react.es.js.map mapsindoors-react.umd.js mapsindoors-react.umd.js.map mapsindoors-webcomponent.es.js mapsindoors-webcomponent.es.js.map mapsindoors-webcomponent.umd.js mapsindoors-webcomponent.umd.js.map gs://map-template-component/latest/
 
       # This is to control cache for 'latest' and set it as low as possible so new changes are instantly available.
       - run: gsutil -m setmeta -h "Cache-Control:public, max-age=0"
