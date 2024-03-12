@@ -42,15 +42,16 @@ jobs:
         uses: "google-github-actions/setup-gcloud@v1"
 
       - name: Get npm package version
+        id: npm-version
         run: |
-          export NPM_VERSION=$(npm pkg get version --workspaces=false | tr -d \")
-          echo "::set-output name=npm_version::$NPM_VERSION"
+          echo "NPM_VERSION=$(npm pkg get version --workspaces=false | tr -d \")" >> $GITHUB_ENV
 
       # This command uses gsutil CLI to sync the built React and Web Component with the bucket.
       # "-m" ensures parallel upload of files.
       - name: Upload React and Web Components to Google Cloud Storage
         run: |
-          gsutil -m cp mapsindoors-react.es.js mapsindoors-react.es.js.map mapsindoors-react.umd.js mapsindoors-react.umd.js.map mapsindoors-webcomponent.es.js mapsindoors-webcomponent.es.js.map mapsindoors-webcomponent.umd.js mapsindoors-webcomponent.umd.js.map gs://map-template-component/v${{ steps.npm_version.outputs.npm_version }}
+          cd packages/map-template/dist
+          gsutil -m cp mapsindoors-react.es.js mapsindoors-react.es.js.map mapsindoors-react.umd.js mapsindoors-react.umd.js.map mapsindoors-webcomponent.es.js mapsindoors-webcomponent.es.js.map mapsindoors-webcomponent.umd.js mapsindoors-webcomponent.umd.js.map gs://map-template-component/v$${{ steps.npm-version.outputs.NPM_VERSION }}
           gsutil -m cp mapsindoors-react.es.js mapsindoors-react.es.js.map mapsindoors-react.umd.js mapsindoors-react.umd.js.map mapsindoors-webcomponent.es.js mapsindoors-webcomponent.es.js.map mapsindoors-webcomponent.umd.js mapsindoors-webcomponent.umd.js.map gs://map-template-component/latest
 
       # This is to control cache for 'latest' and set it as low as possible so new changes are instantly available.
