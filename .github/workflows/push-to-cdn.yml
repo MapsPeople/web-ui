@@ -50,8 +50,9 @@ jobs:
       - name: Upload React and Web Components to Google Cloud Storage
         run: |
           cd packages/map-template/dist
-          gsutil -m cp mapsindoors-react.es.js mapsindoors-react.es.js.map mapsindoors-react.umd.js mapsindoors-react.umd.js.map mapsindoors-webcomponent.es.js mapsindoors-webcomponent.es.js.map mapsindoors-webcomponent.umd.js mapsindoors-webcomponent.umd.js.map gs://map-template-component/v${{ steps.npm-version.outputs.NPM_VERSION }}
-          gsutil -m cp mapsindoors-react.es.js mapsindoors-react.es.js.map mapsindoors-react.umd.js mapsindoors-react.umd.js.map mapsindoors-webcomponent.es.js mapsindoors-webcomponent.es.js.map mapsindoors-webcomponent.umd.js mapsindoors-webcomponent.umd.js.map gs://map-template-component/latest
+          npm_version=$(echo "${NPM_VERSION}")
+          gsutil -m cp mapsindoors-react.es.js mapsindoors-react.es.js.map mapsindoors-react.umd.js mapsindoors-react.umd.js.map mapsindoors-webcomponent.es.js mapsindoors-webcomponent.es.js.map mapsindoors-webcomponent.umd.js mapsindoors-webcomponent.umd.js.map gs://map-template-component/v${npm_version}/
+          gsutil -m cp mapsindoors-react.es.js mapsindoors-react.es.js.map mapsindoors-react.umd.js mapsindoors-react.umd.js.map mapsindoors-webcomponent.es.js mapsindoors-webcomponent.es.js.map mapsindoors-webcomponent.umd.js mapsindoors-webcomponent.umd.js.map gs://map-template-component/latest/
 
       # This is to control cache for 'latest' and set it as low as possible so new changes are instantly available.
       - run: gsutil -m setmeta -h "Cache-Control:public, max-age=0"
