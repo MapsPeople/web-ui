@@ -22,6 +22,7 @@
   "scripts": {
     "build": "npm run clean && style-dictionary build",
     "clean": "style-dictionary clean",
+    "release": "sh ./release.sh",
     "watch": "npm run build && chokidar \"properties/**/*.json\" -c \"npm run build\"",
     "test": "echo \"no tests lol\" && exit 1"
   },
