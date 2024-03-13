@@ -18,6 +18,7 @@
   "sass": "mixins/_index.scss",
   "style": "midt.css",
   "unpkg": "build/css/variables.css",
+  "jsdelivr": "build/css/variables.css",
   "scripts": {
     "build": "npm run clean && style-dictionary build",
     "clean": "style-dictionary clean",
