@@ -45,7 +45,8 @@
   "scripts": {
     "start": "vite",
     "build": "vite build",
-    "build-for-npm": "node releaseTools/buildForNpm.mjs",
+    "build-for-npm": "node releaseTools/buildForNpm.mjs && cd dist && npm run minify",
+    "minify": "esbuild dist/mapsindoors-react.es.js --minify --outfile=dist/mapsindoors-react.es.min.js & esbuild dist/mapsindoors-react.umd.js --minify --outfile=dist/mapsindoors-react.umd.min.js & esbuild dist/mapsindoors-webcomponent.es.js --minify --outfile=dist/mapsindoors-webcomponent.es.min.js & esbuild dist/mapsindoors-webcomponent.umd.js --minify --outfile=dist/mapsindoors-webcomponent.umd.min.js",
     "serve": "vite preview",
     "test": "",
     "release": "sh ./release.sh",
