@@ -275,3 +275,16 @@ jobs:
       - name: Publish to npm
         if: steps.changed-files-map-template.outputs.any_changed == 'true'
         run: npm -w @mapsindoors/map-template publish --access public
+
+  # Using jsDelivr as the CDN, it will cache even @latest for up to 7 days. Specific versions are cached for up to a year, so we need to purge the CDN manually.
+  purge-jsdelivr-cache:
+    name: Purge jsDelivr cache
+    runs-on: ubuntu-latest
+    steps:
+      - name: Purge @latest version
+        run: |
+          curl -X PURGE "https://purge.jsdelivr.net/npm/@mapsindoors/map-template@latest"
+
+      - name: Purge @stable version
+        run: |
+          curl -X PURGE "https://purge.jsdelivr.net/npm/@mapsindoors/map-template@stable"
