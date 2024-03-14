@@ -109,7 +109,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setSelectedCategory] = useRecoilState(selectedCategoryState);
     const [, setSearchAllVenues] = useRecoilState(searchAllVenuesState);
 
-
     const [showVenueSelector, setShowVenueSelector] = useState(true);
     const [showPositionControl, setShowPositionControl] = useState(true);
 
