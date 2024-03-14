@@ -6,6 +6,8 @@ import languageState from '../../../atoms/languageState';
 import searchInputState from '../../../atoms/searchInputState';
 import kioskLocationState from '../../../atoms/kioskLocationState';
 import { useIsKioskContext } from '../../../hooks/useIsKioskContext';
+import currentVenueNameState from '../../../atoms/currentVenueNameState';
+import searchAllVenuesState from '../../../atoms/searchAllVenues';
 
 /**
  * React wrapper around the custom element <mi-search>.
@@ -32,8 +34,6 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
 
     const kioskLocation = useRecoilValue(kioskLocationState);
 
-    const isKioskContext = useIsKioskContext();
-
     const mapboxPlacesSessionToken = sessionStorage.getItem('mapboxPlacesSessionToken');
 
     const userPositionCoordinates = {
@@ -43,6 +43,10 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
 
     /** Instruct the search field to search for Locations near the map center. */
     const searchNear = useNear();
+
+    const currentVenue = useRecoilValue(currentVenueNameState);
+
+    const searchAllVenues = useRecoilValue(searchAllVenuesState);
 
     /**
      * Methods that can be triggered on the mi-search element.
@@ -118,7 +122,7 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
         disabled={disabled}
         mapbox={mapbox}
         google={google}
-        mi-venue={kioskLocation && isKioskContext ? kioskLocation.properties.venueId : undefined} // Restrict the search to the kiosk location venue when in kiosk mode.
+        mi-venue={searchAllVenues ? undefined : currentVenue}
         language={language} />
 });
 
