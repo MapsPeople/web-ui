@@ -51,6 +51,7 @@ import selectedCategoryState from '../../atoms/selectedCategoryState.js';
 import LegendDialog from '../LegendDialog/LegendDialog.jsx';
 import isLegendDialogVisibleState from '../../atoms/isLegendDialogVisibleState.js';
 import searchAllVenuesState from '../../atoms/searchAllVenues.js';
+import currentVenueNameState from '../../atoms/currentVenueNameState.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -139,6 +140,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const isMobile = useMediaQuery('(max-width: 991px)');
     const resetState = useReset();
     const setCurrentVenueName = useSetCurrentVenueName();
+    const currentVenueName = useRecoilValue(currentVenueNameState);
     const [pushAppView, goBack, currentAppView, currentAppViewPayload, appStates, resetAppHistory] = useAppHistory();
 
     // Declare the reference to the disabled locations.
@@ -503,6 +505,16 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         }
     }, [searchAllVenues, mapsindoorsSDKAvailable]);
 
+    /*
+     * React on changes to the currentVenueName prop.
+     * Get the venue categories based on the currentVenueName.
+     */
+    useEffect(() => {
+        if (mapsindoorsSDKAvailable && currentVenueName) {
+            getVenueCategories(currentVenueName)
+        }
+    }, [currentVenueName, mapsindoorsSDKAvailable]);
+
     /**
      * When venue is fitted while initializing the data,
      * set map to be ready and get the venue categories.
@@ -566,7 +578,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             for (const key of keys) {
                 // Get the categories from the App Config that have a matching key.
-                const appConfigCategory = appConfig.menuInfo.mainmenu.find(category => category.categoryKey === key);
+                const appConfigCategory = appConfig?.menuInfo.mainmenu.find(category => category.categoryKey === key);
 
                 if (uniqueCategories.has(key)) {
                     let count = uniqueCategories.get(key).count;
