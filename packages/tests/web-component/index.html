@@ -1,18 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MapsIndoors Map Template</title>
-    <script type="module">
-        import MapsindoorsMap from 'http://localhost:3002/mapsindoors-webcomponent.es.js';
-        window.customElements.define('mapsindoors-map', MapsindoorsMap)
-    </script>
+    <script type="module" src="http://localhost:3002/mapsindoors-webcomponent.es.js"></script>
     <style>
         body {
             margin: 0;
         }
+
         mapsindoors-map {
             display: block;
             width: 100vw;
@@ -20,7 +19,9 @@
         }
     </style>
 </head>
+
 <body>
     <mapsindoors-map></mapsindoors-map>
 </body>
+
 </html>
