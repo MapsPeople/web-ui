@@ -9,9 +9,10 @@ import { useTranslation } from 'react-i18next';
  * @param {object} props
  * @param {object} location - MapsIndoors Location
  * @param {function} locationClicked - Function that is called when Location is clicked.
- * @param {string} icon
+ * @param {string} icon - The icon to be shown in the list item location component.
+ * @param {boolean} disabled - Indicating the disabled state of the list item location component.
  */
-function ListItemLocation({ location, locationClicked, icon, isHovered }) {
+function ListItemLocation({ location, locationClicked, icon, isHovered, disabled }) {
     const { t } = useTranslation();
     const elementRef = useRef();
 
@@ -56,7 +57,7 @@ function ListItemLocation({ location, locationClicked, icon, isHovered }) {
     }, [location, locationClicked, isHovered]);
 
 
-    return <mi-list-item-location level={t('Level')} ref={elementRef} />
+    return <mi-list-item-location level={t('Level')} ref={elementRef} disabled={location.properties.locationSettings?.selectable === false} />
 }
 
 export default ListItemLocation;

@@ -303,6 +303,10 @@ export namespace Components {
     }
     interface MiListItemLocation {
         /**
+          * Indicate the disabled state.
+         */
+        "disabled": boolean;
+        /**
           * @description Optional URL to icon to render for the Location. If not set, imageURL on the Location data will be used.
           * @type {string}
          */
@@ -1686,6 +1690,10 @@ declare namespace LocalJSX {
         "orientation"?: string;
     }
     interface MiListItemLocation {
+        /**
+          * Indicate the disabled state.
+         */
+        "disabled"?: boolean;
         /**
           * @description Optional URL to icon to render for the Location. If not set, imageURL on the Location data will be used.
           * @type {string}
