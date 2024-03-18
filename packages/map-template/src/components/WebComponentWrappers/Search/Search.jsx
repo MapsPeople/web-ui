@@ -4,8 +4,6 @@ import { useRecoilValue, useRecoilState } from 'recoil';
 import userPositionState from '../../../atoms/userPositionState';
 import languageState from '../../../atoms/languageState';
 import searchInputState from '../../../atoms/searchInputState';
-import kioskLocationState from '../../../atoms/kioskLocationState';
-import { useIsKioskContext } from '../../../hooks/useIsKioskContext';
 import currentVenueNameState from '../../../atoms/currentVenueNameState';
 import searchAllVenuesState from '../../../atoms/searchAllVenues';
 
@@ -32,8 +30,6 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
 
     const [, setSearchInput] = useRecoilState(searchInputState)
 
-    const kioskLocation = useRecoilValue(kioskLocationState);
-
     const mapboxPlacesSessionToken = sessionStorage.getItem('mapboxPlacesSessionToken');
 
     const userPositionCoordinates = {
@@ -44,7 +40,7 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
     /** Instruct the search field to search for Locations near the map center. */
     const searchNear = useNear();
 
-    const currentVenue = useRecoilValue(currentVenueNameState);
+    const currentVenueName = useRecoilValue(currentVenueNameState);
 
     const searchAllVenues = useRecoilValue(searchAllVenuesState);
 
@@ -122,7 +118,7 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
         disabled={disabled}
         mapbox={mapbox}
         google={google}
-        mi-venue={searchAllVenues ? undefined : currentVenue}
+        mi-venue={searchAllVenues ? undefined : currentVenueName}
         language={language} />
 });
 
