@@ -210,8 +210,7 @@ export class ListItemLocation {
      */
     render(): JSX.Element {
         return this.location && (
-            <Host role="listitem"
-                onClick={() => this.locationClickedHandler(this.location)}>
+            <Host role="listitem" onClick={() => this.locationClickedHandler(this.location)}>
                 {this.iconURLToRender ? this.renderIcon() : null}
 
                 <div class="details">

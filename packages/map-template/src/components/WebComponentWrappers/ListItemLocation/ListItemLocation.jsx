@@ -4,7 +4,6 @@ import mapsIndoorsInstanceState from '../../../atoms/mapsIndoorsInstanceState';
 import { useTranslation } from 'react-i18next';
 import './ListItemLocation.scss';
 
-
 /**
  * React wrapper around the custom element <mi-list-item-location>.
  *
