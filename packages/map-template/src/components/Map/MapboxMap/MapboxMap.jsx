@@ -12,6 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import miTransitionLevelState from '../../../atoms/miTransitionLevelState';
 import is3DToggledState from '../../../atoms/is3DToggledState';
+import isMapReadyState from '../../../atoms/isMapReadyState';
 
 /**
  * Takes care of instantiating a MapsIndoors Mapbox MapView.
@@ -34,6 +35,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
     const isDesktop = useIsDesktop();
     const miTransitionLevel = useRecoilValue(miTransitionLevelState);
     const is3DToggled = useRecoilValue(is3DToggledState);
+    const isMapReady = useRecoilValue(isMapReadyState);
 
     useEffect(() => {
         // Initialize MapboxV3View MapView
@@ -70,7 +72,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
     // If the map is ready, check if the 3D features are toggled 
 
     useEffect(() => {
-        if (mapView && mapView.isReady) {
+        if (mapView && mapView.isReady && isMapReady) {
             // Check if the 3D features are switched on
             // Conditionally render either 2D or 3D features depending on the Recoil Value of is3DToggled
             // Tilt the map to 45 degrees when the 3D features are switched on, and to 0 degrees when the 2D features are switched on.
@@ -83,7 +85,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
                 mapView.tilt(0, 2000);
             }
         }
-    }, [mapView, is3DToggled]);
+    }, [mapView, is3DToggled, isMapReady, mapView?.isReady]);
 
 
     // Add Floor Selector to the Map when ready.
