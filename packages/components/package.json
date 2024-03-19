@@ -10,6 +10,7 @@
     "collection": "dist/collection/collection-manifest.json",
     "collection:main": "dist/collection/index.js",
     "unpkg": "dist/mi-components/mi-components.js",
+    "jsdelivr": "dist/mi-components/mi-components.js",
     "files": [
         "dist/",
         "loader/"
