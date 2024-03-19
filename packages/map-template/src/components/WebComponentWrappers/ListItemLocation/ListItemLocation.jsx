@@ -2,6 +2,8 @@ import { useEffect, useRef } from 'react';
 import { useRecoilValue } from 'recoil';
 import mapsIndoorsInstanceState from '../../../atoms/mapsIndoorsInstanceState';
 import { useTranslation } from 'react-i18next';
+import './ListItemLocation.scss';
+
 
 /**
  * React wrapper around the custom element <mi-list-item-location>.
@@ -27,10 +29,15 @@ function ListItemLocation({ location, locationClicked, icon, isHovered, disabled
             }
         }
         const unhoverHandler = () => {
-             // Check if the location is non-selectable before unhovering it
+            // Check if the location is non-selectable before unhovering it
             if (!location.properties.locationSettings?.selectable !== false) {
                 mapsIndoorsInstance.unhoverLocation(location);
             }
+        }
+
+        // Add a disabled attribute to the non-selectable locations.
+        if (location.properties.locationSettings?.selectable === false) {
+            elementRef.current.setAttribute("disabled", "");
         }
 
         const { current } = elementRef;
@@ -57,7 +64,7 @@ function ListItemLocation({ location, locationClicked, icon, isHovered, disabled
     }, [location, locationClicked, isHovered]);
 
 
-    return <mi-list-item-location level={t('Level')} ref={elementRef} disabled={location.properties.locationSettings?.selectable === false} />
+    return <mi-list-item-location level={t('Level')} ref={elementRef} />
 }
 
 export default ListItemLocation;

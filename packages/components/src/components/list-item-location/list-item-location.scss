@@ -31,12 +31,6 @@
     border: 1px solid variables.$color-gray-40;
 }
 
-:host(.disabled) {
-    cursor: not-allowed;
-    pointer-events: none;
-    opacity: .5;
-}
-
 .img-container {
     width: variables.$spacing-x-large;
     height: variables.$spacing-x-large;
