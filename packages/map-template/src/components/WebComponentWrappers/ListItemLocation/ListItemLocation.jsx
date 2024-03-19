@@ -33,9 +33,9 @@ function ListItemLocation({ location, locationClicked, icon, isHovered }) {
             }
         }
 
-        // Add a disabled attribute to the non-selectable locations.
+        // Add a "non-selectable" class to the non-selectable locations.
         if (location.properties.locationSettings?.selectable === false) {
-            elementRef.current.setAttribute("disabled", "");
+            elementRef.current.classList.add("non-selectable");
         }
 
         const { current } = elementRef;
