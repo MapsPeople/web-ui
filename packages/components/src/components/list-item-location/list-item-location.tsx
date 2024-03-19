@@ -39,11 +39,6 @@ export class ListItemLocation {
      */
     @Prop() level: string = 'Level';
 
-    /**
-     * Indicate the disabled state.
-     */
-    @Prop() disabled: boolean = false;
-
     @Watch('icon')
     iconChanged(): void {
         this.iconURLToRender = this.icon ? this.icon : this.location?.properties.imageURL;
@@ -216,8 +211,7 @@ export class ListItemLocation {
     render(): JSX.Element {
         return this.location && (
             <Host role="listitem"
-                onClick={() => this.locationClickedHandler(this.location)}
-                class={{ 'disabled': this.disabled }}>
+                onClick={() => this.locationClickedHandler(this.location)}>
                 {this.iconURLToRender ? this.renderIcon() : null}
 
                 <div class="details">

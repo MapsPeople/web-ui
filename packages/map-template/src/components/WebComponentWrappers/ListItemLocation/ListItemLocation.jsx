@@ -12,9 +12,8 @@ import './ListItemLocation.scss';
  * @param {object} location - MapsIndoors Location
  * @param {function} locationClicked - Function that is called when Location is clicked.
  * @param {string} icon - The icon to be shown in the list item location component.
- * @param {boolean} disabled - Indicating the disabled state of the list item location component.
  */
-function ListItemLocation({ location, locationClicked, icon, isHovered, disabled }) {
+function ListItemLocation({ location, locationClicked, icon, isHovered }) {
     const { t } = useTranslation();
     const elementRef = useRef();
 
