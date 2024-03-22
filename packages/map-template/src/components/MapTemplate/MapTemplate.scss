@@ -20,6 +20,10 @@
         .venue-selector__button {
             display: block;
         }
+
+        .switch {
+            display: block;
+        }
     }
 
     &--hide-elements {
@@ -28,6 +32,10 @@
         }
 
         .venue-selector__button {
+            display: none;
+        }
+
+        .switch {
             display: none;
         }
     }
