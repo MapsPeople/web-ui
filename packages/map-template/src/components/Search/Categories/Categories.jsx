@@ -145,7 +145,7 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef }) {
      * then scroll into view and center the active category. 
      */
     useEffect(() => {
-        if (activeCategory && hasCategoryProp && isBottomSheetLoaded) {
+        if (activeCategory && hasCategoryProp && (isDesktop || (!isDesktop && isBottomSheetLoaded))) {
             activeCategory.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' })
         }
     }, [activeCategory, hasCategoryProp, isBottomSheetLoaded]);
