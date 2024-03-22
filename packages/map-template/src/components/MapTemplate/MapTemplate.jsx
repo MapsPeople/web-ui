@@ -47,6 +47,9 @@ import useSetCurrentVenueName from '../../hooks/useSetCurrentVenueName.js';
 import useKeyboardState from '../../atoms/useKeyboardState';
 import { useIsDesktop } from '../../hooks/useIsDesktop.js';
 import miTransitionLevelState from '../../atoms/miTransitionLevelState.js';
+import selectedCategoryState from '../../atoms/selectedCategoryState.js';
+import LegendDialog from '../LegendDialog/LegendDialog.jsx';
+import isLegendDialogVisibleState from '../../atoms/isLegendDialogVisibleState.js';
 import Switch from '../Switch/Switch.jsx';
 
 // Define the Custom Elements from our components package.
@@ -79,7 +82,7 @@ defineCustomElements();
  * @param {number} [props.timeout] - If you want the Map Template to reset map position and UI elements to the initial state after some time of inactivity, use this to specify the number of seconds of inactivity before resetting.
  * @param {number} [props.miTransitionLevel] - The zoom level on which to transition from Mapbox to MapsIndoors data. Default value is 17. This feature is only available for Mapbox.
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category }) {
 
     const [, setApiKey] = useRecoilState(apiKeyState);
     const [, setGmApiKey] = useRecoilState(gmApiKeyState);
@@ -102,6 +105,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setSupportsUrlParameters] = useRecoilState(supportsUrlParametersState);
     const [, setUseKeyboard] = useRecoilState(useKeyboardState);
     const [, setMiTransitionLevel] = useRecoilState(miTransitionLevelState);
+    const [, setSelectedCategory] = useRecoilState(selectedCategoryState);
 
     const [showVenueSelector, setShowVenueSelector] = useState(true);
     const [showPositionControl, setShowPositionControl] = useState(true);
@@ -142,6 +146,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [mapsindoorsSDKAvailable, setMapsindoorsSDKAvailable] = useState(false);
 
     const showQRCodeDialog = useRecoilValue(showQRCodeDialogState);
+    const showLegendDialog = useRecoilValue(isLegendDialogVisibleState);
 
     // The reset count is used to add a new key to the sidebar or bottomsheet, forcing it to re-render from scratch when resetting the Map Template.
     const [resetCount, setResetCount] = useState(0);
@@ -577,6 +582,16 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         setCategories(uniqueCategories);
     }
 
+    /*
+     * React on changes in the category prop.
+     * Check if the category property matches with any of the existing categories.
+     */
+    useEffect(() => {
+        if (mapsindoorsSDKAvailable && category && categories.find((matched) => matched[0] === category)) {
+            setSelectedCategory(category);
+        }
+    }, [category, categories, mapsindoorsSDKAvailable]);
+
     return <div className={`mapsindoors-map ${locationsDisabledRef.current ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'} ${showPositionControl ? 'mapsindoors-map--show-my-position' : 'mapsindoors-map--hide-my-position'}`}>
         <Notification />
         {!isMapReady && <SplashScreen />}
@@ -587,6 +602,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         />}
         {showSwitch && <Switch />}
         {showQRCodeDialog && <QRCodeDialog />}
+        {showLegendDialog && <LegendDialog />}
         {isMapPositionKnown &&
             <Fragment key={resetCount}>
                 {isDesktop &&

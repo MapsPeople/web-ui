@@ -1,4 +1,6 @@
-import { useEffect, useState } from 'react';
+import * as Sentry from "@sentry/react";
+import React, { useEffect, useState } from 'react';
+import { createRoutesFromChildren, matchRoutes, useLocation, useNavigationType } from 'react-dom/client';
 import { RecoilRoot } from 'recoil';
 import MapTemplate from '../MapTemplate/MapTemplate.jsx';
 
@@ -28,6 +30,7 @@ import MapTemplate from '../MapTemplate/MapTemplate.jsx';
  * @param {string} [props.language] - The language to show textual content in. Supported values are "en" for English, "da" for Danish, "de" for German and "fr" for French. If the prop is not set, the language of the browser will be used (if it is one of the four supported languages - otherwise it will default to English).
  * @param {boolean} [props.useKeyboard] - If running the Map Template as a kiosk, set this prop to true and it will prompt a keyboard. 
  * @param {number} [props.miTransitionLevel] - The zoom level on which to transition from Mapbox to MapsIndoors data. Default value is 17. This feature is only available for Mapbox.
+ * @param {string} [props.category] - If you want to indicate an active category on the map. The value should be the Key (Administrative ID).
  */
 function MapsIndoorsMap(props) {
 
@@ -68,11 +71,12 @@ function MapsIndoorsMap(props) {
         const externalIDsQueryParameter = queryStringParams.get('externalIDs')?.split(',');
         const gmMapIdQueryParameter = queryStringParams.get('gmMapId');
         const useMapProviderModuleParameter = getBooleanQueryParameter(queryStringParams.get('useMapProviderModule'));
-        const kioskOriginLocationId = queryStringParams.get('kioskOriginLocationId');
+        const kioskOriginLocationIdQueryParameter = queryStringParams.get('kioskOriginLocationId');
         const timeoutQueryParameter = queryStringParams.get('timeout');
         const languageQueryParameter = queryStringParams.get('language');
         const useKeyboardQueryParameter = getBooleanQueryParameter(queryStringParams.get('useKeyboard'));
         const miTransitionLevelQueryParameter = queryStringParams.get('miTransitionLevel');
+		const categoryQueryParameter = queryStringParams.get('category');
 
         setMapTemplateProps({
             apiKey: props.supportsUrlParameters && apiKeyQueryParameter ? apiKeyQueryParameter : (props.apiKey || defaultProps.apiKey),
@@ -92,12 +96,13 @@ function MapsIndoorsMap(props) {
             externalIDs: props.supportsUrlParameters && externalIDsQueryParameter ? externalIDsQueryParameter : props.externalIDs,
             gmMapId: props.supportsUrlParameters && gmMapIdQueryParameter ? gmMapIdQueryParameter : props.gmMapId,
             useMapProviderModule: props.supportsUrlParameters && useMapProviderModuleParameter ? useMapProviderModuleParameter : (props.useMapProviderModule || defaultProps.useMapProviderModule),
-            kioskOriginLocationId: props.supportsUrlParameters && kioskOriginLocationId ? kioskOriginLocationId : props.kioskOriginLocationId,
+            kioskOriginLocationId: props.supportsUrlParameters && kioskOriginLocationIdQueryParameter ? kioskOriginLocationIdQueryParameter : props.kioskOriginLocationId,
             timeout: props.supportsUrlParameters && timeoutQueryParameter ? timeoutQueryParameter : props.timeout,
             language: props.supportsUrlParameters && languageQueryParameter ? languageQueryParameter : props.language,
             supportsUrlParameters: props.supportsUrlParameters,
             useKeyboard: props.supportsUrlParameters && useKeyboardQueryParameter ? useKeyboardQueryParameter : (props.useKeyboard || defaultProps.useKeyboard),
             miTransitionLevel: props.supportsUrlParameters && miTransitionLevelQueryParameter ? miTransitionLevelQueryParameter : props.miTransitionLevel,
+			category: props.supportsUrlParameters && categoryQueryParameter ? categoryQueryParameter : props.category,
         });
     }, [props]);
 
@@ -107,6 +112,38 @@ function MapsIndoorsMap(props) {
         </RecoilRoot>
     )
 }
+
+Sentry.init({
+    dsn: "https://0ee7fa162023d958c96db25e99c8ff6c@o351128.ingest.sentry.io/4506851619831808",
+    // Set environment to localhost if the url includes it. Otherwise, set to production.
+    environment: window.location.hostname === 'localhost' ? 'localhost' : 'production',
+    integrations: [
+        // See docs for support of different versions of variation of react router
+        // https://docs.sentry.io/platforms/javascript/guides/react/configuration/integrations/react-router/
+        // Note: While we don't use React Router in the Map Template project, this is needed to instrument
+        // the `/` route properly. Without this, Sentry will not log anything on the main page of this app.
+        Sentry.reactRouterV6BrowserTracingIntegration({
+            useEffect: React.useEffect,
+            useLocation,
+            useNavigationType,
+            createRoutesFromChildren,
+            matchRoutes
+        }),
+        Sentry.replayIntegration()
+    ],
+
+    // Set tracesSampleRate to 1.0 to capture 100%
+    // of transactions for performance monitoring.
+    tracesSampleRate: 1.0,
+
+    // Set `tracePropagationTargets` to control for which URLs distributed tracing should be enabled
+    tracePropagationTargets: ["localhost", /^https:\/\/api\.mapsindoors\.com/],
+
+    // Capture Replay for 10% of all sessions,
+    // plus for 100% of sessions with an error
+    replaysSessionSampleRate: 0.1,
+    replaysOnErrorSampleRate: 1.0,
+});
 
 export default MapsIndoorsMap;
 

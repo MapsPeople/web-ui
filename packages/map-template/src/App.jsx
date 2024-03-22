@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/react";
 import './App.css';
 import MapsIndoorsMap from './components/MapsIndoorsMap/MapsIndoorsMap';
 
@@ -13,5 +14,4 @@ function App() {
     );
 }
 
-export default App;
-
+export default Sentry.withProfiler(App, { name: "App" });

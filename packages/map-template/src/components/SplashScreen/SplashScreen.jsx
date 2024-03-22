@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/react";
 import React from "react";
 import { useRecoilValue } from "recoil";
 import primaryColorState from "../../atoms/primaryColorState";
@@ -32,4 +33,4 @@ function SplashScreen() {
     )
 }
 
-export default SplashScreen;
+export default Sentry.withProfiler(SplashScreen, { name: "SplashScreen" });

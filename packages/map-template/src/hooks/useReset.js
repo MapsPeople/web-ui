@@ -10,6 +10,7 @@ import substepsToggledState from '../atoms/substepsToggledState';
 import travelModeState from '../atoms/travelModeState';
 import searchResultsState from '../atoms/searchResultsState';
 import accessibilityOnState from '../atoms/accessibilityOnState';
+import isLegendDialogVisibleState from '../atoms/isLegendDialogVisibleState';
 
 /**
  * Reset a number of Recoil atoms to initial values.
@@ -29,6 +30,7 @@ export function useReset() {
     const travelMode = useResetRecoilState(travelModeState);
     const searchResults = useResetRecoilState(searchResultsState);
     const accessibilityOn = useResetRecoilState(accessibilityOnState);
+    const isLegendDialogVisible  = useResetRecoilState(isLegendDialogVisibleState);
 
     return () => {
         activeStep();
@@ -42,5 +44,6 @@ export function useReset() {
         travelMode();
         searchResults();
         accessibilityOn();
+        isLegendDialogVisible();
     };
 }

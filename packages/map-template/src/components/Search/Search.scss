@@ -28,4 +28,23 @@
         left: calc(50% + 284px + 20px); /* Half viewport width + half modal width + gap */
         bottom: var(--spacing-x-large);
     }
+
+    &__info {
+        display: grid;
+        grid-auto-flow: column;
+        gap: var(--spacing-x-small);
+    }
+
+    &__legend {
+        width: var(--spacing-xxx-large);
+        height: var(--spacing-xxx-large);
+        border: 1px solid var(--color-gray-30);
+        border-radius: var(--rounding-large);
+        background-color: white;
+    }
+
+    @media (max-width: $desktop-breakpoint) {
+        padding: var(--spacing-medium) var(--spacing-x-small) var(--spacing-medium) var(--spacing-x-small);
+    }
+
 }
