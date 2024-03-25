@@ -50,6 +50,8 @@ import miTransitionLevelState from '../../atoms/miTransitionLevelState.js';
 import selectedCategoryState from '../../atoms/selectedCategoryState.js';
 import LegendDialog from '../LegendDialog/LegendDialog.jsx';
 import isLegendDialogVisibleState from '../../atoms/isLegendDialogVisibleState.js';
+import loadVenueState from '../../atoms/loadVenueState.js';
+import currentVenueNameState from '../../atoms/currentVenueNameState.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -80,15 +82,17 @@ defineCustomElements();
  * @param {boolean} [props.useKeyboard] - If running the Map Template as a kiosk, set this prop to true and it will prompt a keyboard.
  * @param {number} [props.timeout] - If you want the Map Template to reset map position and UI elements to the initial state after some time of inactivity, use this to specify the number of seconds of inactivity before resetting.
  * @param {number} [props.miTransitionLevel] - The zoom level on which to transition from Mapbox to MapsIndoors data. Default value is 17. This feature is only available for Mapbox.
+ * @param {number} [props.category] - If you want to indicate an active category on the map. The value should be the Key (Administrative ID).
+ * @param {boolean} [props.loadVenue]
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, loadVenue }) {
 
     const [, setApiKey] = useRecoilState(apiKeyState);
     const [, setGmApiKey] = useRecoilState(gmApiKeyState);
     const [, setMapboxAccessToken] = useRecoilState(mapboxAccessTokenState);
     const [isMapReady, setMapReady] = useRecoilState(isMapReadyState);
     const [venues, setVenues] = useRecoilState(venuesState);
-    const [, setVenue] = useRecoilState(venueState);
+    const [test, setVenue] = useRecoilState(venueState);
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const [categories, setCategories] = useRecoilState(categoriesState);
     const [, setLocationId] = useRecoilState(locationIdState);
@@ -105,6 +109,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setUseKeyboard] = useRecoilState(useKeyboardState);
     const [, setMiTransitionLevel] = useRecoilState(miTransitionLevelState);
     const [, setSelectedCategory] = useRecoilState(selectedCategoryState);
+    const [, setLoadVenue] = useRecoilState(loadVenueState);
+    const currentVenueName = useRecoilValue(currentVenueNameState);
+
+    const [venueInfo, setVenueInfo] = useState();
 
     const [showVenueSelector, setShowVenueSelector] = useState(true);
     const [showPositionControl, setShowPositionControl] = useState(true);
@@ -235,11 +243,44 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         }
     }, [language, mapsindoorsSDKAvailable]);
 
+
+
+    useEffect(() => {
+        if (apiKey) {
+
+            const url = `https://api.mapsindoors.com/${apiKey}/api/venues`;
+
+            fetch(url)
+                .then((response) => {
+                    console.log('response', response);
+                    return response.json();
+                })
+                .then((result) => {
+                    setVenueInfo(result);
+                })
+
+        }
+    }, [apiKey])
+
+
     /**
      * React on changes in the MapsIndoors API key by fetching the required data.
      */
     useEffect(() => {
-        if (mapsindoorsSDKAvailable) {
+        if (mapsindoorsSDKAvailable && venueInfo) {
+            console.log('venue info', venueInfo);
+
+            if (loadVenue === true) {
+                console.log('venue name', venue.name)
+                const venueId = venueInfo.find(venue => venue.name === currentVenueName).id;
+                console.log('venue id', venueId)
+                console.log('selected venue', currentVenueName)
+
+                if(venueId) {
+                    window.mapsindoors.MapsIndoors.addVenuesToSync(venueId);
+                }
+            }
+
             setApiKey(apiKey);
 
             setMapReady(false);
@@ -263,13 +304,14 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             ]).then(([venuesResult, appConfigResult]) => {
                 venuesResult = venuesResult.map(venue => {
                     venue.image = appConfigResult.venueImages[venue.name.toLowerCase()];
+                    console.log('venue', venue)
                     return venue;
                 });
                 setVenues(venuesResult);
             });
             setMapReady(false);
         }
-    }, [apiKey, mapsindoorsSDKAvailable]);
+    }, [apiKey, mapsindoorsSDKAvailable, loadVenue, currentVenueName, venueInfo]);
 
     /*
      * Set map provider access token / API key based on props and app config.
