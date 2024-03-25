@@ -92,7 +92,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setMapboxAccessToken] = useRecoilState(mapboxAccessTokenState);
     const [isMapReady, setMapReady] = useRecoilState(isMapReadyState);
     const [venues, setVenues] = useRecoilState(venuesState);
-    const [test, setVenue] = useRecoilState(venueState);
+    const [, setVenue] = useRecoilState(venueState);
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const [categories, setCategories] = useRecoilState(categoriesState);
     const [, setLocationId] = useRecoilState(locationIdState);
@@ -113,6 +113,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const currentVenueName = useRecoilValue(currentVenueNameState);
 
     const [venueInfo, setVenueInfo] = useState();
+    const [venueSynced, setVenueSynced] = useState();
 
     const [showVenueSelector, setShowVenueSelector] = useState(true);
     const [showPositionControl, setShowPositionControl] = useState(true);
@@ -244,21 +245,20 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [language, mapsindoorsSDKAvailable]);
 
 
-
+    /**
+     * React on changes in the apiKey prop.
+     * Set the venue info to the result from the API call. 
+     */
     useEffect(() => {
         if (apiKey) {
-
             const url = `https://api.mapsindoors.com/${apiKey}/api/venues`;
-
             fetch(url)
                 .then((response) => {
-                    console.log('response', response);
                     return response.json();
                 })
                 .then((result) => {
                     setVenueInfo(result);
                 })
-
         }
     }, [apiKey])
 
@@ -268,16 +268,15 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable && venueInfo) {
-            console.log('venue info', venueInfo);
-
+            // Check if the loadVenue parameter is true
             if (loadVenue === true) {
-                console.log('venue name', venue.name)
+                // Get the id of the venue that is the current venue
                 const venueId = venueInfo.find(venue => venue.name === currentVenueName).id;
-                console.log('venue id', venueId)
-                console.log('selected venue', currentVenueName)
 
-                if(venueId) {
+                if (venueId) {
+                    window.mapsindoors.MapsIndoors.removeVenuesToSync(venueId);
                     window.mapsindoors.MapsIndoors.addVenuesToSync(venueId);
+                    setVenueSynced(venueId);
                 }
             }
 
@@ -304,7 +303,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             ]).then(([venuesResult, appConfigResult]) => {
                 venuesResult = venuesResult.map(venue => {
                     venue.image = appConfigResult.venueImages[venue.name.toLowerCase()];
-                    console.log('venue', venue)
                     return venue;
                 });
                 setVenues(venuesResult);
