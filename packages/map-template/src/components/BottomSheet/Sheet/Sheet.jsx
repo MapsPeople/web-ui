@@ -4,6 +4,8 @@ import { ContainerContext } from '../ContainerContext';
 import { useSwipeable } from 'react-swipeable';
 import { snapPoints } from '../../../constants/snapPoints';
 import './Sheet.scss';
+import { useRecoilState } from 'recoil';
+import isBottomSheetLoadedState from '../../../atoms/isBottomSheetLoadedState';
 
 
 let dragStartHeight;
@@ -42,6 +44,8 @@ function Sheet({ children, isOpen, minHeight, preferredSizeSnapPoint, onSwipedTo
     const [contentHeight, setContentHeight] = useState();
 
     const [style, setStyle] = useState({});
+
+    const [, setIsBottomSheetLoaded] = useRecoilState(isBottomSheetLoadedState);
 
     /**
      * Change the height of the sheet to one of the preset sizes (min, fit, max).
@@ -85,6 +89,15 @@ function Sheet({ children, isOpen, minHeight, preferredSizeSnapPoint, onSwipedTo
             }, { once: true });
         }
     }
+
+    /**
+     * When the transition has ended, set the "setIsBottomSheetLoaded" atom to true.
+     */
+    useEffect(() => {
+        sheetRef.current.addEventListener('transitionend', () => {
+            setIsBottomSheetLoaded(true);
+        }, { once: true });
+    }, []);
 
     /**
      * React to changes in the size prop, meaning something requests
