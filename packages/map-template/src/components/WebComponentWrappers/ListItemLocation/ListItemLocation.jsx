@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useRecoilValue } from 'recoil';
 import mapsIndoorsInstanceState from '../../../atoms/mapsIndoorsInstanceState';
 import { useTranslation } from 'react-i18next';
+import './ListItemLocation.scss';
 
 /**
  * React wrapper around the custom element <mi-list-item-location>.
@@ -9,7 +10,7 @@ import { useTranslation } from 'react-i18next';
  * @param {object} props
  * @param {object} location - MapsIndoors Location
  * @param {function} locationClicked - Function that is called when Location is clicked.
- * @param {string} icon
+ * @param {string} icon - The icon to be shown in the list item location component.
  */
 function ListItemLocation({ location, locationClicked, icon, isHovered }) {
     const { t } = useTranslation();
@@ -26,10 +27,15 @@ function ListItemLocation({ location, locationClicked, icon, isHovered }) {
             }
         }
         const unhoverHandler = () => {
-             // Check if the location is non-selectable before unhovering it
+            // Check if the location is non-selectable before unhovering it
             if (!location.properties.locationSettings?.selectable !== false) {
                 mapsIndoorsInstance.unhoverLocation(location);
             }
+        }
+
+        // Add a "non-selectable" class to the non-selectable locations.
+        if (location.properties.locationSettings?.selectable === false) {
+            elementRef.current.classList.add("non-selectable");
         }
 
         const { current } = elementRef;
