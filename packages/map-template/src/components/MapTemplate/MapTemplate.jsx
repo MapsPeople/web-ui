@@ -50,7 +50,7 @@ import miTransitionLevelState from '../../atoms/miTransitionLevelState.js';
 import selectedCategoryState from '../../atoms/selectedCategoryState.js';
 import LegendDialog from '../LegendDialog/LegendDialog.jsx';
 import isLegendDialogVisibleState from '../../atoms/isLegendDialogVisibleState.js';
-import hasCategoryPropState from '../../atoms/hasCategoryPropState.js';
+import categoryState from '../../atoms/categoryState.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -106,7 +106,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setUseKeyboard] = useRecoilState(useKeyboardState);
     const [, setMiTransitionLevel] = useRecoilState(miTransitionLevelState);
     const [, setSelectedCategory] = useRecoilState(selectedCategoryState);
-    const [, setHasCategoryProp] = useRecoilState(hasCategoryPropState);
+    const [, setCategory] = useRecoilState(categoryState);
 
     const [showVenueSelector, setShowVenueSelector] = useState(true);
     const [showPositionControl, setShowPositionControl] = useState(true);
@@ -566,12 +566,12 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     /*
      * React on changes in the category prop.
      * Check if the category property matches with any of the existing categories.
-     * Indicate the existence of the category as a prop or query parameter by setting the "setHasCategoryProp" to true.
+     * Indicate the existence of the category as a prop or query parameter by setting the "setCategory" to true.
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable && category && categories.find((matched) => matched[0] === category)) {
             setSelectedCategory(category);
-            setHasCategoryProp(true);
+            setCategory(category);
         }
     }, [category, categories, mapsindoorsSDKAvailable]);
 

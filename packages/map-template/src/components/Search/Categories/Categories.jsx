@@ -13,7 +13,7 @@ import { usePreventSwipe } from '../../../hooks/usePreventSwipe';
 import { useIsDesktop } from "../../../hooks/useIsDesktop";
 import getActiveCategory from "../../../helpers/GetActiveCategory";
 import isBottomSheetLoadedState from "../../../atoms/isBottomSheetLoadedState";
-import hasCategoryPropState from "../../../atoms/hasCategoryPropState";
+import categoryState from "../../../atoms/categoryState";
 
 /**
  * Show the categories list.
@@ -48,7 +48,7 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef }) {
     const [activeCategory, setActiveCategory] = useState();
 
     const isBottomSheetLoaded = useRecoilValue(isBottomSheetLoadedState);
-    const hasCategoryProp = useRecoilValue(hasCategoryPropState);
+    const category = useRecoilValue(categoryState);
 
     /**
      * Communicate size change to parent component.
@@ -145,10 +145,10 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef }) {
      * then scroll into view and center the active category. 
      */
     useEffect(() => {
-        if (activeCategory && hasCategoryProp && (isDesktop || (!isDesktop && isBottomSheetLoaded))) {
+        if (activeCategory && category !== undefined && (isDesktop || (!isDesktop && isBottomSheetLoaded))) {
             activeCategory.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' })
         }
-    }, [activeCategory, hasCategoryProp, isBottomSheetLoaded]);
+    }, [activeCategory, category, isBottomSheetLoaded]);
 
     return (
         <div className="categories prevent-scroll" {...scrollableContentSwipePrevent}>
