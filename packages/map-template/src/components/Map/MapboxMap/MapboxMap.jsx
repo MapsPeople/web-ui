@@ -70,7 +70,6 @@ function MapboxMap({ onMapView, onPositionControl }) {
 
 
     // If the map is ready, check if the 3D features are toggled 
-
     useEffect(() => {
         if (mapView && mapView.isReady && isMapReady) {
             // Check if the 3D features are switched on
@@ -79,8 +78,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
             if (is3DToggled) {
                 mapView.hideFeatures([mapView.MapboxFeatures.MODEL2D, mapView.MapboxFeatures.WALLS2D])
                 mapView.tilt(45, 2000);
-            }
-            else {
+            } else {
                 mapView.hideFeatures([mapView.MapboxFeatures.MODEL3D, mapView.MapboxFeatures.WALLS3D, mapView.MapboxFeatures.EXTRUSION3D, mapView.MapboxFeatures.EXTRUDEDBUILDINGS])
                 mapView.tilt(0, 2000);
             }
