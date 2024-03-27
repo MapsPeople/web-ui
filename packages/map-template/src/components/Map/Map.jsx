@@ -129,6 +129,7 @@ function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule, onMap
 
     /*
      * When venue is changed on the map, run callback.
+     * Set the current venue name whenever the venue is changed on the map.
      */
     useEffect(() => {
         if (venueOnMap) {
