@@ -48,7 +48,7 @@ function MapsIndoorsMap(props) {
 
         const defaultProps = {
             apiKey: 'mapspeople3d',
-            venue: 'AUSTIN',
+            venue: 'AUSTINOFFICE',
             logo: 'https://app.mapsindoors.com/mapsindoors/gfx/mapspeople-logo/mapspeople-pin.svg',
             primaryColor: '#005655', // --brand-colors-dark-pine-100 from MIDT
             useMapProviderModule: false,
