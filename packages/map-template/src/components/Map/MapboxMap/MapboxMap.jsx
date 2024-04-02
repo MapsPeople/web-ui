@@ -73,7 +73,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
     useEffect(() => {
         if (mapView && mapView.isReady && isMapReady) {
             // Check if the 3D features are switched on
-            // Conditionally render either 2D or 3D features depending on the Recoil Value of is3DToggled
+            // Conditionally render either 2D or 3D features depending on the value of is3DToggled
             // Tilt the map to 45 degrees when the 3D features are switched on, and to 0 degrees when the 2D features are switched on.
             if (is3DToggled) {
                 mapView.hideFeatures([mapView.MapboxFeatures.MODEL2D, mapView.MapboxFeatures.WALLS2D])
