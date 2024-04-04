@@ -52,6 +52,9 @@ import LegendDialog from '../LegendDialog/LegendDialog.jsx';
 import isLegendDialogVisibleState from '../../atoms/isLegendDialogVisibleState.js';
 import loadVenueState from '../../atoms/loadVenueState.js';
 import currentVenueNameState from '../../atoms/currentVenueNameState.js';
+import venueInfoState from '../../atoms/venueInfoState.js';
+import venueSyncedState from '../../atoms/venueSyncedState.js';
+import venueIdSelector from '../../selectors/venueIdSelector.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -112,7 +115,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setLoadVenue] = useRecoilState(loadVenueState);
     const currentVenueName = useRecoilValue(currentVenueNameState);
 
-    const [venueInfo, setVenueInfo] = useState();
+    // const [venueInfo, setVenueInfo] = useRecoilState(venueInfoState);
     const [venueSynced, setVenueSynced] = useState();
 
     const [showVenueSelector, setShowVenueSelector] = useState(true);
@@ -159,6 +162,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     // The reset count is used to add a new key to the sidebar or bottomsheet, forcing it to re-render from scratch when resetting the Map Template.
     const [resetCount, setResetCount] = useState(0);
 
+    // The venue id to be synced
+    // const venueId = useRecoilValue(venueIdSelector);
+
     /**
      * Ensure that MapsIndoors Web SDK is available.
      *
@@ -172,8 +178,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             const miSdkApiTag = document.createElement('script');
             miSdkApiTag.setAttribute('type', 'text/javascript');
-            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.30.0/mapsindoors-4.30.0.js.gz');
-            miSdkApiTag.setAttribute('integrity', 'sha384-QNeuSSN5hFRZ8W3bz+zYa75qLWvbci+FuIzmRbQOmaPMyHi7R9XgQXiFjKYvW2n+');
+            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.31.0/mapsindoors-4.31.0.js.gz');
+            miSdkApiTag.setAttribute('integrity', 'sha384-cFYmasSjWGfOTX40TH8pN37P9lYVPXea6VM0E9pX1G7TB7DGapNQ11bmn1gvXZkP');
             miSdkApiTag.setAttribute('crossorigin', 'anonymous');
             document.body.appendChild(miSdkApiTag);
             miSdkApiTag.onload = () => {
@@ -245,71 +251,137 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [language, mapsindoorsSDKAvailable]);
 
 
+    // /**
+    //  * React on changes in the apiKey prop.
+    //  * Set the venue info to the result from the API call. 
+    //  */
+    // useEffect(() => {
+    //     if (apiKey) {
+    //         console.log('here', apiKey)
+    //         const url = `https://api.mapsindoors.com/${apiKey}/api/venues`;
+    //         fetch(url)
+    //             .then((response) => {
+    //                 return response.json();
+    //             })
+    //             .then((result) => {
+    //                 console.log('result', result);
+    //                 setVenueInfo(result);
+    //             })
+    //     }
+    // }, [apiKey])
+
+    /*
+    * React on changes in the logo prop.
+    */
+    useEffect(() => {
+        if (loadVenue === true) {
+            setLoadVenue(true);
+        }
+    }, [loadVenue]);
+
     /**
-     * React on changes in the apiKey prop.
-     * Set the venue info to the result from the API call. 
+     * React on changes in the MapsIndoors API key by fetching the required data.
      */
     useEffect(() => {
-        if (apiKey) {
+        if (mapsindoorsSDKAvailable && apiKey) {
+            console.log('current', currentVenueName)
+
+            let venueInformation;
+            let venueToSync;
+
+
+            console.log('here', apiKey)
             const url = `https://api.mapsindoors.com/${apiKey}/api/venues`;
             fetch(url)
                 .then((response) => {
                     return response.json();
                 })
                 .then((result) => {
-                    setVenueInfo(result);
+                    console.log('result', result);
+                    venueInformation = result;
+
+
+
+                    if (venueInformation && loadVenue === true) {
+                        console.log('venue id', loadVenue, currentVenueName);
+                        // console.log('venue info', venueInfo)
+                        // Get the id of the venue that is the current venue
+                        venueToSync = venueInformation.find(venue => venue.name === currentVenueName)?.id;
+                        
+                    }
+        
+        
+                    if (loadVenue) {
+        
+                        console.log('1')
+                        // If there are any venues synced, remove them by using the "removeVenuesToSync()" method
+                        if (venueSynced !== undefined) {
+                            console.log('remove venue', venueSynced)
+                            window.mapsindoors.MapsIndoors.removeVenuesToSync(venueSynced);
+                        }
+        
+                        // If the venueId to be synced exists, add it by using the "addVenuesToSync()" method
+                        // Set the venueSynced Recoil state based on which we should remove the venueId when changed
+                        if (venueToSync !== undefined) {
+                            console.log('add venue', venueToSync)
+                            window.mapsindoors.MapsIndoors.addVenuesToSync(venueToSync);
+                            setVenueSynced(venueToSync);
+        
+                        }
+                    }
+                    // else {
+                    //     console.log('2')
+                    //     // If there are any venues synced, remove them by using the "removeVenuesToSync()" method
+                    //     if (venueToSync !== undefined) {
+                    //         console.log('remove venue 2', venueSynced)
+                    //         window.mapsindoors.MapsIndoors.removeVenuesToSync(currentVenueName);
+                    //     }
+        
+                    //     // If the venueId to be synced exists, add it by using the "addVenuesToSync()" method
+                    //     // Set the venueSynced Recoil state based on which we should remove the venueId when changed
+                    //     if (venueId !== undefined) {
+                    //         console.log('add venue 2', venueId)
+                    //         window.mapsindoors.MapsIndoors.addVenuesToSync(currentVenueName);
+                    //         setVenueSynced(currentVenueName);
+                    //     }
+        
+                    // }
+        
+        
+                    console.log('test', apiKey);
+                    setApiKey(apiKey);
+        
+                    // setMapReady(false);
+                    
+                    window.mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKey);
+        
+                    Promise.all([
+                        // Fetch all Venues in the Solution
+                        window.mapsindoors.services.VenuesService.getVenues(),
+                        // Fetch the App Config belonging to the given API key. This is needed for checking access tokens and Venue images.
+                        window.mapsindoors.services.AppConfigService.getConfig().then(appConfigResult => {
+                            setAppConfig(appConfigResult); // We need this as early as possible
+                            return appConfigResult;
+                        }),
+                        // Fetch solution info in order to see what modules are enabled
+                        window.mapsindoors.services.SolutionsService.getSolution().then(solutionResult => {
+                            setSolution(solutionResult);
+                            return solutionResult;
+                        }),
+                        // Ensure a minimum waiting time of 3 seconds
+                        new Promise(resolve => setTimeout(resolve, 3000))
+                    ]).then(([venuesResult, appConfigResult]) => {
+                        venuesResult = venuesResult.map(venue => {
+                            venue.image = appConfigResult.venueImages[venue.name.toLowerCase()];
+                            return venue;
+                        });
+                        setVenues(venuesResult);
+                    });
+                    setMapReady(false);
                 })
+            
         }
-    }, [apiKey])
-
-
-    /**
-     * React on changes in the MapsIndoors API key by fetching the required data.
-     */
-    useEffect(() => {
-        if (mapsindoorsSDKAvailable && venueInfo) {
-            // Check if the loadVenue parameter is true
-            if (loadVenue === true) {
-                // Get the id of the venue that is the current venue
-                const venueId = venueInfo.find(venue => venue.name === currentVenueName).id;
-
-                if (venueId) {
-                    window.mapsindoors.MapsIndoors.removeVenuesToSync(venueId);
-                    window.mapsindoors.MapsIndoors.addVenuesToSync(venueId);
-                    setVenueSynced(venueId);
-                }
-            }
-
-            setApiKey(apiKey);
-
-            setMapReady(false);
-            window.mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKey);
-
-            Promise.all([
-                // Fetch all Venues in the Solution
-                window.mapsindoors.services.VenuesService.getVenues(),
-                // Fetch the App Config belonging to the given API key. This is needed for checking access tokens and Venue images.
-                window.mapsindoors.services.AppConfigService.getConfig().then(appConfigResult => {
-                    setAppConfig(appConfigResult); // We need this as early as possible
-                    return appConfigResult;
-                }),
-                // Fetch solution info in order to see what modules are enabled
-                window.mapsindoors.services.SolutionsService.getSolution().then(solutionResult => {
-                    setSolution(solutionResult);
-                    return solutionResult;
-                }),
-                // Ensure a minimum waiting time of 3 seconds
-                new Promise(resolve => setTimeout(resolve, 3000))
-            ]).then(([venuesResult, appConfigResult]) => {
-                venuesResult = venuesResult.map(venue => {
-                    venue.image = appConfigResult.venueImages[venue.name.toLowerCase()];
-                    return venue;
-                });
-                setVenues(venuesResult);
-            });
-            setMapReady(false);
-        }
-    }, [apiKey, mapsindoorsSDKAvailable, loadVenue, currentVenueName, venueInfo]);
+    }, [apiKey, mapsindoorsSDKAvailable, loadVenue, currentVenueName]);
 
     /*
      * Set map provider access token / API key based on props and app config.

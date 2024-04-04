@@ -20,6 +20,7 @@ import pitchState from '../../atoms/pitchState';
 import solutionState from '../../atoms/solutionState';
 import notificationMessageState from '../../atoms/notificationMessageState';
 import useMapBoundsDeterminer from '../../hooks/useMapBoundsDeterminer';
+import currentVenueNameState from "../../atoms/currentVenueNameState";
 
 /**
  * Private variable used for storing the tile style.
@@ -53,6 +54,7 @@ function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule, onMap
     const [, setPositionControl] = useRecoilState(positionControlState);
     const solution = useRecoilValue(solutionState);
     const [, setErrorMessage] = useRecoilState(notificationMessageState);
+    const [, setCurrentVenueName] = useRecoilState(currentVenueNameState);
     useLiveData(apiKey);
 
     const [mapPositionKnown, venueOnMap] = useMapBoundsDeterminer();
@@ -130,6 +132,8 @@ function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule, onMap
      */
     useEffect(() => {
         if (venueOnMap) {
+            // console.log('venue', venueOnMap.name)
+            setCurrentVenueName(venueOnMap.name);
             onVenueChangedOnMap(venueOnMap);
         }
     }, [venueOnMap]);
