@@ -50,6 +50,8 @@ import miTransitionLevelState from '../../atoms/miTransitionLevelState.js';
 import selectedCategoryState from '../../atoms/selectedCategoryState.js';
 import LegendDialog from '../LegendDialog/LegendDialog.jsx';
 import isLegendDialogVisibleState from '../../atoms/isLegendDialogVisibleState.js';
+import searchAllVenuesState from '../../atoms/searchAllVenues.js';
+import currentVenueNameState from '../../atoms/currentVenueNameState.js';
 import Switch from '../Switch/Switch.jsx';
 
 // Define the Custom Elements from our components package.
@@ -81,8 +83,9 @@ defineCustomElements();
  * @param {boolean} [props.useKeyboard] - If running the Map Template as a kiosk, set this prop to true and it will prompt a keyboard.
  * @param {number} [props.timeout] - If you want the Map Template to reset map position and UI elements to the initial state after some time of inactivity, use this to specify the number of seconds of inactivity before resetting.
  * @param {number} [props.miTransitionLevel] - The zoom level on which to transition from Mapbox to MapsIndoors data. Default value is 17. This feature is only available for Mapbox.
+ * @param {boolean} [props.searchAllVenues] - If you want to perform search across all venues in the solution.
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues }) {
 
     const [, setApiKey] = useRecoilState(apiKeyState);
     const [, setGmApiKey] = useRecoilState(gmApiKeyState);
@@ -106,6 +109,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setUseKeyboard] = useRecoilState(useKeyboardState);
     const [, setMiTransitionLevel] = useRecoilState(miTransitionLevelState);
     const [, setSelectedCategory] = useRecoilState(selectedCategoryState);
+    const [, setSearchAllVenues] = useRecoilState(searchAllVenuesState);
 
     const [showVenueSelector, setShowVenueSelector] = useState(true);
     const [showPositionControl, setShowPositionControl] = useState(true);
@@ -137,6 +141,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const isMobile = useMediaQuery('(max-width: 991px)');
     const resetState = useReset();
     const setCurrentVenueName = useSetCurrentVenueName();
+    const currentVenueName = useRecoilValue(currentVenueNameState);
     const [pushAppView, goBack, currentAppView, currentAppViewPayload, appStates, resetAppHistory] = useAppHistory();
 
     // Declare the reference to the disabled locations.
@@ -169,7 +174,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.31.0/mapsindoors-4.31.0.js.gz');
             miSdkApiTag.setAttribute('integrity', 'sha384-cFYmasSjWGfOTX40TH8pN37P9lYVPXea6VM0E9pX1G7TB7DGapNQ11bmn1gvXZkP');
             miSdkApiTag.setAttribute('crossorigin', 'anonymous');
-            
+
             document.body.appendChild(miSdkApiTag);
             miSdkApiTag.onload = () => {
                 resolve();
@@ -486,6 +491,35 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [useKeyboard, kioskOriginLocationId, mapsindoorsSDKAvailable]);
 
     /*
+     * React on changes in the category prop.
+     * Check if the category property matches with any of the existing categories.
+     */
+    useEffect(() => {
+        if (mapsindoorsSDKAvailable && category && categories.find((matched) => matched[0] === category)) {
+            setSelectedCategory(category);
+        }
+    }, [category, categories, mapsindoorsSDKAvailable]);
+
+    /*
+     * React on changes to the searchAllVenues prop.
+     */
+    useEffect(() => {
+        if (mapsindoorsSDKAvailable && searchAllVenues) {
+            setSearchAllVenues(searchAllVenues);
+        }
+    }, [searchAllVenues, mapsindoorsSDKAvailable]);
+
+    /*
+     * React on changes to the currentVenueName prop.
+     * Get the venue categories based on the currentVenueName.
+     */
+    useEffect(() => {
+        if (mapsindoorsSDKAvailable && currentVenueName) {
+            getVenueCategories(currentVenueName)
+        }
+    }, [currentVenueName, mapsindoorsSDKAvailable]);
+
+    /*
      * React on changes to the solution.
      * Decide whether to show the Switch component depending on the modules enabled on the solution.
      */
@@ -565,7 +599,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             for (const key of keys) {
                 // Get the categories from the App Config that have a matching key.
-                const appConfigCategory = appConfig.menuInfo.mainmenu.find(category => category.categoryKey === key);
+                const appConfigCategory = appConfig?.menuInfo.mainmenu.find(category => category.categoryKey === key);
 
                 if (uniqueCategories.has(key)) {
                     let count = uniqueCategories.get(key).count;
@@ -581,16 +615,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
         setCategories(uniqueCategories);
     }
-
-    /*
-     * React on changes in the category prop.
-     * Check if the category property matches with any of the existing categories.
-     */
-    useEffect(() => {
-        if (mapsindoorsSDKAvailable && category && categories.find((matched) => matched[0] === category)) {
-            setSelectedCategory(category);
-        }
-    }, [category, categories, mapsindoorsSDKAvailable]);
 
     return <div className={`mapsindoors-map ${locationsDisabledRef.current ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'} ${showPositionControl ? 'mapsindoors-map--show-my-position' : 'mapsindoors-map--hide-my-position'}`}>
         <Notification />
