@@ -52,7 +52,7 @@ import LegendDialog from '../LegendDialog/LegendDialog.jsx';
 import isLegendDialogVisibleState from '../../atoms/isLegendDialogVisibleState.js';
 import searchAllVenuesState from '../../atoms/searchAllVenues.js';
 import currentVenueNameState from '../../atoms/currentVenueNameState.js';
-import Switch from '../Switch/Switch.jsx';
+import VisibilitySwitch from '../VisibilitySwitch/VisibilitySwitch.jsx';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -156,7 +156,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     // The reset count is used to add a new key to the sidebar or bottomsheet, forcing it to re-render from scratch when resetting the Map Template.
     const [resetCount, setResetCount] = useState(0);
 
-    const [showSwitch, setShowSwitch] = useState(false);
+    const [showVisibilitySwitch, setShowVisibilitySwitch] = useState(false);
 
     /**
      * Ensure that MapsIndoors Web SDK is available.
@@ -521,7 +521,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     /*
      * React on changes to the solution.
-     * Decide whether to show the Switch component depending on the modules enabled on the solution.
+     * Decide whether to show the VisibilitySwitch component depending on the modules enabled on the solution.
      */
     useEffect(() => {
         if (solution) {
@@ -531,7 +531,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             const is2DWallsModuleEnabled = solution.modules.map(module => module.toLowerCase()).includes('floorplan');
 
             if (isMapboxModuleEnabled && is3DWallsModuleEnabled && is2DWallsModuleEnabled) {
-                setShowSwitch(true);
+                setShowVisibilitySwitch(true);
             }
         }
     }, [solution]);
@@ -624,7 +624,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             onClose={() => goBack()}
             active={currentAppView === appStates.VENUE_SELECTOR}
         />}
-        {showSwitch && <Switch />}
+        {showVisibilitySwitch && <VisibilitySwitch />}
         {showQRCodeDialog && <QRCodeDialog />}
         {showLegendDialog && <LegendDialog />}
         {isMapPositionKnown &&
