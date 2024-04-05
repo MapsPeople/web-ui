@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import mapsIndoorsInstanceState from '../../../atoms/mapsIndoorsInstanceState';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -13,6 +13,8 @@ import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import miTransitionLevelState from '../../../atoms/miTransitionLevelState';
 import is3DToggledState from '../../../atoms/is3DToggledState';
 import isMapReadyState from '../../../atoms/isMapReadyState';
+import VisibilitySwitch from '../../VisibilitySwitch/VisibilitySwitch';
+import solutionState from '../../../atoms/solutionState';
 
 /**
  * Takes care of instantiating a MapsIndoors Mapbox MapView.
@@ -36,6 +38,9 @@ function MapboxMap({ onMapView, onPositionControl }) {
     const miTransitionLevel = useRecoilValue(miTransitionLevelState);
     const is3DToggled = useRecoilValue(is3DToggledState);
     const isMapReady = useRecoilValue(isMapReadyState);
+    const solution = useRecoilValue(solutionState);
+    const [showVisibilitySwitch, setShowVisibilitySwitch] = useState(false);
+
 
     useEffect(() => {
         // Initialize MapboxV3View MapView
@@ -68,7 +73,6 @@ function MapboxMap({ onMapView, onPositionControl }) {
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
     // We ignore eslint warnings about missing dependencies because onMapView should never change runtime and changing Mapbox Access Token runtime will give other problems.
 
-
     // If the map is ready, check if the 3D features are toggled 
     useEffect(() => {
         if (mapView && mapView.isReady && isMapReady) {
@@ -84,6 +88,23 @@ function MapboxMap({ onMapView, onPositionControl }) {
             }
         }
     }, [mapView, is3DToggled, isMapReady, mapView?.isReady]);
+
+    /*
+     * React on changes to the solution.
+     * Decide whether to show the VisibilitySwitch component depending on the modules enabled on the solution.
+     */
+    useEffect(() => {
+        if (solution) {
+            const isMapboxModuleEnabled = solution.modules.map(module => module.toLowerCase()).includes('mapbox');
+            const is3DWallsModuleEnabled = solution.modules.map(module => module.toLowerCase()).includes('3dwalls');
+            // The module floorplan refers to 2D Walls 
+            const is2DWallsModuleEnabled = solution.modules.map(module => module.toLowerCase()).includes('floorplan');
+
+            if (isMapboxModuleEnabled && is3DWallsModuleEnabled && is2DWallsModuleEnabled) {
+                setShowVisibilitySwitch(true);
+            }
+        }
+    }, [solution]);
 
 
     // Add Floor Selector to the Map when ready.
@@ -122,7 +143,10 @@ function MapboxMap({ onMapView, onPositionControl }) {
         }
     }, [mapsIndoorsInstance, mapView, hasFloorSelector, hasPositionControl, hasZoomControl]);
 
-    return <div className="map-container" id="map"></div>
+    return <>
+        <div className="map-container" id="map"></div>
+        {showVisibilitySwitch && <VisibilitySwitch />}
+    </>
 }
 
 
