@@ -143,9 +143,9 @@ Sentry.init({
     // Set `tracePropagationTargets` to control for which URLs distributed tracing should be enabled
     tracePropagationTargets: ["localhost", /^https:\/\/api\.mapsindoors\.com/],
 
-    // Capture Replay for 10% of all sessions,
-    // plus for 100% of sessions with an error
-    replaysSessionSampleRate: 0.1,
+    // Disable capture Replay for sessions.
+    // Set to 100% of sessions with an error
+    replaysSessionSampleRate: 0,
     replaysOnErrorSampleRate: 1.0,
 });
 
