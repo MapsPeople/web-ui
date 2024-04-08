@@ -276,13 +276,35 @@ jobs:
         if: steps.changed-files-map-template.outputs.any_changed == 'true'
         run: npm -w @mapsindoors/map-template publish --access public
 
+  # This will create and name a Sentry release with the same version number as is being released to npm
+  create-sentry-release:
+    runs-on: ubuntu-latest
+    # This ensures the job only runs for Pull Requests that are merged.
+    if: github.event.pull_request.merged == true
+    needs: ["map-template-release-npm"]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Create Sentry release
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          # SENTRY_URL: https://sentry.io/
+        with:
+          environment: production
+          # This will use the latest commit tag as the release name
+          version: ${{ github.ref }}
+
   # Using jsDelivr as the CDN, it will cache even @latest for up to 7 days. Specific versions are cached for up to a year, so we need to purge the CDN manually.
   purge-jsdelivr-cache:
     name: Purge jsDelivr cache
     runs-on: ubuntu-latest
     # This ensures the job only runs for Pull Requests that are merged.
     if: github.event.pull_request.merged == true
-    needs: ["map-template-release-npm"]
+    needs: ["create-sentry-release"]
     steps:
       - name: Purge @latest version
         run: |
