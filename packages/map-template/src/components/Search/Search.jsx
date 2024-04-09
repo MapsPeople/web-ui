@@ -29,6 +29,7 @@ import { useIsDesktop } from '../../hooks/useIsDesktop';
 import { ReactComponent as Legend } from '../../assets/legend.svg';
 import isLegendDialogVisibleState from '../../atoms/isLegendDialogVisibleState';
 import legendSortedFieldsSelector from '../../selectors/legendSortedFieldsSelector';
+import searchAllVenuesState from '../../atoms/searchAllVenues';
 
 /**
  * Show the search results.
@@ -75,7 +76,7 @@ function Search({ onSetSize, isOpen }) {
 
     const [, setIsLocationClicked] = useRecoilState(isLocationClickedState);
 
-    const [currentVenueId, setCurrentVenueId] = useRecoilState(currentVenueNameState);
+    const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
 
     const currentLanguage = useRecoilValue(languageState);
 
@@ -95,6 +96,8 @@ function Search({ onSetSize, isOpen }) {
 
     const legendSections = useRecoilValue(legendSortedFieldsSelector);
 
+    const searchAllVenues = useRecoilValue(searchAllVenuesState);
+
     /**
      * 
      * Get the locations and filter through them based on categories selected.
@@ -104,7 +107,7 @@ function Search({ onSetSize, isOpen }) {
     function getFilteredLocations(category) {
         window.mapsindoors.services.LocationsService.getLocations({
             categories: category,
-            venue: kioskLocation && isKioskContext ? kioskLocation.properties.venueId : undefined,
+            venue: searchAllVenues ? undefined : currentVenueName,
         }).then(onResults);
     }
 
@@ -186,8 +189,8 @@ function Search({ onSetSize, isOpen }) {
         setCurrentLocation(location);
 
         // Set the current venue to be the selected location venue.
-        if (location.properties.venueId !== currentVenueId) {
-            setCurrentVenueId(location.properties.venueId);
+        if (location.properties.venueId !== currentVenueName) {
+            setCurrentVenueName(location.properties.venueId);
             setIsLocationClicked(true);
         }
 
@@ -269,7 +272,7 @@ function Search({ onSetSize, isOpen }) {
             setSearchResults([]);
             setSelectedCategory(null);
         }
-    }, [currentVenueId]);
+    }, [currentVenueName]);
 
     /*
      * React on changes in the app language. Any existing category search needs to update with translated Locations.

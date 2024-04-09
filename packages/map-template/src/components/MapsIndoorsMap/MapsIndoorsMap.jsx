@@ -31,6 +31,7 @@ import MapTemplate from '../MapTemplate/MapTemplate.jsx';
  * @param {boolean} [props.useKeyboard] - If running the Map Template as a kiosk, set this prop to true and it will prompt a keyboard. 
  * @param {number} [props.miTransitionLevel] - The zoom level on which to transition from Mapbox to MapsIndoors data. Default value is 17. This feature is only available for Mapbox.
  * @param {string} [props.category] - If you want to indicate an active category on the map. The value should be the Key (Administrative ID).
+ * @param {boolean} [props.searchAllVenues] - If you want to perform search across all venues in the solution.
  */
 function MapsIndoorsMap(props) {
 
@@ -47,11 +48,12 @@ function MapsIndoorsMap(props) {
 
         const defaultProps = {
             apiKey: 'mapspeople3d',
-            venue: 'AUSTIN',
+            venue: 'AUSTINOFFICE',
             logo: 'https://app.mapsindoors.com/mapsindoors/gfx/mapspeople-logo/mapspeople-pin.svg',
             primaryColor: '#005655', // --brand-colors-dark-pine-100 from MIDT
             useMapProviderModule: false,
-            useKeyboard: false
+            useKeyboard: false, 
+            searchAllVenues: false,
         };
 
         const apiKeyQueryParameter = queryStringParams.get('apiKey');
@@ -77,6 +79,7 @@ function MapsIndoorsMap(props) {
         const useKeyboardQueryParameter = getBooleanQueryParameter(queryStringParams.get('useKeyboard'));
         const miTransitionLevelQueryParameter = queryStringParams.get('miTransitionLevel');
 		const categoryQueryParameter = queryStringParams.get('category');
+		const searchAllVenuesParameter = getBooleanQueryParameter(queryStringParams.get('searchAllVenues'));
 
         setMapTemplateProps({
             apiKey: props.supportsUrlParameters && apiKeyQueryParameter ? apiKeyQueryParameter : (props.apiKey || defaultProps.apiKey),
@@ -103,6 +106,7 @@ function MapsIndoorsMap(props) {
             useKeyboard: props.supportsUrlParameters && useKeyboardQueryParameter ? useKeyboardQueryParameter : (props.useKeyboard || defaultProps.useKeyboard),
             miTransitionLevel: props.supportsUrlParameters && miTransitionLevelQueryParameter ? miTransitionLevelQueryParameter : props.miTransitionLevel,
 			category: props.supportsUrlParameters && categoryQueryParameter ? categoryQueryParameter : props.category,
+            searchAllVenues: props.supportsUrlParameters && searchAllVenuesParameter ? searchAllVenuesParameter : (props.searchAllVenues || defaultProps.searchAllVenues),
         });
     }, [props]);
 
@@ -139,9 +143,9 @@ Sentry.init({
     // Set `tracePropagationTargets` to control for which URLs distributed tracing should be enabled
     tracePropagationTargets: ["localhost", /^https:\/\/api\.mapsindoors\.com/],
 
-    // Capture Replay for 10% of all sessions,
-    // plus for 100% of sessions with an error
-    replaysSessionSampleRate: 0.1,
+    // Disable capture Replay for sessions.
+    // Set to 100% of sessions with an error
+    replaysSessionSampleRate: 0,
     replaysOnErrorSampleRate: 1.0,
 });
 

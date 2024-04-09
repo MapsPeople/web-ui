@@ -1,7 +1,7 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import reactToWebComponent from 'react-to-webcomponent';
-import PropTypes from 'prop-types';
 import MapsIndoorsMap from '../src/components/MapsIndoorsMap/MapsIndoorsMap';
 
 /*
@@ -32,8 +32,9 @@ MapsIndoorsMap.propTypes = {
     miTransitionLevel: PropTypes.number,
     category: PropTypes.string,
     language: PropTypes.string,
+    searchAllVenues: PropTypes.bool,
 };
 
 const WebMapsIndoorsMap = reactToWebComponent(MapsIndoorsMap, React, ReactDOM);
-
+window.customElements.define('mapsindoors-map', WebMapsIndoorsMap);
 export default WebMapsIndoorsMap;
