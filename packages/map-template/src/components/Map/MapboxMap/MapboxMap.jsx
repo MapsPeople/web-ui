@@ -33,14 +33,13 @@ function MapboxMap({ onMapView, onPositionControl }) {
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const primaryColor = useRecoilValue(primaryColorState);
     const bearing = useRecoilValue(bearingState);
-    const pitch = useRecoilValue(pitchState);
+    const [pitch, setPitch] = useRecoilState(pitchState);
     const isDesktop = useIsDesktop();
     const miTransitionLevel = useRecoilValue(miTransitionLevelState);
     const is3DToggled = useRecoilValue(is3DToggledState);
     const isMapReady = useRecoilValue(isMapReadyState);
     const solution = useRecoilValue(solutionState);
     const [showVisibilitySwitch, setShowVisibilitySwitch] = useState(false);
-
 
     useEffect(() => {
         // Initialize MapboxV3View MapView
@@ -81,13 +80,23 @@ function MapboxMap({ onMapView, onPositionControl }) {
             // Tilt the map to 45 degrees when the 3D features are switched on, and to 0 degrees when the 2D features are switched on.
             if (is3DToggled) {
                 mapView.hideFeatures([mapView.MapboxFeatures.MODEL2D, mapView.MapboxFeatures.WALLS2D])
-                mapView.tilt(45, 2000);
+
+                // If pitch is undefined, set the recoil value to 45 degrees and call the "tilt" method
+                if (pitch === undefined) {
+                    mapView.tilt(45, 2000);
+                    setPitch(45);
+                } else
+                // Else set the recoil value based on the pitch property and call the "tilt" method
+                {
+                    mapView.tilt(pitch, 2000);
+                    setPitch(pitch);
+                }
             } else {
                 mapView.hideFeatures([mapView.MapboxFeatures.MODEL3D, mapView.MapboxFeatures.WALLS3D, mapView.MapboxFeatures.EXTRUSION3D, mapView.MapboxFeatures.EXTRUDEDBUILDINGS])
                 mapView.tilt(0, 2000);
             }
         }
-    }, [mapView, is3DToggled, isMapReady, mapView?.isReady]);
+    }, [mapView, is3DToggled, isMapReady, mapView?.isReady, pitch]);
 
     /*
      * React on changes to the solution.

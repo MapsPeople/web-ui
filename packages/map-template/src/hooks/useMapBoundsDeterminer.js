@@ -68,7 +68,7 @@ const useMapBoundsDeterminer = () => {
     /*
      * When relevant state changes, run code to go to a location in the world.
      */
-    useEffect(() =>  {
+    useEffect(() => {
         determineMapBounds();
     }, [mapsIndoorsInstance, venue, venues, locationId, kioskOriginLocationId, pitch, bearing, startZoomLevel, categories]);
 
@@ -244,14 +244,20 @@ function mapboxGotoBBox(bbox, mapsIndoorsInstance, paddingBottom, paddingLeft, z
     const mapboxMap = mapsIndoorsInstance.getMap();
 
     // We use the Mapbox fitBounds instead of MapsIndoors MapView fitBounds since we
-    // need to be able to use pitch and bearing in one go,
-    // and we want to turn of panning animation.
-    mapboxMap.fitBounds(bbox, {
-        pitch: pitch || 0,
+    // need to be able to use pitch and bearing in one go, and we want to turn of panning animation.
+    // Extract the object containing the fitBounds options
+    const fitBoundsOptions = {
         bearing: bearing || 0,
         animate: false,
         padding: { top: 0, right: 0, bottom: paddingBottom, left: paddingLeft }
-    });
+    };
+
+    // Add the pitch value to the object only if it's not undefined
+    if (pitch !== undefined) {
+        fitBoundsOptions.pitch = pitch;
+    }
+
+    mapboxMap.fitBounds(bbox, fitBoundsOptions);
 
     if (zoomLevel) {
         mapsIndoorsInstance.setZoom(zoomLevel);
