@@ -18,18 +18,18 @@ function VisibilitySwitch() {
 
     return (
         <div className="switch">
-            <div className="switch__button"
+            <button className="switch__button"
                 onClick={() => setIs3DToggled(!is3DToggled)}
                 style={{ backgroundColor: !is3DToggled ? primaryColor : 'white' }}
             >
                 {!is3DToggled ? <Light2D /> : <Dark2D />}
-            </div>
-            <div className="switch__button"
+            </button>
+            <button className="switch__button"
                 onClick={() => setIs3DToggled(!is3DToggled)}
                 style={{ backgroundColor: is3DToggled ? primaryColor : 'white' }}
             >
                 {is3DToggled ? <Light3D /> : <Dark3D />}
-            </div>
+            </button>
         </div>
     )
 }

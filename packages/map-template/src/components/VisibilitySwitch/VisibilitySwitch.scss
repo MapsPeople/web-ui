@@ -20,6 +20,7 @@
         display: grid;
         align-items: center;
         justify-content: center;
+        border: none;
     }
 
     @media (max-width: $desktop-breakpoint) {
