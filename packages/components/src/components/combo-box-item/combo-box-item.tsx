@@ -8,6 +8,8 @@ import { Component, Element, Prop  } from "@stencil/core";
 export class ComboItem {
     @Element() el: HTMLDivElement;
     @Prop() selected: boolean = false;
+    @Prop() disabled: boolean = false;
+    @Prop() excludeFromAll: boolean = false;
     @Prop() value: string;
     @Prop() text: string;
 }
