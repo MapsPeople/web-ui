@@ -137,6 +137,7 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef }) {
     useEffect(() => {
         if (selectedCategory) {
             getActiveCategory().then(activeCategory => setActiveCategory(activeCategory));
+            setSize(snapPoints.MAX);
         }
     }, [selectedCategory]);
 
@@ -146,7 +147,7 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef }) {
      */
     useEffect(() => {
         if (activeCategory && category !== undefined && (isDesktop || (!isDesktop && isBottomSheetLoaded))) {
-            activeCategory.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' })
+            activeCategory.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
         }
     }, [activeCategory, category, isBottomSheetLoaded]);
 
