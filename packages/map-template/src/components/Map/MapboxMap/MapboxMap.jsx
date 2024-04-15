@@ -105,7 +105,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
     useEffect(() => {
         if (solution) {
             // If all of the modules "mapbox", "3dwalls" and "floorplan" (2D walls) are enabled on the solution, show the VisibilitySwitch component
-            if (['mapbox', '3dwalls', 'floorplan'].every(requiredMoule => solution.modules.map(module => module.toLowerCase()).includes(requiredMoule))) {
+            if (['mapbox', '3dwalls', 'floorplan'].every(requiredModule => solution.modules.map(module => module.toLowerCase()).includes(requiredModule))) {
                 setShowVisibilitySwitch(true);
             }
         }
