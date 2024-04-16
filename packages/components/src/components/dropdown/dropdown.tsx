@@ -171,13 +171,13 @@ export class Dropdown {
     }
 
     /**
-    * Outside the dropdown listener. It will close the dropdown when a click is outside a dropdown and dropdown list.
-    *
-    * @param ev
-    */
+     * Outside the dropdown listener. It will close the dropdown when a click is outside a dropdown and dropdown list.
+     *
+     * @param {Event} ev
+     */
     @Listen('click', { target: 'window' })
-    checkForClickOutside(ev) {
-        if (!this.hostElement.contains(ev.target)) {
+    checkForClickOutside(ev: Event): void {
+        if (!this.hostElement.contains(ev.target as HTMLElement)) {
             this.open = false;
         }
     }
