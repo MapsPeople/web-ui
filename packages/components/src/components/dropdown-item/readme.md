@@ -6,7 +6,7 @@ Working example:
 
 <mi-dropdown style="margin-bottom: 16px;" items-order="asc">
     <mi-dropdown-item selected value="Lorem ipsum" text="Lorem ipsum"></mi-dropdown-item>
-    <mi-dropdown-item excludeFromAll value="Dolor sit" text="Dolor sit"></mi-dropdown-item>
+    <mi-dropdown-item excludefromall value="Dolor sit" text="Dolor sit"></mi-dropdown-item>
     <mi-dropdown-item disabled value="Amet Consectetur" text="Amet Consectetur Amet Consectetur Amet Consectetur Amet"></mi-dropdown-item>
     <mi-dropdown-item value="Adipisicing elit" text="Adipisicing elit"></mi-dropdown-item>
     <mi-dropdown-item value="Labore vel" text="Labore vel"></mi-dropdown-item>
@@ -26,7 +26,7 @@ Example usage:
 <!-- HTML -->
 <mi-dropdown style="margin-bottom: 16px;" items-order="asc">
     <mi-dropdown-item selected value="Lorem ipsum" text="Lorem ipsum"></mi-dropdown-item>
-    <mi-dropdown-item excludeFromAll value="Dolor sit" text="Dolor sit"></mi-dropdown-item>
+    <mi-dropdown-item excludefromall value="Dolor sit" text="Dolor sit"></mi-dropdown-item>
     <mi-dropdown-item disabled value="Amet Consectetur" text="Amet Consectetur Amet Consectetur Amet Consectetur Amet"></mi-dropdown-item>
     <mi-dropdown-item value="Adipisicing elit" text="Adipisicing elit"></mi-dropdown-item>
     <mi-dropdown-item value="Labore vel" text="Labore vel"></mi-dropdown-item>
@@ -50,9 +50,9 @@ Set the `title` attribute to add extra information about an item.
 
 A `disabled` attribute is available on the `<mi-dropdown-item>` element, which can be used to mark the element disabled.
 
-## `excludeFromAll` attribute
+## `excludefromall` attribute
 
-An `excludeFromAll` attribute is available on the `<mi-dropdown-item>` element, which can be used to exclude this element when the wrapping `<mi-dropdown>` element's `selectAll` function is used.
+An `excludefromall` attribute is available on the `<mi-dropdown-item>` element, which can be used to exclude this element when the wrapping `<mi-dropdown>` element's `selectAll` function is used.
 
 ## `selected` attribute
 
@@ -75,7 +75,7 @@ A `value` attribute is available on the `<mi-dropdown-item>` element, which can 
 | Property         | Attribute          | Description | Type      | Default     |
 | ---------------- | ------------------ | ----------- | --------- | ----------- |
 | `disabled`       | `disabled`         |             | `boolean` | `false`     |
-| `excludeFromAll` | `exclude-from-all` |             | `boolean` | `false`     |
+| `excludefromall` | `exclude-from-all` |             | `boolean` | `false`     |
 | `selected`       | `selected`         |             | `boolean` | `false`     |
 | `text`           | `text`             |             | `string`  | `undefined` |
 | `value`          | `value`            |             | `string`  | `undefined` |

@@ -18,7 +18,7 @@ import { DirectionsTranslations } from "./types/directions-translations.interfac
 export namespace Components {
     interface ComboBoxItem {
         "disabled": boolean;
-        "excludeFromAll": boolean;
+        "excludefromall": boolean;
         "selected": boolean;
         "text": string;
         "value": string;
@@ -238,7 +238,7 @@ export namespace Components {
     }
     interface MiDropdownItem {
         "disabled": boolean;
-        "excludeFromAll": boolean;
+        "excludefromall": boolean;
         "selected": boolean;
         "text": string;
         "value": string;
@@ -1379,7 +1379,7 @@ declare global {
 declare namespace LocalJSX {
     interface ComboBoxItem {
         "disabled"?: boolean;
-        "excludeFromAll"?: boolean;
+        "excludefromall"?: boolean;
         "selected"?: boolean;
         "text"?: string;
         "value"?: string;
@@ -1620,7 +1620,7 @@ declare namespace LocalJSX {
     }
     interface MiDropdownItem {
         "disabled"?: boolean;
-        "excludeFromAll"?: boolean;
+        "excludefromall"?: boolean;
         "selected"?: boolean;
         "text"?: string;
         "value"?: string;

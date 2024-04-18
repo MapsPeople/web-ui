@@ -66,6 +66,7 @@ export class Dropdown {
 
         this.items.forEach((item, itemIndex) => {
             item.dataset.index = itemIndex.toString();
+            item.dataset.excludefromall = `${item.excludefromall}`;
         });
 
         this.selectFirstMiDropdownItem();
@@ -382,7 +383,7 @@ export class Dropdown {
         const items = Array.from(this.currentItems) as Array<HTMLMiDropdownItemElement>;
 
         for (const item of items) {
-            item.selected = !item.excludeFromAll;
+            item.selected = `${item.dataset.excludefromall}` === 'true' ? false : true;
         }
 
         this.onChangedHandler();
@@ -619,6 +620,7 @@ export class Dropdown {
                         value={index}
                         checked={item.selected}
                         disabled={item.disabled}
+                        data-excludefromall={item.excludefromall}
                         onChange={() => this.onSelect(item)}
                     />
                     {itemText}
