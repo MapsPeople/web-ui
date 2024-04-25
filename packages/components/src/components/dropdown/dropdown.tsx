@@ -383,7 +383,7 @@ export class Dropdown {
         const items = Array.from(this.currentItems) as Array<HTMLMiDropdownItemElement>;
 
         for (const item of items) {
-            item.selected = `${item.dataset.excludefromall}` === 'true' ? false : true;
+            item.selected = (`${item.dataset.excludefromall}` === 'true' || item.disabled)? false : true;
         }
 
         this.onChangedHandler();
