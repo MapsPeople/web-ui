@@ -72,13 +72,13 @@ A `value` attribute is available on the `<mi-dropdown-item>` element, which can 
 
 ## Properties
 
-| Property         | Attribute          | Description | Type      | Default     |
-| ---------------- | ------------------ | ----------- | --------- | ----------- |
-| `disabled`       | `disabled`         |             | `boolean` | `false`     |
-| `excludefromall` | `exclude-from-all` |             | `boolean` | `false`     |
-| `selected`       | `selected`         |             | `boolean` | `false`     |
-| `text`           | `text`             |             | `string`  | `undefined` |
-| `value`          | `value`            |             | `string`  | `undefined` |
+| Property         | Attribute        | Description | Type      | Default     |
+| ---------------- | ---------------- | ----------- | --------- | ----------- |
+| `disabled`       | `disabled`       |             | `boolean` | `false`     |
+| `excludefromall` | `excludefromall` |             | `boolean` | `false`     |
+| `selected`       | `selected`       |             | `boolean` | `false`     |
+| `text`           | `text`           |             | `string`  | `undefined` |
+| `value`          | `value`          |             | `string`  | `undefined` |
 
 
 ----------------------------------------------

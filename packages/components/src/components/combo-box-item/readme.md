@@ -12,13 +12,13 @@ Set the `title` attribute to add extra information about an item.
 
 ## Properties
 
-| Property         | Attribute          | Description | Type      | Default     |
-| ---------------- | ------------------ | ----------- | --------- | ----------- |
-| `disabled`       | `disabled`         |             | `boolean` | `false`     |
-| `excludefromall` | `exclude-from-all` |             | `boolean` | `false`     |
-| `selected`       | `selected`         |             | `boolean` | `false`     |
-| `text`           | `text`             |             | `string`  | `undefined` |
-| `value`          | `value`            |             | `string`  | `undefined` |
+| Property         | Attribute        | Description | Type      | Default     |
+| ---------------- | ---------------- | ----------- | --------- | ----------- |
+| `disabled`       | `disabled`       |             | `boolean` | `false`     |
+| `excludefromall` | `excludefromall` |             | `boolean` | `false`     |
+| `selected`       | `selected`       |             | `boolean` | `false`     |
+| `text`           | `text`           |             | `string`  | `undefined` |
+| `value`          | `value`          |             | `string`  | `undefined` |
 
 
 ----------------------------------------------
