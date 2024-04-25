@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.44.2] - 2024-04-25
+
+### Fixed
+
+- Fixed bottom sheet jumping outside the viewport when selecting a category. 
+
+## [1.44.1] - 2024-04-23
+
+### Fixed
+
+- Add missing `useKeyboard` prop from the `webcomponent.js` file
+
+## [1.44.0] - 2024-04-16
+
+### Added
+
+- Update SDK and Mapbox version.
+
 ## [1.43.1] - 2024-04-08
 
 ### Fixed

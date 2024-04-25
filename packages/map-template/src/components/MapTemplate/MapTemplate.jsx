@@ -52,6 +52,7 @@ import LegendDialog from '../LegendDialog/LegendDialog.jsx';
 import isLegendDialogVisibleState from '../../atoms/isLegendDialogVisibleState.js';
 import searchAllVenuesState from '../../atoms/searchAllVenues.js';
 import currentVenueNameState from '../../atoms/currentVenueNameState.js';
+import categoryState from '../../atoms/categoryState.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -109,6 +110,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setMiTransitionLevel] = useRecoilState(miTransitionLevelState);
     const [, setSelectedCategory] = useRecoilState(selectedCategoryState);
     const [, setSearchAllVenues] = useRecoilState(searchAllVenuesState);
+ 	const [, setCategory] = useRecoilState(categoryState);
 
     const [showVenueSelector, setShowVenueSelector] = useState(true);
     const [showPositionControl, setShowPositionControl] = useState(true);
@@ -168,8 +170,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             const miSdkApiTag = document.createElement('script');
             miSdkApiTag.setAttribute('type', 'text/javascript');
-            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.30.0/mapsindoors-4.30.0.js.gz');
-            miSdkApiTag.setAttribute('integrity', 'sha384-QNeuSSN5hFRZ8W3bz+zYa75qLWvbci+FuIzmRbQOmaPMyHi7R9XgQXiFjKYvW2n+');
+            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.32.0/mapsindoors-4.32.0.js.gz');
+            miSdkApiTag.setAttribute('integrity', 'sha384-pobsiCLAduarZklerr0Y1Yj0gkSVov1spL2XwAMLQ1lm3t6USIXIBAAMeJqiWXSc');
             miSdkApiTag.setAttribute('crossorigin', 'anonymous');
             document.body.appendChild(miSdkApiTag);
             miSdkApiTag.onload = () => {
@@ -594,6 +596,18 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
         setCategories(uniqueCategories);
     }
+
+    /*
+     * React on changes in the category prop.
+     * Check if the category property matches with any of the existing categories.
+     * Indicate the existence of the category as a prop or query parameter by setting the "setCategory" to true.
+     */
+    useEffect(() => {
+        if (mapsindoorsSDKAvailable && category && categories.find((matched) => matched[0] === category)) {
+            setSelectedCategory(category);
+            setCategory(category);
+        }
+    }, [category, categories, mapsindoorsSDKAvailable]);
 
     return <div className={`mapsindoors-map ${locationsDisabledRef.current ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'} ${showPositionControl ? 'mapsindoors-map--show-my-position' : 'mapsindoors-map--hide-my-position'}`}>
         <Notification />
