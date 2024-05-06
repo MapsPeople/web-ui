@@ -1,7 +1,7 @@
 {
   "name": "@mapsindoors/map-template",
   "description": "Get a MapsIndoors map up and running in less than 10 mins.",
-  "version": "1.43.0",
+  "version": "1.44.2",
   "private": false,
   "files": [
     "dist/*.js",
@@ -17,12 +17,14 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "@turf/turf": "^6.5.0",
     "@vitejs/plugin-react": "^4.0.0",
     "eslint": "^8.39.0",
     "eslint-config-react-app": "^7.0.1",
     "i18next": "^23.7.7",
-    "mapbox-gl": "3.1.0",
+    "mapbox-gl": "^3.3.0",
     "prop-types": "^15.8.1",
+    "qrcode": "^1.5.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-i18next": "^13.5.0",
@@ -38,9 +40,7 @@
     "vite-plugin-eslint": "^1.8.1",
     "vite-plugin-favicon2": "^1.1.5",
     "vite-plugin-svgr": "^3.2.0",
-    "web-vitals": "^2.1.4",
-    "@turf/turf": "^6.5.0",
-    "qrcode": "^1.5.3"
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "vite",
