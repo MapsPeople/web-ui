@@ -2,7 +2,7 @@ import { atom } from 'recoil';
 
 const pitchState = atom({
     key: 'pitch',
-    default: 0
+    default: null
 });
 
 export default pitchState;
