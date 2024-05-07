@@ -25,6 +25,9 @@ import { useInactive } from './useInactive';
 import useSetCurrentVenueName from './useSetCurrentVenueName';
 import { useIsDesktop } from './useIsDesktop';
 
+// Selectors
+import currentPitchSelector from '../selectors/currentPitch';
+
 const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
 
 /**
@@ -52,6 +55,7 @@ const useMapBoundsDeterminer = () => {
     const currentVenueName = useRecoilValue(currentVenueNameState);
     const venue = useRecoilValue(venueState);
     const venues = useRecoilValue(venuesState);
+    const currentPitch = useRecoilValue(currentPitchSelector);
 
     const setCurrentVenueName = useSetCurrentVenueName();
     const [kioskLocationDisplayRuleWasChanged, setKioskLocationDisplayRuleWasChanged] = useState(false);
@@ -101,7 +105,7 @@ const useMapBoundsDeterminer = () => {
 
                         getDesktopPaddingBottom().then(desktopPaddingBottom => {
                             setVenueOnMap(venueToShow);
-                            goToGeometry(mapType, kioskLocation.geometry, mapsIndoorsInstance, desktopPaddingBottom, 0, startZoomLevel, pitch, bearing);
+                            goToGeometry(mapType, kioskLocation.geometry, mapsIndoorsInstance, desktopPaddingBottom, 0, startZoomLevel, currentPitch, bearing);
                         });
                     }
                 });
@@ -117,12 +121,12 @@ const useMapBoundsDeterminer = () => {
                         if (isDesktop) {
                             getDesktopPaddingLeft().then(desktopPaddingLeft => {
                                 setVenueOnMap(venueToShow);
-                                goToGeometry(mapType, location.geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, startZoomLevel, pitch, bearing);
+                                goToGeometry(mapType, location.geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, startZoomLevel, currentPitch, bearing);
                             });
                         } else {
                             getMobilePaddingBottom().then(mobilePaddingBottom => {
                                 setVenueOnMap(venueToShow);
-                                goToGeometry(mapType, location.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, startZoomLevel, pitch, bearing);
+                                goToGeometry(mapType, location.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, startZoomLevel, currentPitch, bearing);
                             });
                         }
                     }
@@ -130,7 +134,7 @@ const useMapBoundsDeterminer = () => {
             } else if (currentVenueName) {
                 // When showing a venue, the map is fitted to the bounds of the Venue with no padding.
                 setVenueOnMap(venueToShow);
-                goToGeometry(mapType, venueToShow.geometry, mapsIndoorsInstance, 0, 0, startZoomLevel, pitch, bearing);
+                goToGeometry(mapType, venueToShow.geometry, mapsIndoorsInstance, 0, 0, startZoomLevel, currentPitch, bearing);
             }
         }
     }
