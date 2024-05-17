@@ -62,7 +62,7 @@ function ListItemLocation({ location, locationClicked, icon, isHovered }) {
     }, [location, locationClicked, isHovered]);
 
 
-    return <mi-list-item-location level={t('Level')} ref={elementRef} />
+    return <mi-list-item-location level={t('Level')} ref={elementRef} show-external-id={false} />
 }
 
 export default ListItemLocation;
