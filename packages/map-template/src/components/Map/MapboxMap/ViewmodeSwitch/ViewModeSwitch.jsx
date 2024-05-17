@@ -32,14 +32,12 @@ function ViewModeSwitch({ mapView }) {
     }, [solution]);
 
     useEffect(() => {
-        if (viewMode === null) {
-            setViewMode(ViewModes.initial3D);
-        }
-    }, [viewMode]);
-
-    useEffect(() => {
         // Toggle 2D and 3D features on the map
         if (mapView?.isReady) {
+            // If the viewMode is null, set the ViewMode to be initial3D
+            if (viewMode === null) {
+                setViewMode(ViewModes.initial3D);
+            }
             switch (viewMode) {
                 case ViewModes.clicked2D:
                     mapView.hideFeatures([mapView.MapboxFeatures.MODEL3D, mapView.MapboxFeatures.WALLS3D, mapView.MapboxFeatures.EXTRUSION3D, mapView.MapboxFeatures.EXTRUDEDBUILDINGS]);
@@ -57,7 +55,6 @@ function ViewModeSwitch({ mapView }) {
                 // Intentionally left blank
             }
         }
-
     }, [mapView?.isReady, viewMode]);
 
     return (
