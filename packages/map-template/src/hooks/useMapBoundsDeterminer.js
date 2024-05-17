@@ -76,7 +76,6 @@ const useMapBoundsDeterminer = () => {
         determineMapBounds();
     }, [mapsIndoorsInstance, venue, venues, locationId, kioskOriginLocationId, pitch, bearing, startZoomLevel, categories]);
 
-
     /**
      * Based on the combination of the states for venueName, locationId & kioskOriginLocationId,
      * determine where to make the map go to.

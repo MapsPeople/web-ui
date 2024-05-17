@@ -8,6 +8,7 @@ import { ReactComponent as Dark3D } from '../../../../assets/3d-dark.svg';
 import primaryColorState from '../../../../atoms/primaryColorState';
 import mapboxViewModeState from '../../../../atoms/mapboxViewModeState';
 import './ViewModeSwitch.scss';
+import currentPitchSelector from '../../../../selectors/currentPitch';
 
 export const ViewModes = Object.freeze({
     'initial3D': 1,
@@ -21,7 +22,7 @@ function ViewModeSwitch({ mapView }) {
     const primaryColor = useRecoilValue(primaryColorState);
     const [viewMode, setViewMode] = useRecoilState(mapboxViewModeState);
     const [shouldShowSwitch, setShouldShowSwitch] = useState(false);
-
+    const currentPitch = useRecoilValue(currentPitchSelector);
 
     useEffect(() => {
         if (['mapbox', '3dwalls', 'floorplan'].every(requiredModule => solution.modules.map(module => module.toLowerCase()).includes(requiredModule))) {
@@ -29,6 +30,12 @@ function ViewModeSwitch({ mapView }) {
             setViewMode(ViewModes.initial3D);
         }
     }, [solution]);
+
+    useEffect(() => {
+        if (viewMode === null) {
+            setViewMode(ViewModes.initial3D);
+        }
+    }, [viewMode]);
 
     useEffect(() => {
         // Toggle 2D and 3D features on the map
@@ -39,12 +46,15 @@ function ViewModeSwitch({ mapView }) {
                     mapView.tilt(0, 2000);
                     break;
                 case ViewModes.initial3D:
+                    mapView.tilt(currentPitch, 2000);
+                    mapView.hideFeatures([mapView.MapboxFeatures.MODEL2D, mapView.MapboxFeatures.WALLS2D]);
+                    break;
                 case ViewModes.clicked3D:
                     mapView.tilt(45, 2000);
                     mapView.hideFeatures([mapView.MapboxFeatures.MODEL2D, mapView.MapboxFeatures.WALLS2D]);
                     break;
                 default:
-                    // Intentionally left blank
+                // Intentionally left blank
             }
         }
 
