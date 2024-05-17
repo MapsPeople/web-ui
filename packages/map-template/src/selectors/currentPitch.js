@@ -14,8 +14,6 @@ const currentPitchSelector = selector({
 
         let result;
 
-        // TODO: Google Maps or modules not available
-
         switch (viewMode) {
             case ViewModes.initial3D:
                 // Any pitch property wins over initial 3D mode
