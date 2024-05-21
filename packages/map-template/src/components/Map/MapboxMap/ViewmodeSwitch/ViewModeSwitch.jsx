@@ -57,24 +57,22 @@ function ViewModeSwitch({ mapView }) {
         }
     }, [mapView?.isReady, viewMode]);
 
-    return (
-        <>
-            {shouldShowSwitch && <div className="switch">
-                <button className="switch__button"
-                    onClick={() => setViewMode(ViewModes.clicked2D)}
-                    style={{ backgroundColor: viewMode === ViewModes.clicked2D ? primaryColor : 'white' }}
-                >
-                    {viewMode === ViewModes.clicked2D ? <Light2D /> : <Dark2D />}
-                </button>
-                <button className="switch__button"
-                    onClick={() => setViewMode(ViewModes.clicked3D)}
-                    style={{ backgroundColor: [ViewModes.initial3D, ViewModes.clicked3D].includes(viewMode) ? primaryColor : 'white' }}
-                >
-                    {[ViewModes.initial3D, ViewModes.clicked3D].includes(viewMode) ? <Light3D /> : <Dark3D />}
-                </button>
-            </div>}
-        </>
-    )
+    return <>
+        {shouldShowSwitch && <div className="switch">
+            <button className="switch__button"
+                onClick={() => setViewMode(ViewModes.clicked2D)}
+                style={{ backgroundColor: viewMode === ViewModes.clicked2D ? primaryColor : 'white' }}
+            >
+                {viewMode === ViewModes.clicked2D ? <Light2D /> : <Dark2D />}
+            </button>
+            <button className="switch__button"
+                onClick={() => setViewMode(ViewModes.clicked3D)}
+                style={{ backgroundColor: [ViewModes.initial3D, ViewModes.clicked3D].includes(viewMode) ? primaryColor : 'white' }}
+            >
+                {[ViewModes.initial3D, ViewModes.clicked3D].includes(viewMode) ? <Light3D /> : <Dark3D />}
+            </button>
+        </div>}
+    </>
 }
 
 export default ViewModeSwitch;
