@@ -208,7 +208,7 @@ function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule, onMap
         });
 
         // Detect when the mouse hovers over a location and store the hovered location
-        // If the location is non-selectable/inherited from type, remove the hovering by calling the unhoverLocation() method.
+        // If the location is non-selectable (either set on the Location or inherited from the type), remove the hovering by calling the unhoverLocation() method.
         miInstance.on('mouseenter', () => {
             const hoveredLocation = miInstance.getHoveredLocation()
 
