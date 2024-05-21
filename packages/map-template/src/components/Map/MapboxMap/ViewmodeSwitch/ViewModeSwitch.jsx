@@ -54,14 +54,14 @@ function ViewModeSwitch({ mapView }) {
     }, [mapView?.isReady, viewMode]);
 
     return <>
-        {shouldShowSwitch && <div className="switch">
-            <button className="switch__button"
+        {shouldShowSwitch && <div className="view-mode-switch">
+            <button className="view-mode-switch__button"
                 onClick={() => setViewMode(ViewModes.clicked2D)}
                 style={{ backgroundColor: viewMode === ViewModes.clicked2D ? primaryColor : 'white' }}
             >
                 {viewMode === ViewModes.clicked2D ? <Light2D /> : <Dark2D />}
             </button>
-            <button className="switch__button"
+            <button className="view-mode-switch__button"
                 onClick={() => setViewMode(ViewModes.clicked3D)}
                 style={{ backgroundColor: [ViewModes.initial3D, ViewModes.clicked3D].includes(viewMode) ? primaryColor : 'white' }}
             >
