@@ -9,12 +9,9 @@ import primaryColorState from '../../../../atoms/primaryColorState';
 import mapboxViewModeState from '../../../../atoms/mapboxViewModeState';
 import './ViewModeSwitch.scss';
 import currentPitchSelector from '../../../../selectors/currentPitch';
+import { ViewModes } from '../../../../constants/viewModes';
 
-export const ViewModes = Object.freeze({
-    initial3D: 1,
-    clicked3D: 2,
-    clicked2D: 3
-});
+
 
 function ViewModeSwitch({ mapView }) {
 
@@ -34,10 +31,6 @@ function ViewModeSwitch({ mapView }) {
     useEffect(() => {
         // Toggle 2D and 3D features on the map
         if (mapView?.isReady) {
-            // If the viewMode is null, set the ViewMode to be initial3D
-            if (viewMode === null) {
-                setViewMode(ViewModes.initial3D);
-            }
             switch (viewMode) {
                 case ViewModes.clicked2D:
                     mapView.hideFeatures([mapView.MapboxFeatures.MODEL3D, mapView.MapboxFeatures.WALLS3D, mapView.MapboxFeatures.EXTRUSION3D, mapView.MapboxFeatures.EXTRUDEDBUILDINGS]);

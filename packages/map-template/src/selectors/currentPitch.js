@@ -1,7 +1,7 @@
 import { selector } from 'recoil';
 import pitchState from '../atoms/pitchState';
-import { ViewModes } from '../components/Map/MapboxMap/ViewmodeSwitch/ViewModeSwitch';
 import mapboxViewModeState from '../atoms/mapboxViewModeState';
+import { ViewModes } from '../constants/viewModes';
 
 /**
  * Selector to get which pitch to apply when fitting bounds.
