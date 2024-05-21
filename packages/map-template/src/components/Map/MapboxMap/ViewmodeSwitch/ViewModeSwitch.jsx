@@ -11,9 +11,9 @@ import './ViewModeSwitch.scss';
 import currentPitchSelector from '../../../../selectors/currentPitch';
 
 export const ViewModes = Object.freeze({
-    'initial3D': 1,
-    'clicked3D': 2,
-    'clicked2D': 3
+    initial3D: 1,
+    clicked3D: 2,
+    clicked2D: 3
 });
 
 function ViewModeSwitch({ mapView }) {
@@ -52,7 +52,7 @@ function ViewModeSwitch({ mapView }) {
                     mapView.hideFeatures([mapView.MapboxFeatures.MODEL2D, mapView.MapboxFeatures.WALLS2D]);
                     break;
                 default:
-                // Intentionally left blank
+                    // Intentionally left blank
             }
         }
     }, [mapView?.isReady, viewMode]);
