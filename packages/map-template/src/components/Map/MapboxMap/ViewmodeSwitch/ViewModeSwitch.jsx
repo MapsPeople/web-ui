@@ -52,7 +52,7 @@ function ViewModeSwitch({ mapView }) {
                     mapView.hideFeatures([mapView.MapboxFeatures.MODEL2D, mapView.MapboxFeatures.WALLS2D]);
                     break;
                 default:
-                // Intentionally left blank
+                    // Intentionally left blank
             }
         }
     }, [mapView?.isReady, viewMode]);
