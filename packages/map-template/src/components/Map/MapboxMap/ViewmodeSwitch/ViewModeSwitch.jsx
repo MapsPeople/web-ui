@@ -11,9 +11,9 @@ import './ViewModeSwitch.scss';
 import currentPitchSelector from '../../../../selectors/currentPitch';
 
 export const ViewModes = Object.freeze({
-    'initial3D': 1,
-    'clicked3D': 2,
-    'clicked2D': 3
+    initial3D: 1,
+    clicked3D: 2,
+    clicked2D: 3
 });
 
 function ViewModeSwitch({ mapView }) {
