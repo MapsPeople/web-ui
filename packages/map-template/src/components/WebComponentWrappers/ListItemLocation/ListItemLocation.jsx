@@ -21,20 +21,20 @@ function ListItemLocation({ location, locationClicked, icon, isHovered }) {
     useEffect(() => {
         const clickHandler = customEvent => locationClicked(customEvent.detail);
         const hoverHandler = () => {
-            // Check if the location is non-selectable before hovering it
-            if (location.properties.locationSettings?.selectable !== false) {
+            // Check if the location is non-selectable/inherited from type before hovering it
+            if (location.properties.locationSettings?.selectable !== false || location.properties.locationSettings?.selectable !== null) {
                 mapsIndoorsInstance.hoverLocation(location);
             }
         }
         const unhoverHandler = () => {
-            // Check if the location is non-selectable before unhovering it
-            if (!location.properties.locationSettings?.selectable !== false) {
+            // Check if the location is non-selectable/inherited from type before unhovering it
+            if (!location.properties.locationSettings?.selectable !== false || !location.properties.locationSettings?.selectable !== null) {
                 mapsIndoorsInstance.unhoverLocation(location);
             }
         }
 
-        // Add a "non-selectable" class to the non-selectable locations.
-        if (location.properties.locationSettings?.selectable === false) {
+        // Add a "non-selectable" class to the non-selectable/inherited from type locations.
+        if (location.properties.locationSettings?.selectable === false || location.properties.locationSettings?.selectable === null) {
             elementRef.current.classList.add("non-selectable");
         }
 
