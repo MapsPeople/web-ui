@@ -32,6 +32,7 @@ import MapTemplate from '../MapTemplate/MapTemplate.jsx';
  * @param {number} [props.miTransitionLevel] - The zoom level on which to transition from Mapbox to MapsIndoors data. Default value is 17. This feature is only available for Mapbox.
  * @param {string} [props.category] - If you want to indicate an active category on the map. The value should be the Key (Administrative ID).
  * @param {boolean} [props.searchAllVenues] - If you want to perform search across all venues in the solution.
+ * @param {boolean} [props.hideNonMatches] - Determine whether the locations on the map should be filtered or highlighted. If set to true, the locations will be filtered.
  */
 function MapsIndoorsMap(props) {
 
@@ -54,6 +55,7 @@ function MapsIndoorsMap(props) {
             useMapProviderModule: false,
             useKeyboard: false, 
             searchAllVenues: false,
+            hideNonMatches: false
         };
 
         const apiKeyQueryParameter = queryStringParams.get('apiKey');
@@ -80,6 +82,7 @@ function MapsIndoorsMap(props) {
         const miTransitionLevelQueryParameter = queryStringParams.get('miTransitionLevel');
 		const categoryQueryParameter = queryStringParams.get('category');
 		const searchAllVenuesParameter = getBooleanQueryParameter(queryStringParams.get('searchAllVenues'));
+		const hideNonMatchesQueryParameter = getBooleanQueryParameter(queryStringParams.get('hideNonMatches'));
 
         setMapTemplateProps({
             apiKey: props.supportsUrlParameters && apiKeyQueryParameter ? apiKeyQueryParameter : (props.apiKey || defaultProps.apiKey),
@@ -107,6 +110,7 @@ function MapsIndoorsMap(props) {
             miTransitionLevel: props.supportsUrlParameters && miTransitionLevelQueryParameter ? miTransitionLevelQueryParameter : props.miTransitionLevel,
 			category: props.supportsUrlParameters && categoryQueryParameter ? categoryQueryParameter : props.category,
             searchAllVenues: props.supportsUrlParameters && searchAllVenuesParameter ? searchAllVenuesParameter : (props.searchAllVenues || defaultProps.searchAllVenues),
+            hideNonMatches: props.supportsUrlParameters && hideNonMatchesQueryParameter ? hideNonMatchesQueryParameter : (props.hideNonMatches || defaultProps.hideNonMatches),
         });
     }, [props]);
 
