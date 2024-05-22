@@ -524,10 +524,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes to the hideNonMatches prop.
      */
     useEffect(() => {
-        if (mapsindoorsSDKAvailable && hideNonMatches) {
+        if (hideNonMatches) {
             setHideNonMatches(hideNonMatches);
         }
-    }, [hideNonMatches, mapsindoorsSDKAvailable]);
+    }, [hideNonMatches]);
 
 
     /**
