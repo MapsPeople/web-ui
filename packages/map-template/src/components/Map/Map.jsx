@@ -154,14 +154,10 @@ function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule, onMap
 
         const locationIds = locations.map(location => location.id);
 
-        if (hideNonMatches) {
+        if (hideNonMatches || !mapsIndoorsInstance.highlight) {
             mapsIndoorsInstance.filter(locationIds);
         } else {
-            if (mapsIndoorsInstance.highlight) {
-                mapsIndoorsInstance.highlight(locationIds);
-            } else {
-                mapsIndoorsInstance.filter(locationIds);
-            }
+            mapsIndoorsInstance.highlight(locationIds);
         }
     }, [filteredLocations, filteredLocationsByExternalIDs, mapsIndoorsInstance, hideNonMatches]);
 
