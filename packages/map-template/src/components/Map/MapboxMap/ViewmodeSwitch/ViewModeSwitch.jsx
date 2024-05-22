@@ -29,7 +29,11 @@ function ViewModeSwitch({ mapView }) {
 
     // Handle the toggling of the 2D/3D features on the map
     useEffect(() => {
-        if (mapView?.isReady) {
+        if (mapView?.isReady && shouldShowSwitch) {
+              // If the viewMode is null, set the ViewMode to be initial3D
+            if (viewMode === null) {
+                setViewMode(ViewModes.initial3D);
+            }
             switch (viewMode) {
                     // If the 2D View Mode has been clicked, hide the 3D features and tilt the map to 0 degrees. 
                 case ViewModes.clicked2D:
@@ -51,7 +55,7 @@ function ViewModeSwitch({ mapView }) {
                     // Intentionally left blank
             }
         }
-    }, [mapView?.isReady, viewMode]);
+    }, [mapView?.isReady, viewMode, shouldShowSwitch]);
 
     return <>
         {shouldShowSwitch && <div className="view-mode-switch">

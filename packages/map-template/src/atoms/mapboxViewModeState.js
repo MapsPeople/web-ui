@@ -1,9 +1,8 @@
 import { atom } from 'recoil';
-import { ViewModes } from '../constants/viewModes';
 
 const mapboxViewModeState = atom({
     key: 'mapboxViewMode',
-    default: ViewModes.initial3D
+    default: null
 });
 
 export default mapboxViewModeState;

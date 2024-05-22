@@ -611,7 +611,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     return <div className={`mapsindoors-map 
     ${locationsDisabledRef.current ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'} 
-    ${venues.length > 1 ? '' : 'mapsindoors-map--hide-venue-selector'} 
+    ${(venues.length > 1 && showVenueSelector) ? '' : 'mapsindoors-map--hide-venue-selector'} 
     ${showPositionControl ? 'mapsindoors-map--show-my-position' : 'mapsindoors-map--hide-my-position'}`}>
         <Notification />
         {!isMapReady && <SplashScreen />}
