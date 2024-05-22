@@ -155,12 +155,12 @@ function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule, onMap
         const locationIds = locations.map(location => location.id);
 
         if (hideNonMatches) {
-            if (mapsIndoorsInstance.filter) {
-                mapsIndoorsInstance.filter(locationIds);
-            }
+            mapsIndoorsInstance.filter(locationIds);
         } else {
             if (mapsIndoorsInstance.highlight) {
                 mapsIndoorsInstance.highlight(locationIds);
+            } else {
+                mapsIndoorsInstance.filter(locationIds);
             }
         }
     }, [filteredLocations, filteredLocationsByExternalIDs, mapsIndoorsInstance, hideNonMatches]);

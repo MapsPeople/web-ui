@@ -32,7 +32,7 @@ import MapTemplate from '../MapTemplate/MapTemplate.jsx';
  * @param {number} [props.miTransitionLevel] - The zoom level on which to transition from Mapbox to MapsIndoors data. Default value is 17. This feature is only available for Mapbox.
  * @param {string} [props.category] - If you want to indicate an active category on the map. The value should be the Key (Administrative ID).
  * @param {boolean} [props.searchAllVenues] - If you want to perform search across all venues in the solution.
- * @param {boolean} [props.hideNonMatches] - Determine whether the locations on the map should be filtered or highlighted. If set to true, the locations will be filtered.
+ * @param {boolean} [props.hideNonMatches] - Determine whether the locations on the map should be filtered (only show the matched locations and hide the rest) or highlighted (show all location and highlight the matched ones with a red dot by default). If set to true, the locations will be filtered.
  */
 function MapsIndoorsMap(props) {
 
@@ -54,8 +54,7 @@ function MapsIndoorsMap(props) {
             primaryColor: '#005655', // --brand-colors-dark-pine-100 from MIDT
             useMapProviderModule: false,
             useKeyboard: false, 
-            searchAllVenues: false,
-            hideNonMatches: false
+            searchAllVenues: false
         };
 
         const apiKeyQueryParameter = queryStringParams.get('apiKey');
