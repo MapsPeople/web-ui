@@ -31,8 +31,6 @@
     "lerna": "^6.4.0"
   },
   "dependencies": {
-    "braces": "^3.0.3",
-    "mapbox-gl": "^3.3.0",
-    "micromatch": "^4.0.7"
+    "mapbox-gl": "^3.3.0"
   }
 }
