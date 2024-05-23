@@ -86,6 +86,7 @@ When loading the MapsIndoors Map component for the first time, the map will resp
 |`miTransitionLevel`|`number`|The zoom level on which to transition from Mapbox to MapsIndoors data. Default value is 17. This feature is only available for Mapbox. |
 |`category`|`string`|If you want to indicate an active category on the map. The value should be the Key (Administrative ID). |
 |`searchAllVenues`|`bool`|If you want to perform search across all venues in the solution. |
+|`hideNonMatches`|`bool`|Determine whether the locations on the map should be filtered (only show the matched locations and hide the rest) or highlighted (show all locations and highlight the matched ones with a red dot by default). If set to true, the locations will be filtered. |
 
 ## Using Query Parameters
 
@@ -117,6 +118,7 @@ The supported query parameters are the following:
 22. `miTransitionLevel` - The zoom level on which to transition from Mapbox to MapsIndoors data. Default value is 17. This feature is only available for Mapbox.
 23. `category` - If you want to indicate an active category on the map. The value should be the Key (Administrative ID).
 24. `searchAllVenues` - If you want to perform search across all venues in the solution.
+25. `hideNonMatches` - Determine whether the locations on the map should be filtered (only show the matched locations and hide the rest) or highlighted (show all locations and highlight the matched ones with a red dot by default). If set to true, the locations will be filtered.
 
 **Note!** All the query parameters need to be separated with the `&` symbol, without any spaces in between.
 **Note!** When using parameters such as `directionsTo`, `directionsFrom`, `locationId`, `externalIDs`, and `tileStyle` make sure you are using the correct `apiKey` parameter to which they belong.
