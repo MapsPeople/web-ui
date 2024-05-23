@@ -21,6 +21,7 @@ import solutionState from '../../atoms/solutionState';
 import notificationMessageState from '../../atoms/notificationMessageState';
 import useMapBoundsDeterminer from '../../hooks/useMapBoundsDeterminer';
 import currentVenueNameState from "../../atoms/currentVenueNameState";
+import hideNonMatchesState from "../../atoms/hideNonMatchesState";
 
 /**
  * Private variable used for storing the tile style.
@@ -55,6 +56,8 @@ function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule, onMap
     const solution = useRecoilValue(solutionState);
     const [, setErrorMessage] = useRecoilState(notificationMessageState);
     const [, setCurrentVenueName] = useRecoilState(currentVenueNameState);
+    const hideNonMatches = useRecoilValue(hideNonMatchesState);
+
     useLiveData(apiKey);
 
     const [mapPositionKnown, venueOnMap] = useMapBoundsDeterminer();
@@ -139,26 +142,25 @@ function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule, onMap
     }, [venueOnMap]);
 
     /*
-     * Show the filtered locations on the map based on their IDs or external IDs if present.
-     * Check if the highlight or filter methods exist.
+     * Dynamically filter or highlight location based on the "filteredLocations", "filteredLocationsByExternalIDs" and "hideNonMatches" property.
      */
     useEffect(() => {
-        if (mapsIndoorsInstance) {
-            if (filteredLocations) {
-                if (mapsIndoorsInstance.highlight) {
-                    mapsIndoorsInstance.highlight(filteredLocations.map(location => location.id));
-                } else if (mapsIndoorsInstance.filter) {
-                    mapsIndoorsInstance.filter(filteredLocations.map(location => location.id));
-                }
-            } else if (filteredLocationsByExternalIDs) {
-                if (mapsIndoorsInstance.highlight) {
-                    mapsIndoorsInstance.highlight(filteredLocationsByExternalIDs.map(location => location.id));
-                } else if (mapsIndoorsInstance.filter) {
-                    mapsIndoorsInstance.filter(filteredLocationsByExternalIDs.map(location => location.id));
-                }
-            }
+        if (!mapsIndoorsInstance) return;
+
+        // Determine which set of locations to work with
+        // If none of the locations are available, return the function
+        const locations = filteredLocations || filteredLocationsByExternalIDs;
+        if (!locations) return;
+
+        const locationIds = locations.map(location => location.id);
+
+        // Check if the hideNonMatches prop or highlight method in the SDK exists 
+        if (hideNonMatches || !mapsIndoorsInstance.highlight) {
+            mapsIndoorsInstance.filter(locationIds);
+        } else {
+            mapsIndoorsInstance.highlight(locationIds);
         }
-    }, [filteredLocations, filteredLocationsByExternalIDs, mapsIndoorsInstance]);
+    }, [filteredLocations, filteredLocationsByExternalIDs, mapsIndoorsInstance, hideNonMatches]);
 
     /*
      * React to changes in bearing and pitch props and set them on the map if mapsIndoorsInstance exists.

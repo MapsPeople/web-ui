@@ -33,7 +33,8 @@ MapsIndoorsMap.propTypes = {
     category: PropTypes.string,
     language: PropTypes.string,
     searchAllVenues: PropTypes.bool,
-    useKeyboard: PropTypes.bool
+    useKeyboard: PropTypes.bool,
+    hideNonMatches: PropTypes.bool
 };
 
 const WebMapsIndoorsMap = reactToWebComponent(MapsIndoorsMap, React, ReactDOM);
