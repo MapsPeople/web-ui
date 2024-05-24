@@ -27,7 +27,7 @@ function ListItemLocation({ location, locationClicked, icon, isHovered }) {
             }
         }
         const unhoverHandler = () => {
-            // Check if the location is non-selectable (either set on the Location or inherited from the type) from type before unhovering it.
+            // Check if the location is non-selectable (either set on the Location or inherited from the type) before unhovering it.
             if (!location.properties.locationSettings?.selectable !== false || !location.properties.locationSettings?.selectable !== null) {
                 mapsIndoorsInstance.unhoverLocation(location);
             }
