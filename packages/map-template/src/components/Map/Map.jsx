@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { forwardRef, useEffect, useImperativeHandle } from "react";
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { mapTypes } from "../../constants/mapTypes";
 import useLiveData from '../../hooks/useLivedata';
@@ -39,7 +39,7 @@ let _tileStyle;
  * @param {function} onMapPositionKnown - Function that is run when the map position is known.
  * @returns
  */
-function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule, onMapPositionKnown }) {
+const Map = forwardRef(({ onLocationClick, onVenueChangedOnMap, useMapProviderModule, onMapPositionKnown }, ref) => {
     const apiKey = useRecoilValue(apiKeyState);
     const gmApiKey = useRecoilValue(gmApiKeyState);
     const mapboxAccessToken = useRecoilValue(mapboxAccessTokenState);
@@ -264,10 +264,20 @@ function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule, onMap
         onTileStyleChanged(mapsIndoorsInstance);
     }, [tileStyle]);
 
+
+    /**
+     * Method that can be triggered on the element to get the MapsIndoors Instance.
+     */
+    useImperativeHandle(ref, () => ({
+        getMapsIndoorsInstance() {
+            return mapsIndoorsInstance;
+        }
+    }));
+
     return (<>
         {mapType === mapTypes.Google && <GoogleMapsMap onMapView={onMapView} onPositionControl={onPositionControlCreated} />}
         {mapType === mapTypes.Mapbox && <MapboxMap onMapView={onMapView} onPositionControl={onPositionControlCreated} />}
     </>)
-}
+});
 
 export default Map;

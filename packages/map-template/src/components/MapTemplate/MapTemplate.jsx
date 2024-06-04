@@ -657,6 +657,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             </Fragment>
         }
         <MIMap
+            ref={(mapsIndoorsInstance) => {window.mapsIndoorsInstance = mapsIndoorsInstance}}
             useMapProviderModule={useMapProviderModule}
             onVenueChangedOnMap={(venue) => venueChangedOnMap(venue)}
             onMapPositionKnown={() => setIsMapPositionKnown(true)}
