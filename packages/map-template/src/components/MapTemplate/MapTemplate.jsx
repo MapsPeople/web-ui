@@ -657,7 +657,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             </Fragment>
         }
         <MIMap
-            ref={(mapsIndoorsInstance) => {window.mapsIndoorsInstance = mapsIndoorsInstance}}
+            // Set the ref attribute that receives the instance of the component and assigns it into the window object.
+            // Call the "getMapsIndoorsInstance()" method here for simplifying the use of it. 
+            ref={(mapsIndoorsInstance) => {window.mapsIndoorsInstance = mapsIndoorsInstance?.getMapsIndoorsInstance()}}
             useMapProviderModule={useMapProviderModule}
             onVenueChangedOnMap={(venue) => venueChangedOnMap(venue)}
             onMapPositionKnown={() => setIsMapPositionKnown(true)}
