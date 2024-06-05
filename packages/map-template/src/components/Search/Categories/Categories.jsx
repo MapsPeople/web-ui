@@ -95,17 +95,19 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef }) {
      * Update the state of the left and right scroll buttons
      */
     function updateScrollButtonsState() {
+        const { scrollLeft, scrollWidth, clientWidth } = categoriesListRef?.current || {};
+
         // Disable or enable the scroll left button
-        if (categoriesListRef?.current.scrollLeft === 0) {
+        if (scrollLeft === 0) {
             setIsLeftButtonDisabled(true);
         } else if (isLeftButtonDisabled) {
             setIsLeftButtonDisabled(false);
         }
 
         // Disable or enable the scroll right button
-        if (categoriesListRef?.current.scrollWidth - categoriesListRef?.current.scrollLeft === categoriesListRef?.current.clientWidth) {
+        if (scrollWidth - scrollLeft === clientWidth) {
             setIsRightButtonDisabled(true);
-        } else if (isRightButtonDisabled) {
+        } else if (scrollWidth - scrollLeft > clientWidth) {
             setIsRightButtonDisabled(false);
         }
     }
@@ -125,11 +127,11 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef }) {
     /**
      * Add event listener for scrolling in the categories list
      */
-    if (categoriesListRef.current) {
-        categoriesListRef.current.addEventListener('scroll', () => {
-            updateScrollButtonsState();
-        });
-    }
+    useEffect(() => {
+        if (categoriesListRef.current) {
+            categoriesListRef.current.addEventListener('scroll', updateScrollButtonsState);
+        }
+    }, []);
 
     /*
      * Get the active category element.
@@ -142,8 +144,8 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef }) {
     }, [selectedCategory]);
 
     /*
-     * If the active category is a prop/query parameter and the bottom sheet is loaded, 
-     * then scroll into view and center the active category. 
+     * If the active category is a prop/query parameter and the bottom sheet is loaded,
+     * then scroll into view and center the active category.
      */
     useEffect(() => {
         if (activeCategory && category !== undefined && (isDesktop || (!isDesktop && isBottomSheetLoaded))) {
