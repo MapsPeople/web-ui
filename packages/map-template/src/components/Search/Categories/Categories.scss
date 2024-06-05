@@ -5,13 +5,14 @@
     grid-auto-flow: column;
     gap: var(--spacing-x-small);
     margin-top: var(--spacing-x-small);
+    justify-content: space-between;
 
     ::-webkit-scrollbar {
         width: 0;
         height: 0;
         background: transparent;
     }
-    
+
     &__list {
         display: grid;
         grid-auto-flow: column;
