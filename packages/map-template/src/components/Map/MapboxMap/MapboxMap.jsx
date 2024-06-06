@@ -46,12 +46,12 @@ function MapboxMap({ onMapView, onPositionControl }) {
             pitch: !isNaN(parseInt(pitch)) ? parseInt(pitch) : 0,
         };
 
-        // If miTransitionLevel exists and it's a number, set it in the mapViewOptions
+        // If miTransitionLevel exists and it's a number, set it in the mapViewOptions.
         if (miTransitionLevel && !isNaN(parseInt(miTransitionLevel))) {
             mapViewOptions.mapsIndoorsTransitionLevel = parseInt(miTransitionLevel);
         }
 
-        // If showRoadNameLabels is not null or undefined.
+        // If showRoadNameLabels is not null or undefined, set it as showRoadNameLabels in the mapViewOptions.
         if (!isNullOrUndefined(showRoadNameLabels)) {
             mapViewOptions.showRoadNameLabels = showRoadNameLabels;
         }
