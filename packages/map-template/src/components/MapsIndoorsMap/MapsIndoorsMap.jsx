@@ -81,9 +81,9 @@ function MapsIndoorsMap(props) {
         const languageQueryParameter = queryStringParams.get('language');
         const useKeyboardQueryParameter = getBooleanQueryParameter(queryStringParams.get('useKeyboard'));
         const miTransitionLevelQueryParameter = queryStringParams.get('miTransitionLevel');
-		const categoryQueryParameter = queryStringParams.get('category');
-		const searchAllVenuesParameter = getBooleanQueryParameter(queryStringParams.get('searchAllVenues'));
-		const hideNonMatchesQueryParameter = getBooleanQueryParameter(queryStringParams.get('hideNonMatches'));
+        const categoryQueryParameter = queryStringParams.get('category');
+        const searchAllVenuesParameter = getBooleanQueryParameter(queryStringParams.get('searchAllVenues'));
+        const hideNonMatchesQueryParameter = getBooleanQueryParameter(queryStringParams.get('hideNonMatches'));
         const showRoadNameLabelsQueryParameterBoolean = getBooleanQueryParameter(queryStringParams.get('showRoadNameLabels'));
 
         setMapTemplateProps({
@@ -110,7 +110,7 @@ function MapsIndoorsMap(props) {
             supportsUrlParameters: props.supportsUrlParameters,
             useKeyboard: props.supportsUrlParameters && useKeyboardQueryParameter ? useKeyboardQueryParameter : (props.useKeyboard || defaultProps.useKeyboard),
             miTransitionLevel: props.supportsUrlParameters && miTransitionLevelQueryParameter ? miTransitionLevelQueryParameter : props.miTransitionLevel,
-			category: props.supportsUrlParameters && categoryQueryParameter ? categoryQueryParameter : props.category,
+            category: props.supportsUrlParameters && categoryQueryParameter ? categoryQueryParameter : props.category,
             searchAllVenues: props.supportsUrlParameters && searchAllVenuesParameter ? searchAllVenuesParameter : (props.searchAllVenues || defaultProps.searchAllVenues),
             hideNonMatches: props.supportsUrlParameters && hideNonMatchesQueryParameter ? hideNonMatchesQueryParameter : props.hideNonMatches,
             showRoadNameLabels: props.supportsUrlParameters && !isNullOrUndefined(showRoadNameLabelsQueryParameterBoolean) && !isNullOrUndefined(queryStringParams.get('showRoadNameLabels')) ? showRoadNameLabelsQueryParameterBoolean : props.showRoadNameLabels
