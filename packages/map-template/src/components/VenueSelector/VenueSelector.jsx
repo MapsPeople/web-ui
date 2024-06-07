@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { CSSTransition } from 'react-transition-group';
 import './VenueSelector.scss';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import venuesState from '../../atoms/venuesState';
+import venuesInSolutionState from '../../atoms/venuesInSolutionState';
 import { ReactComponent as BuildingIcon } from '../../assets/building.svg';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import Venue from './Venue/Venue';
@@ -24,7 +24,7 @@ function VenueSelector({ onOpen, onClose, active }) {
     const { t } = useTranslation();
 
     const venueSelectorContentRef = useRef(null);
-    const venues = useRecoilValue(venuesState);
+    const venuesInSolution = useRecoilValue(venuesInSolutionState);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
 
     const setCurrentVenueName = useSetCurrentVenueName();
@@ -72,7 +72,7 @@ function VenueSelector({ onOpen, onClose, active }) {
             <div className="venue-selector__content" ref={venueSelectorContentRef}>
                 <h1>{t('Select venue')}</h1>
                 <div className="venue-selector__list">
-                    {venues.map(venue => (<Venue key={venue.id} isCurrent={currentVenueName === venue.name} venue={venue} onVenueClicked={() => onVenueSelected(venue)} />))}
+                    {venuesInSolution.map(venue => (<Venue key={venue.id} isCurrent={currentVenueName === venue.name} venue={venue} onVenueClicked={() => onVenueSelected(venue)} />))}
                 </div>
             </div>
         </CSSTransition>

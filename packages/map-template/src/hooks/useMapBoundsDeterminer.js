@@ -15,7 +15,7 @@ import mapsIndoorsInstanceState from '../atoms/mapsIndoorsInstanceState';
 import mapTypeState from '../atoms/mapTypeState';
 import pitchState from '../atoms/pitchState';
 import startZoomLevelState from '../atoms/startZoomLevelState';
-import venuesState from '../atoms/venuesState';
+import venuesInSolutionState from '../atoms/venuesInSolutionState';
 import venueState from '../atoms/venueState';
 
 // Hooks
@@ -51,7 +51,7 @@ const useMapBoundsDeterminer = () => {
     const startZoomLevel = useRecoilValue(startZoomLevelState);
     const currentVenueName = useRecoilValue(currentVenueNameState);
     const venue = useRecoilValue(venueState);
-    const venues = useRecoilValue(venuesState);
+    const venuesInSolution = useRecoilValue(venuesInSolutionState);
 
     const setCurrentVenueName = useSetCurrentVenueName();
     const [kioskLocationDisplayRuleWasChanged, setKioskLocationDisplayRuleWasChanged] = useState(false);
@@ -70,7 +70,7 @@ const useMapBoundsDeterminer = () => {
      */
     useEffect(() =>  {
         determineMapBounds();
-    }, [mapsIndoorsInstance, venue, venues, locationId, kioskOriginLocationId, pitch, bearing, startZoomLevel, categories]);
+    }, [mapsIndoorsInstance, venue, venuesInSolution, locationId, kioskOriginLocationId, pitch, bearing, startZoomLevel, categories]);
 
 
     /**
@@ -80,12 +80,12 @@ const useMapBoundsDeterminer = () => {
      * @param {string} [forcedVenue] - If set, this venue will be used instead of the current venue.
      */
     function determineMapBounds(forcedVenue) {
-        if (mapsIndoorsInstance && venues.length) {
+        if (mapsIndoorsInstance && venuesInSolution.length) {
             if (forcedVenue) {
                 setCurrentVenueName(forcedVenue);
             }
 
-            const venueToShow = getVenueToShow(forcedVenue || currentVenueName, venues);
+            const venueToShow = getVenueToShow(forcedVenue || currentVenueName, venuesInSolution);
             window.localStorage.setItem(localStorageKeyForVenue, venueToShow.name);
             setMapPositionKnown(true);
 

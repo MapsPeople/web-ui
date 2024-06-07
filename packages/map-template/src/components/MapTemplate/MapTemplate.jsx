@@ -15,7 +15,7 @@ import isMapReadyState from '../../atoms/isMapReadyState.js';
 import currentLocationState from '../../atoms/currentLocationState';
 import tileStyleState from '../../atoms/tileStyleState';
 import categoriesState from '../../atoms/categoriesState';
-import venuesState from '../../atoms/venuesState';
+import venuesInSolutionState from '../../atoms/venuesInSolutionState';
 import solutionState from '../../atoms/solutionState.js';
 import { useAppHistory } from '../../hooks/useAppHistory';
 import { useReset } from '../../hooks/useReset.js';
@@ -93,7 +93,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setGmApiKey] = useRecoilState(gmApiKeyState);
     const [, setMapboxAccessToken] = useRecoilState(mapboxAccessTokenState);
     const [isMapReady, setMapReady] = useRecoilState(isMapReadyState);
-    const [venues, setVenues] = useRecoilState(venuesState);
+    const [venuesInSolution, setVenuesInSolution] = useRecoilState(venuesInSolutionState);
     const [, setVenue] = useRecoilState(venueState);
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const [categories, setCategories] = useRecoilState(categoriesState);
@@ -218,13 +218,13 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                     getVenueCategories(venue);
                 }
 
-                if (venues.length > 0) {
+                if (venuesInSolution.length > 0) {
                     window.mapsindoors.services.VenuesService.getVenues().then(venuesResult => {
                         venuesResult = venuesResult.map(venue => {
                             venue.image = appConfig.venueImages[venue.name.toLowerCase()];
                             return venue;
                         });
-                        setVenues(venuesResult);
+                        setVenuesInSolution(venuesResult);
                     });
                 }
 
@@ -275,7 +275,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                     venue.image = appConfigResult.venueImages[venue.name.toLowerCase()];
                     return venue;
                 });
-                setVenues(venuesResult);
+                setVenuesInSolution(venuesResult);
             });
             setMapReady(false);
         }
@@ -625,7 +625,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     return <div className={`mapsindoors-map ${locationsDisabledRef.current ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'} ${showPositionControl ? 'mapsindoors-map--show-my-position' : 'mapsindoors-map--hide-my-position'}`}>
         <Notification />
         {!isMapReady && <SplashScreen />}
-        {venues.length > 1 && showVenueSelector && <VenueSelector
+        {venuesInSolution.length > 1 && showVenueSelector && <VenueSelector
             onOpen={() => pushAppView(appStates.VENUE_SELECTOR)}
             onClose={() => goBack()}
             active={currentAppView === appStates.VENUE_SELECTOR}
