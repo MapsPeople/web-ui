@@ -55,6 +55,9 @@ import currentVenueNameState from '../../atoms/currentVenueNameState.js';
 import venueInfoState from '../../atoms/venueInfoState.js';
 import venueSyncedState from '../../atoms/venueSyncedState.js';
 import venueIdSelector from '../../selectors/venueIdSelector.js';
+import searchAllVenuesState from '../../atoms/searchAllVenues.js';
+import categoryState from '../../atoms/categoryState.js';
+import hideNonMatchesState from '../../atoms/hideNonMatchesState.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -87,8 +90,10 @@ defineCustomElements();
  * @param {number} [props.miTransitionLevel] - The zoom level on which to transition from Mapbox to MapsIndoors data. Default value is 17. This feature is only available for Mapbox.
  * @param {number} [props.category] - If you want to indicate an active category on the map. The value should be the Key (Administrative ID).
  * @param {boolean} [props.loadVenue]
+ * @param {boolean} [props.searchAllVenues] - If you want to perform search across all venues in the solution.
+ * @param {boolean} [props.hideNonMatches] - Determine whether the locations on the map should be filtered (only show the matched locations and hide the rest) or highlighted (show all locations and highlight the matched ones with a red dot by default). If set to true, the locations will be filtered.
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, loadVenue }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, loadVenue, searchAllVenues, hideNonMatches }) {
 
     const [, setApiKey] = useRecoilState(apiKeyState);
     const [, setGmApiKey] = useRecoilState(gmApiKeyState);
@@ -113,10 +118,12 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setMiTransitionLevel] = useRecoilState(miTransitionLevelState);
     const [, setSelectedCategory] = useRecoilState(selectedCategoryState);
     const [, setLoadVenue] = useRecoilState(loadVenueState);
-    const currentVenueName = useRecoilValue(currentVenueNameState);
 
     // const [venueInfo, setVenueInfo] = useRecoilState(venueInfoState);
     const [venueSynced, setVenueSynced] = useState();
+    const [, setSearchAllVenues] = useRecoilState(searchAllVenuesState);
+    const [, setCategory] = useRecoilState(categoryState);
+    const [, setHideNonMatches] = useRecoilState(hideNonMatchesState);
 
     const [showVenueSelector, setShowVenueSelector] = useState(true);
     const [showPositionControl, setShowPositionControl] = useState(true);
@@ -148,6 +155,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const isMobile = useMediaQuery('(max-width: 991px)');
     const resetState = useReset();
     const setCurrentVenueName = useSetCurrentVenueName();
+    const currentVenueName = useRecoilValue(currentVenueNameState);
     const [pushAppView, goBack, currentAppView, currentAppViewPayload, appStates, resetAppHistory] = useAppHistory();
 
     // Declare the reference to the disabled locations.
@@ -178,8 +186,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             const miSdkApiTag = document.createElement('script');
             miSdkApiTag.setAttribute('type', 'text/javascript');
-            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.31.0/mapsindoors-4.31.0.js.gz');
-            miSdkApiTag.setAttribute('integrity', 'sha384-cFYmasSjWGfOTX40TH8pN37P9lYVPXea6VM0E9pX1G7TB7DGapNQ11bmn1gvXZkP');
+            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.32.0/mapsindoors-4.32.0.js.gz');
+            miSdkApiTag.setAttribute('integrity', 'sha384-pobsiCLAduarZklerr0Y1Yj0gkSVov1spL2XwAMLQ1lm3t6USIXIBAAMeJqiWXSc');
             miSdkApiTag.setAttribute('crossorigin', 'anonymous');
             document.body.appendChild(miSdkApiTag);
             miSdkApiTag.onload = () => {
@@ -253,7 +261,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     // /**
     //  * React on changes in the apiKey prop.
-    //  * Set the venue info to the result from the API call. 
+    //  * Set the venue info to the result from the API call.
     //  */
     // useEffect(() => {
     //     if (apiKey) {
@@ -307,26 +315,26 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                         // console.log('venue info', venueInfo)
                         // Get the id of the venue that is the current venue
                         venueToSync = venueInformation.find(venue => venue.name === currentVenueName)?.id;
-                        
+
                     }
-        
-        
+
+
                     if (loadVenue) {
-        
+
                         console.log('1')
                         // If there are any venues synced, remove them by using the "removeVenuesToSync()" method
                         if (venueSynced !== undefined) {
                             console.log('remove venue', venueSynced)
                             window.mapsindoors.MapsIndoors.removeVenuesToSync(venueSynced);
                         }
-        
+
                         // If the venueId to be synced exists, add it by using the "addVenuesToSync()" method
                         // Set the venueSynced Recoil state based on which we should remove the venueId when changed
                         if (venueToSync !== undefined) {
                             console.log('add venue', venueToSync)
                             window.mapsindoors.MapsIndoors.addVenuesToSync(venueToSync);
                             setVenueSynced(venueToSync);
-        
+
                         }
                     }
                     // else {
@@ -336,7 +344,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                     //         console.log('remove venue 2', venueSynced)
                     //         window.mapsindoors.MapsIndoors.removeVenuesToSync(currentVenueName);
                     //     }
-        
+
                     //     // If the venueId to be synced exists, add it by using the "addVenuesToSync()" method
                     //     // Set the venueSynced Recoil state based on which we should remove the venueId when changed
                     //     if (venueId !== undefined) {
@@ -344,17 +352,17 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                     //         window.mapsindoors.MapsIndoors.addVenuesToSync(currentVenueName);
                     //         setVenueSynced(currentVenueName);
                     //     }
-        
+
                     // }
-        
-        
+
+
                     console.log('test', apiKey);
                     setApiKey(apiKey);
-        
+
                     // setMapReady(false);
-                    
+
                     window.mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKey);
-        
+
                     Promise.all([
                         // Fetch all Venues in the Solution
                         window.mapsindoors.services.VenuesService.getVenues(),
@@ -379,7 +387,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                     });
                     setMapReady(false);
                 })
-            
+
         }
     }, [apiKey, mapsindoorsSDKAvailable, loadVenue, currentVenueName]);
 
@@ -593,6 +601,45 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         }
     }, [useKeyboard, kioskOriginLocationId, mapsindoorsSDKAvailable]);
 
+    /*
+     * React on changes in the category prop.
+     * Check if the category property matches with any of the existing categories.
+     */
+    useEffect(() => {
+        if (mapsindoorsSDKAvailable && category && categories.find((matched) => matched[0] === category)) {
+            setSelectedCategory(category);
+        }
+    }, [category, categories, mapsindoorsSDKAvailable]);
+
+    /*
+     * React on changes to the searchAllVenues prop.
+     */
+    useEffect(() => {
+        if (mapsindoorsSDKAvailable && searchAllVenues) {
+            setSearchAllVenues(searchAllVenues);
+        }
+    }, [searchAllVenues, mapsindoorsSDKAvailable]);
+
+    /*
+     * React on changes to the currentVenueName prop.
+     * Get the venue categories based on the currentVenueName.
+     */
+    useEffect(() => {
+        if (mapsindoorsSDKAvailable && currentVenueName) {
+            getVenueCategories(currentVenueName)
+        }
+    }, [currentVenueName, mapsindoorsSDKAvailable]);
+
+    /*
+     * React on changes to the hideNonMatches prop.
+     */
+    useEffect(() => {
+        if (hideNonMatches) {
+            setHideNonMatches(hideNonMatches);
+        }
+    }, [hideNonMatches]);
+
+
     /**
      * When venue is fitted while initializing the data,
      * set map to be ready and get the venue categories.
@@ -656,7 +703,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             for (const key of keys) {
                 // Get the categories from the App Config that have a matching key.
-                const appConfigCategory = appConfig.menuInfo.mainmenu.find(category => category.categoryKey === key);
+                const appConfigCategory = appConfig?.menuInfo.mainmenu.find(category => category.categoryKey === key);
 
                 if (uniqueCategories.has(key)) {
                     let count = uniqueCategories.get(key).count;
@@ -676,10 +723,12 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     /*
      * React on changes in the category prop.
      * Check if the category property matches with any of the existing categories.
+     * Indicate the existence of the category as a prop or query parameter by setting the "setCategory" to true.
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable && category && categories.find((matched) => matched[0] === category)) {
             setSelectedCategory(category);
+            setCategory(category);
         }
     }, [category, categories, mapsindoorsSDKAvailable]);
 

@@ -5,6 +5,61 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.46.0] - 2024-05-23
+
+### Added
+
+- Added new property `hideNonMatches` which determines whether the locations on the map should be filtered (only show the matched locations and hide the rest) or highlighted (show all locations and highlight the matched ones with a red dot by default). If set to true, the locations will be filtered.
+
+## [1.45.0] - 2024-05-15
+
+### Added
+
+- Update the default behaviour to hide the External IDs when searching for locations.
+
+## [1.44.3] - 2024-05-15
+
+### Fixed
+
+- Fixed QR code not working on GCS hosted solutions.
+
+## [1.44.2] - 2024-04-25
+
+### Fixed
+
+- Fixed bottom sheet jumping outside the viewport when selecting a category. 
+
+## [1.44.1] - 2024-04-23
+
+### Fixed
+
+- Add missing `useKeyboard` prop from the `webcomponent.js` file
+
+## [1.44.0] - 2024-04-16
+
+### Added
+
+- Update SDK and Mapbox version.
+
+## [1.43.1] - 2024-04-08
+
+### Fixed
+
+- Fix the venue not updating correctly on the map. 
+
+## [1.43.0] - 2024-03-26
+
+### Added
+
+- Add support for new parameter `searchAllVenues` which searches across all venues in one solution. 
+- Change the default behaviour to search in one venue.
+
+## [1.42.0] - 2024-03-26
+
+### Added
+
+- Enhance the visual representation of `non-selectable` locations in the search results list.
+
 ## [1.41.0] - 2024-03-19
 
 ### Added

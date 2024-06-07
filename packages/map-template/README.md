@@ -136,6 +136,8 @@ Note that when using the React component, the properties should conform to JSX p
 |`use-keyboard`|`useKeyboard`|`bool`|If running the Map Template as a Kiosk, set this prop to `true` and it will display a virtual keyboard. This property is dependent on the `kioskOriginLocationId`. |
 |`mi-transition-level`|`miTransitionLevel`|`number`|The zoom level on which to transition from Mapbox to MapsIndoors data. Default value is 17. This feature is only available for Mapbox. |
 |`category`|`category`|`string`|If you want to indicate an active category on the map. The value should be the Key (Administrative ID). |
+|`search-all-venues`|`searchAllVenues`|`bool`|If you want to perform search across all venues in the solution. |
+|`hide-non-matches`|`hideNonMatches`|`bool`|Determine whether the locations on the map should be filtered (only show the matched locations and hide the rest) or highlighted (show all locations and highlight the matched ones with a red dot by default). If set to true, the locations will be filtered. |
 
 ## Using Query Parameters
 
@@ -166,6 +168,8 @@ The supported query parameters are the following:
 21. `useKeyboard` -  If running the Map Template as a Kiosk, set this prop to `true` and it will display a virtual keyboard. This property is dependent on the `kioskOriginLocationId`.
 22. `miTransitionLevel` - The zoom level on which to transition from Mapbox to MapsIndoors data. Default value is 17. This feature is only available for Mapbox.
 23. `category` - If you want to indicate an active category on the map. The value should be the Key (Administrative ID).
+24. `searchAllVenues` - If you want to perform search across all venues in the solution.
+25. `hideNonMatches` - Determine whether the locations on the map should be filtered (only show the matched locations and hide the rest) or highlighted (show all locations and highlight the matched ones with a red dot by default). If set to true, the locations will be filtered.
 
 **Note!** All the query parameters need to be separated with the `&` symbol, without any spaces in between.
 **Note!** When using parameters such as `directionsTo`, `directionsFrom`, `locationId`, `externalIDs`, and `tileStyle` make sure you are using the correct `apiKey` parameter to which they belong.

@@ -66,6 +66,7 @@ export class Dropdown {
 
         this.items.forEach((item, itemIndex) => {
             item.dataset.index = itemIndex.toString();
+            item.dataset.excludefromall = `${item.excludefromall}`;
         });
 
         this.selectFirstMiDropdownItem();
@@ -170,17 +171,17 @@ export class Dropdown {
         }
     }
 
-     /**
+    /**
      * Outside the dropdown listener. It will close the dropdown when a click is outside a dropdown and dropdown list.
      *
-     * @param ev
+     * @param {Event} ev
      */
-      @Listen('click', {target: 'window'})
-      checkForClickOutside(ev) {
-          if (!this.hostElement.contains(ev.target)) {
-              this.open = false;
-          }
-      }
+    @Listen('click', { target: 'window' })
+    checkForClickOutside(ev: Event): void {
+        if (!this.hostElement.contains(ev.target as HTMLElement)) {
+            this.open = false;
+        }
+    }
 
     /**
      * Mousemove event handler.
@@ -382,7 +383,7 @@ export class Dropdown {
         const items = Array.from(this.currentItems) as Array<HTMLMiDropdownItemElement>;
 
         for (const item of items) {
-            item.selected = true;
+            item.selected = (`${item.dataset.excludefromall}` === 'true' || item.disabled)? false : true;
         }
 
         this.onChangedHandler();
@@ -618,6 +619,8 @@ export class Dropdown {
                         type="checkbox"
                         value={index}
                         checked={item.selected}
+                        disabled={item.disabled}
+                        data-excludefromall={item.excludefromall}
                         onChange={() => this.onSelect(item)}
                     />
                     {itemText}

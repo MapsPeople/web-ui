@@ -28,10 +28,12 @@ import MapTemplate from '../MapTemplate/MapTemplate.jsx';
  * @param {string} [props.kioskOriginLocationId] - If running the Map Template as a kiosk (upcoming feature), provide the Location ID that represents the location of the kiosk.
  * @param {number} [props.timeout] - If you want the Map Template to reset map position and UI elements to the initial state after some time of inactivity, use this to specify the number of seconds of inactivity before resetting.
  * @param {string} [props.language] - The language to show textual content in. Supported values are "en" for English, "da" for Danish, "de" for German and "fr" for French. If the prop is not set, the language of the browser will be used (if it is one of the four supported languages - otherwise it will default to English).
- * @param {boolean} [props.useKeyboard] - If running the Map Template as a kiosk, set this prop to true and it will prompt a keyboard. 
+ * @param {boolean} [props.useKeyboard] - If running the Map Template as a kiosk, set this prop to true and it will prompt a keyboard.
  * @param {number} [props.miTransitionLevel] - The zoom level on which to transition from Mapbox to MapsIndoors data. Default value is 17. This feature is only available for Mapbox.
  * @param {string} [props.category] - If you want to indicate an active category on the map. The value should be the Key (Administrative ID).
  * @param {boolean} [props.loadVenue]
+ * @param {boolean} [props.searchAllVenues] - If you want to perform search across all venues in the solution.
+ * @param {boolean} [props.hideNonMatches] - Determine whether the locations on the map should be filtered (only show the matched locations and hide the rest) or highlighted (show all locations and highlight the matched ones with a red dot by default). If set to true, the locations will be filtered.
  */
 function MapsIndoorsMap(props) {
 
@@ -52,8 +54,9 @@ function MapsIndoorsMap(props) {
             logo: 'https://app.mapsindoors.com/mapsindoors/gfx/mapspeople-logo/mapspeople-pin.svg',
             primaryColor: '#005655', // --brand-colors-dark-pine-100 from MIDT
             useMapProviderModule: false,
-            useKeyboard: false, 
-            loadVenue: false
+            useKeyboard: false,
+            loadVenue: false,
+            searchAllVenues: false
         };
 
         const apiKeyQueryParameter = queryStringParams.get('apiKey');
@@ -80,6 +83,8 @@ function MapsIndoorsMap(props) {
         const miTransitionLevelQueryParameter = queryStringParams.get('miTransitionLevel');
 		const categoryQueryParameter = queryStringParams.get('category');
         const loadVenueQueryParameter = getBooleanQueryParameter(queryStringParams.get('loadVenue'));
+		const searchAllVenuesParameter = getBooleanQueryParameter(queryStringParams.get('searchAllVenues'));
+		const hideNonMatchesQueryParameter = getBooleanQueryParameter(queryStringParams.get('hideNonMatches'));
 
         setMapTemplateProps({
             apiKey: props.supportsUrlParameters && apiKeyQueryParameter ? apiKeyQueryParameter : (props.apiKey || defaultProps.apiKey),
@@ -107,6 +112,8 @@ function MapsIndoorsMap(props) {
             miTransitionLevel: props.supportsUrlParameters && miTransitionLevelQueryParameter ? miTransitionLevelQueryParameter : props.miTransitionLevel,
 			category: props.supportsUrlParameters && categoryQueryParameter ? categoryQueryParameter : props.category,
             loadVenue: props.supportsUrlParameters && loadVenueQueryParameter ? loadVenueQueryParameter : (props.loadVenue || defaultProps.loadVenue),
+            searchAllVenues: props.supportsUrlParameters && searchAllVenuesParameter ? searchAllVenuesParameter : (props.searchAllVenues || defaultProps.searchAllVenues),
+            hideNonMatches: props.supportsUrlParameters && hideNonMatchesQueryParameter ? hideNonMatchesQueryParameter : props.hideNonMatches,
         });
     }, [props]);
 
@@ -143,9 +150,9 @@ Sentry.init({
     // Set `tracePropagationTargets` to control for which URLs distributed tracing should be enabled
     tracePropagationTargets: ["localhost", /^https:\/\/api\.mapsindoors\.com/],
 
-    // Capture Replay for 10% of all sessions,
-    // plus for 100% of sessions with an error
-    replaysSessionSampleRate: 0.1,
+    // Disable capture Replay for sessions.
+    // Set to 100% of sessions with an error
+    replaysSessionSampleRate: 0,
     replaysOnErrorSampleRate: 1.0,
 });
 
