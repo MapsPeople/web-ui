@@ -209,16 +209,6 @@ function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule, onMap
             mapView
         });
 
-        // Detect when the mouse hovers over a location and store the hovered location
-        // If the location is non-selectable, remove the hovering by calling the unhoverLocation() method.
-        miInstance.on('mouseenter', () => {
-            const hoveredLocation = miInstance.getHoveredLocation()
-
-            if (hoveredLocation?.properties.locationSettings?.selectable === false) {
-                miInstance.unhoverLocation();
-            }
-        });
-
         // TODO: Turn off visibility for building outline for demo purposes until the SDK supports Display Rules for Buildings too.
         miInstance.setDisplayRule(['MI_BUILDING_OUTLINE'], { visible: false });
 
