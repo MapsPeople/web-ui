@@ -34,7 +34,7 @@ import isNullOrUndefined from "../../helpers/isNullOrUndefined.js";
  * @param {string} [props.category] - If you want to indicate an active category on the map. The value should be the Key (Administrative ID).
  * @param {boolean} [props.searchAllVenues] - If you want to perform search across all venues in the solution.
  * @param {boolean} [props.hideNonMatches] - Determine whether the locations on the map should be filtered (only show the matched locations and hide the rest) or highlighted (show all locations and highlight the matched ones with a red dot by default). If set to true, the locations will be filtered.
- * @param {boolean} [props.showRoadNameLabels] - A boolean parameter that dictates whether Mapbox road names should be shown. By default, Mapbox road names are hidden when MapsIndoors data is shown.
+ * @param {boolean} [props.showRoadNames] - A boolean parameter that dictates whether Mapbox road names should be shown. By default, Mapbox road names are hidden when MapsIndoors data is shown.
  */
 function MapsIndoorsMap(props) {
 
@@ -84,7 +84,7 @@ function MapsIndoorsMap(props) {
         const categoryQueryParameter = queryStringParams.get('category');
         const searchAllVenuesParameter = getBooleanQueryParameter(queryStringParams.get('searchAllVenues'));
         const hideNonMatchesQueryParameter = getBooleanQueryParameter(queryStringParams.get('hideNonMatches'));
-        const showRoadNameLabelsQueryParameterBoolean = getBooleanQueryParameter(queryStringParams.get('showRoadNameLabels'));
+        const showRoadNamesQueryParameterBoolean = getBooleanQueryParameter(queryStringParams.get('showRoadNames'));
 
         setMapTemplateProps({
             apiKey: props.supportsUrlParameters && apiKeyQueryParameter ? apiKeyQueryParameter : (props.apiKey || defaultProps.apiKey),
@@ -113,7 +113,7 @@ function MapsIndoorsMap(props) {
             category: props.supportsUrlParameters && categoryQueryParameter ? categoryQueryParameter : props.category,
             searchAllVenues: props.supportsUrlParameters && searchAllVenuesParameter ? searchAllVenuesParameter : (props.searchAllVenues || defaultProps.searchAllVenues),
             hideNonMatches: props.supportsUrlParameters && hideNonMatchesQueryParameter ? hideNonMatchesQueryParameter : props.hideNonMatches,
-            showRoadNameLabels: props.supportsUrlParameters && !isNullOrUndefined(showRoadNameLabelsQueryParameterBoolean) && !isNullOrUndefined(queryStringParams.get('showRoadNameLabels')) ? showRoadNameLabelsQueryParameterBoolean : props.showRoadNameLabels
+            showRoadNames: props.supportsUrlParameters && !isNullOrUndefined(showRoadNamesQueryParameterBoolean) && !isNullOrUndefined(queryStringParams.get('showRoadNames')) ? showRoadNamesQueryParameterBoolean : props.showRoadNames
         });
     }, [props]);
 

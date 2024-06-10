@@ -138,7 +138,7 @@ Note that when using the React component, the properties should conform to JSX p
 |`category`|`category`|`string`|If you want to indicate an active category on the map. The value should be the Key (Administrative ID). |
 |`search-all-venues`|`searchAllVenues`|`bool`|If you want to perform search across all venues in the solution. |
 |`hide-non-matches`|`hideNonMatches`|`bool`|Determine whether the locations on the map should be filtered (only show the matched locations and hide the rest) or highlighted (show all locations and highlight the matched ones with a red dot by default). If set to true, the locations will be filtered. |
-|`show-road-name-labels`|`showRoadNameLabels`|`bool`|A boolean parameter that dictates whether Mapbox road names should be shown. By default, Mapbox road names are hidden when MapsIndoors data is shown. |
+|`show-road-names`|`showRoadNames`|`bool`|A boolean parameter that dictates whether Mapbox road names should be shown. By default, Mapbox road names are hidden when MapsIndoors data is shown. |
 
 ## Using Query Parameters
 
@@ -171,7 +171,7 @@ The supported query parameters are the following:
 23. `category` - If you want to indicate an active category on the map. The value should be the Key (Administrative ID).
 24. `searchAllVenues` - If you want to perform search across all venues in the solution.
 25. `hideNonMatches` - Determine whether the locations on the map should be filtered (only show the matched locations and hide the rest) or highlighted (show all locations and highlight the matched ones with a red dot by default). If set to true, the locations will be filtered.
-26. `showRoadNameLabels` - A boolean parameter that dictates whether Mapbox road names should be shown. By default, Mapbox road names are hidden when MapsIndoors data is shown.
+26. `showRoadNames` - A boolean parameter that dictates whether Mapbox road names should be shown. By default, Mapbox road names are hidden when MapsIndoors data is shown.
 
 **Note!** All the query parameters need to be separated with the `&` symbol, without any spaces in between.
 **Note!** When using parameters such as `directionsTo`, `directionsFrom`, `locationId`, `externalIDs`, and `tileStyle` make sure you are using the correct `apiKey` parameter to which they belong.

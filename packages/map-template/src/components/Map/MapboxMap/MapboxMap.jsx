@@ -11,7 +11,7 @@ import pitchState from '../../../atoms/pitchState';
 import { v4 as uuidv4 } from 'uuid';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import miTransitionLevelState from '../../../atoms/miTransitionLevelState';
-import showRoadNameLabelsState from '../../../atoms/showRoadNameLabels';
+import showRoadNamesState from '../../../atoms/showRoadNamesState';
 import isNullOrUndefined from '../../../helpers/isNullOrUndefined';
 
 /**
@@ -34,7 +34,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
     const pitch = useRecoilValue(pitchState);
     const isDesktop = useIsDesktop();
     const miTransitionLevel = useRecoilValue(miTransitionLevelState);
-    const showRoadNameLabels = useRecoilValue(showRoadNameLabelsState);
+    const showRoadNames = useRecoilValue(showRoadNamesState);
 
     useEffect(() => {
         // Initialize MapboxV3View MapView
@@ -51,9 +51,9 @@ function MapboxMap({ onMapView, onPositionControl }) {
             mapViewOptions.mapsIndoorsTransitionLevel = parseInt(miTransitionLevel);
         }
 
-        // If showRoadNameLabels is not null or undefined, set it as showRoadNameLabels in the mapViewOptions.
-        if (!isNullOrUndefined(showRoadNameLabels)) {
-            mapViewOptions.showRoadNameLabels = showRoadNameLabels;
+        // If showRoadNames is not null or undefined, set it as showRoadNames in the mapViewOptions.
+        if (!isNullOrUndefined(showRoadNames)) {
+            mapViewOptions.showRoadNameLabels = showRoadNames;
         }
 
         const mapViewInstance = new window.mapsindoors.mapView.MapboxV3View(mapViewOptions);
