@@ -80,8 +80,7 @@ const useMapBoundsDeterminer = () => {
                 // setCurrentVenueName(forcedVenue);
             }
 
-            const venueToShow = getVenueToShow(currentVenue);
-            window.localStorage.setItem(localStorageKeyForVenue, venueToShow.name);
+            window.localStorage.setItem(localStorageKeyForVenue, currentVenue.name);
             setMapPositionKnown(true);
 
             if (kioskOriginLocationId && isDesktop) {
@@ -95,7 +94,7 @@ const useMapBoundsDeterminer = () => {
                         setKioskDisplayRule(kioskLocation);
 
                         getDesktopPaddingBottom().then(desktopPaddingBottom => {
-                            setVenueOnMap(venueToShow);
+                            setVenueOnMap(currentVenue);
                             goToGeometry(mapType, kioskLocation.geometry, mapsIndoorsInstance, desktopPaddingBottom, 0, startZoomLevel, pitch, bearing);
                         });
                     }
@@ -111,12 +110,12 @@ const useMapBoundsDeterminer = () => {
 
                         if (isDesktop) {
                             getDesktopPaddingLeft().then(desktopPaddingLeft => {
-                                setVenueOnMap(venueToShow);
+                                setVenueOnMap(currentVenue);
                                 goToGeometry(mapType, location.geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, startZoomLevel, pitch, bearing);
                             });
                         } else {
                             getMobilePaddingBottom().then(mobilePaddingBottom => {
-                                setVenueOnMap(venueToShow);
+                                setVenueOnMap(currentVenue);
                                 goToGeometry(mapType, location.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, startZoomLevel, pitch, bearing);
                             });
                         }
@@ -124,8 +123,8 @@ const useMapBoundsDeterminer = () => {
                 });
             } else if (currentVenue) {
                 // When showing a venue, the map is fitted to the bounds of the Venue with no padding.
-                setVenueOnMap(venueToShow);
-                goToGeometry(mapType, venueToShow.geometry, mapsIndoorsInstance, 0, 0, startZoomLevel, pitch, bearing);
+                setVenueOnMap(currentVenue);
+                goToGeometry(mapType, currentVenue.geometry, mapsIndoorsInstance, 0, 0, startZoomLevel, pitch, bearing);
             }
         }
     }
@@ -155,45 +154,6 @@ const useMapBoundsDeterminer = () => {
 };
 
 export default useMapBoundsDeterminer;
-
-
-/**
- * Get the venue to show initally on the map.
- * TODO: Make it work again. Also it should be moved to the useCurrentVenue hook.
- *
- * @param {string} preferredVenueName
- * @param {array} venues
- * @returns {object} - venue
- */
-function getVenueToShow(venue) {
-    return venue;
-    // if (venues.length === 0) return;
-
-    // If there's only one venue, early return with that.
-    // if (venues.length === 1) {
-    //     return venues[0];
-    // }
-
-    // // If last selected venue is set in localStorage, use that.
-    // const lastSetVenue = window.localStorage.getItem(localStorageKeyForVenue);
-    // if (lastSetVenue) {
-    //     const venue = venues.find(v => v.name === lastSetVenue);
-    //     if (venue) {
-    //         return venue;
-    //     }
-    // }
-
-    // // If venue parameter is set on the component, use that.
-    // if (preferredVenueName) {
-    //     const venue = venues.find(v => v.name === preferredVenueName);
-    //     if (venue) {
-    //         return venue;
-    //     }
-    // }
-
-    // // Else take first venue sorted alphabetically
-    // return [...venues].sort(function (a, b) { return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0); })[0];
-}
 
 
 /**
