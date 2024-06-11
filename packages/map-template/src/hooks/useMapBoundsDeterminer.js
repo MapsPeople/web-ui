@@ -53,10 +53,9 @@ const useMapBoundsDeterminer = () => {
      * If the app is inactive, run code to reset to initial map position.
      */
     useEffect(() => {
-        // TODO: Make this work again
-        // if (isInactive) {
-        //     determineMapBounds(currentVenue);
-        // }
+        if (isInactive) {
+            determineMapBounds();
+        }
     }, [isInactive]);
 
     /*
@@ -73,13 +72,8 @@ const useMapBoundsDeterminer = () => {
      *
      * @param {string} [forcedVenue] - If set, this venue will be used instead of the current venue.
      */
-    function determineMapBounds(forcedVenue) {
+    function determineMapBounds() {
         if (mapsIndoorsInstance && currentVenue) {
-            if (forcedVenue) {
-                // TODO: Handle this
-                // setCurrentVenueName(forcedVenue);
-            }
-
             window.localStorage.setItem(localStorageKeyForVenue, currentVenue.name);
             setMapPositionKnown(true);
 
