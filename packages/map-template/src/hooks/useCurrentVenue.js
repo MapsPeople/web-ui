@@ -3,12 +3,14 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import venuesInSolutionState from '../atoms/venuesInSolutionState';
 import venueNameState from '../atoms/venueNameStateForVenueHook';
 import venueState from '../atoms/venueStateForVenueHook';
+import mapsIndoorsInstanceState from '../atoms/mapsIndoorsInstanceState';
 
 export const useCurrentVenue = () => {
 
     const [venueName, setVenueName] = useRecoilState(venueNameState);
     const [venue, setVenue] = useRecoilState(venueState);
     const venuesInSolution = useRecoilValue(venuesInSolutionState);
+    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
 
     /*
      * Responsible for setting the Venue state whenever venueName changes (and all Venues in the Solution are loaded).
@@ -22,13 +24,21 @@ export const useCurrentVenue = () => {
     }, [venueName, venuesInSolution]);
 
     /**
+     * Make sure to instruct the MapsIndoors SDK to internally change venue.
+     */
+    useEffect(() => {
+        if (mapsIndoorsInstance && venue) {
+            mapsIndoorsInstance.setVenue(venue);
+        }
+    }, [mapsIndoorsInstance, venue]);
+
+    /**
      * Set the current venue
      *
      * @param {string} venueName - the name of the venue (called "Administrative ID" in the MapsIndoors CMS)
      */
     const setCurrentVenueName = venueName => {
         setVenueName(venueName);
-        // TODO: setVenue on the SDK
     };
 
     return [setCurrentVenueName, venue];
