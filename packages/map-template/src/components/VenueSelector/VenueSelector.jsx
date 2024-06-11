@@ -9,9 +9,9 @@ import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import Venue from './Venue/Venue';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
 import isLocationClickedState from '../../atoms/isLocationClickedState';
-import useSetCurrentVenueName from '../../hooks/useSetCurrentVenueName';
 import fitBoundsLocation from '../../helpers/fitBoundsLocation';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
+import { useCurrentVenue } from '../../hooks/useCurrentVenue';
 
 /**
  * Show a list of Venues. The user can click on a Venue to select it.
@@ -27,7 +27,7 @@ function VenueSelector({ onOpen, onClose, active }) {
     const venuesInSolution = useRecoilValue(venuesInSolutionState);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
 
-    const setCurrentVenueName = useSetCurrentVenueName();
+    const [setCurrentVenueName] = useCurrentVenue();
 
     const currentVenueName = useRecoilValue(currentVenueNameState);
     const [, setIsLocationClicked] = useRecoilState(isLocationClickedState);
