@@ -49,11 +49,11 @@ function MapsIndoorsMap(props) {
 
         const defaultProps = {
             apiKey: 'mapspeople3d',
-            venue: 'AUSTINOFFICE',
+            // venue: 'AUSTINOFFICE', TODO: Eliminate the need for this (and the apiKey) to be here.
             logo: 'https://app.mapsindoors.com/mapsindoors/gfx/mapspeople-logo/mapspeople-pin.svg',
             primaryColor: '#005655', // --brand-colors-dark-pine-100 from MIDT
             useMapProviderModule: false,
-            useKeyboard: false, 
+            useKeyboard: false,
             searchAllVenues: false
         };
 
