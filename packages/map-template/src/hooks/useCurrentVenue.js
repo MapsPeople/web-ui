@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import venuesInSolutionState from '../atoms/venuesInSolutionState';
-import venueNameStateAt from '../atoms/venueNameStateForVenueHook';
+import venueNameState from '../atoms/venueNameStateForVenueHook';
 import venueState from '../atoms/venueStateForVenueHook';
 
 export const useCurrentVenue = () => {
 
-    const [venueName, setVenueName] = useRecoilState(venueNameStateAt);
+    const [venueName, setVenueName] = useRecoilState(venueNameState);
     const [venue, setVenue] = useRecoilState(venueState);
     const venuesInSolution = useRecoilValue(venuesInSolutionState);
 

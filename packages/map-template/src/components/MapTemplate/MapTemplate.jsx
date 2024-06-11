@@ -54,6 +54,7 @@ import searchAllVenuesState from '../../atoms/searchAllVenues.js';
 import currentVenueNameState from '../../atoms/currentVenueNameState.js';
 import categoryState from '../../atoms/categoryState.js';
 import hideNonMatchesState from '../../atoms/hideNonMatchesState.js';
+import { useCurrentVenue } from '../../hooks/useCurrentVenue.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -159,6 +160,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     // The reset count is used to add a new key to the sidebar or bottomsheet, forcing it to re-render from scratch when resetting the Map Template.
     const [resetCount, setResetCount] = useState(0);
+
+    const [setCurrentVenueNameInHook] = useCurrentVenue();
 
     /**
      * Ensure that MapsIndoors Web SDK is available.
@@ -372,7 +375,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         setVenue(venue);
-        setCurrentVenueName(venue);
+        setCurrentVenueName(venue); // TODO Eliminate me plz
+        setCurrentVenueNameInHook(venue);
     }, [venue]);
 
     /*

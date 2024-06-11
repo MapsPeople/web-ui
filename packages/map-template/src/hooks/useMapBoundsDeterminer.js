@@ -8,22 +8,19 @@ import { mapTypes } from '../constants/mapTypes';
 // Recoil atoms
 import bearingState from '../atoms/bearingState';
 import categoriesState from '../atoms/categoriesState';
-import currentVenueNameState from '../atoms/currentVenueNameState';
 import kioskOriginLocationIdState from '../atoms/kioskOriginLocationIdState';
 import locationIdState from '../atoms/locationIdState';
 import mapsIndoorsInstanceState from '../atoms/mapsIndoorsInstanceState';
 import mapTypeState from '../atoms/mapTypeState';
 import pitchState from '../atoms/pitchState';
 import startZoomLevelState from '../atoms/startZoomLevelState';
-import venuesInSolutionState from '../atoms/venuesInSolutionState';
-import venueState from '../atoms/venueState';
 
 // Hooks
 import getMobilePaddingBottom from '../helpers/GetMobilePaddingBottom';
 import getDesktopPaddingLeft from '../helpers/GetDesktopPaddingLeft';
 import { useInactive } from './useInactive';
-import useSetCurrentVenueName from './useSetCurrentVenueName';
 import { useIsDesktop } from './useIsDesktop';
+import { useCurrentVenue } from './useCurrentVenue';
 
 const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
 
@@ -49,20 +46,17 @@ const useMapBoundsDeterminer = () => {
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const pitch = useRecoilValue(pitchState);
     const startZoomLevel = useRecoilValue(startZoomLevelState);
-    const currentVenueName = useRecoilValue(currentVenueNameState);
-    const venue = useRecoilValue(venueState);
-    const venuesInSolution = useRecoilValue(venuesInSolutionState);
-
-    const setCurrentVenueName = useSetCurrentVenueName();
+    const [,currentVenue] = useCurrentVenue();
     const [kioskLocationDisplayRuleWasChanged, setKioskLocationDisplayRuleWasChanged] = useState(false);
 
     /**
      * If the app is inactive, run code to reset to initial map position.
      */
     useEffect(() => {
-        if (isInactive) {
-            determineMapBounds(venue);
-        }
+        // TODO: Make this work again
+        // if (isInactive) {
+        //     determineMapBounds(currentVenue);
+        // }
     }, [isInactive]);
 
     /*
@@ -70,7 +64,7 @@ const useMapBoundsDeterminer = () => {
      */
     useEffect(() =>  {
         determineMapBounds();
-    }, [mapsIndoorsInstance, venue, venuesInSolution, locationId, kioskOriginLocationId, pitch, bearing, startZoomLevel, categories]);
+    }, [mapsIndoorsInstance, currentVenue, locationId, kioskOriginLocationId, pitch, bearing, startZoomLevel, categories]);
 
 
     /**
@@ -80,12 +74,13 @@ const useMapBoundsDeterminer = () => {
      * @param {string} [forcedVenue] - If set, this venue will be used instead of the current venue.
      */
     function determineMapBounds(forcedVenue) {
-        if (mapsIndoorsInstance && venuesInSolution.length) {
+        if (mapsIndoorsInstance && currentVenue) {
             if (forcedVenue) {
-                setCurrentVenueName(forcedVenue);
+                // TODO: Handle this
+                // setCurrentVenueName(forcedVenue);
             }
 
-            const venueToShow = getVenueToShow(forcedVenue || currentVenueName, venuesInSolution);
+            const venueToShow = getVenueToShow(currentVenue);
             window.localStorage.setItem(localStorageKeyForVenue, venueToShow.name);
             setMapPositionKnown(true);
 
@@ -127,7 +122,7 @@ const useMapBoundsDeterminer = () => {
                         }
                     }
                 });
-            } else if (currentVenueName) {
+            } else if (currentVenue) {
                 // When showing a venue, the map is fitted to the bounds of the Venue with no padding.
                 setVenueOnMap(venueToShow);
                 goToGeometry(mapType, venueToShow.geometry, mapsIndoorsInstance, 0, 0, startZoomLevel, pitch, bearing);
@@ -164,38 +159,40 @@ export default useMapBoundsDeterminer;
 
 /**
  * Get the venue to show initally on the map.
+ * TODO: Make it work again. Also it should be moved to the useCurrentVenue hook.
  *
  * @param {string} preferredVenueName
  * @param {array} venues
  * @returns {object} - venue
  */
-function getVenueToShow(preferredVenueName, venues) {
-    if (venues.length === 0) return;
+function getVenueToShow(venue) {
+    return venue;
+    // if (venues.length === 0) return;
 
     // If there's only one venue, early return with that.
-    if (venues.length === 1) {
-        return venues[0];
-    }
+    // if (venues.length === 1) {
+    //     return venues[0];
+    // }
 
-    // If last selected venue is set in localStorage, use that.
-    const lastSetVenue = window.localStorage.getItem(localStorageKeyForVenue);
-    if (lastSetVenue) {
-        const venue = venues.find(v => v.name === lastSetVenue);
-        if (venue) {
-            return venue;
-        }
-    }
+    // // If last selected venue is set in localStorage, use that.
+    // const lastSetVenue = window.localStorage.getItem(localStorageKeyForVenue);
+    // if (lastSetVenue) {
+    //     const venue = venues.find(v => v.name === lastSetVenue);
+    //     if (venue) {
+    //         return venue;
+    //     }
+    // }
 
-    // If venue parameter is set on the component, use that.
-    if (preferredVenueName) {
-        const venue = venues.find(v => v.name === preferredVenueName);
-        if (venue) {
-            return venue;
-        }
-    }
+    // // If venue parameter is set on the component, use that.
+    // if (preferredVenueName) {
+    //     const venue = venues.find(v => v.name === preferredVenueName);
+    //     if (venue) {
+    //         return venue;
+    //     }
+    // }
 
-    // Else take first venue sorted alphabetically
-    return [...venues].sort(function (a, b) { return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0); })[0];
+    // // Else take first venue sorted alphabetically
+    // return [...venues].sort(function (a, b) { return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0); })[0];
 }
 
 
