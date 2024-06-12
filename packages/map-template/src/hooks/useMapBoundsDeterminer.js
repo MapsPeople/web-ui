@@ -22,8 +22,6 @@ import { useInactive } from './useInactive';
 import { useIsDesktop } from './useIsDesktop';
 import { useCurrentVenue } from './useCurrentVenue';
 
-const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
-
 /**
  * Determine where in the world to pan the map, based on the combination of venueName, locationId and kioskOriginLocationId.
  *
@@ -74,7 +72,6 @@ const useMapBoundsDeterminer = () => {
      */
     function determineMapBounds() {
         if (mapsIndoorsInstance && currentVenue) {
-            window.localStorage.setItem(localStorageKeyForVenue, currentVenue.name);
             setMapPositionKnown(true);
 
             if (kioskOriginLocationId && isDesktop) {
