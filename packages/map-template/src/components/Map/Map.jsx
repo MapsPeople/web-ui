@@ -229,14 +229,17 @@ function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule, onMap
         setMapsIndoorsInstance(miInstance);
 
         // Get hold of the outer most <mapsindoors-map> element.
-        const mapElement = document.querySelector('mapsindoors-map')
+        const mapElement = document.querySelector('mapsindoors-map');
 
-        // Assign the miInstance to the mapsIndoorsInstance on the map element.
-        mapElement.mapsIndoorsInstance = miInstance;
+        if (mapElement) {
+            // Assign the miInstance to the mapsIndoorsInstance on the map element.
+            mapElement.mapsIndoorsInstance = miInstance;
 
-        // Create a custom event that is dispatched from the map element.
-        const event = new CustomEvent('mapsIndoorsInstanceAvailable');
-        mapElement.dispatchEvent(event);
+            // Create a custom event that is dispatched from the map element.
+            const event = new CustomEvent('mapsIndoorsInstanceAvailable');
+            mapElement?.dispatchEvent(event);
+        }
+
 
         // Initialize a Directions Service
         const directionsService = new window.mapsindoors.services.DirectionsService(externalDirectionsProvider);
