@@ -237,9 +237,8 @@ function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule, onMap
 
             // Create a custom event that is dispatched from the map element.
             const event = new CustomEvent('mapsIndoorsInstanceAvailable');
-            mapElement?.dispatchEvent(event);
+            mapElement.dispatchEvent(event);
         }
-
 
         // Initialize a Directions Service
         const directionsService = new window.mapsindoors.services.DirectionsService(externalDirectionsProvider);
