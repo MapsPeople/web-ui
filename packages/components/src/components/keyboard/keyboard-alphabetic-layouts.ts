@@ -47,4 +47,14 @@ export const italianAlphabetic = {
     ]
 };
 
+export const spanishAlphabetic = {
+    default: [
+        '1 2 3 4 5 6 7 8 9 0 {bksp}',
+        'a z e r t y u i o p',
+        'q s d f g h j k l ń',
+        'w x c v b n m . - &',
+        '{space}'
+    ]
+};
+
 export const defaultAlphabetic = unitedStatesAlphabetic;
