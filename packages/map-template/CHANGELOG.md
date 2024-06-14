@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.48.1] - 2024-06-14
+
+### Fixed
+
+- Fixed an issue with clearing search input causing console errrors.
+
 ## [1.48.0] - 2024-06-13
 
 ### Added
@@ -39,7 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed bottom sheet jumping outside the viewport when selecting a category. 
+- Fixed bottom sheet jumping outside the viewport when selecting a category.
 
 ## [1.44.1] - 2024-04-23
 
@@ -57,13 +63,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fix the venue not updating correctly on the map. 
+- Fix the venue not updating correctly on the map.
 
 ## [1.43.0] - 2024-03-26
 
 ### Added
 
-- Add support for new parameter `searchAllVenues` which searches across all venues in one solution. 
+- Add support for new parameter `searchAllVenues` which searches across all venues in one solution.
 - Change the default behaviour to search in one venue.
 
 ## [1.42.0] - 2024-03-26
@@ -80,43 +86,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.40.0] - 2024-03-06
 
-### Added 
+### Added
 
 - Added Sentry for Error Logging and Performance Metrics
 
 ## [1.39.1] - 2024-03-04
 
-### Added 
+### Added
 
 - Added docs for `category` prop.
 
 ## [1.39.0] - 2024-02-29
 
-### Added 
+### Added
 
 - Added legend modal to the kiosk.
 
 ## [1.38.1] - 2024-02-28
 
-### Fixed 
+### Fixed
 
 - Added missing `language` prop to web component.
 
 ## [1.38.0] - 2024-02-28
 
-### Added 
+### Added
 
 - Added support for `category` property.
 
 ## [1.37.1] - 2024-02-26
 
-### Fixed 
+### Fixed
 
 - Fix size of the images on the Location Details page.
 
 ## [1.37.0] - 2024-02-22
 
-### Added 
+### Added
 
 - Remove hover from non-selectable locations.
 
@@ -203,7 +209,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added vertical scroll buttons to the search results list
-- Added horizontal scroll buttons to the categories list 
+- Added horizontal scroll buttons to the categories list
 
 ## [1.32.0] - 2024-01-24
 
