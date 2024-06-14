@@ -5,6 +5,8 @@ import venueNameState from '../atoms/venueNameStateForVenueHook';
 import venueState from '../atoms/venueStateForVenueHook';
 import mapsIndoorsInstanceState from '../atoms/mapsIndoorsInstanceState';
 import apiKeyState from '../atoms/apiKeyState';
+import appConfigState from '../atoms/appConfigState';
+import categoriesState from '../atoms/categoriesState';
 
 export const useCurrentVenue = () => {
 
@@ -14,6 +16,8 @@ export const useCurrentVenue = () => {
     const [localStorageKey, setLocalStorageKey] = useState();
     const venuesInSolution = useRecoilValue(venuesInSolutionState);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
+    const appConfig = useRecoilValue(appConfigState);
+    const [, setCategories] = useRecoilState(categoriesState);
 
     /*
      * Responsible for setting the Venue state whenever venueName changes (and all Venues in the Solution are loaded).
@@ -38,13 +42,16 @@ export const useCurrentVenue = () => {
     }, [apiKey]);
 
     /*
-     * Make sure to instruct the MapsIndoors SDK to internally change venue.
+     * Apply side effects when the venue changes:
+     *  - Instruct the MapsIndoors SDK to internally change Venue.
+     *  - Update Categories. We only want to show categories for which Locations in the current Venue exist.
      */
     useEffect(() => {
-        if (mapsIndoorsInstance && venue) {
+        if (mapsIndoorsInstance && venue && appConfig) {
             mapsIndoorsInstance.setVenue(venue);
+            updateCategories();
         }
-    }, [mapsIndoorsInstance, venue]);
+    }, [mapsIndoorsInstance, venue, appConfig]);
 
     /**
      * Set the current venue.
@@ -83,5 +90,34 @@ export const useCurrentVenue = () => {
         return [...venuesInSolution].sort(function (a, b) { return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0); })[0];
     };
 
-    return [setCurrentVenueName, venue];
+    /**
+     * Generate list of categories that exist on Locations in the current Venue.
+     */
+    const updateCategories = () => {
+        window.mapsindoors.services.LocationsService.getLocations({ venue: venue.name }).then(locationsInVenue => {
+            let uniqueCategories = new Map();
+            for (const location of locationsInVenue) {
+                const keys = Object.keys(location.properties.categories);
+
+                for (const key of keys) {
+                    // Get the categories from the App Config that have a matching key.
+                    const appConfigCategory = appConfig?.menuInfo.mainmenu.find(category => category.categoryKey === key);
+
+                    if (uniqueCategories.has(key)) {
+                        let count = uniqueCategories.get(key).count;
+                        uniqueCategories.set(key, { count: ++count, displayName: location.properties.categories[key], iconUrl: appConfigCategory?.iconUrl });
+                    } else {
+                        uniqueCategories.set(key, { count: 1, displayName: location.properties.categories[key], iconUrl: appConfigCategory?.iconUrl });
+                    }
+                }
+            }
+
+            // Sort the categories according to most locations associated.
+            uniqueCategories = Array.from(uniqueCategories).sort((a, b) => b[1].count - a[1].count);
+
+            setCategories(uniqueCategories);
+        });
+    };
+
+    return [setCurrentVenueName, venue, updateCategories];
 }
