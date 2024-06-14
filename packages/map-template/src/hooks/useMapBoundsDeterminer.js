@@ -22,6 +22,9 @@ import getDesktopPaddingLeft from '../helpers/GetDesktopPaddingLeft';
 import { useInactive } from './useInactive';
 import { useIsDesktop } from './useIsDesktop';
 
+// Selectors
+import currentPitchSelector from '../selectors/currentPitch';
+
 /**
  * Determine where in the world to pan the map, based on the combination of venueName, locationId and kioskOriginLocationId.
  *
@@ -45,6 +48,7 @@ const useMapBoundsDeterminer = () => {
     const pitch = useRecoilValue(pitchState);
     const startZoomLevel = useRecoilValue(startZoomLevelState);
     const currentVenue = useRecoilValue(venueState);
+    const currentPitch = useRecoilValue(currentPitchSelector);
     const [kioskLocationDisplayRuleWasChanged, setKioskLocationDisplayRuleWasChanged] = useState(false);
 
     /**
@@ -62,7 +66,6 @@ const useMapBoundsDeterminer = () => {
     useEffect(() =>  {
         determineMapBounds();
     }, [mapsIndoorsInstance, currentVenue, locationId, kioskOriginLocationId, pitch, bearing, startZoomLevel, categories]);
-
 
     /**
      * Based on the combination of the states for venueName, locationId & kioskOriginLocationId,
@@ -86,7 +89,7 @@ const useMapBoundsDeterminer = () => {
 
                         getDesktopPaddingBottom().then(desktopPaddingBottom => {
                             setVenueOnMap(currentVenue);
-                            goToGeometry(mapType, kioskLocation.geometry, mapsIndoorsInstance, desktopPaddingBottom, 0, startZoomLevel, pitch, bearing);
+                            goToGeometry(mapType, kioskLocation.geometry, mapsIndoorsInstance, desktopPaddingBottom, 0, startZoomLevel, currentPitch, bearing);
                         });
                     }
                 });
@@ -102,12 +105,12 @@ const useMapBoundsDeterminer = () => {
                         if (isDesktop) {
                             getDesktopPaddingLeft().then(desktopPaddingLeft => {
                                 setVenueOnMap(currentVenue);
-                                goToGeometry(mapType, location.geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, startZoomLevel, pitch, bearing);
+                                goToGeometry(mapType, location.geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, startZoomLevel, currentPitch, bearing);
                             });
                         } else {
                             getMobilePaddingBottom().then(mobilePaddingBottom => {
                                 setVenueOnMap(currentVenue);
-                                goToGeometry(mapType, location.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, startZoomLevel, pitch, bearing);
+                                goToGeometry(mapType, location.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, startZoomLevel, currentPitch, bearing);
                             });
                         }
                     }
@@ -115,7 +118,7 @@ const useMapBoundsDeterminer = () => {
             } else if (currentVenue) {
                 // When showing a venue, the map is fitted to the bounds of the Venue with no padding.
                 setVenueOnMap(currentVenue);
-                goToGeometry(mapType, currentVenue.geometry, mapsIndoorsInstance, 0, 0, startZoomLevel, pitch, bearing);
+                goToGeometry(mapType, currentVenue.geometry, mapsIndoorsInstance, 0, 0, startZoomLevel, currentPitch, bearing);
             }
         }
     }
