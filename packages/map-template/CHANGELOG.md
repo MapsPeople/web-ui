@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed an issue where the text in the Information Modal did not follow the expected formatting.
+- Fixed an issue where the text in the Legend Information Modal in the Kiosk mode did not follow the expected formatting.
 
 ## [1.48.1] - 2024-06-14
 
