@@ -1,5 +1,6 @@
 @import '@mapsindoors/midt/build/css/mapsindoors-map-variables';
 @import '@mapsindoors/css/toggle.css';
+@import '../../variables.scss';
 
 .mapsindoors-map {
     position: relative;
@@ -20,6 +21,10 @@
         .venue-selector__button {
             display: block;
         }
+
+        .view-mode-switch {
+            display: block;
+        }
     }
 
     &--hide-elements {
@@ -28,6 +33,10 @@
         }
 
         .venue-selector__button {
+            display: none;
+        }
+
+        .view-mode-switch {
             display: none;
         }
     }
@@ -41,6 +50,18 @@
     &--hide-my-position {
         mi-my-position {
             display: none;
+        }
+    }
+
+    &--hide-venue-selector{
+        .view-mode-switch {
+            margin-top: -68px; // When the venue selector is not visible, place the 2D/3D switch at the top on desktop devices.
+        }
+
+        @media (max-width: $desktop-breakpoint) {
+            .view-mode-switch {
+                margin-top: -62px; // When the venue selector is not visible, place the 2D/3D switch at the top on mobile devices.
+            }
         }
     }
 

@@ -30,6 +30,7 @@ import { ReactComponent as Legend } from '../../assets/legend.svg';
 import isLegendDialogVisibleState from '../../atoms/isLegendDialogVisibleState';
 import legendSortedFieldsSelector from '../../selectors/legendSortedFieldsSelector';
 import searchAllVenuesState from '../../atoms/searchAllVenues';
+import isNullOrUndefined from '../../helpers/isNullOrUndefined';
 
 /**
  * Show the search results.
@@ -99,7 +100,7 @@ function Search({ onSetSize, isOpen }) {
     const searchAllVenues = useRecoilValue(searchAllVenuesState);
 
     /**
-     * 
+     *
      * Get the locations and filter through them based on categories selected.
      *
      * @param {string} category
@@ -145,8 +146,8 @@ function Search({ onSetSize, isOpen }) {
 
         setFilteredLocations([]);
 
-        // If keyboard is not null, clear the input field
-        if (keyboardRef.current !== null) {
+        // If keyboard is not null or undefined, clear the input field
+        if (!isNullOrUndefined(keyboardRef.current)) {
             keyboardRef.current.clearInputField();
         }
     }
@@ -331,7 +332,7 @@ function Search({ onSetSize, isOpen }) {
     }, [useKeyboard]);
 
     /*
-     * React on changes in the selected category state. 
+     * React on changes in the selected category state.
      * If the selected category is present, get the filtered locations based on the selected category.
      */
     useEffect(() => {
@@ -341,7 +342,7 @@ function Search({ onSetSize, isOpen }) {
     }, [selectedCategory]);
 
     /*
-     * Get the legend sections and determine 
+     * Get the legend sections and determine
      * If the legend button should be shown.
      */
     useEffect(() => {
