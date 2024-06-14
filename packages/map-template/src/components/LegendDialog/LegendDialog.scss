@@ -49,7 +49,6 @@
     &__section {
         display: grid;
         gap: var(--spacing-medium);
-        word-break: break-all;
     }
 
     &__sections {
@@ -78,6 +77,8 @@
 
     &__content {
         padding-bottom: var(--spacing-medium);
+        word-break: normal; // Prevents words from breaking in half
+        overflow-wrap: break-word; // Ensures long words break and move to the next line
     }
 
     .scroll-buttons {
