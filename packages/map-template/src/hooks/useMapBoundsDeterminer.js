@@ -6,6 +6,7 @@ import getDesktopPaddingBottom from '../helpers/GetDesktopPaddingBottom';
 import { mapTypes } from '../constants/mapTypes';
 
 // Recoil atoms
+import venueState from '../atoms/venueStateForVenueHook';
 import bearingState from '../atoms/bearingState';
 import categoriesState from '../atoms/categoriesState';
 import kioskOriginLocationIdState from '../atoms/kioskOriginLocationIdState';
@@ -20,7 +21,6 @@ import getMobilePaddingBottom from '../helpers/GetMobilePaddingBottom';
 import getDesktopPaddingLeft from '../helpers/GetDesktopPaddingLeft';
 import { useInactive } from './useInactive';
 import { useIsDesktop } from './useIsDesktop';
-import { useCurrentVenue } from './useCurrentVenue';
 
 /**
  * Determine where in the world to pan the map, based on the combination of venueName, locationId and kioskOriginLocationId.
@@ -44,7 +44,7 @@ const useMapBoundsDeterminer = () => {
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const pitch = useRecoilValue(pitchState);
     const startZoomLevel = useRecoilValue(startZoomLevelState);
-    const [,currentVenue] = useCurrentVenue();
+    const currentVenue = useRecoilValue(venueState);
     const [kioskLocationDisplayRuleWasChanged, setKioskLocationDisplayRuleWasChanged] = useState(false);
 
     /**
