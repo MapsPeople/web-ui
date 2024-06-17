@@ -112,7 +112,7 @@ function MapsIndoorsMap(props) {
 			category: props.supportsUrlParameters && categoryQueryParameter ? categoryQueryParameter : props.category,
             searchAllVenues: props.supportsUrlParameters && searchAllVenuesParameter ? searchAllVenuesParameter : (props.searchAllVenues || defaultProps.searchAllVenues),
             hideNonMatches: props.supportsUrlParameters && hideNonMatchesQueryParameter ? hideNonMatchesQueryParameter : props.hideNonMatches,
-            showExternalIDs: props.supportsUrlParameters && showExternalIDsQueryParameter ? showExternalIDsQueryParameter : props.hideNonMatches,
+            showExternalIDs: props.supportsUrlParameters && showExternalIDsQueryParameter ? showExternalIDsQueryParameter : props.showExternalIDs,
         });
     }, [props]);
 
