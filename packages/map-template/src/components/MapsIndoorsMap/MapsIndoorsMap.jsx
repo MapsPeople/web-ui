@@ -49,7 +49,6 @@ function MapsIndoorsMap(props) {
 
         const defaultProps = {
             apiKey: 'mapspeople3d',
-            // venue: 'AUSTINOFFICE', TODO: Eliminate the need for this (and the apiKey) to be here.
             logo: 'https://app.mapsindoors.com/mapsindoors/gfx/mapspeople-logo/mapspeople-pin.svg',
             primaryColor: '#005655', // --brand-colors-dark-pine-100 from MIDT
             useMapProviderModule: false,
@@ -83,9 +82,18 @@ function MapsIndoorsMap(props) {
 		const searchAllVenuesParameter = getBooleanQueryParameter(queryStringParams.get('searchAllVenues'));
 		const hideNonMatchesQueryParameter = getBooleanQueryParameter(queryStringParams.get('hideNonMatches'));
 
+        // Set the initial props on the Map Template component.
+
+        // For the apiKey and venue, set the venue to "AUSTINOFFICE" if the apiKey is "mapspeople3d" and no venue is provided. We want this as the default venue for the "mapspeople3d" apiKey.
+        const apiKey = props.supportsUrlParameters && apiKeyQueryParameter ? apiKeyQueryParameter : (props.apiKey || defaultProps.apiKey);
+        let venue = props.supportsUrlParameters && venueQueryParameter ? venueQueryParameter : (props.venue || defaultProps.venue);
+        if (apiKey === 'mapspeople3d' && !venue) {
+            venue = 'AUSTINOFFICE';
+        }
+
         setMapTemplateProps({
-            apiKey: props.supportsUrlParameters && apiKeyQueryParameter ? apiKeyQueryParameter : (props.apiKey || defaultProps.apiKey),
-            venue: props.supportsUrlParameters && venueQueryParameter ? venueQueryParameter : (props.venue || defaultProps.venue),
+            apiKey,
+            venue,
             locationId: props.supportsUrlParameters && locationIdQueryParameter ? locationIdQueryParameter : props.locationId,
             logo: props.supportsUrlParameters && logoQueryParameter ? logoQueryParameter : (props.logo || defaultProps.logo),
             directionsFrom: props.supportsUrlParameters && directionsFromQueryParameter ? directionsFromQueryParameter : props.directionsFrom,
