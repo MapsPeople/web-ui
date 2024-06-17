@@ -149,6 +149,11 @@
         &:hover {
             filter: brightness(90%);
         }
+
+        &:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
     }
 
     &__scrollable {
