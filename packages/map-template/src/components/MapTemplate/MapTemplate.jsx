@@ -42,7 +42,6 @@ import { useInactive } from '../../hooks/useInactive.js';
 import showQRCodeDialogState from '../../atoms/showQRCodeDialogState';
 import QRCodeDialog from '../QRCodeDialog/QRCodeDialog';
 import supportsUrlParametersState from '../../atoms/supportsUrlParametersState';
-import useSetCurrentVenueName from '../../hooks/useSetCurrentVenueName.js';
 import useKeyboardState from '../../atoms/useKeyboardState';
 import { useIsDesktop } from '../../hooks/useIsDesktop.js';
 import miTransitionLevelState from '../../atoms/miTransitionLevelState.js';
@@ -143,7 +142,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const isDesktop = useIsDesktop();
     const isMobile = useMediaQuery('(max-width: 991px)');
     const resetState = useReset();
-    const setCurrentVenueName = useSetCurrentVenueName();
     const [pushAppView, goBack, currentAppView, currentAppViewPayload, appStates, resetAppHistory] = useAppHistory();
 
     // Declare the reference to the disabled locations.
@@ -329,7 +327,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             if (locationId) {
                 window.mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
                     if (location) {
-                        setCurrentVenueName(location.properties.venueId);
+                        setCurrentVenueNameInHook(location.properties.venueId);
                         setCurrentLocation(location);
                     }
                 });
@@ -371,7 +369,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the venue prop.
      */
     useEffect(() => {
-        setCurrentVenueName(venue); // TODO Eliminate me plz
         setCurrentVenueNameInHook(venue);
     }, [venue]);
 
@@ -448,7 +445,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             setKioskOriginLocationId(kioskOriginLocationId);
             if (kioskOriginLocationId) {
                 window.mapsindoors.services.LocationsService.getLocation(kioskOriginLocationId).then(kioskLocation => {
-                    setCurrentVenueName(kioskLocation.properties.venueId);
+                    setCurrentVenueNameInHook(kioskLocation.properties.venueId);
                     setKioskLocation(kioskLocation);
                 })
             } else {
