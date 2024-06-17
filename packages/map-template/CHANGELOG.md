@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added missing props when creating the QR code URL.
+- Added missing props `searchAllVenues` and `language` when creating the QR code URL.
 
 ## [1.49.0] - 2024-06-17
 
