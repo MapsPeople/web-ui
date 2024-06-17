@@ -66,6 +66,8 @@ A table showing which alphabetical layouts and languages are supported and mappe
 | danishAlphabetic       | da, da-dk        |
 | frenchAlphabetic       | fr, fr-fr        |
 | germanAlphabetic       | de, de-de        |
+| italianAlphabetic      | it, it-it        |
+| spanishAlphabetic      | es, es-es        |
 
 <!-- markdownlint-disable -->
 <!-- Auto Generated Below -->
