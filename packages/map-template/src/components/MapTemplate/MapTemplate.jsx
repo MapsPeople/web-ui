@@ -79,7 +79,7 @@ defineCustomElements();
  * @param {string} [props.gmMapId] - The Google Maps Map ID associated with a specific map style or feature.
  * @param {boolean} [props.useMapProviderModule] - Set to true if the Map Template should take MapsIndoors solution modules into consideration when determining what map type to use.
  * @param {string} [props.kioskOriginLocationId] - If running the Map Template as a kiosk (upcoming feature), provide the Location ID that represents the location of the kiosk.
- * @param {string} [props.language] - The language to show textual content in. Supported values are "en" for English, "da" for Danish, "de" for German and "fr" for French. If the prop is not set, the language of the browser will be used (if it is one of the four supported languages - otherwise it will default to English).
+ * @param {string} [props.language] - The language to show textual content in. Supported values are "en" for English, "da" for Danish, "de" for German, "fr" for French, "it" for Italian and "es" for Spanish. If the prop is not set, the language of the browser will be used (if it is one of the supported languages - otherwise it will default to English).
  * @param {boolean} [props.supportsUrlParameters] - Set to true if you want to support URL Parameters to configure the Map Template.
  * @param {boolean} [props.useKeyboard] - If running the Map Template as a kiosk, set this prop to true and it will prompt a keyboard.
  * @param {number} [props.timeout] - If you want the Map Template to reset map position and UI elements to the initial state after some time of inactivity, use this to specify the number of seconds of inactivity before resetting.
@@ -173,8 +173,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             const miSdkApiTag = document.createElement('script');
             miSdkApiTag.setAttribute('type', 'text/javascript');
-            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.34.0/mapsindoors-4.34.0.js.gz');
-            miSdkApiTag.setAttribute('integrity', 'sha384-PmlLSyZqDHBMT7mdLvzISBGszeCx5Bi7Emk5kb1Cmy2MA/SmgcjZvNsVAvqjw3ri');
+            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.35.0/mapsindoors-4.35.0.js.gz');
+            miSdkApiTag.setAttribute('integrity', 'sha384-p/2HpbrD2kC/E62E6RgoVk6NgJN6yGD9o1zbTjNzu933wucQZBvIlyTjCbNVbMMP');
             miSdkApiTag.setAttribute('crossorigin', 'anonymous');
             document.body.appendChild(miSdkApiTag);
             miSdkApiTag.onload = () => {
@@ -622,7 +622,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         }
     }, [category, categories, mapsindoorsSDKAvailable]);
 
-    return <div className={`mapsindoors-map ${locationsDisabledRef.current ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'} ${showPositionControl ? 'mapsindoors-map--show-my-position' : 'mapsindoors-map--hide-my-position'}`}>
+    return <div className={`mapsindoors-map 
+    ${locationsDisabledRef.current ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'} 
+    ${(venues.length > 1 && showVenueSelector) ? '' : 'mapsindoors-map--hide-venue-selector'} 
+    ${showPositionControl ? 'mapsindoors-map--show-my-position' : 'mapsindoors-map--hide-my-position'}`}>
         <Notification />
         {!isMapReady && <SplashScreen />}
         {venues.length > 1 && showVenueSelector && <VenueSelector

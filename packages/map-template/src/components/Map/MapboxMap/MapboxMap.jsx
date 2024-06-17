@@ -11,6 +11,7 @@ import pitchState from '../../../atoms/pitchState';
 import { v4 as uuidv4 } from 'uuid';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import miTransitionLevelState from '../../../atoms/miTransitionLevelState';
+import ViewModeSwitch from './ViewmodeSwitch/ViewModeSwitch';
 
 /**
  * Takes care of instantiating a MapsIndoors Mapbox MapView.
@@ -100,7 +101,9 @@ function MapboxMap({ onMapView, onPositionControl }) {
         }
     }, [mapsIndoorsInstance, mapView, hasFloorSelector, hasPositionControl, hasZoomControl]);
 
-    return <div className="map-container" id="map"></div>
+    return <div className="map-container" id="map">
+        <ViewModeSwitch mapView={mapView} />
+    </div>
 }
 
 
