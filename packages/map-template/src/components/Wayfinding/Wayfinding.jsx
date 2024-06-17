@@ -105,7 +105,6 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     const distanceUnitSystem = useRecoilValue(distanceUnitSystemSelector);
 
     const [totalDistance, totalTime, hasFoundRoute, isDirectionReady] = useDirectionsInfo(originLocation, destinationLocation, directionsService, travelMode, accessibilityOn)
-    console.log(isDirectionReady);
 
     /**
      * Decorates location with data that is required for wayfinding to work.
