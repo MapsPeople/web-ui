@@ -7,6 +7,8 @@ import mapsIndoorsInstanceState from '../atoms/mapsIndoorsInstanceState';
 import apiKeyState from '../atoms/apiKeyState';
 import appConfigState from '../atoms/appConfigState';
 import categoriesState from '../atoms/categoriesState';
+import searchResultsState from '../atoms/searchResultsState';
+import searchInputState from '../atoms/searchInputState';
 
 export const useCurrentVenue = () => {
 
@@ -18,6 +20,8 @@ export const useCurrentVenue = () => {
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const appConfig = useRecoilValue(appConfigState);
     const [, setCategories] = useRecoilState(categoriesState);
+    const [, setSearchResults] = useRecoilState(searchResultsState);
+    const searchInput = useRecoilValue(searchInputState);
 
     /*
      * Responsible for setting the Venue state whenever venueName changes (and all Venues in the Solution are loaded).
@@ -45,11 +49,17 @@ export const useCurrentVenue = () => {
      * Apply side effects when the venue changes:
      *  - Instruct the MapsIndoors SDK to internally change Venue.
      *  - Update Categories. We only want to show categories for which Locations in the current Venue exist.
+     *  - Clear search results.
+     *  - Clear search input field.
      */
     useEffect(() => {
         if (mapsIndoorsInstance && venue && appConfig) {
             mapsIndoorsInstance.setVenue(venue);
             updateCategories();
+            setSearchResults([]);
+            if (searchInput) {
+                searchInput.value = '';
+            }
         }
     }, [mapsIndoorsInstance, venue, appConfig]);
 
