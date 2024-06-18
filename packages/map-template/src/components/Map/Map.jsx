@@ -154,7 +154,7 @@ function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule, onMap
 
         const locationIds = locations.map(location => location.id);
 
-        // Check if the hideNonMatches prop or highlight method in the SDK exists 
+        // Check if the hideNonMatches prop or highlight method in the SDK exists
         if (hideNonMatches || !mapsIndoorsInstance.highlight) {
             mapsIndoorsInstance.filter(locationIds);
         } else {

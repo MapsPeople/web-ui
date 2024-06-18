@@ -7,7 +7,7 @@ import venuesInSolutionState from '../../atoms/venuesInSolutionState';
 import { ReactComponent as BuildingIcon } from '../../assets/building.svg';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import Venue from './Venue/Venue';
-import venueNameState from '../../atoms/venueNameStateForVenueHook';
+import currentVenueNameState from '../../atoms/currentVenueNameState';
 import isLocationClickedState from '../../atoms/isLocationClickedState';
 import fitBoundsLocation from '../../helpers/fitBoundsLocation';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
@@ -26,7 +26,7 @@ function VenueSelector({ onOpen, onClose, active }) {
     const venuesInSolution = useRecoilValue(venuesInSolutionState);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
 
-    const [currentVenueName, setCurrentVenueName] = useRecoilState(venueNameState);
+    const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
 
     const [, setIsLocationClicked] = useRecoilState(isLocationClickedState);
 

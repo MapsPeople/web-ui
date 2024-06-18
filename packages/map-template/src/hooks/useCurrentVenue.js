@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import venuesInSolutionState from '../atoms/venuesInSolutionState';
-import venueNameState from '../atoms/venueNameStateForVenueHook';
+import currentVenueNameState from '../atoms/currentVenueNameState';
 import venueState from '../atoms/venueStateForVenueHook';
 import mapsIndoorsInstanceState from '../atoms/mapsIndoorsInstanceState';
 import apiKeyState from '../atoms/apiKeyState';
@@ -12,7 +12,7 @@ import searchInputState from '../atoms/searchInputState';
 
 export const useCurrentVenue = () => {
 
-    const [venueName, setVenueName] = useRecoilState(venueNameState);
+    const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
     const [venue, setVenue] = useRecoilState(venueState);
     const apiKey = useRecoilValue(apiKeyState);
     const [localStorageKey, setLocalStorageKey] = useState();
@@ -27,12 +27,12 @@ export const useCurrentVenue = () => {
      * Responsible for setting the Venue state whenever venueName changes (and all Venues in the Solution are loaded).
      */
     useEffect(() => {
-        if (venueName && venuesInSolution?.length && venueName !== venue?.name) {
-            setVenue(venuesInSolution.find(venue => venue.name === venueName));
-        } else if (!venueName && venuesInSolution.length) {
-            setVenueName(getVenueToSet(venuesInSolution)?.name);
+        if (currentVenueName && venuesInSolution?.length && currentVenueName !== venue?.name) {
+            setVenue(venuesInSolution.find(venue => venue.name === currentVenueName));
+        } else if (!currentVenueName && venuesInSolution.length) {
+            setCurrentVenueName(getVenueToSet(venuesInSolution)?.name);
         }
-    }, [venueName, venuesInSolution]);
+    }, [currentVenueName, venuesInSolution]);
 
     /*
      * When apiKey changes, set the local storage key name that we use to store the
@@ -69,11 +69,11 @@ export const useCurrentVenue = () => {
      *
      * @param {string} venueName - the name of the venue (called "Administrative ID" in the MapsIndoors CMS)
      */
-    const setCurrentVenueName = venueName => {
+    const setCurrentVenueNameWrapper = venueName => {
         if (venueName && localStorageKey) {
             window.localStorage.setItem(localStorageKey, venueName);
         }
-        setVenueName(venueName);
+        setCurrentVenueName(venueName);
     };
 
     /**
@@ -129,5 +129,5 @@ export const useCurrentVenue = () => {
         });
     };
 
-    return [setCurrentVenueName, venue, updateCategories];
+    return [setCurrentVenueNameWrapper, venue, updateCategories];
 }
