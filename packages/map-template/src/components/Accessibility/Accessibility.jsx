@@ -3,7 +3,9 @@ import Tooltip from '../Tooltip/Tooltip';
 import './Accessibility.scss';
 import primaryColorState from '../../atoms/primaryColorState';
 import accessibilityOnState from '../../atoms/accessibilityOnState';
+import accessibilityState from '../../atoms/accessibilityState';
 import { t } from 'i18next';
+import { useEffect } from 'react';
 
 /**
  * Accessibility component which uses the mi-toggle and displays an info tooltip.
@@ -14,6 +16,16 @@ function Accessibility({ onAccessibilityChanged }) {
     const primaryColor = useRecoilValue(primaryColorState);
 
     const [accessibilityOn, setAccessibilityOn] = useRecoilState(accessibilityOnState);
+
+    const accessibility = useRecoilValue(accessibilityState);
+    console.log(accessibility);
+
+    // If the accessibility is defined as true, then setAccessibilityOn to true.
+    useEffect(() => {
+        if (accessibility) {
+            setAccessibilityOn(accessibility)
+        }
+    }, [accessibility])
 
     /**
      * Handle changes in the Accessibility component.
