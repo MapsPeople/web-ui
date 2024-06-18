@@ -5,7 +5,7 @@ import directionsResponseState from '../atoms/directionsResponseState';
 import hasFoundRouteState from '../atoms/hasFoundRouteState';
 
 /*
- * Hook to handle when both origin location and destination location are selected, 
+ * Hook to handle when both origin location and destination location are selected,
  * and have geometry, call the MapsIndoors SDK to get information about the route.
  */
 const useDirectionsInfo = (originLocation, destinationLocation, directionsService, travelMode, accessibilityOn) => {
@@ -13,8 +13,10 @@ const useDirectionsInfo = (originLocation, destinationLocation, directionsServic
     const [totalTime, setTotalTime] = useState();
     const [hasFoundRoute, setHasFoundRoute] = useRecoilState(hasFoundRouteState);
     const [, setDirectionsResponse] = useRecoilState(directionsResponseState);
+    const [isDirectionReady, setIsDirectionReady] = useState();
 
     useEffect(() => {
+        setIsDirectionReady(false);
         if (originLocation?.geometry && destinationLocation?.geometry) {
             directionsService.getRoute({
                 origin: getLocationPoint(originLocation),
@@ -38,6 +40,7 @@ const useDirectionsInfo = (originLocation, destinationLocation, directionsServic
                         totalTime,
                         directionsResult
                     });
+                    setIsDirectionReady(true);
                 } else {
                     setHasFoundRoute(false);
                 }
@@ -47,7 +50,7 @@ const useDirectionsInfo = (originLocation, destinationLocation, directionsServic
         }
     }, [originLocation, destinationLocation, directionsService, accessibilityOn, travelMode]);
 
-    return [totalDistance, totalTime, hasFoundRoute];
+    return [totalDistance, totalTime, hasFoundRoute, isDirectionReady];
 }
 
 export default useDirectionsInfo;
