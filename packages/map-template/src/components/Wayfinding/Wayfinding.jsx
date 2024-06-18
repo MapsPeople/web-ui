@@ -34,6 +34,7 @@ import useDirectionsInfo from "../../hooks/useDirectionsInfo";
 import hasFoundRouteState from "../../atoms/hasFoundRouteState";
 import accessibilityOnState from "../../atoms/accessibilityOnState";
 import Accessibility from "../Accessibility/Accessibility";
+import skipGoState from "../../atoms/skipGoState";
 
 const searchFieldIdentifiers = {
     TO: 'TO',
@@ -75,7 +76,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     const [activeSearchField, setActiveSearchField] = useState();
 
     /** Indicate if a route has been found */
-    const [, setHasFoundRoute] = useRecoilState(hasFoundRouteState);
+    const [isSet, setHasFoundRoute] = useRecoilState(hasFoundRouteState);
 
     /** Indicate if search results have been found */
     const [hasSearchResults, setHasSearchResults] = useState(true);
@@ -104,7 +105,9 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
 
     const distanceUnitSystem = useRecoilValue(distanceUnitSystemSelector);
 
-    const [totalDistance, totalTime, hasFoundRoute] = useDirectionsInfo(originLocation, destinationLocation, directionsService, travelMode, accessibilityOn)
+    const [totalDistance, totalTime, hasFoundRoute, isDirectionReady] = useDirectionsInfo(originLocation, destinationLocation, directionsService, travelMode, accessibilityOn)
+
+    const skipGo = useRecoilValue(skipGoState);
 
     /**
      * Decorates location with data that is required for wayfinding to work.
@@ -386,6 +389,14 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
             toFieldRef.current.setDisplayText(currentLocation.properties.name);
         }
     }, [currentLocation]);
+
+    useEffect(() => {
+        if (skipGo && isSet) {
+            if (directionsFromLocation && directionsToLocation && isDirectionReady) {
+                onStartDirections();
+            }
+        }
+    }, [skipGo, isSet, directionsFromLocation, directionsToLocation, isDirectionReady])
 
     return (
         <div className="wayfinding" ref={wayfindingRef}>
