@@ -55,6 +55,7 @@ import currentVenueNameState from '../../atoms/currentVenueNameState.js';
 import categoryState from '../../atoms/categoryState.js';
 import hideNonMatchesState from '../../atoms/hideNonMatchesState.js';
 import skipGoState from '../../atoms/skipGoState.js';
+import accessibilityState from '../../atoms/accessibilityState.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -88,8 +89,9 @@ defineCustomElements();
  * @param {boolean} [props.searchAllVenues] - If you want to perform search across all venues in the solution.
  * @param {boolean} [props.hideNonMatches] - Determine whether the locations on the map should be filtered (only show the matched locations and hide the rest) or highlighted (show all locations and highlight the matched ones with a red dot by default). If set to true, the locations will be filtered.
  * @param {boolean} [props.skipGo]
+ * @param {boolean} [props.accessibility]
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, skipGo }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, skipGo, accessibility }) {
 
     const [, setApiKey] = useRecoilState(apiKeyState);
     const [, setGmApiKey] = useRecoilState(gmApiKeyState);
@@ -117,6 +119,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setCategory] = useRecoilState(categoryState);
     const [, setHideNonMatches] = useRecoilState(hideNonMatchesState);
     const [, setSkipGo] = useRecoilState(skipGoState);
+    const [, setAccessibility] = useRecoilState(accessibilityState);
 
     const [showVenueSelector, setShowVenueSelector] = useState(true);
     const [showPositionControl, setShowPositionControl] = useState(true);
@@ -537,10 +540,18 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         if (skipGo) {
-            console.log(skipGo);
             setSkipGo(skipGo);
         }
     }, [skipGo]);
+
+    /*
+     * React on changes to the accessibility prop.
+     */
+    useEffect(() => {
+        if (accessibility) {
+            setAccessibility(accessibility);
+        }
+    }, [accessibility]);
 
     /**
      * When venue is fitted while initializing the data,
