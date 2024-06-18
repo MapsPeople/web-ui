@@ -34,6 +34,7 @@ import MapTemplate from '../MapTemplate/MapTemplate.jsx';
  * @param {boolean} [props.searchAllVenues] - If you want to perform search across all venues in the solution.
  * @param {boolean} [props.hideNonMatches] - Determine whether the locations on the map should be filtered (only show the matched locations and hide the rest) or highlighted (show all locations and highlight the matched ones with a red dot by default). If set to true, the locations will be filtered.
  * @param {boolean} [props.skipGo]
+ * @param {boolean} [props.accessibility]
  */
 function MapsIndoorsMap(props) {
 
@@ -84,6 +85,7 @@ function MapsIndoorsMap(props) {
 		const searchAllVenuesParameter = getBooleanQueryParameter(queryStringParams.get('searchAllVenues'));
 		const hideNonMatchesQueryParameter = getBooleanQueryParameter(queryStringParams.get('hideNonMatches'));
 		const skipGoQueryParameter = getBooleanQueryParameter(queryStringParams.get('skipGo'));
+		const accessibilityQueryParameter = getBooleanQueryParameter(queryStringParams.get('accessibility'));
 
         setMapTemplateProps({
             apiKey: props.supportsUrlParameters && apiKeyQueryParameter ? apiKeyQueryParameter : (props.apiKey || defaultProps.apiKey),
@@ -113,6 +115,7 @@ function MapsIndoorsMap(props) {
             searchAllVenues: props.supportsUrlParameters && searchAllVenuesParameter ? searchAllVenuesParameter : (props.searchAllVenues || defaultProps.searchAllVenues),
             hideNonMatches: props.supportsUrlParameters && hideNonMatchesQueryParameter ? hideNonMatchesQueryParameter : props.hideNonMatches,
             skipGo: props.supportsUrlParameters && skipGoQueryParameter ? skipGoQueryParameter : props.skipGo,
+            accessibility: props.supportsUrlParameters && accessibilityQueryParameter ? accessibilityQueryParameter : props.accessibility
         });
     }, [props]);
 
