@@ -6,7 +6,7 @@ import getDesktopPaddingBottom from '../helpers/GetDesktopPaddingBottom';
 import { mapTypes } from '../constants/mapTypes';
 
 // Recoil atoms
-import venueState from '../atoms/venueStateForVenueHook';
+import currentVenueState from '../atoms/currentVenueState';
 import bearingState from '../atoms/bearingState';
 import categoriesState from '../atoms/categoriesState';
 import kioskOriginLocationIdState from '../atoms/kioskOriginLocationIdState';
@@ -47,7 +47,7 @@ const useMapBoundsDeterminer = () => {
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const pitch = useRecoilValue(pitchState);
     const startZoomLevel = useRecoilValue(startZoomLevelState);
-    const currentVenue = useRecoilValue(venueState);
+    const currentVenue = useRecoilValue(currentVenueState);
     const currentPitch = useRecoilValue(currentPitchSelector);
     const [kioskLocationDisplayRuleWasChanged, setKioskLocationDisplayRuleWasChanged] = useState(false);
 
