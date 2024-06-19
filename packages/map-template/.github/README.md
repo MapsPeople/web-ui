@@ -87,7 +87,7 @@ When loading the MapsIndoors Map component for the first time, the map will resp
 |`category`|`string`|If you want to indicate an active category on the map. The value should be the Key (Administrative ID). |
 |`searchAllVenues`|`bool`|If you want to perform search across all venues in the solution. |
 |`hideNonMatches`|`bool`|Determine whether the locations on the map should be filtered (only show the matched locations and hide the rest) or highlighted (show all locations and highlight the matched ones with a red dot by default). If set to true, the locations will be filtered. |
-|`showExternalIDs`|`bool`|Determine whether the location details on the map should have an external ID visible. The default value is set to false. |
+|`showExternalIDs`|`bool`|Determine whether the Location details should show the external ID or not. The default value is set to false. |
 
 ## Using Query Parameters
 
