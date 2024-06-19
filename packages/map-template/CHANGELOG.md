@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add support for new parameter `showExternalIDs` which determines if selected location should have externalId visible.
+- Add support for new parameter `showExternalIDs` which determines the Location details should show the External ID or not.
 
 ## [1.50.0] - 2024-06-17
 
