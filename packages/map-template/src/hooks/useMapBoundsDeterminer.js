@@ -6,7 +6,6 @@ import getDesktopPaddingBottom from '../helpers/GetDesktopPaddingBottom';
 import { mapTypes } from '../constants/mapTypes';
 
 // Recoil atoms
-import currentVenueState from '../atoms/currentVenueState';
 import bearingState from '../atoms/bearingState';
 import categoriesState from '../atoms/categoriesState';
 import kioskOriginLocationIdState from '../atoms/kioskOriginLocationIdState';
@@ -15,6 +14,8 @@ import mapsIndoorsInstanceState from '../atoms/mapsIndoorsInstanceState';
 import mapTypeState from '../atoms/mapTypeState';
 import pitchState from '../atoms/pitchState';
 import startZoomLevelState from '../atoms/startZoomLevelState';
+import currentVenueNameState from '../atoms/currentVenueNameState';
+import venuesInSolutionState from '../atoms/venuesInSolutionState';
 
 // Hooks
 import getMobilePaddingBottom from '../helpers/GetMobilePaddingBottom';
@@ -47,7 +48,8 @@ const useMapBoundsDeterminer = () => {
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const pitch = useRecoilValue(pitchState);
     const startZoomLevel = useRecoilValue(startZoomLevelState);
-    const currentVenue = useRecoilValue(currentVenueState);
+    const currentVenueName = useRecoilValue(currentVenueNameState);
+    const venuesInSolution = useRecoilValue(venuesInSolutionState);
     const currentPitch = useRecoilValue(currentPitchSelector);
     const [kioskLocationDisplayRuleWasChanged, setKioskLocationDisplayRuleWasChanged] = useState(false);
 
@@ -65,7 +67,7 @@ const useMapBoundsDeterminer = () => {
      */
     useEffect(() =>  {
         determineMapBounds();
-    }, [mapsIndoorsInstance, currentVenue, locationId, kioskOriginLocationId, pitch, bearing, startZoomLevel, categories]);
+    }, [mapsIndoorsInstance, currentVenueName, locationId, kioskOriginLocationId, pitch, bearing, startZoomLevel, categories]);
 
     /**
      * Based on the combination of the states for venueName, locationId & kioskOriginLocationId,
@@ -74,6 +76,7 @@ const useMapBoundsDeterminer = () => {
      * @param {string} [forcedVenue] - If set, this venue will be used instead of the current venue.
      */
     function determineMapBounds() {
+        const currentVenue = venuesInSolution.find(venue => venue.name === currentVenueName);
         if (mapsIndoorsInstance && currentVenue) {
             setMapPositionKnown(true);
 

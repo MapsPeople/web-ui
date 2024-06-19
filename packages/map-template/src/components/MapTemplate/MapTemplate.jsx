@@ -159,7 +159,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     // The reset count is used to add a new key to the sidebar or bottomsheet, forcing it to re-render from scratch when resetting the Map Template.
     const [resetCount, setResetCount] = useState(0);
 
-    const [setCurrentVenueName,, updateCategories] = useCurrentVenue();
+    const [setCurrentVenueName, updateCategories] = useCurrentVenue();
 
     /**
      * Ensure that MapsIndoors Web SDK is available.

@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import venuesInSolutionState from '../atoms/venuesInSolutionState';
 import currentVenueNameState from '../atoms/currentVenueNameState';
-import currentVenueState from '../atoms/currentVenueState';
 import mapsIndoorsInstanceState from '../atoms/mapsIndoorsInstanceState';
 import apiKeyState from '../atoms/apiKeyState';
 import appConfigState from '../atoms/appConfigState';
@@ -13,7 +12,6 @@ import searchInputState from '../atoms/searchInputState';
 export const useCurrentVenue = () => {
 
     const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
-    const [currentVenue, setCurrentVenue] = useRecoilState(currentVenueState);
     const apiKey = useRecoilValue(apiKeyState);
     const [localStorageKey, setLocalStorageKey] = useState();
     const venuesInSolution = useRecoilValue(venuesInSolutionState);
@@ -27,9 +25,7 @@ export const useCurrentVenue = () => {
      * Responsible for setting the Venue state whenever venueName changes (and all Venues in the Solution are loaded).
      */
     useEffect(() => {
-        if (currentVenueName && venuesInSolution?.length && currentVenueName !== currentVenue?.name) {
-            setCurrentVenue(venuesInSolution.find(venue => venue.name === currentVenueName));
-        } else if (!currentVenueName && venuesInSolution.length) {
+        if (!currentVenueName && venuesInSolution.length) {
             setCurrentVenueName(getVenueToSet(venuesInSolution)?.name);
         }
     }, [currentVenueName, venuesInSolution]);
@@ -53,15 +49,15 @@ export const useCurrentVenue = () => {
      *  - Clear search input field.
      */
     useEffect(() => {
-        if (mapsIndoorsInstance && currentVenue && appConfig) {
-            mapsIndoorsInstance.setVenue(currentVenue);
+        if (mapsIndoorsInstance && venuesInSolution && currentVenueName && appConfig) {
+            mapsIndoorsInstance.setVenue(venuesInSolution.find(venue => venue.name === currentVenueName));
             updateCategories();
             setSearchResults([]);
             if (searchInput) {
                 searchInput.value = '';
             }
         }
-    }, [mapsIndoorsInstance, currentVenue, appConfig]);
+    }, [mapsIndoorsInstance, currentVenueName, venuesInSolution, appConfig]);
 
     /**
      * Set the current venue.
@@ -104,7 +100,7 @@ export const useCurrentVenue = () => {
      * Generate list of categories that exist on Locations in the current Venue.
      */
     const updateCategories = () => {
-        window.mapsindoors.services.LocationsService.getLocations({ venue: currentVenue.name }).then(locationsInVenue => {
+        window.mapsindoors.services.LocationsService.getLocations({ venue: currentVenueName }).then(locationsInVenue => {
             let uniqueCategories = new Map();
             for (const location of locationsInVenue) {
                 const keys = Object.keys(location.properties.categories);
@@ -129,5 +125,5 @@ export const useCurrentVenue = () => {
         });
     };
 
-    return [setCurrentVenueNameWrapper, currentVenue, updateCategories];
+    return [setCurrentVenueNameWrapper, updateCategories];
 }
