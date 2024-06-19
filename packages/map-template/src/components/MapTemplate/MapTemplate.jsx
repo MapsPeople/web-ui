@@ -159,7 +159,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     // The reset count is used to add a new key to the sidebar or bottomsheet, forcing it to re-render from scratch when resetting the Map Template.
     const [resetCount, setResetCount] = useState(0);
 
-    const [setCurrentVenueNameInHook,, updateCategories] = useCurrentVenue();
+    const [setCurrentVenueName,, updateCategories] = useCurrentVenue();
 
     /**
      * Ensure that MapsIndoors Web SDK is available.
@@ -331,7 +331,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             if (locationId) {
                 window.mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
                     if (location) {
-                        setCurrentVenueNameInHook(location.properties.venueId);
+                        setCurrentVenueName(location.properties.venueId);
                         setCurrentLocation(location);
                     }
                 });
@@ -373,7 +373,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the venue prop.
      */
     useEffect(() => {
-        setCurrentVenueNameInHook(venue);
+        setCurrentVenueName(venue);
     }, [venue]);
 
     /*
@@ -449,7 +449,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             setKioskOriginLocationId(kioskOriginLocationId);
             if (kioskOriginLocationId) {
                 window.mapsindoors.services.LocationsService.getLocation(kioskOriginLocationId).then(kioskLocation => {
-                    setCurrentVenueNameInHook(kioskLocation.properties.venueId);
+                    setCurrentVenueName(kioskLocation.properties.venueId);
                     setKioskLocation(kioskLocation);
                 })
             } else {
