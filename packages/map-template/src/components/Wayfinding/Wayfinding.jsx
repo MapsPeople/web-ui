@@ -35,6 +35,7 @@ import hasFoundRouteState from "../../atoms/hasFoundRouteState";
 import accessibilityOnState from "../../atoms/accessibilityOnState";
 import Accessibility from "../Accessibility/Accessibility";
 import skipGoState from "../../atoms/skipGoState";
+import isFinishRouteState from '../../atoms/isFinishRouteState';
 
 const searchFieldIdentifiers = {
     TO: 'TO',
@@ -109,6 +110,10 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
 
     const skipGo = useRecoilValue(skipGoState);
 
+    const isFinishRoute = useRecoilValue(isFinishRouteState);
+
+    const [isSkipGoUsed, setIsSkipGoUsed] = useState(false);
+    console.log(isFinishRoute);
     /**
      * Decorates location with data that is required for wayfinding to work.
      * Specifically, adds geometry to a google_places location.
@@ -315,6 +320,8 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         setOriginLocation();
         fromFieldRef.current.setDisplayText('');
         onBack();
+        setIsSkipGoUsed(true);
+        console.log('finish');
     }
 
     useEffect(() => {
@@ -391,15 +398,16 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     }, [currentLocation]);
 
     useEffect(() => {
-        if (skipGo && isSet) {
-            if (directionsFromLocation && directionsToLocation && isDirectionReady) {
+        if (skipGo && isSet && !isFinishRoute) {
+            if (directionsFromLocation && directionsToLocation && isDirectionReady && !isSkipGoUsed) {
                 onStartDirections();
+                setIsSkipGoUsed(true)
             }
         }
     }, [skipGo, isSet, directionsFromLocation, directionsToLocation, isDirectionReady])
 
     return (
-        <div className="wayfinding" ref={wayfindingRef}>
+        <div className="wayfinding" ref={wayfindingRef} style={{ display: skipGo ? 'grid' : 'grid'}}>
             <div className="wayfinding__directions">
                 <div className="wayfinding__title">{t('Start wayfinding')}</div>
                 <button className="wayfinding__close"

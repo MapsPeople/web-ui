@@ -18,7 +18,6 @@ function Accessibility({ onAccessibilityChanged }) {
     const [accessibilityOn, setAccessibilityOn] = useRecoilState(accessibilityOnState);
 
     const accessibility = useRecoilValue(accessibilityState);
-    console.log(accessibility);
 
     // If the accessibility is defined as true, then setAccessibilityOn to true.
     useEffect(() => {

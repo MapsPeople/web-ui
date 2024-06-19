@@ -57,6 +57,7 @@ import hideNonMatchesState from '../../atoms/hideNonMatchesState.js';
 import showRoadNamesState from '../../atoms/showRoadNamesState.js';
 import skipGoState from '../../atoms/skipGoState.js';
 import accessibilityState from '../../atoms/accessibilityState.js';
+import isFinishRouteState from '../../atoms/isFinishRouteState.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -123,6 +124,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setSkipGo] = useRecoilState(skipGoState);
     const [, setAccessibility] = useRecoilState(accessibilityState);
     const [, setShowRoadNames] = useRecoilState(showRoadNamesState);
+    const [, setIsFinishRouteState] = useRecoilState(isFinishRouteState);
 
     const [showVenueSelector, setShowVenueSelector] = useState(true);
     const [showPositionControl, setShowPositionControl] = useState(true);
@@ -610,6 +612,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         resetState();
         resetAppHistory();
         setResetCount(curr => curr + 1); // will force a re-render of bottom sheet and sidebar.
+        setIsFinishRouteState(true);
     }
 
     /**
