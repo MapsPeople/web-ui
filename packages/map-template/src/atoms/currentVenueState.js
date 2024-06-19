@@ -1,9 +1,8 @@
-// Used for the useCurrentVenue hook
-
 import { atom } from 'recoil';
 
 /**
- * Atom for holding the Venue object for the current Venue.
+ * Holds the Venue object of the current Venue.
+ * This is not to be confused with the "venue" prop that can be used to dynamically change venue.
  */
 const venueState = atom({
     key: 'venueState',
