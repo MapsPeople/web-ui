@@ -605,7 +605,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 const appConfigCategory = appConfig?.menuInfo.mainmenu.find(category => category.categoryKey === key);
 
                 if (appConfigCategory) {
-                    uniqueCategories.set(appConfigCategory.categoryKey, {displayName: location.properties.categories[key], iconUrl: appConfigCategory?.iconUrl })
+                    uniqueCategories.set(appConfigCategory.categoryKey, { displayName: location.properties.categories[key], iconUrl: appConfigCategory?.iconUrl })
                 }
             }
         }
