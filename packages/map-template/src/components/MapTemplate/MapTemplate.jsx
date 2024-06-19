@@ -594,7 +594,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * @param {array} locationsResult
      */
     function getCategories(locationsResult) {
-        // Initialise the unique categories map
         let uniqueCategories = new Map();
 
         // Loop through the locations and count the unique locations.
@@ -606,19 +605,20 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 // Get the categories from the App Config that have a matching key.
                 const appConfigCategory = appConfig?.menuInfo.mainmenu.find(category => category.categoryKey === key);
 
-                if (uniqueCategories.has(key)) {
-                    let count = uniqueCategories.get(key).count;
-                    uniqueCategories.set(key, { count: ++count, displayName: location.properties.categories[key], iconUrl: appConfigCategory?.iconUrl });
-                } else {
-                    uniqueCategories.set(key, { count: 1, displayName: location.properties.categories[key], iconUrl: appConfigCategory?.iconUrl });
+                if (appConfigCategory) {
+                    uniqueCategories.set(appConfigCategory.categoryKey, { displayName: location.properties.categories[key], iconUrl: appConfigCategory?.iconUrl })
                 }
             }
         }
 
-        // Sort the categories with most locations associated.
-        uniqueCategories = Array.from(uniqueCategories).sort((a, b) => b[1].count - a[1].count);
+        // Sort categories by the place in the mainmenu array. Use index to do that.
+        const sortedCategories = Array.from(uniqueCategories).sort((a, b) => {
+            const orderA = appConfig.menuInfo.mainmenu.findIndex(category => category.categoryKey === a[0]);
+            const orderB = appConfig.menuInfo.mainmenu.findIndex(category => category.categoryKey === b[0]);
+            return orderA - orderB;
+        });
 
-        setCategories(uniqueCategories);
+        setCategories(sortedCategories);
     }
 
     /*
