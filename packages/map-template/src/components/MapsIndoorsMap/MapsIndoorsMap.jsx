@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { createRoutesFromChildren, matchRoutes, useLocation, useNavigationType } from 'react-dom/client';
 import { RecoilRoot } from 'recoil';
 import MapTemplate from '../MapTemplate/MapTemplate.jsx';
+import isNullOrUndefined from "../../helpers/isNullOrUndefined.js";
 
 /**
  *
@@ -34,6 +35,7 @@ import MapTemplate from '../MapTemplate/MapTemplate.jsx';
  * @param {boolean} [props.searchAllVenues] - If you want to perform search across all venues in the solution.
  * @param {boolean} [props.hideNonMatches] - Determine whether the locations on the map should be filtered (only show the matched locations and hide the rest) or highlighted (show all locations and highlight the matched ones with a red dot by default). If set to true, the locations will be filtered.|
  * @param {boolean} [props.showExternalIDs] - Determine whether the location details on the map should have an external ID visible. The default value is set to false.
+ * @param {boolean} [props.showRoadNames] - A boolean parameter that dictates whether Mapbox road names should be shown. By default, Mapbox road names are hidden when MapsIndoors data is shown. It is dictated by `mi-transition-level` which default value is 17.
  */
 function MapsIndoorsMap(props) {
 
@@ -84,6 +86,7 @@ function MapsIndoorsMap(props) {
 		const searchAllVenuesParameter = getBooleanQueryParameter(queryStringParams.get('searchAllVenues'));
 		const hideNonMatchesQueryParameter = getBooleanQueryParameter(queryStringParams.get('hideNonMatches'));
         const showExternalIDsQueryParameter = getBooleanQueryParameter(queryStringParams.get('showExternalIDs'));
+        const showRoadNamesQueryParameterBoolean = getBooleanQueryParameter(queryStringParams.get('showRoadNames'));
 
         setMapTemplateProps({
             apiKey: props.supportsUrlParameters && apiKeyQueryParameter ? apiKeyQueryParameter : (props.apiKey || defaultProps.apiKey),
@@ -109,10 +112,11 @@ function MapsIndoorsMap(props) {
             supportsUrlParameters: props.supportsUrlParameters,
             useKeyboard: props.supportsUrlParameters && useKeyboardQueryParameter ? useKeyboardQueryParameter : (props.useKeyboard || defaultProps.useKeyboard),
             miTransitionLevel: props.supportsUrlParameters && miTransitionLevelQueryParameter ? miTransitionLevelQueryParameter : props.miTransitionLevel,
-			category: props.supportsUrlParameters && categoryQueryParameter ? categoryQueryParameter : props.category,
+            category: props.supportsUrlParameters && categoryQueryParameter ? categoryQueryParameter : props.category,
             searchAllVenues: props.supportsUrlParameters && searchAllVenuesParameter ? searchAllVenuesParameter : (props.searchAllVenues || defaultProps.searchAllVenues),
             hideNonMatches: props.supportsUrlParameters && hideNonMatchesQueryParameter ? hideNonMatchesQueryParameter : props.hideNonMatches,
-            showExternalIDs: props.supportsUrlParameters && showExternalIDsQueryParameter ? showExternalIDsQueryParameter : props.showExternalIDs,
+            showRoadNames: props.supportsUrlParameters && !isNullOrUndefined(showRoadNamesQueryParameterBoolean) && !isNullOrUndefined(queryStringParams.get('showRoadNames')) ? showRoadNamesQueryParameterBoolean : props.showRoadNames,
+            showExternalIDs: props.supportsUrlParameters && showExternalIDsQueryParameter ? showExternalIDsQueryParameter : props.showExternalIDs
         });
     }, [props]);
 

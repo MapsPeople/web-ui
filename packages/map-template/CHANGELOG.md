@@ -5,11 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.51.0] - 2024-06-17
+# [1.55.0] - 2024-06-19
 
 ### Added
 
 - Add support for new parameter `showExternalIDs` which determines the Location details should show the External ID or not.
+
+## [1.52.0] - 2024-06-19
+
+### Added
+
+- Changed the order of how categories are displayed. Now their order is dictated by AppConfig.
+
+## [1.51.1] - 2024-06-18
+
+### Fixed
+
+- Fixed issue where MapsIndoors data could be wrongly shown in the default language in case the given IETF language string consisted of more than a primary language subtag.
+
+## [1.51.0] - 2024-06-17
+
+### Added
+
+- Added new property `showRoadNames`: A boolean parameter that dictates whether Mapbox road names should be shown. By default, Mapbox road names are hidden when MapsIndoors data is shown. It is dictated by `mi-transition-level` which default value is 17.
 
 ## [1.50.0] - 2024-06-17
 
