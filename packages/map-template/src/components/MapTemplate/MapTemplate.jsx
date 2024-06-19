@@ -54,6 +54,7 @@ import searchAllVenuesState from '../../atoms/searchAllVenues.js';
 import currentVenueNameState from '../../atoms/currentVenueNameState.js';
 import categoryState from '../../atoms/categoryState.js';
 import hideNonMatchesState from '../../atoms/hideNonMatchesState.js';
+import showRoadNamesState from '../../atoms/showRoadNamesState.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -79,15 +80,16 @@ defineCustomElements();
  * @param {string} [props.gmMapId] - The Google Maps Map ID associated with a specific map style or feature.
  * @param {boolean} [props.useMapProviderModule] - Set to true if the Map Template should take MapsIndoors solution modules into consideration when determining what map type to use.
  * @param {string} [props.kioskOriginLocationId] - If running the Map Template as a kiosk (upcoming feature), provide the Location ID that represents the location of the kiosk.
- * @param {string} [props.language] - The language to show textual content in. Supported values are "en" for English, "da" for Danish, "de" for German and "fr" for French. If the prop is not set, the language of the browser will be used (if it is one of the four supported languages - otherwise it will default to English).
+ * @param {string} [props.language] - The language to show textual content in. Supported values are "en" for English, "da" for Danish, "de" for German, "fr" for French, "it" for Italian and "es" for Spanish. If the prop is not set, the language of the browser will be used (if it is one of the supported languages - otherwise it will default to English).
  * @param {boolean} [props.supportsUrlParameters] - Set to true if you want to support URL Parameters to configure the Map Template.
  * @param {boolean} [props.useKeyboard] - If running the Map Template as a kiosk, set this prop to true and it will prompt a keyboard.
  * @param {number} [props.timeout] - If you want the Map Template to reset map position and UI elements to the initial state after some time of inactivity, use this to specify the number of seconds of inactivity before resetting.
  * @param {number} [props.miTransitionLevel] - The zoom level on which to transition from Mapbox to MapsIndoors data. Default value is 17. This feature is only available for Mapbox.
  * @param {boolean} [props.searchAllVenues] - If you want to perform search across all venues in the solution.
  * @param {boolean} [props.hideNonMatches] - Determine whether the locations on the map should be filtered (only show the matched locations and hide the rest) or highlighted (show all locations and highlight the matched ones with a red dot by default). If set to true, the locations will be filtered.
+ * @param {boolean} [props.showRoadNames] - A boolean parameter that dictates whether Mapbox road names should be shown. By default, Mapbox road names are hidden when MapsIndoors data is shown. It is dictated by `mi-transition-level` which default value is 17.
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames }) {
 
     const [, setApiKey] = useRecoilState(apiKeyState);
     const [, setGmApiKey] = useRecoilState(gmApiKeyState);
@@ -114,6 +116,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setSearchAllVenues] = useRecoilState(searchAllVenuesState);
     const [, setCategory] = useRecoilState(categoryState);
     const [, setHideNonMatches] = useRecoilState(hideNonMatchesState);
+    const [, setShowRoadNames] = useRecoilState(showRoadNamesState);
 
     const [showVenueSelector, setShowVenueSelector] = useState(true);
     const [showPositionControl, setShowPositionControl] = useState(true);
@@ -173,8 +176,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             const miSdkApiTag = document.createElement('script');
             miSdkApiTag.setAttribute('type', 'text/javascript');
-            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.32.0/mapsindoors-4.32.0.js.gz');
-            miSdkApiTag.setAttribute('integrity', 'sha384-pobsiCLAduarZklerr0Y1Yj0gkSVov1spL2XwAMLQ1lm3t6USIXIBAAMeJqiWXSc');
+            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.35.0/mapsindoors-4.35.0.js.gz');
+            miSdkApiTag.setAttribute('integrity', 'sha384-p/2HpbrD2kC/E62E6RgoVk6NgJN6yGD9o1zbTjNzu933wucQZBvIlyTjCbNVbMMP');
             miSdkApiTag.setAttribute('crossorigin', 'anonymous');
             document.body.appendChild(miSdkApiTag);
             miSdkApiTag.onload = () => {
@@ -210,7 +213,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             const languageToUse = language ? language : navigator.language;
 
             // Set the language on the MapsIndoors SDK in order to get eg. Mapbox and Google directions in that language.
-            window.mapsindoors.MapsIndoors.setLanguage(languageToUse);
+            // The MapsIndoors data only accepts the first part of the IETF language string, hence the split.
+            window.mapsindoors.MapsIndoors.setLanguage(languageToUse.split('-')[0]);
 
             // If relevant, fetch venues, categories and the current location again to get them in the new language
             window.mapsindoors.services.LocationsService.once('update_completed', () => {
@@ -240,6 +244,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 // Change the already set language
                 i18n.changeLanguage(languageToUse);
             }
+
 
             setCurrentLanguage(languageToUse);
         }
@@ -529,6 +534,12 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         }
     }, [hideNonMatches]);
 
+    /*
+     * React on changes to the showRoadNames prop.
+     */
+    useEffect(() => {
+        setShowRoadNames(showRoadNames);
+    }, [showRoadNames])
 
     /**
      * When venue is fitted while initializing the data,
@@ -583,7 +594,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * @param {array} locationsResult
      */
     function getCategories(locationsResult) {
-        // Initialise the unique categories map
         let uniqueCategories = new Map();
 
         // Loop through the locations and count the unique locations.
@@ -595,19 +605,20 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 // Get the categories from the App Config that have a matching key.
                 const appConfigCategory = appConfig?.menuInfo.mainmenu.find(category => category.categoryKey === key);
 
-                if (uniqueCategories.has(key)) {
-                    let count = uniqueCategories.get(key).count;
-                    uniqueCategories.set(key, { count: ++count, displayName: location.properties.categories[key], iconUrl: appConfigCategory?.iconUrl });
-                } else {
-                    uniqueCategories.set(key, { count: 1, displayName: location.properties.categories[key], iconUrl: appConfigCategory?.iconUrl });
+                if (appConfigCategory) {
+                    uniqueCategories.set(appConfigCategory.categoryKey, { displayName: location.properties.categories[key], iconUrl: appConfigCategory?.iconUrl })
                 }
             }
         }
 
-        // Sort the categories with most locations associated.
-        uniqueCategories = Array.from(uniqueCategories).sort((a, b) => b[1].count - a[1].count);
+        // Sort categories by the place in the mainmenu array. Use index to do that.
+        const sortedCategories = Array.from(uniqueCategories).sort((a, b) => {
+            const orderA = appConfig.menuInfo.mainmenu.findIndex(category => category.categoryKey === a[0]);
+            const orderB = appConfig.menuInfo.mainmenu.findIndex(category => category.categoryKey === b[0]);
+            return orderA - orderB;
+        });
 
-        setCategories(uniqueCategories);
+        setCategories(sortedCategories);
     }
 
     /*
@@ -622,7 +633,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         }
     }, [category, categories, mapsindoorsSDKAvailable]);
 
-    return <div className={`mapsindoors-map ${locationsDisabledRef.current ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'} ${showPositionControl ? 'mapsindoors-map--show-my-position' : 'mapsindoors-map--hide-my-position'}`}>
+    return <div className={`mapsindoors-map
+    ${locationsDisabledRef.current ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}
+    ${(venues.length > 1 && showVenueSelector) ? '' : 'mapsindoors-map--hide-venue-selector'}
+    ${showPositionControl ? 'mapsindoors-map--show-my-position' : 'mapsindoors-map--hide-my-position'}`}>
         <Notification />
         {!isMapReady && <SplashScreen />}
         {venues.length > 1 && showVenueSelector && <VenueSelector

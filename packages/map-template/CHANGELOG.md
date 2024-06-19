@@ -5,6 +5,60 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.52.0] - 2024-06-19
+
+### Added
+
+- Changed the order of how categories are displayed. Now their order is dictated by AppConfig.
+
+## [1.51.1] - 2024-06-18
+
+### Fixed
+
+- Fixed issue where MapsIndoors data could be wrongly shown in the default language in case the given IETF language string consisted of more than a primary language subtag.
+
+## [1.51.0] - 2024-06-17
+
+### Added
+
+- Added new property `showRoadNames`: A boolean parameter that dictates whether Mapbox road names should be shown. By default, Mapbox road names are hidden when MapsIndoors data is shown. It is dictated by `mi-transition-level` which default value is 17.
+
+## [1.50.0] - 2024-06-17
+
+### Added
+
+- Added missing props `searchAllVenues` and `language` when creating the QR code URL.
+
+## [1.49.0] - 2024-06-17
+
+### Added
+
+- Add support for Italian and Spanish languages.
+
+## [1.48.2] - 2024-06-14
+
+### Fixed
+
+- Fixed an issue where the text in the Legend Information Modal in the Kiosk mode did not follow the expected formatting.
+
+## [1.48.1] - 2024-06-14
+
+### Fixed
+
+- Fixed an issue with clearing search input causing console errrors.
+
+## [1.48.0] - 2024-06-13
+
+### Added
+
+- Add 2D/3D visibility switch component which can only be visible if the `mapbox`, `3dwalls` and `floorplan` modules are enabled in the CMS.
+
+## [1.47.0] - 2024-06-12
+
+### Added
+
+- Upgraded to MapsIndoors SDK v4.35.0
+
 ## [1.46.0] - 2024-05-23
 
 ### Added
@@ -27,7 +81,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed bottom sheet jumping outside the viewport when selecting a category. 
+- Fixed bottom sheet jumping outside the viewport when selecting a category.
 
 ## [1.44.1] - 2024-04-23
 
@@ -45,13 +99,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fix the venue not updating correctly on the map. 
+- Fix the venue not updating correctly on the map.
 
 ## [1.43.0] - 2024-03-26
 
 ### Added
 
-- Add support for new parameter `searchAllVenues` which searches across all venues in one solution. 
+- Add support for new parameter `searchAllVenues` which searches across all venues in one solution.
 - Change the default behaviour to search in one venue.
 
 ## [1.42.0] - 2024-03-26
@@ -68,43 +122,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.40.0] - 2024-03-06
 
-### Added 
+### Added
 
 - Added Sentry for Error Logging and Performance Metrics
 
 ## [1.39.1] - 2024-03-04
 
-### Added 
+### Added
 
 - Added docs for `category` prop.
 
 ## [1.39.0] - 2024-02-29
 
-### Added 
+### Added
 
 - Added legend modal to the kiosk.
 
 ## [1.38.1] - 2024-02-28
 
-### Fixed 
+### Fixed
 
 - Added missing `language` prop to web component.
 
 ## [1.38.0] - 2024-02-28
 
-### Added 
+### Added
 
 - Added support for `category` property.
 
 ## [1.37.1] - 2024-02-26
 
-### Fixed 
+### Fixed
 
 - Fix size of the images on the Location Details page.
 
 ## [1.37.0] - 2024-02-22
 
-### Added 
+### Added
 
 - Remove hover from non-selectable locations.
 
@@ -191,7 +245,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added vertical scroll buttons to the search results list
-- Added horizontal scroll buttons to the categories list 
+- Added horizontal scroll buttons to the categories list
 
 ## [1.32.0] - 2024-01-24
 
