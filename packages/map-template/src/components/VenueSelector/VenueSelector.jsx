@@ -9,8 +9,7 @@ import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import Venue from './Venue/Venue';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
 import isLocationClickedState from '../../atoms/isLocationClickedState';
-import fitBoundsLocation from '../../helpers/fitBoundsLocation';
-import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
+import venueWasSelectedState from '../../atoms/venueWasSelectedState';
 
 /**
  * Show a list of Venues. The user can click on a Venue to select it.
@@ -24,7 +23,7 @@ function VenueSelector({ onOpen, onClose, active }) {
 
     const venueSelectorContentRef = useRef(null);
     const venuesInSolution = useRecoilValue(venuesInSolutionState);
-    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
+    const [, setVenueWasSelected] = useRecoilState(venueWasSelectedState);
 
     const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
 
@@ -36,8 +35,8 @@ function VenueSelector({ onOpen, onClose, active }) {
      * @param {object} venue
      */
     const selectVenue = venue => {
+        setVenueWasSelected(true);
         setCurrentVenueName(venue.name);
-        fitBoundsLocation(venue, mapsIndoorsInstance, 0, 0);
         toggle();
     };
 

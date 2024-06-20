@@ -16,6 +16,7 @@ import pitchState from '../atoms/pitchState';
 import startZoomLevelState from '../atoms/startZoomLevelState';
 import currentVenueNameState from '../atoms/currentVenueNameState';
 import venuesInSolutionState from '../atoms/venuesInSolutionState';
+import venueWasSelectedState from '../atoms/venueWasSelectedState';
 
 // Hooks
 import getMobilePaddingBottom from '../helpers/GetMobilePaddingBottom';
@@ -51,6 +52,7 @@ const useMapBoundsDeterminer = () => {
     const currentVenueName = useRecoilValue(currentVenueNameState);
     const venuesInSolution = useRecoilValue(venuesInSolutionState);
     const currentPitch = useRecoilValue(currentPitchSelector);
+    const venueWasSelected = useRecoilValue(venueWasSelectedState);
     const [kioskLocationDisplayRuleWasChanged, setKioskLocationDisplayRuleWasChanged] = useState(false);
 
     /**
@@ -96,7 +98,7 @@ const useMapBoundsDeterminer = () => {
                         });
                     }
                 });
-            } else if (locationId) {
+            } else if (locationId && !venueWasSelected) {
                 // When a LocationID is set, the map is centered fitted to the bounds of the given Location with some padding,
                 // either bottom (on mobile to accommodate for the bottom sheet) or to the left (on desktop to accommodate for the modal).
                 window.mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
