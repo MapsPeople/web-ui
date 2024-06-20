@@ -113,7 +113,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     const isFinishRoute = useRecoilValue(isFinishRouteState);
 
     const [isSkipGoUsed, setIsSkipGoUsed] = useState(false);
-    console.log(isFinishRoute);
+
     /**
      * Decorates location with data that is required for wayfinding to work.
      * Specifically, adds geometry to a google_places location.
@@ -321,7 +321,6 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         fromFieldRef.current.setDisplayText('');
         onBack();
         setIsSkipGoUsed(true);
-        console.log('finish');
     }
 
     useEffect(() => {
