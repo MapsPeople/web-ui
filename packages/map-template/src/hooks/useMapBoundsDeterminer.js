@@ -30,12 +30,12 @@ import currentPitchSelector from '../selectors/currentPitch';
  * Determine where in the world to pan the map, based on the combination of venueName, locationId and kioskOriginLocationId.
  *
  * Returns two state variables:
- * - mapPositionKnown is set to true when map position is investigating. This is used to instruct the Map Template to start showing UI elements.
- * - venueOnMap is populated with the venue shown on map. This is used to instruct the Map Template to hide the spinner, since the map is now ready to be shown to the user.
+ * - mapPositionInvestigating is set to true when map position is investigating. This is used to instruct the Map Template to start showing UI elements.
+ * - mapPositionKnown is set to instruct the Map Template that the map is now ready to be shown to the user.
  */
 const useMapBoundsDeterminer = () => {
+    const [mapPositionInvestigating, setMapPositionInvestigating] = useState(false);
     const [mapPositionKnown, setMapPositionKnown] = useState(false);
-    const [venueOnMap, setVenueOnMap] = useState();
 
     const isDesktop = useIsDesktop();
     const isInactive = useInactive();
@@ -78,7 +78,7 @@ const useMapBoundsDeterminer = () => {
     function determineMapBounds() {
         const currentVenue = venuesInSolution.find(venue => venue.name === currentVenueName);
         if (mapsIndoorsInstance && currentVenue) {
-            setMapPositionKnown(true);
+            setMapPositionInvestigating(true);
 
             if (kioskOriginLocationId && isDesktop) {
                 // When in Kiosk mode (which can only happen on desktop), the map is fitted to the bounds of the given Location with some bottom padding to accommodate
@@ -91,7 +91,7 @@ const useMapBoundsDeterminer = () => {
                         setKioskDisplayRule(kioskLocation);
 
                         getDesktopPaddingBottom().then(desktopPaddingBottom => {
-                            setVenueOnMap(currentVenue);
+                            setMapPositionKnown(kioskLocation.geometry);
                             goToGeometry(mapType, kioskLocation.geometry, mapsIndoorsInstance, desktopPaddingBottom, 0, startZoomLevel, currentPitch, bearing);
                         });
                     }
@@ -107,12 +107,12 @@ const useMapBoundsDeterminer = () => {
 
                         if (isDesktop) {
                             getDesktopPaddingLeft().then(desktopPaddingLeft => {
-                                setVenueOnMap(currentVenue);
+                                setMapPositionKnown(location.geometry);
                                 goToGeometry(mapType, location.geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, startZoomLevel, currentPitch, bearing);
                             });
                         } else {
                             getMobilePaddingBottom().then(mobilePaddingBottom => {
-                                setVenueOnMap(currentVenue);
+                                setMapPositionKnown(location.geometry);
                                 goToGeometry(mapType, location.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, startZoomLevel, currentPitch, bearing);
                             });
                         }
@@ -120,7 +120,7 @@ const useMapBoundsDeterminer = () => {
                 });
             } else if (currentVenue) {
                 // When showing a venue, the map is fitted to the bounds of the Venue with no padding.
-                setVenueOnMap(currentVenue);
+                setMapPositionKnown(currentVenue.geometry);
                 goToGeometry(mapType, currentVenue.geometry, mapsIndoorsInstance, 0, 0, startZoomLevel, currentPitch, bearing);
             }
         }
@@ -147,7 +147,7 @@ const useMapBoundsDeterminer = () => {
         setKioskLocationDisplayRuleWasChanged(true);
     }
 
-    return [mapPositionKnown, venueOnMap];
+    return [mapPositionInvestigating, mapPositionKnown];
 };
 
 export default useMapBoundsDeterminer;

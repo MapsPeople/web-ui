@@ -122,7 +122,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const directionsFromLocation = useLocationForWayfinding(directionsFrom);
     const directionsToLocation = useLocationForWayfinding(directionsTo);
 
-    const [isMapPositionKnown, setIsMapPositionKnown] = useState(false);
+    const [isMapPositionInvestigating, setIsMapPositionInvestigating] = useState(false);
 
     // The filtered locations by external id, if present.
     const [, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
@@ -528,14 +528,13 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [showRoadNames])
 
     /**
-     * When venue is fitted while initializing the data,
-     * set map to be ready and get the venue categories.
+     * When map position is known while initializing the data,
+     * set map to be ready.
      */
-    function venueChangedOnMap(venue) {
+    function mapPositionKnown() {
         if (isMapReady === false) {
             setMapReady(true);
         }
-        updateCategories();
     }
 
     /**
@@ -585,7 +584,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         />}
         {showQRCodeDialog && <QRCodeDialog />}
         {showLegendDialog && <LegendDialog />}
-        {isMapPositionKnown &&
+        {isMapPositionInvestigating &&
             <Fragment key={resetCount}>
                 {isDesktop &&
                     <Sidebar
@@ -611,8 +610,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         }
         <MIMap
             useMapProviderModule={useMapProviderModule}
-            onVenueChangedOnMap={(venue) => venueChangedOnMap(venue)}
-            onMapPositionKnown={() => setIsMapPositionKnown(true)}
+            onMapPositionKnown={() => mapPositionKnown()}
+            onMapPositionInvestigating={() => setIsMapPositionInvestigating(true)}
             onLocationClick={(location) => locationClicked(location)}
         />
     </div>

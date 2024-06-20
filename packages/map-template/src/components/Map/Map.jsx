@@ -34,12 +34,12 @@ let _tileStyle;
  *
  * @param {Object} props
  * @param {function} [props.onLocationClick] - Function that is run when a MapsIndoors Location is clicked. the Location will be sent along as first argument.
- * @param {function} props.onVenueChangedOnMap - Function that is run when the map bounds was changed due to fitting to a venue.
+ * @param {function} props.onMapPositionKnown - Function that is run when the map bounds was changed due to fitting to a Venue or Location.
  * @param {boolean} props.useMapProviderModule - If you want to use the Map Provider set on your solution in the MapsIndoors CMS, set this to true.
  * @param {function} onMapPositionKnown - Function that is run when the map position is known.
  * @returns
  */
-function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule, onMapPositionKnown }) {
+function Map({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating }) {
     const apiKey = useRecoilValue(apiKeyState);
     const gmApiKey = useRecoilValue(gmApiKeyState);
     const mapboxAccessToken = useRecoilValue(mapboxAccessTokenState);
@@ -55,12 +55,11 @@ function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule, onMap
     const [, setPositionControl] = useRecoilState(positionControlState);
     const solution = useRecoilValue(solutionState);
     const [, setErrorMessage] = useRecoilState(notificationMessageState);
-    const [, setCurrentVenueName] = useRecoilState(currentVenueNameState);
     const hideNonMatches = useRecoilValue(hideNonMatchesState);
 
     useLiveData(apiKey);
 
-    const [mapPositionKnown, venueOnMap] = useMapBoundsDeterminer();
+    const [mapPositionInvestigating, mapPositionKnown] = useMapBoundsDeterminer();
 
     useEffect(() => {
         if (!solution || (gmApiKey === null && mapboxAccessToken === null)) return;
@@ -125,21 +124,21 @@ function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule, onMap
      * When map position is known, run callback.
      */
     useEffect(() => {
-        if (mapPositionKnown) {
-            onMapPositionKnown();
+        if (mapPositionInvestigating) {
+            onMapPositionInvestigating();
         }
-    }, [mapPositionKnown]);
+    }, [mapPositionInvestigating]);
 
     /*
      * When venue is changed on the map, run callback.
      * Set the current venue name whenever the venue is changed on the map.
      */
     useEffect(() => {
-        if (venueOnMap) {
-            setCurrentVenueName(venueOnMap.name);
-            onVenueChangedOnMap(venueOnMap);
+        if (mapPositionKnown) {
+            onMapPositionKnown();
         }
-    }, [venueOnMap]);
+    }, [mapPositionKnown]);
+
 
     /*
      * Dynamically filter or highlight location based on the "filteredLocations", "filteredLocationsByExternalIDs" and "hideNonMatches" property.
