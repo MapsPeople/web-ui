@@ -53,15 +53,6 @@ export const useCurrentVenue = () => {
     }, [mapsIndoorsInstance, currentVenueName, venuesInSolution, appConfig]);
 
     /**
-     * Set the current venue.
-     *
-     * @param {string} venueName - the name of the venue (called "Administrative ID" in the MapsIndoors CMS)
-     */
-    const setCurrentVenueNameWrapper = venueName => {
-        setCurrentVenueName(venueName);
-    };
-
-    /**
      * Used when there is no set venue.
      * Calculates which venue to set based on number of venues and alphabetic order.
      */
@@ -104,5 +95,5 @@ export const useCurrentVenue = () => {
         });
     };
 
-    return [setCurrentVenueNameWrapper, updateCategories];
+    return [setCurrentVenueName, updateCategories];
 }
