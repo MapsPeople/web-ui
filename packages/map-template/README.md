@@ -188,3 +188,51 @@ Example of URL:
 `directionsTo` + `directionsFrom` + `locationId` → the `directionsTo` + `directionsFrom` have priority over the `locationId`
 
 `directionsTo` + `directionsFrom` + `externalIDs` → the `directionsTo` + `directionsFrom` have priority over the `externalIDs`
+
+
+## External customization of the Map Template
+
+When using the Map Template as a React Component or as a Web Component, you can customize the application by accessing the MapsIndoors instance. To do this, listen for the `mapsIndoorsInstanceAvailable` event on the `window` object. 
+
+You can read about all the methods that can be used on the MapsIndoors Instance [here]. (https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/mapsindoors.MapsIndoors.html)
+
+### 1. React Component
+
+To use the MapsIndoors instance within a React Component, you can create a `useEffect` hook that listens for the `mapsIndoorsInstanceAvailable` event on the `window` object.
+
+```
+import MapsIndoorsMap from '@mapsindoors/map-template/dist/mapsindoors-react.es.js';
+import { useEffect } from 'react';
+
+function App() {
+
+    useEffect(() => {
+        window.addEventListener('mapsIndoorsInstanceAvailable', () => {
+            window.mapsIndoorsInstance.setDisplayRule('yourLocationId', { 'icon': 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fkarrieredagene.dk%2Fwp-content%2Fuploads%2FLogo.png&f=1&nofb=1&ipt=e78976a7297776ae859b8db776258e5fae819a7640aca805587379dcee10abda&ipo=images' })
+        })
+    }, [])
+
+    return (
+        <div>
+            <MapsIndoorsMap apiKey="yourApiKey" venue="yourVenue" mapboxAccessToken="yourMapboxAccessToken" />
+        </div>
+    )
+}
+
+export default App;
+```
+
+### 2. Web Component 
+
+To use the MapsIndoors instance within a Web Component, include a script tag that listens for the `mapsIndoorsInstanceAvailable` event on the `window` object.
+
+```
+<body>
+    <mapsindoors-map api-key="yourApiKey" venue="yourVenue" mapbox-access-token="yourMapboxAccessToken"></mapsindoors-map>
+    <script>
+        window.addEventListener('mapsIndoorsInstanceAvailable', () => {
+            window.mapsIndoorsInstance.setDisplayRule('yourLocationId', {'icon': 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fkarrieredagene.dk%2Fwp-content%2Fuploads%2FLogo.png&f=1&nofb=1&ipt=e78976a7297776ae859b8db776258e5fae819a7640aca805587379dcee10abda&ipo=images''})
+        })
+    </script>
+</body>
+```
