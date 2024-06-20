@@ -20,7 +20,6 @@ import pitchState from '../../atoms/pitchState';
 import solutionState from '../../atoms/solutionState';
 import notificationMessageState from '../../atoms/notificationMessageState';
 import useMapBoundsDeterminer from '../../hooks/useMapBoundsDeterminer';
-import currentVenueNameState from "../../atoms/currentVenueNameState";
 import hideNonMatchesState from "../../atoms/hideNonMatchesState";
 
 /**
@@ -36,7 +35,7 @@ let _tileStyle;
  * @param {function} [props.onLocationClick] - Function that is run when a MapsIndoors Location is clicked. the Location will be sent along as first argument.
  * @param {function} props.onMapPositionKnown - Function that is run when the map bounds was changed due to fitting to a Venue or Location.
  * @param {boolean} props.useMapProviderModule - If you want to use the Map Provider set on your solution in the MapsIndoors CMS, set this to true.
- * @param {function} onMapPositionKnown - Function that is run when the map position is known.
+ * @param {function} onMapPositionInvestigating - Function that is run when the map position is being determined.
  * @returns
  */
 function Map({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating }) {

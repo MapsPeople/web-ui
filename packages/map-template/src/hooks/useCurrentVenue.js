@@ -9,6 +9,13 @@ import categoriesState from '../atoms/categoriesState';
 import searchResultsState from '../atoms/searchResultsState';
 import searchInputState from '../atoms/searchInputState';
 
+/**
+ * Hook to handle the current Venue in the app based on the venue prop or other ways to set the Venue.
+ *
+ * Handles side effects when a Venue changes.
+ *
+ * @returns {[function, function]} - Function to set the current Venue (by providing the Venue name) and a function to force Categories to be updated.
+ */
 export const useCurrentVenue = () => {
 
     const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
