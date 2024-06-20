@@ -406,7 +406,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     }, [skipGo, isSet, directionsFromLocation, directionsToLocation, isDirectionReady])
 
     return (
-        <div className="wayfinding" ref={wayfindingRef} style={{ display: skipGo ? 'grid' : 'grid'}}>
+        <div className="wayfinding" ref={wayfindingRef}>
             <div className="wayfinding__directions">
                 <div className="wayfinding__title">{t('Start wayfinding')}</div>
                 <button className="wayfinding__close"
