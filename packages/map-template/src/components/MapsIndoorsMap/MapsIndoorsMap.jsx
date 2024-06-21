@@ -82,9 +82,9 @@ function MapsIndoorsMap(props) {
         const languageQueryParameter = queryStringParams.get('language');
         const useKeyboardQueryParameter = getBooleanQueryParameter(queryStringParams.get('useKeyboard'));
         const miTransitionLevelQueryParameter = queryStringParams.get('miTransitionLevel');
-		const categoryQueryParameter = queryStringParams.get('category');
-		const searchAllVenuesParameter = getBooleanQueryParameter(queryStringParams.get('searchAllVenues'));
-		const hideNonMatchesQueryParameter = getBooleanQueryParameter(queryStringParams.get('hideNonMatches'));
+        const categoryQueryParameter = queryStringParams.get('category');
+        const searchAllVenuesParameter = getBooleanQueryParameter(queryStringParams.get('searchAllVenues'));
+        const hideNonMatchesQueryParameter = getBooleanQueryParameter(queryStringParams.get('hideNonMatches'));
         const showExternalIDsQueryParameter = getBooleanQueryParameter(queryStringParams.get('showExternalIDs'));
         const showRoadNamesQueryParameterBoolean = getBooleanQueryParameter(queryStringParams.get('showRoadNames'));
 
