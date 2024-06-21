@@ -13,10 +13,10 @@ const useDirectionsInfo = (originLocation, destinationLocation, directionsServic
     const [totalTime, setTotalTime] = useState();
     const [hasFoundRoute, setHasFoundRoute] = useRecoilState(hasFoundRouteState);
     const [, setDirectionsResponse] = useRecoilState(directionsResponseState);
-    const [isDirectionReady, setIsDirectionReady] = useState()
+    const [areDirectionsReady, setAreDirectionReady] = useState()
 
     useEffect(() => {
-        setIsDirectionReady(false);
+        setAreDirectionReady(false);
         if (originLocation?.geometry && destinationLocation?.geometry) {
             directionsService.getRoute({
                 origin: getLocationPoint(originLocation),
@@ -40,7 +40,7 @@ const useDirectionsInfo = (originLocation, destinationLocation, directionsServic
                         totalTime,
                         directionsResult
                     });
-                    setIsDirectionReady(true)
+                    setAreDirectionReady(true)
                 } else {
                     setHasFoundRoute(false);
                 }
@@ -50,7 +50,7 @@ const useDirectionsInfo = (originLocation, destinationLocation, directionsServic
         }
     }, [originLocation, destinationLocation, directionsService, accessibilityOn, travelMode]);
 
-    return [totalDistance, totalTime, hasFoundRoute, isDirectionReady];
+    return [totalDistance, totalTime, hasFoundRoute, areDirectionsReady];
 }
 
 export default useDirectionsInfo;
