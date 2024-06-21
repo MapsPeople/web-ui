@@ -192,7 +192,7 @@ Example of URL:
 
 ## External customization of the Map Template
 
-When using the Map Template as a React Component or as a Web Component, you can customize the application by accessing the MapsIndoors instance. To do this, listen for the `mapsIndoorsInstanceAvailable` event on the `window` object. 
+When using the Map Template as a React Component or as a Web Component, you can control the map and the data on it by accessing the MapsIndoors instance. To do this, listen for the `mapsIndoorsInstanceAvailable` event on the `window` object. 
 
 You can read about all the methods that can be used on the MapsIndoors Instance [here]. (https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/mapsindoors.MapsIndoors.html)
 
