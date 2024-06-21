@@ -164,9 +164,3 @@ $ npm run deploy-to-gcloud -- BUCKET_NAME
 ```
 
 This script will only work if you've already authenticated using the `gsutil` CLI on your machine, and have the proper access rights to deploy to the specified bucket.
-
-## External customization of the Map Template
-
-When using the Map Template as a React Component or as a Web Component, you can customize the application by accessing the MapsIndoors instance. To do this, listen for the `mapsIndoorsInstanceAvailable` event on the `window` object. 
-
-You can read about all the methods that can be used on the MapsIndoors Instance [here]. (https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/mapsindoors.MapsIndoors.html)
