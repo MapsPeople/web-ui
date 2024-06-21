@@ -228,6 +228,13 @@ function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule, onMap
 
         setMapsIndoorsInstance(miInstance);
 
+        // Assign the miInstance to the mapsIndoorsInstance on the window interface.
+        window.mapsIndoorsInstance = miInstance;
+
+        // Create a custom event that is dispatched from the window interface.
+        const event = new CustomEvent('mapsIndoorsInstanceAvailable');
+        window.dispatchEvent(event);
+
         // Initialize a Directions Service
         const directionsService = new window.mapsindoors.services.DirectionsService(externalDirectionsProvider);
         setDirectionsService(directionsService);
@@ -268,6 +275,6 @@ function Map({ onLocationClick, onVenueChangedOnMap, useMapProviderModule, onMap
         {mapType === mapTypes.Google && <GoogleMapsMap onMapView={onMapView} onPositionControl={onPositionControlCreated} />}
         {mapType === mapTypes.Mapbox && <MapboxMap onMapView={onMapView} onPositionControl={onPositionControlCreated} />}
     </>)
-}
+};
 
 export default Map;
