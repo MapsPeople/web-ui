@@ -208,7 +208,7 @@ function App() {
 
     useEffect(() => {
         window.addEventListener('mapsIndoorsInstanceAvailable', () => {
-            window.mapsIndoorsInstance.setDisplayRule('yourLocationId', { 'polygonFillColor': '#3071D9' })
+            window.mapsIndoorsInstance.setDisplayRule('yourLocationId', { 'polygonFillColor': '#ff69b4' })
         })
     }, [])
 
@@ -231,7 +231,7 @@ To use the MapsIndoors instance within a Web Component, include a script tag tha
     <mapsindoors-map api-key="yourApiKey" venue="yourVenue" mapbox-access-token="yourMapboxAccessToken"></mapsindoors-map>
     <script>
         window.addEventListener('mapsIndoorsInstanceAvailable', () => {
-            window.mapsIndoorsInstance.setDisplayRule('yourLocationId', { 'polygonFillColor': '#3071D9' })
+            window.mapsIndoorsInstance.setDisplayRule('yourLocationId', { 'polygonFillColor': '#ff69b4' })
         })
     </script>
 </body>
