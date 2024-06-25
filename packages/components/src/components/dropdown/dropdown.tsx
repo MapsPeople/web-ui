@@ -603,6 +603,7 @@ export class Dropdown {
      */
     renderListItem(item: HTMLMiDropdownItemElement, index: number, showCheckBox: boolean): JSX.Element {
         let itemText: HTMLElement;
+        let itemClass: string;
         const itemTooltipInfo: string = (item.getAttribute('title') || item.text || item.innerText);
 
         if (item.innerText.length > 0) {
@@ -611,8 +612,14 @@ export class Dropdown {
             itemText = <div class="label__item" innerHTML={item.text}></div>;
         }
 
+        if (item.disabled) {
+            itemClass = 'list__item list__item--disabled';
+        } else {
+            itemClass = 'list__item';
+        }
+
         return (
-            <li class="list__item" title={itemTooltipInfo} onMouseOver={() => { this.onMouseOver(index); }}>
+            <li class={itemClass} title={itemTooltipInfo} onMouseOver={() => { this.onMouseOver(index); }}>
                 <label class="mi-label label" tabindex="-1">
                     <input
                         class={{ 'label__checkbox': true, 'label__checkbox--hidden': !showCheckBox, 'mi-input': true }}
