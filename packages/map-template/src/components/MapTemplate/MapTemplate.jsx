@@ -54,6 +54,7 @@ import searchAllVenuesState from '../../atoms/searchAllVenues.js';
 import currentVenueNameState from '../../atoms/currentVenueNameState.js';
 import categoryState from '../../atoms/categoryState.js';
 import hideNonMatchesState from '../../atoms/hideNonMatchesState.js';
+import showRoadNamesState from '../../atoms/showRoadNamesState.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -86,8 +87,9 @@ defineCustomElements();
  * @param {number} [props.miTransitionLevel] - The zoom level on which to transition from Mapbox to MapsIndoors data. Default value is 17. This feature is only available for Mapbox.
  * @param {boolean} [props.searchAllVenues] - If you want to perform search across all venues in the solution.
  * @param {boolean} [props.hideNonMatches] - Determine whether the locations on the map should be filtered (only show the matched locations and hide the rest) or highlighted (show all locations and highlight the matched ones with a red dot by default). If set to true, the locations will be filtered.
+ * @param {boolean} [props.showRoadNames] - A boolean parameter that dictates whether Mapbox road names should be shown. By default, Mapbox road names are hidden when MapsIndoors data is shown. It is dictated by `mi-transition-level` which default value is 17.
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames }) {
 
     const [, setApiKey] = useRecoilState(apiKeyState);
     const [, setGmApiKey] = useRecoilState(gmApiKeyState);
@@ -114,6 +116,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setSearchAllVenues] = useRecoilState(searchAllVenuesState);
     const [, setCategory] = useRecoilState(categoryState);
     const [, setHideNonMatches] = useRecoilState(hideNonMatchesState);
+    const [, setShowRoadNames] = useRecoilState(showRoadNamesState);
 
     const [showVenueSelector, setShowVenueSelector] = useState(true);
     const [showPositionControl, setShowPositionControl] = useState(true);
@@ -210,7 +213,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             const languageToUse = language ? language : navigator.language;
 
             // Set the language on the MapsIndoors SDK in order to get eg. Mapbox and Google directions in that language.
-            window.mapsindoors.MapsIndoors.setLanguage(languageToUse);
+            // The MapsIndoors data only accepts the first part of the IETF language string, hence the split.
+            window.mapsindoors.MapsIndoors.setLanguage(languageToUse.split('-')[0]);
 
             // If relevant, fetch venues, categories and the current location again to get them in the new language
             window.mapsindoors.services.LocationsService.once('update_completed', () => {
@@ -240,6 +244,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 // Change the already set language
                 i18n.changeLanguage(languageToUse);
             }
+
 
             setCurrentLanguage(languageToUse);
         }
@@ -529,6 +534,12 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         }
     }, [hideNonMatches]);
 
+    /*
+     * React on changes to the showRoadNames prop.
+     */
+    useEffect(() => {
+        setShowRoadNames(showRoadNames);
+    }, [showRoadNames])
 
     /**
      * When venue is fitted while initializing the data,
@@ -583,7 +594,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * @param {array} locationsResult
      */
     function getCategories(locationsResult) {
-        // Initialise the unique categories map
         let uniqueCategories = new Map();
 
         // Loop through the locations and count the unique locations.
@@ -595,19 +605,20 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 // Get the categories from the App Config that have a matching key.
                 const appConfigCategory = appConfig?.menuInfo.mainmenu.find(category => category.categoryKey === key);
 
-                if (uniqueCategories.has(key)) {
-                    let count = uniqueCategories.get(key).count;
-                    uniqueCategories.set(key, { count: ++count, displayName: location.properties.categories[key], iconUrl: appConfigCategory?.iconUrl });
-                } else {
-                    uniqueCategories.set(key, { count: 1, displayName: location.properties.categories[key], iconUrl: appConfigCategory?.iconUrl });
+                if (appConfigCategory) {
+                    uniqueCategories.set(appConfigCategory.categoryKey, { displayName: location.properties.categories[key], iconUrl: appConfigCategory?.iconUrl })
                 }
             }
         }
 
-        // Sort the categories with most locations associated.
-        uniqueCategories = Array.from(uniqueCategories).sort((a, b) => b[1].count - a[1].count);
+        // Sort categories by the place in the mainmenu array. Use index to do that.
+        const sortedCategories = Array.from(uniqueCategories).sort((a, b) => {
+            const orderA = appConfig.menuInfo.mainmenu.findIndex(category => category.categoryKey === a[0]);
+            const orderB = appConfig.menuInfo.mainmenu.findIndex(category => category.categoryKey === b[0]);
+            return orderA - orderB;
+        });
 
-        setCategories(uniqueCategories);
+        setCategories(sortedCategories);
     }
 
     /*
@@ -622,9 +633,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         }
     }, [category, categories, mapsindoorsSDKAvailable]);
 
-    return <div className={`mapsindoors-map 
-    ${locationsDisabledRef.current ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'} 
-    ${(venues.length > 1 && showVenueSelector) ? '' : 'mapsindoors-map--hide-venue-selector'} 
+    return <div className={`mapsindoors-map
+    ${locationsDisabledRef.current ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}
+    ${(venues.length > 1 && showVenueSelector) ? '' : 'mapsindoors-map--hide-venue-selector'}
     ${showPositionControl ? 'mapsindoors-map--show-my-position' : 'mapsindoors-map--hide-my-position'}`}>
         <Notification />
         {!isMapReady && <SplashScreen />}
