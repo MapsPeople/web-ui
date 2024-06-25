@@ -3,6 +3,7 @@ import { useRecoilValue } from 'recoil';
 import mapsIndoorsInstanceState from '../../../atoms/mapsIndoorsInstanceState';
 import { useTranslation } from 'react-i18next';
 import './ListItemLocation.scss';
+import showExternalIDsState from '../../../atoms/showExternalIDsState';
 
 /**
  * React wrapper around the custom element <mi-list-item-location>.
@@ -17,6 +18,8 @@ function ListItemLocation({ location, locationClicked, icon, isHovered }) {
     const elementRef = useRef();
 
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
+
+    const showExternalIDs = useRecoilValue(showExternalIDsState);
 
     useEffect(() => {
         const clickHandler = customEvent => locationClicked(customEvent.detail);
@@ -62,7 +65,7 @@ function ListItemLocation({ location, locationClicked, icon, isHovered }) {
     }, [location, locationClicked, isHovered]);
 
 
-    return <mi-list-item-location level={t('Level')} ref={elementRef} show-external-id={false} />
+    return <mi-list-item-location level={t('Level')} ref={elementRef} show-external-id={showExternalIDs} />
 }
 
 export default ListItemLocation;
