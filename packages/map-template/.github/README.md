@@ -88,7 +88,7 @@ When loading the MapsIndoors Map component for the first time, the map will resp
 |`searchAllVenues`|`bool`|If you want to perform search across all venues in the solution. |
 |`hideNonMatches`|`bool`|Determine whether the locations on the map should be filtered (only show the matched locations and hide the rest) or highlighted (show all locations and highlight the matched ones with a red dot by default). If set to true, the locations will be filtered. |
 |`show-road-names`|`showRoadNames`|`bool`|A boolean parameter that dictates whether Mapbox road names should be shown. By default, Mapbox road names are hidden when MapsIndoors data is shown. It is dictated by `mi-transition-level` which default value is 17. |
-|`showExternalIDs`|`bool`|Determine whether the Location details should show the external ID or not. The default value is set to false. |
+|`show-external-ids`|`showExternalIDs`|`bool`|Determine whether the Location details should show the external ID or not. The default value is set to false. |
 
 ## Using Query Parameters
 
