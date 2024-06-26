@@ -204,6 +204,10 @@ mi-dropdown-item {
         &__item {
             cursor: pointer;
 
+            &--disabled {
+                @include opacity.opacity(x-large);
+            }
+
             &--highlighted {
                 @include background-color.gray(20);
             }
