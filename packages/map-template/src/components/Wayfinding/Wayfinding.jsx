@@ -497,12 +497,12 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                         {travelMode === travelModes.DRIVING && <DriveIcon />}
                         {travelMode === travelModes.BICYCLING && <BikeIcon />}
                         <div>{t('Distance')}:</div>
-                        <div className="wayfinding__meters">{totalDistance && <mi-distance unit={distanceUnitSystem} meters={totalDistance} />}</div>
+                        <div className="wayfinding__meters">{totalDistance && isDirectionReady && <mi-distance unit={distanceUnitSystem} meters={totalDistance} />}</div>
                     </div>
                     <div className="wayfinding__time">
                         <ClockIcon />
                         <div>{t('Estimated time')}:</div>
-                        <div className="wayfinding__minutes">{totalTime && <mi-time translations={JSON.stringify({ days: t('d'), hours: t('h'), minutes: t('min') })} seconds={totalTime} />}</div>
+                        <div className="wayfinding__minutes">{totalTime && isDirectionReady && <mi-time translations={JSON.stringify({ days: t('d'), hours: t('h'), minutes: t('min') })} seconds={totalTime} />}</div>
                     </div>
                 </div>
                 <button className="wayfinding__button" style={{ background: primaryColor }} onClick={() => onStartDirections()}>

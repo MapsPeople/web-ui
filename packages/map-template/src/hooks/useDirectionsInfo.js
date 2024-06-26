@@ -3,6 +3,7 @@ import getLocationPoint from '../helpers/GetLocationPoint';
 import { useRecoilState } from 'recoil';
 import directionsResponseState from '../atoms/directionsResponseState';
 import hasFoundRouteState from '../atoms/hasFoundRouteState';
+import accessibilityState from '../atoms/accessibilityState';
 
 /*
  * Hook to handle when both origin location and destination location are selected,
@@ -14,6 +15,7 @@ const useDirectionsInfo = (originLocation, destinationLocation, directionsServic
     const [hasFoundRoute, setHasFoundRoute] = useRecoilState(hasFoundRouteState);
     const [, setDirectionsResponse] = useRecoilState(directionsResponseState);
     const [isDirectionReady, setIsDirectionReady] = useState();
+    const accessibility = useRecoilState(accessibilityState);
 
     useEffect(() => {
         setIsDirectionReady(false);
@@ -22,7 +24,7 @@ const useDirectionsInfo = (originLocation, destinationLocation, directionsServic
                 origin: getLocationPoint(originLocation),
                 destination: getLocationPoint(destinationLocation),
                 travelMode: travelMode,
-                avoidStairs: accessibilityOn
+                avoidStairs: accessibilityOn || accessibility[0]
             }).then(directionsResult => {
                 if (directionsResult && directionsResult.legs) {
                     setHasFoundRoute(true);
