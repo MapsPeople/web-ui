@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import getLocationPoint from '../helpers/GetLocationPoint';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import directionsResponseState from '../atoms/directionsResponseState';
 import hasFoundRouteState from '../atoms/hasFoundRouteState';
 import accessibilityState from '../atoms/accessibilityState';
@@ -15,8 +15,8 @@ const useDirectionsInfo = (originLocation, destinationLocation, directionsServic
     const [hasFoundRoute, setHasFoundRoute] = useRecoilState(hasFoundRouteState);
     const [, setDirectionsResponse] = useRecoilState(directionsResponseState);
     const [isDirectionReady, setIsDirectionReady] = useState();
-    const accessibility = useRecoilState(accessibilityState);
-
+    const accessibility = useRecoilValue(accessibilityState);
+    console.log(accessibility);
     useEffect(() => {
         setIsDirectionReady(false);
         if (originLocation?.geometry && destinationLocation?.geometry) {
@@ -24,7 +24,7 @@ const useDirectionsInfo = (originLocation, destinationLocation, directionsServic
                 origin: getLocationPoint(originLocation),
                 destination: getLocationPoint(destinationLocation),
                 travelMode: travelMode,
-                avoidStairs: accessibilityOn || accessibility[0]
+                avoidStairs: accessibilityOn || accessibility
             }).then(directionsResult => {
                 if (directionsResult && directionsResult.legs) {
                     setHasFoundRoute(true);
