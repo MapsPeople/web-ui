@@ -139,6 +139,8 @@ Note that when using the React component, the properties should conform to JSX p
 |`search-all-venues`|`searchAllVenues`|`bool`|If you want to perform search across all venues in the solution. |
 |`hide-non-matches`|`hideNonMatches`|`bool`|Determine whether the locations on the map should be filtered (only show the matched locations and hide the rest) or highlighted (show all locations and highlight the matched ones with a red dot by default). If set to true, the locations will be filtered. |
 |`show-road-names`|`showRoadNames`|`bool`|A boolean parameter that dictates whether Mapbox road names should be shown. By default, Mapbox road names are hidden when MapsIndoors data is shown. It is dictated by `mi-transition-level` which default value is 17. |
+|`skip-go`|`skipGo`|`bool`| A boolean parameter that dictates if directions 'Go' button should be skipped, showing the route straightaway. |
+|`accessibility`|`accessibility`|`bool`| A boolean parameter that dictates if accessibility should be taken into consideration when getting a route. |
 
 ## Using Query Parameters
 
@@ -172,6 +174,8 @@ The supported query parameters are the following:
 24. `searchAllVenues` - If you want to perform search across all venues in the solution.
 25. `hideNonMatches` - Determine whether the locations on the map should be filtered (only show the matched locations and hide the rest) or highlighted (show all locations and highlight the matched ones with a red dot by default). If set to true, the locations will be filtered.
 26. `showRoadNames` - A boolean parameter that dictates whether Mapbox road names should be shown. By default, Mapbox road names are hidden when MapsIndoors data is shown. It is dictated by `mi-transition-level` which default value is 17.
+27. `skipGo` - A boolean parameter that dictates if directions 'Go' button should be skipped, showing the route straightaway.
+28. `accessibility` - A boolean parameter that dictates if accessibility should be taken into consideration when getting a route.
 
 **Note!** All the query parameters need to be separated with the `&` symbol, without any spaces in between.
 **Note!** When using parameters such as `directionsTo`, `directionsFrom`, `locationId`, `externalIDs`, and `tileStyle` make sure you are using the correct `apiKey` parameter to which they belong.
