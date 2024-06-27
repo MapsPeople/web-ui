@@ -396,6 +396,9 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         }
     }, [currentLocation]);
 
+    /**
+     * When the skipGo parameter is true and the route has finished fetching, start the directions immediately.
+     */
     useEffect(() => {
         if (skipGo && isSet && !isFinishRoute) {
             if (directionsFromLocation && directionsToLocation && isDirectionReady && !isSkipGoUsed) {
