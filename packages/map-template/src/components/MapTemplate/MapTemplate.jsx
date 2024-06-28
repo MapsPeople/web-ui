@@ -541,7 +541,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes to the showExternalIDs prop.
      */
     useEffect(() => {
-        setshowExternalIDs(showExternalIDs);
+        if (showExternalIDs) {
+            setshowExternalIDs(showExternalIDs);
+        }
     }, [showExternalIDs]);
 
     /*
