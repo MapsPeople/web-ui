@@ -1,8 +1,8 @@
 import { atom } from 'recoil';
 
-const showExternalIDs = atom({
+const showExternalIDsState = atom({
     key: 'showExternalIDs',
     default: false
 });
 
-export default showExternalIDs;
+export default showExternalIDsState;
