@@ -15,7 +15,7 @@ import isMapReadyState from '../../atoms/isMapReadyState.js';
 import currentLocationState from '../../atoms/currentLocationState';
 import tileStyleState from '../../atoms/tileStyleState';
 import categoriesState from '../../atoms/categoriesState';
-import venuesState from '../../atoms/venuesState';
+import venuesInSolutionState from '../../atoms/venuesInSolutionState';
 import solutionState from '../../atoms/solutionState.js';
 import { useAppHistory } from '../../hooks/useAppHistory';
 import { useReset } from '../../hooks/useReset.js';
@@ -42,8 +42,6 @@ import { useInactive } from '../../hooks/useInactive.js';
 import showQRCodeDialogState from '../../atoms/showQRCodeDialogState';
 import QRCodeDialog from '../QRCodeDialog/QRCodeDialog';
 import supportsUrlParametersState from '../../atoms/supportsUrlParametersState';
-import venueState from '../../atoms/venueState.js';
-import useSetCurrentVenueName from '../../hooks/useSetCurrentVenueName.js';
 import useKeyboardState from '../../atoms/useKeyboardState';
 import { useIsDesktop } from '../../hooks/useIsDesktop.js';
 import miTransitionLevelState from '../../atoms/miTransitionLevelState.js';
@@ -51,9 +49,10 @@ import selectedCategoryState from '../../atoms/selectedCategoryState.js';
 import LegendDialog from '../LegendDialog/LegendDialog.jsx';
 import isLegendDialogVisibleState from '../../atoms/isLegendDialogVisibleState.js';
 import searchAllVenuesState from '../../atoms/searchAllVenues.js';
-import currentVenueNameState from '../../atoms/currentVenueNameState.js';
 import categoryState from '../../atoms/categoryState.js';
 import hideNonMatchesState from '../../atoms/hideNonMatchesState.js';
+import appConfigState from '../../atoms/appConfigState.js';
+import { useCurrentVenue } from '../../hooks/useCurrentVenue.js';
 import showRoadNamesState from '../../atoms/showRoadNamesState.js';
 
 // Define the Custom Elements from our components package.
@@ -95,10 +94,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setGmApiKey] = useRecoilState(gmApiKeyState);
     const [, setMapboxAccessToken] = useRecoilState(mapboxAccessTokenState);
     const [isMapReady, setMapReady] = useRecoilState(isMapReadyState);
-    const [venues, setVenues] = useRecoilState(venuesState);
-    const [, setVenue] = useRecoilState(venueState);
+    const [venuesInSolution, setVenuesInSolution] = useRecoilState(venuesInSolutionState);
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
-    const [categories, setCategories] = useRecoilState(categoriesState);
+    const categories = useRecoilValue(categoriesState);
     const [, setLocationId] = useRecoilState(locationIdState);
     const [, setPrimaryColor] = useRecoilState(primaryColorState);
     const [, setLogo] = useRecoilState(logoState);
@@ -124,7 +122,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const directionsFromLocation = useLocationForWayfinding(directionsFrom);
     const directionsToLocation = useLocationForWayfinding(directionsTo);
 
-    const [isMapPositionKnown, setIsMapPositionKnown] = useState(false);
+    const [isMapPositionInvestigating, setIsMapPositionInvestigating] = useState(false);
 
     // The filtered locations by external id, if present.
     const [, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
@@ -135,7 +133,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     // Holds a copy of the initially filtered locations.
     const [initialFilteredLocations, setInitialFilteredLocations] = useState();
 
-    const [appConfig, setAppConfig] = useState();
+    const [appConfig, setAppConfig] = useRecoilState(appConfigState);
     const [, setSolution] = useRecoilState(solutionState);
 
     const [, setTileStyle] = useRecoilState(tileStyleState);
@@ -147,8 +145,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const isDesktop = useIsDesktop();
     const isMobile = useMediaQuery('(max-width: 991px)');
     const resetState = useReset();
-    const setCurrentVenueName = useSetCurrentVenueName();
-    const currentVenueName = useRecoilValue(currentVenueNameState);
     const [pushAppView, goBack, currentAppView, currentAppViewPayload, appStates, resetAppHistory] = useAppHistory();
 
     // Declare the reference to the disabled locations.
@@ -162,6 +158,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     // The reset count is used to add a new key to the sidebar or bottomsheet, forcing it to re-render from scratch when resetting the Map Template.
     const [resetCount, setResetCount] = useState(0);
+
+    const [setCurrentVenueName, updateCategories] = useCurrentVenue();
 
     /**
      * Ensure that MapsIndoors Web SDK is available.
@@ -219,16 +217,16 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             // If relevant, fetch venues, categories and the current location again to get them in the new language
             window.mapsindoors.services.LocationsService.once('update_completed', () => {
                 if (categories.length > 0) {
-                    getVenueCategories(venue);
+                    updateCategories();
                 }
 
-                if (venues.length > 0) {
+                if (venuesInSolution.length > 0) {
                     window.mapsindoors.services.VenuesService.getVenues().then(venuesResult => {
                         venuesResult = venuesResult.map(venue => {
                             venue.image = appConfig.venueImages[venue.name.toLowerCase()];
                             return venue;
                         });
-                        setVenues(venuesResult);
+                        setVenuesInSolution(venuesResult);
                     });
                 }
 
@@ -280,7 +278,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                     venue.image = appConfigResult.venueImages[venue.name.toLowerCase()];
                     return venue;
                 });
-                setVenues(venuesResult);
+                setVenuesInSolution(venuesResult);
             });
             setMapReady(false);
         }
@@ -376,7 +374,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the venue prop.
      */
     useEffect(() => {
-        setVenue(venue);
         setCurrentVenueName(venue);
     }, [venue]);
 
@@ -516,16 +513,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [searchAllVenues, mapsindoorsSDKAvailable]);
 
     /*
-     * React on changes to the currentVenueName prop.
-     * Get the venue categories based on the currentVenueName.
-     */
-    useEffect(() => {
-        if (mapsindoorsSDKAvailable && currentVenueName) {
-            getVenueCategories(currentVenueName)
-        }
-    }, [currentVenueName, mapsindoorsSDKAvailable]);
-
-    /*
      * React on changes to the hideNonMatches prop.
      */
     useEffect(() => {
@@ -542,14 +529,13 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [showRoadNames])
 
     /**
-     * When venue is fitted while initializing the data,
-     * set map to be ready and get the venue categories.
+     * When map position is known while initializing the data,
+     * set map to be ready.
      */
-    function venueChangedOnMap(venue) {
+    function mapPositionKnown() {
         if (isMapReady === false) {
             setMapReady(true);
         }
-        getVenueCategories(venue.name);
     }
 
     /**
@@ -566,59 +552,12 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }
 
     /**
-     * Get the categories for the selected venue.
-     *
-     * @param {string} venue
-     */
-    function getVenueCategories(venue) {
-        // Filter through the locations which have the venueId equal to the selected venue,
-        // due to the impossibility to use the venue parameter in the getLocations().
-        window.mapsindoors.services.LocationsService.getLocations({}).then(locations => {
-            const filteredLocations = locations.filter(location => location.properties.venueId === venue);
-            getCategories(filteredLocations);
-        })
-    }
-
-    /**
      * Function that handles the reset of the state and UI.
      */
     function resetStateAndUI() {
         resetState();
         resetAppHistory();
         setResetCount(curr => curr + 1); // will force a re-render of bottom sheet and sidebar.
-    }
-
-    /**
-     * Get the unique categories and the count of the categories with locations associated.
-     *
-     * @param {array} locationsResult
-     */
-    function getCategories(locationsResult) {
-        let uniqueCategories = new Map();
-
-        // Loop through the locations and count the unique locations.
-        // Build an object which contains the key, the count, the display name and an icon.
-        for (const location of locationsResult) {
-            const keys = Object.keys(location.properties.categories);
-
-            for (const key of keys) {
-                // Get the categories from the App Config that have a matching key.
-                const appConfigCategory = appConfig?.menuInfo.mainmenu.find(category => category.categoryKey === key);
-
-                if (appConfigCategory) {
-                    uniqueCategories.set(appConfigCategory.categoryKey, { displayName: location.properties.categories[key], iconUrl: appConfigCategory?.iconUrl })
-                }
-            }
-        }
-
-        // Sort categories by the place in the mainmenu array. Use index to do that.
-        const sortedCategories = Array.from(uniqueCategories).sort((a, b) => {
-            const orderA = appConfig.menuInfo.mainmenu.findIndex(category => category.categoryKey === a[0]);
-            const orderB = appConfig.menuInfo.mainmenu.findIndex(category => category.categoryKey === b[0]);
-            return orderA - orderB;
-        });
-
-        setCategories(sortedCategories);
     }
 
     /*
@@ -635,18 +574,18 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     return <div className={`mapsindoors-map
     ${locationsDisabledRef.current ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}
-    ${(venues.length > 1 && showVenueSelector) ? '' : 'mapsindoors-map--hide-venue-selector'}
+    ${(venuesInSolution.length > 1 && showVenueSelector) ? '' : 'mapsindoors-map--hide-venue-selector'}
     ${showPositionControl ? 'mapsindoors-map--show-my-position' : 'mapsindoors-map--hide-my-position'}`}>
         <Notification />
         {!isMapReady && <SplashScreen />}
-        {venues.length > 1 && showVenueSelector && <VenueSelector
+        {venuesInSolution.length > 1 && showVenueSelector && <VenueSelector
             onOpen={() => pushAppView(appStates.VENUE_SELECTOR)}
             onClose={() => goBack()}
             active={currentAppView === appStates.VENUE_SELECTOR}
         />}
         {showQRCodeDialog && <QRCodeDialog />}
         {showLegendDialog && <LegendDialog />}
-        {isMapPositionKnown &&
+        {isMapPositionInvestigating &&
             <Fragment key={resetCount}>
                 {isDesktop &&
                     <Sidebar
@@ -672,8 +611,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         }
         <MIMap
             useMapProviderModule={useMapProviderModule}
-            onVenueChangedOnMap={(venue) => venueChangedOnMap(venue)}
-            onMapPositionKnown={() => setIsMapPositionKnown(true)}
+            onMapPositionKnown={() => mapPositionKnown()}
+            onMapPositionInvestigating={() => setIsMapPositionInvestigating(true)}
             onLocationClick={(location) => locationClicked(location)}
         />
     </div>

@@ -12,6 +12,7 @@ import searchResultsState from '../atoms/searchResultsState';
 import accessibilityOnState from '../atoms/accessibilityOnState';
 import isLegendDialogVisibleState from '../atoms/isLegendDialogVisibleState';
 import mapboxViewModeState from '../atoms/mapboxViewModeState';
+import venueWasSelectedState from '../atoms/venueWasSelectedState';
 
 /**
  * Reset a number of Recoil atoms to initial values.
@@ -33,6 +34,7 @@ export function useReset() {
     const accessibilityOn = useResetRecoilState(accessibilityOnState);
     const isLegendDialogVisible  = useResetRecoilState(isLegendDialogVisibleState);
     const mapboxViewMode = useResetRecoilState(mapboxViewModeState);
+    const venueWasSelected = useResetRecoilState(venueWasSelectedState);
 
     return () => {
         activeStep();
@@ -48,5 +50,6 @@ export function useReset() {
         accessibilityOn();
         isLegendDialogVisible();
         mapboxViewMode();
+        venueWasSelected();
     };
 }
