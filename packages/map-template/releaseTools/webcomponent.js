@@ -35,6 +35,7 @@ MapsIndoorsMap.propTypes = {
     searchAllVenues: PropTypes.bool,
     useKeyboard: PropTypes.bool,
     hideNonMatches: PropTypes.bool,
+    showExternalIDs: PropTypes.bool,
     showRoadNames: PropTypes.bool
 };
 
