@@ -612,7 +612,7 @@ export class Dropdown {
         }
 
         return (
-            <li class="list__item" title={itemTooltipInfo} onMouseOver={() => { this.onMouseOver(index); }}>
+            <li class={{ 'list__item': true, 'list__item--disabled': item.disabled }} title={itemTooltipInfo} onMouseOver={() => { this.onMouseOver(index); }}>
                 <label class="mi-label label" tabindex="-1">
                     <input
                         class={{ 'label__checkbox': true, 'label__checkbox--hidden': !showCheckBox, 'mi-input': true }}
