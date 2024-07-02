@@ -33,7 +33,8 @@ import isNullOrUndefined from "../../helpers/isNullOrUndefined.js";
  * @param {number} [props.miTransitionLevel] - The zoom level on which to transition from Mapbox to MapsIndoors data. Default value is 17. This feature is only available for Mapbox.
  * @param {string} [props.category] - If you want to indicate an active category on the map. The value should be the Key (Administrative ID).
  * @param {boolean} [props.searchAllVenues] - If you want to perform search across all venues in the solution.
- * @param {boolean} [props.hideNonMatches] - Determine whether the locations on the map should be filtered (only show the matched locations and hide the rest) or highlighted (show all locations and highlight the matched ones with a red dot by default). If set to true, the locations will be filtered.
+ * @param {boolean} [props.hideNonMatches] - Determine whether the locations on the map should be filtered (only show the matched locations and hide the rest) or highlighted (show all locations and highlight the matched ones with a red dot by default). If set to true, the locations will be filtered.|
+ * @param {boolean} [props.showExternalIDs] - Determine whether the location details on the map should have an external ID visible. The default value is set to false.
  * @param {boolean} [props.showRoadNames] - A boolean parameter that dictates whether Mapbox road names should be shown. By default, Mapbox road names are hidden when MapsIndoors data is shown. It is dictated by `mi-transition-level` which default value is 17.
  * @param {boolean} [props.skipGo] - A boolean parameter that dictates if directions 'Go' button should be skipped, showing the route straightaway.
  * @param {boolean} [props.accessibility] - A boolean parameter that dictates if accessibility should be taken into consideration when getting a route.
@@ -83,12 +84,13 @@ function MapsIndoorsMap(props) {
         const languageQueryParameter = queryStringParams.get('language');
         const useKeyboardQueryParameter = getBooleanQueryParameter(queryStringParams.get('useKeyboard'));
         const miTransitionLevelQueryParameter = queryStringParams.get('miTransitionLevel');
-		const categoryQueryParameter = queryStringParams.get('category');
-		const searchAllVenuesParameter = getBooleanQueryParameter(queryStringParams.get('searchAllVenues'));
-		const hideNonMatchesQueryParameter = getBooleanQueryParameter(queryStringParams.get('hideNonMatches'));
+        const categoryQueryParameter = queryStringParams.get('category');
+        const searchAllVenuesParameter = getBooleanQueryParameter(queryStringParams.get('searchAllVenues'));
+        const hideNonMatchesQueryParameter = getBooleanQueryParameter(queryStringParams.get('hideNonMatches'));
         const showRoadNamesQueryParameterBoolean = getBooleanQueryParameter(queryStringParams.get('showRoadNames'));
-		const skipGoQueryParameter = getBooleanQueryParameter(queryStringParams.get('skipGo'));
-		const accessibilityQueryParameter = getBooleanQueryParameter(queryStringParams.get('accessibility'));
+        const showExternalIDsQueryParameter = getBooleanQueryParameter(queryStringParams.get('showExternalIDs'));
+        const skipGoQueryParameter = getBooleanQueryParameter(queryStringParams.get('skipGo'));
+        const accessibilityQueryParameter = getBooleanQueryParameter(queryStringParams.get('accessibility'));
 
         setMapTemplateProps({
             apiKey: props.supportsUrlParameters && apiKeyQueryParameter ? apiKeyQueryParameter : (props.apiKey || defaultProps.apiKey),
@@ -118,8 +120,9 @@ function MapsIndoorsMap(props) {
             searchAllVenues: props.supportsUrlParameters && searchAllVenuesParameter ? searchAllVenuesParameter : (props.searchAllVenues || defaultProps.searchAllVenues),
             hideNonMatches: props.supportsUrlParameters && hideNonMatchesQueryParameter ? hideNonMatchesQueryParameter : props.hideNonMatches,
             showRoadNames: props.supportsUrlParameters && !isNullOrUndefined(showRoadNamesQueryParameterBoolean) && !isNullOrUndefined(queryStringParams.get('showRoadNames')) ? showRoadNamesQueryParameterBoolean : props.showRoadNames,
+            showExternalIDs: props.supportsUrlParameters && showExternalIDsQueryParameter ? showExternalIDsQueryParameter : props.showExternalIDs,
             skipGo: props.supportsUrlParameters && skipGoQueryParameter ? skipGoQueryParameter : props.skipGo,
-            accessibility: props.supportsUrlParameters && accessibilityQueryParameter ? accessibilityQueryParameter : props.accessibility
+            accessibility: props.supportsUrlParameters && accessibilityQueryParameter ? accessibilityQueryParameter : props.accessibility,
         });
     }, [props]);
 

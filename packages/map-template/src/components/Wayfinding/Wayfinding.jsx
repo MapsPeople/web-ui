@@ -106,7 +106,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
 
     const distanceUnitSystem = useRecoilValue(distanceUnitSystemSelector);
 
-    const [totalDistance, totalTime, hasFoundRoute, isDirectionReady] = useDirectionsInfo(originLocation, destinationLocation, directionsService, travelMode, accessibilityOn)
+    const [totalDistance, totalTime, hasFoundRoute, areDirectionsReady] = useDirectionsInfo(originLocation, destinationLocation, directionsService, travelMode, accessibilityOn)
 
     const skipGo = useRecoilValue(skipGoState);
 
@@ -401,12 +401,12 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
      */
     useEffect(() => {
         if (skipGo && isSet && !isFinishRoute) {
-            if (directionsFromLocation && directionsToLocation && isDirectionReady && !isSkipGoUsed) {
+            if (directionsFromLocation && directionsToLocation && areDirectionsReady && !isSkipGoUsed) {
                 onStartDirections();
                 setIsSkipGoUsed(true)
             }
         }
-    }, [skipGo, isSet, directionsFromLocation, directionsToLocation, isDirectionReady])
+    }, [skipGo, isSet, directionsFromLocation, directionsToLocation, areDirectionsReady])
 
     return (
         <div className="wayfinding" ref={wayfindingRef}>
@@ -500,15 +500,15 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                         {travelMode === travelModes.DRIVING && <DriveIcon />}
                         {travelMode === travelModes.BICYCLING && <BikeIcon />}
                         <div>{t('Distance')}:</div>
-                        <div className="wayfinding__meters">{totalDistance && isDirectionReady && <mi-distance unit={distanceUnitSystem} meters={totalDistance} />}</div>
+                        <div className="wayfinding__meters">{totalDistance && areDirectionsReady && <mi-distance unit={distanceUnitSystem} meters={totalDistance} />}</div>
                     </div>
                     <div className="wayfinding__time">
                         <ClockIcon />
                         <div>{t('Estimated time')}:</div>
-                        <div className="wayfinding__minutes">{totalTime && isDirectionReady && <mi-time translations={JSON.stringify({ days: t('d'), hours: t('h'), minutes: t('min') })} seconds={totalTime} />}</div>
+                        <div className="wayfinding__minutes">{totalTime && areDirectionsReady && <mi-time translations={JSON.stringify({ days: t('d'), hours: t('h'), minutes: t('min') })} seconds={totalTime} />}</div>
                     </div>
                 </div>
-                <button className="wayfinding__button" style={{ background: primaryColor }} onClick={() => onStartDirections()}>
+                <button className="wayfinding__button" style={{ background: primaryColor }} onClick={() => onStartDirections()} disabled={!areDirectionsReady}>
                     {t('Go!')}
                 </button>
             </div>}

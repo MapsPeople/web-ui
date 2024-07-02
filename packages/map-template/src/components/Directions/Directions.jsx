@@ -20,6 +20,7 @@ import isDestinationStepState from "../../atoms/isDestinationStepState";
 import primaryColorState from "../../atoms/primaryColorState";
 import { useIsKioskContext } from "../../hooks/useIsKioskContext";
 import { useIsDesktop } from "../../hooks/useIsDesktop";
+import showExternalIDsState from '../../atoms/showExternalIDsState';
 
 let directionsRenderer;
 
@@ -65,6 +66,8 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
     const primaryColor = useRecoilValue(primaryColorState);
 
     const isKioskContext = useIsKioskContext();
+
+    const showExternalIDs = useRecoilValue(showExternalIDsState);
 
     useEffect(() => {
         setDestinationDisplayRule(null);
@@ -287,7 +290,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
                                 <div className="directions__name">
                                     {directions?.destinationLocation.properties.name}
                                 </div>
-                                <mi-location-info ref={destinationInfoElement} show-external-id={false} />
+                                <mi-location-info ref={destinationInfoElement} show-external-id={showExternalIDs} />
                             </div>
                         </div>
                     }

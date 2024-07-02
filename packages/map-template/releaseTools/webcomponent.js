@@ -36,6 +36,7 @@ MapsIndoorsMap.propTypes = {
     useKeyboard: PropTypes.bool,
     hideNonMatches: PropTypes.bool,
     showRoadNames: PropTypes.bool,
+    showExternalIDs: PropTypes.bool,
     skipGo: PropTypes.bool,
     accessibility: PropTypes.bool
 };

@@ -54,6 +54,7 @@ import searchAllVenuesState from '../../atoms/searchAllVenues.js';
 import currentVenueNameState from '../../atoms/currentVenueNameState.js';
 import categoryState from '../../atoms/categoryState.js';
 import hideNonMatchesState from '../../atoms/hideNonMatchesState.js';
+import showExternalIDsState from '../../atoms/showExternalIDsState.js'
 import showRoadNamesState from '../../atoms/showRoadNamesState.js';
 import skipGoState from '../../atoms/skipGoState.js';
 import accessibilityState from '../../atoms/accessibilityState.js';
@@ -91,10 +92,11 @@ defineCustomElements();
  * @param {boolean} [props.searchAllVenues] - If you want to perform search across all venues in the solution.
  * @param {boolean} [props.hideNonMatches] - Determine whether the locations on the map should be filtered (only show the matched locations and hide the rest) or highlighted (show all locations and highlight the matched ones with a red dot by default). If set to true, the locations will be filtered.
  * @param {boolean} [props.showRoadNames] - A boolean parameter that dictates whether Mapbox road names should be shown. By default, Mapbox road names are hidden when MapsIndoors data is shown. It is dictated by `mi-transition-level` which default value is 17.
+ * @param {boolean} [props.showExternalIDs] - Determine whether the location details on the map should have an external ID visible. The default value is set to false.
  * @param {boolean} [props.skipGo] - A boolean parameter that dictates if directions 'Go' button should be skipped, showing the route straightaway.
  * @param {boolean} [props.accessibility] - A boolean parameter that dictates if accessibility should be taken into consideration when getting a route.
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, skipGo, accessibility }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, skipGo, accessibility }) {
 
     const [, setApiKey] = useRecoilState(apiKeyState);
     const [, setGmApiKey] = useRecoilState(gmApiKeyState);
@@ -121,9 +123,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setSearchAllVenues] = useRecoilState(searchAllVenuesState);
     const [, setCategory] = useRecoilState(categoryState);
     const [, setHideNonMatches] = useRecoilState(hideNonMatchesState);
+    const [, setshowExternalIDs] = useRecoilState(showExternalIDsState);
+    const [, setShowRoadNames] = useRecoilState(showRoadNamesState);
     const [, setSkipGo] = useRecoilState(skipGoState);
     const [, setAccessibility] = useRecoilState(accessibilityState);
-    const [, setShowRoadNames] = useRecoilState(showRoadNamesState);
     const [, setIsFinishRouteState] = useRecoilState(isFinishRouteState);
 
     const [showVenueSelector, setShowVenueSelector] = useState(true);
@@ -542,7 +545,16 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         }
     }, [hideNonMatches]);
 
-     /*
+    /*
+     * React on changes to the showExternalIDs prop.
+     */
+    useEffect(() => {
+        if (showExternalIDs) {
+            setshowExternalIDs(showExternalIDs);
+        }
+    }, [showExternalIDs]);
+
+    /*
      * React on changes to the showRoadNames prop.
      */
      useEffect(() => {
