@@ -34,6 +34,8 @@ import useDirectionsInfo from "../../hooks/useDirectionsInfo";
 import hasFoundRouteState from "../../atoms/hasFoundRouteState";
 import accessibilityOnState from "../../atoms/accessibilityOnState";
 import Accessibility from "../Accessibility/Accessibility";
+import skipGoState from "../../atoms/skipGoState";
+import isFinishRouteState from '../../atoms/isFinishRouteState';
 
 const searchFieldIdentifiers = {
     TO: 'TO',
@@ -75,7 +77,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     const [activeSearchField, setActiveSearchField] = useState();
 
     /** Indicate if a route has been found */
-    const [, setHasFoundRoute] = useRecoilState(hasFoundRouteState);
+    const [isSet, setHasFoundRoute] = useRecoilState(hasFoundRouteState);
 
     /** Indicate if search results have been found */
     const [hasSearchResults, setHasSearchResults] = useState(true);
@@ -105,6 +107,12 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     const distanceUnitSystem = useRecoilValue(distanceUnitSystemSelector);
 
     const [totalDistance, totalTime, hasFoundRoute, areDirectionsReady] = useDirectionsInfo(originLocation, destinationLocation, directionsService, travelMode, accessibilityOn)
+
+    const skipGo = useRecoilValue(skipGoState);
+
+    const isFinishRoute = useRecoilValue(isFinishRouteState);
+
+    const [isSkipGoUsed, setIsSkipGoUsed] = useState(false);
 
     /**
      * Decorates location with data that is required for wayfinding to work.
@@ -312,6 +320,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         setOriginLocation();
         fromFieldRef.current.setDisplayText('');
         onBack();
+        setIsSkipGoUsed(true);
     }
 
     useEffect(() => {
@@ -386,6 +395,18 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
             toFieldRef.current.setDisplayText(currentLocation.properties.name);
         }
     }, [currentLocation]);
+
+    /**
+     * When the skipGo parameter is true and the route has finished fetching, start the directions immediately.
+     */
+    useEffect(() => {
+        if (skipGo && isSet && !isFinishRoute) {
+            if (directionsFromLocation && directionsToLocation && areDirectionsReady && !isSkipGoUsed) {
+                onStartDirections();
+                setIsSkipGoUsed(true)
+            }
+        }
+    }, [skipGo, isSet, directionsFromLocation, directionsToLocation, areDirectionsReady])
 
     return (
         <div className="wayfinding" ref={wayfindingRef}>
