@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Wayfinding 'Go' button is now disabled until route is fetched and ready to be displayed.
 
-# [1.53.0] - 2024-07-01
+## [1.53.0] - 2024-07-01
 
 ### Added
 
