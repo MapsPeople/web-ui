@@ -104,7 +104,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
 
     const distanceUnitSystem = useRecoilValue(distanceUnitSystemSelector);
 
-    const [totalDistance, totalTime, hasFoundRoute] = useDirectionsInfo(originLocation, destinationLocation, directionsService, travelMode, accessibilityOn)
+    const [totalDistance, totalTime, hasFoundRoute, areDirectionsReady] = useDirectionsInfo(originLocation, destinationLocation, directionsService, travelMode, accessibilityOn)
 
     /**
      * Decorates location with data that is required for wayfinding to work.
@@ -479,15 +479,15 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                         {travelMode === travelModes.DRIVING && <DriveIcon />}
                         {travelMode === travelModes.BICYCLING && <BikeIcon />}
                         <div>{t('Distance')}:</div>
-                        <div className="wayfinding__meters">{totalDistance && hasFoundRoute && <mi-distance unit={distanceUnitSystem} meters={totalDistance} />}</div>
+                        <div className="wayfinding__meters">{totalDistance && areDirectionsReady && <mi-distance unit={distanceUnitSystem} meters={totalDistance} />}</div>
                     </div>
                     <div className="wayfinding__time">
                         <ClockIcon />
                         <div>{t('Estimated time')}:</div>
-                        <div className="wayfinding__minutes">{totalTime && hasFoundRoute && <mi-time translations={JSON.stringify({ days: t('d'), hours: t('h'), minutes: t('min') })} seconds={totalTime} />}</div>
+                        <div className="wayfinding__minutes">{totalTime && areDirectionsReady && <mi-time translations={JSON.stringify({ days: t('d'), hours: t('h'), minutes: t('min') })} seconds={totalTime} />}</div>
                     </div>
                 </div>
-                <button className="wayfinding__button" style={{ background: primaryColor }} onClick={() => onStartDirections()} disabled={!hasFoundRoute}>
+                <button className="wayfinding__button" style={{ background: primaryColor }} onClick={() => onStartDirections()} disabled={!areDirectionsReady}>
                     {t('Go!')}
                 </button>
             </div>}
