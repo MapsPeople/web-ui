@@ -16,7 +16,7 @@ const useDirectionsInfo = (originLocation, destinationLocation, directionsServic
     const [, setDirectionsResponse] = useRecoilState(directionsResponseState);
     const [isDirectionReady, setIsDirectionReady] = useState();
     const accessibility = useRecoilValue(accessibilityState);
-    console.log(accessibility);
+
     useEffect(() => {
         setIsDirectionReady(false);
         if (originLocation?.geometry && destinationLocation?.geometry) {
