@@ -24,7 +24,7 @@ const useDirectionsInfo = (originLocation, destinationLocation, directionsServic
                 origin: getLocationPoint(originLocation),
                 destination: getLocationPoint(destinationLocation),
                 travelMode: travelMode,
-                avoidStairs: accessibilityOn || accessibility
+                avoidStairs: accessibilityOn && accessibility
             }).then(directionsResult => {
                 if (directionsResult && directionsResult.legs) {
                     // Calculate total distance and time
