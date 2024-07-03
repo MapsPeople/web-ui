@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import getLocationPoint from '../helpers/GetLocationPoint';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import directionsResponseState from '../atoms/directionsResponseState';
 import hasFoundRouteState from '../atoms/hasFoundRouteState';
+import accessibilityState from '../atoms/accessibilityState';
 
 /*
  * Hook to handle when both origin location and destination location are selected,
@@ -13,6 +14,7 @@ const useDirectionsInfo = (originLocation, destinationLocation, directionsServic
     const [totalTime, setTotalTime] = useState();
     const [hasFoundRoute, setHasFoundRoute] = useRecoilState(hasFoundRouteState);
     const [, setDirectionsResponse] = useRecoilState(directionsResponseState);
+    const accessibility = useRecoilValue(accessibilityState);
     const [areDirectionsReady, setAreDirectionReady] = useState();
 
     useEffect(() => {
@@ -22,7 +24,7 @@ const useDirectionsInfo = (originLocation, destinationLocation, directionsServic
                 origin: getLocationPoint(originLocation),
                 destination: getLocationPoint(destinationLocation),
                 travelMode: travelMode,
-                avoidStairs: accessibilityOn
+                avoidStairs: accessibilityOn && accessibility
             }).then(directionsResult => {
                 if (directionsResult && directionsResult.legs) {
                     // Calculate total distance and time
