@@ -47,7 +47,7 @@ function MapboxMap({ onMapView, onPositionControl }) {
             pitch: !isNaN(parseInt(pitch)) ? parseInt(pitch) : 0,
             // The MapsIndoors SDK needs a starting point and a zoom level to avoid timing issues when setting the venue.
             center: { lat: 0, lng: 0 },
-            zoom: 10
+            zoom: 15
         };
 
         // If miTransitionLevel exists and it's a number, set it in the mapViewOptions.
