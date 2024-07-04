@@ -15,6 +15,7 @@ import travelModeState from '../../atoms/travelModeState';
 import kioskLocationState from '../../atoms/kioskLocationState';
 import accessibilityOnState from '../../atoms/accessibilityOnState';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
+import showExternalIDsState from '../../atoms/showExternalIDsState';
 
 /**
  * Shows details for a MapsIndoors Location.
@@ -65,6 +66,8 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
     const accessibilityOn = useRecoilValue(accessibilityOnState);
 
     const [, , hasFoundRoute] = useDirectionsInfo(originLocation, destinationLocation, directionsService, travelMode, accessibilityOn)
+
+    const showExternalIDs = useRecoilValue(showExternalIDsState);
 
     useEffect(() => {
         // Reset state
@@ -206,7 +209,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                     <div className='location-info__name'>
                         {location.properties.name}
                     </div>
-                    <mi-location-info level={t('Level')} ref={locationInfoElement} show-external-id={false} />
+                    <mi-location-info level={t('Level')} ref={locationInfoElement} show-external-id={showExternalIDs} />
                 </div>
                 <button className="location-info__close" onClick={() => back()}>
                     <CloseIcon />
