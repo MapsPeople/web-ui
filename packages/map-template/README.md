@@ -218,7 +218,7 @@ function App() {
 
     return (
         <div>
-            <MapsIndoorsMap apiKey="yourApiKey" venue="yourVenue" mapboxAccessToken="yourMapboxAccessToken" />
+            <MapsIndoorsMap apiKey="yourApiKey" mapboxAccessToken="yourMapboxAccessToken" />
         </div>
     )
 }
@@ -232,7 +232,7 @@ To use the MapsIndoors instance within a Web Component, include a script tag tha
 
 ```
 <body>
-    <mapsindoors-map api-key="yourApiKey" venue="yourVenue" mapbox-access-token="yourMapboxAccessToken"></mapsindoors-map>
+    <mapsindoors-map api-key="yourApiKey" mapbox-access-token="yourMapboxAccessToken"></mapsindoors-map>
     <script>
         window.addEventListener('mapsIndoorsInstanceAvailable', () => {
             window.mapsIndoorsInstance.setDisplayRule('yourLocationId', { 'polygonFillColor': '#ff69b4' })
