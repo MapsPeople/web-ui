@@ -42,7 +42,7 @@ export const useCurrentVenue = () => {
      *  - Clear search input field.
      */
     useEffect(() => {
-        if (mapsIndoorsInstance && venuesInSolution && currentVenueName && appConfig) {
+        if (mapsIndoorsInstance && venuesInSolution.length && currentVenueName && appConfig) {
             mapsIndoorsInstance.setVenue(venuesInSolution.find(venue => venue.name === currentVenueName));
             updateCategories();
             setSearchResults([]);
