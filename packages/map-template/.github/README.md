@@ -168,4 +168,3 @@ $ npm run deploy-to-gcloud -- BUCKET_NAME
 ```
 
 This script will only work if you've already authenticated using the `gsutil` CLI on your machine, and have the proper access rights to deploy to the specified bucket.
-

@@ -192,3 +192,51 @@ Example of URL:
 `directionsTo` + `directionsFrom` + `locationId` → the `directionsTo` + `directionsFrom` have priority over the `locationId`
 
 `directionsTo` + `directionsFrom` + `externalIDs` → the `directionsTo` + `directionsFrom` have priority over the `externalIDs`
+
+
+## External customization of the Map Template
+
+When using the Map Template as a React Component or as a Web Component, you can control the map and the data on it by accessing the MapsIndoors instance. To do this, listen for the `mapsIndoorsInstanceAvailable` event on the `window` object. 
+
+You can read about all the methods that can be used on the MapsIndoors Instance [here]. (https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/mapsindoors.MapsIndoors.html)
+
+### 1. React Component
+
+To use the MapsIndoors instance within a React Component, you can create a `useEffect` hook that listens for the `mapsIndoorsInstanceAvailable` event on the `window` object.
+
+```
+import MapsIndoorsMap from '@mapsindoors/map-template/dist/mapsindoors-react.es.js';
+import { useEffect } from 'react';
+
+function App() {
+
+    useEffect(() => {
+        window.addEventListener('mapsIndoorsInstanceAvailable', () => {
+            window.mapsIndoorsInstance.setDisplayRule('yourLocationId', { 'polygonFillColor': '#ff69b4' })
+        })
+    }, [])
+
+    return (
+        <div>
+            <MapsIndoorsMap apiKey="yourApiKey" mapboxAccessToken="yourMapboxAccessToken" />
+        </div>
+    )
+}
+
+export default App;
+```
+
+### 2. Web Component 
+
+To use the MapsIndoors instance within a Web Component, include a script tag that listens for the `mapsIndoorsInstanceAvailable` event on the `window` object.
+
+```
+<body>
+    <mapsindoors-map api-key="yourApiKey" mapbox-access-token="yourMapboxAccessToken"></mapsindoors-map>
+    <script>
+        window.addEventListener('mapsIndoorsInstanceAvailable', () => {
+            window.mapsIndoorsInstance.setDisplayRule('yourLocationId', { 'polygonFillColor': '#ff69b4' })
+        })
+    </script>
+</body>
+```
