@@ -74,8 +74,6 @@ const useMapBoundsDeterminer = () => {
     /**
      * Based on the combination of the states for venueName, locationId & kioskOriginLocationId,
      * determine where to make the map go to.
-     *
-     * @param {string} [forcedVenue] - If set, this venue will be used instead of the current venue.
      */
     function determineMapBounds() {
         const currentVenue = venuesInSolution.find(venue => venue.name === currentVenueName);
