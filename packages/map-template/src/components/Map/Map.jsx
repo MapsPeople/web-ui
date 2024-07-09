@@ -120,7 +120,7 @@ function Map({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapP
     }, [gmApiKey, mapboxAccessToken, solution]);
 
     /*
-     * When map position is known, run callback.
+     * When map position is investigating, run callback.
      */
     useEffect(() => {
         if (mapPositionInvestigating) {
@@ -129,8 +129,7 @@ function Map({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapP
     }, [mapPositionInvestigating]);
 
     /*
-     * When venue is changed on the map, run callback.
-     * Set the current venue name whenever the venue is changed on the map.
+     * When map position is known, run callback.
      */
     useEffect(() => {
         if (mapPositionKnown) {
