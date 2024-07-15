@@ -7,6 +7,7 @@ import appConfigState from '../atoms/appConfigState';
 import categoriesState from '../atoms/categoriesState';
 import searchResultsState from '../atoms/searchResultsState';
 import searchInputState from '../atoms/searchInputState';
+import initialVenueNameState from '../atoms/initialVenueNameState';
 
 /**
  * Hook to handle the current Venue in the app based on the venue prop or other ways to set the Venue.
@@ -24,6 +25,7 @@ export const useCurrentVenue = () => {
     const [, setCategories] = useRecoilState(categoriesState);
     const [, setSearchResults] = useRecoilState(searchResultsState);
     const searchInput = useRecoilValue(searchInputState);
+    const [initialVenueName, setInitialVenueName] = useRecoilState(initialVenueNameState);
 
     /*
      * Responsible for setting the Venue state whenever venueName changes (and all Venues in the Solution are loaded).
@@ -33,6 +35,15 @@ export const useCurrentVenue = () => {
             setCurrentVenueName(getVenueToSet(venuesInSolution)?.name);
         }
     }, [currentVenueName, venuesInSolution]);
+
+    /*
+     * Make sure to store the initial venue for later use when eg. resetting.
+     */
+    useEffect(() => {
+        if (currentVenueName && !initialVenueName) {
+            setInitialVenueName(currentVenueName);
+        }
+    }, [currentVenueName]);
 
     /*
      * Apply side effects when the venue changes:
