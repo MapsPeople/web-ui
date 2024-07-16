@@ -167,15 +167,19 @@ export class Dropdown {
     selectedItemIndex = 0;
     highlightedItemClassName = 'list__item--highlighted';
 
+
     /**
-     * Focusout event handler.
-     * If the dropdown loses focus it is closed.
+     * Keyboard event listener.
+     * When the Tab key is pressed, the focus is set to the filter input field (If present).
+     *
+     * @param {KeyboardEvent} event
+     * @returns {void}
      */
-    @Listen('focusout')
-    focusOutEventHandler(event: FocusEvent): void {
-        const relatedTarget = event.relatedTarget as Node;
-        if (!relatedTarget || !this.hostElement.contains(relatedTarget)) {
-            this.open = false;
+    @Listen('keydown', { target: 'window' })
+    handleKeyDown(event: KeyboardEvent): void {
+        if (event.key === 'Tab' && this.open) {
+            this.filterElement?.focus();
+            event.preventDefault();
         }
     }
 
