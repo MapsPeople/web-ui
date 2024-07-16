@@ -81,7 +81,11 @@ export const useCurrentVenue = () => {
      * Generate list of categories that exist on Locations in the current Venue.
      */
     const updateCategories = () => {
-        window.mapsindoors.services.LocationsService.getLocations({ venue: currentVenueName }).then(locationsInVenue => {
+        // The venue parameter in the SDK's getLocations method is case sensitive.
+        // So when the currentVenueName is set based on a Locations venue property, the casing may differ.
+        // Thus we need to find the exact venue name.
+        const venueName = venuesInSolution.find(venue => venue.name.toLowerCase() === currentVenueName.toLowerCase())?.name;
+        window.mapsindoors.services.LocationsService.getLocations({ venue: venueName }).then(locationsInVenue => {
             let uniqueCategories = new Map();
             for (const location of locationsInVenue) {
                 const keys = Object.keys(location.properties.categories);
