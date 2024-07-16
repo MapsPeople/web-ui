@@ -14,6 +14,9 @@ module.exports = {
         sourceType: 'module',  // Allows for the use of imports
     },
     'rules': {
-        'require-await': 0 // Stencil requires publicly exposed methods to be async, but has no requirement to implement any asynchronous code
+        'require-await': 0, // Stencil requires publicly exposed methods to be async, but has no requirement to implement any asynchronous code
+        '@typescript-eslint/no-unused-vars': ['error', {
+            'varsIgnorePattern': '^h$'
+        }]
     }
 };
