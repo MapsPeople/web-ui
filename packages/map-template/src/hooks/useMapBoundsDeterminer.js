@@ -76,7 +76,7 @@ const useMapBoundsDeterminer = () => {
      * determine where to make the map go to.
      */
     function determineMapBounds() {
-        const currentVenue = venuesInSolution.find(venue => venue.name === currentVenueName);
+        const currentVenue = venuesInSolution.find(venue => venue.name.toLowerCase() === currentVenueName.toLowerCase());
         if (mapsIndoorsInstance && currentVenue) {
             setMapPositionInvestigating(true);
 

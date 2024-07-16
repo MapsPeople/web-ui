@@ -54,7 +54,7 @@ export const useCurrentVenue = () => {
      */
     useEffect(() => {
         if (mapsIndoorsInstance && venuesInSolution.length && currentVenueName && appConfig) {
-            mapsIndoorsInstance.setVenue(venuesInSolution.find(venue => venue.name === currentVenueName));
+            mapsIndoorsInstance.setVenue(venuesInSolution.find(venue => venue.name.toLowerCase() === currentVenueName.toLowerCase()));
             updateCategories();
             setSearchResults([]);
             if (searchInput) {

@@ -69,7 +69,7 @@ function VenueSelector({ onOpen, onClose, active }) {
             <div className="venue-selector__content" ref={venueSelectorContentRef}>
                 <h1>{t('Select venue')}</h1>
                 <div className="venue-selector__list">
-                    {venuesInSolution.map(venue => (<Venue key={venue.id} isCurrent={currentVenueName === venue.name} venue={venue} onVenueClicked={() => onVenueSelected(venue)} />))}
+                    {venuesInSolution.map(venue => (<Venue key={venue.id} isCurrent={currentVenueName?.toLowerCase() === venue.name.toLowerCase()} venue={venue} onVenueClicked={() => onVenueSelected(venue)} />))}
                 </div>
             </div>
         </CSSTransition>
