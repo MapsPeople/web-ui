@@ -128,7 +128,14 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef }) {
      * Add event listener for scrolling in the categories list
      */
     useEffect(() => {
+        // When categoriesListRef.current element resizes, update scroll button states.
+        const handleResize = () => {
+            updateScrollButtonsState();
+        };
+
         if (categoriesListRef.current) {
+            const resizeObserver = new ResizeObserver(handleResize)
+            resizeObserver.observe(categoriesListRef.current)
             categoriesListRef.current.addEventListener('scroll', updateScrollButtonsState);
         }
     }, []);
