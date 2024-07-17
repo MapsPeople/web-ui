@@ -1,4 +1,4 @@
-import { Component, Element, Event, EventEmitter, h, Host, JSX, Prop, State, Watch, Listen } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, Host, JSX, Prop, State, Watch, Listen, h } from '@stencil/core';
 import fuzzysort from 'fuzzysort';
 import { SortOrder } from '../../enums/sort-order.enum';
 
@@ -43,6 +43,10 @@ export class Dropdown {
      * @type {Array<HTMLMiDropdownItemElement>}
      */
     @Prop() items: Array<HTMLMiDropdownItemElement> = [];
+
+    /**
+     * Watcher for items property.
+     */
     @Watch('items')
     onItemsChanged(items): void {
         if (items.some(item => item.tagName.toLowerCase() !== 'mi-dropdown-item')) {
@@ -103,7 +107,7 @@ export class Dropdown {
     @Prop() multiple = false;
 
     /**
-     * Gets the selected items
+     * Gets the selected items.
      *
      * @type {Array<HTMLMiDropdownItemElement>}
      */
@@ -126,6 +130,10 @@ export class Dropdown {
     @Prop() iconAlt: string;
 
     @State() currentItems: Array<HTMLMiDropdownItemElement> = [];
+
+    /**
+     * Watcher for currentItems property.
+     */
     @Watch('currentItems')
     onCurrentItemsChange(): void {
         this.isFilterSelectionDisabled = this.currentItems.length === 0;
@@ -159,26 +167,30 @@ export class Dropdown {
     selectedItemIndex = 0;
     highlightedItemClassName = 'list__item--highlighted';
 
+
     /**
-     * Focusout event handler.
-     * If the dropdown loses focus it is closed.
+     * Keyboard event listener.
+     * When the Tab key is pressed, the focus is set to the filter input field (If present).
+     *
+     * @param {KeyboardEvent} event
+     * @returns {void}
      */
-    @Listen('focusout')
-    focusOutEventHandler(event: FocusEvent): void {
-        const relatedTarget = event.relatedTarget as Node;
-        if (!relatedTarget || !this.hostElement.contains(relatedTarget)) {
-            this.open = false;
+    @Listen('keydown', { target: 'window' })
+    handleKeyDown(event: KeyboardEvent): void {
+        if (event.key === 'Tab' && this.open) {
+            this.filterElement?.focus();
+            event.preventDefault();
         }
     }
 
     /**
      * Outside the dropdown listener. It will close the dropdown when a click is outside a dropdown and dropdown list.
      *
-     * @param {Event} ev
+     * @param {Event} event
      */
-    @Listen('click', { target: 'window' })
-    checkForClickOutside(ev: Event): void {
-        if (!this.hostElement.contains(ev.target as HTMLElement)) {
+    @Listen('click', { target: 'window', capture: true })
+    checkForClickOutside(event: MouseEvent): void {
+        if (!this.hostElement.contains(event.target as HTMLElement)) {
             this.open = false;
         }
     }
@@ -213,12 +225,15 @@ export class Dropdown {
         this.calculateDropDownPosition();
     }
 
+    /**
+     * Lifecycle method called when the component is loaded in the DOM.
+     */
     componentDidLoad(): void {
         this.createMiDropdownItemsFromDocument();
         this.selectFirstMiDropdownItem();
         this.enableKeyboardNavigationEvents();
 
-        const filterElementObserver = new IntersectionObserver((entries, observer) => {
+        const filterElementObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting === true) {
                     this.filterElement.focus();
@@ -236,6 +251,9 @@ export class Dropdown {
         }
     }
 
+    /**
+     * Lifecycle method called when the component is updated.
+     */
     componentDidRender(): void {
         this.calculateDropDownPosition();
         if (!this.multiple) {
@@ -320,7 +338,8 @@ export class Dropdown {
 
     /**
      * Updates the currently highlighted item in the markup.
-     * @param itemIndex
+     *
+     * @param {number} itemIndex
      */
     highlightItem(itemIndex: number, scrollIntoView: boolean = false): void {
         const items = this.hostElement.shadowRoot.querySelectorAll('.list__item');
@@ -383,7 +402,7 @@ export class Dropdown {
         const items = Array.from(this.currentItems) as Array<HTMLMiDropdownItemElement>;
 
         for (const item of items) {
-            item.selected = (`${item.dataset.excludefromall}` === 'true' || item.disabled)? false : true;
+            item.selected = (`${item.dataset.excludefromall}` === 'true' || item.disabled) ? false : true;
         }
 
         this.onChangedHandler();
@@ -425,7 +444,8 @@ export class Dropdown {
 
     /**
      * Highlights the item that the cursor is hovering in the content window.
-     * @param filteredItemsIndex
+     *
+     * @param {number} filteredItemsIndex
      */
     onMouseOver(filteredItemsIndex: number): void {
         if (!this.isMouseOverEventDisabled && !this.multiple) {
@@ -435,11 +455,9 @@ export class Dropdown {
     }
 
     /**
-     * Filter items based on input query.
-     *
-     * @returns {HTMLMiDropdownItemElement[]}
+     * Filter items based on the input query.
      */
-    filter(): HTMLMiDropdownItemElement[] {
+    filter(): void {
         if (this.filterElement) {
             const inputQuery: string = this.filterElement.value;
             const miDropdownItemTexts: string[] = this.items.map(item => (item.text || item.innerText));
@@ -448,7 +466,8 @@ export class Dropdown {
             if (inputQuery === '') {
                 this.currentItemIndex = this.selectedItemIndex;
                 this.isClearButtonVisible = false;
-                return this.currentItems = [...this.items];
+                this.currentItems = [...this.items];
+                return;
             } else {
                 this.isClearButtonVisible = true;
             }
@@ -482,6 +501,11 @@ export class Dropdown {
         this.isClearButtonVisible = false;
     }
 
+    /**
+     * Render the dropdown component.
+     *
+     * @returns {JSX.Element}
+     */
     render(): JSX.Element {
         const filter = this.filterable ? this.renderFiltering() : null;
         const multiple = this.multiple ? this.renderMultipleOptions() : null;
@@ -494,7 +518,7 @@ export class Dropdown {
 
         return (
             <Host class={{ 'open': this.open }}>
-                <button part="button" class="button" disabled={this.disabled || this.items.length === 0} onClick={() => this.toggleContentWindow()}>
+                <button part="button" class="button" disabled={this.disabled || this.items.length === 0} onClick={(): void => this.toggleContentWindow()}>
                     {leftSideIcon}
                     {this.renderButtonLabel()}
 
@@ -505,7 +529,7 @@ export class Dropdown {
                         <path d="M9.37165 9.58706C9.17303 9.80775 8.82697 9.80775 8.62835 9.58706L0.751035 0.834484C0.46145 0.512722 0.689796 7.73699e-08 1.12268 1.25924e-07L16.8773 1.89302e-06C17.3102 1.94157e-06 17.5386 0.512723 17.249 0.834484L9.37165 9.58706Z" />
                     </svg>
                 </button>
-                <section ref={(el) => this.listElement = el as HTMLElement} part="dropdown-container" class="content">
+                <section ref={(el): HTMLElement => this.listElement = el} part="dropdown-container" class="content" tab-index="1">
                     {filter}
                     {multiple}
                     {this.currentItems.length === 0 ? this.renderNoResultsTemplate() : listOfItems}
@@ -532,6 +556,7 @@ export class Dropdown {
 
     /**
      * Helper function to render the button label.
+     *
      * @returns {JSX.Element}
      */
     renderButtonLabel(): JSX.Element {
@@ -550,6 +575,7 @@ export class Dropdown {
 
     /**
      * Helper function to render an icon when an image source is provided.
+     *
      * @returns {JSX.Element}
      */
     renderLeftSideIcon(): JSX.Element {
@@ -566,11 +592,11 @@ export class Dropdown {
             <div class="filter">
                 <input type="text" class="mi-input filter__input"
                     placeholder="Type to filter"
-                    ref={(el) => this.filterElement = el as HTMLInputElement}
-                    onInput={() => { this.filter(); }}
+                    ref={(el): HTMLInputElement => this.filterElement = el}
+                    onInput={(): void => { this.filter(); }}
                     tabIndex={this.open ? 0 : -1} />
 
-                <button ref={(el) => this.clearButtonElement = el as HTMLButtonElement} tabindex={this.isClearButtonVisible ? 0 : -1} type="button" onClick={() => this.clearFilter()} class={`filter__clear ${this.isClearButtonVisible === false ? 'filter__clear--hidden' : ''}`} aria-label="Clear">
+                <button ref={(el): HTMLButtonElement => this.clearButtonElement = el} tabindex={this.isClearButtonVisible ? 0 : -1} type="button" onClick={(): void => this.clearFilter()} class={`filter__clear ${this.isClearButtonVisible === false ? 'filter__clear--hidden' : ''}`} aria-label="Clear">
                     <svg viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M14 1.41L12.59 0L7 5.59L1.41 0L0 1.41L5.59 7L0 12.59L1.41 14L7 8.41L12.59 14L14 12.59L8.41 7L14 1.41Z" />
                     </svg>
@@ -587,8 +613,8 @@ export class Dropdown {
     renderMultipleOptions(): JSX.Element {
         return (
             <div class="options">
-                <button class="options__item" disabled={this.isFilterSelectionDisabled} onClick={() => this.selectAll()}>Select all</button>
-                <button class="options__item" disabled={this.isFilterSelectionDisabled} onClick={() => this.selectNone()}>Select none</button>
+                <button class="options__item" disabled={this.isFilterSelectionDisabled} onClick={(): void => this.selectAll()}>Select all</button>
+                <button class="options__item" disabled={this.isFilterSelectionDisabled} onClick={(): void => this.selectNone()}>Select none</button>
             </div>
         );
     }
@@ -612,7 +638,7 @@ export class Dropdown {
         }
 
         return (
-            <li class={{ 'list__item': true, 'list__item--disabled': item.disabled }} title={itemTooltipInfo} onMouseOver={() => { this.onMouseOver(index); }}>
+            <li class={{ 'list__item': true, 'list__item--disabled': item.disabled }} title={itemTooltipInfo} onMouseOver={(): void => { this.onMouseOver(index); }}>
                 <label class="mi-label label" tabindex="-1">
                     <input
                         class={{ 'label__checkbox': true, 'label__checkbox--hidden': !showCheckBox, 'mi-input': true }}
@@ -621,7 +647,7 @@ export class Dropdown {
                         checked={item.selected}
                         disabled={item.disabled}
                         data-excludefromall={item.excludefromall}
-                        onChange={() => this.onSelect(item)}
+                        onChange={(): void => this.onSelect(item)}
                     />
                     {itemText}
                 </label>
