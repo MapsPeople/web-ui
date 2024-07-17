@@ -32,6 +32,7 @@ import legendSortedFieldsSelector from '../../selectors/legendSortedFieldsSelect
 import searchAllVenuesState from '../../atoms/searchAllVenues';
 import isNullOrUndefined from '../../helpers/isNullOrUndefined';
 import venuesInSolutionState from '../../atoms/venuesInSolutionState';
+import initialVenueNameState from '../../atoms/initialVenueNameState';
 
 /**
  * Show the search results.
@@ -101,6 +102,7 @@ function Search({ onSetSize, isOpen }) {
     const searchAllVenues = useRecoilValue(searchAllVenuesState);
 
     const venuesInSolution = useRecoilValue(venuesInSolutionState);
+    const initialVenueName = useRecoilValue(initialVenueNameState);
 
     /**
      *
@@ -275,7 +277,7 @@ function Search({ onSetSize, isOpen }) {
      * Deselect category and clear results list.
      */
     useEffect(() => {
-        if (selectedCategory) {
+        if (selectedCategory && currentVenueName !== initialVenueName) {
             setSearchResults([]);
             setSelectedCategory(null);
         }
