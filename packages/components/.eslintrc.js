@@ -16,7 +16,7 @@ module.exports = {
     'rules': {
         'require-await': 0, // Stencil requires publicly exposed methods to be async, but has no requirement to implement any asynchronous code
         '@typescript-eslint/no-unused-vars': ['error', {
-            'varsIgnorePattern': '^h$'
+            'varsIgnorePattern': '^h$' // Ignore the 'h' variable used in JSX, this is done to prevent errors from eslint due the 'h' variable not being used in the code.
         }]
     }
 };
