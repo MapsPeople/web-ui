@@ -5,11 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [13.19.1] - 2024-07-17
+## [13.20.2] - 2024-07-17
 
 ### Fixed
 
 - Fixed an issue where clicking the scrollbar of `mi-dropdown` within a modal would unexpectedly close the dropdown.
+
+## [13.20.1] - 2024-06-25
+
+### Fixed
+
+- Adds missing styling for disabled items in a dropdown list.
+
+## [13.20.0] - 2024-06-17
+
+### Added
+
+- **mi-keyboard**: Support added for Italian keyboard layout.
+
+## [13.19.1] - 2024-05-27
+
+### Fixed
+
+- Upgrade dependencies causing vulnerabilities
 
 ## [13.19.0] - 2024-04-25
 
