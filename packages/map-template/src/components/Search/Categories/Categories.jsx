@@ -134,6 +134,9 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef }) {
         };
 
         if (categoriesListRef.current) {
+            // Because of timing issue, we need to listen to changes inside div element for categories.
+            // Based on that we can handle disabling/enabling scroll buttons.
+            // Read more: https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver
             const resizeObserver = new ResizeObserver(handleResize)
             resizeObserver.observe(categoriesListRef.current)
             categoriesListRef.current.addEventListener('scroll', updateScrollButtonsState);
