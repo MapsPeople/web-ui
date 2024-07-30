@@ -139,6 +139,7 @@ Note that when using the React component, the properties should conform to JSX p
 |`search-all-venues`|`searchAllVenues`|`bool`|If you want to perform search across all venues in the solution. |
 |`hide-non-matches`|`hideNonMatches`|`bool`|Determine whether the locations on the map should be filtered (only show the matched locations and hide the rest) or highlighted (show all locations and highlight the matched ones with a red dot by default). If set to true, the locations will be filtered. |
 |`show-road-names`|`showRoadNames`|`bool`|A boolean parameter that dictates whether Mapbox road names should be shown. By default, Mapbox road names are hidden when MapsIndoors data is shown. It is dictated by `mi-transition-level` which default value is 17. |
+|`show-external-ids`|`showExternalIDs`|`bool`|Determine whether the location details on the map should have an external ID visible. The default value is set to false. |
 
 ## Using Query Parameters
 
@@ -172,6 +173,7 @@ The supported query parameters are the following:
 24. `searchAllVenues` - If you want to perform search across all venues in the solution.
 25. `hideNonMatches` - Determine whether the locations on the map should be filtered (only show the matched locations and hide the rest) or highlighted (show all locations and highlight the matched ones with a red dot by default). If set to true, the locations will be filtered.
 26. `showRoadNames` - A boolean parameter that dictates whether Mapbox road names should be shown. By default, Mapbox road names are hidden when MapsIndoors data is shown. It is dictated by `mi-transition-level` which default value is 17.
+27. `showExternalIDs` - Determine whether the location details on the map should have an external ID visible. The default value is set to false.
 
 **Note!** All the query parameters need to be separated with the `&` symbol, without any spaces in between.
 **Note!** When using parameters such as `directionsTo`, `directionsFrom`, `locationId`, `externalIDs`, and `tileStyle` make sure you are using the correct `apiKey` parameter to which they belong.
@@ -190,3 +192,51 @@ Example of URL:
 `directionsTo` + `directionsFrom` + `locationId` → the `directionsTo` + `directionsFrom` have priority over the `locationId`
 
 `directionsTo` + `directionsFrom` + `externalIDs` → the `directionsTo` + `directionsFrom` have priority over the `externalIDs`
+
+
+## External customization of the Map Template
+
+When using the Map Template as a React Component or as a Web Component, you can control the map and the data on it by accessing the MapsIndoors instance. To do this, listen for the `mapsIndoorsInstanceAvailable` event on the `window` object. 
+
+You can read about all the methods that can be used on the MapsIndoors Instance [here]. (https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/mapsindoors.MapsIndoors.html)
+
+### 1. React Component
+
+To use the MapsIndoors instance within a React Component, you can create a `useEffect` hook that listens for the `mapsIndoorsInstanceAvailable` event on the `window` object.
+
+```
+import MapsIndoorsMap from '@mapsindoors/map-template/dist/mapsindoors-react.es.js';
+import { useEffect } from 'react';
+
+function App() {
+
+    useEffect(() => {
+        window.addEventListener('mapsIndoorsInstanceAvailable', () => {
+            window.mapsIndoorsInstance.setDisplayRule('yourLocationId', { 'polygonFillColor': '#ff69b4' })
+        })
+    }, [])
+
+    return (
+        <div>
+            <MapsIndoorsMap apiKey="yourApiKey" mapboxAccessToken="yourMapboxAccessToken" />
+        </div>
+    )
+}
+
+export default App;
+```
+
+### 2. Web Component 
+
+To use the MapsIndoors instance within a Web Component, include a script tag that listens for the `mapsIndoorsInstanceAvailable` event on the `window` object.
+
+```
+<body>
+    <mapsindoors-map api-key="yourApiKey" mapbox-access-token="yourMapboxAccessToken"></mapsindoors-map>
+    <script>
+        window.addEventListener('mapsIndoorsInstanceAvailable', () => {
+            window.mapsIndoorsInstance.setDisplayRule('yourLocationId', { 'polygonFillColor': '#ff69b4' })
+        })
+    </script>
+</body>
+```
