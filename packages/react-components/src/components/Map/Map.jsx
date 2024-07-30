@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
+import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
 import MapboxMap from './MapboxMap/MapboxMap';
 import MapContext from './MapContext';
+
+// Define the Custom Elements from our components package.
+defineCustomElements();
 
 const mapTypes = {
     Google: 'google',
