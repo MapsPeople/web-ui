@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
 import MapboxMap from './MapboxMap/MapboxMap';
+import GoogleMapsMap from './GoogleMapsMap/GoogleMapsMap';
 import MapContext from './MapContext';
 
 // Define the Custom Elements from our components package.
@@ -20,7 +21,7 @@ function Map({
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const [, setDirectionsService] = useState();
 
-    const mapType = mapTypes.Mapbox;
+    const mapType = mapTypes.Google;
 
     useEffect(() => {
         if (apiKey) {
@@ -29,8 +30,7 @@ function Map({
     }, [apiKey]);
 
     const onMapView = async (mapView, externalDirectionsProvider) => {
-        setTimeout(() => {
-            console.log('go onMapView', apiKey);
+        setTimeout(() => { // yikes 😬 TODO: Invesitate timing issue that is fixed with this workaround.
             // Instantiate MapsIndoors instance
             const miInstance = new window.mapsindoors.MapsIndoors({
                 mapView
@@ -92,7 +92,7 @@ function Map({
     }
 
     return <MapContext.Provider value={{ apiKey, gmApiKey, mapboxAccessToken, mapsIndoorsInstance }}>
-        {mapType === mapTypes.Google && <p>Google Maps map</p>}
+        {mapType === mapTypes.Google && <GoogleMapsMap onMapView={onMapView} onPositionControl={onPositionControlCreated} />}
         {mapType === mapTypes.Mapbox && <MapboxMap onMapView={onMapView} onPositionControl={onPositionControlCreated} />}
     </MapContext.Provider>
 }

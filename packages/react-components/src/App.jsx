@@ -10,6 +10,7 @@ function App() {
             <div className="map-container">
                 <Map
                     apiKey="mapspeople3d"
+                    gmApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
                     mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
                 />
             </div>
