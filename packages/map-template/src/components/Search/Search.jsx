@@ -31,6 +31,8 @@ import isLegendDialogVisibleState from '../../atoms/isLegendDialogVisibleState';
 import legendSortedFieldsSelector from '../../selectors/legendSortedFieldsSelector';
 import searchAllVenuesState from '../../atoms/searchAllVenues';
 import isNullOrUndefined from '../../helpers/isNullOrUndefined';
+import venuesInSolutionState from '../../atoms/venuesInSolutionState';
+import initialVenueNameState from '../../atoms/initialVenueNameState';
 
 /**
  * Show the search results.
@@ -99,6 +101,9 @@ function Search({ onSetSize, isOpen }) {
 
     const searchAllVenues = useRecoilValue(searchAllVenuesState);
 
+    const venuesInSolution = useRecoilValue(venuesInSolutionState);
+    const initialVenueName = useRecoilValue(initialVenueNameState);
+
     /**
      *
      * Get the locations and filter through them based on categories selected.
@@ -106,9 +111,12 @@ function Search({ onSetSize, isOpen }) {
      * @param {string} category
      */
     function getFilteredLocations(category) {
+        // Regarding the venue name: The venue parameter in the SDK's getLocations method is case sensitive.
+        // So when the currentVenueName is set based on a Locations venue property, the casing may differ.
+        // Thus we need to find the venue name from the list of venues.
         window.mapsindoors.services.LocationsService.getLocations({
             categories: category,
-            venue: searchAllVenues ? undefined : currentVenueName,
+            venue: searchAllVenues ? undefined : venuesInSolution.find(venue => venue.name.toLowerCase() === currentVenueName.toLowerCase())?.name,
         }).then(onResults);
     }
 
@@ -190,7 +198,7 @@ function Search({ onSetSize, isOpen }) {
         setCurrentLocation(location);
 
         // Set the current venue to be the selected location venue.
-        if (location.properties.venueId !== currentVenueName) {
+        if (location.properties.venueId.toLowerCase() !== currentVenueName.toLowerCase()) {
             setCurrentVenueName(location.properties.venueId);
             setIsLocationClicked(true);
         }
@@ -269,7 +277,7 @@ function Search({ onSetSize, isOpen }) {
      * Deselect category and clear results list.
      */
     useEffect(() => {
-        if (selectedCategory) {
+        if (selectedCategory && currentVenueName !== initialVenueName) {
             setSearchResults([]);
             setSelectedCategory(null);
         }

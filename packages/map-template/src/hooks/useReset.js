@@ -1,4 +1,4 @@
-import { useResetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
 import activeStepState from '../atoms/activeStep';
 import currentLocationState from '../atoms/currentLocationState';
 import directionsResponseState from '../atoms/directionsResponseState';
@@ -12,6 +12,9 @@ import searchResultsState from '../atoms/searchResultsState';
 import accessibilityOnState from '../atoms/accessibilityOnState';
 import isLegendDialogVisibleState from '../atoms/isLegendDialogVisibleState';
 import mapboxViewModeState from '../atoms/mapboxViewModeState';
+import venueWasSelectedState from '../atoms/venueWasSelectedState';
+import initialVenueNameState from '../atoms/initialVenueNameState';
+import currentVenueNameState from '../atoms/currentVenueNameState';
 
 /**
  * Reset a number of Recoil atoms to initial values.
@@ -19,6 +22,9 @@ import mapboxViewModeState from '../atoms/mapboxViewModeState';
  * @returns {function} - Call this to reset.
  */
 export function useReset() {
+
+    const initialVenueName = useRecoilValue(initialVenueNameState);
+    const [, setCurrentVenueName] = useRecoilState(currentVenueNameState);
 
     const activeStep = useResetRecoilState(activeStepState);
     const currentLocation = useResetRecoilState(currentLocationState);
@@ -33,6 +39,7 @@ export function useReset() {
     const accessibilityOn = useResetRecoilState(accessibilityOnState);
     const isLegendDialogVisible  = useResetRecoilState(isLegendDialogVisibleState);
     const mapboxViewMode = useResetRecoilState(mapboxViewModeState);
+    const venueWasSelected = useResetRecoilState(venueWasSelectedState);
 
     return () => {
         activeStep();
@@ -48,5 +55,11 @@ export function useReset() {
         accessibilityOn();
         isLegendDialogVisible();
         mapboxViewMode();
+        venueWasSelected();
+
+        // Make sure to reset the venue to the initial one.
+        if (initialVenueName) {
+            setCurrentVenueName(initialVenueName);
+        }
     };
 }
