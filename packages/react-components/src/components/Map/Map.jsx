@@ -15,19 +15,35 @@ const mapTypes = {
 function Map({
     apiKey,
     gmApiKey,
-    mapboxAccessToken
+    mapboxAccessToken,
+    venue // administrative ID
 }) {
 
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const [, setDirectionsService] = useState();
 
-    const mapType = mapTypes.Google;
+    const mapType = mapTypes.Mapbox;
 
     useEffect(() => {
         if (apiKey) {
             window.mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKey);
         }
     }, [apiKey]);
+
+    // TODO: Proper design on how map bounds should work
+    useEffect(() => {
+        if (mapsIndoorsInstance) {
+            window.mapsindoors.services.VenuesService.getVenues().then(venuesInSolution => {
+                let venueToSet = venuesInSolution.find(v => v.name === venue);
+                if (!venueToSet) {
+                    // No explicit venue set. Take the first alphabetically
+                    venueToSet = [...venuesInSolution].sort(function (a, b) { return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0); })[0];
+                }
+                mapsIndoorsInstance.setVenue(venueToSet);
+                mapsIndoorsInstance.fitVenue(venueToSet);
+            });
+        }
+    }, [mapsIndoorsInstance, venue]);
 
     const onMapView = async (mapView, externalDirectionsProvider) => {
         setTimeout(() => { // yikes 😬 TODO: Invesitate timing issue that is fixed with this workaround.
