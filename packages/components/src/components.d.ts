@@ -231,7 +231,7 @@ export namespace Components {
          */
         "open": boolean;
         /**
-          * Gets the selected items
+          * Gets the selected items.
           * @type {Array<HTMLMiDropdownItemElement>}
          */
         "selected": Array<HTMLMiDropdownItemElement>;
@@ -1613,7 +1613,7 @@ declare namespace LocalJSX {
          */
         "open"?: boolean;
         /**
-          * Gets the selected items
+          * Gets the selected items.
           * @type {Array<HTMLMiDropdownItemElement>}
          */
         "selected"?: Array<HTMLMiDropdownItemElement>;

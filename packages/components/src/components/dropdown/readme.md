@@ -150,7 +150,7 @@ mi-dropdown::part(button) {
 | `multiple`           | `multiple`           | This attribute indicates that multiple items can be selected in the list. If it is not specified, then only one item can be selected at a time.                                               | `boolean`                         | `false`              |
 | `noResultsMessage`   | `no-results-message` | Guiding message when presented with a content window that has no rows. Default language is English.                                                                                           | `string`                          | `'No results found'` |
 | `open`               | `open`               | Gets or sets the state of the dropdown. If the attribute is set to true then the dropdown will be expanded.                                                                                   | `boolean`                         | `false`              |
-| `selected`           | --                   | Gets the selected items                                                                                                                                                                       | `HTMLMiDropdownItemElement[]`     | `[]`                 |
+| `selected`           | --                   | Gets the selected items.                                                                                                                                                                      | `HTMLMiDropdownItemElement[]`     | `[]`                 |
 
 
 ## Events
