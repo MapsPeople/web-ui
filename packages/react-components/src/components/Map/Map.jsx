@@ -24,7 +24,6 @@ function Map({
 
     useEffect(() => {
         if (apiKey) {
-            console.log('apiKey', apiKey);
             window.mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKey);
         }
     }, [apiKey]);
@@ -67,12 +66,34 @@ function Map({
             const directionsService = new window.mapsindoors.services.DirectionsService(externalDirectionsProvider);
             setDirectionsService(directionsService);
         }, 0);
-
     };
+
+    /**
+     * Listen for changes in user position and update state for it.
+     *
+     * @param {object} positionControl - MapsIndoors PositionControl instance.
+     */
+    const onPositionControlCreated = positionControl => {
+        if (positionControl.nodeName === 'MI-MY-POSITION') {
+            // The Web Component needs to set up the listener with addEventListener
+            positionControl.addEventListener('position_received', positionInfo => {
+                if (positionInfo.detail.accurate === true) {
+                    //setUserPosition(positionInfo.detail.position);
+                }
+            });
+        } else {
+            positionControl.on('position_received', positionInfo => {
+                if (positionInfo.accurate === true) {
+                    //setUserPosition(positionInfo.position);
+                }
+            });
+        }
+        //setPositionControl(positionControl);
+    }
 
     return <MapContext.Provider value={{ apiKey, gmApiKey, mapboxAccessToken, mapsIndoorsInstance }}>
         {mapType === mapTypes.Google && <p>Google Maps map</p>}
-        {mapType === mapTypes.Mapbox && <MapboxMap onMapView={onMapView} />}
+        {mapType === mapTypes.Mapbox && <MapboxMap onMapView={onMapView} onPositionControl={onPositionControlCreated} />}
     </MapContext.Provider>
 }
 

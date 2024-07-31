@@ -3,7 +3,7 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import MapContext from '../MapContext';
 
-function MapboxMap({ onMapView, /* onPositionControl */}) {
+function MapboxMap({ onMapView, onPositionControl }) {
 
     const { mapboxAccessToken, bearing, pitch, mapsIndoorsInstance } = useContext(MapContext);
 
@@ -61,7 +61,7 @@ function MapboxMap({ onMapView, /* onPositionControl */}) {
                 onRemove: function () { }
             }, 'top-right');
             setHasPositionControl(true);
-            // onPositionControl(myPositionButtonElement);
+            onPositionControl(myPositionButtonElement);
         }
 
         if (mapsIndoorsInstance && mapView && !hasZoomControl /*&& isDesktop*/) {
