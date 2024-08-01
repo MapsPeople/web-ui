@@ -5,7 +5,8 @@ import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js
 import i18n from 'i18next';
 import initI18n from '../../i18n/initialize.js';
 import './MapTemplate.scss';
-import MIMap from "../Map/Map";
+// import MIMap from "../Map/Map";
+import Map from '@mapsindoors/react-components/dist/map.es.js';
 import SplashScreen from '../SplashScreen/SplashScreen';
 import VenueSelector from '../VenueSelector/VenueSelector';
 import BottomSheet from '../BottomSheet/BottomSheet';
@@ -55,6 +56,7 @@ import appConfigState from '../../atoms/appConfigState.js';
 import { useCurrentVenue } from '../../hooks/useCurrentVenue.js';
 import showExternalIDsState from '../../atoms/showExternalIDsState.js'
 import showRoadNamesState from '../../atoms/showRoadNamesState.js';
+import currentVenueNameState from '../../atoms/currentVenueNameState.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -103,7 +105,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setPrimaryColor] = useRecoilState(primaryColorState);
     const [, setLogo] = useRecoilState(logoState);
     const [, setGmMapId] = useRecoilState(gmMapIdState);
-    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
+    const [mapsIndoorsInstance, setMapsIndoorsInstance] = useRecoilState(mapsIndoorsInstanceState);
     const [currentLanguage, setCurrentLanguage] = useRecoilState(languageState);
     const [, setKioskLocation] = useRecoilState(kioskLocationState);
     const [, setKioskOriginLocationId] = useRecoilState(kioskOriginLocationIdState);
@@ -118,6 +120,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setHideNonMatches] = useRecoilState(hideNonMatchesState);
     const [, setshowExternalIDs] = useRecoilState(showExternalIDsState);
     const [, setShowRoadNames] = useRecoilState(showRoadNamesState);
+    const currentVenueName = useRecoilValue(currentVenueNameState);
 
     const [showVenueSelector, setShowVenueSelector] = useState(true);
     const [showPositionControl, setShowPositionControl] = useState(true);
@@ -198,11 +201,17 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     /**
      * Wait for the MapsIndoors JS SDK to be initialized, then set the mapsindoorsSDKAvailable state to true.
+     * Also set the MapsIndoorsInstance given from the Map.
      */
     useEffect(() => {
         initializeMapsIndoorsSDK().then(() => {
             setMapsindoorsSDKAvailable(true);
         });
+
+        window.addEventListener('mapsIndoorsInstanceAvailable', () => {
+            setMapsIndoorsInstance(window.mapsIndoorsInstance);
+        })
+
     }, []);
 
     /*
@@ -597,7 +606,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         />}
         {showQRCodeDialog && <QRCodeDialog />}
         {showLegendDialog && <LegendDialog />}
-        {isMapPositionInvestigating &&
+        {mapsIndoorsInstance &&
             <Fragment key={resetCount}>
                 {isDesktop &&
                     <Sidebar
@@ -621,12 +630,18 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 }
             </Fragment>
         }
-        <MIMap
+        <Map
+            apiKey={apiKey}
+            mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
+            venue={currentVenueName}
+            onMapReady={() => setMapReady(true)}
+        />
+        {/* <MIMap
             useMapProviderModule={useMapProviderModule}
             onMapPositionKnown={() => mapPositionKnown()}
             onMapPositionInvestigating={() => setIsMapPositionInvestigating(true)}
             onLocationClick={(location) => locationClicked(location)}
-        />
+        /> */}
     </div>
 }
 
