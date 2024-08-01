@@ -58,3 +58,46 @@
 .app__map > * {
     height: 100%;
 }
+
+.dialog {
+    z-index: 10;
+    font-size: 1rem;
+}
+
+
+.location-details {
+    position: relative;
+}
+
+.location-details ul {
+    list-style-type: none;
+    display: flex;
+}
+
+.location-details li {
+    margin: 0 0.5rem;
+    border-radius: 16px;
+    display: block;
+    padding: 0.25rem 0.5rem;
+    background-color: rgba(241, 245, 249, 0.89);
+}
+
+.location-details button.close {
+    position: absolute;
+    right: 0;
+    top: -1.5rem;
+}
+
+.location-details button.book {
+    background-color: black;
+    color: white;
+}
+
+.venue-selector {
+    position: absolute;
+    top: calc(60px + 1rem);
+    left: 1rem;
+    z-index: 10;
+    font-size: 18px;
+    background-color: white;
+}
