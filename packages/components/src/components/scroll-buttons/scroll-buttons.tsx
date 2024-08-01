@@ -5,6 +5,7 @@ import { Component, h, JSX, Method, Prop, Watch } from '@stencil/core';
     styleUrl: 'scroll-buttons.scss',
     shadow: true
 })
+
 export class ScrollButtons {
     /**
      * Reference to the element with scroll on parent element.
@@ -12,6 +13,24 @@ export class ScrollButtons {
      * @type {HTMLDivElement}
      */
     @Prop() scrollContainerElementRef: HTMLDivElement;
+
+    @Prop() locations;
+
+    /**
+     * Method.
+     */
+    @Method()
+    public async updateUI(locations): Promise<any> {
+        console.log(locations.length);
+        this.locations = locations;
+        this.updateScrollButtonsState();
+    }
+
+    @Method()
+    public async disableButtons(): Promise<any> {
+        this.downButtonElement.disabled = true;
+        this.upButtonElement.disabled = true;
+    }
 
     /**
      * Watch for container scroll events.
@@ -73,12 +92,20 @@ export class ScrollButtons {
         } else if (this.upButtonElement.disabled) {
             this.upButtonElement.disabled = false;
         }
-
         // Disable or enable the scroll down button
-        if (this.scrollContainerElementRef.scrollHeight - this.scrollContainerElementRef.scrollTop === this.scrollContainerElementRef.clientHeight) {
-            this.downButtonElement.disabled = true;
-        } else if (this.downButtonElement.disabled) {
+        // length 6 is just an assumption that maxiumum locations visible without scroll is 6, can be changed
+        if (this.scrollContainerElementRef.scrollHeight - this.scrollContainerElementRef.scrollTop === this.scrollContainerElementRef.clientHeight
+            && this.upButtonElement.disabled === true && this.locations > 6
+        ) {
             this.downButtonElement.disabled = false;
+        } else if (this.scrollContainerElementRef.scrollHeight - this.scrollContainerElementRef.scrollTop > this.scrollContainerElementRef.clientHeight) {
+            this.downButtonElement.disabled = false;
+            // length 6 is just an assumption that maxiumum locations visible without scroll is 6, can be changed
+        } else if (this.scrollContainerElementRef.scrollHeight - this.scrollContainerElementRef.scrollTop === this.scrollContainerElementRef.clientHeight
+            && this.upButtonElement.disabled === true && this.locations < 6) {
+            this.downButtonElement.disabled = true;
+        } else {
+            this.downButtonElement.disabled = true;
         }
     }
 

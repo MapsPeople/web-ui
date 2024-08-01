@@ -132,6 +132,10 @@ function Search({ onSetSize, isOpen }) {
         setSearchResults(locations);
         setFilteredLocations(locations);
         setShowNotFoundMessage(locations.length === 0);
+
+        setTimeout(() => {
+            scrollButtonsRef.current.updateUI(locations);
+        }, 200)
     }
 
     /**

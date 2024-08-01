@@ -853,6 +853,8 @@ export namespace Components {
         "unit": UnitSystem;
     }
     interface MiScrollButtons {
+        "disableButtons": () => Promise<any>;
+        "locations": any;
         /**
           * Reference to the element with scroll on parent element.
           * @type {HTMLDivElement}
@@ -868,6 +870,10 @@ export namespace Components {
           * @returns
          */
         "updateScrollButtonsState": () => Promise<void>;
+        /**
+          * Method.
+         */
+        "updateUI": (locations: any) => Promise<any>;
     }
     interface MiSearch {
         /**
@@ -1100,6 +1106,10 @@ export interface MiRouteInstructionsStepCustomEvent<T> extends CustomEvent<T> {
 export interface MiRouteInstructionsStepLegacyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLMiRouteInstructionsStepLegacyElement;
+}
+export interface MiScrollButtonsCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLMiScrollButtonsElement;
 }
 export interface MiSearchCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -2226,6 +2236,8 @@ declare namespace LocalJSX {
         "unit"?: UnitSystem;
     }
     interface MiScrollButtons {
+        "locations"?: any;
+        "onCategorieHasChanged"?: (event: MiScrollButtonsCustomEvent<void>) => void;
         /**
           * Reference to the element with scroll on parent element.
           * @type {HTMLDivElement}

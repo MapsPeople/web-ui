@@ -72,11 +72,29 @@ A `updateScrollButtonsState` method can be called on the `<mi-scroll-buttons>` e
 
 | Property                    | Attribute       | Description                                                                          | Type             | Default     |
 | --------------------------- | --------------- | ------------------------------------------------------------------------------------ | ---------------- | ----------- |
+| `locations`                 | `locations`     |                                                                                      | `any`            | `undefined` |
 | `scrollContainerElementRef` | --              | Reference to the element with scroll on parent element.                              | `HTMLDivElement` | `undefined` |
 | `scrollLength`              | `scroll-length` | Determines how far to scroll when clicking one of the buttons. Default value is 100. | `number`         | `100`       |
 
 
+## Events
+
+| Event                 | Description | Type                |
+| --------------------- | ----------- | ------------------- |
+| `categorieHasChanged` |             | `CustomEvent<void>` |
+
+
 ## Methods
+
+### `disableButtons() => Promise<any>`
+
+
+
+#### Returns
+
+Type: `Promise<any>`
+
+
 
 ### `updateScrollButtonsState() => Promise<void>`
 
@@ -85,6 +103,16 @@ Updates enable/disable state for scroll up and down buttons.
 #### Returns
 
 Type: `Promise<void>`
+
+
+
+### `updateUI(locations: any) => Promise<any>`
+
+Method.
+
+#### Returns
+
+Type: `Promise<any>`
 
 
 
