@@ -1,34 +1,41 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import Map from '@mapsindoors/react-components/dist/map.es.js';
+import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
+
+defineCustomElements();
 
 function App() {
-    const [count, setCount] = useState(0)
+
+    const zoom = () => {
+        const map = window.mapsIndoorsInstance.getMap();
+        map.setPitch(45);
+        map.setBearing(100);
+        map.setZoom(20)
+        map.setCenter({ lng: -97.74212109990427, lat: 30.360645908269646 })
+    };
 
     return (
-        <>
-            <div>
-                <a href="https://vitejs.dev" target="_blank">
-                    <img src={viteLogo} className="logo" alt="Vite logo" />
-                </a>
-                <a href="https://react.dev" target="_blank">
-                    <img src={reactLogo} className="logo react" alt="React logo" />
-                </a>
+        <div className="app">
+            <nav className="app__nav">
+                <h1>
+                    <img alt="" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTM2IiBoZWlnaHQ9IjEzNiIgdmlld0JveD0iMCAwIDEzNiAxMzYiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxnIGZpbHRlcj0idXJsKCNmaWx0ZXIwX2lfMTNfMzY0KSI+CjxyZWN0IHdpZHRoPSIxMzYiIGhlaWdodD0iMTM2IiByeD0iNjgiIGZpbGw9IiMzNzVERkIiIHN0eWxlPSJmaWxsOiMzNzVERkI7ZmlsbDpjb2xvcihkaXNwbGF5LXAzIDAuMjE1NyAwLjM2NDcgMC45ODQzKTtmaWxsLW9wYWNpdHk6MTsiLz4KPHJlY3Qgd2lkdGg9IjEzNiIgaGVpZ2h0PSIxMzYiIHJ4PSI2OCIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC4xIiBzdHlsZT0iZmlsbDp3aGl0ZTtmaWxsLW9wYWNpdHk6MC4xOyIvPgo8cGF0aCBkPSJNNTAuODkzNSA4Ni41NThDNTEuMDA3MiA4Ni4zODk5IDUxLjE5NjkgODYuMjg5MyA1MS4zOTk3IDg2LjI4OTNINjIuMTcxNEM2My4yNTk2IDg2LjI4OTMgNjQuMjc2OCA4NS43NDkyIDY0Ljg4NjUgODQuODQ3OUw4NC44MDM5IDU1LjQwMDZMODQuMzg5NyA1NS4xMjA1TDg0LjgwMzkgNTUuNDAwNkM4NC45MTc2IDU1LjIzMjYgODUuMTA3MiA1NS4xMzE5IDg1LjMxMDEgNTUuMTMxOUgxMTguNzk2QzExOS4yODYgNTUuMTMxOSAxMTkuNTc3IDU1LjY3OTYgMTE5LjMwMiA1Ni4wODU0TDg2LjQwODQgMTA0LjcxOEM4Ni4yOTQ3IDEwNC44ODYgODYuMTA1MSAxMDQuOTg3IDg1LjkwMjIgMTA0Ljk4N0gzOS41ODAxQzM5LjA5MDIgMTA0Ljk4NyAzOC43OTk0IDEwNC40MzkgMzkuMDczOSAxMDQuMDMzTDUwLjg5MzUgODYuNTU4WiIgZmlsbD0idXJsKCNwYWludDBfbGluZWFyXzEzXzM2NCkiIGZpbGwtb3BhY2l0eT0iMC42OCIgc3Ryb2tlPSJ1cmwoI3BhaW50MV9saW5lYXJfMTNfMzY0KSIgc3R5bGU9IiIvPgo8ZyBmaWx0ZXI9InVybCgjZmlsdGVyMV9kXzEzXzM2NCkiPgo8cGF0aCBkPSJNNDguOTI1MiAzMS4xOTczQzQ5LjMzODcgMzAuNTg3NCA1MC4wMjc3IDMwLjIyMiA1MC43NjQ2IDMwLjIyMkg5NC4zODMxQzk1LjI3NDQgMzAuMjIyIDk1LjgwMjkgMzEuMjE4OCA5NS4zMDI4IDMxLjk1NjZMNjIuNjY0NiA4MC4xMDE1QzYyLjI1MTEgODAuNzExNCA2MS41NjIxIDgxLjA3NjcgNjAuODI1MiA4MS4wNzY3SDE3LjIwNjdDMTYuMzE1NCA4MS4wNzY3IDE1Ljc4NjkgODAuMDc5OSAxNi4yODcxIDc5LjM0MjJMNDguOTI1MiAzMS4xOTczWiIgZmlsbD0idXJsKCNwYWludDJfbGluZWFyXzEzXzM2NCkiIHN0eWxlPSIiIHNoYXBlLXJlbmRlcmluZz0iY3Jpc3BFZGdlcyIvPgo8cGF0aCBkPSJNNDkuMzM5MSAzMS40Nzc5QzQ5LjY1OTYgMzEuMDA1MiA1MC4xOTM1IDMwLjcyMiA1MC43NjQ2IDMwLjcyMkg5NC4zODMxQzk0Ljg3MzMgMzAuNzIyIDk1LjE2NCAzMS4yNzAzIDk0Ljg4ODkgMzEuNjc2MUw2Mi4yNTA3IDc5LjgyMDlDNjEuOTMwMyA4MC4yOTM2IDYxLjM5NjMgODAuNTc2NyA2MC44MjUyIDgwLjU3NjdIMTcuMjA2N0MxNi43MTY1IDgwLjU3NjcgMTYuNDI1OCA4MC4wMjg1IDE2LjcwMDkgNzkuNjIyN0w0OS4zMzkxIDMxLjQ3NzlaIiBzdHJva2U9InVybCgjcGFpbnQzX2xpbmVhcl8xM18zNjQpIiBzdHlsZT0iIiBzaGFwZS1yZW5kZXJpbmc9ImNyaXNwRWRnZXMiLz4KPC9nPgo8L2c+CjxkZWZzPgo8ZmlsdGVyIGlkPSJmaWx0ZXIwX2lfMTNfMzY0IiB4PSIwIiB5PSItNCIgd2lkdGg9IjEzNiIgaGVpZ2h0PSIxNDAiIGZpbHRlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgY29sb3ItaW50ZXJwb2xhdGlvbi1maWx0ZXJzPSJzUkdCIj4KPGZlRmxvb2QgZmxvb2Qtb3BhY2l0eT0iMCIgcmVzdWx0PSJCYWNrZ3JvdW5kSW1hZ2VGaXgiLz4KPGZlQmxlbmQgbW9kZT0ibm9ybWFsIiBpbj0iU291cmNlR3JhcGhpYyIgaW4yPSJCYWNrZ3JvdW5kSW1hZ2VGaXgiIHJlc3VsdD0ic2hhcGUiLz4KPGZlQ29sb3JNYXRyaXggaW49IlNvdXJjZUFscGhhIiB0eXBlPSJtYXRyaXgiIHZhbHVlcz0iMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMTI3IDAiIHJlc3VsdD0iaGFyZEFscGhhIi8+CjxmZU9mZnNldCBkeT0iLTQiLz4KPGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iNCIvPgo8ZmVDb21wb3NpdGUgaW4yPSJoYXJkQWxwaGEiIG9wZXJhdG9yPSJhcml0aG1ldGljIiBrMj0iLTEiIGszPSIxIi8+CjxmZUNvbG9yTWF0cml4IHR5cGU9Im1hdHJpeCIgdmFsdWVzPSIwIDAgMCAwIDEgMCAwIDAgMCAxIDAgMCAwIDAgMSAwIDAgMCAwLjY0IDAiLz4KPGZlQmxlbmQgbW9kZT0ibm9ybWFsIiBpbjI9InNoYXBlIiByZXN1bHQ9ImVmZmVjdDFfaW5uZXJTaGFkb3dfMTNfMzY0Ii8+CjwvZmlsdGVyPgo8ZmlsdGVyIGlkPSJmaWx0ZXIxX2RfMTNfMzY0IiB4PSIxNi4wOTM4IiB5PSIzMC4yMjIiIHdpZHRoPSI4My44NDY4IiBoZWlnaHQ9IjU4LjYzMjUiIGZpbHRlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgY29sb3ItaW50ZXJwb2xhdGlvbi1maWx0ZXJzPSJzUkdCIj4KPGZlRmxvb2QgZmxvb2Qtb3BhY2l0eT0iMCIgcmVzdWx0PSJCYWNrZ3JvdW5kSW1hZ2VGaXgiLz4KPGZlQ29sb3JNYXRyaXggaW49IlNvdXJjZUFscGhhIiB0eXBlPSJtYXRyaXgiIHZhbHVlcz0iMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMTI3IDAiIHJlc3VsdD0iaGFyZEFscGhhIi8+CjxmZU9mZnNldCBkeD0iMi4yMjIyMiIgZHk9IjUuNTU1NTYiLz4KPGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iMS4xMTExMSIvPgo8ZmVDb21wb3NpdGUgaW4yPSJoYXJkQWxwaGEiIG9wZXJhdG9yPSJvdXQiLz4KPGZlQ29sb3JNYXRyaXggdHlwZT0ibWF0cml4IiB2YWx1ZXM9IjAgMCAwIDAgMC4xMzQ0IDAgMCAwIDAgMC4yNjg2MTQgMCAwIDAgMCAwLjgyNTYgMCAwIDAgMC4zMiAwIi8+CjxmZUJsZW5kIG1vZGU9Im5vcm1hbCIgaW4yPSJCYWNrZ3JvdW5kSW1hZ2VGaXgiIHJlc3VsdD0iZWZmZWN0MV9kcm9wU2hhZG93XzEzXzM2NCIvPgo8ZmVCbGVuZCBtb2RlPSJub3JtYWwiIGluPSJTb3VyY2VHcmFwaGljIiBpbjI9ImVmZmVjdDFfZHJvcFNoYWRvd18xM18zNjQiIHJlc3VsdD0ic2hhcGUiLz4KPC9maWx0ZXI+CjxsaW5lYXJHcmFkaWVudCBpZD0icGFpbnQwX2xpbmVhcl8xM18zNjQiIHgxPSI3OS4xODgiIHkxPSI1NC42MzE5IiB4Mj0iNzkuMTg4IiB5Mj0iMTMxLjc0NiIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPgo8c3RvcCBvZmZzZXQ9IjAuMzEzMDc5IiBzdG9wLWNvbG9yPSJ3aGl0ZSIgc3R5bGU9InN0b3AtY29sb3I6d2hpdGU7c3RvcC1vcGFjaXR5OjE7Ii8+CjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0id2hpdGUiIHN0b3Atb3BhY2l0eT0iMCIgc3R5bGU9InN0b3AtY29sb3I6bm9uZTtzdG9wLW9wYWNpdHk6MDsiLz4KPC9saW5lYXJHcmFkaWVudD4KPGxpbmVhckdyYWRpZW50IGlkPSJwYWludDFfbGluZWFyXzEzXzM2NCIgeDE9IjIyNi40IiB5MT0iLTY4Ljc5ODUiIHgyPSI3OS41MTQ0IiB5Mj0iMTI2LjYyNCIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPgo8c3RvcCBzdG9wLWNvbG9yPSJ3aGl0ZSIgc3R5bGU9InN0b3AtY29sb3I6d2hpdGU7c3RvcC1vcGFjaXR5OjE7Ii8+CjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0id2hpdGUiIHN0b3Atb3BhY2l0eT0iMCIgc3R5bGU9InN0b3AtY29sb3I6bm9uZTtzdG9wLW9wYWNpdHk6MDsiLz4KPC9saW5lYXJHcmFkaWVudD4KPGxpbmVhckdyYWRpZW50IGlkPSJwYWludDJfbGluZWFyXzEzXzM2NCIgeDE9IjU1Ljc5NDkiIHkxPSIzMC4yMjIiIHgyPSI1NS43OTQ5IiB5Mj0iOTcuNDY5NiIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPgo8c3RvcCBvZmZzZXQ9IjAuMzgyMzkiIHN0b3AtY29sb3I9IndoaXRlIiBzdHlsZT0ic3RvcC1jb2xvcjp3aGl0ZTtzdG9wLW9wYWNpdHk6MTsiLz4KPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSJ3aGl0ZSIgc3RvcC1vcGFjaXR5PSIwIiBzdHlsZT0ic3RvcC1jb2xvcjpub25lO3N0b3Atb3BhY2l0eTowOyIvPgo8L2xpbmVhckdyYWRpZW50Pgo8bGluZWFyR3JhZGllbnQgaWQ9InBhaW50M19saW5lYXJfMTNfMzY0IiB4MT0iMTk5LjQxNiIgeTE9Ii05My4yMDg0IiB4Mj0iNTEuNTYwOCIgeTI9Ijk4LjcwNjQiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KPHN0b3Agc3RvcC1jb2xvcj0id2hpdGUiIHN0eWxlPSJzdG9wLWNvbG9yOndoaXRlO3N0b3Atb3BhY2l0eToxOyIvPgo8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IndoaXRlIiBzdG9wLW9wYWNpdHk9IjAiIHN0eWxlPSJzdG9wLWNvbG9yOm5vbmU7c3RvcC1vcGFjaXR5OjA7Ii8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPC9zdmc+Cg==" />
+                    DigiSpaces
+                </h1>
+                <ul>
+                    <li>Home</li>
+                    <li className="selected">Map</li>
+                    <li>Reports</li>
+                </ul>
+            </nav>
+            <div className="app__map">
+                <Map
+                    apiKey="mapspeople3d"
+                    mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
+                    onMapReady={() => zoom()}
+                />
             </div>
-            <h1>Vite + React</h1>
-            <div className="card">
-                <button onClick={() => setCount((count) => count + 1)}>
-                    count is {count}
-                </button>
-                <p>
-                    Edit <code>src/App.jsx</code> and save to test HMR
-                </p>
-            </div>
-            <p className="read-the-docs">
-                Click on the Vite and React logos to learn more
-            </p>
-        </>
+            <div className="app__footer">Footer</div>
+        </div>
     )
 }
 
