@@ -5,7 +5,7 @@ import GoogleMapsMap from './GoogleMapsMap/GoogleMapsMap';
 import MapContext from './MapContext';
 
 // Define the Custom Elements from our components package.
-defineCustomElements();
+defineCustomElements();// TODO: Why do we need to remove this when we want to use it in the Map Template?
 
 const mapTypes = {
     Google: 'google',
@@ -16,7 +16,8 @@ function Map({
     apiKey,
     gmApiKey,
     mapboxAccessToken,
-    venue // administrative ID
+    venue, // administrative ID
+    onMapReady // callback called when fitVenue resolves
 }) {
 
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
@@ -40,13 +41,18 @@ function Map({
                     venueToSet = [...venuesInSolution].sort(function (a, b) { return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0); })[0];
                 }
                 mapsIndoorsInstance.setVenue(venueToSet);
-                mapsIndoorsInstance.fitVenue(venueToSet);
+                mapsIndoorsInstance.fitVenue(venueToSet).then(() => {
+                    // TODO: Investigate a better alternative as to when to call the onMapReady callback
+                    if (typeof onMapReady === 'function') {
+                        onMapReady();
+                    }
+                })
             });
         }
     }, [mapsIndoorsInstance, venue]);
 
     const onMapView = async (mapView, externalDirectionsProvider) => {
-        setTimeout(() => { // yikes 😬 TODO: Invesitate timing issue that is fixed with this workaround.
+        setTimeout(() => { // yikes 😬 TODO: Invesigate timing issue that is fixed with this workaround.
             // Instantiate MapsIndoors instance
             const miInstance = new window.mapsindoors.MapsIndoors({
                 mapView
