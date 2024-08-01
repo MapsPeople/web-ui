@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
+// import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
 import MapboxMap from './MapboxMap/MapboxMap';
 import GoogleMapsMap from './GoogleMapsMap/GoogleMapsMap';
 import MapContext from './MapContext';
 
 // Define the Custom Elements from our components package.
-defineCustomElements();// TODO: Why do we need to remove this when we want to use it in the Map Template?
+// defineCustomElements();// TODO: Why do we need to remove this when we want to use it in the Map Template?
 
 const mapTypes = {
     Google: 'google',
