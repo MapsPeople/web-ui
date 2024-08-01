@@ -17,7 +17,8 @@ function Map({
     gmApiKey,
     mapboxAccessToken,
     venue, // administrative ID
-    onMapReady // callback called when fitVenue resolves
+    onMapReady, // callback called when fitVenue resolves
+    onLocationClick // callback called when user clicks on a MapsIndoors Location. Payload is the Location object.
 }) {
 
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
@@ -71,7 +72,7 @@ function Map({
             // TODO: Turn off visibility for building outline for demo purposes until the SDK supports Display Rules for Buildings too.
             miInstance.setDisplayRule(['MI_BUILDING_OUTLINE'], { visible: false });
 
-            // miInstance.on('click', location => onLocationClick(location));
+            miInstance.on('click', location => typeof onLocationClick === 'function' && onLocationClick(location));
             // miInstance.once('building_changed', () => onBuildingChanged(miInstance))
             // miInstance.on('floor_changed', () => onTileStyleChanged(miInstance));
 
