@@ -1,0 +1,17 @@
+{
+    "name": "map-webcomponent",
+    "version": "1.0.0",
+    "private": true,
+    "description": "Test setup for testing the Map Web Component locally.",
+    "main": "index.js",
+    "scripts": {
+      "dev": "npx serve . -p 3000 & npx serve ../../react-components/dist -p 3002 --cors",
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+      "serve": "*"
+    }
+  }

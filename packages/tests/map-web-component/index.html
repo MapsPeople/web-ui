@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://app.mapsindoors.com/mapsindoors/js/sdk/4.36.1/mapsindoors-4.36.1.js.gz" integrity="sha384-1q0Vh8TQZcjeSByW22njbeVz4E327cilRcZZs6uAOS5ZihXmonR7Qm02nvg/vTIR" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MapsIndoors Map as Web Component</title>
+    <script type="module" src="http://localhost:3002/mi-map-webcomponent.es.js"></script>
+    <style>
+        body {
+            margin: 0;
+        }
+        mi-map {
+            display: block;
+            width: 90vw;
+            height: 50dvh;
+        }
+    </style>
+</head>
+<body>
+    <h1>mi-map web component</h1>
+    <!-- remmeber to put in required attributes like apiKey and map key/token -->
+    <mi-map></mi-map>
+</body>
+</html>
