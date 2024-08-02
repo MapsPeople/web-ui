@@ -6,6 +6,32 @@ import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const libraries = [
+    // Web component
+    {
+        build: {
+            outDir: './dist',
+            lib: {
+                entry: path.resolve(__dirname, 'webcomponent.js'),
+                name: 'MapTemplate', // unused, but required
+                fileName: format => `mi-map-webcomponent.${format}.js`,
+                formats: ['es', 'umd']
+            },
+            emptyOutDir: false,
+            rollupOptions: {
+                output: {
+                    manualChunks: false,
+                    inlineDynamicImports: true
+                }
+            }
+        },
+        plugins: [
+            cssInjectedByJsPlugin()
+        ],
+        define: {
+            'process.env.NODE_ENV': '"production"'
+        }
+    },
+    // React component
     {
         build: {
             outDir: './dist',
