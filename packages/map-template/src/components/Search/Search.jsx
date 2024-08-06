@@ -133,9 +133,9 @@ function Search({ onSetSize, isOpen }) {
         setFilteredLocations(locations);
         setShowNotFoundMessage(locations.length === 0);
 
-        setTimeout(() => {
-            scrollButtonsRef.current.updateUI(locations);
-        }, 200)
+        searchRef.current?.addEventListener('transitionend', () => {
+            scrollButtonsRef.current.newCategorySelected(locations);
+        });
     }
 
     /**
