@@ -5,12 +5,32 @@ import { Component, h, JSX, Method, Prop, Watch } from '@stencil/core';
     styleUrl: 'scroll-buttons.scss',
     shadow: true
 })
+
 export class ScrollButtons {
     /**
      * Reference to the element with scroll on parent element.
+     *
      * @type {HTMLDivElement}
      */
     @Prop() scrollContainerElementRef: HTMLDivElement;
+
+    /**
+     * Locations visible when specific category is selected.
+     */
+    @Prop() locations;
+
+    /**
+     * Method.
+     */
+    @Method()
+    public async newCategorySelected(locations): Promise<any> {
+        this.locations = locations;
+        this.updateScrollButtonsState();
+    }
+
+    /**
+     * Watch for container scroll events.
+     */
     @Watch('scrollContainerElementRef')
     addScrollEventListener(): void {
         this.resizeObserver?.disconnect();
@@ -36,12 +56,16 @@ export class ScrollButtons {
         this.addScrollEventListener();
     }
 
+    /**
+     * Disconnects ResizeObserver.
+     */
     disconnectedCallback(): void {
         this.resizeObserver?.disconnect();
     }
 
     /**
      * Determines how far to scroll when clicking one of the buttons. Default value is 100.
+     *
      * @type {number}
      */
     @Prop() scrollLength = 100;
@@ -53,6 +77,7 @@ export class ScrollButtons {
 
     /**
      * Updates enable/disable state for scroll up and down buttons.
+     *
      * @returns {Promise<void>}
      */
     @Method()
@@ -63,17 +88,26 @@ export class ScrollButtons {
         } else if (this.upButtonElement.disabled) {
             this.upButtonElement.disabled = false;
         }
-
         // Disable or enable the scroll down button
-        if (this.scrollContainerElementRef.scrollHeight - this.scrollContainerElementRef.scrollTop === this.scrollContainerElementRef.clientHeight) {
-            this.downButtonElement.disabled = true;
-        } else if (this.downButtonElement.disabled) {
+        // length 8 is just that maxiumum amount of locations visible without a scroll possibility
+        if (this.scrollContainerElementRef.scrollHeight - this.scrollContainerElementRef.scrollTop === this.scrollContainerElementRef.clientHeight
+            && this.upButtonElement.disabled === true && this.locations > 8
+        ) {
             this.downButtonElement.disabled = false;
+        } else if (this.scrollContainerElementRef.scrollHeight - this.scrollContainerElementRef.scrollTop > this.scrollContainerElementRef.clientHeight) {
+            this.downButtonElement.disabled = false;
+            // length 8 is just that maxiumum amount of locations visible without a scroll possibility
+        } else if (this.scrollContainerElementRef.scrollHeight - this.scrollContainerElementRef.scrollTop === this.scrollContainerElementRef.clientHeight
+            && this.upButtonElement.disabled === true && this.locations < 8) {
+            this.downButtonElement.disabled = true;
+        } else {
+            this.downButtonElement.disabled = true;
         }
     }
 
     /**
      * Update scroll position.
+     *
      * @param {number} value - Value to scroll.
      */
     updateScrollPosition(value: number): void {
@@ -87,6 +121,11 @@ export class ScrollButtons {
         }
     }
 
+    /**
+     * Render scoll buttons.
+     *
+     * @returns {JSX.Element}
+     */
     render(): JSX.Element {
         return (
             <div part="container" class="scroll-buttons">
@@ -94,15 +133,19 @@ export class ScrollButtons {
                     type="button"
                     disabled
                     aria-label="Scroll Up"
-                    ref={(el) => this.upButtonElement = el as HTMLButtonElement}
-                    onClick={() => this.updateScrollPosition(-this.scrollLength)}>
+                    ref={(el: HTMLButtonElement | null): void => {
+                        this.upButtonElement = el as HTMLButtonElement | null;
+                    }}
+                    onClick={(): void => this.updateScrollPosition(-this.scrollLength)}>
                     <mi-icon icon-name="chevron-up" />
                 </button>
                 <button part="button button-down" class="mi-button mi-button--base btn btn-down"
                     type="button"
                     aria-label="Scroll Down"
-                    ref={(el) => this.downButtonElement = el as HTMLButtonElement}
-                    onClick={() => this.updateScrollPosition(this.scrollLength)}>
+                    ref={(el: HTMLButtonElement | null): void => {
+                        this.downButtonElement = el as HTMLButtonElement | null;
+                    }}
+                    onClick={(): void => this.updateScrollPosition(this.scrollLength)}>
                     <mi-icon icon-name="chevron-down" />
                 </button>
             </div>

@@ -854,6 +854,14 @@ export namespace Components {
     }
     interface MiScrollButtons {
         /**
+          * Locations visible when specific category is selected.
+         */
+        "locations": any;
+        /**
+          * Method.
+         */
+        "newCategorySelected": (locations: any) => Promise<any>;
+        /**
           * Reference to the element with scroll on parent element.
           * @type {HTMLDivElement}
          */
@@ -2226,6 +2234,10 @@ declare namespace LocalJSX {
         "unit"?: UnitSystem;
     }
     interface MiScrollButtons {
+        /**
+          * Locations visible when specific category is selected.
+         */
+        "locations"?: any;
         /**
           * Reference to the element with scroll on parent element.
           * @type {HTMLDivElement}
