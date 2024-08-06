@@ -133,6 +133,7 @@ function Search({ onSetSize, isOpen }) {
         setFilteredLocations(locations);
         setShowNotFoundMessage(locations.length === 0);
 
+        // When category changes, we need to update scroll buttons enabled/disabled states.
         searchRef.current?.addEventListener('transitionend', () => {
             scrollButtonsRef.current.newCategorySelected(locations);
         });
