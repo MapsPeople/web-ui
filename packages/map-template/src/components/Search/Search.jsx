@@ -141,7 +141,11 @@ function Search({ onSetSize, isOpen }) {
         setFilteredLocations(locations);
         setShowNotFoundMessage(locations.length === 0);
 
-        // When category changes, we need to update scroll buttons enabled/disabled states.
+        // Handles updates to scroll buttons when the category changes.
+        // When a category changes, the scroll buttons need to have their enabled/disabled states updated.
+        // Since some categories might load before the SCSS element is fully rendered, we listen for the 'transitionend' event.
+        // The 'transitionend' event is triggered when the SCSS element changes its size, which can occur as a result of new categories being fetched.
+        // Upon completion of the size transition, the 'newCategorySelected' function is triggered to handle the updated state.
         searchRef.current?.addEventListener('transitionend', () => {
             scrollButtonsRef.current.newCategorySelected(locations);
         });
