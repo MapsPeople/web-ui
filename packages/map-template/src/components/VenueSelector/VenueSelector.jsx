@@ -3,15 +3,13 @@ import { useTranslation } from 'react-i18next';
 import { CSSTransition } from 'react-transition-group';
 import './VenueSelector.scss';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import venuesState from '../../atoms/venuesState';
+import venuesInSolutionState from '../../atoms/venuesInSolutionState';
 import { ReactComponent as BuildingIcon } from '../../assets/building.svg';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import Venue from './Venue/Venue';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
 import isLocationClickedState from '../../atoms/isLocationClickedState';
-import useSetCurrentVenueName from '../../hooks/useSetCurrentVenueName';
-import fitBoundsLocation from '../../helpers/fitBoundsLocation';
-import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
+import venueWasSelectedState from '../../atoms/venueWasSelectedState';
 
 /**
  * Show a list of Venues. The user can click on a Venue to select it.
@@ -24,12 +22,11 @@ function VenueSelector({ onOpen, onClose, active }) {
     const { t } = useTranslation();
 
     const venueSelectorContentRef = useRef(null);
-    const venues = useRecoilValue(venuesState);
-    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
+    const venuesInSolution = useRecoilValue(venuesInSolutionState);
+    const [, setVenueWasSelected] = useRecoilState(venueWasSelectedState);
 
-    const setCurrentVenueName = useSetCurrentVenueName();
+    const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
 
-    const currentVenueName = useRecoilValue(currentVenueNameState);
     const [, setIsLocationClicked] = useRecoilState(isLocationClickedState);
 
     /**
@@ -38,8 +35,8 @@ function VenueSelector({ onOpen, onClose, active }) {
      * @param {object} venue
      */
     const selectVenue = venue => {
+        setVenueWasSelected(true);
         setCurrentVenueName(venue.name);
-        fitBoundsLocation(venue, mapsIndoorsInstance, 0, 0);
         toggle();
     };
 
@@ -72,7 +69,7 @@ function VenueSelector({ onOpen, onClose, active }) {
             <div className="venue-selector__content" ref={venueSelectorContentRef}>
                 <h1>{t('Select venue')}</h1>
                 <div className="venue-selector__list">
-                    {venues.map(venue => (<Venue key={venue.id} isCurrent={currentVenueName === venue.name} venue={venue} onVenueClicked={() => onVenueSelected(venue)} />))}
+                    {venuesInSolution.map(venue => (<Venue key={venue.id} isCurrent={currentVenueName?.toLowerCase() === venue.name.toLowerCase()} venue={venue} onVenueClicked={() => onVenueSelected(venue)} />))}
                 </div>
             </div>
         </CSSTransition>
