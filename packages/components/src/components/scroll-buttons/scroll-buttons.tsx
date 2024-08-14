@@ -23,7 +23,7 @@ export class ScrollButtons {
      * Method.
      */
     @Method()
-    public async newCategorySelected(locations): Promise<any> {
+    public async updateKioskScrollButtons(locations): Promise<any> {
         this.locations = locations;
         this.updateScrollButtonsState();
     }
