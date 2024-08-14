@@ -26,7 +26,7 @@ const currentPitchSelector = selector({
                 result = 0;
                 break;
             default:
-                // Intentionally left blank.
+                result = pitch; // always default to any set pitch state
         }
 
         return result;
