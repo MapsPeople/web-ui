@@ -15,16 +15,16 @@ export class ScrollButtons {
     @Prop() scrollContainerElementRef: HTMLDivElement;
 
     /**
-     * Locations visible when specific category is selected.
+     * Items that are rendered inside a specific element.
      */
-    @Prop() locations;
+    @Prop() elementItems;
 
     /**
      * Method.
      */
     @Method()
-    public async updateKioskScrollButtons(locations): Promise<any> {
-        this.locations = locations;
+    public async updateKioskScrollButtons(elementItems): Promise<any> {
+        this.elementItems = elementItems;
         this.updateScrollButtonsState();
     }
 
@@ -89,16 +89,16 @@ export class ScrollButtons {
             this.upButtonElement.disabled = false;
         }
         // Disable or enable the scroll down button
-        // length 8 is just that maxiumum amount of locations visible without a scroll possibility
+        // length 8 is just that maxiumum amount of element items visible without a scroll possibility
         if (this.scrollContainerElementRef.scrollHeight - this.scrollContainerElementRef.scrollTop === this.scrollContainerElementRef.clientHeight
-            && this.upButtonElement.disabled === true && this.locations > 8
+            && this.upButtonElement.disabled === true && this.elementItems > 8
         ) {
             this.downButtonElement.disabled = false;
         } else if (this.scrollContainerElementRef.scrollHeight - this.scrollContainerElementRef.scrollTop > this.scrollContainerElementRef.clientHeight) {
             this.downButtonElement.disabled = false;
-            // length 8 is just that maxiumum amount of locations visible without a scroll possibility
+            // length 8 is just that maxiumum amount of element items visible without a scroll possibility
         } else if (this.scrollContainerElementRef.scrollHeight - this.scrollContainerElementRef.scrollTop === this.scrollContainerElementRef.clientHeight
-            && this.upButtonElement.disabled === true && this.locations < 8) {
+            && this.upButtonElement.disabled === true && this.elementItems < 8) {
             this.downButtonElement.disabled = true;
         } else {
             this.downButtonElement.disabled = true;
