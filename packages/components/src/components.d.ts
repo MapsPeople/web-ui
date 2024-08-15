@@ -854,13 +854,9 @@ export namespace Components {
     }
     interface MiScrollButtons {
         /**
-          * Locations visible when specific category is selected.
+          * Items that are rendered inside a specific element.
          */
-        "locations": any;
-        /**
-          * Method.
-         */
-        "newCategorySelected": (locations: any) => Promise<any>;
+        "elementItems": any;
         /**
           * Reference to the element with scroll on parent element.
           * @type {HTMLDivElement}
@@ -871,6 +867,10 @@ export namespace Components {
           * @type {number}
          */
         "scrollLength": number;
+        /**
+          * Updates scroll buttons enabled/disabled states when elementItems amount changes.
+         */
+        "updateScrollButtons": (elementItems: any) => Promise<any>;
         /**
           * Updates enable/disable state for scroll up and down buttons.
           * @returns
@@ -2235,9 +2235,9 @@ declare namespace LocalJSX {
     }
     interface MiScrollButtons {
         /**
-          * Locations visible when specific category is selected.
+          * Items that are rendered inside a specific element.
          */
-        "locations"?: any;
+        "elementItems"?: any;
         /**
           * Reference to the element with scroll on parent element.
           * @type {HTMLDivElement}

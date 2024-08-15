@@ -20,10 +20,10 @@ export class ScrollButtons {
     @Prop() elementItems;
 
     /**
-     * Method.
+     * Updates scroll buttons enabled/disabled states when elementItems amount changes.
      */
     @Method()
-    public async updateKioskScrollButtons(elementItems): Promise<any> {
+    public async updateScrollButtons(elementItems): Promise<any> {
         this.elementItems = elementItems;
         this.updateScrollButtonsState();
     }
