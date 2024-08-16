@@ -1,4 +1,4 @@
-import { Component, h, JSX, Method, Prop, Watch } from '@stencil/core';
+import { Component, h, JSX, Method, Prop, State, Watch } from '@stencil/core';
 
 @Component({
     tag: 'mi-scroll-buttons',
@@ -17,7 +17,7 @@ export class ScrollButtons {
     /**
      * Items that are rendered inside a specific element.
      */
-    @Prop() elementItems;
+    @State() elementItems;
 
     /**
      * Updates scroll buttons enabled/disabled states when elementItems amount changes.
