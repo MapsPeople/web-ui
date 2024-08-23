@@ -1,4 +1,4 @@
-import { Component, h, JSX, Method, Prop, State, Watch } from '@stencil/core';
+import { Component, h, JSX, Method, Prop, Watch } from '@stencil/core';
 
 @Component({
     tag: 'mi-scroll-buttons',
@@ -15,16 +15,10 @@ export class ScrollButtons {
     @Prop() scrollContainerElementRef: HTMLDivElement;
 
     /**
-     * Items that are rendered inside a specific element.
-     */
-    @State() elementItems;
-
-    /**
      * Updates scroll buttons enabled/disabled states when elementItems amount changes.
      */
     @Method()
-    public async updateScrollButtons(elementItems): Promise<any> {
-        this.elementItems = elementItems;
+    public async updateScrollButtons(): Promise<any> {
         this.updateScrollButtonsState();
     }
 
@@ -88,18 +82,14 @@ export class ScrollButtons {
         } else if (this.upButtonElement.disabled) {
             this.upButtonElement.disabled = false;
         }
+
         // Disable or enable the scroll down button
-        // length 8 is just that maxiumum amount of element items visible without a scroll possibility
         if (this.scrollContainerElementRef.scrollHeight - this.scrollContainerElementRef.scrollTop === this.scrollContainerElementRef.clientHeight
-            && this.upButtonElement.disabled === true && this.elementItems > 8
+            && this.upButtonElement.disabled === true
         ) {
-            this.downButtonElement.disabled = false;
+            this.downButtonElement.disabled = true;
         } else if (this.scrollContainerElementRef.scrollHeight - this.scrollContainerElementRef.scrollTop > this.scrollContainerElementRef.clientHeight) {
             this.downButtonElement.disabled = false;
-            // length 8 is just that maxiumum amount of element items visible without a scroll possibility
-        } else if (this.scrollContainerElementRef.scrollHeight - this.scrollContainerElementRef.scrollTop === this.scrollContainerElementRef.clientHeight
-            && this.upButtonElement.disabled === true && this.elementItems < 8) {
-            this.downButtonElement.disabled = true;
         } else {
             this.downButtonElement.disabled = true;
         }

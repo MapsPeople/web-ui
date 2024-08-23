@@ -147,7 +147,7 @@ function Search({ onSetSize, isOpen }) {
         // The 'transitionend' event is triggered when the DOM element changes its size, which can occur as a result of new categories being fetched.
         // Upon completion of the size transition, the 'updateScrollButtons' function is triggered to handle the updated state.
         searchRef.current?.addEventListener('transitionend', () => {
-            scrollButtonsRef?.current?.updateScrollButtons(locations);
+            scrollButtonsRef?.current?.updateScrollButtons();
         });
     }
 

@@ -72,14 +72,13 @@ A `updateScrollButtonsState` method can be called on the `<mi-scroll-buttons>` e
 
 | Property                    | Attribute       | Description                                                                          | Type             | Default     |
 | --------------------------- | --------------- | ------------------------------------------------------------------------------------ | ---------------- | ----------- |
-| `elementItems`              | `element-items` | Items that are rendered inside a specific element.                                   | `any`            | `undefined` |
 | `scrollContainerElementRef` | --              | Reference to the element with scroll on parent element.                              | `HTMLDivElement` | `undefined` |
 | `scrollLength`              | `scroll-length` | Determines how far to scroll when clicking one of the buttons. Default value is 100. | `number`         | `100`       |
 
 
 ## Methods
 
-### `updateScrollButtons(elementItems: any) => Promise<any>`
+### `updateScrollButtons() => Promise<any>`
 
 Updates scroll buttons enabled/disabled states when elementItems amount changes.
 
