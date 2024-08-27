@@ -15,7 +15,7 @@ export class ScrollButtons {
     @Prop() scrollContainerElementRef: HTMLDivElement;
 
     /**
-     * Updates scroll buttons enabled/disabled states when elementItems amount changes.
+     * Update scroll buttons enabled/disabled states.
      */
     @Method()
     public async updateScrollButtons(): Promise<any> {
