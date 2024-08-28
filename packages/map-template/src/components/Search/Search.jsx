@@ -146,9 +146,11 @@ function Search({ onSetSize, isOpen }) {
         // Since some categories might load before the DOM element is fully rendered, we listen for the 'transitionend' event.
         // The 'transitionend' event is triggered when the DOM element changes its size, which can occur as a result of new categories being fetched.
         // Upon completion of the size transition, the 'updateScrollButtons' function is triggered to handle the updated state.
-        searchRef.current?.addEventListener('transitionend', () => {
-            scrollButtonsRef?.current?.updateScrollButtons();
-        });
+        if (isKioskContext) {
+            searchRef.current?.addEventListener('transitionend', () => {
+                scrollButtonsRef?.current?.updateScrollButtons();
+            }, { once: true });
+        }
     }
 
     /**
