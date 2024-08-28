@@ -241,6 +241,13 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                         {t('Close')}
                     </button>}
                 </section>}
+                {location.getFieldForKey('link') && location.getFieldForKey('linktext') && (
+                    <div>
+                        <a href={location.getFieldForKey('link').value} target="_blank" rel="noopener noreferrer">
+                            {location.getFieldForKey('linktext').value}
+                        </a>
+                    </div>
+                )}
             </div>
 
             {kioskLocation && isDesktop
