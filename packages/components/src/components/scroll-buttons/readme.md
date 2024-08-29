@@ -80,7 +80,7 @@ A `updateScrollButtonsState` method can be called on the `<mi-scroll-buttons>` e
 
 ### `updateScrollButtons() => Promise<any>`
 
-Updates scroll buttons enabled/disabled states when elementItems amount changes.
+Update scroll buttons enabled/disabled states.
 
 #### Returns
 

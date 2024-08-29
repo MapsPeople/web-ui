@@ -864,7 +864,7 @@ export namespace Components {
          */
         "scrollLength": number;
         /**
-          * Updates scroll buttons enabled/disabled states when elementItems amount changes.
+          * Update scroll buttons enabled/disabled states.
          */
         "updateScrollButtons": () => Promise<any>;
         /**
