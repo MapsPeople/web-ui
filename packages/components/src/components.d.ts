@@ -864,6 +864,10 @@ export namespace Components {
          */
         "scrollLength": number;
         /**
+          * Update scroll buttons enabled/disabled states.
+         */
+        "updateScrollButtons": () => Promise<any>;
+        /**
           * Updates enable/disable state for scroll up and down buttons.
           * @returns
          */
