@@ -93,10 +93,10 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
                     }
                 });
 
-                directionsRenderer.setRoute(directions.directionsResult);
-
-                // Set the step index to be 0 in order to display the correct instruction on the map.
-                directionsRenderer.setStepIndex(0);
+                directionsRenderer.setRoute(directions.directionsResult).then(() => {
+                    // Set the step index to be 0 in order to display the correct instruction on the map.
+                    directionsRenderer.setStepIndex(0);
+                });
 
                 destinationInfoElement.current.location = directions.destinationLocation;
 
