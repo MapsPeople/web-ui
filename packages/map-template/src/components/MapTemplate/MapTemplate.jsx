@@ -119,7 +119,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setshowExternalIDs] = useRecoilState(showExternalIDsState);
     const [, setShowRoadNames] = useRecoilState(showRoadNamesState);
 
-    const [showVenueSelector, setShowVenueSelector] = useState(true);
+    const [showVenueSelector, setShowVenueSelector] = useState(false);
     const [showPositionControl, setShowPositionControl] = useState(true);
 
     const directionsFromLocation = useLocationForWayfinding(directionsFrom);
@@ -464,7 +464,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 setShowVenueSelector(false);
                 setShowPositionControl(false);
             } else {
-                setShowVenueSelector(true);
+                setShowVenueSelector(false);
                 setShowPositionControl(true);
             }
         }
