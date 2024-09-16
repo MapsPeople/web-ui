@@ -231,6 +231,11 @@ export namespace Components {
          */
         "open": boolean;
         /**
+          * If present, it dictates placeholder for an filterable input field in the dropdown. Defaults to 'Type to filter...'.
+          * @type {string}
+         */
+        "placeholder": string;
+        /**
           * Gets the selected items.
           * @type {Array<HTMLMiDropdownItemElement>}
          */
@@ -1616,6 +1621,11 @@ declare namespace LocalJSX {
           * @type {boolean}
          */
         "open"?: boolean;
+        /**
+          * If present, it dictates placeholder for an filterable input field in the dropdown. Defaults to 'Type to filter...'.
+          * @type {string}
+         */
+        "placeholder"?: string;
         /**
           * Gets the selected items.
           * @type {Array<HTMLMiDropdownItemElement>}
