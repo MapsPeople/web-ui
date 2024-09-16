@@ -8,7 +8,13 @@ function App() {
             {/* This is the Map Template component */}
             <MapsIndoorsMap supportsUrlParameters={true}
                 gmApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
-                mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
+                mapboxAccessToken="pk.eyJ1IjoibWFwc3Blb3BsZSIsImEiOiJjbGx3OWx4OWwwM2s3M2pzeXBtNGtoN2diIn0.IXKTHejui3rgTzBTxDPQ1w"
+                apiKey="45ba63bf7c37426ca25009cb"
+                startZoomLevel="20"
+                pitch="60"
+                bearing="0"
+                logo="https://storage.googleapis.com/mapsindoors-media/Customers/jpmorganchaselogotext.png"
+                primaryColor="#6F3D1D"
                 />
         </div>
     );
