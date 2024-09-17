@@ -9,7 +9,7 @@ function App() {
             <MapsIndoorsMap supportsUrlParameters={true}
                 gmApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
                 mapboxAccessToken="pk.eyJ1IjoibWFwc3Blb3BsZSIsImEiOiJjbGx3OWx4OWwwM2s3M2pzeXBtNGtoN2diIn0.IXKTHejui3rgTzBTxDPQ1w"
-                apiKey="45ba63bf7c37426ca25009cb"
+                apiKey="a9a29e500c5e46b9a192d9bc"
                 startZoomLevel="20"
                 pitch="60"
                 bearing="0"
