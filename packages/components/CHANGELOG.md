@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [13.21.0] - 2024-09-18
 
-### Changed
+### Added
 
 - `clearFilter` function for `mi-dropdown` is public and can be used outside the component.
 
