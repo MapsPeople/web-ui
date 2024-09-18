@@ -161,6 +161,19 @@ mi-dropdown::part(button) {
 | `change` | Triggers an event when the selection is changed. | `CustomEvent<any>` |
 
 
+## Methods
+
+### `clearFilter() => Promise<void>`
+
+Clear filter.
+
+#### Returns
+
+Type: `Promise<void>`
+
+
+
+
 ## Shadow Parts
 
 | Part                   | Description |
