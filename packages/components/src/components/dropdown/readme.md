@@ -156,9 +156,10 @@ mi-dropdown::part(button) {
 
 ## Events
 
-| Event    | Description                                      | Type               |
-| -------- | ------------------------------------------------ | ------------------ |
-| `change` | Triggers an event when the selection is changed. | `CustomEvent<any>` |
+| Event     | Description                                      | Type                |
+| --------- | ------------------------------------------------ | ------------------- |
+| `change`  | Triggers an event when the selection is changed. | `CustomEvent<any>`  |
+| `cleared` |                                                  | `CustomEvent<void>` |
 
 
 ## Methods
