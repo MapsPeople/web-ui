@@ -99,6 +99,14 @@ export class Dropdown {
      */
     @Prop() filterable = false;
 
+
+    /**
+     * If present, it dictates placeholder for an filterable input field in the dropdown. Defaults to 'Type to filter...'.
+     *
+     * @type {string}
+     */
+    @Prop() placeholder: string = 'Type to filter...';
+
     /**
      * This attribute indicates that multiple items can be selected in the list. If it is not specified, then only one item can be selected at a time.
      *
@@ -591,7 +599,7 @@ export class Dropdown {
         return (
             <div class="filter">
                 <input type="text" class="mi-input filter__input"
-                    placeholder="Type to filter"
+                    placeholder={this.placeholder}
                     ref={(el): HTMLInputElement => this.filterElement = el}
                     onInput={(): void => { this.filter(); }}
                     tabIndex={this.open ? 0 : -1} />
