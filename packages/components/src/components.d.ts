@@ -185,6 +185,10 @@ export namespace Components {
     }
     interface MiDropdown {
         /**
+          * Clear filter.
+         */
+        "clearFilter": () => Promise<void>;
+        /**
           * Sets the disabled state for the dropdown.
          */
         "disabled": boolean;

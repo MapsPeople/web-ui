@@ -1,4 +1,4 @@
-import { Component, Element, Event, EventEmitter, Host, JSX, Prop, State, Watch, Listen, h } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, Host, JSX, Prop, State, Watch, Listen, h, Method } from '@stencil/core';
 import fuzzysort from 'fuzzysort';
 import { SortOrder } from '../../enums/sort-order.enum';
 
@@ -499,7 +499,8 @@ export class Dropdown {
     /**
      * Clear filter.
      */
-    clearFilter(): void {
+    @Method()
+    public clearFilter(): void {
         if (this.filterElement) {
             this.filterElement.value = '';
             this.filterElement.focus();
