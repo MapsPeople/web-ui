@@ -30,12 +30,17 @@ export class Dropdown {
     }) change: EventEmitter;
 
     /**
+     * Emit an event when search field is cleared.
+     */
+    @Event() cleared: EventEmitter<void>;
+
+    /**
      * Gets or sets the state of the dropdown.
      * If the attribute is set to true then the dropdown will be expanded.
      *
      * @type {boolean}
      */
-    @Prop() open = false;
+    @Prop() open: boolean = false;
 
     /**
      * Gets or sets the list items.
@@ -505,6 +510,7 @@ export class Dropdown {
             this.filterElement.value = '';
             this.filterElement.focus();
             this.currentItems = this.items;
+            this.cleared.emit();
         }
 
         this.isClearButtonVisible = false;
