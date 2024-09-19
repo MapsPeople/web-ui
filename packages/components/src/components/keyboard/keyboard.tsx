@@ -1,7 +1,7 @@
 import { Component, ComponentInterface, h } from '@stencil/core';
 import { JSX, Prop, Watch, Method } from '@stencil/core/internal';
 import SimpleKeyboard from 'simple-keyboard';
-import { danishAlphabetic, defaultAlphabetic, frenchAlphabetic, germanAlphabetic, italianAlphabetic, spanishAlphabetic, unitedStatesAlphabetic } from './keyboard-alphabetic-layouts';
+import { danishAlphabetic, defaultAlphabetic, dutchAlphabetic, frenchAlphabetic, germanAlphabetic, italianAlphabetic, spanishAlphabetic, unitedStatesAlphabetic } from './keyboard-alphabetic-layouts';
 import { KeyboardLayout } from './keyboard-layout.enum';
 import { defaultNumeric } from './keyboard-numeric-layouts';
 
@@ -143,6 +143,7 @@ export class Keyboard implements ComponentInterface {
             { layout: germanAlphabetic, languages: ['de', 'de-de'] },
             { layout: italianAlphabetic, languages: ['it', 'it-it'] },
             { layout: spanishAlphabetic, languages: ['es', 'es-es'] },
+            { layout: dutchAlphabetic, languages: ['nl', 'nl-nl'] },
         ];
         const supportedLayout = supportedAlphabeticLayouts.find((layout): boolean => {
             return layout.languages.find((language): boolean => language === browserLanguage.toLowerCase()) ? true : false;
