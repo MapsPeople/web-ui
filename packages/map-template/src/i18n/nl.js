@@ -30,7 +30,7 @@ const nl = {
     'You have arrived': 'Je bent aangekomen',
     'Leave': 'Verlaat',
     'Park': 'Parkeer',
-    'at': 'bjj',
+    'at': 'bij',
     'Building': 'Gebouw',
     'Venue': 'Locatie',
     'Take staircase to level': 'Neem de trap naar niveau',
