@@ -1620,6 +1620,9 @@ declare namespace LocalJSX {
           * @type {EventEmitter}
          */
         "onChange"?: (event: MiDropdownCustomEvent<any>) => void;
+        /**
+          * Emit an event when search field is cleared.
+         */
         "onCleared"?: (event: MiDropdownCustomEvent<void>) => void;
         /**
           * Gets or sets the state of the dropdown. If the attribute is set to true then the dropdown will be expanded.

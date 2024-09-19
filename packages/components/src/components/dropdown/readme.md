@@ -159,7 +159,7 @@ mi-dropdown::part(button) {
 | Event     | Description                                      | Type                |
 | --------- | ------------------------------------------------ | ------------------- |
 | `change`  | Triggers an event when the selection is changed. | `CustomEvent<any>`  |
-| `cleared` |                                                  | `CustomEvent<void>` |
+| `cleared` | Emit an event when search field is cleared.      | `CustomEvent<void>` |
 
 
 ## Methods
