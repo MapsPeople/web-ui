@@ -67,4 +67,10 @@ export const dutchAlphabetic = {
     ]
 };
 
+export const greekAlphabetic = {
+    default: [
+        // TODO: Add relevant greek keyboard layout.
+    ]
+};
+
 export const defaultAlphabetic = unitedStatesAlphabetic;
