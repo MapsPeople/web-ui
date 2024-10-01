@@ -309,11 +309,11 @@ function Search({ onSetSize, isOpen }) {
      * Handle location hover.
      */
     useEffect(() => {
-        mapsIndoorsInstance.on('mouseenter', onMouseEnter);
+        mapsIndoorsInstance?.on('mouseenter', onMouseEnter);
         return () => {
-            mapsIndoorsInstance.off('mouseenter', onMouseEnter);
+            mapsIndoorsInstance?.off('mouseenter', onMouseEnter);
         }
-    });
+    }, [mapsIndoorsInstance]);
 
     /*
      * Setup scroll buttons to scroll in search results list when in kiosk mode.
