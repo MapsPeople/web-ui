@@ -42,7 +42,7 @@ function GoogleMapsMap({ apiKey, onInitialized, center, zoom }) {
                 element: document.getElementById('map'),
                 disableDefaultUI: true, // Disable Map Type control, Street view control and Zoom controls.
                 center: center ?? { lat: 0, lng: 0 }, // The MapsIndoors SDK needs a starting point and a zoom level to avoid timing issues when setting a venue.
-                zoom: zoom ?? 15
+                zoom: zoom ?? 21
             };
 
             const mv = new window.mapsindoors.mapView.GoogleMapsView(mapViewOptions);
