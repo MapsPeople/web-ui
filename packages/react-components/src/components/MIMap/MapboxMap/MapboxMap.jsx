@@ -39,11 +39,11 @@ function MapboxMap({ accessToken, onInitialized, center, zoom }) {
             zoom: zoom ?? 15
         };
 
-        const mv = new window.mapsindoors.mapView.MapboxV3View(mapViewOptions);
+        const mapView = new window.mapsindoors.mapView.MapboxV3View(mapViewOptions);
 
-        setMapViewInstance(mv);
+        setMapViewInstance(mapView);
 
-        onInitialized(mv);
+        onInitialized(mapView);
     }, []);
 
     return <div className="mapbox-map-container" id="map"></div>

@@ -45,11 +45,11 @@ function GoogleMapsMap({ apiKey, onInitialized, center, zoom }) {
                 zoom: zoom ?? 21
             };
 
-            const mv = new window.mapsindoors.mapView.GoogleMapsView(mapViewOptions);
+            const mapView = new window.mapsindoors.mapView.GoogleMapsView(mapViewOptions);
 
-            setMapViewInstance(mv);
+            setMapViewInstance(mapView);
 
-            onInitialized(mv);
+            onInitialized(mapView);
         });
     }, []);
 
