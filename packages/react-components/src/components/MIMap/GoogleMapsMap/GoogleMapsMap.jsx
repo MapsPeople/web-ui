@@ -10,7 +10,13 @@ GoogleMapsMap.propTypes = {
     center: PropTypes.object,
     zoom: PropTypes.number
 }
-
+/**
+ * @param {Object} props
+ * @param {string} props.apiKey - Google Maps API key.
+ * @param {function} props.onInitialized - Function that is called when the map view is initialized.
+ * @param {Object} props.center - Object with latitude and longitude on which the map will center. Example: { lat: 55, lng: 10 }
+ * @param {number} props.zoom - Zoom level for the map.
+ */
 function GoogleMapsMap({ apiKey, onInitialized, center, zoom }) {
 
     const [mapViewInstance, setMapViewInstance] = useState();
