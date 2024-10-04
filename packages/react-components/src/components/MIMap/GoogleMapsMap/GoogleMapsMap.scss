@@ -1,0 +1,15 @@
+.google-maps-map-container {
+    width: 100%;
+    height: 100%;
+}
+
+.gm-style {
+    /* In order to align with UX design, button placement has to be edited */
+    .gmnoprint {
+        right: 44px !important;
+
+        div {
+            border-radius: var(--rounding-large) !important;
+        }
+    }
+}
