@@ -145,6 +145,7 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef }) {
         }
 
         return () => {
+            setActiveCategory();
             resizeObserver?.disconnect();
             categoriesListRef.current?.removeEventListener('scroll', updateScrollButtonsState);
         };

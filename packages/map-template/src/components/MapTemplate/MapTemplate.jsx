@@ -203,6 +203,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         initializeMapsIndoorsSDK().then(() => {
             setMapsindoorsSDKAvailable(true);
         });
+
+        return () => {
+            setInitialFilteredLocations();
+        }
     }, []);
 
     /*

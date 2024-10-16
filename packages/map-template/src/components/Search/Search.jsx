@@ -283,6 +283,12 @@ function Search({ onSetSize, isOpen }) {
         }
     }
 
+    useEffect(() => {
+        return () => {
+            setHoveredLocation();
+        }
+    }, []);
+
     /*
      * React on changes in the venue prop.
      * Deselect category and clear results list.
