@@ -37,7 +37,7 @@ MapsIndoorsMap.propTypes = {
     hideNonMatches: PropTypes.bool,
     showExternalIDs: PropTypes.bool,
     showRoadNames: PropTypes.bool, 
-    searchExternalResults: PropTypes.bool
+    searchExternalLocations: PropTypes.bool
 };
 
 const WebMapsIndoorsMap = reactToWebComponent(MapsIndoorsMap, React, ReactDOM);

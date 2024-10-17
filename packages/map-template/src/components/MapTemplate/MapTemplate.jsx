@@ -55,7 +55,7 @@ import appConfigState from '../../atoms/appConfigState.js';
 import { useCurrentVenue } from '../../hooks/useCurrentVenue.js';
 import showExternalIDsState from '../../atoms/showExternalIDsState.js'
 import showRoadNamesState from '../../atoms/showRoadNamesState.js';
-import searchExternalResultsState from '../../atoms/searchExternalResultsState.js';
+import searchExternalLocationsState from '../../atoms/searchExternalLocationsState.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -90,9 +90,9 @@ defineCustomElements();
  * @param {boolean} [props.hideNonMatches] - Determine whether the locations on the map should be filtered (only show the matched locations and hide the rest) or highlighted (show all locations and highlight the matched ones with a red dot by default). If set to true, the locations will be filtered.
  * @param {boolean} [props.showRoadNames] - A boolean parameter that dictates whether Mapbox road names should be shown. By default, Mapbox road names are hidden when MapsIndoors data is shown. It is dictated by `mi-transition-level` which default value is 17.
  * @param {boolean} [props.showExternalIDs] - Determine whether the location details on the map should have an external ID visible. The default value is set to false.
- * @param {boolean} [props.searchExternalResults] - If you want to perform search for external results. If set to true, Mapbox/Google places will be displayed depending on the Map Provider you are using. If set to false, the results returned will only be MapsIndoors results.
+ * @param {boolean} [props.searchExternalLocations] - If you want to perform search for external locations. If set to true, Mapbox/Google places will be displayed depending on the Map Provider you are using. If set to false, the results returned will only be MapsIndoors results.
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalResults }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations }) {
 
     const [, setApiKey] = useRecoilState(apiKeyState);
     const [, setGmApiKey] = useRecoilState(gmApiKeyState);
@@ -120,7 +120,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setHideNonMatches] = useRecoilState(hideNonMatchesState);
     const [, setshowExternalIDs] = useRecoilState(showExternalIDsState);
     const [, setShowRoadNames] = useRecoilState(showRoadNamesState);
-    const [, setSearchExternalResults] = useRecoilState(searchExternalResultsState);
+    const [, setSearchExternalLocations] = useRecoilState(searchExternalLocationsState);
 
     const [showVenueSelector, setShowVenueSelector] = useState(true);
     const [showPositionControl, setShowPositionControl] = useState(true);
@@ -548,13 +548,13 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [showRoadNames])
 
     /*
-     * React on changes to the searchExternalResults prop.
+     * React on changes to the searchExternalLocations prop.
      */
     useEffect(() => {
-        if (mapsindoorsSDKAvailable && searchExternalResults) {
-            setSearchExternalResults(searchExternalResults);
+        if (mapsindoorsSDKAvailable && searchExternalLocations) {
+            setSearchExternalLocations(searchExternalLocations);
         }
-    }, [searchExternalResults, mapsindoorsSDKAvailable]);
+    }, [searchExternalLocations, mapsindoorsSDKAvailable]);
 
     /**
      * When map position is known while initializing the data,
