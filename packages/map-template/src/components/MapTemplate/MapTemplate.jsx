@@ -551,10 +551,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes to the searchExternalLocations prop.
      */
     useEffect(() => {
-        if (mapsindoorsSDKAvailable && searchExternalLocations) {
+        if (searchExternalLocations) {
             setSearchExternalLocations(searchExternalLocations);
         }
-    }, [searchExternalLocations, mapsindoorsSDKAvailable]);
+    }, [searchExternalLocations]);
 
     /**
      * When map position is known while initializing the data,
