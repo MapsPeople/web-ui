@@ -18,7 +18,8 @@ MIMap.propTypes = {
     gmApiKey: PropTypes.string,
     mapboxAccessToken: PropTypes.string,
     center: PropTypes.object,
-    zoom: PropTypes.number
+    zoom: PropTypes.number,
+    mapOptions: PropTypes.object
 }
 
 /**
@@ -28,9 +29,10 @@ MIMap.propTypes = {
  * @param {string} props.mapboxAccessToken - Mapbox Access Token if you want to show a Mapbox map.
  * @param {Object} props.center - Object with latitude and longitude on which the map will center. Example: { lat: 55, lng: 10 }
  * @param {number} props.zoom - Zoom level for the map.
+ * @param {Object} props.mapOptions - Options for instantiating and styling the map.
  * @returns
  */
-function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom }) {
+function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, mapOptions }) {
 
     const [mapType, setMapType] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
@@ -75,8 +77,8 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom }) {
     }, [gmApiKey, mapboxAccessToken]);
 
     return <>
-        {mapType === mapTypes.Google && <GoogleMapsMap mapsIndoorsInstance={mapsIndoorsInstance} apiKey={gmApiKey} onInitialized={onMapViewInitialized} center={center} zoom={zoom} />}
-        {mapType === mapTypes.Mapbox && <MapboxMap mapsIndoorsInstance={mapsIndoorsInstance} accessToken={mapboxAccessToken} onInitialized={onMapViewInitialized} center={center} zoom={zoom} />}
+        {mapType === mapTypes.Google && <GoogleMapsMap mapsIndoorsInstance={mapsIndoorsInstance} apiKey={gmApiKey} onInitialized={onMapViewInitialized} center={center} zoom={zoom} mapOptions={mapOptions} />}
+        {mapType === mapTypes.Mapbox && <MapboxMap mapsIndoorsInstance={mapsIndoorsInstance} accessToken={mapboxAccessToken} onInitialized={onMapViewInitialized} center={center} zoom={zoom} mapOptions={mapOptions} />}
     </>
 }
 
