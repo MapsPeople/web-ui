@@ -56,7 +56,6 @@ function MapboxMap({ accessToken, onInitialized, center, zoom, mapsIndoorsInstan
                 onRemove: function () { }
             }, 'top-right');
             setHasPositionControl(true);
-            // TODO: onPositionControl(myPositionButtonElement);
         }
 
         if (mapsIndoorsInstance && mapViewInstance && !hasZoomControl && isDesktop) {

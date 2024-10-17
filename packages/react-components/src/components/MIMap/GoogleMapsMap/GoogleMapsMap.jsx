@@ -52,7 +52,6 @@ function GoogleMapsMap({ apiKey, onInitialized, center, zoom, mapsIndoorsInstanc
             myPositionButtonElement.mapsindoors = mapsIndoorsInstance;
             mapViewInstance.getMap().controls[google.maps.ControlPosition.RIGHT_TOP].push(myPositionButtonElement);
             setHasPositionControl(true);
-            // TODO onPositionControl(myPositionButtonElement);
         }
 
         if (mapsIndoorsInstance && mapViewInstance && google && !hasFloorSelector) {
