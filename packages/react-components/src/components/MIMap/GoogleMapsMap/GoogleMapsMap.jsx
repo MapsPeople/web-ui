@@ -55,7 +55,6 @@ function GoogleMapsMap({ apiKey, onInitialized, center, zoom, mapsIndoorsInstanc
         }
 
         if (mapsIndoorsInstance && mapViewInstance && google && !hasFloorSelector) {
-            console.log('make floor selector');
             const floorSelectorElement = document.createElement('mi-floor-selector');
             floorSelectorElement.mapsindoors = mapsIndoorsInstance;
             if (mapOptions?.floorSelectorColor) {
