@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Loader as GoogleMapsApiLoader } from '@googlemaps/js-api-loader';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './GoogleMapsMap.scss';
+import { useIsDesktop } from '../../../hooks/useIsDesktop';
 
 GoogleMapsMap.propTypes = {
     apiKey: PropTypes.string.isRequired,
@@ -26,6 +27,7 @@ function GoogleMapsMap({ apiKey, onInitialized, center, zoom, mapsIndoorsInstanc
     const [hasFloorSelector, setHasFloorSelector] = useState(false);
     const [hasPositionControl, setHasPositionControl] = useState(false);
     const [hasZoomControl, setHasZoomControl] = useState(false);
+    const isDesktop = useIsDesktop();
 
     useEffect(() => {
         if (!mapViewInstance) return;
@@ -61,7 +63,7 @@ function GoogleMapsMap({ apiKey, onInitialized, center, zoom, mapsIndoorsInstanc
             setHasFloorSelector(true);
         }
 
-        if (mapsIndoorsInstance && mapViewInstance && google && !hasZoomControl /* && isDesktop */) {
+        if (mapsIndoorsInstance && mapViewInstance && google && !hasZoomControl && isDesktop) {
             // Enable only the Zoom control
             mapViewInstance.getMap().setOptions({
                 zoomControl: true,
