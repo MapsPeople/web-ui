@@ -10,7 +10,8 @@ MapboxMap.propTypes = {
     onInitialized: PropTypes.func.isRequired,
     center: PropTypes.object,
     zoom: PropTypes.number,
-    mapsIndoorsInstance: PropTypes.object
+    mapsIndoorsInstance: PropTypes.object,
+    mapOptions: PropTypes.object
 }
 
 /**
@@ -20,8 +21,9 @@ MapboxMap.propTypes = {
  * @param {Object} props.center - Object with latitude and longitude on which the map will center. Example: { lat: 55, lng: 10 }
  * @param {number} props.zoom - Zoom level for the map.
  * @param {Object} props.mapsIndoorsInstance - Instance of MapsIndoors class: https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/mapsindoors.MapsIndoors.html
+ * @param {Object} props.mapOptions - Options for instantiating and styling the map.
  */
-function MapboxMap({ accessToken, onInitialized, center, zoom, mapsIndoorsInstance }) {
+function MapboxMap({ accessToken, onInitialized, center, zoom, mapsIndoorsInstance, mapOptions }) {
 
     const [mapViewInstance, setMapViewInstance] = useState();
     const [hasFloorSelector, setHasFloorSelector] = useState(false);
@@ -68,7 +70,9 @@ function MapboxMap({ accessToken, onInitialized, center, zoom, mapsIndoorsInstan
         if (mapsIndoorsInstance && mapViewInstance && !hasFloorSelector) {
             const floorSelectorElement = document.createElement('mi-floor-selector');
             floorSelectorElement.mapsindoors = mapsIndoorsInstance;
-            // TODO: Part of mapOptions? floorSelectorElement.primaryColor = primaryColor;
+            if (mapOptions?.floorSelectorColor) {
+                floorSelectorElement.primaryColor = mapOptions.floorSelectorColor;
+            }
 
             mapViewInstance.getMap().addControl({
                 onAdd: () => floorSelectorElement,

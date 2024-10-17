@@ -10,7 +10,8 @@ GoogleMapsMap.propTypes = {
     onInitialized: PropTypes.func.isRequired,
     center: PropTypes.object,
     zoom: PropTypes.number,
-    mapsIndoorsInstance: PropTypes.object
+    mapsIndoorsInstance: PropTypes.object,
+    mapOptions: PropTypes.object
 }
 /**
  * @param {Object} props
@@ -19,8 +20,9 @@ GoogleMapsMap.propTypes = {
  * @param {Object} props.center - Object with latitude and longitude on which the map will center. Example: { lat: 55, lng: 10 }
  * @param {number} props.zoom - Zoom level for the map.
  * @param {Object} props.mapsIndoorsInstance - Instance of MapsIndoors class: https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/mapsindoors.MapsIndoors.html
+ * @param {Object} props.mapOptions - Options for instantiating and styling the map.
  */
-function GoogleMapsMap({ apiKey, onInitialized, center, zoom, mapsIndoorsInstance }) {
+function GoogleMapsMap({ apiKey, onInitialized, center, zoom, mapsIndoorsInstance, mapOptions }) {
 
     const [google, setGoogle] = useState();
     const [mapViewInstance, setMapViewInstance] = useState();
@@ -57,8 +59,9 @@ function GoogleMapsMap({ apiKey, onInitialized, center, zoom, mapsIndoorsInstanc
             console.log('make floor selector');
             const floorSelectorElement = document.createElement('mi-floor-selector');
             floorSelectorElement.mapsindoors = mapsIndoorsInstance;
-            // TODO: Part of mapOptions? floorSelectorElement.primaryColor = primaryColor;
-
+            if (mapOptions?.floorSelectorColor) {
+                floorSelectorElement.primaryColor = mapOptions.floorSelectorColor;
+            }
             mapViewInstance.getMap().controls[google.maps.ControlPosition.RIGHT_TOP].push(floorSelectorElement);
             setHasFloorSelector(true);
         }
