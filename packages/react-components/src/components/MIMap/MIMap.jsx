@@ -2,6 +2,11 @@ import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import MapboxMap from './MapboxMap/MapboxMap';
 import GoogleMapsMap from './GoogleMapsMap/GoogleMapsMap';
+import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
+import './MIMap.scss';
+
+// Define the Custom Elements from our components package.
+defineCustomElements();
 
 const mapTypes = {
     Google: 'google',
@@ -28,6 +33,7 @@ MIMap.propTypes = {
 function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom }) {
 
     const [mapType, setMapType] = useState();
+    const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
 
     useEffect(() => {
         if (apiKey) {
@@ -53,6 +59,8 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom }) {
 
          // TODO: Turn off visibility for building outline for demo purposes until the SDK supports Display Rules for Buildings too.
          mi.setDisplayRule(['MI_BUILDING_OUTLINE'], { visible: false });
+
+         setMapsIndoorsInstance(mi);
     }
 
     /*
@@ -67,8 +75,8 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom }) {
     }, [gmApiKey, mapboxAccessToken]);
 
     return <>
-        {mapType === mapTypes.Google && <GoogleMapsMap apiKey={gmApiKey} onInitialized={onMapViewInitialized} center={center} zoom={zoom} />}
-        {mapType === mapTypes.Mapbox && <MapboxMap accessToken={mapboxAccessToken} onInitialized={onMapViewInitialized} center={center} zoom={zoom} />}
+        {mapType === mapTypes.Google && <GoogleMapsMap mapsIndoorsInstance={mapsIndoorsInstance} apiKey={gmApiKey} onInitialized={onMapViewInitialized} center={center} zoom={zoom} />}
+        {mapType === mapTypes.Mapbox && <MapboxMap mapsIndoorsInstance={mapsIndoorsInstance} accessToken={mapboxAccessToken} onInitialized={onMapViewInitialized} center={center} zoom={zoom} />}
     </>
 }
 
