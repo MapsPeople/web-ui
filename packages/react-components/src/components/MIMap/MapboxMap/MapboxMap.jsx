@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './MapboxMap.scss';
+import { useIsDesktop } from '../../../hooks/useIsDesktop';
 
 MapboxMap.propTypes = {
     accessToken: PropTypes.string.isRequired,
@@ -26,6 +27,7 @@ function MapboxMap({ accessToken, onInitialized, center, zoom, mapsIndoorsInstan
     const [hasFloorSelector, setHasFloorSelector] = useState(false);
     const [hasPositionControl, setHasPositionControl] = useState(false);
     const [hasZoomControl, setHasZoomControl] = useState(false);
+    const isDesktop = useIsDesktop();
 
     useEffect(() => {
         if (!mapViewInstance) return;
@@ -55,7 +57,7 @@ function MapboxMap({ accessToken, onInitialized, center, zoom, mapsIndoorsInstan
             // TODO: onPositionControl(myPositionButtonElement);
         }
 
-        if (mapsIndoorsInstance && mapViewInstance && !hasZoomControl /* TODO && isDesktop */) {
+        if (mapsIndoorsInstance && mapViewInstance && !hasZoomControl && isDesktop) {
             mapViewInstance
                 .getMap()
                 .addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
