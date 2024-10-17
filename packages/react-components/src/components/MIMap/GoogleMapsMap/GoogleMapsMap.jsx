@@ -3,12 +3,15 @@ import PropTypes from 'prop-types';
 import { Loader as GoogleMapsApiLoader } from '@googlemaps/js-api-loader';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './GoogleMapsMap.scss';
+import { useIsDesktop } from '../../../hooks/useIsDesktop';
 
 GoogleMapsMap.propTypes = {
     apiKey: PropTypes.string.isRequired,
     onInitialized: PropTypes.func.isRequired,
     center: PropTypes.object,
-    zoom: PropTypes.number
+    zoom: PropTypes.number,
+    mapsIndoorsInstance: PropTypes.object,
+    mapOptions: PropTypes.object
 }
 /**
  * @param {Object} props
@@ -16,10 +19,17 @@ GoogleMapsMap.propTypes = {
  * @param {function} props.onInitialized - Function that is called when the map view is initialized.
  * @param {Object} props.center - Object with latitude and longitude on which the map will center. Example: { lat: 55, lng: 10 }
  * @param {number} props.zoom - Zoom level for the map.
+ * @param {Object} props.mapsIndoorsInstance - Instance of MapsIndoors class: https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/mapsindoors.MapsIndoors.html
+ * @param {Object} props.mapOptions - Options for instantiating and styling the map.
  */
-function GoogleMapsMap({ apiKey, onInitialized, center, zoom }) {
+function GoogleMapsMap({ apiKey, onInitialized, center, zoom, mapsIndoorsInstance, mapOptions }) {
 
+    const [google, setGoogle] = useState();
     const [mapViewInstance, setMapViewInstance] = useState();
+    const [hasFloorSelector, setHasFloorSelector] = useState(false);
+    const [hasPositionControl, setHasPositionControl] = useState(false);
+    const [hasZoomControl, setHasZoomControl] = useState(false);
+    const isDesktop = useIsDesktop();
 
     useEffect(() => {
         if (!mapViewInstance) return;
@@ -35,6 +45,39 @@ function GoogleMapsMap({ apiKey, onInitialized, center, zoom }) {
         }
     }, [zoom]);
 
+    // Add map controls to the map when ready.
+    useEffect(() => {
+        if (mapsIndoorsInstance && mapViewInstance && google && !hasPositionControl) {
+            const myPositionButtonElement = document.createElement('mi-my-position');
+            myPositionButtonElement.mapsindoors = mapsIndoorsInstance;
+            mapViewInstance.getMap().controls[google.maps.ControlPosition.RIGHT_TOP].push(myPositionButtonElement);
+            setHasPositionControl(true);
+        }
+
+        if (mapsIndoorsInstance && mapViewInstance && google && !hasFloorSelector) {
+            const floorSelectorElement = document.createElement('mi-floor-selector');
+            floorSelectorElement.mapsindoors = mapsIndoorsInstance;
+            if (mapOptions?.floorSelectorColor) {
+                floorSelectorElement.primaryColor = mapOptions.floorSelectorColor;
+            }
+            mapViewInstance.getMap().controls[google.maps.ControlPosition.RIGHT_TOP].push(floorSelectorElement);
+            setHasFloorSelector(true);
+        }
+
+        if (mapsIndoorsInstance && mapViewInstance && google && !hasZoomControl && isDesktop) {
+            // Enable only the Zoom control
+            mapViewInstance.getMap().setOptions({
+                zoomControl: true,
+                zoomControlOptions: {
+                    style: google.maps.ZoomControlStyle.DEFAULT,
+                    position: google.maps.ControlPosition.RIGHT_TOP,
+                }
+            });
+            setHasZoomControl(true);
+        }
+
+    }, [mapsIndoorsInstance, mapViewInstance, google, hasFloorSelector, hasPositionControl])
+
     useEffect(() => {
         const loader = new GoogleMapsApiLoader({
             apiKey: apiKey,
@@ -42,7 +85,9 @@ function GoogleMapsMap({ apiKey, onInitialized, center, zoom }) {
             libraries: ['geometry', 'places']
         });
 
-        loader.load().then(() => {
+        loader.load().then(loadedGoogle => {
+            setGoogle(loadedGoogle);
+
             // Initialize Google Maps MapView
             const mapViewOptions = {
                 element: document.getElementById('map'),
@@ -59,7 +104,7 @@ function GoogleMapsMap({ apiKey, onInitialized, center, zoom }) {
         });
     }, []);
 
-    return <div className="google-maps-map-container" id="map"></div>
+    return <div className="mapsindoors-map google-maps-map-container" id="map"></div>
 }
 
 export default GoogleMapsMap;
