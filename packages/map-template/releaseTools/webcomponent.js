@@ -36,7 +36,8 @@ MapsIndoorsMap.propTypes = {
     useKeyboard: PropTypes.bool,
     hideNonMatches: PropTypes.bool,
     showExternalIDs: PropTypes.bool,
-    showRoadNames: PropTypes.bool
+    showRoadNames: PropTypes.bool, 
+    searchExternalResults: PropTypes.bool
 };
 
 const WebMapsIndoorsMap = reactToWebComponent(MapsIndoorsMap, React, ReactDOM);

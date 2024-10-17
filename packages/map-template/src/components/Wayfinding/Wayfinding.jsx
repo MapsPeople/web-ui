@@ -34,6 +34,7 @@ import useDirectionsInfo from "../../hooks/useDirectionsInfo";
 import hasFoundRouteState from "../../atoms/hasFoundRouteState";
 import accessibilityOnState from "../../atoms/accessibilityOnState";
 import Accessibility from "../Accessibility/Accessibility";
+import searchExternalResultsState from "../../atoms/searchExternalResultsState";
 
 const searchFieldIdentifiers = {
     TO: 'TO',
@@ -105,6 +106,8 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     const distanceUnitSystem = useRecoilValue(distanceUnitSystemSelector);
 
     const [totalDistance, totalTime, hasFoundRoute, areDirectionsReady] = useDirectionsInfo(originLocation, destinationLocation, directionsService, travelMode, accessibilityOn)
+
+    const searchExternalResults = useRecoilValue(searchExternalResultsState);
 
     /**
      * Decorates location with data that is required for wayfinding to work.
@@ -410,8 +413,8 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                         <SearchField
                             ref={fromFieldRef}
                             mapsindoors={true}
-                            google={selectedMapType === mapTypes.Google}
-                            mapbox={selectedMapType === mapTypes.Mapbox}
+                            google={selectedMapType === mapTypes.Google && searchExternalResults}
+                            mapbox={selectedMapType === mapTypes.Mapbox && searchExternalResults}
                             placeholder={t('Search by name, category, building...')}
                             results={locations => searchResultsReceived(locations, searchFieldIdentifiers.FROM)}
                             clicked={() => onSearchClicked(searchFieldIdentifiers.FROM)}
@@ -429,8 +432,8 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                         <SearchField
                             ref={toFieldRef}
                             mapsindoors={true}
-                            google={selectedMapType === mapTypes.Google}
-                            mapbox={selectedMapType === mapTypes.Mapbox}
+                            google={selectedMapType === mapTypes.Google && searchExternalResults}
+                            mapbox={selectedMapType === mapTypes.Mapbox && searchExternalResults}
                             placeholder={t('Search by name, category, building...')}
                             results={locations => searchResultsReceived(locations, searchFieldIdentifiers.TO)}
                             clicked={() => onSearchClicked(searchFieldIdentifiers.TO)}
