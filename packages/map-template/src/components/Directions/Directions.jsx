@@ -73,7 +73,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
         return () => {
             setDestinationDisplayRule(null);
         }
-    }, [])
+    }, []);
 
     useEffect(() => {
         setDestinationDisplayRule(null);
