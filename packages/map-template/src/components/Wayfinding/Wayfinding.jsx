@@ -315,6 +315,14 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     }
 
     useEffect(() => {
+        return () => {
+            setSearchResults([]);
+            setDestinationLocation();
+            setOriginLocation();
+        }
+    }, []);
+
+    useEffect(() => {
         setSize(snapPoints.MAX);
         let originLocationWasSet = false;
 

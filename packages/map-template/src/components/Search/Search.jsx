@@ -283,6 +283,12 @@ function Search({ onSetSize, isOpen }) {
         }
     }
 
+    useEffect(() => {
+        return () => {
+            setHoveredLocation();
+        }
+    }, []);
+
     /*
      * React on changes in the venue prop.
      * Deselect category and clear results list.
@@ -309,11 +315,11 @@ function Search({ onSetSize, isOpen }) {
      * Handle location hover.
      */
     useEffect(() => {
-        mapsIndoorsInstance.on('mouseenter', onMouseEnter);
+        mapsIndoorsInstance?.on('mouseenter', onMouseEnter);
         return () => {
-            mapsIndoorsInstance.off('mouseenter', onMouseEnter);
+            mapsIndoorsInstance?.off('mouseenter', onMouseEnter);
         }
-    });
+    }, [mapsIndoorsInstance]);
 
     /*
      * Setup scroll buttons to scroll in search results list when in kiosk mode.

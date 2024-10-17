@@ -73,6 +73,10 @@ function MapboxMap({ onMapView, onPositionControl }) {
         const uuid = uuidv4();
         sessionStorage.setItem('mapboxPlacesSessionToken', uuid);
 
+        return () => {
+            setMapView();
+        }
+
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
     // We ignore eslint warnings about missing dependencies because onMapView should never change runtime and changing Mapbox Access Token runtime will give other problems.
 
