@@ -19,7 +19,8 @@ MIMap.propTypes = {
     mapboxAccessToken: PropTypes.string,
     center: PropTypes.object,
     zoom: PropTypes.number,
-    mapOptions: PropTypes.object
+    mapOptions: PropTypes.object,
+    onMapsIndoorsInstanceReady: PropTypes.func
 }
 
 /**
@@ -30,9 +31,10 @@ MIMap.propTypes = {
  * @param {Object} props.center - Object with latitude and longitude on which the map will center. Example: { lat: 55, lng: 10 }
  * @param {number} props.zoom - Zoom level for the map.
  * @param {Object} props.mapOptions - Options for instantiating and styling the map.
+ * @param {function} props.onMapsIndoorsInstanceReady - Callback for when the MapsIndoors instance (https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/mapsindoors.MapsIndoors.html) is ready. The instance is given as payload.
  * @returns
  */
-function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, mapOptions }) {
+function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, mapOptions, onMapsIndoorsInstanceReady }) {
 
     const [mapType, setMapType] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
@@ -59,10 +61,14 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, mapOptions }
             }
         });
 
-         // TODO: Turn off visibility for building outline for demo purposes until the SDK supports Display Rules for Buildings too.
-         mi.setDisplayRule(['MI_BUILDING_OUTLINE'], { visible: false });
+        // TODO: Turn off visibility for building outline for demo purposes until the SDK supports Display Rules for Buildings too.
+        mi.setDisplayRule(['MI_BUILDING_OUTLINE'], { visible: false });
 
-         setMapsIndoorsInstance(mi);
+        setMapsIndoorsInstance(mi);
+
+        if (typeof onMapsIndoorsInstanceReady === 'function') {
+            onMapsIndoorsInstanceReady(mi);
+        }
     }
 
     /*
