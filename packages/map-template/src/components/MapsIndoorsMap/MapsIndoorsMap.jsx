@@ -36,6 +36,7 @@ import isNullOrUndefined from "../../helpers/isNullOrUndefined.js";
  * @param {boolean} [props.hideNonMatches] - Determine whether the locations on the map should be filtered (only show the matched locations and hide the rest) or highlighted (show all locations and highlight the matched ones with a red dot by default). If set to true, the locations will be filtered.|
  * @param {boolean} [props.showExternalIDs] - Determine whether the location details on the map should have an external ID visible. The default value is set to false.
  * @param {boolean} [props.showRoadNames] - A boolean parameter that dictates whether Mapbox road names should be shown. By default, Mapbox road names are hidden when MapsIndoors data is shown. It is dictated by `mi-transition-level` which default value is 17.
+ * @param {boolean} [props.searchExternalLocations] - If you want to perform search for external results in the Wayfinding mode. If set to true, Mapbox/Google places will be displayed depending on the Map Provider you are using. If set to false, the results returned will only be MapsIndoors results. The default is false.
  */
 function MapsIndoorsMap(props) {
 
@@ -56,7 +57,8 @@ function MapsIndoorsMap(props) {
             primaryColor: '#005655', // --brand-colors-dark-pine-100 from MIDT
             useMapProviderModule: false,
             useKeyboard: false,
-            searchAllVenues: false
+            searchAllVenues: false, 
+            searchExternalLocations: false
         };
 
         const apiKeyQueryParameter = queryStringParams.get('apiKey');
@@ -86,6 +88,7 @@ function MapsIndoorsMap(props) {
         const hideNonMatchesQueryParameter = getBooleanQueryParameter(queryStringParams.get('hideNonMatches'));
         const showExternalIDsQueryParameter = getBooleanQueryParameter(queryStringParams.get('showExternalIDs'));
         const showRoadNamesQueryParameterBoolean = getBooleanQueryParameter(queryStringParams.get('showRoadNames'));
+        const searchExternalLocationsParameter = getBooleanQueryParameter(queryStringParams.get('searchExternalLocations'));
 
         // Set the initial props on the Map Template component.
 
@@ -124,7 +127,8 @@ function MapsIndoorsMap(props) {
             searchAllVenues: props.supportsUrlParameters && searchAllVenuesParameter ? searchAllVenuesParameter : (props.searchAllVenues || defaultProps.searchAllVenues),
             hideNonMatches: props.supportsUrlParameters && hideNonMatchesQueryParameter ? hideNonMatchesQueryParameter : props.hideNonMatches,
             showRoadNames: props.supportsUrlParameters && !isNullOrUndefined(showRoadNamesQueryParameterBoolean) && !isNullOrUndefined(queryStringParams.get('showRoadNames')) ? showRoadNamesQueryParameterBoolean : props.showRoadNames,
-            showExternalIDs: props.supportsUrlParameters && showExternalIDsQueryParameter ? showExternalIDsQueryParameter : props.showExternalIDs
+            showExternalIDs: props.supportsUrlParameters && showExternalIDsQueryParameter ? showExternalIDsQueryParameter : props.showExternalIDs,
+            searchExternalLocations: props.supportsUrlParameters && searchExternalLocationsParameter ? searchExternalLocationsParameter : (props.searchExternalLocations || defaultProps.searchExternalLocations),
         });
     }, [props]);
 
