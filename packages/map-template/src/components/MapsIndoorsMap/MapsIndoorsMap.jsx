@@ -57,8 +57,8 @@ function MapsIndoorsMap(props) {
             primaryColor: '#005655', // --brand-colors-dark-pine-100 from MIDT
             useMapProviderModule: false,
             useKeyboard: false,
-            searchAllVenues: false, 
-            searchExternalLocations: false
+            searchAllVenues: false,
+            searchExternalLocations: true
         };
 
         const apiKeyQueryParameter = queryStringParams.get('apiKey');
@@ -87,8 +87,8 @@ function MapsIndoorsMap(props) {
         const searchAllVenuesParameter = getBooleanQueryParameter(queryStringParams.get('searchAllVenues'));
         const hideNonMatchesQueryParameter = getBooleanQueryParameter(queryStringParams.get('hideNonMatches'));
         const showExternalIDsQueryParameter = getBooleanQueryParameter(queryStringParams.get('showExternalIDs'));
-        const showRoadNamesQueryParameterBoolean = getBooleanQueryParameter(queryStringParams.get('showRoadNames'));
-        const searchExternalLocationsParameter = getBooleanQueryParameter(queryStringParams.get('searchExternalLocations'));
+        const showRoadNamesQueryParameter = getBooleanQueryParameter(queryStringParams.get('showRoadNames'));
+        const searchExternalLocationsQueryParameter = getBooleanQueryParameter(queryStringParams.get('searchExternalLocations'));
 
         // Set the initial props on the Map Template component.
 
@@ -126,9 +126,10 @@ function MapsIndoorsMap(props) {
             category: props.supportsUrlParameters && categoryQueryParameter ? categoryQueryParameter : props.category,
             searchAllVenues: props.supportsUrlParameters && searchAllVenuesParameter ? searchAllVenuesParameter : (props.searchAllVenues || defaultProps.searchAllVenues),
             hideNonMatches: props.supportsUrlParameters && hideNonMatchesQueryParameter ? hideNonMatchesQueryParameter : props.hideNonMatches,
-            showRoadNames: props.supportsUrlParameters && !isNullOrUndefined(showRoadNamesQueryParameterBoolean) && !isNullOrUndefined(queryStringParams.get('showRoadNames')) ? showRoadNamesQueryParameterBoolean : props.showRoadNames,
+            showRoadNames: props.supportsUrlParameters && !isNullOrUndefined(showRoadNamesQueryParameter) && !isNullOrUndefined(queryStringParams.get('showRoadNames')) ? showRoadNamesQueryParameter : props.showRoadNames,
             showExternalIDs: props.supportsUrlParameters && showExternalIDsQueryParameter ? showExternalIDsQueryParameter : props.showExternalIDs,
-            searchExternalLocations: props.supportsUrlParameters && searchExternalLocationsParameter ? searchExternalLocationsParameter : (props.searchExternalLocations || defaultProps.searchExternalLocations),
+            searchExternalLocations: props.supportsUrlParameters && !isNullOrUndefined(searchExternalLocationsQueryParameter) && !isNullOrUndefined(queryStringParams.get('searchExternalLocations')) ? searchExternalLocationsQueryParameter : (props.searchExternalLocations || defaultProps.searchExternalLocations),
+
         });
     }, [props]);
 
