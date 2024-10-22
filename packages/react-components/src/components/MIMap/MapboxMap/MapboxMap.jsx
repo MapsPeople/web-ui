@@ -90,7 +90,8 @@ function MapboxMap({ accessToken, onInitialized, center, zoom, mapsIndoorsInstan
             accessToken: accessToken,
             element: document.getElementById('map'),
             center: center ?? { lat: 0, lng: 0 }, // The MapsIndoors SDK needs a starting point and a zoom level to avoid timing issues when setting a venue.
-            zoom: zoom ?? 15
+            zoom: zoom ?? 15,
+            ...mapOptions
         };
 
         const mapView = new window.mapsindoors.mapView.MapboxV3View(mapViewOptions);
