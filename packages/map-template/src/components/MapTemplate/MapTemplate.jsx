@@ -496,12 +496,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * Show keyboard only in a kiosk context.
      */
     useEffect(() => {
-        if (mapsindoorsSDKAvailable) {
-            if (useKeyboard && kioskOriginLocationId) {
-                setUseKeyboard(useKeyboard);
-            }
+        if (useKeyboard && kioskOriginLocationId) {
+            setUseKeyboard(useKeyboard);
         }
-    }, [useKeyboard, kioskOriginLocationId, mapsindoorsSDKAvailable]);
+    }, [useKeyboard, kioskOriginLocationId]);
 
     /*
      * React on changes in the category prop.
@@ -517,27 +515,21 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes to the searchAllVenues prop.
      */
     useEffect(() => {
-        if (mapsindoorsSDKAvailable && searchAllVenues) {
-            setSearchAllVenues(searchAllVenues);
-        }
+        setSearchAllVenues(searchAllVenues);
     }, [searchAllVenues, mapsindoorsSDKAvailable]);
 
     /*
      * React on changes to the hideNonMatches prop.
      */
     useEffect(() => {
-        if (hideNonMatches) {
-            setHideNonMatches(hideNonMatches);
-        }
+        setHideNonMatches(hideNonMatches);
     }, [hideNonMatches]);
 
     /*
      * React on changes to the showExternalIDs prop.
      */
     useEffect(() => {
-        if (showExternalIDs) {
-            setshowExternalIDs(showExternalIDs);
-        }
+        setshowExternalIDs(showExternalIDs);
     }, [showExternalIDs]);
 
     /*

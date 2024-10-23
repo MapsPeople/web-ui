@@ -3,8 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { createRoutesFromChildren, matchRoutes, useLocation, useNavigationType } from 'react-dom/client';
 import { RecoilRoot } from 'recoil';
 import MapTemplate from '../MapTemplate/MapTemplate.jsx';
-import isNullOrUndefined from "../../helpers/isNullOrUndefined.js";
-
+import getBooleanValue from "../../helpers/GetBooleanValue.js";
 /**
  *
  * @param {Object} props
@@ -58,9 +57,13 @@ function MapsIndoorsMap(props) {
             useMapProviderModule: false,
             useKeyboard: false,
             searchAllVenues: false,
-            searchExternalLocations: true
+            searchExternalLocations: true,
+            showRoadNames: true,
+            showExternalIDs: false,
+            hideNonMatches: false,
         };
 
+        // Query parameters
         const apiKeyQueryParameter = queryStringParams.get('apiKey');
         const venueQueryParameter = queryStringParams.get('venue');
         const locationIdQueryParameter = queryStringParams.get('locationId');
@@ -77,18 +80,19 @@ function MapsIndoorsMap(props) {
         const appUserRolesQueryParameter = queryStringParams.get('appUserRoles')?.split(',');
         const externalIDsQueryParameter = queryStringParams.get('externalIDs')?.split(',');
         const gmMapIdQueryParameter = queryStringParams.get('gmMapId');
-        const useMapProviderModuleParameter = getBooleanQueryParameter(queryStringParams.get('useMapProviderModule'));
         const kioskOriginLocationIdQueryParameter = queryStringParams.get('kioskOriginLocationId');
         const timeoutQueryParameter = queryStringParams.get('timeout');
         const languageQueryParameter = queryStringParams.get('language');
-        const useKeyboardQueryParameter = getBooleanQueryParameter(queryStringParams.get('useKeyboard'));
         const miTransitionLevelQueryParameter = queryStringParams.get('miTransitionLevel');
         const categoryQueryParameter = queryStringParams.get('category');
-        const searchAllVenuesParameter = getBooleanQueryParameter(queryStringParams.get('searchAllVenues'));
-        const hideNonMatchesQueryParameter = getBooleanQueryParameter(queryStringParams.get('hideNonMatches'));
-        const showExternalIDsQueryParameter = getBooleanQueryParameter(queryStringParams.get('showExternalIDs'));
-        const showRoadNamesQueryParameter = getBooleanQueryParameter(queryStringParams.get('showRoadNames'));
-        const searchExternalLocationsQueryParameter = getBooleanQueryParameter(queryStringParams.get('searchExternalLocations'));
+        // Boolean query parameters
+        const useMapProviderModuleQueryParameter = queryStringParams.get('useMapProviderModule');
+        const useKeyboardQueryParameter = queryStringParams.get('useKeyboard');
+        const searchAllVenuesQueryParameter = queryStringParams.get('searchAllVenues');
+        const hideNonMatchesQueryParameter = queryStringParams.get('hideNonMatches');
+        const showExternalIDsQueryParameter = queryStringParams.get('showExternalIDs');
+        const showRoadNamesQueryParameter = queryStringParams.get('showRoadNames');
+        const searchExternalLocationsQueryParameter = queryStringParams.get('searchExternalLocations');
 
         // Set the initial props on the Map Template component.
 
@@ -116,20 +120,20 @@ function MapsIndoorsMap(props) {
             appUserRoles: props.supportsUrlParameters && appUserRolesQueryParameter ? appUserRolesQueryParameter : props.appUserRoles,
             externalIDs: props.supportsUrlParameters && externalIDsQueryParameter ? externalIDsQueryParameter : props.externalIDs,
             gmMapId: props.supportsUrlParameters && gmMapIdQueryParameter ? gmMapIdQueryParameter : props.gmMapId,
-            useMapProviderModule: props.supportsUrlParameters && useMapProviderModuleParameter ? useMapProviderModuleParameter : (props.useMapProviderModule || defaultProps.useMapProviderModule),
             kioskOriginLocationId: props.supportsUrlParameters && kioskOriginLocationIdQueryParameter ? kioskOriginLocationIdQueryParameter : props.kioskOriginLocationId,
             timeout: props.supportsUrlParameters && timeoutQueryParameter ? timeoutQueryParameter : props.timeout,
             language: props.supportsUrlParameters && languageQueryParameter ? languageQueryParameter : props.language,
-            supportsUrlParameters: props.supportsUrlParameters,
-            useKeyboard: props.supportsUrlParameters && useKeyboardQueryParameter ? useKeyboardQueryParameter : (props.useKeyboard || defaultProps.useKeyboard),
             miTransitionLevel: props.supportsUrlParameters && miTransitionLevelQueryParameter ? miTransitionLevelQueryParameter : props.miTransitionLevel,
             category: props.supportsUrlParameters && categoryQueryParameter ? categoryQueryParameter : props.category,
-            searchAllVenues: props.supportsUrlParameters && searchAllVenuesParameter ? searchAllVenuesParameter : (props.searchAllVenues || defaultProps.searchAllVenues),
-            hideNonMatches: props.supportsUrlParameters && hideNonMatchesQueryParameter ? hideNonMatchesQueryParameter : props.hideNonMatches,
-            showRoadNames: props.supportsUrlParameters && !isNullOrUndefined(showRoadNamesQueryParameter) && !isNullOrUndefined(queryStringParams.get('showRoadNames')) ? showRoadNamesQueryParameter : props.showRoadNames,
-            showExternalIDs: props.supportsUrlParameters && showExternalIDsQueryParameter ? showExternalIDsQueryParameter : props.showExternalIDs,
-            searchExternalLocations: props.supportsUrlParameters && !isNullOrUndefined(searchExternalLocationsQueryParameter) && !isNullOrUndefined(queryStringParams.get('searchExternalLocations')) ? searchExternalLocationsQueryParameter : (props.searchExternalLocations || defaultProps.searchExternalLocations),
 
+            useKeyboard: getBooleanValue(props.supportsUrlParameters, defaultProps.useKeyboard, props.useKeyboard, useKeyboardQueryParameter),
+            useMapProviderModule: getBooleanValue(props.supportsUrlParameters, defaultProps.useMapProviderModule, props.useMapProviderModule, useMapProviderModuleQueryParameter),
+            searchAllVenues: getBooleanValue(props.supportsUrlParameters, defaultProps.searchAllVenues, props.searchAllVenues, searchAllVenuesQueryParameter),
+            hideNonMatches: getBooleanValue(props.supportsUrlParameters, defaultProps.hideNonMatches, props.hideNonMatches, hideNonMatchesQueryParameter),
+            showRoadNames: getBooleanValue(props.supportsUrlParameters, defaultProps.showRoadNames, props.showRoadNames, showRoadNamesQueryParameter),
+            showExternalIDs: getBooleanValue(props.supportsUrlParameters, defaultProps.showExternalIDs, props.showExternalIDs, showExternalIDsQueryParameter),
+            searchExternalLocations: getBooleanValue(props.supportsUrlParameters, defaultProps.searchExternalLocations, props.searchExternalLocations, searchExternalLocationsQueryParameter),
+            supportsUrlParameters: props.supportsUrlParameters,
         });
     }, [props]);
 
@@ -173,14 +177,3 @@ Sentry.init({
 });
 
 export default MapsIndoorsMap;
-
-/**
- * Convert query parameter value (which is always a string) into a boolean.
- * It will only accept the string 'true' as a boolean true. Anything else will return false.
- *
- * @param {string} queryParameterValue
- * @return {boolean}
- */
-function getBooleanQueryParameter(queryParameterValue) {
-    return queryParameterValue === 'true';
-}
