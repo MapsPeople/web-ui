@@ -516,7 +516,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         setSearchAllVenues(searchAllVenues);
-    }, [searchAllVenues, mapsindoorsSDKAvailable]);
+    }, [searchAllVenues]);
 
     /*
      * React on changes to the hideNonMatches prop.

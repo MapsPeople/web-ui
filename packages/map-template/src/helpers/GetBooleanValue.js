@@ -2,6 +2,16 @@ import isNullOrUndefined from "./isNullOrUndefined";
 
 /**
  * Determines the boolean value based on several parameters.
+ * 
+ * Test Scenarios for the function:
+ * 
+ * If `queryParameterValue` is `true`, then the result is `true`.
+ * If `queryParameterValue` is `false`, then the result is `false`.
+ * If `queryParameterValue` is anything other than the string `'true'`, then the result is `false`.
+ * If `queryParameterValue` is `null` or `undefined` and `propValue` is boolean `true`, then the result is `true`.
+ * If `queryParameterValue` is `null` or `undefined` and `propValue` is boolean `false`, then the result is `false`.
+ * If `queryParameterValue` is `null` or `undefined` and `propValue` is present but not a boolean, then the result is `false`.
+ * If both `queryParameterValue` and `propValue` are `null` or `undefined`, then the function falls back to `defaultValue`.
  *
  * @param {boolean} supportsUrlParameters - A boolean indicating if URL parameters should be considered.
  * @param {object} defaultValue - The default boolean value to use if no other valid value is found.
@@ -33,15 +43,3 @@ export default function getBooleanValue(supportsUrlParameters, defaultValue, pro
 
     return result;
 }
-
-/**
- * Test Scenarios for the function above:
- * 
- * 1. If `queryParameterValue` is `true`, then the result is `true`.
- * 2. If `queryParameterValue` is `false`, then the result is `false`.
- * 3. If `queryParameterValue` is anything other than the string `'true'`, then the result is `false`.
- * 4. If `queryParameterValue` is `null` or `undefined` and `propValue` is boolean `true`, then the result is `true`.
- * 5. If `queryParameterValue` is `null` or `undefined` and `propValue` is boolean `false`, then the result is `false`.
- * 6. If `queryParameterValue` is `null` or `undefined` and `propValue` is present but not a boolean, then the result is `false`.
- * 7. If both `queryParameterValue` and `propValue` are `null` or `undefined`, then the function falls back to `defaultValue`.
- */

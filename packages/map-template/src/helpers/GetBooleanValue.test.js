@@ -1,3 +1,5 @@
+import getBooleanValue from "./GetBooleanValue";
+
 describe('getBooleanValue', () => {
     // Test cases for supportsUrlParameters === true
     it('should return true when supportsUrlParameters is true and queryParameterValue is true', () => {
