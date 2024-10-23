@@ -63,7 +63,6 @@ function MapsIndoorsMap(props) {
             hideNonMatches: false,
         };
 
-        // Query parameters
         const apiKeyQueryParameter = queryStringParams.get('apiKey');
         const venueQueryParameter = queryStringParams.get('venue');
         const locationIdQueryParameter = queryStringParams.get('locationId');
@@ -95,7 +94,7 @@ function MapsIndoorsMap(props) {
         const searchExternalLocationsQueryParameter = queryStringParams.get('searchExternalLocations');
 
         // Set the initial props on the Map Template component.
-
+        
         // For the apiKey and venue, set the venue to "AUSTINOFFICE" if the apiKey is "mapspeople3d" and no venue is provided. We want this as the default venue for the "mapspeople3d" apiKey.
         const apiKey = props.supportsUrlParameters && apiKeyQueryParameter ? apiKeyQueryParameter : (props.apiKey || defaultProps.apiKey);
         let venue = props.supportsUrlParameters && venueQueryParameter ? venueQueryParameter : (props.venue || defaultProps.venue);
@@ -125,7 +124,7 @@ function MapsIndoorsMap(props) {
             language: props.supportsUrlParameters && languageQueryParameter ? languageQueryParameter : props.language,
             miTransitionLevel: props.supportsUrlParameters && miTransitionLevelQueryParameter ? miTransitionLevelQueryParameter : props.miTransitionLevel,
             category: props.supportsUrlParameters && categoryQueryParameter ? categoryQueryParameter : props.category,
-
+            // Handle boolean values
             useKeyboard: getBooleanValue(props.supportsUrlParameters, defaultProps.useKeyboard, props.useKeyboard, useKeyboardQueryParameter),
             useMapProviderModule: getBooleanValue(props.supportsUrlParameters, defaultProps.useMapProviderModule, props.useMapProviderModule, useMapProviderModuleQueryParameter),
             searchAllVenues: getBooleanValue(props.supportsUrlParameters, defaultProps.searchAllVenues, props.searchAllVenues, searchAllVenuesQueryParameter),
