@@ -2,7 +2,7 @@ import { atom } from 'recoil';
 
 const searchExternalLocationsState = atom({
     key: 'searchExternalLocations',
-    default: false
+    default: true
 });
 
 export default searchExternalLocationsState;

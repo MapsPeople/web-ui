@@ -35,6 +35,7 @@ import hasFoundRouteState from "../../atoms/hasFoundRouteState";
 import accessibilityOnState from "../../atoms/accessibilityOnState";
 import Accessibility from "../Accessibility/Accessibility";
 import searchExternalLocationsState from "../../atoms/searchExternalLocationsState";
+import isNullOrUndefined from "../../helpers/isNullOrUndefined";
 
 const searchFieldIdentifiers = {
     TO: 'TO',

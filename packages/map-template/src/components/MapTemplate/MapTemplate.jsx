@@ -90,7 +90,7 @@ defineCustomElements();
  * @param {boolean} [props.hideNonMatches] - Determine whether the locations on the map should be filtered (only show the matched locations and hide the rest) or highlighted (show all locations and highlight the matched ones with a red dot by default). If set to true, the locations will be filtered.
  * @param {boolean} [props.showRoadNames] - A boolean parameter that dictates whether Mapbox road names should be shown. By default, Mapbox road names are hidden when MapsIndoors data is shown. It is dictated by `mi-transition-level` which default value is 17.
  * @param {boolean} [props.showExternalIDs] - Determine whether the location details on the map should have an external ID visible. The default value is set to false.
- * @param {boolean} [props.searchExternalLocations] - If you want to perform search for external locations in the Wayfinding mode. If set to true, Mapbox/Google places will be displayed depending on the Map Provider you are using. If set to false, the results returned will only be MapsIndoors results. The default is false.
+ * @param {boolean} [props.searchExternalLocations] - If you want to perform search for external locations in the Wayfinding mode. If set to true, Mapbox/Google places will be displayed depending on the Map Provider you are using. If set to false, the results returned will only be MapsIndoors results. The default is true.
  */
 function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations }) {
 
@@ -496,12 +496,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * Show keyboard only in a kiosk context.
      */
     useEffect(() => {
-        if (mapsindoorsSDKAvailable) {
-            if (useKeyboard && kioskOriginLocationId) {
-                setUseKeyboard(useKeyboard);
-            }
+        if (useKeyboard && kioskOriginLocationId) {
+            setUseKeyboard(useKeyboard);
         }
-    }, [useKeyboard, kioskOriginLocationId, mapsindoorsSDKAvailable]);
+    }, [useKeyboard, kioskOriginLocationId]);
 
     /*
      * React on changes in the category prop.
@@ -517,27 +515,21 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes to the searchAllVenues prop.
      */
     useEffect(() => {
-        if (mapsindoorsSDKAvailable && searchAllVenues) {
-            setSearchAllVenues(searchAllVenues);
-        }
-    }, [searchAllVenues, mapsindoorsSDKAvailable]);
+        setSearchAllVenues(searchAllVenues);
+    }, [searchAllVenues]);
 
     /*
      * React on changes to the hideNonMatches prop.
      */
     useEffect(() => {
-        if (hideNonMatches) {
-            setHideNonMatches(hideNonMatches);
-        }
+        setHideNonMatches(hideNonMatches);
     }, [hideNonMatches]);
 
     /*
      * React on changes to the showExternalIDs prop.
      */
     useEffect(() => {
-        if (showExternalIDs) {
-            setshowExternalIDs(showExternalIDs);
-        }
+        setshowExternalIDs(showExternalIDs);
     }, [showExternalIDs]);
 
     /*
@@ -551,9 +543,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes to the searchExternalLocations prop.
      */
     useEffect(() => {
-        if (searchExternalLocations) {
-            setSearchExternalLocations(searchExternalLocations);
-        }
+        setSearchExternalLocations(searchExternalLocations);
     }, [searchExternalLocations]);
 
     /**

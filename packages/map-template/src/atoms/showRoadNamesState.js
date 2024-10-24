@@ -2,7 +2,7 @@ import { atom } from 'recoil';
 
 const showRoadNamesState = atom({
     key: 'showRoadNames',
-    default: undefined
+    default: true
 });
 
 export default showRoadNamesState;
