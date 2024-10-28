@@ -12,6 +12,7 @@ MapboxMap.propTypes = {
     center: PropTypes.object,
     zoom: PropTypes.number,
     bearing: PropTypes.number,
+    pitch: PropTypes.number,
     mapsIndoorsInstance: PropTypes.object,
     mapOptions: PropTypes.object
 }
@@ -23,10 +24,11 @@ MapboxMap.propTypes = {
  * @param {Object} props.center - Object with latitude and longitude on which the map will center. Example: { lat: 55, lng: 10 }
  * @param {number} props.zoom - Zoom level for the map.
  * @param {number} props.bearing - The bearing of the map (rotation from north) as a number.
+ * @param {number} [props.pitch] - The pitch of the map as a number.
  * @param {Object} props.mapsIndoorsInstance - Instance of MapsIndoors class: https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/mapsindoors.MapsIndoors.html
  * @param {Object} props.mapOptions - Options for instantiating and styling the map.
  */
-function MapboxMap({ accessToken, onInitialized, center, zoom, bearing, mapsIndoorsInstance, mapOptions }) {
+function MapboxMap({ accessToken, onInitialized, center, zoom, bearing, pitch, mapsIndoorsInstance, mapOptions }) {
 
     const [mapViewInstance, setMapViewInstance] = useState();
     const [hasFloorSelector, setHasFloorSelector] = useState(false);
@@ -53,6 +55,12 @@ function MapboxMap({ accessToken, onInitialized, center, zoom, bearing, mapsIndo
             mapViewInstance.getMap().setBearing(bearing);
         }
     }, [bearing, mapViewInstance]);
+
+    useEffect(() => {
+        if (mapViewInstance && !isNullOrUndefined(pitch)) {
+            mapViewInstance.getMap().setPitch(pitch);
+        }
+    }, [pitch, mapViewInstance]);
 
     // Add map controls to the map when ready
     useEffect(() => {
@@ -101,6 +109,7 @@ function MapboxMap({ accessToken, onInitialized, center, zoom, bearing, mapsIndo
             center: center ?? { lat: 0, lng: 0 }, // The MapsIndoors SDK needs a starting point and a zoom level to avoid timing issues when setting a venue.
             zoom: zoom ?? 15,
             bearing: bearing ?? 0,
+            pitch: pitch ?? 0,
             ...mapOptions
         };
 
