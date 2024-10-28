@@ -12,6 +12,7 @@ GoogleMapsMap.propTypes = {
     center: PropTypes.object,
     zoom: PropTypes.number,
     heading: PropTypes.number,
+    tilt: PropTypes.number,
     mapsIndoorsInstance: PropTypes.object,
     mapOptions: PropTypes.object
 }
@@ -22,10 +23,11 @@ GoogleMapsMap.propTypes = {
  * @param {Object} props.center - Object with latitude and longitude on which the map will center. Example: { lat: 55, lng: 10 }
  * @param {number} props.zoom - Zoom level for the map.
  * @param {number} props.heading - The heading of the map (rotation from north) as a number. Not recommended for maps with 2D Models.
+ * @param {number} [props.tilt] - The tilt of the map as a number. Not recommended for maps with 2D Models.
  * @param {Object} props.mapsIndoorsInstance - Instance of MapsIndoors class: https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/mapsindoors.MapsIndoors.html
  * @param {Object} props.mapOptions - Options for instantiating and styling the map.
  */
-function GoogleMapsMap({ apiKey, onInitialized, center, zoom, heading, mapsIndoorsInstance, mapOptions }) {
+function GoogleMapsMap({ apiKey, onInitialized, center, zoom, heading, tilt, mapsIndoorsInstance, mapOptions }) {
 
     const [google, setGoogle] = useState();
     const [mapViewInstance, setMapViewInstance] = useState();
@@ -53,6 +55,12 @@ function GoogleMapsMap({ apiKey, onInitialized, center, zoom, heading, mapsIndoo
             mapViewInstance.getMap().setHeading(heading);
         }
     }, [heading, mapViewInstance]);
+
+    useEffect(() => {
+        if (mapViewInstance && !isNullOrUndefined(tilt)) {
+            mapViewInstance.getMap().setTilt(tilt);
+        }
+    }, [tilt, mapViewInstance]);
 
     // Add map controls to the map when ready.
     useEffect(() => {
@@ -104,6 +112,7 @@ function GoogleMapsMap({ apiKey, onInitialized, center, zoom, heading, mapsIndoo
                 center: center ?? { lat: 0, lng: 0 }, // The MapsIndoors SDK needs a starting point and a zoom level to avoid timing issues when setting a venue.
                 zoom: zoom ?? 21,
                 heading: heading ?? 0,
+                tilt: tilt ?? 0,
                 ...mapOptions
             };
 
