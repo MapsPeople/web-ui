@@ -36,31 +36,28 @@ function GoogleMapsMap({ apiKey, onInitialized, center, zoom, heading, tilt, map
     const [hasZoomControl, setHasZoomControl] = useState(false);
     const isDesktop = useIsDesktop();
 
+    /*
+     * React on any props that are used to control the position of the map.
+     */
     useEffect(() => {
         if (!mapViewInstance) return;
-        if (center) {
+
+        if (!isNullOrUndefined(center)) {
             mapViewInstance.getMap().setCenter(center);
         }
-    }, [center]);
 
-    useEffect(() => {
-        if (!mapViewInstance) return;
-        if (zoom) {
+        if (!isNullOrUndefined(zoom)) {
             mapViewInstance.getMap().setZoom(zoom);
         }
-    }, [zoom]);
 
-    useEffect(() => {
-        if (mapViewInstance && !isNullOrUndefined(heading)) {
+        if (!isNullOrUndefined(heading)) {
             mapViewInstance.getMap().setHeading(heading);
         }
-    }, [heading, mapViewInstance]);
 
-    useEffect(() => {
-        if (mapViewInstance && !isNullOrUndefined(tilt)) {
+        if (!isNullOrUndefined(tilt)) {
             mapViewInstance.getMap().setTilt(tilt);
         }
-    }, [tilt, mapViewInstance]);
+    }, [mapViewInstance, center, zoom, heading, tilt]);
 
     // Add map controls to the map when ready.
     useEffect(() => {

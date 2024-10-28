@@ -36,31 +36,29 @@ function MapboxMap({ accessToken, onInitialized, center, zoom, bearing, pitch, m
     const [hasZoomControl, setHasZoomControl] = useState(false);
     const isDesktop = useIsDesktop();
 
+    /*
+     * React on any props that are used to control the position of the map.
+     */
     useEffect(() => {
         if (!mapViewInstance) return;
-        if (center) {
+
+        if (!isNullOrUndefined(center)) {
             mapViewInstance.getMap().setCenter(center);
         }
-    }, [center]);
 
-    useEffect(() => {
-        if (!mapViewInstance) return;
-        if (zoom) {
+        if (!isNullOrUndefined(zoom)) {
             mapViewInstance.getMap().setZoom(zoom);
         }
-    }, [zoom]);
 
-    useEffect(() => {
-        if (mapViewInstance && !isNullOrUndefined(bearing)) {
+        if (!isNullOrUndefined(bearing)) {
             mapViewInstance.getMap().setBearing(bearing);
         }
-    }, [bearing, mapViewInstance]);
 
-    useEffect(() => {
-        if (mapViewInstance && !isNullOrUndefined(pitch)) {
+        if (!isNullOrUndefined(pitch)) {
             mapViewInstance.getMap().setPitch(pitch);
         }
-    }, [pitch, mapViewInstance]);
+    }, [mapViewInstance, center, zoom, bearing, pitch]);
+
 
     // Add map controls to the map when ready
     useEffect(() => {
