@@ -14,7 +14,7 @@ MapboxMap.propTypes = {
     bounds: PropTypes.object,
     bearing: PropTypes.number,
     pitch: PropTypes.number,
-    mapsIndoorsInstance: PropTypes.object,
+    mapsIndoorsInstance: PropTypes.object.isRequired,
     mapOptions: PropTypes.object
 }
 
@@ -22,13 +22,13 @@ MapboxMap.propTypes = {
  * @param {Object} props
  * @param {string} props.accessToken -  Mapbox Access Token.
  * @param {function} props.onInitialized - Function that is called when the map view is initialized.
- * @param {Object} props.center - Object with latitude and longitude on which the map will center. Example: { lat: 55, lng: 10 }
- * @param {number} props.zoom - Zoom level for the map.
- * @param {object} props.bounds - Map bounds. Will win over center+zoom if set. Use the format { south: number, west: number, north: number, east: number }
- * @param {number} props.bearing - The bearing of the map (rotation from north) as a number.
+ * @param {Object} [props.center] - Object with latitude and longitude on which the map will center. Example: { lat: 55, lng: 10 }
+ * @param {number} [props.zoom] - Zoom level for the map.
+ * @param {object} [props.bounds] - Map bounds. Will win over center+zoom if set. Use the format { south: number, west: number, north: number, east: number }
+ * @param {number} [props.bearing] - The bearing of the map (rotation from north) as a number.
  * @param {number} [props.pitch] - The pitch of the map as a number.
  * @param {Object} props.mapsIndoorsInstance - Instance of MapsIndoors class: https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/mapsindoors.MapsIndoors.html
- * @param {Object} props.mapOptions - Options for instantiating and styling the map.
+ * @param {Object} [props.mapOptions] - Options for instantiating and styling the map.
  */
 function MapboxMap({ accessToken, onInitialized, center, zoom, bounds, bearing, pitch, mapsIndoorsInstance, mapOptions }) {
 
