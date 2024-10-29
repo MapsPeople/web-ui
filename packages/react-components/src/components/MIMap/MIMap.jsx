@@ -19,6 +19,7 @@ MIMap.propTypes = {
     mapboxAccessToken: PropTypes.string,
     center: PropTypes.object,
     zoom: PropTypes.number,
+    bounds: PropTypes.object,
     bearing: PropTypes.number,
     pitch: PropTypes.number,
     mapOptions: PropTypes.object,
@@ -32,13 +33,14 @@ MIMap.propTypes = {
  * @param {string} props.mapboxAccessToken - Mapbox Access Token if you want to show a Mapbox map.
  * @param {Object} props.center - Object with latitude and longitude on which the map will center. Example: { lat: 55, lng: 10 }
  * @param {number} props.zoom - Zoom level for the map.
+ * @param {object} props.bounds - Map bounds. Will win over center+zoom if set. Use the format { south: number, west: number, north: number, east: number }
  * @param {number} props.bearing - The bearing of the map (rotation from north) as a number. Not recommended for Google Maps with 2D Models.
  * @param {number} [props.pitch] - The pitch of the map as a number. Not recommended for Google Maps with 2D Models.
- * @param {Object} props.mapOptions - Options for instantiating and styling the map.
+ * @param {Object} props.mapOptions - Options for instantiating and styling the map. In addition to map specific options, it can also contain a floorSelectorColor prop (hex string) and a fitBoundsPadding object ({top: number, right: number, bottom: number, left: number }).
  * @param {function} props.onMapsIndoorsInstanceReady - Callback for when the MapsIndoors instance (https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/mapsindoors.MapsIndoors.html) is ready. The instance is given as payload.
  * @returns
  */
-function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bearing, pitch, mapOptions, onMapsIndoorsInstanceReady }) {
+function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bearing, pitch, mapOptions, onMapsIndoorsInstanceReady }) {
 
     const [mapType, setMapType] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
@@ -87,8 +89,8 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bearing, pit
     }, [gmApiKey, mapboxAccessToken]);
 
     return <>
-        {mapType === mapTypes.Google && <GoogleMapsMap mapsIndoorsInstance={mapsIndoorsInstance} apiKey={gmApiKey} onInitialized={onMapViewInitialized} center={center} zoom={zoom} mapOptions={mapOptions} heading={bearing} tilt={pitch} />}
-        {mapType === mapTypes.Mapbox && <MapboxMap mapsIndoorsInstance={mapsIndoorsInstance} accessToken={mapboxAccessToken} onInitialized={onMapViewInitialized} center={center} zoom={zoom} mapOptions={mapOptions} bearing={bearing} pitch={pitch} />}
+        {mapType === mapTypes.Google && <GoogleMapsMap mapsIndoorsInstance={mapsIndoorsInstance} apiKey={gmApiKey} onInitialized={onMapViewInitialized} center={center} zoom={zoom} mapOptions={mapOptions} heading={bearing} tilt={pitch} bounds={bounds} />}
+        {mapType === mapTypes.Mapbox && <MapboxMap mapsIndoorsInstance={mapsIndoorsInstance} accessToken={mapboxAccessToken} onInitialized={onMapViewInitialized} center={center} zoom={zoom} mapOptions={mapOptions} bearing={bearing} pitch={pitch} bounds={bounds} />}
     </>
 }
 
