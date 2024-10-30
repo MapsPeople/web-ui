@@ -33,7 +33,7 @@
     },
     "scripts": {
       "start": "vite",
-      "build": "vite build",
+      "build": "node buildTools/build.mjs",
       "serve": "vite preview",
       "test": ""
     },
