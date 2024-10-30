@@ -4,25 +4,32 @@ import { Loader as GoogleMapsApiLoader } from '@googlemaps/js-api-loader';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './GoogleMapsMap.scss';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
+import isNullOrUndefined from '../../../../../map-template/src/helpers/isNullOrUndefined';
 
 GoogleMapsMap.propTypes = {
     apiKey: PropTypes.string.isRequired,
     onInitialized: PropTypes.func.isRequired,
     center: PropTypes.object,
     zoom: PropTypes.number,
-    mapsIndoorsInstance: PropTypes.object,
+    bounds: PropTypes.object,
+    heading: PropTypes.number,
+    tilt: PropTypes.number,
+    mapsIndoorsInstance: PropTypes.object.isRequired,
     mapOptions: PropTypes.object
 }
 /**
  * @param {Object} props
  * @param {string} props.apiKey - Google Maps API key.
  * @param {function} props.onInitialized - Function that is called when the map view is initialized.
- * @param {Object} props.center - Object with latitude and longitude on which the map will center. Example: { lat: 55, lng: 10 }
- * @param {number} props.zoom - Zoom level for the map.
+ * @param {Object} [props.center] - Object with latitude and longitude on which the map will center. Example: { lat: 55, lng: 10 }
+ * @param {number} [props.zoom] - Zoom level for the map.
+ * @param {object} [props.bounds] - Map bounds. Will win over center+zoom if set. Use the format { south: number, west: number, north: number, east: number }
+ * @param {number} [props.heading] - The heading of the map (rotation from north) as a number. Not recommended for maps with 2D Models.
+ * @param {number} [props.tilt] - The tilt of the map as a number. Not recommended for maps with 2D Models.
  * @param {Object} props.mapsIndoorsInstance - Instance of MapsIndoors class: https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/mapsindoors.MapsIndoors.html
- * @param {Object} props.mapOptions - Options for instantiating and styling the map.
+ * @param {Object} [props.mapOptions] - Options for instantiating and styling the map.
  */
-function GoogleMapsMap({ apiKey, onInitialized, center, zoom, mapsIndoorsInstance, mapOptions }) {
+function GoogleMapsMap({ apiKey, onInitialized, center, zoom, bounds, heading, tilt, mapsIndoorsInstance, mapOptions }) {
 
     const [google, setGoogle] = useState();
     const [mapViewInstance, setMapViewInstance] = useState();
@@ -31,19 +38,35 @@ function GoogleMapsMap({ apiKey, onInitialized, center, zoom, mapsIndoorsInstanc
     const [hasZoomControl, setHasZoomControl] = useState(false);
     const isDesktop = useIsDesktop();
 
+    /*
+     * React on any props that are used to control the position of the map.
+     *
+     * If the bounds prop is set, it will win over center+zoom.
+     */
     useEffect(() => {
         if (!mapViewInstance) return;
-        if (center) {
+
+        if (!isNullOrUndefined(bounds)) {
+            // Bounds will allways win over center+zoom.
+            mapsIndoorsInstance.getMapView().fitBounds(bounds, mapOptions?.fitBoundsPadding);
+        }
+
+        if (!isNullOrUndefined(center) && isNullOrUndefined(bounds)) {
             mapViewInstance.getMap().setCenter(center);
         }
-    }, [center]);
 
-    useEffect(() => {
-        if (!mapViewInstance) return;
-        if (zoom) {
+        if (!isNullOrUndefined(zoom) && isNullOrUndefined(bounds)) {
             mapViewInstance.getMap().setZoom(zoom);
         }
-    }, [zoom]);
+
+        if (!isNullOrUndefined(heading)) {
+            mapViewInstance.getMap().setHeading(heading);
+        }
+
+        if (!isNullOrUndefined(tilt)) {
+            mapViewInstance.getMap().setTilt(tilt);
+        }
+    }, [mapViewInstance, center, zoom, heading, tilt, bounds, mapOptions]);
 
     // Add map controls to the map when ready.
     useEffect(() => {
@@ -94,6 +117,8 @@ function GoogleMapsMap({ apiKey, onInitialized, center, zoom, mapsIndoorsInstanc
                 disableDefaultUI: true, // Disable Map Type control, Street view control and Zoom controls.
                 center: center ?? { lat: 0, lng: 0 }, // The MapsIndoors SDK needs a starting point and a zoom level to avoid timing issues when setting a venue.
                 zoom: zoom ?? 21,
+                heading: heading ?? 0,
+                tilt: tilt ?? 0,
                 ...mapOptions
             };
 

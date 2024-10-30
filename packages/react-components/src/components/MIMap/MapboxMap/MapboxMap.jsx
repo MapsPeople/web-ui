@@ -4,13 +4,17 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './MapboxMap.scss';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
+import isNullOrUndefined from '../../../../../map-template/src/helpers/isNullOrUndefined';
 
 MapboxMap.propTypes = {
     accessToken: PropTypes.string.isRequired,
     onInitialized: PropTypes.func.isRequired,
     center: PropTypes.object,
     zoom: PropTypes.number,
-    mapsIndoorsInstance: PropTypes.object,
+    bounds: PropTypes.object,
+    bearing: PropTypes.number,
+    pitch: PropTypes.number,
+    mapsIndoorsInstance: PropTypes.object.isRequired,
     mapOptions: PropTypes.object
 }
 
@@ -18,12 +22,15 @@ MapboxMap.propTypes = {
  * @param {Object} props
  * @param {string} props.accessToken -  Mapbox Access Token.
  * @param {function} props.onInitialized - Function that is called when the map view is initialized.
- * @param {Object} props.center - Object with latitude and longitude on which the map will center. Example: { lat: 55, lng: 10 }
- * @param {number} props.zoom - Zoom level for the map.
+ * @param {Object} [props.center] - Object with latitude and longitude on which the map will center. Example: { lat: 55, lng: 10 }
+ * @param {number} [props.zoom] - Zoom level for the map.
+ * @param {object} [props.bounds] - Map bounds. Will win over center+zoom if set. Use the format { south: number, west: number, north: number, east: number }
+ * @param {number} [props.bearing] - The bearing of the map (rotation from north) as a number.
+ * @param {number} [props.pitch] - The pitch of the map as a number.
  * @param {Object} props.mapsIndoorsInstance - Instance of MapsIndoors class: https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/mapsindoors.MapsIndoors.html
- * @param {Object} props.mapOptions - Options for instantiating and styling the map.
+ * @param {Object} [props.mapOptions] - Options for instantiating and styling the map.
  */
-function MapboxMap({ accessToken, onInitialized, center, zoom, mapsIndoorsInstance, mapOptions }) {
+function MapboxMap({ accessToken, onInitialized, center, zoom, bounds, bearing, pitch, mapsIndoorsInstance, mapOptions }) {
 
     const [mapViewInstance, setMapViewInstance] = useState();
     const [hasFloorSelector, setHasFloorSelector] = useState(false);
@@ -31,19 +38,42 @@ function MapboxMap({ accessToken, onInitialized, center, zoom, mapsIndoorsInstan
     const [hasZoomControl, setHasZoomControl] = useState(false);
     const isDesktop = useIsDesktop();
 
+    /*
+     * React on any props that are used to control the position of the map.
+     *
+     * If the bounds prop is set, it will win over center+zoom.
+     */
     useEffect(() => {
         if (!mapViewInstance) return;
-        if (center) {
-            mapViewInstance.getMap().setCenter(center);
-        }
-    }, [center]);
 
-    useEffect(() => {
-        if (!mapViewInstance) return;
-        if (zoom) {
-            mapViewInstance.getMap().setZoom(zoom);
+        if (!isNullOrUndefined(bounds)) {
+            // Bounds will allways win over center+zoom.
+            // And we need to take bearing and pitch into the account on the same Mapbox function call.
+            mapViewInstance.getMap().fitBounds([bounds.west, bounds.south, bounds.east, bounds.north], {
+                pitch: pitch || 0,
+                bearing: bearing || 0,
+                animate: false,
+                padding: mapOptions?.fitBoundsPadding
+            });
+        } else {
+            if (!isNullOrUndefined(center)) {
+                mapViewInstance.getMap().setCenter(center);
+            }
+
+            if (!isNullOrUndefined(zoom)) {
+                mapViewInstance.getMap().setZoom(zoom);
+            }
+
+            if (!isNullOrUndefined(bearing)) {
+                mapViewInstance.getMap().setBearing(bearing);
+            }
+
+            if (!isNullOrUndefined(pitch)) {
+                mapViewInstance.getMap().setPitch(pitch);
+            }
         }
-    }, [zoom]);
+    }, [mapViewInstance, center, zoom, bearing, pitch, bounds, mapOptions]);
+
 
     // Add map controls to the map when ready
     useEffect(() => {
@@ -91,6 +121,9 @@ function MapboxMap({ accessToken, onInitialized, center, zoom, mapsIndoorsInstan
             element: document.getElementById('map'),
             center: center ?? { lat: 0, lng: 0 }, // The MapsIndoors SDK needs a starting point and a zoom level to avoid timing issues when setting a venue.
             zoom: zoom ?? 15,
+            bounds: bounds ? [bounds.west, bounds.south, bounds.east, bounds.north] : undefined,
+            bearing: bearing ?? 0,
+            pitch: pitch ?? 0,
             ...mapOptions
         };
 
