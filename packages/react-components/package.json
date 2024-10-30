@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "node buildTools/build.mjs",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
@@ -27,6 +27,7 @@
     "mapbox-gl": "^3.7.0",
     "prop-types": "^15.8.1",
     "sass": "^1.57.1",
-    "vite": "^4.4.5"
+    "vite": "^4.4.5",
+    "vite-plugin-css-injected-by-js": "^3.1.0"
   }
 }

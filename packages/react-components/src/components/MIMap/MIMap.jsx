@@ -5,9 +5,6 @@ import GoogleMapsMap from './GoogleMapsMap/GoogleMapsMap';
 import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
 import './MIMap.scss';
 
-// Define the Custom Elements from our components package.
-defineCustomElements();
-
 const mapTypes = {
     Google: 'google',
     Mapbox: 'mapbox'
@@ -44,6 +41,14 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bear
 
     const [mapType, setMapType] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
+
+    useEffect(() => {
+        // Make sure to define the MI Components custom elements if they are not already defined.
+        // Best way for now is to check that is to check for the existance of one of them in the custom elements registry.
+        if (!window.customElements.get('mi-floor-selector')) {
+            defineCustomElements();
+        }
+    }, []);
 
     useEffect(() => {
         if (apiKey) {

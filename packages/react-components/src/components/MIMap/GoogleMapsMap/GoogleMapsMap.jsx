@@ -14,7 +14,7 @@ GoogleMapsMap.propTypes = {
     bounds: PropTypes.object,
     heading: PropTypes.number,
     tilt: PropTypes.number,
-    mapsIndoorsInstance: PropTypes.object.isRequired,
+    mapsIndoorsInstance: PropTypes.object,
     mapOptions: PropTypes.object
 }
 /**
@@ -26,7 +26,7 @@ GoogleMapsMap.propTypes = {
  * @param {object} [props.bounds] - Map bounds. Will win over center+zoom if set. Use the format { south: number, west: number, north: number, east: number }
  * @param {number} [props.heading] - The heading of the map (rotation from north) as a number. Not recommended for maps with 2D Models.
  * @param {number} [props.tilt] - The tilt of the map as a number. Not recommended for maps with 2D Models.
- * @param {Object} props.mapsIndoorsInstance - Instance of MapsIndoors class: https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/mapsindoors.MapsIndoors.html
+ * @param {Object} [props.mapsIndoorsInstance] - Instance of MapsIndoors class: https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/mapsindoors.MapsIndoors.html
  * @param {Object} [props.mapOptions] - Options for instantiating and styling the map.
  */
 function GoogleMapsMap({ apiKey, onInitialized, center, zoom, bounds, heading, tilt, mapsIndoorsInstance, mapOptions }) {
