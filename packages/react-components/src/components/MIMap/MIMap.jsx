@@ -88,7 +88,7 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bear
     useEffect(() => {
         if (mapboxAccessToken) {
             setMapType(mapTypes.Mapbox);
-        } else {
+        } else if (gmApiKey) {
             setMapType(mapTypes.Google);
         }
     }, [gmApiKey, mapboxAccessToken]);
