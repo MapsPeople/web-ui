@@ -2,8 +2,6 @@ import { useEffect } from "react";
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { mapTypes } from "../../constants/mapTypes";
 import useLiveData from '../../hooks/useLivedata';
-import GoogleMapsMap from "./GoogleMapsMap/GoogleMapsMap";
-import MapboxMap from "./MapboxMap/MapboxMap";
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import userPositionState from '../../atoms/userPositionState';
 import directionsServiceState from '../../atoms/directionsServiceState';
@@ -21,6 +19,7 @@ import solutionState from '../../atoms/solutionState';
 import notificationMessageState from '../../atoms/notificationMessageState';
 import useMapBoundsDeterminer from '../../hooks/useMapBoundsDeterminer';
 import hideNonMatchesState from "../../atoms/hideNonMatchesState";
+import MIMap from '@mapsindoors/react-components/src/components/MIMap/MIMap';
 
 /**
  * Private variable used for storing the tile style.
@@ -38,7 +37,7 @@ let _tileStyle;
  * @param {function} onMapPositionInvestigating - Function that is run when the map position is being determined.
  * @returns
  */
-function Map({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating }) {
+function Map({ mapsindoorsSDKAvailable, onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating }) {
     const apiKey = useRecoilValue(apiKeyState);
     const gmApiKey = useRecoilValue(gmApiKeyState);
     const mapboxAccessToken = useRecoilValue(mapboxAccessTokenState);
@@ -200,12 +199,7 @@ function Map({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapP
         }
     }
 
-    const onMapView = async (mapView, externalDirectionsProvider) => {
-        // Instantiate MapsIndoors instance
-        const miInstance = new window.mapsindoors.MapsIndoors({
-            mapView
-        });
-
+    const onMapsIndoorsInstanceReady = miInstance => {
         // Detect when the mouse hovers over a location and store the hovered location
         // If the location is non-selectable, remove the hovering by calling the unhoverLocation() method.
         miInstance.on('mouseenter', () => {
@@ -233,12 +227,22 @@ function Map({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapP
         window.dispatchEvent(event);
 
         // Initialize a Directions Service
+        let externalDirectionsProvider;
+        if (mapType === mapTypes.Google) {
+            externalDirectionsProvider = new window.mapsindoors.directions.MapboxProvider(mapboxAccessToken);
+        } else if (mapType === mapType.Mapbox) {
+            externalDirectionsProvider = new window.mapsindoors.directions.GoogleMapsProvider();
+        }
         const directionsService = new window.mapsindoors.services.DirectionsService(externalDirectionsProvider);
         setDirectionsService(directionsService);
-    };
+
+        setMapsIndoorsInstance(miInstance);
+    }
 
     /**
      * Listen for changes in user position and update state for it.
+     *
+     * TODO: Use it
      *
      * @param {object} positionControl - MapsIndoors PositionControl instance.
      */
@@ -269,8 +273,12 @@ function Map({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapP
     }, [tileStyle]);
 
     return (<>
-        {mapType === mapTypes.Google && <GoogleMapsMap onMapView={onMapView} onPositionControl={onPositionControlCreated} />}
-        {mapType === mapTypes.Mapbox && <MapboxMap onMapView={onMapView} onPositionControl={onPositionControlCreated} />}
+        {mapsindoorsSDKAvailable && apiKey && <MIMap
+            apiKey={apiKey}
+            mapboxAccessToken={mapType === mapTypes.Mapbox ? mapboxAccessToken : undefined}
+            gmApiKey={mapType === mapTypes.Google ? gmApiKey : undefined}
+            onMapsIndoorsInstanceReady={miInstance => onMapsIndoorsInstanceReady(miInstance)}
+        />}
     </>)
 };
 
