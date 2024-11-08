@@ -99,8 +99,8 @@ function MapboxMap({ accessToken, onInitialized, center, zoom, bounds, bearing, 
         if (mapsIndoorsInstance && mapViewInstance && !hasFloorSelector) {
             const floorSelectorElement = document.createElement('mi-floor-selector');
             floorSelectorElement.mapsindoors = mapsIndoorsInstance;
-            if (mapOptions?.floorSelectorColor) {
-                floorSelectorElement.primaryColor = mapOptions.floorSelectorColor;
+            if (mapOptions?.brandingColor) {
+                floorSelectorElement.primaryColor = mapOptions.brandingColor;
             }
 
             mapViewInstance.getMap().addControl({

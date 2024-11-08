@@ -80,8 +80,8 @@ function GoogleMapsMap({ apiKey, onInitialized, center, zoom, bounds, heading, t
         if (mapsIndoorsInstance && mapViewInstance && google && !hasFloorSelector) {
             const floorSelectorElement = document.createElement('mi-floor-selector');
             floorSelectorElement.mapsindoors = mapsIndoorsInstance;
-            if (mapOptions?.floorSelectorColor) {
-                floorSelectorElement.primaryColor = mapOptions.floorSelectorColor;
+            if (mapOptions?.brandingColor) {
+                floorSelectorElement.primaryColor = mapOptions.brandingColor;
             }
             mapViewInstance.getMap().controls[google.maps.ControlPosition.RIGHT_TOP].push(floorSelectorElement);
             setHasFloorSelector(true);
