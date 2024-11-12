@@ -139,7 +139,7 @@ function MapboxMap({ accessToken, onInitialized, center, zoom, bounds, bearing, 
     }, []);
 
     return <div className="mapsindoors-map mapbox-map-container" id="map">
-        <ViewModeSwitch reset={resetViewMode} mapView={mapViewInstance} activeColor={mapOptions?.brandingColor} solution={solution} />
+        <ViewModeSwitch reset={resetViewMode} mapView={mapViewInstance} pitch={pitch} activeColor={mapOptions?.brandingColor} solution={solution} />
     </div>
 }
 
