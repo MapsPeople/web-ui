@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import './ViewModeSwitch.scss';
 
-import Light2D from '../../../../assets/2d-light.svg?react';
-import Dark2D from '../../../../assets/2d-dark.svg?react';
-import Light3D from '../../../../assets/3d-light.svg?react';
-import Dark3D from '../../../../assets/3d-dark.svg?react';
+import { ReactComponent as Light2D } from '../../../../assets/2d-light.svg';
+import { ReactComponent as Dark2D } from '../../../../assets/2d-dark.svg';
+import { ReactComponent as Light3D } from '../../../../assets/3d-light.svg';
+import { ReactComponent as Dark3D } from '../../../../assets/3d-dark.svg';
 
 const ViewModes = Object.freeze({
     initial3D: 'initial3D',
