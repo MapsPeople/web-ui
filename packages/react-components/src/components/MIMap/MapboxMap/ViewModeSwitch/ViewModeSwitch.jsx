@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import './ViewModeSwitch.scss';
-
+import isNullOrUndefined from '../../../../../../map-template/src/helpers/isNullOrUndefined';
 import { ReactComponent as Light2D } from '../../../../assets/2d-light.svg';
 import { ReactComponent as Dark2D } from '../../../../assets/2d-dark.svg';
 import { ReactComponent as Light3D } from '../../../../assets/3d-light.svg';
@@ -14,8 +14,8 @@ const ViewModes = Object.freeze({
 });
 
 ViewModeSwitch.propTypes = {
-    viewModeTrigger: PropTypes.string,
     mapView: PropTypes.object,
+    pitch: PropTypes.number,
     solution: PropTypes.object,
     reset: PropTypes.bool,
     activeColor: PropTypes.string
@@ -25,11 +25,12 @@ ViewModeSwitch.propTypes = {
  *
  * @param {Object} props
  * @param {Object} props.mapView - Instance of a MapsIndoors MapView
+ * @param {number} [props.pitch] - The value of the pitch property on the map (not necessarily the current map pitch)
  * @param {Object} [props.solution] - The current MapsIndoors solution
  * @param {boolean} [props.reset] - Set to true to reset to initial 3D mode
  * @param {string} [props.activeColor='#005655'] - The color to use to mark the active view mode
  */
-function ViewModeSwitch({ mapView, solution, reset, activeColor='#005655' }) {
+function ViewModeSwitch({ mapView, pitch, solution, reset, activeColor='#005655' }) {
 
     const [visible, setVisible] = useState(false);
     const [viewMode, setViewMode] = useState();
@@ -37,7 +38,7 @@ function ViewModeSwitch({ mapView, solution, reset, activeColor='#005655' }) {
     useEffect(() => {
         if (!solution) return;
 
-        // If the required modules are enables, show the Visibility Switch and set the View Mode
+        // If the required modules are enabled, show the Visibility Switch and set the View Mode
         if (['mapbox', '3dwalls', 'floorplan'].every(requiredModule => solution.modules.map(module => module.toLowerCase()).includes(requiredModule))) {
             setVisible(true);
             setViewMode(ViewModes.initial3D);
@@ -62,7 +63,7 @@ function ViewModeSwitch({ mapView, solution, reset, activeColor='#005655' }) {
                 // If the Visibility Switch has not been interacted with, hide the 2D features
                 // Tilt the map to the 'currentPitch' value - this is the value that the timeout property resets to.
                 case ViewModes.initial3D:
-                    mapView.tilt(mapView.getPitch(), 2000);
+                    mapView.tilt(!isNullOrUndefined(pitch) ? pitch : 45, 2000);
                     mapView.hideFeatures([mapView.FeatureType.MODEL2D, mapView.FeatureType.WALLS2D]);
                     break;
 
