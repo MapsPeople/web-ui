@@ -19,6 +19,7 @@ MIMap.propTypes = {
     bounds: PropTypes.object,
     bearing: PropTypes.number,
     pitch: PropTypes.number,
+    resetViewMode: PropTypes.bool,
     mapOptions: PropTypes.object,
     onMapsIndoorsInstanceReady: PropTypes.func
 }
@@ -33,14 +34,16 @@ MIMap.propTypes = {
  * @param {object} [props.bounds] - Map bounds. Will win over center+zoom if set. Use the format { south: number, west: number, north: number, east: number }
  * @param {number} [props.bearing] - The bearing of the map (rotation from north) as a number. Not recommended for Google Maps with 2D Models.
  * @param {number} [props.pitch] - The pitch of the map as a number. Not recommended for Google Maps with 2D Models.
+ * @param {string} [props.resetViewMode] - For Mapbox only: Reset the view mode to 3D when set to true.
  * @param {Object} [props.mapOptions] - Options for instantiating and styling the map. In addition to map specific options, it can also contain a brandingColor prop (hex string) and a fitBoundsPadding object ({top: number, right: number, bottom: number, left: number }).
  * @param {function} [props.onMapsIndoorsInstanceReady] - Callback for when the MapsIndoors instance (https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/mapsindoors.MapsIndoors.html) is ready. The instance is given as payload.
  * @returns
  */
-function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bearing, pitch, mapOptions, onMapsIndoorsInstanceReady }) {
+function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bearing, pitch, resetViewMode, mapOptions, onMapsIndoorsInstanceReady }) {
 
     const [mapType, setMapType] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
+    const [solution, setSolution] = useState();
 
     useEffect(() => {
         // Make sure to define the MI Components custom elements if they are not already defined.
@@ -52,9 +55,17 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bear
 
     useEffect(() => {
         if (apiKey) {
+            // Set the MapsIndoors API key in order to load the data for your Solution.
             window.mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKey);
+
+            // Load solution config in order to check if the 2D/3D switch should be shown. This is only needed if the map is a Mapbox map.
+            if (mapType === mapTypes.Mapbox) {
+                window.mapsindoors.services.SolutionsService.getSolution().then(solutionResult => {
+                    setSolution(solutionResult);
+                });
+            }
         }
-    }, [apiKey]);
+    }, [apiKey, mapType]);
 
     const onMapViewInitialized = (mapView) => {
         // Instantiate MapsIndoors instance
@@ -95,7 +106,7 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bear
 
     return <>
         {mapType === mapTypes.Google && <GoogleMapsMap mapsIndoorsInstance={mapsIndoorsInstance} apiKey={gmApiKey} onInitialized={onMapViewInitialized} center={center} zoom={zoom} mapOptions={mapOptions} heading={bearing} tilt={pitch} bounds={bounds} />}
-        {mapType === mapTypes.Mapbox && <MapboxMap mapsIndoorsInstance={mapsIndoorsInstance} accessToken={mapboxAccessToken} onInitialized={onMapViewInitialized} center={center} zoom={zoom} mapOptions={mapOptions} bearing={bearing} pitch={pitch} bounds={bounds} />}
+        {mapType === mapTypes.Mapbox && <MapboxMap mapsIndoorsInstance={mapsIndoorsInstance} accessToken={mapboxAccessToken} onInitialized={onMapViewInitialized} center={center} zoom={zoom} mapOptions={mapOptions} bearing={bearing} pitch={pitch} bounds={bounds} solution={solution} resetViewMode={resetViewMode} />}
     </>
 }
 
