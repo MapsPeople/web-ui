@@ -199,7 +199,13 @@ function Map({ mapsindoorsSDKAvailable, onLocationClick, onMapPositionKnown, use
         }
     }
 
-    const onMapsIndoorsInstanceReady = miInstance => {
+    /**
+     * React when MapsIndoors instance and position control is ready, and setup necessary objects.
+     *
+     * @param {object} miInstance
+     * @param {object} positionControl
+     */
+    const onInitialized = (miInstance, positionControl) => {
         // Detect when the mouse hovers over a location and store the hovered location
         // If the location is non-selectable, remove the hovering by calling the unhoverLocation() method.
         miInstance.on('mouseenter', () => {
@@ -229,24 +235,15 @@ function Map({ mapsindoorsSDKAvailable, onLocationClick, onMapPositionKnown, use
         // Initialize a Directions Service
         let externalDirectionsProvider;
         if (mapType === mapTypes.Google) {
-            externalDirectionsProvider = new window.mapsindoors.directions.MapboxProvider(mapboxAccessToken);
-        } else if (mapType === mapType.Mapbox) {
             externalDirectionsProvider = new window.mapsindoors.directions.GoogleMapsProvider();
+        } else if (mapType === mapTypes.Mapbox) {
+            externalDirectionsProvider = new window.mapsindoors.directions.MapboxProvider(mapboxAccessToken);
         }
         const directionsService = new window.mapsindoors.services.DirectionsService(externalDirectionsProvider);
         setDirectionsService(directionsService);
 
         setMapsIndoorsInstance(miInstance);
-    }
 
-    /**
-     * Listen for changes in user position and update state for it.
-     *
-     * TODO: Use it
-     *
-     * @param {object} positionControl - MapsIndoors PositionControl instance.
-     */
-    const onPositionControlCreated = positionControl => {
         if (positionControl.nodeName === 'MI-MY-POSITION') {
             // The Web Component needs to set up the listener with addEventListener
             positionControl.addEventListener('position_received', positionInfo => {
@@ -277,7 +274,7 @@ function Map({ mapsindoorsSDKAvailable, onLocationClick, onMapPositionKnown, use
             apiKey={apiKey}
             mapboxAccessToken={mapType === mapTypes.Mapbox ? mapboxAccessToken : undefined}
             gmApiKey={mapType === mapTypes.Google ? gmApiKey : undefined}
-            onMapsIndoorsInstanceReady={miInstance => onMapsIndoorsInstanceReady(miInstance)}
+            onInitialized={onInitialized}
         />}
     </>)
 };

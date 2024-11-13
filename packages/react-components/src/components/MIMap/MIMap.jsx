@@ -21,7 +21,7 @@ MIMap.propTypes = {
     pitch: PropTypes.number,
     resetViewMode: PropTypes.bool,
     mapOptions: PropTypes.object,
-    onMapsIndoorsInstanceReady: PropTypes.func
+    onInitialized: PropTypes.func
 }
 
 /**
@@ -36,13 +36,14 @@ MIMap.propTypes = {
  * @param {number} [props.pitch] - The pitch of the map as a number. Not recommended for Google Maps with 2D Models.
  * @param {string} [props.resetViewMode] - For Mapbox only: Reset the view mode to 3D when set to true.
  * @param {Object} [props.mapOptions] - Options for instantiating and styling the map. In addition to map specific options, it can also contain a brandingColor prop (hex string) and a fitBoundsPadding object ({top: number, right: number, bottom: number, left: number }).
- * @param {function} [props.onMapsIndoorsInstanceReady] - Callback for when the MapsIndoors instance (https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/mapsindoors.MapsIndoors.html) is ready. The instance is given as payload.
+ * @param {function} [props.onInitialized] - Callback for when the MapsIndoors instance (https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/mapsindoors.MapsIndoors.html) and position control is ready. The instance and position control is given as payload.
  * @returns
  */
-function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bearing, pitch, resetViewMode, mapOptions, onMapsIndoorsInstanceReady }) {
+function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bearing, pitch, resetViewMode, mapOptions, onInitialized }) {
 
     const [mapType, setMapType] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
+    const [positionControl, setPositionControl] = useState();
     const [solution, setSolution] = useState();
 
     useEffect(() => {
@@ -87,11 +88,16 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bear
         mi.setDisplayRule(['MI_BUILDING_OUTLINE'], { visible: false });
 
         setMapsIndoorsInstance(mi);
-
-        if (typeof onMapsIndoorsInstanceReady === 'function') {
-            onMapsIndoorsInstanceReady(mi);
-        }
     }
+
+    /*
+     * Execute the onInitialized callback when both the MapsIndoors instance and the position control is ready.
+     */
+    useEffect(() => {
+        if (typeof onInitialized === 'function' && mapsIndoorsInstance && positionControl) {
+            onInitialized(mapsIndoorsInstance, positionControl);
+        }
+    }, [mapsIndoorsInstance, positionControl]);
 
     /*
      * Determine map type based on the given map provider tokens.
@@ -105,8 +111,8 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bear
     }, [gmApiKey, mapboxAccessToken]);
 
     return <>
-        {mapType === mapTypes.Google && <GoogleMapsMap mapsIndoorsInstance={mapsIndoorsInstance} apiKey={gmApiKey} onInitialized={onMapViewInitialized} center={center} zoom={zoom} mapOptions={mapOptions} heading={bearing} tilt={pitch} bounds={bounds} />}
-        {mapType === mapTypes.Mapbox && <MapboxMap mapsIndoorsInstance={mapsIndoorsInstance} accessToken={mapboxAccessToken} onInitialized={onMapViewInitialized} center={center} zoom={zoom} mapOptions={mapOptions} bearing={bearing} pitch={pitch} bounds={bounds} solution={solution} resetViewMode={resetViewMode} />}
+        {mapType === mapTypes.Google && <GoogleMapsMap mapsIndoorsInstance={mapsIndoorsInstance} apiKey={gmApiKey} onInitialized={onMapViewInitialized} onPositionControl={setPositionControl} center={center} zoom={zoom} mapOptions={mapOptions} heading={bearing} tilt={pitch} bounds={bounds} />}
+        {mapType === mapTypes.Mapbox && <MapboxMap mapsIndoorsInstance={mapsIndoorsInstance} accessToken={mapboxAccessToken} onInitialized={onMapViewInitialized} onPositionControl={setPositionControl} center={center} zoom={zoom} mapOptions={mapOptions} bearing={bearing} pitch={pitch} bounds={bounds} solution={solution} resetViewMode={resetViewMode} />}
     </>
 }
 
