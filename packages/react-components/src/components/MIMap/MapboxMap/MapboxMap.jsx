@@ -10,6 +10,7 @@ import isNullOrUndefined from '../../../../../map-template/src/helpers/isNullOrU
 MapboxMap.propTypes = {
     accessToken: PropTypes.string.isRequired,
     onInitialized: PropTypes.func.isRequired,
+    onPositionControl: PropTypes.func.isRequired,
     center: PropTypes.object,
     zoom: PropTypes.number,
     bounds: PropTypes.object,
@@ -25,6 +26,7 @@ MapboxMap.propTypes = {
  * @param {Object} props
  * @param {string} props.accessToken -  Mapbox Access Token.
  * @param {function} props.onInitialized - Function that is called when the map view is initialized.
+ * @param {function} props.onPositionControl - Callback called when the position control is initialized. Payload is the position control.
  * @param {Object} [props.center] - Object with latitude and longitude on which the map will center. Example: { lat: 55, lng: 10 }
  * @param {number} [props.zoom] - Zoom level for the map.
  * @param {object} [props.bounds] - Map bounds. Will win over center+zoom if set. Use the format { south: number, west: number, north: number, east: number }
@@ -35,7 +37,7 @@ MapboxMap.propTypes = {
  * @param {Object} [props.solution] - The Solution data corresponding to the API key.
  * @param {Object} [props.mapOptions] - Options for instantiating and styling the map.
  */
-function MapboxMap({ accessToken, onInitialized, center, zoom, bounds, bearing, pitch, resetViewMode, mapsIndoorsInstance, solution, mapOptions }) {
+function MapboxMap({ accessToken, onInitialized, onPositionControl, center, zoom, bounds, bearing, pitch, resetViewMode, mapsIndoorsInstance, solution, mapOptions }) {
 
     const [mapViewInstance, setMapViewInstance] = useState();
     const [hasFloorSelector, setHasFloorSelector] = useState(false);
@@ -91,6 +93,7 @@ function MapboxMap({ accessToken, onInitialized, center, zoom, bounds, bearing, 
                 onRemove: function () { }
             }, 'top-right');
             setHasPositionControl(true);
+            onPositionControl(myPositionButtonElement);
         }
 
         if (mapsIndoorsInstance && mapViewInstance && !hasZoomControl && isDesktop) {
