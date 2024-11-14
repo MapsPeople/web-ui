@@ -35,7 +35,7 @@ MapboxMap.propTypes = {
  * @param {boolean} [props.resetViewMode] - Set to true to reset the view mode to initial 3D mode.
  * @param {Object} [props.mapsIndoorsInstance] - Instance of MapsIndoors class: https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/mapsindoors.MapsIndoors.html
  * @param {Object} [props.solution] - The Solution data corresponding to the API key.
- * @param {Object} [props.mapOptions] - Options for instantiating and styling the map.
+ * @param {Object} [props.mapOptions] - Options for instantiating and styling the map as well as UI elements.
  */
 function MapboxMap({ accessToken, onInitialized, onPositionControl, center, zoom, bounds, bearing, pitch, resetViewMode, mapsIndoorsInstance, solution, mapOptions }) {
 
