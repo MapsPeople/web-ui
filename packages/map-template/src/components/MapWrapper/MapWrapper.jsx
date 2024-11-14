@@ -1,9 +1,8 @@
 import { useEffect } from "react";
 import { useRecoilState, useRecoilValue } from 'recoil';
+import MIMap from '@mapsindoors/react-components/src/components/MIMap/MIMap';
 import { mapTypes } from "../../constants/mapTypes";
 import useLiveData from '../../hooks/useLivedata';
-import GoogleMapsMap from "./GoogleMapsMap/GoogleMapsMap";
-import MapboxMap from "./MapboxMap/MapboxMap";
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import userPositionState from '../../atoms/userPositionState';
 import directionsServiceState from '../../atoms/directionsServiceState';
@@ -29,7 +28,8 @@ import hideNonMatchesState from "../../atoms/hideNonMatchesState";
 let _tileStyle;
 
 /**
- * Shows a map.
+ * A wrapper component around the MIMap component.
+ * Contains logic for determining map provider (Google, Mapbox), map options, device position handling and setting up a directions service to use for showing directions.
  *
  * @param {Object} props
  * @param {function} [props.onLocationClick] - Function that is run when a MapsIndoors Location is clicked. the Location will be sent along as first argument.
@@ -38,7 +38,7 @@ let _tileStyle;
  * @param {function} onMapPositionInvestigating - Function that is run when the map position is being determined.
  * @returns
  */
-function Map({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating }) {
+function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating }) {
     const apiKey = useRecoilValue(apiKeyState);
     const gmApiKey = useRecoilValue(gmApiKeyState);
     const mapboxAccessToken = useRecoilValue(mapboxAccessTokenState);
@@ -200,12 +200,13 @@ function Map({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapP
         }
     }
 
-    const onMapView = async (mapView, externalDirectionsProvider) => {
-        // Instantiate MapsIndoors instance
-        const miInstance = new window.mapsindoors.MapsIndoors({
-            mapView
-        });
-
+    /**
+     * React when MapsIndoors instance and position control is ready, and setup necessary objects.
+     *
+     * @param {object} miInstance
+     * @param {object} positionControl
+     */
+    const onInitialized = (miInstance, positionControl) => {
         // Detect when the mouse hovers over a location and store the hovered location
         // If the location is non-selectable, remove the hovering by calling the unhoverLocation() method.
         miInstance.on('mouseenter', () => {
@@ -233,16 +234,17 @@ function Map({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapP
         window.dispatchEvent(event);
 
         // Initialize a Directions Service
+        let externalDirectionsProvider;
+        if (mapType === mapTypes.Google) {
+            externalDirectionsProvider = new window.mapsindoors.directions.GoogleMapsProvider();
+        } else if (mapType === mapTypes.Mapbox) {
+            externalDirectionsProvider = new window.mapsindoors.directions.MapboxProvider(mapboxAccessToken);
+        }
         const directionsService = new window.mapsindoors.services.DirectionsService(externalDirectionsProvider);
         setDirectionsService(directionsService);
-    };
 
-    /**
-     * Listen for changes in user position and update state for it.
-     *
-     * @param {object} positionControl - MapsIndoors PositionControl instance.
-     */
-    const onPositionControlCreated = positionControl => {
+        setMapsIndoorsInstance(miInstance);
+
         if (positionControl.nodeName === 'MI-MY-POSITION') {
             // The Web Component needs to set up the listener with addEventListener
             positionControl.addEventListener('position_received', positionInfo => {
@@ -269,9 +271,13 @@ function Map({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapP
     }, [tileStyle]);
 
     return (<>
-        {mapType === mapTypes.Google && <GoogleMapsMap onMapView={onMapView} onPositionControl={onPositionControlCreated} />}
-        {mapType === mapTypes.Mapbox && <MapboxMap onMapView={onMapView} onPositionControl={onPositionControlCreated} />}
+        {apiKey && <MIMap
+            apiKey={apiKey}
+            mapboxAccessToken={mapType === mapTypes.Mapbox ? mapboxAccessToken : undefined}
+            gmApiKey={mapType === mapTypes.Google ? gmApiKey : undefined}
+            onInitialized={onInitialized}
+        />}
     </>)
 };
 
-export default Map;
+export default MapWrapper;

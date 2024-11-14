@@ -5,7 +5,7 @@ import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js
 import i18n from 'i18next';
 import initI18n from '../../i18n/initialize.js';
 import './MapTemplate.scss';
-import MIMap from "../Map/Map";
+import MapWrapper from "../MapWrapper/MapWrapper";
 import SplashScreen from '../SplashScreen/SplashScreen';
 import VenueSelector from '../VenueSelector/VenueSelector';
 import BottomSheet from '../BottomSheet/BottomSheet';
@@ -621,7 +621,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 }
             </Fragment>
         }
-        <MIMap
+        <MapWrapper
             useMapProviderModule={useMapProviderModule}
             onMapPositionKnown={() => mapPositionKnown()}
             onMapPositionInvestigating={() => setIsMapPositionInvestigating(true)}

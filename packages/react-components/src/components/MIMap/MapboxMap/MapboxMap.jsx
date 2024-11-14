@@ -3,18 +3,22 @@ import PropTypes from 'prop-types';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './MapboxMap.scss';
+import ViewModeSwitch from './ViewmodeSwitch/ViewModeSwitch';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import isNullOrUndefined from '../../../../../map-template/src/helpers/isNullOrUndefined';
 
 MapboxMap.propTypes = {
     accessToken: PropTypes.string.isRequired,
     onInitialized: PropTypes.func.isRequired,
+    onPositionControl: PropTypes.func.isRequired,
     center: PropTypes.object,
     zoom: PropTypes.number,
     bounds: PropTypes.object,
     bearing: PropTypes.number,
     pitch: PropTypes.number,
+    resetViewMode: PropTypes.bool,
     mapsIndoorsInstance: PropTypes.object,
+    solution: PropTypes.object,
     mapOptions: PropTypes.object
 }
 
@@ -22,15 +26,18 @@ MapboxMap.propTypes = {
  * @param {Object} props
  * @param {string} props.accessToken -  Mapbox Access Token.
  * @param {function} props.onInitialized - Function that is called when the map view is initialized.
+ * @param {function} props.onPositionControl - Callback called when the position control is initialized. Payload is the position control.
  * @param {Object} [props.center] - Object with latitude and longitude on which the map will center. Example: { lat: 55, lng: 10 }
  * @param {number} [props.zoom] - Zoom level for the map.
  * @param {object} [props.bounds] - Map bounds. Will win over center+zoom if set. Use the format { south: number, west: number, north: number, east: number }
  * @param {number} [props.bearing] - The bearing of the map (rotation from north) as a number.
  * @param {number} [props.pitch] - The pitch of the map as a number.
+ * @param {boolean} [props.resetViewMode] - Set to true to reset the view mode to initial 3D mode.
  * @param {Object} [props.mapsIndoorsInstance] - Instance of MapsIndoors class: https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/mapsindoors.MapsIndoors.html
- * @param {Object} [props.mapOptions] - Options for instantiating and styling the map.
+ * @param {Object} [props.solution] - The Solution data corresponding to the API key.
+ * @param {Object} [props.mapOptions] - Options for instantiating and styling the map as well as UI elements.
  */
-function MapboxMap({ accessToken, onInitialized, center, zoom, bounds, bearing, pitch, mapsIndoorsInstance, mapOptions }) {
+function MapboxMap({ accessToken, onInitialized, onPositionControl, center, zoom, bounds, bearing, pitch, resetViewMode, mapsIndoorsInstance, solution, mapOptions }) {
 
     const [mapViewInstance, setMapViewInstance] = useState();
     const [hasFloorSelector, setHasFloorSelector] = useState(false);
@@ -86,6 +93,7 @@ function MapboxMap({ accessToken, onInitialized, center, zoom, bounds, bearing, 
                 onRemove: function () { }
             }, 'top-right');
             setHasPositionControl(true);
+            onPositionControl(myPositionButtonElement);
         }
 
         if (mapsIndoorsInstance && mapViewInstance && !hasZoomControl && isDesktop) {
@@ -99,8 +107,8 @@ function MapboxMap({ accessToken, onInitialized, center, zoom, bounds, bearing, 
         if (mapsIndoorsInstance && mapViewInstance && !hasFloorSelector) {
             const floorSelectorElement = document.createElement('mi-floor-selector');
             floorSelectorElement.mapsindoors = mapsIndoorsInstance;
-            if (mapOptions?.floorSelectorColor) {
-                floorSelectorElement.primaryColor = mapOptions.floorSelectorColor;
+            if (mapOptions?.brandingColor) {
+                floorSelectorElement.primaryColor = mapOptions.brandingColor;
             }
 
             mapViewInstance.getMap().addControl({
@@ -111,7 +119,6 @@ function MapboxMap({ accessToken, onInitialized, center, zoom, bounds, bearing, 
             setHasFloorSelector(true);
         }
     }, [mapsIndoorsInstance, mapViewInstance, hasFloorSelector, hasPositionControl, hasZoomControl]);
-
 
     useEffect(() => {
         // Initialize MapboxV3View MapView
@@ -134,7 +141,9 @@ function MapboxMap({ accessToken, onInitialized, center, zoom, bounds, bearing, 
         onInitialized(mapView);
     }, []);
 
-    return <div className="mapsindoors-map mapbox-map-container" id="map"></div>
+    return <div className="mapsindoors-map mapbox-map-container" id="map">
+        <ViewModeSwitch reset={resetViewMode} mapView={mapViewInstance} pitch={pitch} activeColor={mapOptions?.brandingColor} solution={solution} />
+    </div>
 }
 
 export default MapboxMap;
