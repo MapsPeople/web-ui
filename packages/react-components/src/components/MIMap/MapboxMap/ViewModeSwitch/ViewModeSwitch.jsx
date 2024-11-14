@@ -24,7 +24,7 @@ ViewModeSwitch.propTypes = {
 /**
  *
  * @param {Object} props
- * @param {Object} props.mapView - Instance of a MapsIndoors MapView
+ * @param {Object} [props.mapView] - Instance of a MapsIndoors MapView
  * @param {number} [props.pitch] - The value of the pitch property on the map (not necessarily the current map pitch)
  * @param {Object} [props.solution] - The current MapsIndoors solution
  * @param {boolean} [props.reset] - Set to true to reset to initial 3D mode
