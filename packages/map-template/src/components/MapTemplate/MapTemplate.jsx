@@ -5,7 +5,7 @@ import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js
 import i18n from 'i18next';
 import initI18n from '../../i18n/initialize.js';
 import './MapTemplate.scss';
-import MapWrapper from "../Map/Map";
+import MapWrapper from "../MapWrapper/MapWrapper";
 import SplashScreen from '../SplashScreen/SplashScreen';
 import VenueSelector from '../VenueSelector/VenueSelector';
 import BottomSheet from '../BottomSheet/BottomSheet';
