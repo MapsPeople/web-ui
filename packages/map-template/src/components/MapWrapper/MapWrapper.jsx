@@ -28,7 +28,8 @@ import hideNonMatchesState from "../../atoms/hideNonMatchesState";
 let _tileStyle;
 
 /**
- * Shows a map.
+ * A wrapper component around the MIMap component.
+ * Contains logic for determining map provider (Google, Mapbox), map options, device position handling and setting up a directions service to use for showing directions.
  *
  * @param {Object} props
  * @param {function} [props.onLocationClick] - Function that is run when a MapsIndoors Location is clicked. the Location will be sent along as first argument.
@@ -37,7 +38,7 @@ let _tileStyle;
  * @param {function} onMapPositionInvestigating - Function that is run when the map position is being determined.
  * @returns
  */
-function Map({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating }) {
+function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating }) {
     const apiKey = useRecoilValue(apiKeyState);
     const gmApiKey = useRecoilValue(gmApiKeyState);
     const mapboxAccessToken = useRecoilValue(mapboxAccessTokenState);
@@ -279,4 +280,4 @@ function Map({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapP
     </>)
 };
 
-export default Map;
+export default MapWrapper;
