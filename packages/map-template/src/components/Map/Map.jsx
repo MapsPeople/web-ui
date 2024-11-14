@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useRecoilState, useRecoilValue } from 'recoil';
+import MIMap from '@mapsindoors/react-components/src/components/MIMap/MIMap';
 import { mapTypes } from "../../constants/mapTypes";
 import useLiveData from '../../hooks/useLivedata';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
@@ -19,7 +20,6 @@ import solutionState from '../../atoms/solutionState';
 import notificationMessageState from '../../atoms/notificationMessageState';
 import useMapBoundsDeterminer from '../../hooks/useMapBoundsDeterminer';
 import hideNonMatchesState from "../../atoms/hideNonMatchesState";
-import MIMap from '@mapsindoors/react-components/src/components/MIMap/MIMap';
 
 /**
  * Private variable used for storing the tile style.
@@ -37,7 +37,7 @@ let _tileStyle;
  * @param {function} onMapPositionInvestigating - Function that is run when the map position is being determined.
  * @returns
  */
-function Map({ mapsindoorsSDKAvailable, onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating }) {
+function Map({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating }) {
     const apiKey = useRecoilValue(apiKeyState);
     const gmApiKey = useRecoilValue(gmApiKeyState);
     const mapboxAccessToken = useRecoilValue(mapboxAccessTokenState);
@@ -270,7 +270,7 @@ function Map({ mapsindoorsSDKAvailable, onLocationClick, onMapPositionKnown, use
     }, [tileStyle]);
 
     return (<>
-        {mapsindoorsSDKAvailable && apiKey && <MIMap
+        {apiKey && <MIMap
             apiKey={apiKey}
             mapboxAccessToken={mapType === mapTypes.Mapbox ? mapboxAccessToken : undefined}
             gmApiKey={mapType === mapTypes.Google ? gmApiKey : undefined}

@@ -632,7 +632,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             onMapPositionKnown={() => mapPositionKnown()}
             onMapPositionInvestigating={() => setIsMapPositionInvestigating(true)}
             onLocationClick={(location) => locationClicked(location)}
-            mapsindoorsSDKAvailable={mapsindoorsSDKAvailable}
         />
     </div>
 }
