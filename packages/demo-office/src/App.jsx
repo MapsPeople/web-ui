@@ -14,7 +14,7 @@ function App() {
             <main>
                 <MIMap
                     apiKey="mapspeople3d"
-                    mapboxAccessToken="YOUR_TOKEN_HERE"
+                    mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
                     center={center}
                     zoom={zoom}
                 />
