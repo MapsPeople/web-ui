@@ -1,5 +1,6 @@
 import './App.css'
 import MIMap from '@mapsindoors/react-components/src/components/MIMap/MIMap';
+import Header from './Header/Header';
 
 function App() {
 
@@ -10,9 +11,7 @@ function App() {
 
     return (
         <>
-            <header>
-                <h1>MapsIndoors Office Demo</h1>
-            </header>
+            <Header />
             <main>
                 <MIMap
                     apiKey="mapspeople3d"
