@@ -78,6 +78,16 @@ A `updateScrollButtonsState` method can be called on the `<mi-scroll-buttons>` e
 
 ## Methods
 
+### `updateScrollButtons() => Promise<any>`
+
+Update scroll buttons enabled/disabled states.
+
+#### Returns
+
+Type: `Promise<any>`
+
+
+
 ### `updateScrollButtonsState() => Promise<void>`
 
 Updates enable/disable state for scroll up and down buttons.

@@ -64,6 +64,11 @@ function GoogleMapsMap({ onMapView, onPositionControl }) {
 
             onMapView(mapViewInstance, externalDirectionsProvider);
         });
+
+        return () => {
+            setGoogle();
+            setMapView();
+        }
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
     // We ignore eslint warnings about missing dependencies because onMapView should never change runtime and changing Google Maps API key runtime will give other problems.
 

@@ -8,38 +8,35 @@ import { mapTypes } from '../constants/mapTypes';
 // Recoil atoms
 import bearingState from '../atoms/bearingState';
 import categoriesState from '../atoms/categoriesState';
-import currentVenueNameState from '../atoms/currentVenueNameState';
 import kioskOriginLocationIdState from '../atoms/kioskOriginLocationIdState';
 import locationIdState from '../atoms/locationIdState';
 import mapsIndoorsInstanceState from '../atoms/mapsIndoorsInstanceState';
 import mapTypeState from '../atoms/mapTypeState';
 import pitchState from '../atoms/pitchState';
 import startZoomLevelState from '../atoms/startZoomLevelState';
-import venuesState from '../atoms/venuesState';
-import venueState from '../atoms/venueState';
+import currentVenueNameState from '../atoms/currentVenueNameState';
+import venuesInSolutionState from '../atoms/venuesInSolutionState';
+import venueWasSelectedState from '../atoms/venueWasSelectedState';
 
 // Hooks
 import getMobilePaddingBottom from '../helpers/GetMobilePaddingBottom';
 import getDesktopPaddingLeft from '../helpers/GetDesktopPaddingLeft';
 import { useInactive } from './useInactive';
-import useSetCurrentVenueName from './useSetCurrentVenueName';
 import { useIsDesktop } from './useIsDesktop';
 
 // Selectors
 import currentPitchSelector from '../selectors/currentPitch';
 
-const localStorageKeyForVenue = 'MI-MAP-TEMPLATE-LAST-VENUE';
-
 /**
  * Determine where in the world to pan the map, based on the combination of venueName, locationId and kioskOriginLocationId.
  *
  * Returns two state variables:
- * - mapPositionKnown is set to true when map position is investigating. This is used to instruct the Map Template to start showing UI elements.
- * - venueOnMap is populated with the venue shown on map. This is used to instruct the Map Template to hide the spinner, since the map is now ready to be shown to the user.
+ * - mapPositionInvestigating is set to true when map position is investigating. This is used to instruct the Map Template to start showing UI elements.
+ * - mapPositionKnown is set to instruct the Map Template that the map is now ready to be shown to the user.
  */
 const useMapBoundsDeterminer = () => {
+    const [mapPositionInvestigating, setMapPositionInvestigating] = useState(false);
     const [mapPositionKnown, setMapPositionKnown] = useState(false);
-    const [venueOnMap, setVenueOnMap] = useState();
 
     const isDesktop = useIsDesktop();
     const isInactive = useInactive();
@@ -53,11 +50,9 @@ const useMapBoundsDeterminer = () => {
     const pitch = useRecoilValue(pitchState);
     const startZoomLevel = useRecoilValue(startZoomLevelState);
     const currentVenueName = useRecoilValue(currentVenueNameState);
-    const venue = useRecoilValue(venueState);
-    const venues = useRecoilValue(venuesState);
+    const venuesInSolution = useRecoilValue(venuesInSolutionState);
     const currentPitch = useRecoilValue(currentPitchSelector);
-
-    const setCurrentVenueName = useSetCurrentVenueName();
+    const venueWasSelected = useRecoilValue(venueWasSelectedState);
     const [kioskLocationDisplayRuleWasChanged, setKioskLocationDisplayRuleWasChanged] = useState(false);
 
     /**
@@ -65,7 +60,7 @@ const useMapBoundsDeterminer = () => {
      */
     useEffect(() => {
         if (isInactive) {
-            determineMapBounds(venue);
+            determineMapBounds();
         }
     }, [isInactive]);
 
@@ -74,23 +69,16 @@ const useMapBoundsDeterminer = () => {
      */
     useEffect(() =>  {
         determineMapBounds();
-    }, [mapsIndoorsInstance, venue, venues, locationId, kioskOriginLocationId, pitch, bearing, startZoomLevel, categories]);
+    }, [mapsIndoorsInstance, currentVenueName, locationId, kioskOriginLocationId, pitch, bearing, startZoomLevel, categories]);
 
     /**
      * Based on the combination of the states for venueName, locationId & kioskOriginLocationId,
      * determine where to make the map go to.
-     *
-     * @param {string} [forcedVenue] - If set, this venue will be used instead of the current venue.
      */
-    function determineMapBounds(forcedVenue) {
-        if (mapsIndoorsInstance && venues.length) {
-            if (forcedVenue) {
-                setCurrentVenueName(forcedVenue);
-            }
-
-            const venueToShow = getVenueToShow(forcedVenue || currentVenueName, venues);
-            window.localStorage.setItem(localStorageKeyForVenue, venueToShow.name);
-            setMapPositionKnown(true);
+    function determineMapBounds() {
+        const currentVenue = venuesInSolution.find(venue => venue.name.toLowerCase() === currentVenueName.toLowerCase());
+        if (mapsIndoorsInstance && currentVenue) {
+            setMapPositionInvestigating(true);
 
             if (kioskOriginLocationId && isDesktop) {
                 // When in Kiosk mode (which can only happen on desktop), the map is fitted to the bounds of the given Location with some bottom padding to accommodate
@@ -103,12 +91,12 @@ const useMapBoundsDeterminer = () => {
                         setKioskDisplayRule(kioskLocation);
 
                         getDesktopPaddingBottom().then(desktopPaddingBottom => {
-                            setVenueOnMap(venueToShow);
+                            setMapPositionKnown(kioskLocation.geometry);
                             goToGeometry(mapType, kioskLocation.geometry, mapsIndoorsInstance, desktopPaddingBottom, 0, startZoomLevel, currentPitch, bearing);
                         });
                     }
                 });
-            } else if (locationId) {
+            } else if (locationId && !venueWasSelected) {
                 // When a LocationID is set, the map is centered fitted to the bounds of the given Location with some padding,
                 // either bottom (on mobile to accommodate for the bottom sheet) or to the left (on desktop to accommodate for the modal).
                 window.mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
@@ -119,21 +107,21 @@ const useMapBoundsDeterminer = () => {
 
                         if (isDesktop) {
                             getDesktopPaddingLeft().then(desktopPaddingLeft => {
-                                setVenueOnMap(venueToShow);
+                                setMapPositionKnown(location.geometry);
                                 goToGeometry(mapType, location.geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, startZoomLevel, currentPitch, bearing);
                             });
                         } else {
                             getMobilePaddingBottom().then(mobilePaddingBottom => {
-                                setVenueOnMap(venueToShow);
+                                setMapPositionKnown(location.geometry);
                                 goToGeometry(mapType, location.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, startZoomLevel, currentPitch, bearing);
                             });
                         }
                     }
                 });
-            } else if (currentVenueName) {
+            } else if (currentVenue) {
                 // When showing a venue, the map is fitted to the bounds of the Venue with no padding.
-                setVenueOnMap(venueToShow);
-                goToGeometry(mapType, venueToShow.geometry, mapsIndoorsInstance, 0, 0, startZoomLevel, currentPitch, bearing);
+                setMapPositionKnown(currentVenue.geometry);
+                goToGeometry(mapType, currentVenue.geometry, mapsIndoorsInstance, 0, 0, startZoomLevel, currentPitch, bearing);
             }
         }
     }
@@ -159,47 +147,10 @@ const useMapBoundsDeterminer = () => {
         setKioskLocationDisplayRuleWasChanged(true);
     }
 
-    return [mapPositionKnown, venueOnMap];
+    return [mapPositionInvestigating, mapPositionKnown];
 };
 
 export default useMapBoundsDeterminer;
-
-
-/**
- * Get the venue to show initally on the map.
- *
- * @param {string} preferredVenueName
- * @param {array} venues
- * @returns {object} - venue
- */
-function getVenueToShow(preferredVenueName, venues) {
-    if (venues.length === 0) return;
-
-    // If there's only one venue, early return with that.
-    if (venues.length === 1) {
-        return venues[0];
-    }
-
-    // If last selected venue is set in localStorage, use that.
-    const lastSetVenue = window.localStorage.getItem(localStorageKeyForVenue);
-    if (lastSetVenue) {
-        const venue = venues.find(v => v.name === lastSetVenue);
-        if (venue) {
-            return venue;
-        }
-    }
-
-    // If venue parameter is set on the component, use that.
-    if (preferredVenueName) {
-        const venue = venues.find(v => v.name === preferredVenueName);
-        if (venue) {
-            return venue;
-        }
-    }
-
-    // Else take first venue sorted alphabetically
-    return [...venues].sort(function (a, b) { return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0); })[0];
-}
 
 
 /**

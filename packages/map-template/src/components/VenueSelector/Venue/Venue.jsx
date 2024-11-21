@@ -16,6 +16,12 @@ function Venue({ venue, isCurrent, onVenueClicked }) {
     const [style, setStyle] = useState({});
 
     useEffect(() => {
+        return () => {
+            setStyle({});
+        }
+    }, []);
+
+    useEffect(() => {
         const styleObject = {};
 
         if (venue.image) {

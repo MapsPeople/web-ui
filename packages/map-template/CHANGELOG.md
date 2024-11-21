@@ -5,6 +5,103 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.58.0] - 2024-10-28
+
+### Added
+
+- Added new boolean prop `searchExternalLocations` for searches performed in the Wayfinding mode. If set to true, Mapbox/Google places will be displayed depending on the Map Provider you are using. If set to false, the results returned will only be MapsIndoors results. The default is false.
+
+## [1.57.0] - 2024-10-22
+
+### Added
+
+- Upgrade SDK version to v4.36.3.
+
+## [1.56.0] - 2024-10-21
+
+### Added
+
+- Added new boolean prop `searchExternalLocations` for searches performed in the Wayfinding mode. If set to true, Mapbox/Google places will be displayed depending on the Map Provider you are using. If set to false, the results returned will only be MapsIndoors results. The default is true.
+
+## [1.55.2] - 2024-10-18
+
+### Fixed
+
+- Simplify documentation on the README files.
+
+## [1.55.1] - 2024-10-17
+
+### Fixed
+
+- Mitigate memory leaks by cleaning up component state when unmounting.
+
+## [1.55.0] - 2024-09-19
+
+### Added
+
+- Added support for dutch language.
+
+## [1.54.7] - 2024-09-12
+
+### Fixed
+
+- Fix bug where wayfinding steps were misaligned.
+
+## [1.54.6] - 2024-09-03
+
+### Fixed
+
+- Resolved an issue where kiosk scroll buttons were sometimes disabled, preventing users from clicking them.
+
+## [1.54.5] - 2024-08-29
+
+### Fixed
+
+- Fix bug whwre 2D geometry was not always shown.
+
+## [1.54.4] - 2024-08-14
+
+### Fixed
+
+- Fixed bug where pitch property was not respected in case 2D/3D switch was not shown.
+
+## [1.54.3] - 2024-08-06
+
+### Added
+
+- Upgraded to MapsIndoors SDK v4.36.1.
+- Upgraded to mapbox-gl v3.5.2.
+
+## [1.54.2] - 2024-07-31
+
+### Fixed
+
+- Fixed various bugs related to the venues and 2D geometry.
+
+## [1.54.1] - 2024-07-30
+
+### Fixed
+
+- Horizontal scroll buttons are not being properly disabled/enabled when necessary.
+
+## [1.54.0] - 2024-07-04
+
+### Added
+
+- Expose the MapsIndoors instance so it can be used from outside.
+
+## [1.53.1] - 2024-07-02
+
+### Fixed
+
+- Wayfinding 'Go' button is now disabled until route is fetched and ready to be displayed.
+
+## [1.53.0] - 2024-07-01
+
+### Added
+
+- Add support for new parameter `showExternalIDs` which determines if the Location details should show the External ID or not.
+
 ## [1.52.0] - 2024-06-19
 
 ### Added
@@ -45,7 +142,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed an issue with clearing search input causing console errrors.
+- Fixed an issue with clearing search input causing console errors.
 
 ## [1.48.0] - 2024-06-13
 

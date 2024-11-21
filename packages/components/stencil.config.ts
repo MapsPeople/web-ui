@@ -8,7 +8,7 @@ import autoprefixer from 'autoprefixer';
 
 // Serve each component test.html file
 const dirs = readdirSync('./src/components').filter(f => statSync(join('./src/components', f)).isDirectory());
-const testPageOutputTargets = [];
+const testPageOutputTargets: any[] = [];
 dirs.forEach(dir => {
     const testFilePath = './src/components/' + dir + '/test.html';
     if (existsSync(testFilePath)) {

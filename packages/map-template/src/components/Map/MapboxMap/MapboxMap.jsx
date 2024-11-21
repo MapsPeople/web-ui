@@ -45,6 +45,9 @@ function MapboxMap({ onMapView, onPositionControl }) {
             element: document.getElementById('map'),
             bearing: !isNaN(parseInt(bearing)) ? parseInt(bearing) : 0,
             pitch: !isNaN(parseInt(pitch)) ? parseInt(pitch) : 0,
+            // The MapsIndoors SDK needs a starting point and a zoom level to avoid timing issues when setting the venue.
+            center: { lat: 0, lng: 0 },
+            zoom: 15
         };
 
         // If miTransitionLevel exists and it's a number, set it in the mapViewOptions.
@@ -69,6 +72,10 @@ function MapboxMap({ onMapView, onPositionControl }) {
         // Generate a UUIDv4 and set the Session Token for searching for Mapbox places.
         const uuid = uuidv4();
         sessionStorage.setItem('mapboxPlacesSessionToken', uuid);
+
+        return () => {
+            setMapView();
+        }
 
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
     // We ignore eslint warnings about missing dependencies because onMapView should never change runtime and changing Mapbox Access Token runtime will give other problems.

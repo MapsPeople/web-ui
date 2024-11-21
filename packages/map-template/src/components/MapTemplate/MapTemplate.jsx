@@ -15,7 +15,7 @@ import isMapReadyState from '../../atoms/isMapReadyState.js';
 import currentLocationState from '../../atoms/currentLocationState';
 import tileStyleState from '../../atoms/tileStyleState';
 import categoriesState from '../../atoms/categoriesState';
-import venuesState from '../../atoms/venuesState';
+import venuesInSolutionState from '../../atoms/venuesInSolutionState';
 import solutionState from '../../atoms/solutionState.js';
 import { useAppHistory } from '../../hooks/useAppHistory';
 import { useReset } from '../../hooks/useReset.js';
@@ -42,8 +42,6 @@ import { useInactive } from '../../hooks/useInactive.js';
 import showQRCodeDialogState from '../../atoms/showQRCodeDialogState';
 import QRCodeDialog from '../QRCodeDialog/QRCodeDialog';
 import supportsUrlParametersState from '../../atoms/supportsUrlParametersState';
-import venueState from '../../atoms/venueState.js';
-import useSetCurrentVenueName from '../../hooks/useSetCurrentVenueName.js';
 import useKeyboardState from '../../atoms/useKeyboardState';
 import { useIsDesktop } from '../../hooks/useIsDesktop.js';
 import miTransitionLevelState from '../../atoms/miTransitionLevelState.js';
@@ -51,10 +49,13 @@ import selectedCategoryState from '../../atoms/selectedCategoryState.js';
 import LegendDialog from '../LegendDialog/LegendDialog.jsx';
 import isLegendDialogVisibleState from '../../atoms/isLegendDialogVisibleState.js';
 import searchAllVenuesState from '../../atoms/searchAllVenues.js';
-import currentVenueNameState from '../../atoms/currentVenueNameState.js';
 import categoryState from '../../atoms/categoryState.js';
 import hideNonMatchesState from '../../atoms/hideNonMatchesState.js';
+import appConfigState from '../../atoms/appConfigState.js';
+import { useCurrentVenue } from '../../hooks/useCurrentVenue.js';
+import showExternalIDsState from '../../atoms/showExternalIDsState.js'
 import showRoadNamesState from '../../atoms/showRoadNamesState.js';
+import searchExternalLocationsState from '../../atoms/searchExternalLocationsState.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -80,7 +81,7 @@ defineCustomElements();
  * @param {string} [props.gmMapId] - The Google Maps Map ID associated with a specific map style or feature.
  * @param {boolean} [props.useMapProviderModule] - Set to true if the Map Template should take MapsIndoors solution modules into consideration when determining what map type to use.
  * @param {string} [props.kioskOriginLocationId] - If running the Map Template as a kiosk (upcoming feature), provide the Location ID that represents the location of the kiosk.
- * @param {string} [props.language] - The language to show textual content in. Supported values are "en" for English, "da" for Danish, "de" for German, "fr" for French, "it" for Italian and "es" for Spanish. If the prop is not set, the language of the browser will be used (if it is one of the supported languages - otherwise it will default to English).
+ * @param {string} [props.language] - The language to show textual content in. Supported values are "en" for English, "da" for Danish, "de" for German, "fr" for French, "it" for Italian, "es" for Spanish and "nl" for Dutch. If the prop is not set, the language of the browser will be used (if it is one of the supported languages - otherwise it will default to English).
  * @param {boolean} [props.supportsUrlParameters] - Set to true if you want to support URL Parameters to configure the Map Template.
  * @param {boolean} [props.useKeyboard] - If running the Map Template as a kiosk, set this prop to true and it will prompt a keyboard.
  * @param {number} [props.timeout] - If you want the Map Template to reset map position and UI elements to the initial state after some time of inactivity, use this to specify the number of seconds of inactivity before resetting.
@@ -88,17 +89,18 @@ defineCustomElements();
  * @param {boolean} [props.searchAllVenues] - If you want to perform search across all venues in the solution.
  * @param {boolean} [props.hideNonMatches] - Determine whether the locations on the map should be filtered (only show the matched locations and hide the rest) or highlighted (show all locations and highlight the matched ones with a red dot by default). If set to true, the locations will be filtered.
  * @param {boolean} [props.showRoadNames] - A boolean parameter that dictates whether Mapbox road names should be shown. By default, Mapbox road names are hidden when MapsIndoors data is shown. It is dictated by `mi-transition-level` which default value is 17.
+ * @param {boolean} [props.showExternalIDs] - Determine whether the location details on the map should have an external ID visible. The default value is set to false.
+ * @param {boolean} [props.searchExternalLocations] - If you want to perform search for external locations in the Wayfinding mode. If set to true, Mapbox/Google places will be displayed depending on the Map Provider you are using. If set to false, the results returned will only be MapsIndoors results. The default is true.
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations }) {
 
     const [, setApiKey] = useRecoilState(apiKeyState);
     const [, setGmApiKey] = useRecoilState(gmApiKeyState);
     const [, setMapboxAccessToken] = useRecoilState(mapboxAccessTokenState);
     const [isMapReady, setMapReady] = useRecoilState(isMapReadyState);
-    const [venues, setVenues] = useRecoilState(venuesState);
-    const [, setVenue] = useRecoilState(venueState);
+    const [venuesInSolution, setVenuesInSolution] = useRecoilState(venuesInSolutionState);
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
-    const [categories, setCategories] = useRecoilState(categoriesState);
+    const categories = useRecoilValue(categoriesState);
     const [, setLocationId] = useRecoilState(locationIdState);
     const [, setPrimaryColor] = useRecoilState(primaryColorState);
     const [, setLogo] = useRecoilState(logoState);
@@ -116,7 +118,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setSearchAllVenues] = useRecoilState(searchAllVenuesState);
     const [, setCategory] = useRecoilState(categoryState);
     const [, setHideNonMatches] = useRecoilState(hideNonMatchesState);
+    const [, setshowExternalIDs] = useRecoilState(showExternalIDsState);
     const [, setShowRoadNames] = useRecoilState(showRoadNamesState);
+    const [, setSearchExternalLocations] = useRecoilState(searchExternalLocationsState);
 
     const [showVenueSelector, setShowVenueSelector] = useState(true);
     const [showPositionControl, setShowPositionControl] = useState(true);
@@ -124,7 +128,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const directionsFromLocation = useLocationForWayfinding(directionsFrom);
     const directionsToLocation = useLocationForWayfinding(directionsTo);
 
-    const [isMapPositionKnown, setIsMapPositionKnown] = useState(false);
+    const [isMapPositionInvestigating, setIsMapPositionInvestigating] = useState(false);
 
     // The filtered locations by external id, if present.
     const [, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
@@ -135,7 +139,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     // Holds a copy of the initially filtered locations.
     const [initialFilteredLocations, setInitialFilteredLocations] = useState();
 
-    const [appConfig, setAppConfig] = useState();
+    const [appConfig, setAppConfig] = useRecoilState(appConfigState);
     const [, setSolution] = useRecoilState(solutionState);
 
     const [, setTileStyle] = useRecoilState(tileStyleState);
@@ -147,8 +151,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const isDesktop = useIsDesktop();
     const isMobile = useMediaQuery('(max-width: 991px)');
     const resetState = useReset();
-    const setCurrentVenueName = useSetCurrentVenueName();
-    const currentVenueName = useRecoilValue(currentVenueNameState);
     const [pushAppView, goBack, currentAppView, currentAppViewPayload, appStates, resetAppHistory] = useAppHistory();
 
     // Declare the reference to the disabled locations.
@@ -163,6 +165,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     // The reset count is used to add a new key to the sidebar or bottomsheet, forcing it to re-render from scratch when resetting the Map Template.
     const [resetCount, setResetCount] = useState(0);
 
+    const [setCurrentVenueName, updateCategories] = useCurrentVenue();
+
     /**
      * Ensure that MapsIndoors Web SDK is available.
      *
@@ -176,8 +180,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             const miSdkApiTag = document.createElement('script');
             miSdkApiTag.setAttribute('type', 'text/javascript');
-            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.36.2/mapsindoors-4.36.2.js.gz');
-            miSdkApiTag.setAttribute('integrity', 'sha384-S/xO5B5WzQeUYCK1QJE26gX50/Q++SiOzkp8JI6A4Cf/okBpWZ+YK3WcdXkcdzHK');
+            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.36.3/mapsindoors-4.36.3.js.gz');
+            miSdkApiTag.setAttribute('integrity', 'sha384-UPPUHq6fu2VwcT5Rv+1+FzOlAg6mLd8iAUpr6taDU5XsKNluEpmIenfqKoEBQZPc');
             miSdkApiTag.setAttribute('crossorigin', 'anonymous');
             document.body.appendChild(miSdkApiTag);
             miSdkApiTag.onload = () => {
@@ -202,6 +206,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         initializeMapsIndoorsSDK().then(() => {
             setMapsindoorsSDKAvailable(true);
         });
+
+        return () => {
+            setInitialFilteredLocations();
+        }
     }, []);
 
     /*
@@ -219,16 +227,16 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             // If relevant, fetch venues, categories and the current location again to get them in the new language
             window.mapsindoors.services.LocationsService.once('update_completed', () => {
                 if (categories.length > 0) {
-                    getVenueCategories(venue);
+                    updateCategories();
                 }
 
-                if (venues.length > 0) {
+                if (venuesInSolution.length > 0) {
                     window.mapsindoors.services.VenuesService.getVenues().then(venuesResult => {
                         venuesResult = venuesResult.map(venue => {
                             venue.image = appConfig.venueImages[venue.name.toLowerCase()];
                             return venue;
                         });
-                        setVenues(venuesResult);
+                        setVenuesInSolution(venuesResult);
                     });
                 }
 
@@ -280,7 +288,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                     venue.image = appConfigResult.venueImages[venue.name.toLowerCase()];
                     return venue;
                 });
-                setVenues(venuesResult);
+                setVenuesInSolution(venuesResult);
             });
             setMapReady(false);
         }
@@ -376,7 +384,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the venue prop.
      */
     useEffect(() => {
-        setVenue(venue);
         setCurrentVenueName(venue);
     }, [venue]);
 
@@ -489,12 +496,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * Show keyboard only in a kiosk context.
      */
     useEffect(() => {
-        if (mapsindoorsSDKAvailable) {
-            if (useKeyboard && kioskOriginLocationId) {
-                setUseKeyboard(useKeyboard);
-            }
+        if (useKeyboard && kioskOriginLocationId) {
+            setUseKeyboard(useKeyboard);
         }
-    }, [useKeyboard, kioskOriginLocationId, mapsindoorsSDKAvailable]);
+    }, [useKeyboard, kioskOriginLocationId]);
 
     /*
      * React on changes in the category prop.
@@ -510,29 +515,22 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes to the searchAllVenues prop.
      */
     useEffect(() => {
-        if (mapsindoorsSDKAvailable && searchAllVenues) {
-            setSearchAllVenues(searchAllVenues);
-        }
-    }, [searchAllVenues, mapsindoorsSDKAvailable]);
-
-    /*
-     * React on changes to the currentVenueName prop.
-     * Get the venue categories based on the currentVenueName.
-     */
-    useEffect(() => {
-        if (mapsindoorsSDKAvailable && currentVenueName) {
-            getVenueCategories(currentVenueName)
-        }
-    }, [currentVenueName, mapsindoorsSDKAvailable]);
+        setSearchAllVenues(searchAllVenues);
+    }, [searchAllVenues]);
 
     /*
      * React on changes to the hideNonMatches prop.
      */
     useEffect(() => {
-        if (hideNonMatches) {
-            setHideNonMatches(hideNonMatches);
-        }
+        setHideNonMatches(hideNonMatches);
     }, [hideNonMatches]);
+
+    /*
+     * React on changes to the showExternalIDs prop.
+     */
+    useEffect(() => {
+        setshowExternalIDs(showExternalIDs);
+    }, [showExternalIDs]);
 
     /*
      * React on changes to the showRoadNames prop.
@@ -541,15 +539,21 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         setShowRoadNames(showRoadNames);
     }, [showRoadNames])
 
-    /**
-     * When venue is fitted while initializing the data,
-     * set map to be ready and get the venue categories.
+    /*
+     * React on changes to the searchExternalLocations prop.
      */
-    function venueChangedOnMap(venue) {
+    useEffect(() => {
+        setSearchExternalLocations(searchExternalLocations);
+    }, [searchExternalLocations]);
+
+    /**
+     * When map position is known while initializing the data,
+     * set map to be ready.
+     */
+    function mapPositionKnown() {
         if (isMapReady === false) {
             setMapReady(true);
         }
-        getVenueCategories(venue.name);
     }
 
     /**
@@ -566,59 +570,12 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }
 
     /**
-     * Get the categories for the selected venue.
-     *
-     * @param {string} venue
-     */
-    function getVenueCategories(venue) {
-        // Filter through the locations which have the venueId equal to the selected venue,
-        // due to the impossibility to use the venue parameter in the getLocations().
-        window.mapsindoors.services.LocationsService.getLocations({}).then(locations => {
-            const filteredLocations = locations.filter(location => location.properties.venueId === venue);
-            getCategories(filteredLocations);
-        })
-    }
-
-    /**
      * Function that handles the reset of the state and UI.
      */
     function resetStateAndUI() {
         resetState();
         resetAppHistory();
         setResetCount(curr => curr + 1); // will force a re-render of bottom sheet and sidebar.
-    }
-
-    /**
-     * Get the unique categories and the count of the categories with locations associated.
-     *
-     * @param {array} locationsResult
-     */
-    function getCategories(locationsResult) {
-        let uniqueCategories = new Map();
-
-        // Loop through the locations and count the unique locations.
-        // Build an object which contains the key, the count, the display name and an icon.
-        for (const location of locationsResult) {
-            const keys = Object.keys(location.properties.categories);
-
-            for (const key of keys) {
-                // Get the categories from the App Config that have a matching key.
-                const appConfigCategory = appConfig?.menuInfo.mainmenu.find(category => category.categoryKey === key);
-
-                if (appConfigCategory) {
-                    uniqueCategories.set(appConfigCategory.categoryKey, { displayName: location.properties.categories[key], iconUrl: appConfigCategory?.iconUrl })
-                }
-            }
-        }
-
-        // Sort categories by the place in the mainmenu array. Use index to do that.
-        const sortedCategories = Array.from(uniqueCategories).sort((a, b) => {
-            const orderA = appConfig.menuInfo.mainmenu.findIndex(category => category.categoryKey === a[0]);
-            const orderB = appConfig.menuInfo.mainmenu.findIndex(category => category.categoryKey === b[0]);
-            return orderA - orderB;
-        });
-
-        setCategories(sortedCategories);
     }
 
     /*
@@ -635,18 +592,18 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     return <div className={`mapsindoors-map
     ${locationsDisabledRef.current ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}
-    ${(venues.length > 1 && showVenueSelector) ? '' : 'mapsindoors-map--hide-venue-selector'}
+    ${(venuesInSolution.length > 1 && showVenueSelector) ? '' : 'mapsindoors-map--hide-venue-selector'}
     ${showPositionControl ? 'mapsindoors-map--show-my-position' : 'mapsindoors-map--hide-my-position'}`}>
         <Notification />
         {!isMapReady && <SplashScreen />}
-        {venues.length > 1 && showVenueSelector && <VenueSelector
+        {venuesInSolution.length > 1 && showVenueSelector && <VenueSelector
             onOpen={() => pushAppView(appStates.VENUE_SELECTOR)}
             onClose={() => goBack()}
             active={currentAppView === appStates.VENUE_SELECTOR}
         />}
         {showQRCodeDialog && <QRCodeDialog />}
         {showLegendDialog && <LegendDialog />}
-        {isMapPositionKnown &&
+        {isMapPositionInvestigating &&
             <Fragment key={resetCount}>
                 {isDesktop &&
                     <Sidebar
@@ -672,8 +629,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         }
         <MIMap
             useMapProviderModule={useMapProviderModule}
-            onVenueChangedOnMap={(venue) => venueChangedOnMap(venue)}
-            onMapPositionKnown={() => setIsMapPositionKnown(true)}
+            onMapPositionKnown={() => mapPositionKnown()}
+            onMapPositionInvestigating={() => setIsMapPositionInvestigating(true)}
             onLocationClick={(location) => locationClicked(location)}
         />
     </div>

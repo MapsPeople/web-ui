@@ -34,6 +34,8 @@ import useDirectionsInfo from "../../hooks/useDirectionsInfo";
 import hasFoundRouteState from "../../atoms/hasFoundRouteState";
 import accessibilityOnState from "../../atoms/accessibilityOnState";
 import Accessibility from "../Accessibility/Accessibility";
+import searchExternalLocationsState from "../../atoms/searchExternalLocationsState";
+import isNullOrUndefined from "../../helpers/isNullOrUndefined";
 
 const searchFieldIdentifiers = {
     TO: 'TO',
@@ -104,7 +106,9 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
 
     const distanceUnitSystem = useRecoilValue(distanceUnitSystemSelector);
 
-    const [totalDistance, totalTime, hasFoundRoute] = useDirectionsInfo(originLocation, destinationLocation, directionsService, travelMode, accessibilityOn)
+    const [totalDistance, totalTime, hasFoundRoute, areDirectionsReady] = useDirectionsInfo(originLocation, destinationLocation, directionsService, travelMode, accessibilityOn)
+
+    const searchExternalLocations = useRecoilValue(searchExternalLocationsState);
 
     /**
      * Decorates location with data that is required for wayfinding to work.
@@ -315,6 +319,14 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     }
 
     useEffect(() => {
+        return () => {
+            setSearchResults([]);
+            setDestinationLocation();
+            setOriginLocation();
+        }
+    }, []);
+
+    useEffect(() => {
         setSize(snapPoints.MIN);
         let originLocationWasSet = false;
 
@@ -402,8 +414,8 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                         <SearchField
                             ref={fromFieldRef}
                             mapsindoors={true}
-                            google={selectedMapType === mapTypes.Google}
-                            mapbox={selectedMapType === mapTypes.Mapbox}
+                            google={selectedMapType === mapTypes.Google && searchExternalLocations}
+                            mapbox={selectedMapType === mapTypes.Mapbox && searchExternalLocations}
                             placeholder={t('Search by name, category, building...')}
                             results={locations => searchResultsReceived(locations, searchFieldIdentifiers.FROM)}
                             clicked={() => onSearchClicked(searchFieldIdentifiers.FROM)}
@@ -421,8 +433,8 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                         <SearchField
                             ref={toFieldRef}
                             mapsindoors={true}
-                            google={selectedMapType === mapTypes.Google}
-                            mapbox={selectedMapType === mapTypes.Mapbox}
+                            google={selectedMapType === mapTypes.Google && searchExternalLocations}
+                            mapbox={selectedMapType === mapTypes.Mapbox && searchExternalLocations}
                             placeholder={t('Search by name, category, building...')}
                             results={locations => searchResultsReceived(locations, searchFieldIdentifiers.TO)}
                             clicked={() => onSearchClicked(searchFieldIdentifiers.TO)}
@@ -479,15 +491,15 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                         {travelMode === travelModes.DRIVING && <DriveIcon />}
                         {travelMode === travelModes.BICYCLING && <BikeIcon />}
                         <div>{t('Distance')}:</div>
-                        <div className="wayfinding__meters">{totalDistance && <mi-distance unit={distanceUnitSystem} meters={totalDistance} />}</div>
+                        <div className="wayfinding__meters">{totalDistance && areDirectionsReady && <mi-distance unit={distanceUnitSystem} meters={totalDistance} />}</div>
                     </div>
                     <div className="wayfinding__time">
                         <ClockIcon />
                         <div>{t('Estimated time')}:</div>
-                        <div className="wayfinding__minutes">{totalTime && <mi-time translations={JSON.stringify({ days: t('d'), hours: t('h'), minutes: t('min') })} seconds={totalTime} />}</div>
+                        <div className="wayfinding__minutes">{totalTime && areDirectionsReady && <mi-time translations={JSON.stringify({ days: t('d'), hours: t('h'), minutes: t('min') })} seconds={totalTime} />}</div>
                     </div>
                 </div>
-                <button className="wayfinding__button" style={{ background: primaryColor }} onClick={() => onStartDirections()}>
+                <button className="wayfinding__button" style={{ background: primaryColor }} onClick={() => onStartDirections()} disabled={!areDirectionsReady}>
                     {t('Go!')}
                 </button>
             </div>}

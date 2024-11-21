@@ -20,6 +20,7 @@ import isDestinationStepState from "../../atoms/isDestinationStepState";
 import primaryColorState from "../../atoms/primaryColorState";
 import { useIsKioskContext } from "../../hooks/useIsKioskContext";
 import { useIsDesktop } from "../../hooks/useIsDesktop";
+import showExternalIDsState from '../../atoms/showExternalIDsState';
 
 let directionsRenderer;
 
@@ -66,6 +67,14 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
 
     const isKioskContext = useIsKioskContext();
 
+    const showExternalIDs = useRecoilValue(showExternalIDsState);
+
+    useEffect(() => {
+        return () => {
+            setDestinationDisplayRule(null);
+        }
+    }, []);
+
     useEffect(() => {
         setDestinationDisplayRule(null);
 
@@ -90,10 +99,10 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
                     }
                 });
 
-                directionsRenderer.setRoute(directions.directionsResult);
-
-                // Set the step index to be 0 in order to display the correct instruction on the map.
-                directionsRenderer.setStepIndex(0);
+                directionsRenderer.setRoute(directions.directionsResult).then(() => {
+                    // Set the step index to be 0 in order to display the correct instruction on the map.
+                    directionsRenderer.setStepIndex(0);
+                });
 
                 destinationInfoElement.current.location = directions.destinationLocation;
 
@@ -287,7 +296,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
                                 <div className="directions__name">
                                     {directions?.destinationLocation.properties.name}
                                 </div>
-                                <mi-location-info ref={destinationInfoElement} show-external-id={false} />
+                                <mi-location-info ref={destinationInfoElement} show-external-id={showExternalIDs} />
                             </div>
                         </div>
                     }
