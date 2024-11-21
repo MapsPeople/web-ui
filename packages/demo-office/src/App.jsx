@@ -13,12 +13,15 @@ function App() {
     /**
      * Callback for when the MapsIndoors instance is initialized.
      */
-    const onInitialized = (mapsIndoorsInstance) => {
-        // Add fake blue dot signalling the current device position.
-        // This is NOT using the built in MapsIndoors positioning feature, but is just a faked visual representation.
+    const onInitialized = (mapsIndoorsInstance, positionControl) => {
         const mapboxMap = mapsIndoorsInstance.getMap();
         mapboxMap.on('style.load', () => {
+            // Add fake blue dot signalling the current device position.
+            // This is NOT using the built in MapsIndoors positioning feature, but is just a faked visual representation.
             addBlueDot(mapboxMap);
+
+            // Remove the built-in Position Control from the map. We will fake the position instead.
+            positionControl.remove()
         });
     };
 
