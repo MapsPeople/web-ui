@@ -1,6 +1,7 @@
 import './App.css'
 import MIMap from '@mapsindoors/react-components/src/components/MIMap/MIMap';
 import Header from './Header/Header';
+import addBlueDot from './tools/addBlueDot';
 
 function App() {
 
@@ -8,6 +9,18 @@ function App() {
     const center = { lng: -97.74203004999998, lat: 30.360050363249286 };
     // A well fitting zoom level
     const zoom = 17.6;
+
+    /**
+     * Callback for when the MapsIndoors instance is initialized.
+     */
+    const onInitialized = (mapsIndoorsInstance) => {
+        // Add fake blue dot signalling the current device position.
+        // This is NOT using the built in MapsIndoors positioning feature, but is just a faked visual representation.
+        const mapboxMap = mapsIndoorsInstance.getMap();
+        mapboxMap.on('style.load', () => {
+            addBlueDot(mapboxMap);
+        });
+    };
 
     return (
         <>
@@ -18,6 +31,7 @@ function App() {
                     mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
                     center={center}
                     zoom={zoom}
+                    onInitialized={onInitialized}
                 />
             </main>
         </>
