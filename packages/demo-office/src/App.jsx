@@ -2,6 +2,9 @@ import './App.css'
 import MIMap from '@mapsindoors/react-components/src/components/MIMap/MIMap';
 import Header from './Header/Header';
 import addBlueDot from './tools/addBlueDot';
+import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
+
+defineCustomElements();
 
 function App() {
 
