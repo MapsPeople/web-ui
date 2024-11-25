@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import './App.css'
 import MIMap from '@mapsindoors/react-components/src/components/MIMap/MIMap';
 import Header from './Header/Header';
@@ -8,6 +9,8 @@ defineCustomElements();
 
 function App() {
 
+    const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState(null);
+
     // MapsIndoors Austin Office location
     const center = { lng: -97.74203004999998, lat: 30.360050363249286 };
     // A well fitting zoom level
@@ -16,15 +19,17 @@ function App() {
     /**
      * Callback for when the MapsIndoors instance is initialized.
      */
-    const onInitialized = (mapsIndoorsInstance, positionControl) => {
-        const mapboxMap = mapsIndoorsInstance.getMap();
+    const onInitialized = (initializedMapsIndoorsInstance, positionControl) => {
+        setMapsIndoorsInstance(initializedMapsIndoorsInstance);
+
+        const mapboxMap = initializedMapsIndoorsInstance.getMap();
         mapboxMap.on('style.load', () => {
             // Add fake blue dot signalling the current device position.
             // This is NOT using the built in MapsIndoors positioning feature, but is just a faked visual representation.
             addBlueDot(mapboxMap);
 
             // Remove the built-in Position Control from the map. We will fake the position instead.
-            positionControl.remove()
+            positionControl.remove();
         });
     };
 
