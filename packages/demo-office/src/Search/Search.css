@@ -1,7 +1,16 @@
 .search {
     position: absolute;
-    top: 32px;
-    left: 132px; /* Next to the 2D/3D switch */
+
+    top: 10px;
+    left: 80px;
+    width: calc(100% - 160px); /* 80px padding on each side to accommodate for the 2D/3D switch and the Floor Selector */
+    max-width: 360px;
+
+    @media screen and (min-width: 768px) {
+        top: 32px;
+        left: 132px;
+        width: 360px;
+    }
 }
 
 .search__results {
