@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import './App.css'
+import './App.scss'
 import MIMap from '@mapsindoors/react-components/src/components/MIMap/MIMap';
 import Header from './Header/Header';
 import addBlueDot from './tools/addBlueDot';
@@ -35,7 +35,7 @@ function App() {
     };
 
     return (
-        <>
+        <div className="app mapsindoors-map"> {/* The mapsindoors-map class is added for giving the MapsIndoors components library access to the MapsIndoors CSS variables */}
             <Header />
             <main>
                 <MIMap
@@ -47,7 +47,7 @@ function App() {
                 />
                 <Search mapsIndoorsInstance={mapsIndoorsInstance} />
             </main>
-        </>
+        </div>
     )
 }
 
