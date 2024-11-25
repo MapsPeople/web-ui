@@ -3,6 +3,7 @@ import './App.css'
 import MIMap from '@mapsindoors/react-components/src/components/MIMap/MIMap';
 import Header from './Header/Header';
 import addBlueDot from './tools/addBlueDot';
+import Search from './Search/Search';
 import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
 
 defineCustomElements();
@@ -44,6 +45,7 @@ function App() {
                     zoom={zoom}
                     onInitialized={onInitialized}
                 />
+                <Search mapsIndoorsInstance={mapsIndoorsInstance} />
             </main>
         </>
     )
