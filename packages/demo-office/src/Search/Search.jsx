@@ -5,7 +5,7 @@ import SearchResult from './SearchResult/SearchResult';
 
 
 Search.propTypes = {
-    mapsIndoorsInstance: PropTypes.object.isRequired
+    mapsIndoorsInstance: PropTypes.object
 };
 
 /**
@@ -22,6 +22,7 @@ function Search({ mapsIndoorsInstance }) {
     const searchFieldRef = useRef();
 
     const [searchResults, setSearchResults] = useState([]);
+    const [hoveredLocationId, setHoveredLocationId] = useState(null);
 
     const onSearchResults = (event) => setSearchResults(event.detail);
     const onCleared = () => setSearchResults([]);
@@ -33,6 +34,28 @@ function Search({ mapsIndoorsInstance }) {
         // TODO: Do something when a search result is clicked.
     };
 
+    /**
+     * Event handler for when a location is hovered. Used to set the isHovered state for the search results.
+     * @param {object} location
+     */
+    const onMouseEnter = location => setHoveredLocationId(location?.id);
+
+    /**
+     * Setup event listeners for when the user hovers a MapsIndoors Location.
+     */
+    useEffect(() => {
+        if (mapsIndoorsInstance) {
+            mapsIndoorsInstance.on('mouseenter', onMouseEnter);
+        }
+
+        // Clean up event listeners when the component is unmounted.
+        return () => {
+            if (mapsIndoorsInstance) {
+                mapsIndoorsInstance.off('mouseenter', onMouseEnter);
+            }
+        };
+    }, [mapsIndoorsInstance]);
+
     /*
      * Add event listeners for search results and cleared search field.
      */
@@ -42,13 +65,12 @@ function Search({ mapsIndoorsInstance }) {
         current.addEventListener('results', onSearchResults);
         current.addEventListener('cleared', onCleared);
 
+        // Clean up event listeners when the component is unmounted.
         return () => {
-            // Clean up event listeners when the component is unmounted.
             current.removeEventListener('results', onSearchResults);
             current.removeEventListener('cleared', onCleared);
         };
     }, []);
-
 
     return <div className="search">
 
@@ -62,7 +84,7 @@ function Search({ mapsIndoorsInstance }) {
 
         {/* Search results */}
         {searchResults.length > 0 && <div className="search__results">
-            {searchResults.map((location) => <SearchResult key={location.id} location={location} mapsIndoorsInstance={mapsIndoorsInstance} locationClicked={onLocationClicked} />)}
+            {searchResults.map((location) => <SearchResult key={location.id} location={location} mapsIndoorsInstance={mapsIndoorsInstance} locationClicked={onLocationClicked} isHovered={hoveredLocationId === location.id} />)}
         </div>}
     </div>
 }

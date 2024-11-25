@@ -5,7 +5,8 @@ import PropTypes from 'prop-types';
 SearchResult.propTypes = {
     location: PropTypes.object,
     mapsIndoorsInstance: PropTypes.object,
-    locationClicked: PropTypes.func
+    locationClicked: PropTypes.func,
+    isHovered: PropTypes.bool
 };
 
 /**
@@ -19,13 +20,26 @@ SearchResult.propTypes = {
  * @param {function} props.locationClicked - Function that is called when the Location is clicked.
  * @returns
  */
-function SearchResult({ location, mapsIndoorsInstance, locationClicked }) {
+function SearchResult({ location, mapsIndoorsInstance, locationClicked, isHovered }) {
 
     const elementRef = useRef();
 
     useEffect(() => {
         // Event listener for when a search result is clicked. Calls the locationClicked function with the clicked location.
         const clickHandler = customEvent => locationClicked(customEvent.detail);
+
+        const hoverHandler = () => {
+            // Check if the location is non-selectable before hovering it
+            if (location.properties.locationSettings?.selectable !== false) {
+                mapsIndoorsInstance.hoverLocation(location);
+            }
+        };
+        const unhoverHandler = () => {
+            // Check if the location is non-selectable before unhovering it
+            if (!location.properties.locationSettings?.selectable !== false) {
+                mapsIndoorsInstance.unhoverLocation(location);
+            }
+        };
 
         const { current } = elementRef;
 
@@ -34,6 +48,8 @@ function SearchResult({ location, mapsIndoorsInstance, locationClicked }) {
         current.icon = mapsIndoorsInstance.getDisplayRule(location).icon;
 
         current.addEventListener('locationClicked', clickHandler);
+        current.addEventListener('mouseover', hoverHandler);
+        current.addEventListener('mouseout', unhoverHandler);
 
         // Clean up event listeners when the component is unmounted.
         return () => {
@@ -41,6 +57,17 @@ function SearchResult({ location, mapsIndoorsInstance, locationClicked }) {
         };
 
     }, [location]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    /*
+     * Add a class to the element when the location is hovered.
+     */
+    useEffect(() => {
+        if (isHovered) {
+            elementRef.current.classList.add('hovered');
+        } else {
+            elementRef.current.classList.remove('hovered');
+        }
+    }, [isHovered]);
 
     return (
         <mi-list-item-location ref={elementRef} />
