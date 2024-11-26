@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Upgrade SDK version to v4.37.0.
+- Upgrade SDK version to v4.37.1.
 
 ## [1.58.0] - 2024-10-28
 
