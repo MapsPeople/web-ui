@@ -634,6 +634,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             onMapPositionInvestigating={() => setIsMapPositionInvestigating(true)}
             onLocationClick={(location) => locationClicked(location)}
             onViewModeSwitchKnown={visible => setViewModeSwitchVisible(visible)}
+            resetCount={resetCount}
         />
     </div>
 }
