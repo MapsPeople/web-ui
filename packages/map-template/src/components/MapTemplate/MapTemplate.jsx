@@ -405,7 +405,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     /*
      * React on changes in the pitch prop.
-     * If the pitch is not set, set it to 45 degrees if the required modules are enabled (2D/3D switch).
+     * If the pitch is not set, set it to 45 degrees if the view mode switch is visible.
      */
     useEffect(() => {
         if (!isNullOrUndefined(pitch)) {
