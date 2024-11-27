@@ -119,6 +119,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setHideNonMatches] = useRecoilState(hideNonMatchesState);
     const [, setshowExternalIDs] = useRecoilState(showExternalIDsState);
     const [, setShowRoadNames] = useRecoilState(showRoadNamesState);
+    const [viewModeSwitchVisible, setViewModeSwitchVisible] = useState();
 
     const [showVenueSelector, setShowVenueSelector] = useState(true);
     const [showPositionControl, setShowPositionControl] = useState(true);
@@ -409,10 +410,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         if (!isNullOrUndefined(pitch)) {
             setPitch(pitch);
-        } else if (solution && ['mapbox', '3dwalls', 'floorplan'].every(requiredModule => solution.modules.map(module => module.toLowerCase()).includes(requiredModule))) {
+        } else if (viewModeSwitchVisible) {
             setPitch(45);
         }
-    }, [pitch, solution]);
+    }, [pitch, viewModeSwitchVisible]);
 
     /*
      * React on changes in the bearing prop.
@@ -632,6 +633,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             onMapPositionKnown={() => mapPositionKnown()}
             onMapPositionInvestigating={() => setIsMapPositionInvestigating(true)}
             onLocationClick={(location) => locationClicked(location)}
+            onViewModeSwitchKnown={visible => setViewModeSwitchVisible(visible)}
         />
     </div>
 }
