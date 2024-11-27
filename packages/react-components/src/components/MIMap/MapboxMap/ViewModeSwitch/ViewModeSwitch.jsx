@@ -17,7 +17,7 @@ ViewModeSwitch.propTypes = {
     mapView: PropTypes.object,
     pitch: PropTypes.number,
     solution: PropTypes.object,
-    reset: PropTypes.bool,
+    reset: PropTypes.number,
     activeColor: PropTypes.string
 }
 
@@ -27,7 +27,7 @@ ViewModeSwitch.propTypes = {
  * @param {Object} [props.mapView] - Instance of a MapsIndoors MapView
  * @param {number} [props.pitch] - The value of the pitch property on the map (not necessarily the current map pitch)
  * @param {Object} [props.solution] - The current MapsIndoors solution
- * @param {boolean} [props.reset] - Set to true to reset to initial 3D mode
+ * @param {number} [props.reset] - Set/increase the number reset to initial 3D mode
  * @param {string} [props.activeColor='#005655'] - The color to use to mark the active view mode
  */
 function ViewModeSwitch({ mapView, pitch, reset, activeColor='#005655' }) {
