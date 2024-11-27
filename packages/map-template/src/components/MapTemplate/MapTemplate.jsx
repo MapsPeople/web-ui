@@ -56,6 +56,7 @@ import { useCurrentVenue } from '../../hooks/useCurrentVenue.js';
 import showExternalIDsState from '../../atoms/showExternalIDsState.js'
 import showRoadNamesState from '../../atoms/showRoadNamesState.js';
 import searchExternalLocationsState from '../../atoms/searchExternalLocationsState.js';
+import isNullOrUndefined from '../../helpers/isNullOrUndefined.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -140,7 +141,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [initialFilteredLocations, setInitialFilteredLocations] = useState();
 
     const [appConfig, setAppConfig] = useRecoilState(appConfigState);
-    const [, setSolution] = useRecoilState(solutionState);
+    const [solution, setSolution] = useRecoilState(solutionState);
 
     const [, setTileStyle] = useRecoilState(tileStyleState);
     const [, setStartZoomLevel] = useRecoilState(startZoomLevelState);
@@ -410,10 +411,15 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     /*
      * React on changes in the pitch prop.
+     * If the pitch is not set, set it to 45 degrees if the required modules are enabled (2D/3D switch).
      */
     useEffect(() => {
-        setPitch(pitch);
-    }, [pitch]);
+        if (!isNullOrUndefined(pitch)) {
+            setPitch(pitch);
+        } else if (solution && ['mapbox', '3dwalls', 'floorplan'].every(requiredModule => solution.modules.map(module => module.toLowerCase()).includes(requiredModule))) {
+            setPitch(45);
+        }
+    }, [pitch, solution]);
 
     /*
      * React on changes in the bearing prop.
