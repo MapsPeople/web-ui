@@ -25,6 +25,7 @@ Search.propTypes = {
  */
 function Search({ mapsIndoorsInstance }) {
     const [searchResults, setSearchResults] = useState([]);
+    const [noResultsFound, setNoResultsFound] = useState(false);
     const [hoveredLocationId, setHoveredLocationId] = useState(null);
 
     /**
@@ -34,6 +35,7 @@ function Search({ mapsIndoorsInstance }) {
      * @param {array} locations
      */
     function onResults(locations) {
+        setNoResultsFound(locations.length === 0);
         setSearchResults(locations);
         mapsIndoorsInstance.highlight(locations.map(location => location.id), false);
     }
@@ -44,6 +46,7 @@ function Search({ mapsIndoorsInstance }) {
      */
     const onCleared = () => {
         setSearchResults([]);
+        setNoResultsFound(false);
         mapsIndoorsInstance.highlight([], false);
     };
 
@@ -97,6 +100,9 @@ function Search({ mapsIndoorsInstance }) {
                 isHovered={hoveredLocationId === location.id}
             />)}
         </div>}
+
+        {/* No results found */}
+        {noResultsFound && <div className="search__no-results">No location found</div>}
     </div>
 }
 

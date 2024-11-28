@@ -5,6 +5,9 @@
     left: 80px;
     width: calc(100% - 160px); /* 80px padding on each side to accommodate for the 2D/3D switch and the Floor Selector */
     max-width: 360px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
     @media screen and (min-width: 768px) {
         top: 32px;
@@ -17,8 +20,9 @@
     width: 100%;
     max-height: 50vh;
     overflow-y: auto;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    z-index: 1;
+}
+
+.search__no-results {
+    padding: 16px;
+    text-align: center;
 }
