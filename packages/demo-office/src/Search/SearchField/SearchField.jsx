@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
+import fakeData from '../../fakeData';
 
 SearchField.propTypes = {
     onResults: PropTypes.func,
@@ -45,6 +46,8 @@ function SearchField({ onResults, onClear }) {
         ref={elementRef}
         mapsindoors="true" // Enable MapsIndoors search.
         placeholder="Search..." // Placeholder text for the search field when nothing is entered.
+        mi-near={fakeData.devicePosition.lat + ',' + fakeData.devicePosition.lng} // Search for Locations near the fake device position.
+        mi-venue={fakeData.startPosition.venueAdministrativeID} // Search for Locations within this venue only.
     />
 }
 

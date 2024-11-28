@@ -3,6 +3,7 @@ import './App.scss'
 import MIMap from '@mapsindoors/react-components/src/components/MIMap/MIMap';
 import Header from './Header/Header';
 import addBlueDot from './tools/addBlueDot';
+import fakeData from './fakeData';
 import Search from './Search/Search';
 import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
 
@@ -11,11 +12,6 @@ defineCustomElements();
 function App() {
 
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState(null);
-
-    // MapsIndoors Austin Office location
-    const center = { lng: -97.74203004999998, lat: 30.360050363249286 };
-    // A well fitting zoom level
-    const zoom = 17.6;
 
     /**
      * Callback for when the MapsIndoors instance is initialized.
@@ -39,10 +35,17 @@ function App() {
             <Header />
             <main>
                 <MIMap
-                    apiKey="mapspeople3d"
+                    // Map provider setup. See the README for more information on how to set up a Mapbox account and get an access token.
                     mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
-                    center={center}
-                    zoom={zoom}
+
+                    // MapsIndoors setup
+                    apiKey={fakeData.solutionAlias}
+
+                    // Map position in the world
+                    center={fakeData.startPosition.center}
+                    zoom={fakeData.startPosition.zoom}
+
+                    // Callback for when the MapsIndoors instance is initialized
                     onInitialized={onInitialized}
                 />
                 <Search mapsIndoorsInstance={mapsIndoorsInstance} />
