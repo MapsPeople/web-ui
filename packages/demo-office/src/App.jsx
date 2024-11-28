@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import './App.css'
-import MIMap from '@mapsindoors/react-components/src/components/MIMap/MIMap';
-import Header from './Header/Header';
-import addBlueDot from './tools/addBlueDot';
-import fakeData from './fakeData';
-import Search from './Search/Search';
 import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
+import MIMap from '@mapsindoors/react-components/src/components/MIMap/MIMap';
+import fakeData from './fakeData';
+import addBlueDot from './tools/addBlueDot';
+import Header from './Header/Header';
+import Search from './Search/Search';
 
 defineCustomElements();
 
@@ -38,7 +38,7 @@ function App() {
                     // Map provider setup. See the README for more information on how to set up a Mapbox account and get an access token.
                     mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
 
-                    // MapsIndoors setup
+                    // MapsIndoors setup: Provide a MapsIndoors API key or solution alias in order to let the map know which MapsIndoors solution to use.
                     apiKey={fakeData.solutionAlias}
 
                     // Map position in the world

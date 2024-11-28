@@ -12,13 +12,13 @@ Search.propTypes = {
 /**
  * Component to search for MapsIndoors Locations and present them in a list of search results.
  *
- * As a search field, we use The SearchField component, which agin wraps the mi-search component, which is a custom
- * element that is defined in the MapsIndoors Components library and can be used to search for MapsIndoors Locations
- * in the current Solution.
+ * As a search field, we use The SearchField component, which again wraps the mi-search component, which is a custom
+ * element that is defined in the {@link https://components.mapsindoors.com|MapsIndoors Components library} and can be
+ * used to search for MapsIndoors Locations in the current MapsIndoors Solution.
  *
  * To show the search results, we use the SearchResult component, which again wraps the mi-list-item-location
- * component, which is a custom element that is defined in the MapsIndoors Components library and can be used to
- * present a MapsIndoors Location in a list of search results.
+ * component, which is a custom element that is defined in the {@link https://components.mapsindoors.com|MapsIndoors Components library}
+ * and can be used to present a MapsIndoors Location in a list of search results.
  *
  * @param {object} props
  * @param {object} props.mapsIndoorsInstance - MapsIndoors instance.

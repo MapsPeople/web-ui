@@ -8,12 +8,14 @@ SearchField.propTypes = {
 };
 
 /**
- * This component is a wrapper around the custom element <mi-search>.
+ * This component is a wrapper around the custom element `<mi-search>`.
  *
  * It can be used to search for Locations in the MapsIndoors data.
- * See: https://components.mapsindoors.com/search/
  *
- * The wrapper component is needed because the <mi-search> component cannot be used directly in React, since the custom events it emits cannot be listened to directly in React.
+ * See {@link https://components.mapsindoors.com/search/ mi-search documentation}
+ *
+ * The wrapper component is needed because the `<mi-search>` element is cumbersome to use directly, since the
+ * custom events it emits cannot easily be listened to in React.
  *
  * @param {*} props
  * @param {function} props.onResults - Callback for when search results are received.
