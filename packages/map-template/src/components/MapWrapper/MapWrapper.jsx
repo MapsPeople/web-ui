@@ -36,9 +36,11 @@ let _tileStyle;
  * @param {function} props.onMapPositionKnown - Function that is run when the map bounds was changed due to fitting to a Venue or Location.
  * @param {boolean} props.useMapProviderModule - If you want to use the Map Provider set on your solution in the MapsIndoors CMS, set this to true.
  * @param {function} onMapPositionInvestigating - Function that is run when the map position is being determined.
+ * @param {function} onViewModeSwitchKnown - Function that is run when the view mode switch is known (if it is to be shown of not).
+ * @param {number} resetCount - A counter that is incremented when the map should be reset.
  * @returns
  */
-function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating }) {
+function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating, onViewModeSwitchKnown, resetCount }) {
     const apiKey = useRecoilValue(apiKeyState);
     const gmApiKey = useRecoilValue(gmApiKeyState);
     const mapboxAccessToken = useRecoilValue(mapboxAccessTokenState);
@@ -206,7 +208,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
      * @param {object} miInstance
      * @param {object} positionControl
      */
-    const onInitialized = (miInstance, positionControl) => {
+    const onInitialized = (miInstance, positionControl, viewModeSwitchVisible) => {
         // Detect when the mouse hovers over a location and store the hovered location
         // If the location is non-selectable, remove the hovering by calling the unhoverLocation() method.
         miInstance.on('mouseenter', () => {
@@ -260,6 +262,8 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
             });
         }
         setPositionControl(positionControl);
+
+        onViewModeSwitchKnown(viewModeSwitchVisible);
     }
 
     /*
@@ -276,6 +280,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
             mapboxAccessToken={mapType === mapTypes.Mapbox ? mapboxAccessToken : undefined}
             gmApiKey={mapType === mapTypes.Google ? gmApiKey : undefined}
             onInitialized={onInitialized}
+            resetUICounter={resetCount}
         />}
     </>)
 };

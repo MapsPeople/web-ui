@@ -17,7 +17,7 @@ ViewModeSwitch.propTypes = {
     mapView: PropTypes.object,
     pitch: PropTypes.number,
     solution: PropTypes.object,
-    reset: PropTypes.bool,
+    reset: PropTypes.number,
     activeColor: PropTypes.string
 }
 
@@ -27,23 +27,12 @@ ViewModeSwitch.propTypes = {
  * @param {Object} [props.mapView] - Instance of a MapsIndoors MapView
  * @param {number} [props.pitch] - The value of the pitch property on the map (not necessarily the current map pitch)
  * @param {Object} [props.solution] - The current MapsIndoors solution
- * @param {boolean} [props.reset] - Set to true to reset to initial 3D mode
+ * @param {number} [props.reset] - Set/increase the number reset to initial 3D mode
  * @param {string} [props.activeColor='#005655'] - The color to use to mark the active view mode
  */
-function ViewModeSwitch({ mapView, pitch, solution, reset, activeColor='#005655' }) {
+function ViewModeSwitch({ mapView, pitch, reset, activeColor='#005655' }) {
 
-    const [visible, setVisible] = useState(false);
-    const [viewMode, setViewMode] = useState();
-
-    useEffect(() => {
-        if (!solution) return;
-
-        // If the required modules are enabled, show the Visibility Switch and set the View Mode
-        if (['mapbox', '3dwalls', 'floorplan'].every(requiredModule => solution.modules.map(module => module.toLowerCase()).includes(requiredModule))) {
-            setVisible(true);
-            setViewMode(ViewModes.initial3D);
-        }
-    }, [solution]);
+    const [viewMode, setViewMode] = useState(ViewModes.initial3D);
 
     useEffect(() => {
         if (reset) {
@@ -52,7 +41,7 @@ function ViewModeSwitch({ mapView, pitch, solution, reset, activeColor='#005655'
     }, [reset]);
 
     useEffect(() => {
-        if (visible === true && mapView) {
+        if (mapView) {
             switch (viewMode) {
                 // If the 2D View Mode has been clicked, hide the 3D features and tilt the map to 0 degrees.
                 case ViewModes.clicked2D:
@@ -77,24 +66,22 @@ function ViewModeSwitch({ mapView, pitch, solution, reset, activeColor='#005655'
                     // Intentionally left blank
             }
         }
-    }, [viewMode, mapView, visible]);
+    }, [viewMode, mapView]);
 
-    return <>
-        {visible && <div className="view-mode-switch">
-            <button className="view-mode-switch__button"
-                onClick={() => setViewMode(ViewModes.clicked2D)}
-                style={{ backgroundColor: viewMode === ViewModes.clicked2D ? activeColor : 'white' }}
-            >
-                {viewMode === ViewModes.clicked2D ? <Light2D /> : <Dark2D />}
-            </button>
-            <button className="view-mode-switch__button"
-                onClick={() => setViewMode(ViewModes.clicked3D)}
-                style={{ backgroundColor: [ViewModes.initial3D, ViewModes.clicked3D].includes(viewMode) ? activeColor : 'white' }}
-            >
-                {[ViewModes.initial3D, ViewModes.clicked3D].includes(viewMode) ? <Light3D /> : <Dark3D />}
-            </button>
-        </div>}
-    </>
+    return <div className="view-mode-switch">
+        <button className="view-mode-switch__button"
+            onClick={() => setViewMode(ViewModes.clicked2D)}
+            style={{ backgroundColor: viewMode === ViewModes.clicked2D ? activeColor : 'white' }}
+        >
+            {viewMode === ViewModes.clicked2D ? <Light2D /> : <Dark2D />}
+        </button>
+        <button className="view-mode-switch__button"
+            onClick={() => setViewMode(ViewModes.clicked3D)}
+            style={{ backgroundColor: [ViewModes.initial3D, ViewModes.clicked3D].includes(viewMode) ? activeColor : 'white' }}
+        >
+            {[ViewModes.initial3D, ViewModes.clicked3D].includes(viewMode) ? <Light3D /> : <Dark3D />}
+        </button>
+    </div>
 }
 
 export default ViewModeSwitch;
