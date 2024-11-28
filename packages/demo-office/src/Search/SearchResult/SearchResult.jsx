@@ -12,6 +12,10 @@ SearchResult.propTypes = {
 /**
  * This component is a wrapper around the custom element <mi-list-item-location>.
  *
+ * It can be used to present a MapsIndoors Location in a list of search results.
+ *
+ * See {@link https://components.mapsindoors.com/list-item-location/ mi-list-item-location documentation}
+ *
  * This is needed because the <mi-list-item-location> takes a Location object as a prop, and the Location object cannot be passed directly from React.
  * Instead, we need to pass the Location object to the custom element through a ref.
  *
