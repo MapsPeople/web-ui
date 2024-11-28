@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './Search.css';
 import PropTypes from 'prop-types';
 import SearchResult from './SearchResult/SearchResult';
+import SearchField from './SearchField/SearchField';
 
 
 Search.propTypes = {
@@ -11,21 +12,40 @@ Search.propTypes = {
 /**
  * Component to search for MapsIndoors Locations and present them in a list of search results.
  *
- * As a search field, we use the mi-search component, which is a custom element that is defined in the MapsIndoors Components library.
- * It can be used to search for Locations in the MapsIndoors data.
- * See: https://components.mapsindoors.com/search/
+ * As a search field, we use The SearchField component, which agin wraps the mi-search component, which is a custom
+ * element that is defined in the MapsIndoors Components library and can be used to search for MapsIndoors Locations
+ * in the current Solution.
+ *
+ * To show the search results, we use the SearchResult component, which again wraps the mi-list-item-location
+ * component, which is a custom element that is defined in the MapsIndoors Components library and can be used to
+ * present a MapsIndoors Location in a list of search results.
  *
  * @param {object} props
  * @param {object} props.mapsIndoorsInstance - MapsIndoors instance.
  */
 function Search({ mapsIndoorsInstance }) {
-    const searchFieldRef = useRef();
-
     const [searchResults, setSearchResults] = useState([]);
     const [hoveredLocationId, setHoveredLocationId] = useState(null);
 
-    const onSearchResults = (event) => setSearchResults(event.detail);
-    const onCleared = () => setSearchResults([]);
+    /**
+     * Callback for when search results are received.
+     * Sets the results in the state and highlights the search results on the map.
+     *
+     * @param {array} locations
+     */
+    function onResults(locations) {
+        setSearchResults(locations);
+        mapsIndoorsInstance.highlight(locations.map(location => location.id), false);
+    }
+
+    /**
+     * Callback for when the search field is cleared.
+     * Clears the search results in the state and removes the highlights on the map.
+     */
+    const onCleared = () => {
+        setSearchResults([]);
+        mapsIndoorsInstance.highlight([], false);
+    };
 
     /**
      * Callback for when a search result is clicked.
@@ -56,35 +76,26 @@ function Search({ mapsIndoorsInstance }) {
         };
     }, [mapsIndoorsInstance]);
 
-    /*
-     * Add event listeners for search results and cleared search field.
-     */
-    useEffect(() => {
-        const { current } = searchFieldRef;
-
-        current.addEventListener('results', onSearchResults);
-        current.addEventListener('cleared', onCleared);
-
-        // Clean up event listeners when the component is unmounted.
-        return () => {
-            current.removeEventListener('results', onSearchResults);
-            current.removeEventListener('cleared', onCleared);
-        };
-    }, []);
-
     return <div className="search">
 
         {/* Search field */}
-        <mi-search
-            ref={searchFieldRef}
-            mapsindoors={true} // This attribute is required to enable searching in MapsIndoors data.
-            placeholder="Search..."
-            mi-take="20" // We are only interested in the 20 most relevant search results.
+        <SearchField
+            onResults={locations => onResults(locations)}
+            onClear={() => onCleared()}
         />
 
-        {/* Search results */}
+        {/* Search results.
+            We only show the first 20 results in the list.
+            We don't use the mi-take prop on the <mi-search> element, since we want all results to be highlighted on the map
+            while keeping a managable size of the results list.
+        */}
         {searchResults.length > 0 && <div className="search__results">
-            {searchResults.map((location) => <SearchResult key={location.id} location={location} mapsIndoorsInstance={mapsIndoorsInstance} locationClicked={onLocationClicked} isHovered={hoveredLocationId === location.id} />)}
+            {searchResults.slice(0, 20).map((location) => <SearchResult
+                key={location.id} location={location}
+                mapsIndoorsInstance={mapsIndoorsInstance}
+                locationClicked={onLocationClicked}
+                isHovered={hoveredLocationId === location.id}
+            />)}
         </div>}
     </div>
 }

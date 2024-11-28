@@ -1,0 +1,51 @@
+import { useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
+
+SearchField.propTypes = {
+    onResults: PropTypes.func,
+    onClear: PropTypes.func,
+};
+
+/**
+ * This component is a wrapper around the custom element <mi-search>.
+ *
+ * It can be used to search for Locations in the MapsIndoors data.
+ * See: https://components.mapsindoors.com/search/
+ *
+ * The wrapper component is needed because the <mi-search> component cannot be used directly in React, since the custom events it emits cannot be listened to directly in React.
+ *
+ * @param {*} props
+ * @param {function} props.onResults - Callback for when search results are received.
+ * @param {function} props.onClear - Callback for when the search field is cleared.
+ */
+function SearchField({ onResults, onClear }) {
+
+    const elementRef = useRef(null);
+
+    /*
+     * Add event listeners for the custom events emitted by the <mi-search> component.
+     */
+    useEffect(() => {
+        const searchResultsHandler = customEvent => onResults(customEvent.detail);
+        const clearHandler = () => onClear();
+
+        const { current } = elementRef;
+
+        current.addEventListener('results', searchResultsHandler);
+        current.addEventListener('cleared', clearHandler);
+
+        // Clean up event listeners when the component is unmounted.
+        return () => {
+            current.removeEventListener('results', searchResultsHandler);
+            current.removeEventListener('cleared', clearHandler);
+        }
+    }, [onResults, onClear]);
+
+    return <mi-search
+        ref={elementRef}
+        mapsindoors="true" // Enable MapsIndoors search.
+        placeholder="Search..." // Placeholder text for the search field when nothing is entered.
+    />
+}
+
+export default SearchField;
