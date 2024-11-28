@@ -19,13 +19,16 @@ main {
     padding: 0 8px 16px 8px;
     position: relative; /* to make it easier to control position of sub elements */
 
-    @media screen and (min-width: 768px) {
+}
+
+@media screen and (min-width: 768px) {
+    main {
         padding: 0 16px 32px 16px;
     }
+}
 
-    .mapsindoors-map {
-        height: 100%;
-        width: 100%;
-        border-radius: 8px;
-    }
+main .mapsindoors-map {
+    height: 100%;
+    width: 100%;
+    border-radius: 8px;
 }

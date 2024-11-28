@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import './App.scss'
+import './App.css'
 import MIMap from '@mapsindoors/react-components/src/components/MIMap/MIMap';
 import Header from './Header/Header';
 import addBlueDot from './tools/addBlueDot';
