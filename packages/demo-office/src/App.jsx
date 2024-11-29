@@ -1,43 +1,56 @@
+import { useState } from 'react';
 import './App.css'
+import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
 import MIMap from '@mapsindoors/react-components/src/components/MIMap/MIMap';
-import Header from './Header/Header';
+import fakeData from './fakeData';
 import addBlueDot from './tools/addBlueDot';
+import Header from './Header/Header';
+import Search from './Search/Search';
+
+defineCustomElements();
 
 function App() {
 
-    // MapsIndoors Austin Office location
-    const center = { lng: -97.74203004999998, lat: 30.360050363249286 };
-    // A well fitting zoom level
-    const zoom = 17.6;
+    const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState(null);
 
     /**
      * Callback for when the MapsIndoors instance is initialized.
      */
-    const onInitialized = (mapsIndoorsInstance, positionControl) => {
-        const mapboxMap = mapsIndoorsInstance.getMap();
+    const onInitialized = (initializedMapsIndoorsInstance, positionControl) => {
+        setMapsIndoorsInstance(initializedMapsIndoorsInstance);
+
+        const mapboxMap = initializedMapsIndoorsInstance.getMap();
         mapboxMap.on('style.load', () => {
             // Add fake blue dot signalling the current device position.
             // This is NOT using the built in MapsIndoors positioning feature, but is just a faked visual representation.
             addBlueDot(mapboxMap);
 
             // Remove the built-in Position Control from the map. We will fake the position instead.
-            positionControl.remove()
+            positionControl.remove();
         });
     };
 
     return (
-        <>
+        <div className="app mapsindoors-map"> {/* The mapsindoors-map class is added for giving the MapsIndoors components library access to the MapsIndoors CSS variables */}
             <Header />
             <main>
                 <MIMap
-                    apiKey="mapspeople3d"
+                    // Map provider setup. See the README for more information on how to set up a Mapbox account and get an access token.
                     mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
-                    center={center}
-                    zoom={zoom}
+
+                    // MapsIndoors setup: Provide a MapsIndoors API key or solution alias in order to let the map know which MapsIndoors solution to use.
+                    apiKey={fakeData.solutionAlias}
+
+                    // Map position in the world
+                    center={fakeData.startPosition.center}
+                    zoom={fakeData.startPosition.zoom}
+
+                    // Callback for when the MapsIndoors instance is initialized
                     onInitialized={onInitialized}
                 />
+                <Search mapsIndoorsInstance={mapsIndoorsInstance} />
             </main>
-        </>
+        </div>
     )
 }
 
