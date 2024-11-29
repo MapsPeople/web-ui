@@ -76,6 +76,15 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bear
             mapView
         });
 
+        // Set the venue based on the first building change if the current venue is different than the given building.
+        // This is a workaround for the SDK not setting the venue automatically, thus not loading 2D geometry.
+        mi.once('building_changed', (building) => {
+            const venue = mi.getVenue();
+            if (building && venue && building.venueId !== venue.id ) {
+                mi.setVenue(building.venueId);
+            }
+        });
+
         // Detect when the mouse hovers over a location and store the hovered location
         // If the location is non-selectable, remove the hovering by calling the unhoverLocation() method.
         mi.on('mouseenter', () => {
