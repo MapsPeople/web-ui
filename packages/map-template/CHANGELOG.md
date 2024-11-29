@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.60.0] - 2024-11-28
 
 - Added `MAX_RESULTS` constant to limit the maximum number of search results displayed at once 
+- Sort venues by display name 
 
 ## [1.59.0] - 2024-11-26
 
