@@ -201,7 +201,7 @@ function mapboxGotoBBox(bbox, mapsIndoorsInstance, paddingBottom, paddingLeft, z
     // need to be able to use pitch and bearing in one go,
     // and we want to turn of panning animation.
     mapboxMap.fitBounds(bbox, {
-        pitch: pitch || mapboxMap.getPitch() || 0,
+        pitch: pitch || 0,
         bearing: bearing || 0,
         animate: false,
         padding: { top: 0, right: 0, bottom: paddingBottom, left: paddingLeft }
