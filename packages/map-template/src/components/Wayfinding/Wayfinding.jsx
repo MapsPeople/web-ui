@@ -402,47 +402,40 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     return (
         <div className="wayfinding" ref={wayfindingRef}>
             <div className="wayfinding__directions">
-                <div className="wayfinding__title">{t('Start wayfinding')}</div>
+                <div className="wayfinding__title">{t('Directions')}</div>
                 <button className="wayfinding__close"
                     onClick={() => closeWayfinding()}
                     aria-label="Close">
                     <CloseIcon />
                 </button>
                 <div className="wayfinding__locations">
-                    <label className="wayfinding__label">
-                        {t('From').toUpperCase()}
-                        <SearchField
-                            ref={fromFieldRef}
-                            mapsindoors={true}
-                            google={selectedMapType === mapTypes.Google && searchExternalLocations}
-                            mapbox={selectedMapType === mapTypes.Mapbox && searchExternalLocations}
-                            placeholder={t('Search by name, category, building...')}
-                            results={locations => searchResultsReceived(locations, searchFieldIdentifiers.FROM)}
-                            clicked={() => onSearchClicked(searchFieldIdentifiers.FROM)}
-                            cleared={() => onSearchCleared(searchFieldIdentifiers.FROM)}
-                            changed={() => onInputChanged(searchFieldIdentifiers.FROM)}
-                        />
-                    </label>
+                    <SearchField
+                        ref={fromFieldRef}
+                        mapsindoors={true}
+                        google={selectedMapType === mapTypes.Google && searchExternalLocations}
+                        mapbox={selectedMapType === mapTypes.Mapbox && searchExternalLocations}
+                        placeholder={t('Choose departure')}
+                        results={locations => searchResultsReceived(locations, searchFieldIdentifiers.FROM)}
+                        clicked={() => onSearchClicked(searchFieldIdentifiers.FROM)}
+                        cleared={() => onSearchCleared(searchFieldIdentifiers.FROM)}
+                        changed={() => onInputChanged(searchFieldIdentifiers.FROM)}
+                    />
                     <button onClick={() => switchDirectionsHandler()}
                         aria-label={t('Switch')}
                         className="wayfinding__switch">
                         <SwitchIcon />
                     </button>
-                    <label className="wayfinding__label">
-                        {t('To').toUpperCase()}
-                        <SearchField
-                            ref={toFieldRef}
-                            mapsindoors={true}
-                            google={selectedMapType === mapTypes.Google && searchExternalLocations}
-                            mapbox={selectedMapType === mapTypes.Mapbox && searchExternalLocations}
-                            placeholder={t('Search by name, category, building...')}
-                            results={locations => searchResultsReceived(locations, searchFieldIdentifiers.TO)}
-                            clicked={() => onSearchClicked(searchFieldIdentifiers.TO)}
-                            cleared={() => onSearchCleared(searchFieldIdentifiers.TO)}
-                            changed={() => onInputChanged(searchFieldIdentifiers.TO)}
-                        />
-                    </label>
-
+                    <SearchField
+                        ref={toFieldRef}
+                        mapsindoors={true}
+                        google={selectedMapType === mapTypes.Google && searchExternalLocations}
+                        mapbox={selectedMapType === mapTypes.Mapbox && searchExternalLocations}
+                        placeholder={t('Choose destination')}
+                        results={locations => searchResultsReceived(locations, searchFieldIdentifiers.TO)}
+                        clicked={() => onSearchClicked(searchFieldIdentifiers.TO)}
+                        cleared={() => onSearchCleared(searchFieldIdentifiers.TO)}
+                        changed={() => onInputChanged(searchFieldIdentifiers.TO)}
+                    />
                 </div>
             </div>
             {!hasFoundRoute && <p className="wayfinding__error">{t('No route found')}</p>}
