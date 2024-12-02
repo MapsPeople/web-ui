@@ -409,33 +409,39 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                     <CloseIcon />
                 </button>
                 <div className="wayfinding__locations">
-                    <SearchField
-                        ref={fromFieldRef}
-                        mapsindoors={true}
-                        google={selectedMapType === mapTypes.Google && searchExternalLocations}
-                        mapbox={selectedMapType === mapTypes.Mapbox && searchExternalLocations}
-                        placeholder={t('Choose departure')}
-                        results={locations => searchResultsReceived(locations, searchFieldIdentifiers.FROM)}
-                        clicked={() => onSearchClicked(searchFieldIdentifiers.FROM)}
-                        cleared={() => onSearchCleared(searchFieldIdentifiers.FROM)}
-                        changed={() => onInputChanged(searchFieldIdentifiers.FROM)}
-                    />
+                    <label>
+                        <span>{t('Choose departure')}</span>
+                        <SearchField
+                            ref={fromFieldRef}
+                            mapsindoors={true}
+                            google={selectedMapType === mapTypes.Google && searchExternalLocations}
+                            mapbox={selectedMapType === mapTypes.Mapbox && searchExternalLocations}
+                            placeholder={t('Choose departure')}
+                            results={locations => searchResultsReceived(locations, searchFieldIdentifiers.FROM)}
+                            clicked={() => onSearchClicked(searchFieldIdentifiers.FROM)}
+                            cleared={() => onSearchCleared(searchFieldIdentifiers.FROM)}
+                            changed={() => onInputChanged(searchFieldIdentifiers.FROM)}
+                        />
+                    </label>
                     <button onClick={() => switchDirectionsHandler()}
                         aria-label={t('Switch')}
                         className="wayfinding__switch">
                         <SwitchIcon />
                     </button>
-                    <SearchField
-                        ref={toFieldRef}
-                        mapsindoors={true}
-                        google={selectedMapType === mapTypes.Google && searchExternalLocations}
-                        mapbox={selectedMapType === mapTypes.Mapbox && searchExternalLocations}
-                        placeholder={t('Choose destination')}
-                        results={locations => searchResultsReceived(locations, searchFieldIdentifiers.TO)}
-                        clicked={() => onSearchClicked(searchFieldIdentifiers.TO)}
-                        cleared={() => onSearchCleared(searchFieldIdentifiers.TO)}
-                        changed={() => onInputChanged(searchFieldIdentifiers.TO)}
-                    />
+                    <label>
+                        <span>{t('Choose destination')}</span>
+                        <SearchField
+                            ref={toFieldRef}
+                            mapsindoors={true}
+                            google={selectedMapType === mapTypes.Google && searchExternalLocations}
+                            mapbox={selectedMapType === mapTypes.Mapbox && searchExternalLocations}
+                            placeholder={t('Choose destination')}
+                            results={locations => searchResultsReceived(locations, searchFieldIdentifiers.TO)}
+                            clicked={() => onSearchClicked(searchFieldIdentifiers.TO)}
+                            cleared={() => onSearchCleared(searchFieldIdentifiers.TO)}
+                            changed={() => onInputChanged(searchFieldIdentifiers.TO)}
+                        />
+                    </label>
                 </div>
             </div>
             {!hasFoundRoute && <p className="wayfinding__error">{t('No route found')}</p>}

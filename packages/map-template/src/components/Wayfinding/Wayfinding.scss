@@ -3,7 +3,7 @@
 .wayfinding {
     color: var(--brand-colors-black-100);
     display: grid;
-    grid-template-rows: 200px min-content;
+    grid-template-rows: 190px min-content;
     min-height: 435px;
 
     &__directions {
@@ -202,5 +202,9 @@
 
     mi-search {
         width: calc(100% - 48px);
+    }
+
+    span {
+        display: none;
     }
 }
