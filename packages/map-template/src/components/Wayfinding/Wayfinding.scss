@@ -200,7 +200,7 @@
         border: 1px solid var(--color-gray-30);
     }
 
-    mi-search{
-        width: 90%;
+    mi-search {
+        width: calc(100% - 48px);
     }
 }
