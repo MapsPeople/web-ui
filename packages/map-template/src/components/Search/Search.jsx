@@ -387,7 +387,7 @@ function Search({ onSetSize, isOpen }) {
                 {isKioskContext && showLegendButton && <button className='search__legend' onClick={() => setShowLegendDialog(true)}><Legend /></button>}
 
                 { /* Search field that allows users to search for locations (MapsIndoors Locations and external) */}
-                <label>
+                <label className="search__label">
                     <span>{t('Search by name, category, building...')}</span>
                     <SearchField
                         ref={searchFieldRef}

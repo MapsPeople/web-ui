@@ -181,6 +181,12 @@
         align-items: center;
     }
 
+    &__label {
+        span {
+            display: none;
+        }
+    }
+
     mi-dropdown::part(dropdown-container) {
         overflow-y: auto;
         left: unset;
@@ -202,9 +208,5 @@
 
     mi-search {
         width: calc(100% - 48px);
-    }
-
-    span {
-        display: none;
     }
 }

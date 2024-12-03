@@ -409,7 +409,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                     <CloseIcon />
                 </button>
                 <div className="wayfinding__locations">
-                    <label>
+                    <label className="wayfinding__label">
                         <span>{t('Choose departure')}</span>
                         <SearchField
                             ref={fromFieldRef}
@@ -428,7 +428,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                         className="wayfinding__switch">
                         <SwitchIcon />
                     </button>
-                    <label>
+                    <label className="wayfinding__label">
                         <span>{t('Choose destination')}</span>
                         <SearchField
                             ref={toFieldRef}
