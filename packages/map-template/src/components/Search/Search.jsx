@@ -387,17 +387,19 @@ function Search({ onSetSize, isOpen }) {
                 {isKioskContext && showLegendButton && <button className='search__legend' onClick={() => setShowLegendDialog(true)}><Legend /></button>}
 
                 { /* Search field that allows users to search for locations (MapsIndoors Locations and external) */}
-
-                <SearchField
-                    ref={searchFieldRef}
-                    mapsindoors={true}
-                    placeholder={t('Search by name, category, building...')}
-                    results={locations => onResults(locations)}
-                    clicked={() => searchFieldClicked()}
-                    cleared={() => cleared()}
-                    category={selectedCategory}
-                    disabled={searchDisabled} // Disabled initially to prevent content jumping when clicking and changing sheet size.
-                />
+                <label className="search__label">
+                    <span>{t('Search by name, category, building...')}</span>
+                    <SearchField
+                        ref={searchFieldRef}
+                        mapsindoors={true}
+                        placeholder={t('Search by name, category, building...')}
+                        results={locations => onResults(locations)}
+                        clicked={() => searchFieldClicked()}
+                        cleared={() => cleared()}
+                        category={selectedCategory}
+                        disabled={searchDisabled} // Disabled initially to prevent content jumping when clicking and changing sheet size.
+                    />
+                </label>
             </div>
 
 

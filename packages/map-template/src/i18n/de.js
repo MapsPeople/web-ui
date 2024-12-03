@@ -58,6 +58,9 @@ const de = {
     'My position': 'Meine Position',
     'Turn on Accessibility to get directions that avoid stairs and escalators.': 'Schalte Barrierefrei ein, um Treppen und Rolltreppen zu vermeiden.',
     'Go!': 'Start!',
+    'Directions': 'Wegbeschreibung',
+    'Choose departure': 'Abfahrt wählen',
+    'Choose destination': 'Ziel wählen',
     // Venue selector
     'Venues': 'Standorte',
     'Select venue': 'Wähle Standort',

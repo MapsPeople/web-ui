@@ -58,6 +58,9 @@ const nl = {
     'My position': 'Mijn positie',
     'Turn on Accessibility to get directions that avoid stairs and escalators.': 'Schakel toegankelijkheid in voor een routebeschrijving waarbij trappen en roltrappen worden vermeden',
     'Go!': 'Gaan!',
+    'Directions': 'Richtingen',
+    'Choose departure': 'Kies vertrek',
+    'Choose destination': 'Kies bestemming',
     // Venue selector
     'Venues': 'Locaties',
     'Select venue': 'Kies locatie',
