@@ -74,7 +74,7 @@ export const useCurrentVenue = () => {
         }
 
         // Else take first venue sorted alphabetically
-        return [...venuesInSolution].sort(function (a, b) { return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0); })[0];
+        return [...venuesInSolution].sort(function (a, b) { return (a.venueInfo.name > b.venueInfo.name) ? 1 : ((b.venueInfo.name > a.venueInfo.name) ? -1 : 0); })[0];
     };
 
     /**
