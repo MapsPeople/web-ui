@@ -24,6 +24,10 @@
 
         .view-mode-switch {
             display: block;
+            margin-top: 68px;
+            @media (max-width: $desktop-breakpoint) {
+                margin-top: 62px;
+            }
         }
     }
 
@@ -55,13 +59,7 @@
 
     &--hide-venue-selector{
         .view-mode-switch {
-            margin-top: -68px; // When the venue selector is not visible, place the 2D/3D switch at the top on desktop devices.
-        }
-
-        @media (max-width: $desktop-breakpoint) {
-            .view-mode-switch {
-                margin-top: -62px; // When the venue selector is not visible, place the 2D/3D switch at the top on mobile devices.
-            }
+            margin-top: 0; // When the venue selector is not visible, place the 2D/3D switch at the top on desktop devices.
         }
     }
 

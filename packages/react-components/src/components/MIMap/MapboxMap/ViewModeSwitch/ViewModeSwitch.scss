@@ -1,4 +1,5 @@
-@import '../../../../variables.scss';
+$tablet-breakpoint: 768px;
+$desktop-breakpoint: 992px;
 
 .view-mode-switch {
     display: grid;
@@ -10,7 +11,7 @@
     padding: var(--spacing-xx-small);
     position: absolute;
     z-index: var(--z-index-sticky);
-    top: 100px;
+    top: var(--spacing-x-large);
     left: var(--spacing-x-large);
 
     &__button {
@@ -24,7 +25,7 @@
     }
 
     @media (max-width: $desktop-breakpoint) {
-        top: 70px;
+        top:var(--spacing-x-small);
         left: var(--spacing-x-small);
     }
 }
