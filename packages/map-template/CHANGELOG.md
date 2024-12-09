@@ -5,10 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.60.0] - 2024-12-05
+### Added
 
-- Added `MAX_RESULTS` constant to limit the maximum number of search results displayed at once 
-- Sort venues by display name 
+## [1.60.0] - 2024-12-09
+
+- Limit the maximum number of search results to 100 to improve render performance.
+- Fixed a bug where the selected venue (in case no venue was set otherwise) was picked alphabetically by Administrative ID rather than the displayed Venue name.
 
 ## [1.59.0] - 2024-11-26
 
