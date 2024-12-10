@@ -115,10 +115,8 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bear
      * For Mapbox maps, determine if the View Mode switch should be shown based on the Solution.
      */
     useEffect(() => {
-        if (!solution) return;
-
         // If the required modules are enabled, show the Visibility Switch and set the View Mode
-        if (mapType === mapTypes.Mapbox && ['mapbox', '3dwalls', 'floorplan'].every(requiredModule => solution.modules.map(module => module.toLowerCase()).includes(requiredModule))) {
+        if (solution && mapType === mapTypes.Mapbox && ['mapbox', '3dwalls', 'floorplan'].every(requiredModule => solution.modules.map(module => module.toLowerCase()).includes(requiredModule))) {
             setViewModeSwitchVisible(true);
         } else {
             setViewModeSwitchVisible(false);
