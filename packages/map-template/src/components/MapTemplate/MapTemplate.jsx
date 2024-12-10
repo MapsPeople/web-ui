@@ -5,7 +5,7 @@ import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js
 import i18n from 'i18next';
 import initI18n from '../../i18n/initialize.js';
 import './MapTemplate.scss';
-import MIMap from "../Map/Map";
+import MapWrapper from "../MapWrapper/MapWrapper";
 import SplashScreen from '../SplashScreen/SplashScreen';
 import VenueSelector from '../VenueSelector/VenueSelector';
 import BottomSheet from '../BottomSheet/BottomSheet';
@@ -56,6 +56,7 @@ import { useCurrentVenue } from '../../hooks/useCurrentVenue.js';
 import showExternalIDsState from '../../atoms/showExternalIDsState.js'
 import showRoadNamesState from '../../atoms/showRoadNamesState.js';
 import searchExternalLocationsState from '../../atoms/searchExternalLocationsState.js';
+import isNullOrUndefined from '../../helpers/isNullOrUndefined.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -121,6 +122,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setshowExternalIDs] = useRecoilState(showExternalIDsState);
     const [, setShowRoadNames] = useRecoilState(showRoadNamesState);
     const [, setSearchExternalLocations] = useRecoilState(searchExternalLocationsState);
+    const [viewModeSwitchVisible, setViewModeSwitchVisible] = useState();
 
     const [showVenueSelector, setShowVenueSelector] = useState(true);
     const [showPositionControl, setShowPositionControl] = useState(true);
@@ -410,10 +412,15 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     /*
      * React on changes in the pitch prop.
+     * If the pitch is not set, set it to 45 degrees if the view mode switch is visible.
      */
     useEffect(() => {
-        setPitch(pitch);
-    }, [pitch]);
+        if (!isNullOrUndefined(pitch)) {
+            setPitch(pitch);
+        } else if (viewModeSwitchVisible) {
+            setPitch(45);
+        }
+    }, [pitch, viewModeSwitchVisible]);
 
     /*
      * React on changes in the bearing prop.
@@ -627,11 +634,13 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 }
             </Fragment>
         }
-        <MIMap
+        <MapWrapper
             useMapProviderModule={useMapProviderModule}
             onMapPositionKnown={() => mapPositionKnown()}
             onMapPositionInvestigating={() => setIsMapPositionInvestigating(true)}
             onLocationClick={(location) => locationClicked(location)}
+            onViewModeSwitchKnown={visible => setViewModeSwitchVisible(visible)}
+            resetCount={resetCount}
         />
     </div>
 }
