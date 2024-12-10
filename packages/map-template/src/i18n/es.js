@@ -58,6 +58,9 @@ const es = {
     'My position': 'Mi posición',
     'Turn on Accessibility to get directions that avoid stairs and escalators.': 'Active Accesibilidad para obtener indicaciones que eviten escalares y escaleras mecánicas',
     'Go!': '¡Ir!',
+    'Directions': 'Instrucciones',
+    'Choose departure': 'Elige la salida',
+    'Choose destination': 'Elige destino',
     // Venue selector
     'Venues': 'Lugares',
     'Select venue': 'Seleccionar lugar',

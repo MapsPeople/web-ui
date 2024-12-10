@@ -5,7 +5,6 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-
 ## [1.70.0] - 2024-12-10
 
 ### Added
@@ -14,6 +13,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed 
 - Fixed a bug where the selected venue (in case no venue was set otherwise) was picked alphabetically by Administrative ID rather than the displayed Venue name.
+
+## [1.60.0] - 2024-12-10
+
+### Added
+
+- Upgrade UI on the Wayfinding page.
+
+
 ## [1.59.0] - 2024-11-26
 
 ### Added
