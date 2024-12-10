@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './MapboxMap.scss';
-import ViewModeSwitch from './ViewmodeSwitch/ViewModeSwitch';
+import ViewModeSwitch from './ViewModeSwitch/ViewModeSwitch';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import isNullOrUndefined from '../../../../../map-template/src/helpers/isNullOrUndefined';
 
