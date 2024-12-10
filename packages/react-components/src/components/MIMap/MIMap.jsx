@@ -25,6 +25,8 @@ MIMap.propTypes = {
 }
 
 /**
+ * MIMap component: Renders a MapsIndoors map. The map can be either a Google Maps map or a Mapbox map based on the given map provider tokens.
+ *
  * @param {Object} props
  * @param {string} props.apiKey - MapsIndoors API key or solution alias.
  * @param {string} [props.gmApiKey] - Google Maps API key if you want to show a Google Maps map.
@@ -38,7 +40,6 @@ MIMap.propTypes = {
  * @param {Object} [props.mapOptions] - Options for instantiating and styling the map. In addition to map specific options, it can also contain a brandingColor prop (hex string) and a fitBoundsPadding object ({top: number, right: number, bottom: number, left: number }).
  * @param {function} [props.onInitialized] - Callback for when the MapsIndoors instance (https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/mapsindoors.MapsIndoors.html)
  *    and position control and knowledge of the View mode switch is ready. The instance, position control and boolean for if the view mode switch is active is given as payload.
- * @returns
  */
 function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bearing, pitch, resetUICounter, mapOptions, onInitialized }) {
 
