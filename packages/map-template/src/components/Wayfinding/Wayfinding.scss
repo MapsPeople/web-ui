@@ -3,7 +3,7 @@
 .wayfinding {
     color: var(--brand-colors-black-100);
     display: grid;
-    grid-template-rows: 238px min-content;
+    grid-template-rows: 190px min-content;
     min-height: 435px;
 
     &__directions {
@@ -45,14 +45,6 @@
         display: grid;
         gap: var(--spacing-medium);
         position: relative;
-    }
-
-    &__label {
-        display: grid;
-        gap: var(--spacing-x-small);
-        font-size: var(--font-size-small);
-        color: var(--color-gray-70);
-        font-weight: var(--font-weight-large);
     }
 
     &__use-current-position {
@@ -169,7 +161,7 @@
         background: transparent;
         position: absolute;
         right: 0;
-        top: 80px;
+        top: 40px;
 
         &:hover {
             opacity: .8;
@@ -189,6 +181,12 @@
         align-items: center;
     }
 
+    &__label {
+        span {
+            display: none;
+        }
+    }
+
     mi-dropdown::part(dropdown-container) {
         overflow-y: auto;
         left: unset;
@@ -206,5 +204,9 @@
         height: 36px;
         background: var(--color-gray-10);
         border: 1px solid var(--color-gray-30);
+    }
+
+    mi-search {
+        width: calc(100% - 48px);
     }
 }

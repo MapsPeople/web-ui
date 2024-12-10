@@ -5,6 +5,76 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.62.0] - 2024-12-10
+
+### Added
+
+- Upgrade SDK version to v4.38.0.
+
+## [1.61.1] - 2024-12-10
+
+### Fixed
+
+- Internal code refactor: The Map Template now uses the MIMap component from the `react-components` package, and the internal map components were removed.
+
+## [1.61.0] - 2024-12-10
+
+### Added
+
+- Limit the maximum number of search results to 100 to improve render performance.
+
+### Fixed
+
+- Fixed a bug where the selected venue (in case no venue was set otherwise) was picked alphabetically by Administrative ID rather than the displayed Venue name.
+
+## [1.60.0] - 2024-12-10
+
+### Added
+
+- Upgrade UI on the Wayfinding page.
+
+## [1.59.0] - 2024-11-26
+
+### Added
+
+- Upgrade SDK version to v4.37.1.
+
+## [1.58.0] - 2024-10-28
+
+### Added
+
+- Added new boolean prop `searchExternalLocations` for searches performed in the Wayfinding mode. If set to true, Mapbox/Google places will be displayed depending on the Map Provider you are using. If set to false, the results returned will only be MapsIndoors results. The default is false.
+
+## [1.57.0] - 2024-10-22
+
+### Added
+
+- Upgrade SDK version to v4.36.3.
+
+## [1.56.0] - 2024-10-21
+
+### Added
+
+- Added new boolean prop `searchExternalLocations` for searches performed in the Wayfinding mode. If set to true, Mapbox/Google places will be displayed depending on the Map Provider you are using. If set to false, the results returned will only be MapsIndoors results. The default is true.
+
+## [1.55.2] - 2024-10-18
+
+### Fixed
+
+- Simplify documentation on the README files.
+
+## [1.55.1] - 2024-10-17
+
+### Fixed
+
+- Mitigate memory leaks by cleaning up component state when unmounting.
+
+## [1.55.0] - 2024-09-19
+
+### Added
+
+- Added support for dutch language.
+
 ## [1.54.7] - 2024-09-12
 
 ### Fixed

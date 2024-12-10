@@ -70,6 +70,14 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
     const showExternalIDs = useRecoilValue(showExternalIDsState);
 
     useEffect(() => {
+        return () => {
+            setLocationDisplayRule(null);
+            setDestinationLocation();
+            setOriginLocation();
+        }
+    }, []);
+
+    useEffect(() => {
         // Reset state
         setShowFullDescription(false);
         setDescriptionHasContentAbove(false);

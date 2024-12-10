@@ -185,6 +185,10 @@ export namespace Components {
     }
     interface MiDropdown {
         /**
+          * Clear filter.
+         */
+        "clearFilter": () => Promise<void>;
+        /**
           * Sets the disabled state for the dropdown.
          */
         "disabled": boolean;
@@ -230,6 +234,11 @@ export namespace Components {
           * @type {boolean}
          */
         "open": boolean;
+        /**
+          * If present, it dictates placeholder for an filterable input field in the dropdown. Defaults to 'Type to filter...'.
+          * @type {string}
+         */
+        "placeholder": string;
         /**
           * Gets the selected items.
           * @type {Array<HTMLMiDropdownItemElement>}
@@ -1612,10 +1621,19 @@ declare namespace LocalJSX {
          */
         "onChange"?: (event: MiDropdownCustomEvent<any>) => void;
         /**
+          * Emit an event when search field is cleared.
+         */
+        "onCleared"?: (event: MiDropdownCustomEvent<void>) => void;
+        /**
           * Gets or sets the state of the dropdown. If the attribute is set to true then the dropdown will be expanded.
           * @type {boolean}
          */
         "open"?: boolean;
+        /**
+          * If present, it dictates placeholder for an filterable input field in the dropdown. Defaults to 'Type to filter...'.
+          * @type {string}
+         */
+        "placeholder"?: string;
         /**
           * Gets the selected items.
           * @type {Array<HTMLMiDropdownItemElement>}
