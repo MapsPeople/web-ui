@@ -11,6 +11,7 @@ on:
       - packages/midt/**
       - packages/components/**
       - packages/map-template/**
+      - packages/react-components/**
       - .github/workflows/bump-version-release.yml
 
 jobs:

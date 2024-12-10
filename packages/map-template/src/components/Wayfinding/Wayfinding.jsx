@@ -17,7 +17,7 @@ import SearchField from '../WebComponentWrappers/Search/Search';
 import { snapPoints } from '../../constants/snapPoints';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import generateMyPositionLocation from '../../helpers/MyPositionLocation';
-import addGooglePlaceGeometry from "../Map/GoogleMapsMap/GooglePlacesHandler";
+import addGooglePlaceGeometry from "./googlePlacesHandler";
 import GooglePlaces from '../../assets/google-places.png';
 import { mapTypes } from "../../constants/mapTypes";
 import { ReactComponent as WalkIcon } from '../../assets/walk.svg';
@@ -27,13 +27,15 @@ import { ReactComponent as CompassArrow } from '../../assets/compass-arrow.svg';
 import { travelModes } from "../../constants/travelModes";
 import Dropdown from "../WebComponentWrappers/Dropdown/Dropdown";
 import primaryColorState from "../../atoms/primaryColorState";
-import addMapboxPlaceGeometry from "../Map/MapboxMap/MapboxPlacesHandler";
+import addMapboxPlaceGeometry from "./mapboxPlacesHandler";
 import mapboxAccessTokenState from "../../atoms/mapboxAccessTokenState";
 import distanceUnitSystemSelector from '../../selectors/distanceUnitSystemSelector';
 import useDirectionsInfo from "../../hooks/useDirectionsInfo";
 import hasFoundRouteState from "../../atoms/hasFoundRouteState";
 import accessibilityOnState from "../../atoms/accessibilityOnState";
 import Accessibility from "../Accessibility/Accessibility";
+import searchExternalLocationsState from "../../atoms/searchExternalLocationsState";
+import isNullOrUndefined from "../../helpers/isNullOrUndefined";
 
 const searchFieldIdentifiers = {
     TO: 'TO',
@@ -105,6 +107,8 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     const distanceUnitSystem = useRecoilValue(distanceUnitSystemSelector);
 
     const [totalDistance, totalTime, hasFoundRoute, areDirectionsReady] = useDirectionsInfo(originLocation, destinationLocation, directionsService, travelMode, accessibilityOn)
+
+    const searchExternalLocations = useRecoilValue(searchExternalLocationsState);
 
     /**
      * Decorates location with data that is required for wayfinding to work.
@@ -315,6 +319,14 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     }
 
     useEffect(() => {
+        return () => {
+            setSearchResults([]);
+            setDestinationLocation();
+            setOriginLocation();
+        }
+    }, []);
+
+    useEffect(() => {
         setSize(snapPoints.MAX);
         let originLocationWasSet = false;
 
@@ -390,7 +402,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     return (
         <div className="wayfinding" ref={wayfindingRef}>
             <div className="wayfinding__directions">
-                <div className="wayfinding__title">{t('Start wayfinding')}</div>
+                <div className="wayfinding__title">{t('Directions')}</div>
                 <button className="wayfinding__close"
                     onClick={() => closeWayfinding()}
                     aria-label="Close">
@@ -398,13 +410,13 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                 </button>
                 <div className="wayfinding__locations">
                     <label className="wayfinding__label">
-                        {t('From').toUpperCase()}
+                        <span>{t('Choose departure')}</span>
                         <SearchField
                             ref={fromFieldRef}
                             mapsindoors={true}
-                            google={selectedMapType === mapTypes.Google}
-                            mapbox={selectedMapType === mapTypes.Mapbox}
-                            placeholder={t('Search by name, category, building...')}
+                            google={selectedMapType === mapTypes.Google && searchExternalLocations}
+                            mapbox={selectedMapType === mapTypes.Mapbox && searchExternalLocations}
+                            placeholder={t('Choose departure')}
                             results={locations => searchResultsReceived(locations, searchFieldIdentifiers.FROM)}
                             clicked={() => onSearchClicked(searchFieldIdentifiers.FROM)}
                             cleared={() => onSearchCleared(searchFieldIdentifiers.FROM)}
@@ -417,20 +429,19 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                         <SwitchIcon />
                     </button>
                     <label className="wayfinding__label">
-                        {t('To').toUpperCase()}
+                        <span>{t('Choose destination')}</span>
                         <SearchField
                             ref={toFieldRef}
                             mapsindoors={true}
-                            google={selectedMapType === mapTypes.Google}
-                            mapbox={selectedMapType === mapTypes.Mapbox}
-                            placeholder={t('Search by name, category, building...')}
+                            google={selectedMapType === mapTypes.Google && searchExternalLocations}
+                            mapbox={selectedMapType === mapTypes.Mapbox && searchExternalLocations}
+                            placeholder={t('Choose destination')}
                             results={locations => searchResultsReceived(locations, searchFieldIdentifiers.TO)}
                             clicked={() => onSearchClicked(searchFieldIdentifiers.TO)}
                             cleared={() => onSearchCleared(searchFieldIdentifiers.TO)}
                             changed={() => onInputChanged(searchFieldIdentifiers.TO)}
                         />
                     </label>
-
                 </div>
             </div>
             {!hasFoundRoute && <p className="wayfinding__error">{t('No route found')}</p>}

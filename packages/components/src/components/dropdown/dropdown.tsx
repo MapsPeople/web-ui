@@ -1,4 +1,4 @@
-import { Component, Element, Event, EventEmitter, Host, JSX, Prop, State, Watch, Listen, h } from '@stencil/core';
+import { Component, Element, Event, EventEmitter, Host, JSX, Prop, State, Watch, Listen, h, Method } from '@stencil/core';
 import fuzzysort from 'fuzzysort';
 import { SortOrder } from '../../enums/sort-order.enum';
 
@@ -30,12 +30,17 @@ export class Dropdown {
     }) change: EventEmitter;
 
     /**
+     * Emit an event when search field is cleared.
+     */
+    @Event() cleared: EventEmitter<void>;
+
+    /**
      * Gets or sets the state of the dropdown.
      * If the attribute is set to true then the dropdown will be expanded.
      *
      * @type {boolean}
      */
-    @Prop() open = false;
+    @Prop() open: boolean = false;
 
     /**
      * Gets or sets the list items.
@@ -98,6 +103,14 @@ export class Dropdown {
      * @type {boolean}
      */
     @Prop() filterable = false;
+
+
+    /**
+     * If present, it dictates placeholder for an filterable input field in the dropdown. Defaults to 'Type to filter...'.
+     *
+     * @type {string}
+     */
+    @Prop() placeholder: string = 'Type to filter...';
 
     /**
      * This attribute indicates that multiple items can be selected in the list. If it is not specified, then only one item can be selected at a time.
@@ -491,11 +504,13 @@ export class Dropdown {
     /**
      * Clear filter.
      */
-    clearFilter(): void {
+    @Method()
+    public clearFilter(): void {
         if (this.filterElement) {
             this.filterElement.value = '';
             this.filterElement.focus();
             this.currentItems = this.items;
+            this.cleared.emit();
         }
 
         this.isClearButtonVisible = false;
@@ -591,7 +606,7 @@ export class Dropdown {
         return (
             <div class="filter">
                 <input type="text" class="mi-input filter__input"
-                    placeholder="Type to filter"
+                    placeholder={this.placeholder}
                     ref={(el): HTMLInputElement => this.filterElement = el}
                     onInput={(): void => { this.filter(); }}
                     tabIndex={this.open ? 0 : -1} />
