@@ -58,6 +58,9 @@ const da = {
     'My position': 'Min position',
     'Turn on Accessibility to get directions that avoid stairs and escalators.': 'Slå "Tilgængelig rute" til for at få en rutevejledning uden trapper og rulletrapper.',
     'Go!': 'Go!',
+    'Directions': 'Rutevejledning',
+    'Choose departure': 'Vælg startpunkt',
+    'Choose destination': 'Vælg destination',
     // Venue selector
     'Venues': 'Venues',
     'Select venue': 'Vælg venue',

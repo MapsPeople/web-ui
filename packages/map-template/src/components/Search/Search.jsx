@@ -57,6 +57,9 @@ function Search({ onSetSize, isOpen }) {
     /** Referencing the keyboard element */
     const keyboardRef = useRef();
 
+    /** Maximum number of search results to show */
+    const MAX_RESULTS = 100;
+
     const [searchDisabled, setSearchDisabled] = useState(true);
     const [searchResults, setSearchResults] = useRecoilState(searchResultsState);
     const categories = useRecoilValue(categoriesState);
@@ -137,9 +140,11 @@ function Search({ onSetSize, isOpen }) {
      * @param {array} locations
      */
     function onResults(locations) {
-        setSearchResults(locations);
-        setFilteredLocations(locations);
-        setShowNotFoundMessage(locations.length === 0);
+        const displayResults = locations.slice(0, MAX_RESULTS);
+
+        setSearchResults(displayResults);
+        setFilteredLocations(displayResults);
+        setShowNotFoundMessage(displayResults.length === 0);
 
         // Handles updates to scroll buttons when the category changes.
         // When a category changes, the scroll buttons need to have their enabled/disabled states updated.
@@ -387,17 +392,19 @@ function Search({ onSetSize, isOpen }) {
                 {isKioskContext && showLegendButton && <button className='search__legend' onClick={() => setShowLegendDialog(true)}><Legend /></button>}
 
                 { /* Search field that allows users to search for locations (MapsIndoors Locations and external) */}
-
-                <SearchField
-                    ref={searchFieldRef}
-                    mapsindoors={true}
-                    placeholder={t('Search by name, category, building...')}
-                    results={locations => onResults(locations)}
-                    clicked={() => searchFieldClicked()}
-                    cleared={() => cleared()}
-                    category={selectedCategory}
-                    disabled={searchDisabled} // Disabled initially to prevent content jumping when clicking and changing sheet size.
-                />
+                <label className="search__label">
+                    <span>{t('Search by name, category, building...')}</span>
+                    <SearchField
+                        ref={searchFieldRef}
+                        mapsindoors={true}
+                        placeholder={t('Search by name, category, building...')}
+                        results={locations => onResults(locations)}
+                        clicked={() => searchFieldClicked()}
+                        cleared={() => cleared()}
+                        category={selectedCategory}
+                        disabled={searchDisabled} // Disabled initially to prevent content jumping when clicking and changing sheet size.
+                    />
+                </label>
             </div>
 
 
