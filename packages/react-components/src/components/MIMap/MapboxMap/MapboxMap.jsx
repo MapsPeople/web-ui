@@ -123,6 +123,28 @@ function MapboxMap({ accessToken, onInitialized, onPositionControl, center, zoom
         }
     }, [mapsIndoorsInstance, mapViewInstance, hasFloorSelector, hasPositionControl, hasZoomControl]);
 
+
+    useEffect(() => {
+        // Initialize MapboxV3View MapView
+        window.mapboxgl = mapboxgl;
+        const mapViewOptions = {
+            accessToken: accessToken,
+            element: document.getElementById('map'),
+            center: center ?? { lat: 0, lng: 0 }, // The MapsIndoors SDK needs a starting point and a zoom level to avoid timing issues when setting a venue.
+            zoom: zoom ?? 15,
+            bounds: bounds ? [bounds.west, bounds.south, bounds.east, bounds.north] : undefined,
+            bearing: bearing ?? 0,
+            pitch: pitch ?? 0,
+            ...mapOptions
+        };
+
+        const mapView = new window.mapsindoors.mapView.MapboxV3View(mapViewOptions);
+
+        setMapViewInstance(mapView);
+
+        onInitialized(mapView);
+    }, []);
+
     // Add click event listener to the map to detect clicks
     useEffect(() => {
         if (mapsIndoorsInstance) {
@@ -152,27 +174,6 @@ function MapboxMap({ accessToken, onInitialized, onPositionControl, center, zoom
 
         }
     }, [mapsIndoorsInstance, setMapClick]);
-
-    useEffect(() => {
-        // Initialize MapboxV3View MapView
-        window.mapboxgl = mapboxgl;
-        const mapViewOptions = {
-            accessToken: accessToken,
-            element: document.getElementById('map'),
-            center: center ?? { lat: 0, lng: 0 }, // The MapsIndoors SDK needs a starting point and a zoom level to avoid timing issues when setting a venue.
-            zoom: zoom ?? 15,
-            bounds: bounds ? [bounds.west, bounds.south, bounds.east, bounds.north] : undefined,
-            bearing: bearing ?? 0,
-            pitch: pitch ?? 0,
-            ...mapOptions
-        };
-
-        const mapView = new window.mapsindoors.mapView.MapboxV3View(mapViewOptions);
-
-        setMapViewInstance(mapView);
-
-        onInitialized(mapView);
-    }, []);
 
     return <div className="mapsindoors-map mapbox-map-container" id="map">
         {viewModeSwitchVisible && <ViewModeSwitch reset={resetViewMode} mapView={mapViewInstance} pitch={pitch} activeColor={mapOptions?.brandingColor} />}
