@@ -53,7 +53,7 @@ const de = {
     'Turn around': 'Umdrehen',
     // Wayfinding component
     'Switch': 'Umkehren',
-    'Avoid stairs and escalators': 'Treppen und Rolltreppen vermeiden',
+    'Avoid stairs and escalators': 'Vermeide Treppen und Rolltreppen',
     'No route found': 'Keine Route gefunden',
     'My position': 'Meine Position',
     'Go!': 'Start!',
