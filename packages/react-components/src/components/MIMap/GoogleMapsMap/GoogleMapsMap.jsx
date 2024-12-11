@@ -143,11 +143,13 @@ function GoogleMapsMap({ apiKey, onInitialized, onPositionControl, center, zoom,
 
             mapsIndoorsInstance.addListener('click', (locationResult) => {
                 setMapClick(false);
+                // TODO Remove console.log after review
                 console.log('Clicked on a MapsIndoors location:', locationResult);
             });
 
             map.addListener('click', (clickResult) => {
                 setMapClick(true);
+                // TODO Remove console.log after review
                 console.log('Clicked on a Google Maps Place:', clickResult);
             });
         }
