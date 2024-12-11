@@ -150,8 +150,6 @@ function MapboxMap({ accessToken, onInitialized, onPositionControl, center, zoom
             // Add event listener
             map.on('click', handleMapClick);
 
-            // Cleanup event listener
-            return () => map.off('click', handleMapClick);
         }
     }, [mapsIndoorsInstance, setMapClick]);
 
