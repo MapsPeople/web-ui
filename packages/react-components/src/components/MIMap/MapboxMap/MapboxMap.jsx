@@ -164,6 +164,7 @@ function MapboxMap({ accessToken, onInitialized, onPositionControl, center, zoom
                 } else if (!features.length && !isClickedOutOfVenue) {
                     // Clicked outside venue
                     isClickedOutOfVenue = true;
+                    // TODO Remove console.log after review
                     console.log('Clicked Nothing');
                     setMapClick(true);
                 }

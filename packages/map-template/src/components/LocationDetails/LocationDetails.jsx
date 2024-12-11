@@ -129,6 +129,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
     useEffect(() => {
         if (mapClick && !isWayfindingActive) {
             collapseLocationDescription(); // Call existing back function
+            // TODO Remove console.log after review
             console.log('Location clicked outside of known features:', mapClick);
             onBack();
         }
