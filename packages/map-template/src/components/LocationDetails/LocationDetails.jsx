@@ -72,6 +72,8 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
 
     const mapClick = useRecoilValue(mapClickState);
 
+    const [isWayfindingActive, setIsWayfindingActive] = useState(false);
+
     useEffect(() => {
         return () => {
             setLocationDisplayRule(null);
@@ -125,7 +127,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
     }, [snapPointSwiped]); // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
-        if (mapClick) {
+        if (mapClick && !isWayfindingActive) {
             collapseLocationDescription(); // Call existing back function
             console.log('Location clicked outside of known features:', mapClick);
             onBack();
@@ -190,6 +192,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
         setDescriptionHasContentAbove(false);
         setDescriptionHasContentBelow(false);
         setSize(snapPoints.FIT);
+        setIsWayfindingActive(true);
 
         onStartWayfinding();
     }
@@ -214,6 +217,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
         setDescriptionHasContentAbove(false);
         setDescriptionHasContentBelow(false);
         setSize(snapPoints.FIT);
+        setIsWayfindingActive(false);
 
         onBack();
     }
