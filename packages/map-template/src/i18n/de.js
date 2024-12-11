@@ -53,7 +53,7 @@ const de = {
     'Turn around': 'Umdrehen',
     // Wayfinding component
     'Switch': 'Umkehren',
-    'Accessibility': 'Barrierefrei',
+    'Accessibility': 'Treppen und Rolltreppen vermeiden',
     'No route found': 'Keine Route gefunden',
     'My position': 'Meine Position',
     'Turn on Accessibility to get directions that avoid stairs and escalators.': 'Schalte Barrierefrei ein, um Treppen und Rolltreppen zu vermeiden.',

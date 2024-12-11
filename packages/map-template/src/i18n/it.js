@@ -53,7 +53,7 @@ const it = {
     'Turn around': 'Girati',
     // Wayfinding component
     'Switch': 'Inverti',
-    'Accessibility': 'Percorso accessibile',
+    'Accessibility': 'Evita scale e scale mobili',
     'No route found': 'Nessun percorso trovato',
     'My position': 'La mia posizione',
     'Turn on Accessibility to get directions that avoid stairs and escalators.': 'Attiva "Percorso accessibile" per ottenere indicazioni che evitano scale e scale mobili.',
