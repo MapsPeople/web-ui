@@ -56,7 +56,6 @@ const nl = {
     'Avoid stairs and escalators': 'Vermijd trappen en roltrappen',
     'No route found': 'Geen route gevonden',
     'My position': 'Mijn positie',
-    'Turn on Accessibility to get directions that avoid stairs and escalators.': 'Schakel toegankelijkheid in voor een routebeschrijving waarbij trappen en roltrappen worden vermeden',
     'Go!': 'Gaan!',
     'Directions': 'Richtingen',
     'Choose departure': 'Kies vertrek',
