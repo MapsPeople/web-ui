@@ -162,11 +162,11 @@ function goto(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLev
     mapsIndoorsInstance.getMapView().tilt(pitch || 0);
     mapsIndoorsInstance.getMapView().rotate(bearing || 0);
     mapsIndoorsInstance.goTo({ type: 'Feature', geometry, properties: {}}, {
-        maxZoom: 22, // TODO: or startZoomLevel if set?
+        maxZoom: zoomLevel ?? 22,
         padding: { top: 0, right: 0, bottom: paddingBottom, left: paddingLeft },
+    }).then(() => {
+        if (zoomLevel) {
+            mapsIndoorsInstance.setZoom(zoomLevel);
+        }
     });
-
-    if (zoomLevel) {
-        mapsIndoorsInstance.setZoom(zoomLevel);
-    }
 }
