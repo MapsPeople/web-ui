@@ -150,13 +150,13 @@ export default useMapBoundsDeterminer;
 /**
  * Make the map go to specified geometry with optional padding, zoom level, pitch and bearing.
  *
- * @param {object} geometry
- * @param {object} mapsIndoorsInstance
- * @param {number} paddingBottom
- * @param {number} paddingLeft
- * @param {number} zoomLevel
- * @param {number} pitch
- * @param {number} bearing
+ * @param {object} geometry - GeoJSON geometry to make map bounds fit to.
+ * @param {object} mapsIndoorsInstance - MapsIndoors instance.
+ * @param {number} paddingBottom - Padding that should be applied to the bottom of the map.
+ * @param {number} paddingLeft - Padding that should be applied to the left of the map.
+ * @param {number} zoomLevel - Enforced zoom level.
+ * @param {number} pitch - Map pitch (tilt).
+ * @param {number} bearing - Mp bearing (rotation) in degrees from north.
  */
 function goTo(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLevel, pitch, bearing) {
     mapsIndoorsInstance.getMapView().tilt(pitch || 0);
