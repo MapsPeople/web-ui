@@ -228,7 +228,7 @@ function Search({ onSetSize, isOpen }) {
 
         Promise.all([getBottomPadding(), getLeftPadding()]).then(([bottomPadding, leftPadding]) => {
             mapsIndoorsInstance.goTo(location, {
-                maxZoom: 22, // TODO or startZoomLevel if it is set
+                maxZoom: 22,
                 padding: { bottom: bottomPadding, left: leftPadding, top: 0, right: 0 }
             });
         });
