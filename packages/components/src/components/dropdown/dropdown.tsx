@@ -584,7 +584,7 @@ export class Dropdown {
         const label = this.label ?? this.selected?.[0]?.text;
 
         if (label > '') {
-            return (<div part="button-label" class="button__label">{this.label}</div>);
+            return (<div part="button-label" class="button__label">{label}</div>);
         } else if (this.selected?.[0]?.innerHTML) {
             return (<div part="button-label" class="button__label button__label--from-inner-html" innerHTML={this.selected[0].innerHTML}></div>);
         } else {
