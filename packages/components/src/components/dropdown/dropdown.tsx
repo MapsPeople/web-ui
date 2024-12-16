@@ -575,17 +575,21 @@ export class Dropdown {
         return noResultsTemplate;
     }
 
-
     /**
      * Helper function to render the button label.
      *
      * @returns {JSX.Element}
      */
     renderButtonLabel(): JSX.Element {
-        const label = this.label ?? this.selected?.[0]?.text ?? this.selected?.[0]?.innerHTML ?? '';
-        this.selected?.[0]?.text ?? this.selected?.[0]?.innerHTML ?? '';
+        const label = this.label ?? this.selected?.[0]?.text;
 
-        return (<div part="button-label" class="button__label">{label}</div>);
+        if (label > '') {
+            return (<div part="button-label" class="button__label">{this.label}</div>);
+        } else if (this.selected?.[0]?.innerHTML) {
+            return (<div part="button-label" class="button__label button__label--from-inner-html" innerHTML={this.selected[0].innerHTML}></div>);
+        } else {
+            return (<div part="button-label" class="button__label"></div>);
+        }
     }
 
     /**
