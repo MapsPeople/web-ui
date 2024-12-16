@@ -142,6 +142,13 @@ export class Dropdown {
      */
     @Prop() iconAlt: string;
 
+    /**
+     * Sets the alignment of the dropdown. The default alignment is 'left'.
+     *
+     * @type {('right' | 'left')}
+     */
+    @Prop({attribute: 'alignment'}) dropdownAlignment: 'right' | 'left' = 'left';
+
     @State() currentItems: Array<HTMLMiDropdownItemElement> = [];
 
     /**
@@ -568,19 +575,16 @@ export class Dropdown {
         return noResultsTemplate;
     }
 
-
     /**
      * Helper function to render the button label.
      *
      * @returns {JSX.Element}
      */
     renderButtonLabel(): JSX.Element {
-        this.selected?.[0]?.text ?? this.selected?.[0]?.innerHTML ?? '';
+        const label = this.label ?? this.selected?.[0]?.text;
 
-        if (this.multiple) {
+        if (label > '') {
             return (<div part="button-label" class="button__label">{this.label}</div>);
-        } else if (this.selected?.[0]?.text) {
-            return (<div part="button-label" class="button__label">{this.selected[0].text}</div>);
         } else if (this.selected?.[0]?.innerHTML) {
             return (<div part="button-label" class="button__label button__label--from-inner-html" innerHTML={this.selected[0].innerHTML}></div>);
         } else {
@@ -695,7 +699,7 @@ export class Dropdown {
             this.listElement.style.right = `${MARGIN}px`;
             this.listElement.style.left = `${MARGIN}px`;
             this.listElement.style.minWidth = 'unset';
-        } else if (listElementRect.right > clientWidth) {
+        } else if (listElementRect.right > clientWidth || this.dropdownAlignment === 'right') {
             this.listElement.style.left = 'unset';
             this.listElement.style.right = `${clientWidth - hostElementRect.right}px`;
         } else {
