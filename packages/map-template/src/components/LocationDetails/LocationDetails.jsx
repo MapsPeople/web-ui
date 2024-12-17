@@ -16,7 +16,7 @@ import kioskLocationState from '../../atoms/kioskLocationState';
 import accessibilityOnState from '../../atoms/accessibilityOnState';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
 import showExternalIDsState from '../../atoms/showExternalIDsState';
-import { mapClickState } from '../../atoms/mapClickState';
+import useMapClick from '../../hooks/useMapClick';
 
 /**
  * Shows details for a MapsIndoors Location.
@@ -70,9 +70,9 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
 
     const showExternalIDs = useRecoilValue(showExternalIDsState);
 
-    const mapClick = useRecoilValue(mapClickState);
-
     const [isWayfindingActive, setIsWayfindingActive] = useState(false);
+
+    const clickedOutsideMapsIndoorsData = useMapClick(mapsIndoorsInstance);
 
     useEffect(() => {
         return () => {
@@ -127,13 +127,10 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
     }, [snapPointSwiped]); // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
-        if (mapClick && !isWayfindingActive) {
-            collapseLocationDescription(); // Call existing back function
-            // TODO Remove console.log after review
-            console.log('Location clicked outside of known features:', mapClick);
+        if (clickedOutsideMapsIndoorsData) {
             onBack();
         }
-    }, [mapClick]);
+    }, [clickedOutsideMapsIndoorsData]);
 
     /**
      * Toggle the description.
