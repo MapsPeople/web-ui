@@ -6,8 +6,6 @@ import './MapboxMap.scss';
 import ViewModeSwitch from './ViewModeSwitch/ViewModeSwitch';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import isNullOrUndefined from '../../../../../map-template/src/helpers/isNullOrUndefined';
-import { useRecoilState } from 'recoil';
-import { mapClickState } from '../../../../../map-template/src/atoms/mapClickState';
 
 MapboxMap.propTypes = {
     accessToken: PropTypes.string.isRequired,
@@ -46,7 +44,6 @@ function MapboxMap({ accessToken, onInitialized, onPositionControl, center, zoom
     const [hasPositionControl, setHasPositionControl] = useState(false);
     const [hasZoomControl, setHasZoomControl] = useState(false);
     const isDesktop = useIsDesktop();
-    const [, setMapClick] = useRecoilState(mapClickState);
 
     /*
      * React on any props that are used to control the position of the map.
@@ -144,37 +141,6 @@ function MapboxMap({ accessToken, onInitialized, onPositionControl, center, zoom
 
         onInitialized(mapView);
     }, []);
-
-    // Add click event listener to the map to detect clicks
-    useEffect(() => {
-        if (mapsIndoorsInstance) {
-
-            // Cache map reference
-            const map = mapsIndoorsInstance.getMap();
-
-            let isClickedOutOfVenue = true;
-
-            const handleMapClick = (featureUnderCursor) => {
-                const features = mapsIndoorsInstance.getMap().queryRenderedFeatures(featureUnderCursor.point);
-
-                if (features.length && isClickedOutOfVenue) {
-                    // Clicked on venue feature
-                    isClickedOutOfVenue = false;
-                    setMapClick(false);
-                } else if (!features.length && !isClickedOutOfVenue) {
-                    // Clicked outside venue
-                    isClickedOutOfVenue = true;
-                    // TODO Remove console.log after review
-                    console.log('Clicked Nothing');
-                    setMapClick(true);
-                }
-            };
-
-            // Add event listener
-            map.on('click', handleMapClick);
-
-        }
-    }, [mapsIndoorsInstance, setMapClick]);
 
     return <div className="mapsindoors-map mapbox-map-container" id="map">
         {viewModeSwitchVisible && <ViewModeSwitch reset={resetViewMode} mapView={mapViewInstance} pitch={pitch} activeColor={mapOptions?.brandingColor} />}
