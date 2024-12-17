@@ -6,7 +6,6 @@ import './GoogleMapsMap.scss';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import isNullOrUndefined from '../../../../../map-template/src/helpers/isNullOrUndefined';
 import { useRecoilState } from 'recoil';
-import { mapClickState } from '../../../../../map-template/src/atoms/mapClickState';
 
 GoogleMapsMap.propTypes = {
     apiKey: PropTypes.string.isRequired,
@@ -41,7 +40,6 @@ function GoogleMapsMap({ apiKey, onInitialized, onPositionControl, center, zoom,
     const [hasPositionControl, setHasPositionControl] = useState(false);
     const [hasZoomControl, setHasZoomControl] = useState(false);
     const isDesktop = useIsDesktop();
-    const [, setMapClick] = useRecoilState(mapClickState);
 
     /*
      * React on any props that are used to control the position of the map.
@@ -136,24 +134,6 @@ function GoogleMapsMap({ apiKey, onInitialized, onPositionControl, center, zoom,
         });
     }, []);
 
-    // Add click event listener to the map to detect clicks
-    useEffect(() => {
-        if (mapViewInstance && mapsIndoorsInstance) {
-            const map = mapViewInstance.getMap();
-
-            mapsIndoorsInstance.addListener('click', (locationResult) => {
-                setMapClick(false);
-                // TODO Remove console.log after review
-                console.log('Clicked on a MapsIndoors location:', locationResult);
-            });
-
-            map.addListener('click', (clickResult) => {
-                setMapClick(true);
-                // TODO Remove console.log after review
-                console.log('Clicked on a Google Maps Place:', clickResult);
-            });
-        }
-    }, [mapViewInstance, mapsIndoorsInstance, setMapClick]);
     return <div className="mapsindoors-map google-maps-map-container" id="map"></div>
 }
 
