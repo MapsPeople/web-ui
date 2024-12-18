@@ -9,9 +9,12 @@ export default function useMapClick(mapsIndoorsInstance) {
     const map = mapsIndoorsInstance.getMap();
 
     useEffect(() => {
+        let mapboxClickHandler;
+        let googleMapsClickHandler;
+        let googleMapsIndoorsClickHandler;
 
         if (mapType === mapTypes.Mapbox) {
-            const handleMapClick = (clickResult) => {
+            mapboxClickHandler = (clickResult) => {
                 const features = mapsIndoorsInstance.getMap().queryRenderedFeatures(clickResult.point);
 
                 if (features.length) {
@@ -27,21 +30,36 @@ export default function useMapClick(mapsIndoorsInstance) {
                 }
             };
             // Add event listener
-            map.on('click', handleMapClick);
+            map.on('click', mapboxClickHandler);
         }
 
         if (mapType === mapTypes.Google) {
-            mapsIndoorsInstance.addListener('click', (clickResult) => {
+            googleMapsClickHandler = (clickResult) => {
                 setClickedOutside(false);
                 // TODO Remove console.log after review
                 console.log('Clicked on a MapsIndoors location:', clickResult);
-            });
-            map.addListener('click', (clickResult) => {
+            };
+
+            googleMapsIndoorsClickHandler = (clickResult) => {
                 // TODO Remove console.log after review
                 setClickedOutside(true);
                 console.log('Clicked on a Google Maps Place:', clickResult);
-            });
+            }
+
+            mapsIndoorsInstance.addListener('click', googleMapsClickHandler);
+            
+            map.addListener('click', googleMapsIndoorsClickHandler);
         }
+
+        return () => {
+            if (mapType === mapTypes.Mapbox) {
+                map.off('click', mapboxClickHandler);
+            }
+            if (mapType === mapTypes.Google) {
+                mapsIndoorsInstance.removeListener('click', googleMapsClickHandler);
+                map.removeListener('click', googleMapsIndoorsClickHandler);
+            }
+        };
 
     }, [mapsIndoorsInstance]);
 
