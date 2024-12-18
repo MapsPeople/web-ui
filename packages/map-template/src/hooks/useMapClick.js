@@ -1,11 +1,7 @@
 import { useEffect, useState } from 'react';
 import mapTypeState from '../atoms/mapTypeState';
 import { useRecoilValue } from 'recoil';
-
-const MAP_PROVIDERS = {
-    MAPBOX: 'mapbox',
-    GOOGLE: 'google'
-}
+import { mapTypes } from '../constants/mapTypes';
 
 export default function useMapClick(mapsIndoorsInstance) {
     const mapType = useRecoilValue(mapTypeState);
@@ -14,7 +10,7 @@ export default function useMapClick(mapsIndoorsInstance) {
 
     useEffect(() => {
 
-        if (mapType === MAP_PROVIDERS.MAPBOX) {
+        if (mapType === mapTypes.Mapbox) {
             const handleMapClick = (clickResult) => {
                 const features = mapsIndoorsInstance.getMap().queryRenderedFeatures(clickResult.point);
 
@@ -34,7 +30,7 @@ export default function useMapClick(mapsIndoorsInstance) {
             map.on('click', handleMapClick);
         }
 
-        if (mapType === MAP_PROVIDERS.GOOGLE) {
+        if (mapType === mapTypes.Google) {
             mapsIndoorsInstance.addListener('click', (clickResult) => {
                 setClickedOutside(false);
                 // TODO Remove console.log after review
