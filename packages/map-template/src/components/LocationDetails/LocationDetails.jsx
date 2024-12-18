@@ -16,6 +16,7 @@ import kioskLocationState from '../../atoms/kioskLocationState';
 import accessibilityOnState from '../../atoms/accessibilityOnState';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
 import showExternalIDsState from '../../atoms/showExternalIDsState';
+import useMapClick from '../../hooks/useMapClick';
 
 /**
  * Shows details for a MapsIndoors Location.
@@ -69,6 +70,10 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
 
     const showExternalIDs = useRecoilValue(showExternalIDsState);
 
+    const [isWayfindingActive, setIsWayfindingActive] = useState(false);
+
+    const clickedOutsideMapsIndoorsData = useMapClick(mapsIndoorsInstance);
+
     useEffect(() => {
         return () => {
             setLocationDisplayRule(null);
@@ -120,6 +125,12 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
             collapseLocationDescription();
         }
     }, [snapPointSwiped]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    useEffect(() => {
+        if (clickedOutsideMapsIndoorsData) {
+            onBack();
+        }
+    }, [clickedOutsideMapsIndoorsData]);
 
     /**
      * Toggle the description.
@@ -179,6 +190,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
         setDescriptionHasContentAbove(false);
         setDescriptionHasContentBelow(false);
         setSize(snapPoints.FIT);
+        setIsWayfindingActive(true);
 
         onStartWayfinding();
     }
@@ -203,6 +215,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
         setDescriptionHasContentAbove(false);
         setDescriptionHasContentBelow(false);
         setSize(snapPoints.FIT);
+        setIsWayfindingActive(false);
 
         onBack();
     }
