@@ -5,7 +5,6 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import './GoogleMapsMap.scss';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import isNullOrUndefined from '../../../../../map-template/src/helpers/isNullOrUndefined';
-import { useRecoilState } from 'recoil';
 
 GoogleMapsMap.propTypes = {
     apiKey: PropTypes.string.isRequired,
