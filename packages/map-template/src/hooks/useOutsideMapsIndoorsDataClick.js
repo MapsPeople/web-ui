@@ -9,7 +9,7 @@ import { mapTypes } from '../constants/mapTypes';
  * @param {Object} mapsIndoorsInstance - The MapsIndoors instance.
  * @returns {boolean} Returns `true` if the user clicked outside MapsIndoors data, `false` otherwise.
  */
-export default function useMapClick(mapsIndoorsInstance) {
+export default function useOutsideMapsIndoorsDataClick(mapsIndoorsInstance) {
     const mapType = useRecoilValue(mapTypeState);
     const [clickedOutside, setClickedOutside] = useState(false);
     const map = mapsIndoorsInstance.getMap();

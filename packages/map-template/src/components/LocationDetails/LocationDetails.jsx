@@ -16,7 +16,7 @@ import kioskLocationState from '../../atoms/kioskLocationState';
 import accessibilityOnState from '../../atoms/accessibilityOnState';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
 import showExternalIDsState from '../../atoms/showExternalIDsState';
-import useMapClick from '../../hooks/useMapClick';
+import useOutsideMapsIndoorsDataClick from '../../hooks/useOutsideMapsIndoorsDataClick';
 
 /**
  * Shows details for a MapsIndoors Location.
@@ -72,7 +72,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
 
     const [isWayfindingActive, setIsWayfindingActive] = useState(false);
 
-    const clickedOutsideMapsIndoorsData = useMapClick(mapsIndoorsInstance);
+    const clickedOutsideMapsIndoorsData = useOutsideMapsIndoorsDataClick(mapsIndoorsInstance);
 
     useEffect(() => {
         return () => {
