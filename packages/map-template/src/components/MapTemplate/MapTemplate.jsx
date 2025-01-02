@@ -182,8 +182,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             const miSdkApiTag = document.createElement('script');
             miSdkApiTag.setAttribute('type', 'text/javascript');
-            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.38.1/mapsindoors-4.38.1.js.gz');
-            miSdkApiTag.setAttribute('integrity', 'sha384-k0gVBlITRBAvfzMR2R9Vu3qdMLRfUoxjx/LQW23ZvDAeg3fG/Xo2sEHgnnm7UUok');
+            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.38.2/mapsindoors-4.38.2.js.gz');
+            miSdkApiTag.setAttribute('integrity', 'sha384-Ywo8TNPD4mVQcg1bSohPqLygw8huofC98LqPHf12dEreXTEUeoW7nFj/qQVlZNTt');
             miSdkApiTag.setAttribute('crossorigin', 'anonymous');
             document.body.appendChild(miSdkApiTag);
             miSdkApiTag.onload = () => {
