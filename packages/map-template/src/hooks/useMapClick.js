@@ -3,6 +3,12 @@ import mapTypeState from '../atoms/mapTypeState';
 import { useRecoilValue } from 'recoil';
 import { mapTypes } from '../constants/mapTypes';
 
+/**
+ * Custom hook that handles map click events and determines whether the user clicked outside MapsIndoors data.
+ *
+ * @param {Object} mapsIndoorsInstance - The MapsIndoors instance.
+ * @returns {boolean} Returns `true` if the user clicked outside MapsIndoors data, `false` otherwise.
+ */
 export default function useMapClick(mapsIndoorsInstance) {
     const mapType = useRecoilValue(mapTypeState);
     const [clickedOutside, setClickedOutside] = useState(false);
