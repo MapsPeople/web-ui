@@ -127,7 +127,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
     }, [snapPointSwiped]); // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
-        if (clickedOutsideMapsIndoorsData) {
+        if (clickedOutsideMapsIndoorsData && !isWayfindingActive) {
             onBack();
         }
     }, [clickedOutsideMapsIndoorsData]);
