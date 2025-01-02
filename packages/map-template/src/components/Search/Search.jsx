@@ -191,8 +191,12 @@ function Search({ onSetSize, isOpen }) {
         };
 
         if (featureCollection.features.length > 0) {
-            // TODO: Padding
-            mapsIndoorsInstance.goTo(featureCollection);
+            Promise.all([getBottomPadding(), getLeftPadding()]).then(([bottomPadding, leftPadding]) => {
+                mapsIndoorsInstance.goTo(featureCollection, {
+                    maxZoom: 22,
+                    padding: { bottom: bottomPadding, left: leftPadding, top: 0, right: 0 }
+                });
+            });
         }
     }
 
