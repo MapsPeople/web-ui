@@ -53,10 +53,9 @@ const en = {
     'Turn around': 'Turn around',
     // Wayfinding component
     'Switch': 'Switch',
-    'Accessibility': 'Accessibility',
+    'Avoid stairs and escalators': 'Avoid stairs and escalators',
     'No route found': 'No route found',
     'My position': 'My position',
-    'Turn on Accessibility to get directions that avoid stairs and escalators.': 'Turn on Accessibility to get directions that avoid stairs and escalators.',
     'Go!': 'Go!',
     'Directions': 'Directions',
     'Choose departure': 'Choose departure',

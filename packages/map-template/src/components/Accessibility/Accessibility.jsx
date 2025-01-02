@@ -1,5 +1,4 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
-import Tooltip from '../Tooltip/Tooltip';
 import './Accessibility.scss';
 import primaryColorState from '../../atoms/primaryColorState';
 import accessibilityOnState from '../../atoms/accessibilityOnState';
@@ -33,8 +32,7 @@ function Accessibility({ onAccessibilityChanged }) {
             checked={accessibilityOn}
             onChange={event => handleAccessibilityChanged(event)}
             style={{ backgroundColor: accessibilityOn ? primaryColor : '' }} />
-        <div>{t('Accessibility')}</div>
-        <Tooltip text={t('Turn on Accessibility to get directions that avoid stairs and escalators.')}></Tooltip>
+        <div>{t('Avoid stairs and escalators')}</div>
     </div>
 }
 

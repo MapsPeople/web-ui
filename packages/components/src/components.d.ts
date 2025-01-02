@@ -193,6 +193,11 @@ export namespace Components {
          */
         "disabled": boolean;
         /**
+          * Sets the alignment of the dropdown. The default alignment is 'left'.
+          * @type {('right' | 'left')}
+         */
+        "dropdownAlignment": 'right' | 'left';
+        /**
           * This attribute indicates that the items can be filtered using the input field present at the top. If it is not specified, the input field will not be visible, and filtering is not possible.
           * @type {boolean}
          */
@@ -1578,6 +1583,11 @@ declare namespace LocalJSX {
           * Sets the disabled state for the dropdown.
          */
         "disabled"?: boolean;
+        /**
+          * Sets the alignment of the dropdown. The default alignment is 'left'.
+          * @type {('right' | 'left')}
+         */
+        "dropdownAlignment"?: 'right' | 'left';
         /**
           * This attribute indicates that the items can be filtered using the input field present at the top. If it is not specified, the input field will not be visible, and filtering is not possible.
           * @type {boolean}

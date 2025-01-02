@@ -53,10 +53,9 @@ const fr = {
     'Turn around': 'Faite demi-tour',
     // Wayfinding component
     'Switch': 'Changer',
-    'Accessibility': 'Accessibilité',
+    'Avoid stairs and escalators': 'Éviter les escaliers et les escalators',
     'No route found': 'Aucun itinéraire trouvé',
     'My position': 'Ma position',
-    'Turn on Accessibility to get directions that avoid stairs and escalators.': 'Activez l\'accessibilité pour obtenir des itinéraires qui évitent les escaliers.',
     'Go!': 'C\'est parti!',
     'Directions': 'Instructions',
     'Choose departure': 'Choisir le départ',
