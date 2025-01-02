@@ -11,7 +11,6 @@ import filteredLocationsState from '../../atoms/filteredLocationsState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import currentLocationState from '../../atoms/currentLocationState';
 import isLocationClickedState from '../../atoms/isLocationClickedState';
-import fitBoundsLocation from '../../helpers/fitBoundsLocation';
 import getDesktopPaddingLeft from '../../helpers/GetDesktopPaddingLeft';
 import languageState from '../../atoms/languageState';
 import { useTranslation } from 'react-i18next';
@@ -228,7 +227,10 @@ function Search({ onSetSize, isOpen }) {
         }
 
         Promise.all([getBottomPadding(), getLeftPadding()]).then(([bottomPadding, leftPadding]) => {
-            fitBoundsLocation(location, mapsIndoorsInstance, bottomPadding, leftPadding);
+            mapsIndoorsInstance.goTo(location, {
+                maxZoom: 22,
+                padding: { bottom: bottomPadding, left: leftPadding, top: 0, right: 0 }
+            });
         });
     }
 
