@@ -27,9 +27,10 @@ import useOutsideMapsIndoorsDataClick from '../../hooks/useOutsideMapsIndoorsDat
  * @param {function} props.onSetSize - Callback that is fired when the toggle full description button is clicked and the Sheet size changes.
  * @param {function} props.snapPointSwiped - Changes value when user has swiped a Bottom sheet to a new snap point.
  * @param {function} props.onStartDirections - Callback that fires when user clicks the Start directions button.
+ * @param {boolean} props.isOpen - Whether the Location Details are open or not.
  *
  */
-function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped, onStartDirections }) {
+function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped, onStartDirections, isOpen }) {
     const { t } = useTranslation();
 
     const locationInfoElement = useRef(null);
@@ -69,8 +70,6 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
     const [, , hasFoundRoute] = useDirectionsInfo(originLocation, destinationLocation, directionsService, travelMode, accessibilityOn)
 
     const showExternalIDs = useRecoilValue(showExternalIDsState);
-
-    const [isWayfindingActive, setIsWayfindingActive] = useState(false);
 
     const clickedOutsideMapsIndoorsData = useOutsideMapsIndoorsDataClick(mapsIndoorsInstance);
 
@@ -127,10 +126,10 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
     }, [snapPointSwiped]); // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
-        if (clickedOutsideMapsIndoorsData && !isWayfindingActive) {
+        if (clickedOutsideMapsIndoorsData && isOpen) {
             onBack();
         }
-    }, [clickedOutsideMapsIndoorsData]);
+    }, [clickedOutsideMapsIndoorsData, isOpen]);
 
     /**
      * Toggle the description.
@@ -190,7 +189,6 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
         setDescriptionHasContentAbove(false);
         setDescriptionHasContentBelow(false);
         setSize(snapPoints.FIT);
-        setIsWayfindingActive(true);
 
         onStartWayfinding();
     }
@@ -215,7 +213,6 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
         setDescriptionHasContentAbove(false);
         setDescriptionHasContentBelow(false);
         setSize(snapPoints.FIT);
-        setIsWayfindingActive(false);
 
         onBack();
     }
