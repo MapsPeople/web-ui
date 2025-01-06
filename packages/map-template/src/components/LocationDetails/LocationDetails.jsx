@@ -71,7 +71,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
 
     const showExternalIDs = useRecoilValue(showExternalIDsState);
 
-    const clickedOutsideMapsIndoorsData = useOutsideMapsIndoorsDataClick(mapsIndoorsInstance);
+    const clickedOutsideMapsIndoorsData = useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOpen);
 
     useEffect(() => {
         return () => {
@@ -126,10 +126,10 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
     }, [snapPointSwiped]); // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
-        if (clickedOutsideMapsIndoorsData && isOpen) {
+        if (clickedOutsideMapsIndoorsData) {
             onBack();
         }
-    }, [clickedOutsideMapsIndoorsData, isOpen]);
+    }, [clickedOutsideMapsIndoorsData]);
 
     /**
      * Toggle the description.
