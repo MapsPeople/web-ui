@@ -22,63 +22,75 @@ export default function useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOp
         }
     }, [isOpen]);
 
-    useEffect(() => {
-        let mapboxClickHandler;
-        let googleMapsClickHandler;
-        let googleMapsIndoorsClickHandler;
+    /**
+     * Attaches click listeners to a Mapbox map instance to handle clicks on MapsIndoors data.
+     *
+     * @param {Object} map - The Mapbox map instance.
+     * @param {Object} mapsIndoorsInstance - The MapsIndoors instance.
+     * @param {boolean} isOpen - Whether the sidebar or bottom sheet is open or not.
+     * @param {Function} setClickedOutside - A function to set the state when a click occurs outside MapsIndoors data.
+     * @returns {Function} A cleanup function to remove the attached listeners.
+     */
+    function attachMapboxClickListeners(map, mapsIndoorsInstance, isOpen, setClickedOutside) {
+        const mapboxClickHandler = (clickResult) => {
+            if (!isOpen) return;
+            const features = mapsIndoorsInstance.getMap().queryRenderedFeatures(clickResult.point);
 
-        if (mapType === mapTypes.Mapbox) {
-            mapboxClickHandler = (clickResult) => {
-                if (!isOpen) return;
-                const features = mapsIndoorsInstance.getMap().queryRenderedFeatures(clickResult.point);
-
-                if (features.length) {
-                    // Clicked on venue
-                    // TODO Remove console.log after review
-                    console.log('Clicked on MapsIndoors data:', features[0]);
-                    setClickedOutside(false);
-                } else if (!features.length) {
-                    setClickedOutside(true);
-                    // Clicked outside venue
-                    // TODO Remove console.log after review
-                    console.log('Clicked Nothing');
-                }
-            };
-            // Add event listener
-            map.on('click', mapboxClickHandler);
-        }
-
-        if (mapType === mapTypes.Google) {
-            googleMapsClickHandler = (clickResult) => {
-                if (!isOpen) return;
+            if (features.length) {
+                console.log('Clicked on MapsIndoors data:', features[0]);
                 setClickedOutside(false);
-                // TODO Remove console.log after review
-                console.log('Clicked on a MapsIndoors location:', clickResult);
-            };
-
-            googleMapsIndoorsClickHandler = (clickResult) => {
-                if (!isOpen) return;
-                // TODO Remove console.log after review
+            } else {
+                console.log('Clicked Nothing');
                 setClickedOutside(true);
-                console.log('Clicked on a Google Maps Place:', clickResult);
-            }
-
-            mapsIndoorsInstance.addListener('click', googleMapsClickHandler);
-
-            map.addListener('click', googleMapsIndoorsClickHandler);
-        }
-
-        return () => {
-            if (mapType === mapTypes.Mapbox) {
-                map.off('click', mapboxClickHandler);
-                console.log('Removed Mapbox click handler');
-            }
-            if (mapType === mapTypes.Google) {
-                mapsIndoorsInstance.removeListener('click', googleMapsClickHandler);
-                map.removeListener('click', googleMapsIndoorsClickHandler);
             }
         };
+        map.on('click', mapboxClickHandler);
 
+        return () => {
+            map.off('click', mapboxClickHandler);
+        };
+    }
+
+    /**
+     * Attaches click listeners to the Google Maps and MapsIndoors instances.
+     *
+     * @param {object} map - The Google Maps instance.
+     * @param {object} mapsIndoorsInstance - The MapsIndoors instance.
+     * @param {boolean} isOpen - Whether the sidebar or bottom sheet is open or not.
+     * @param {function} setClickedOutside - A function to set the state when a click occurs outside MapsIndoors.
+     * @returns {function} A cleanup function to remove the attached listeners.
+     */
+    function attachGoogleClickListeners(map, mapsIndoorsInstance, isOpen, setClickedOutside) {
+        const googleMapsClickHandler = (clickResult) => {
+            if (!isOpen) return;
+            setClickedOutside(false);
+            console.log('Clicked on a MapsIndoors location:', clickResult);
+        };
+
+        const googleMapsIndoorsClickHandler = (clickResult) => {
+            if (!isOpen) return;
+            setClickedOutside(true);
+            console.log('Clicked on a Google Maps Place:', clickResult);
+        };
+
+        mapsIndoorsInstance.addListener('click', googleMapsClickHandler);
+        const mapListener = map.addListener('click', googleMapsIndoorsClickHandler);
+
+        return () => {
+            mapsIndoorsInstance.removeListener('click', googleMapsClickHandler);
+            mapListener.remove();
+        };
+    }
+
+    useEffect(() => {
+        let detachMapClickListeners;
+        if (mapType === mapTypes.Mapbox) {
+            detachMapClickListeners = attachMapboxClickListeners(map, mapsIndoorsInstance, isOpen, setClickedOutside);
+        }
+        if (mapType === mapTypes.Google) {
+            detachMapClickListeners = attachGoogleClickListeners(map, mapsIndoorsInstance, isOpen, setClickedOutside);
+        }
+        return () => detachMapClickListeners?.();
     }, [mapsIndoorsInstance, isOpen]);
 
     return clickedOutside;
