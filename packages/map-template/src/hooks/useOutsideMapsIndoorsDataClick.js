@@ -7,7 +7,7 @@ import { mapTypes } from '../constants/mapTypes';
  * Custom hook that handles map click events and determines whether the user clicked outside MapsIndoors data.
  *
  * @param {Object} mapsIndoorsInstance - The MapsIndoors instance.
- * @param {boolean} isOpen - Whether the sidebar is open or not.
+ * @param {boolean} isOpen - Whether the sidebar or bottom sheet is open or not.
  * @returns {boolean} Returns `true` if the user clicked outside MapsIndoors data, `false` otherwise.
  */
 export default function useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOpen) {
