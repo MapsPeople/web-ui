@@ -120,7 +120,6 @@ function MapboxMap({ accessToken, onInitialized, onPositionControl, center, zoom
         }
     }, [mapsIndoorsInstance, mapViewInstance, hasFloorSelector, hasPositionControl, hasZoomControl]);
 
-
     useEffect(() => {
         // Initialize MapboxV3View MapView
         window.mapboxgl = mapboxgl;
