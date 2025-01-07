@@ -37,10 +37,8 @@ export default function useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOp
             const features = mapsIndoorsInstance.getMap().queryRenderedFeatures(clickResult.point);
 
             if (features.length) {
-                console.log('Clicked on MapsIndoors data:', features[0]);
                 setClickedOutside(false);
             } else {
-                console.log('Clicked Nothing');
                 setClickedOutside(true);
             }
         };
@@ -64,13 +62,11 @@ export default function useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOp
         const googleMapsClickHandler = (clickResult) => {
             if (!isOpen) return;
             setClickedOutside(false);
-            console.log('Clicked on a MapsIndoors location:', clickResult);
         };
 
         const googleMapsIndoorsClickHandler = (clickResult) => {
             if (!isOpen) return;
             setClickedOutside(true);
-            console.log('Clicked on a Google Maps Place:', clickResult);
         };
 
         mapsIndoorsInstance.addListener('click', googleMapsClickHandler);
