@@ -15,7 +15,7 @@ export default function useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOp
     const [clickedOutside, setClickedOutside] = useState(false);
     const map = mapsIndoorsInstance.getMap();
 
-    // Reset clickedOutside state when the sidebar is opened
+    // Reset clickedOutside state when the sidebar or bottom sheet is opened
     useEffect(() => {
         if (isOpen) {
             setClickedOutside(false);
