@@ -57,6 +57,7 @@ import showExternalIDsState from '../../atoms/showExternalIDsState.js'
 import showRoadNamesState from '../../atoms/showRoadNamesState.js';
 import searchExternalLocationsState from '../../atoms/searchExternalLocationsState.js';
 import isNullOrUndefined from '../../helpers/isNullOrUndefined.js';
+import centerState from '../../atoms/centerState.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -92,8 +93,9 @@ defineCustomElements();
  * @param {boolean} [props.showRoadNames] - A boolean parameter that dictates whether Mapbox road names should be shown. By default, Mapbox road names are hidden when MapsIndoors data is shown. It is dictated by `mi-transition-level` which default value is 17.
  * @param {boolean} [props.showExternalIDs] - Determine whether the location details on the map should have an external ID visible. The default value is set to false.
  * @param {boolean} [props.searchExternalLocations] - If you want to perform search for external locations in the Wayfinding mode. If set to true, Mapbox/Google places will be displayed depending on the Map Provider you are using. If set to false, the results returned will only be MapsIndoors results. The default is true.
+ * @param {string} [props.center] - TODO
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations, center }) {
 
     const [, setApiKey] = useRecoilState(apiKeyState);
     const [, setGmApiKey] = useRecoilState(gmApiKeyState);
@@ -122,6 +124,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setshowExternalIDs] = useRecoilState(showExternalIDsState);
     const [, setShowRoadNames] = useRecoilState(showRoadNamesState);
     const [, setSearchExternalLocations] = useRecoilState(searchExternalLocationsState);
+    const [, setCenter] = useRecoilState(centerState);
     const [viewModeSwitchVisible, setViewModeSwitchVisible] = useState();
 
     const [showVenueSelector, setShowVenueSelector] = useState(true);
@@ -552,6 +555,13 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         setSearchExternalLocations(searchExternalLocations);
     }, [searchExternalLocations]);
+
+    /*
+     * TODO
+     */
+    useEffect(() => {
+        setCenter(center);
+    }, [center]);
 
     /**
      * When map position is known while initializing the data,
