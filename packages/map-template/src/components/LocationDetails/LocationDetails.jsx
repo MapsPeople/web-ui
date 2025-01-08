@@ -16,6 +16,7 @@ import kioskLocationState from '../../atoms/kioskLocationState';
 import accessibilityOnState from '../../atoms/accessibilityOnState';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
 import showExternalIDsState from '../../atoms/showExternalIDsState';
+import useOutsideMapsIndoorsDataClick from '../../hooks/useOutsideMapsIndoorsDataClick';
 
 /**
  * Shows details for a MapsIndoors Location.
@@ -26,9 +27,10 @@ import showExternalIDsState from '../../atoms/showExternalIDsState';
  * @param {function} props.onSetSize - Callback that is fired when the toggle full description button is clicked and the Sheet size changes.
  * @param {function} props.snapPointSwiped - Changes value when user has swiped a Bottom sheet to a new snap point.
  * @param {function} props.onStartDirections - Callback that fires when user clicks the Start directions button.
+ * @param {boolean} props.isOpen - Whether the Location Details are open or not.
  *
  */
-function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped, onStartDirections }) {
+function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped, onStartDirections, isOpen }) {
     const { t } = useTranslation();
 
     const locationInfoElement = useRef(null);
@@ -68,6 +70,8 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
     const [, , hasFoundRoute] = useDirectionsInfo(originLocation, destinationLocation, directionsService, travelMode, accessibilityOn)
 
     const showExternalIDs = useRecoilValue(showExternalIDsState);
+
+    const clickedOutsideMapsIndoorsData = useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOpen);
 
     useEffect(() => {
         return () => {
@@ -120,6 +124,12 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
             collapseLocationDescription();
         }
     }, [snapPointSwiped]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    useEffect(() => {
+        if (clickedOutsideMapsIndoorsData) {
+            onBack();
+        }
+    }, [clickedOutsideMapsIndoorsData]);
 
     /**
      * Toggle the description.

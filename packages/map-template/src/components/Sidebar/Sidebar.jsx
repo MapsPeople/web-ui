@@ -105,6 +105,7 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
                 onStartWayfinding={() => pushAppView(appViews.WAYFINDING)}
                 onBack={() => closeLocationDetails()}
                 onStartDirections={() => pushAppView(appViews.DIRECTIONS)}
+                isOpen={currentAppView === appViews.LOCATION_DETAILS}
             />
         </Modal>,
         <Modal isOpen={currentAppView === appViews.WAYFINDING} key="D">
