@@ -36,6 +36,7 @@ import getBooleanValue from "../../helpers/GetBooleanValue.js";
  * @param {boolean} [props.showExternalIDs] - Determine whether the location details on the map should have an external ID visible. The default value is set to false.
  * @param {boolean} [props.showRoadNames] - A boolean parameter that dictates whether Mapbox road names should be shown. By default, Mapbox road names are hidden when MapsIndoors data is shown. It is dictated by `mi-transition-level` which default value is 17.
  * @param {boolean} [props.searchExternalLocations] - If you want to perform search for external results in the Wayfinding mode. If set to true, Mapbox/Google places will be displayed depending on the Map Provider you are using. If set to false, the results returned will only be MapsIndoors results. The default is true.
+ * @param {string} [props.center] - TODO
  */
 function MapsIndoorsMap(props) {
 
@@ -92,9 +93,10 @@ function MapsIndoorsMap(props) {
         const showExternalIDsQueryParameter = queryStringParams.get('showExternalIDs');
         const showRoadNamesQueryParameter = queryStringParams.get('showRoadNames');
         const searchExternalLocationsQueryParameter = queryStringParams.get('searchExternalLocations');
+        const centerQueryParameter = queryStringParams.get('center');
 
         // Set the initial props on the Map Template component.
-        
+
         // For the apiKey and venue, set the venue to "AUSTINOFFICE" if the apiKey is "mapspeople3d" and no venue is provided. We want this as the default venue for the "mapspeople3d" apiKey.
         const apiKey = props.supportsUrlParameters && apiKeyQueryParameter ? apiKeyQueryParameter : (props.apiKey || defaultProps.apiKey);
         let venue = props.supportsUrlParameters && venueQueryParameter ? venueQueryParameter : (props.venue || defaultProps.venue);
@@ -133,7 +135,9 @@ function MapsIndoorsMap(props) {
             showExternalIDs: getBooleanValue(props.supportsUrlParameters, defaultProps.showExternalIDs, props.showExternalIDs, showExternalIDsQueryParameter),
             searchExternalLocations: getBooleanValue(props.supportsUrlParameters, defaultProps.searchExternalLocations, props.searchExternalLocations, searchExternalLocationsQueryParameter),
             supportsUrlParameters: props.supportsUrlParameters,
+            center: props.supportsUrlParameters && centerQueryParameter ? centerQueryParameter : props.center
         });
+
     }, [props]);
 
     return (
