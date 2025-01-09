@@ -177,7 +177,7 @@ function Search({ onSetSize, isOpen }) {
             type: 'FeatureCollection',
             features: locations
                 // Filter out locations that are not on the current floor. Including those when fitting to bounds could cause the map to zoom out too much.
-                .filter(location => parseInt(location.properties.floor, 10) === currentFloorIndex)
+                .filter(location => parseInt(location.properties.floor, 10) === parseInt(currentFloorIndex, 10))
 
                 // Filter out locations that are not part of the current venue. Including those when fitting to bounds could cause the map to zoom out too much.
                 .filter(location => location.properties.venueId.toLowerCase() === currentVenueName.toLowerCase())
