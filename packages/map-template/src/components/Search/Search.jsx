@@ -165,24 +165,26 @@ function Search({ onSetSize, isOpen }) {
 
     /**
      * Adjusts the map view to fit the bounds of the provided locations.
-     * It will filter out locations that are not on the current floor or not part of the current venue.
+     * It will filter out Locations that are not on the current floor or not part of the current venue.
      *
-     * @param {Array} locations - An array of location objects to fit within the map bounds.
+     * @param {Array} locations - An array of Location objects to fit within the map bounds.
      */
     function fitMapBoundsToLocations(locations) {
+        if (!mapsIndoorsInstance.goTo) return; // Early exit to prevent crashes if using an older version of the MapsIndoors JS SDK. The goTo method was introduced in version 4.38.0.
+
         const currentFloorIndex = mapsIndoorsInstance.getFloor();
 
         // Create a GeoJSON FeatureCollection from the locations that can be used as input to the goTo method.
         const featureCollection = {
             type: 'FeatureCollection',
             features: locations
-                // Filter out locations that are not on the current floor. Including those when fitting to bounds could cause the map to zoom out too much.
+                // Filter out locations that are not on the current floor. Including those could result in a wrong fit since they are not visible on the map anyawy.
                 .filter(location => parseInt(location.properties.floor, 10) === parseInt(currentFloorIndex, 10))
 
                 // Filter out locations that are not part of the current venue. Including those when fitting to bounds could cause the map to zoom out too much.
                 .filter(location => location.properties.venueId.toLowerCase() === currentVenueName.toLowerCase())
 
-                // Map the locations to GeoJSON features
+                // Map the locations to GeoJSON features.
                 .map(location => ({
                     type: 'Feature',
                     geometry: location.geometry,
