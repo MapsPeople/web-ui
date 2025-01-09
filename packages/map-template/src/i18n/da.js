@@ -53,10 +53,9 @@ const da = {
     'Turn around': 'Vend om',
     // Wayfinding component
     'Switch': 'Skift',
-    'Accessibility': 'Tilgængelig rute',
+    'Avoid stairs and escalators': 'Undgå trapper og rulletrapper',
     'No route found': 'Ingen rute fundet',
     'My position': 'Min position',
-    'Turn on Accessibility to get directions that avoid stairs and escalators.': 'Slå "Tilgængelig rute" til for at få en rutevejledning uden trapper og rulletrapper.',
     'Go!': 'Go!',
     'Directions': 'Rutevejledning',
     'Choose departure': 'Vælg startpunkt',
