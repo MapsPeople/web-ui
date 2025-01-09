@@ -24,7 +24,7 @@ import mapsIndoorsInstanceState from "../../../atoms/mapsIndoorsInstanceState";
  * @param {function} props.onSetSize - Callback that is fired when the categories are clicked.
  * @param {function} props.getFilteredLocations - Function that gets the filtered locations based on the category selected.
  * @param {object} props.searchFieldRef - The reference to the search input field.
- * @param {boolean} props.isOpen - Whether the Categories window is open or not
+ * @param {boolean} props.isOpen - Determines wheteher the Categories window is open or not.
  */
 function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen }) {
     /** Referencing the categories results container DOM element */
