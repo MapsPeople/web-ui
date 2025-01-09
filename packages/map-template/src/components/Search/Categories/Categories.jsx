@@ -14,6 +14,8 @@ import { useIsDesktop } from "../../../hooks/useIsDesktop";
 import getActiveCategory from "../../../helpers/GetActiveCategory";
 import isBottomSheetLoadedState from "../../../atoms/isBottomSheetLoadedState";
 import categoryState from "../../../atoms/categoryState";
+import useOutsideMapsIndoorsDataClick from "../../../hooks/useOutsideMapsIndoorsDataClick";
+import mapsIndoorsInstanceState from "../../../atoms/mapsIndoorsInstanceState";
 
 /**
  * Show the categories list.
@@ -22,8 +24,9 @@ import categoryState from "../../../atoms/categoryState";
  * @param {function} props.onSetSize - Callback that is fired when the categories are clicked.
  * @param {function} props.getFilteredLocations - Function that gets the filtered locations based on the category selected.
  * @param {object} props.searchFieldRef - The reference to the search input field.
+ * @param {boolean} props.isOpen - Whether the Categories window is open or not
  */
-function Categories({ onSetSize, getFilteredLocations, searchFieldRef }) {
+function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen }) {
     /** Referencing the categories results container DOM element */
     const categoriesListRef = useRef();
 
@@ -49,6 +52,9 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef }) {
 
     const isBottomSheetLoaded = useRecoilValue(isBottomSheetLoadedState);
     const category = useRecoilValue(categoryState);
+
+    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
+    const clickedOutsideMapsIndoorsData = useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOpen);
 
     /**
      * Communicate size change to parent component.
@@ -123,6 +129,20 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef }) {
             behavior: 'smooth'
         });
     }
+
+    useEffect(() => {
+        if (clickedOutsideMapsIndoorsData && selectedCategory) {
+            setSelectedCategory(null);
+            setSearchResults([]);
+            setFilteredLocations([]);
+            setSize(snapPoints.FIT);
+
+            // If search field has value, trigger search without category filter
+            if (searchFieldRef.current?.getValue()) {
+                searchFieldRef.current.triggerSearch();
+            }
+        }
+    }, [clickedOutsideMapsIndoorsData]);
 
     /**
      * Add event listener for scrolling in the categories list
