@@ -54,9 +54,9 @@ const useMapBoundsDeterminer = () => {
     const currentPitch = useRecoilValue(currentPitchSelector);
     const venueWasSelected = useRecoilValue(venueWasSelectedState);
     const [kioskLocationDisplayRuleWasChanged, setKioskLocationDisplayRuleWasChanged] = useState(false);
-    let centerValue = useRecoilValue(centerState);
     const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
     const isMapReady = useRecoilState(isMapReadyState);
+    let center = useRecoilValue(centerState);
 
     /**
      * If the app is inactive, run code to reset to initial map position.
@@ -88,8 +88,8 @@ const useMapBoundsDeterminer = () => {
             setMapPositionInvestigating(true);
 
             // Parse center prop into coordinates. If it is not included in the URL, latLng are undefined.
-            const [latitude, longitude] = centerValue
-                ? centerValue.split(",").map(Number)
+            const [latitude, longitude] = center
+                ? center.split(",").map(Number)
                 : [undefined, undefined];
 
             // Create centerPoint object.
@@ -103,20 +103,15 @@ const useMapBoundsDeterminer = () => {
             // If startZoomLevel is not defined, fallback to 16 default value.
             const zoomLevel = startZoomLevel ?? 16;
 
-            getDesktopPaddingBottom().then(desktopPaddingBottom => {
+
+            Promise.all([getDesktopPaddingBottom(), getDesktopPaddingLeft(), getMobilePaddingBottom()]).then(([desktopPaddingBottom, desktopPaddingLeft, mobilePaddingBottom]) => {
                 desktopPadBottom = desktopPaddingBottom;
-            });
-
-            getMobilePaddingBottom().then(mobilePaddingBottom => {
                 mobilePadBottom = mobilePaddingBottom
-            });
-
-            getDesktopPaddingLeft().then(desktopPaddingLeft => {
                 desktopPadLeft = desktopPaddingLeft;
             });
 
             if (kioskOriginLocationId && isDesktop) {
-                if (!isNullOrUndefined(centerValue)) {
+                if (!isNullOrUndefined(center)) {
                     // When in Kiosk mode and center prop is defined, set centerPoint to be center prop.
                     setMapPositionKnown(centerPoint.geometry);
                     goTo(centerPoint.geometry, mapsIndoorsInstance, desktopPadBottom, 0, zoomLevel, currentPitch, bearing);
@@ -136,7 +131,7 @@ const useMapBoundsDeterminer = () => {
                     });
                 }
             } else if (locationId && !venueWasSelected) {
-                if (!isNullOrUndefined(centerValue)) {
+                if (!isNullOrUndefined(center)) {
                     // When locationId is defined and center prop is defined, set centerPoint to be center prop.
                     if (isDesktop) {
                         setMapPositionKnown(centerPoint.geometry);
@@ -168,7 +163,7 @@ const useMapBoundsDeterminer = () => {
                 if (venueWasSelected) {
                     // If switching Venues, while having center prop defined, set center prop to undefined.
                     // It is required to be able to switch between Venues inside Venue Selector.
-                    centerValue = undefined;
+                    center = undefined;
                     if (isDesktop) {
                         setMapPositionKnown(currentVenue.geometry);
                         goTo(currentVenue.geometry, mapsIndoorsInstance, 0, desktopPadLeft, zoomLevel, currentPitch, bearing);
@@ -177,7 +172,7 @@ const useMapBoundsDeterminer = () => {
                         goTo(currentVenue.geometry, mapsIndoorsInstance, mobilePadBottom, 0, zoomLevel, currentPitch, bearing);
                     }
                 } else {
-                    if (isNullOrUndefined(centerValue)) {
+                    if (isNullOrUndefined(center)) {
                         // If center prop is not defined, pan to currentVenue.
                         if (isDesktop) {
                             setMapPositionKnown(currentVenue.geometry);
