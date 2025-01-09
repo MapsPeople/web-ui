@@ -27,7 +27,7 @@ import centerState from '../atoms/centerState';
 import isNullOrUndefined from '../helpers/isNullOrUndefined';
 
 // Turf
-import booleanIntersects from '@turf/turf';
+import * as turf from '@turf/turf';
 
 /**
  * Determine where in the world to pan the map, based on the combination of venueName, locationId and kioskOriginLocationId.
@@ -97,7 +97,7 @@ const useMapBoundsDeterminer = () => {
 
             // Returns Venue that intersects with center prop.
             const intersectingVenueWithCenterPoint = venuesInSolution.find(venue => {
-                return booleanIntersects(venue.geometry, centerPoint.geometry);
+                return turf.booleanIntersects(venue.geometry, centerPoint.geometry);
             })
 
             // If startZoomLevel is not defined, fallback to 16 default value.
