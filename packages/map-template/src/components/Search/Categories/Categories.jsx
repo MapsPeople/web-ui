@@ -130,6 +130,17 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
         });
     }
 
+    /**
+     * Handles cleanup when user clicks outside MapsIndoors data area.
+     * This effect will:
+     * 1. Clear the currently selected category
+     * 2. Reset all search/filter related states to empty
+     * 3. Collapse the view back to fit size
+     * 4. Clear any existing search input
+     * 
+     * Only triggers when:
+     * - There is a currently selected category and user clicks outside MapsIndoors data
+     */
     useEffect(() => {
         if (clickedOutsideMapsIndoorsData && selectedCategory) {
             setSelectedCategory(null);
@@ -137,9 +148,9 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
             setFilteredLocations([]);
             setSize(snapPoints.FIT);
 
-            // If search field has value, trigger search without category filter
+            // If search field has a value, clear the search field.
             if (searchFieldRef.current?.getValue()) {
-                searchFieldRef.current.triggerSearch();
+                searchFieldRef.current.clear();
             }
         }
     }, [clickedOutsideMapsIndoorsData]);
