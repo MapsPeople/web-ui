@@ -126,6 +126,7 @@ function MapsIndoorsMap(props) {
             language: props.supportsUrlParameters && languageQueryParameter ? languageQueryParameter : props.language,
             miTransitionLevel: props.supportsUrlParameters && miTransitionLevelQueryParameter ? miTransitionLevelQueryParameter : props.miTransitionLevel,
             category: props.supportsUrlParameters && categoryQueryParameter ? categoryQueryParameter : props.category,
+            center: props.supportsUrlParameters && centerQueryParameter ? centerQueryParameter : props.center,
             // Handle boolean values
             useKeyboard: getBooleanValue(props.supportsUrlParameters, defaultProps.useKeyboard, props.useKeyboard, useKeyboardQueryParameter),
             useMapProviderModule: getBooleanValue(props.supportsUrlParameters, defaultProps.useMapProviderModule, props.useMapProviderModule, useMapProviderModuleQueryParameter),
@@ -135,7 +136,6 @@ function MapsIndoorsMap(props) {
             showExternalIDs: getBooleanValue(props.supportsUrlParameters, defaultProps.showExternalIDs, props.showExternalIDs, showExternalIDsQueryParameter),
             searchExternalLocations: getBooleanValue(props.supportsUrlParameters, defaultProps.searchExternalLocations, props.searchExternalLocations, searchExternalLocationsQueryParameter),
             supportsUrlParameters: props.supportsUrlParameters,
-            center: props.supportsUrlParameters && centerQueryParameter ? centerQueryParameter : props.center
         });
 
     }, [props]);

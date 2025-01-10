@@ -72,7 +72,7 @@ const useMapBoundsDeterminer = () => {
      */
     useEffect(() => {
         determineMapBounds();
-    }, [mapsIndoorsInstance, currentVenueName, locationId, kioskOriginLocationId, pitch, bearing, startZoomLevel, categories]);
+    }, [mapsIndoorsInstance, currentVenueName, locationId, kioskOriginLocationId, pitch, bearing, startZoomLevel, categories, center]);
 
     /**
      * Based on the combination of the states for venueName, locationId & kioskOriginLocationId,
@@ -101,8 +101,7 @@ const useMapBoundsDeterminer = () => {
             })
 
             // If startZoomLevel is not defined, fallback to 16 default value.
-            const zoomLevel = startZoomLevel ?? 16;
-
+            const zoomLevel = startZoomLevel ?? 18;
 
             Promise.all([getDesktopPaddingBottom(), getDesktopPaddingLeft(), getMobilePaddingBottom()]).then(([desktopPaddingBottom, desktopPaddingLeft, mobilePaddingBottom]) => {
                 desktopPadBottom = desktopPaddingBottom;
