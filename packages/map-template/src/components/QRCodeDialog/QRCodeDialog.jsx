@@ -13,6 +13,7 @@ import mapboxAccessTokenState from "../../atoms/mapboxAccessTokenState";
 import gmApiKeyState from "../../atoms/gmApiKeyState";
 import languageState from "../../atoms/languageState";
 import searchAllVenuesState from "../../atoms/searchAllVenues";
+import searchExternalLocationsState from "../../atoms/searchExternalLocationsState";
 
 /**
  * Handle the QR Code dialog.
@@ -30,6 +31,7 @@ function QRCodeDialog() {
     const mapboxAccessTokenProp = useRecoilValue(mapboxAccessTokenState);
     const languageProp = useRecoilValue(languageState);
     const searchAllVenuesProp = useRecoilValue(searchAllVenuesState);
+    const searchExternalLocationsProp = useRecoilValue(searchExternalLocationsState);
     
     const directionsFrom = useRecoilValue(kioskLocationState);
     const directionsTo = useRecoilValue(currentLocationState);
@@ -57,6 +59,7 @@ function QRCodeDialog() {
             ['primaryColor', primaryColorProp],
             ['language', languageProp],
             ['searchAllVenues', searchAllVenuesProp],
+            ['searchExternalLocations', searchExternalLocationsProp],
             ['logo', logoProp]]
                 .forEach(([queryParam, prop]) => {
                     if (currentParams.has(queryParam)) {

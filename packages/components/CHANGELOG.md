@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [13.24.1] - 2024-12-16
+
+### Fixed
+
+- **mi-dropdown**: Fixed a bug where the dropdown button would sometimes appear empty and not display the selected item's value.
+
+## [13.24.0] - 2024-12-16
+
+### Added
+
+- **mi-dropdown**: Added `alignment` attribute to the `mi-dropdown` component. This attribute allows you to set the alignment of the dropdown relative to the dropdown button, with options for `left` or `right`. The default is `left`.
+
+### Changed
+
+- **mi-dropdown**: The `label` attribute on the `mi-dropdown` now also works for non-multi-select dropdowns. If set, its content is always shown as the label on the dropdown button.
+
+## [13.23.0] - 2024-09-19
+
+### Added
+
+- **mi-keyboard**: Support for Dutch keyboard layout.
+
 ## [13.22.0] - 2024-09-19
 
 ### Added
@@ -282,6 +304,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - **mi-dropdown**: In Safari dropdown will be closed when clicked outside of the dropdown.
+
 ## [11.15.0] - 2022-08-11
 
 ### Added

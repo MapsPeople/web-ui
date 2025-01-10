@@ -1,44 +1,44 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import reactToWebComponent from 'react-to-webcomponent';
 import MapsIndoorsMap from '../src/components/MapsIndoorsMap/MapsIndoorsMap';
+import r2wc from '@r2wc/react-to-web-component';
 
 /*
  * Exports the MapsIndoorsMap React component as a Web Component.
  */
 
-MapsIndoorsMap.propTypes = {
-    apiKey: PropTypes.string.isRequired,
-    gmApiKey: PropTypes.string,
-    mapboxAccessToken: PropTypes.string,
-    venue: PropTypes.string,
-    locationId: PropTypes.string,
-    primaryColor: PropTypes.string,
-    logo: PropTypes.string,
-    appUserRoles: PropTypes.string,
-    directionsFrom: PropTypes.string,
-    directionsTo: PropTypes.string,
-    externalIDs: PropTypes.array,
-    tileStyle: PropTypes.string,
-    startZoomLevel: PropTypes.number,
-    gmMapId: PropTypes.string,
-    supportsUrlParameters: PropTypes.bool,
-    bearing: PropTypes.number,
-    pitch: PropTypes.number,
-    kioskOriginLocationId: PropTypes.string,
-    useMapProviderModule: PropTypes.bool,
-    timeout: PropTypes.number,
-    miTransitionLevel: PropTypes.number,
-    category: PropTypes.string,
-    language: PropTypes.string,
-    searchAllVenues: PropTypes.bool,
-    useKeyboard: PropTypes.bool,
-    hideNonMatches: PropTypes.bool,
-    showExternalIDs: PropTypes.bool,
-    showRoadNames: PropTypes.bool
-};
+const WebMapsIndoorsMap = r2wc(MapsIndoorsMap, {
+    props: {
+        apiKey: "string",
+        gmApiKey: "string",
+        mapboxAccessToken: "string",
+        venue: "string",
+        locationId: "string",
+        primaryColor: "string",
+        logo: "string",
+        appUserRoles: "string",
+        directionsFrom: "string",
+        directionsTo: "string",
+        externalIDs: "json",
+        tileStyle: "string",
+        startZoomLevel: "number",
+        gmMapId: "string",
+        supportsUrlParameters: "boolean",
+        bearing: "number",
+        pitch: "number",
+        kioskOriginLocationId: "string",
+        useMapProviderModule: "boolean",
+        timeout: "number",
+        miTransitionLevel: "number",
+        category: "string",
+        language: "string",
+        searchAllVenues: "boolean",
+        useKeyboard: "boolean",
+        hideNonMatches: "boolean",
+        showExternalIDs: "boolean",
+        showRoadNames: "boolean",
+        searchExternalLocations: "boolean"
+    }
 
-const WebMapsIndoorsMap = reactToWebComponent(MapsIndoorsMap, React, ReactDOM);
+})
+
 window.customElements.define('mapsindoors-map', WebMapsIndoorsMap);
 export default WebMapsIndoorsMap;

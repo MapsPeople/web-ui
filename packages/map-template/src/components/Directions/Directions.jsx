@@ -70,6 +70,12 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
     const showExternalIDs = useRecoilValue(showExternalIDsState);
 
     useEffect(() => {
+        return () => {
+            setDestinationDisplayRule(null);
+        }
+    }, []);
+
+    useEffect(() => {
         setDestinationDisplayRule(null);
 
         if (isOpen && directions) {
