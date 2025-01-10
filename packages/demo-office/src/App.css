@@ -40,6 +40,12 @@
     left: 0;
     right: 0;
     pointer-events: none;
+
+    @media screen and (min-width: 992px) {
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: flex-start;
+    }
 }
 
 .app__cards > * {

@@ -1,0 +1,14 @@
+.location-details {
+    background-color: white;
+    overflow-y: auto;
+    margin-top: 48px;
+
+    @media screen and (min-width: 992px) {
+        margin-top: 32px;
+        margin-left: 32px;
+        width: 320px;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+}

@@ -6,6 +6,7 @@ import fakeData from './fakeData';
 import addBlueDot from './tools/addBlueDot';
 import Header from './Header/Header';
 import Search from './Search/Search';
+import LocationDetails from './LocationDetails/LocationDetails';
 
 defineCustomElements();
 
@@ -50,6 +51,7 @@ function App() {
                 />
                 <div className="app__cards">
                     <Search mapsIndoorsInstance={mapsIndoorsInstance} />
+                    <LocationDetails location={{ properties: { name: 'Location name'}}} />
                 </div>
             </main>
         </div>
