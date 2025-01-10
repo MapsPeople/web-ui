@@ -14,6 +14,8 @@ function App() {
 
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState(null);
 
+    const [selectedLocation, setSelectedLocation] = useState(null);
+
     /**
      * Callback for when the MapsIndoors instance is initialized.
      */
@@ -28,6 +30,10 @@ function App() {
 
             // Remove the built-in Position Control from the map. We will fake the position instead.
             positionControl.remove();
+        });
+
+        initializedMapsIndoorsInstance.on('click', (location) => {
+            setSelectedLocation(location);
         });
     };
 
@@ -51,7 +57,7 @@ function App() {
                 />
                 <div className="app__cards">
                     <Search mapsIndoorsInstance={mapsIndoorsInstance} />
-                    <LocationDetails location={{ properties: { name: 'Location name'}}} />
+                    <LocationDetails location={selectedLocation} />
                 </div>
             </main>
         </div>
