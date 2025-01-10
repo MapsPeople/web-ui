@@ -19,7 +19,7 @@
     padding: 0 8px 16px 8px;
     position: relative; /* to make it easier to control position of sub elements */
 
-    @media screen and (min-width: 768px) {
+    @media screen and (min-width: 992px) {
         padding: 0 16px 32px 16px;
     }
 }
@@ -40,7 +40,6 @@
     left: 0;
     right: 0;
     pointer-events: none;
-    padding-top: 10px;
 }
 
 .app__cards > * {

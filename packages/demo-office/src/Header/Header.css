@@ -27,7 +27,7 @@
 .header__nav {
     position: absolute; /* to enable overlapping the heading on very small viewports */
     right: 16px;
-    @media (min-width: 768px) {
+    @media (min-width: 992px) {
         right: 24px;
     }
 }
