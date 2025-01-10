@@ -14,7 +14,7 @@
     color: black;
 }
 
-main {
+.app__main {
     box-sizing: border-box;
     padding: 0 8px 16px 8px;
     position: relative; /* to make it easier to control position of sub elements */
@@ -24,6 +24,33 @@ main {
     }
 }
 
+/*
+    The cards container is a flex container that will contain UI components.
+    It is positioned absolutely to fill the entire map, and the pointer-events are set to none to allow the
+    user to interact with the map.
+*/
+.app__cards {
+    z-index: 2; /* to place in front of Mapbox map elements */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    pointer-events: none;
+    padding-top: 10px;
+}
+
+.app__cards > * {
+    pointer-events: all;
+}
+
+/*
+    The map container is a flex container that will contain the MapsIndoors map.
+    It fills up all available space.
+*/
 main .mapsindoors-map {
     height: 100%;
     width: 100%;

@@ -33,7 +33,7 @@ function App() {
     return (
         <div className="app mapsindoors-map"> {/* The mapsindoors-map class is added for giving the MapsIndoors components library access to the MapsIndoors CSS variables */}
             <Header />
-            <main>
+            <main className="app__main">
                 <MIMap
                     // Map provider setup. See the README for more information on how to set up a Mapbox account and get an access token.
                     mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
@@ -48,7 +48,9 @@ function App() {
                     // Callback for when the MapsIndoors instance is initialized
                     onInitialized={onInitialized}
                 />
-                <Search mapsIndoorsInstance={mapsIndoorsInstance} />
+                <div className="app__cards">
+                    <Search mapsIndoorsInstance={mapsIndoorsInstance} />
+                </div>
             </main>
         </div>
     )
