@@ -7,7 +7,7 @@ import ViewModeSwitch from './ViewModeSwitch/ViewModeSwitch';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import isNullOrUndefined from '../../../../../map-template/src/helpers/isNullOrUndefined';
 import { useRecoilValue } from 'recoil';
-import miTransitionLevelState from '../../../../../../packages/map-template/src/atoms/miTransitionLevelState'
+import miTransitionLevelState from '../../../../../map-template/src/atoms/miTransitionLevelState';
 
 MapboxMap.propTypes = {
     accessToken: PropTypes.string.isRequired,
