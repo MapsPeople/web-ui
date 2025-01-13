@@ -161,12 +161,29 @@ export default useMapBoundsDeterminer;
 function goTo(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLevel, pitch, bearing) {
     mapsIndoorsInstance.getMapView().tilt(pitch || 0);
     mapsIndoorsInstance.getMapView().rotate(bearing || 0);
-    mapsIndoorsInstance.goTo({ type: 'Feature', geometry, properties: {}}, {
-        maxZoom: zoomLevel ?? 22,
-        padding: { top: 0, right: 0, bottom: paddingBottom, left: paddingLeft },
-    }).then(() => {
-        if (zoomLevel) {
-            mapsIndoorsInstance.setZoom(zoomLevel);
-        }
+
+    return new Promise((resolve) => {
+        mapsIndoorsInstance.goTo(
+            { type: 'Feature', geometry, properties: {} },
+            {
+                maxZoom: zoomLevel ?? 22,
+                padding: { top: 0, right: 0, bottom: paddingBottom, left: paddingLeft },
+            }
+        ).then(() => {
+            // Get reference to the map view
+            const mapView = mapsIndoorsInstance.getMapView();
+
+            // Set up listener for idle state
+            mapView.once('idle', () => {
+                // Verify final zoom level
+                if (zoomLevel && mapView.getZoom() !== zoomLevel) {
+                    console.log(zoomLevel);
+
+                    mapsIndoorsInstance.setZoom(Number(zoomLevel));
+                } else {
+                    resolve();
+                }
+            });
+        });
     });
 }
