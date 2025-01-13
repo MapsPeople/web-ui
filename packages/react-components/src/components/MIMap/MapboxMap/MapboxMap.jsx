@@ -6,6 +6,8 @@ import './MapboxMap.scss';
 import ViewModeSwitch from './ViewModeSwitch/ViewModeSwitch';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import isNullOrUndefined from '../../../../../map-template/src/helpers/isNullOrUndefined';
+import { useRecoilValue } from 'recoil';
+import miTransitionLevelState from '../../../../../../packages/map-template/src/atoms/miTransitionLevelState'
 
 MapboxMap.propTypes = {
     accessToken: PropTypes.string.isRequired,
@@ -44,6 +46,7 @@ function MapboxMap({ accessToken, onInitialized, onPositionControl, center, zoom
     const [hasPositionControl, setHasPositionControl] = useState(false);
     const [hasZoomControl, setHasZoomControl] = useState(false);
     const isDesktop = useIsDesktop();
+    const miTransitionLevel = useRecoilValue(miTransitionLevelState);
 
     /*
      * React on any props that are used to control the position of the map.
@@ -133,6 +136,11 @@ function MapboxMap({ accessToken, onInitialized, onPositionControl, center, zoom
             pitch: pitch ?? 0,
             ...mapOptions
         };
+
+        // If miTransitionLevel exists and it's a number, set it in the mapViewOptions
+        if (miTransitionLevel && !isNaN(parseInt(miTransitionLevel))) {
+            mapViewOptions.mapsIndoorsTransitionLevel = parseInt(miTransitionLevel);
+        }
 
         const mapView = new window.mapsindoors.mapView.MapboxV3View(mapViewOptions);
 
