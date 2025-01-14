@@ -56,7 +56,7 @@ const useMapBoundsDeterminer = () => {
     const [kioskLocationDisplayRuleWasChanged, setKioskLocationDisplayRuleWasChanged] = useState(false);
     const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
     const isMapReady = useRecoilState(isMapReadyState);
-    let center = useRecoilValue(centerState);
+    const [center, setCenter] = useRecoilState(centerState);
 
     /**
      * If the app is inactive, run code to reset to initial map position.
@@ -91,11 +91,6 @@ const useMapBoundsDeterminer = () => {
 
             // Create centerPoint object.
             const centerPoint = { geometry: { type: 'Point', coordinates: [latitude, longitude] } };
-
-            // Returns Venue that intersects with center prop.
-            const intersectingVenueWithCenterPoint = venuesInSolution.find(venue => {
-                return turf.booleanIntersects(venue.geometry, centerPoint.geometry);
-            })
 
             // If startZoomLevel is not defined, fallback to 16 default value.
             const zoomLevel = startZoomLevel ?? 18;
@@ -163,9 +158,6 @@ const useMapBoundsDeterminer = () => {
                 }
             } else if (currentVenue) {
                 if (venueWasSelected) {
-                    // If switching Venues, while having center prop defined, set center prop to undefined.
-                    // It is required to be able to switch between Venues inside Venue Selector.
-                    center = undefined;
                     if (isDesktop) {
                         getDesktopPaddingLeft().then(desktopPaddingLeft => {
                             setMapPositionKnown(currentVenue.geometry);
@@ -178,6 +170,11 @@ const useMapBoundsDeterminer = () => {
                         });
                     }
                 } else {
+                    // Returns Venue that intersects with center prop.
+                    const intersectingVenueWithCenterPoint = venuesInSolution.find(venue => {
+                        return turf.booleanIntersects(venue.geometry, centerPoint.geometry);
+                    });
+
                     if (isNullOrUndefined(center)) {
                         // If center prop is not defined, pan to currentVenue.
                         if (isDesktop) {
