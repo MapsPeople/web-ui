@@ -36,7 +36,7 @@ import getBooleanValue from "../../helpers/GetBooleanValue.js";
  * @param {boolean} [props.showExternalIDs] - Determine whether the location details on the map should have an external ID visible. The default value is set to false.
  * @param {boolean} [props.showRoadNames] - A boolean parameter that dictates whether Mapbox road names should be shown. By default, Mapbox road names are hidden when MapsIndoors data is shown. It is dictated by `mi-transition-level` which default value is 17.
  * @param {boolean} [props.searchExternalLocations] - If you want to perform search for external results in the Wayfinding mode. If set to true, Mapbox/Google places will be displayed depending on the Map Provider you are using. If set to false, the results returned will only be MapsIndoors results. The default is true.
- * @param {string} [props.center] - Specifies the coordinates where the map should load, represented as latitude and longitude values separated by a comma. If the specified coordinates intersect with a Venue, that Venue will be selected in the Venue Selector.
+ * @param {string} [props.center] - If you want the map to show a specific coordinates, provide the center value, f.ex.: center=9.9,57.05. If the specified coordinates intersect with a Venue, that Venue will be selected in the Venue Selector.
  */
 function MapsIndoorsMap(props) {
 
