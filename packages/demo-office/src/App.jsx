@@ -56,7 +56,7 @@ function App() {
                     onInitialized={onInitialized}
                 />
                 <div className="app__cards">
-                    <Search mapsIndoorsInstance={mapsIndoorsInstance} />
+                    <Search onSearchResultClicked={location => setSelectedLocation(location)} selectedLocation={selectedLocation} mapsIndoorsInstance={mapsIndoorsInstance} />
                     <LocationDetails onRequestClose={() => setSelectedLocation(null)} location={selectedLocation} />
                 </div>
             </main>

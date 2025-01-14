@@ -6,7 +6,9 @@ import SearchField from './SearchField/SearchField';
 
 
 Search.propTypes = {
-    mapsIndoorsInstance: PropTypes.object
+    mapsIndoorsInstance: PropTypes.object,
+    onSearchResultClicked: PropTypes.func,
+    selectedLocation: PropTypes.object
 };
 
 /**
@@ -22,11 +24,30 @@ Search.propTypes = {
  *
  * @param {object} props
  * @param {object} props.mapsIndoorsInstance - MapsIndoors instance.
+ * @param {function} props.onSearchResultClicked - Callback function to call when a search result is clicked.
+ * @param {object} props.selectedLocation - The currently selected location.
  */
-function Search({ mapsIndoorsInstance }) {
+function Search({ mapsIndoorsInstance, onSearchResultClicked, selectedLocation }) {
+    // State for search results shown in the list.
     const [searchResults, setSearchResults] = useState([]);
+
+    // State for visibility of the search results list. Will be switched off when a search result is clicked.
+    const [searchResultsVisible, setSearchResultsVisible] = useState(false);
+
+    // State for showing a "No results found" message.
     const [noResultsFound, setNoResultsFound] = useState(false);
+
+    // State for the location that is currently hovered in the search results list.
     const [hoveredLocationId, setHoveredLocationId] = useState(null);
+
+    /**
+     * When the selected Location is set to nothing, we may want to show the search results list.
+     */
+    useEffect(() => {
+        if (!selectedLocation && searchResults.length > 0) {
+            setSearchResultsVisible(true);
+        }
+    }, [selectedLocation]);
 
     /**
      * Callback for when search results are received.
@@ -37,6 +58,7 @@ function Search({ mapsIndoorsInstance }) {
     function onResults(locations) {
         setNoResultsFound(locations.length === 0);
         setSearchResults(locations);
+        setSearchResultsVisible(true);
         mapsIndoorsInstance.highlight(locations.map(location => location.id), false);
     }
 
@@ -47,14 +69,18 @@ function Search({ mapsIndoorsInstance }) {
     const onCleared = () => {
         setSearchResults([]);
         setNoResultsFound(false);
+        setSearchResultsVisible(false);
         mapsIndoorsInstance.highlight([], false);
     };
 
     /**
      * Callback for when a search result is clicked.
      */
-    const onLocationClicked = () => {
-        // TODO: Do something when a search result is clicked.
+    const onLocationClicked = (location) => {
+        setSearchResultsVisible(false);
+        if (typeof onSearchResultClicked === 'function') {
+            onSearchResultClicked(location);
+        }
     };
 
     /**
@@ -92,7 +118,7 @@ function Search({ mapsIndoorsInstance }) {
             We don't use the mi-take prop on the <mi-search> element, since we want all results to be highlighted on the map
             while keeping a managable size of the results list.
         */}
-        {searchResults.length > 0 && <div className="search__results">
+        {searchResults.length > 0 && searchResultsVisible && <div className="search__results">
             {searchResults.slice(0, 20).map((location) => <SearchResult
                 key={location.id} location={location}
                 mapsIndoorsInstance={mapsIndoorsInstance}
