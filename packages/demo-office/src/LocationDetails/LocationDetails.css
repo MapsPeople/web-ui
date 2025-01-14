@@ -2,6 +2,7 @@
     background-color: white;
     overflow-y: auto;
     margin-top: 48px;
+    padding: 16px;
 
     @media screen and (min-width: 992px) {
         margin-top: 32px;
@@ -11,4 +12,38 @@
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
+}
+
+
+/*
+ * The header container contains an icon, the Location title and a close button.
+ */
+.location-details__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.location-details__heading {
+    flex: 1; /* Grow the heading to take up the available space */
+    font-size: 18px;
+    font-weight: 900;
+    margin: 0;
+}
+
+.location-details__close-button {
+    align-self: flex-start;
+    background: none;
+    border: 1px solid #e5e7eb;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.location-details__close-button:hover {
+    background-color: #f9fafb;
 }

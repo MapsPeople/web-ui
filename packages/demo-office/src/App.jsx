@@ -57,7 +57,7 @@ function App() {
                 />
                 <div className="app__cards">
                     <Search mapsIndoorsInstance={mapsIndoorsInstance} />
-                    <LocationDetails location={selectedLocation} />
+                    <LocationDetails onRequestClose={() => setSelectedLocation(null)} location={selectedLocation} />
                 </div>
             </main>
         </div>
