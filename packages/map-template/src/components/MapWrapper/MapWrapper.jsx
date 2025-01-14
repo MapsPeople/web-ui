@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from 'recoil';
 import MIMap from '@mapsindoors/react-components/src/components/MIMap/MIMap';
 import { mapTypes } from "../../constants/mapTypes";
@@ -20,6 +20,7 @@ import solutionState from '../../atoms/solutionState';
 import notificationMessageState from '../../atoms/notificationMessageState';
 import useMapBoundsDeterminer from '../../hooks/useMapBoundsDeterminer';
 import hideNonMatchesState from "../../atoms/hideNonMatchesState";
+import miTransitionLevelState from "../../atoms/miTransitionLevelState";
 
 /**
  * Private variable used for storing the tile style.
@@ -57,6 +58,8 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
     const solution = useRecoilValue(solutionState);
     const [, setErrorMessage] = useRecoilState(notificationMessageState);
     const hideNonMatches = useRecoilValue(hideNonMatchesState);
+    const [mapOptions, setMapOptions] = useState({});
+    const miTransitionLevel = useRecoilValue(miTransitionLevelState);
 
     useLiveData(apiKey);
 
@@ -274,6 +277,13 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
         onTileStyleChanged(mapsIndoorsInstance);
     }, [tileStyle]);
 
+    /**
+     * React on changes in the miTransitionLevel prop.
+     */
+    useEffect(() => {
+        setMapOptions({ miTransitionLevel: miTransitionLevel})
+    }, [miTransitionLevel])
+
     return (<>
         {apiKey && <MIMap
             apiKey={apiKey}
@@ -281,6 +291,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
             gmApiKey={mapType === mapTypes.Google ? gmApiKey : undefined}
             onInitialized={onInitialized}
             resetUICounter={resetCount}
+            mapOptions={mapOptions}
         />}
     </>)
 };
