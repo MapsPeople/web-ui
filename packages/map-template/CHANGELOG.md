@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.65.3] - 2025-01-15
 
+## Fixed
+
 - Fixed issue of clicking outside of MapsIndoors data to close the Categories tab
 
 ## [1.65.2] - 2025-01-13
