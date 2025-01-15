@@ -20,7 +20,6 @@ MapboxMap.propTypes = {
     mapsIndoorsInstance: PropTypes.object,
     viewModeSwitchVisible: PropTypes.bool,
     mapOptions: PropTypes.object,
-    miTransitionLevel: PropTypes.number
 }
 
 /**
