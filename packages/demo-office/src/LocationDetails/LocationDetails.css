@@ -3,8 +3,10 @@
     overflow-y: auto;
     margin-top: 48px;
     padding: 16px;
+    animation: fadeInMoveUp 0.2s ease-in-out;
 
     @media screen and (min-width: 992px) {
+        animation: fadeInMoveDown 0.2s ease-in-out;
         margin-top: 32px;
         margin-left: 32px;
         width: 320px;
@@ -46,4 +48,26 @@
 
 .location-details__close-button:hover {
     background-color: #f9fafb;
+}
+
+@keyframes fadeInMoveDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInMoveUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
