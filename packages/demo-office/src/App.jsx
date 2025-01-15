@@ -37,6 +37,32 @@ function App() {
         });
     };
 
+    /**
+     * When a search result is clicked, we want to show the details for the MapsIndoors Location.
+     * In this specific case (as opposed to clicking on a MapsIndoors Location on the map), we also want to zoom to the Location.
+     *
+     * @param {object} location
+     */
+    const onSearchResultClicked = (location) => {
+        setSelectedLocation(location);
+        gotoLocation(location);
+    };
+
+    /**
+     * Make the map center over a MapsIndoors Location on the map.
+     *
+     * @param {object} location
+     */
+    const gotoLocation = (location) => {
+        // Make sure to set the floor level of the map to the floor level of the Location.
+        mapsIndoorsInstance.setFloor(location.properties.floor);
+
+        // TODO: Calculate any padding needed to make sure the Location is not hidden behind the UI.
+
+        // Make the map pan to the Location, but don't zoom to far in.
+        mapsIndoorsInstance.goTo(location, { maxZoom: 21 });
+    };
+
     return (
         <div className="app mapsindoors-map"> {/* The mapsindoors-map class is added for giving the MapsIndoors components library access to the MapsIndoors CSS variables */}
             <Header />
@@ -56,7 +82,7 @@ function App() {
                     onInitialized={onInitialized}
                 />
                 <div className="app__cards">
-                    <Search onSearchResultClicked={location => setSelectedLocation(location)} selectedLocation={selectedLocation} mapsIndoorsInstance={mapsIndoorsInstance} />
+                    <Search onSearchResultClicked={location => onSearchResultClicked(location)} selectedLocation={selectedLocation} mapsIndoorsInstance={mapsIndoorsInstance} />
                     <LocationDetails onRequestClose={() => setSelectedLocation(null)} location={selectedLocation} />
                 </div>
             </main>
