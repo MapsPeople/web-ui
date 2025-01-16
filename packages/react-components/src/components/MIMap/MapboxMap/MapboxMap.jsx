@@ -19,7 +19,7 @@ MapboxMap.propTypes = {
     resetViewMode: PropTypes.number,
     mapsIndoorsInstance: PropTypes.object,
     viewModeSwitchVisible: PropTypes.bool,
-    mapOptions: PropTypes.object,
+    mapOptions: PropTypes.object
 }
 
 /**
