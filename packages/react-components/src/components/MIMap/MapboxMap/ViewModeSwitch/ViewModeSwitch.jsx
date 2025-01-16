@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import PropTypes from 'prop-types';
 import './ViewModeSwitch.scss';
 import isNullOrUndefined from '../../../../../../map-template/src/helpers/isNullOrUndefined';
+import appConfigState from '../../../../../../map-template/src/atoms/appConfigState';
 import { ReactComponent as Light2D } from '../../../../assets/2d-light.svg';
 import { ReactComponent as Dark2D } from '../../../../assets/2d-dark.svg';
 import { ReactComponent as Light3D } from '../../../../assets/3d-light.svg';
@@ -30,9 +32,17 @@ ViewModeSwitch.propTypes = {
  * @param {number} [props.reset] - Set/increase the number reset to initial 3D mode
  * @param {string} [props.activeColor='#005655'] - The color to use to mark the active view mode
  */
-function ViewModeSwitch({ mapView, pitch, reset, activeColor='#005655' }) {
+function ViewModeSwitch({ mapView, pitch, reset, activeColor = '#005655' }) {
 
     const [viewMode, setViewMode] = useState(ViewModes.initial3D);
+    const appConfig = useRecoilValue(appConfigState);
+    const show2DModelsIn3D = appConfig.appSettings?.show2DModelsIn3D;
+
+    // The show2DModelsIn3D property from AppConfig is received as a string ("true"/"false") or might be undefined.
+    // We need to explicitly check for the string value "true" for the setting to take effect.
+    const is2DModelsEnabledIn3D = () => {
+        return show2DModelsIn3D === "true";
+    };
 
     useEffect(() => {
         if (reset) {
@@ -65,17 +75,23 @@ function ViewModeSwitch({ mapView, pitch, reset, activeColor='#005655' }) {
                     // Tilt the map to the 'currentPitch' value - this is the value that the timeout property resets to.
                     case ViewModes.initial3D:
                         mapView.tilt(!isNullOrUndefined(pitch) ? pitch : 45, 2000);
-                        mapView.hideFeatures([mapView.FeatureType.MODEL2D, mapView.FeatureType.WALLS2D]);
+                        mapView.hideFeatures([
+                            ...(!is2DModelsEnabledIn3D() ? [mapView.FeatureType.MODEL2D] : []),
+                            mapView.FeatureType.WALLS2D
+                        ]);
                         break;
 
                     // If the 3D View Mode has been clicked, hide the 2D features and tilt the map to 45 degrees.
                     case ViewModes.clicked3D:
                         mapView.tilt(45, 2000);
-                        mapView.hideFeatures([mapView.FeatureType.MODEL2D, mapView.FeatureType.WALLS2D]);
+                        mapView.hideFeatures([
+                            ...(!is2DModelsEnabledIn3D() ? [mapView.FeatureType.MODEL2D] : []),
+                            mapView.FeatureType.WALLS2D
+                        ]);
                         break;
 
                     default:
-                        // Intentionally left blank
+                    // Intentionally left blank
                 }
             });
         }
