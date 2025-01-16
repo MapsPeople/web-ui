@@ -461,6 +461,7 @@ function Search({ onSetSize, isOpen }) {
             {categories.length > 0 && <Categories onSetSize={onSetSize}
                 searchFieldRef={searchFieldRef}
                 getFilteredLocations={category => getFilteredLocations(category)}
+                isOpen={!!selectedCategory}
             />}
 
 
