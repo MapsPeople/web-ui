@@ -281,7 +281,9 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
      * React on changes in the miTransitionLevel prop.
      */
     useEffect(() => {
-        setMapOptions({ miTransitionLevel: miTransitionLevel})
+        if (!isNaN(parseInt(mapOptions?.miTransitionLevel))) {
+            setMapOptions({ miTransitionLevel: miTransitionLevel})
+        }
     }, [miTransitionLevel])
 
     return (<>
