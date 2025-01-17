@@ -84,14 +84,6 @@ const useMapBoundsDeterminer = () => {
         if (mapsIndoorsInstance && currentVenue) {
             setMapPositionInvestigating(true);
 
-            // Parse center prop into coordinates. If it is not included in the URL, latLng are undefined.
-            const [latitude, longitude] = center
-                ? center.split(",").map(Number)
-                : [undefined, undefined];
-
-            // Create centerPoint object.
-            const centerPoint = { geometry: { type: 'Point', coordinates: [latitude, longitude] } };
-
             // If center prop is defined and startZoomLevel is not defined, fallback to 18 default value.
             const zoomLevel = startZoomLevel ?? 18;
 
@@ -99,8 +91,8 @@ const useMapBoundsDeterminer = () => {
                 if (!isNullOrUndefined(center)) {
                     // When in Kiosk mode and center prop is defined, set centerPoint to be center prop.
                     getDesktopPaddingBottom().then(desktopPaddingBottom => {
-                        setMapPositionKnown(centerPoint.geometry);
-                        goTo(centerPoint.geometry, mapsIndoorsInstance, desktopPaddingBottom, 0, zoomLevel, currentPitch, bearing);
+                        setMapPositionKnown(getCenterPoint().geometry);
+                        goTo(getCenterPoint().geometry, mapsIndoorsInstance, desktopPaddingBottom, 0, zoomLevel, currentPitch, bearing);
                     });
                 } else {
                     // When in Kiosk mode (which can only happen on desktop), the map is fitted to the bounds of the given Location with some bottom padding to accommodate
@@ -124,13 +116,13 @@ const useMapBoundsDeterminer = () => {
                     // When locationId is defined and center prop is defined, set centerPoint to be center prop.
                     if (isDesktop) {
                         getDesktopPaddingLeft().then(desktopPaddingLeft => {
-                            setMapPositionKnown(centerPoint.geometry);
-                            goTo(centerPoint.geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, zoomLevel, currentPitch, bearing);
+                            setMapPositionKnown(getCenterPoint().geometry);
+                            goTo(getCenterPoint().geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, zoomLevel, currentPitch, bearing);
                         });
                     } else {
                         getMobilePaddingBottom().then(mobilePaddingBottom => {
-                            setMapPositionKnown(centerPoint.geometry);
-                            goTo(centerPoint.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, zoomLevel, currentPitch, bearing);
+                            setMapPositionKnown(getCenterPoint().geometry);
+                            goTo(getCenterPoint().geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, zoomLevel, currentPitch, bearing);
                         });
                     }
                 } else {
@@ -172,7 +164,7 @@ const useMapBoundsDeterminer = () => {
                 } else {
                     // Returns Venue that intersects with center prop.
                     const intersectingVenueWithCenterPoint = venuesInSolution.find(venue => {
-                        return turf.booleanIntersects(venue.geometry, centerPoint.geometry);
+                        return turf.booleanIntersects(venue.geometry, getCenterPoint().geometry);
                     });
 
                     if (isNullOrUndefined(center)) {
@@ -192,13 +184,13 @@ const useMapBoundsDeterminer = () => {
                         // If center prop is defined, but it does not intersects with any Venue, pan to value that is defined by center prop.
                         if (isDesktop) {
                             getDesktopPaddingLeft().then(desktopPaddingLeft => {
-                                setMapPositionKnown(centerPoint.geometry);
-                                goTo(centerPoint.geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, zoomLevel, currentPitch, bearing);
+                                setMapPositionKnown(getCenterPoint().geometry);
+                                goTo(getCenterPoint().geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, zoomLevel, currentPitch, bearing);
                             });
                         } else {
                             getMobilePaddingBottom().then(mobilePaddingBottom => {
-                                setMapPositionKnown(centerPoint.geometry);
-                                goTo(centerPoint.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, zoomLevel, currentPitch, bearing);
+                                setMapPositionKnown(getCenterPoint().geometry);
+                                goTo(getCenterPoint().geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, zoomLevel, currentPitch, bearing);
                             });
                         }
                     } else {
@@ -206,13 +198,13 @@ const useMapBoundsDeterminer = () => {
                         // when map is ready, setCurrentVenueName to the Venue that center prop is intersecting with.
                         if (isDesktop) {
                             getDesktopPaddingLeft().then(desktopPaddingLeft => {
-                                setMapPositionKnown(centerPoint.geometry);
-                                goTo(centerPoint.geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, zoomLevel, currentPitch, bearing);
+                                setMapPositionKnown(getCenterPoint().geometry);
+                                goTo(getCenterPoint(latitude, longitude).geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, zoomLevel, currentPitch, bearing);
                             });
                         } else {
                             getMobilePaddingBottom().then(mobilePaddingBottom => {
-                                setMapPositionKnown(centerPoint.geometry);
-                                goTo(centerPoint.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, zoomLevel, currentPitch, bearing);
+                                setMapPositionKnown(getCenterPoint().geometry);
+                                goTo(getCenterPoint().geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, zoomLevel, currentPitch, bearing);
                             });
                         }
 
@@ -244,6 +236,24 @@ const useMapBoundsDeterminer = () => {
         mapsIndoorsInstance.setDisplayRule(kioskLocation.id, displayRule);
 
         setKioskLocationDisplayRuleWasChanged(true);
+    }
+
+    /**
+     * Gets center point GeoJSON object based on latitude and longitude.
+     * If such a point does not exists, undefined is returned.
+     *
+     * @param {number} latitude
+     * @param {number} longitude
+     * @returns {GeoJSON.Point}
+     */
+    function getCenterPoint() {
+        // Parse center prop into coordinates. If it is not included in the URL, latLng are undefined.
+        const [latitude, longitude] = center
+        ? center.split(",").map(Number)
+        : [undefined, undefined];
+
+        const centerPoint = { geometry: { type: 'Point', coordinates: [latitude, longitude] } };
+        return centerPoint;
     }
 
     return [mapPositionInvestigating, mapPositionKnown];
