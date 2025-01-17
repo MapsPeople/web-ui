@@ -127,6 +127,7 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
                 onBack={() => closeLocationDetails()}
                 snapPointSwiped={locationDetailsSheetSwiped}
                 onStartDirections={() => pushAppView(appViews.DIRECTIONS)}
+                isOpen={currentAppView === appViews.LOCATION_DETAILS}
             />
         </Sheet>,
         <Sheet

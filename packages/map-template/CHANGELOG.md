@@ -5,6 +5,42 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.66.1] - 2025-01-16
+
+## Fixed
+
+- Removed Create React App dependencies and replaced with standard ESLint rules
+
+## [1.66.0] - 2025-01-16
+
+## Added
+
+- The map now fits to matching Locations when the user clicks/taps on a Category.
+
+## [1.65.3] - 2025-01-15
+
+## Fixed
+
+- Fixed issue of clicking outside of MapsIndoors data to close the Categories tab
+
+## [1.65.2] - 2025-01-13
+
+## Fixed
+
+- An issue where miTransitionLevel is not respected for Mapbox map.
+
+## [1.65.1] - 2025-01-08
+
+## Fixed
+
+- Upgrade to SDK v4.38.3.
+
+## [1.65.0] - 2025-01-08
+
+## Added
+
+- Added functionality to exit location details by clicking outside MapsIndoors data on the map for both Google Maps and Mapbox.
+
 ## [1.64.0] - 2025-01-02
 
 ## Added
