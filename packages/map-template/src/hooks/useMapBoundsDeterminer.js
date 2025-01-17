@@ -92,7 +92,7 @@ const useMapBoundsDeterminer = () => {
             // Create centerPoint object.
             const centerPoint = { geometry: { type: 'Point', coordinates: [latitude, longitude] } };
 
-            // If startZoomLevel is not defined, fallback to 16 default value.
+            // If center prop is defined and startZoomLevel is not defined, fallback to 18 default value.
             const zoomLevel = startZoomLevel ?? 18;
 
             if (kioskOriginLocationId && isDesktop) {
