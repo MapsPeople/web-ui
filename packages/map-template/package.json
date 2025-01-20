@@ -1,7 +1,7 @@
 {
   "name": "@mapsindoors/map-template",
   "description": "Get a MapsIndoors map up and running in less than 10 mins.",
-  "version": "1.65.3",
+  "version": "1.66.1",
   "private": false,
   "files": [
     "dist/*.js",
@@ -12,8 +12,8 @@
     "@mapsindoors/components": "*",
     "@mapsindoors/css": "^3.0.0",
     "@mapsindoors/midt": "*",
-    "@r2wc/react-to-web-component": "2.0.3",
     "@mapsindoors/react-components": "*",
+    "@r2wc/react-to-web-component": "2.0.3",
     "@sentry/react": "^8.34.0",
     "@sentry/vite-plugin": "^2.22.5",
     "@testing-library/jest-dom": "^5.16.5",
@@ -22,7 +22,8 @@
     "@turf/turf": "^6.5.0",
     "@vitejs/plugin-react": "^4.0.0",
     "eslint": "^8.39.0",
-    "eslint-config-react-app": "^7.0.1",
+    "eslint-plugin-react": "^7.37.3",
+    "eslint-plugin-react-hooks": "^4.6.2",
     "i18next": "^23.7.7",
     "jest": "^29.7.0",
     "mapbox-gl": "^3.5.2",
@@ -51,7 +52,8 @@
     "serve": "vite preview",
     "test": "jest",
     "release": "sh ./release.sh",
-    "deploy-to-gcloud": "sh ./deploy-to-gcloud.sh"
+    "deploy-to-gcloud": "sh ./deploy-to-gcloud.sh",
+    "lint": "eslint . --ext .js,.jsx --fix"
   },
   "browserslist": {
     "production": [
