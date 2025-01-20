@@ -8,6 +8,7 @@ import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import isNullOrUndefined from '../../../../../map-template/src/helpers/isNullOrUndefined';
 import { useRecoilValue } from 'recoil';
 import miTransitionLevelState from '../../../../../map-template/src/atoms/miTransitionLevelState';
+import appConfigState from '../../../../../map-template/src/atoms/appConfigState';
 
 MapboxMap.propTypes = {
     accessToken: PropTypes.string.isRequired,
@@ -47,6 +48,7 @@ function MapboxMap({ accessToken, onInitialized, onPositionControl, center, zoom
     const [hasZoomControl, setHasZoomControl] = useState(false);
     const isDesktop = useIsDesktop();
     const miTransitionLevel = useRecoilValue(miTransitionLevelState);
+    const appConfig = useRecoilValue(appConfigState);
 
     /*
      * React on any props that are used to control the position of the map.
@@ -150,7 +152,7 @@ function MapboxMap({ accessToken, onInitialized, onPositionControl, center, zoom
     }, []);
 
     return <div className="mapsindoors-map mapbox-map-container" id="map">
-        {viewModeSwitchVisible && <ViewModeSwitch reset={resetViewMode} mapView={mapViewInstance} pitch={pitch} activeColor={mapOptions?.brandingColor} />}
+        {viewModeSwitchVisible && <ViewModeSwitch reset={resetViewMode} mapView={mapViewInstance} pitch={pitch} activeColor={mapOptions?.brandingColor} appConfig={appConfig} />}
     </div>
 }
 
