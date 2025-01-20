@@ -157,6 +157,7 @@ export default useMapBoundsDeterminer;
  * @param {number} zoomLevel - Enforced zoom level.
  * @param {number} pitch - Map pitch (tilt).
  * @param {number} bearing - Mp bearing (rotation) in degrees from north.
+ * @param {boolean} [mapPositionKnown] - Checks if map position is known. Based on that, we can perform zooming to a specific geometry, once map is loaded.
  */
 function goTo(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLevel, pitch, bearing, mapPositionKnown) {
     mapsIndoorsInstance.getMapView().tilt(pitch || 0);
