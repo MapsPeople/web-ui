@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.67.0] - 2025-01-21
+
+### Added
+
+- Added Jest and Babel config for setting up the jest testing framework
+
 ## [1.66.1] - 2025-01-16
 
 ## Fixed
