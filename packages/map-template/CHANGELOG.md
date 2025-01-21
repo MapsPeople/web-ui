@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added Jest and Babel config for setting up the jest testing framework
 
+## [1.66.2] - 2025-01-21
+
+## Fixed
+
+- Upgraded to SDK v4.38.5.
+
 ## [1.66.1] - 2025-01-16
 
 ## Fixed
