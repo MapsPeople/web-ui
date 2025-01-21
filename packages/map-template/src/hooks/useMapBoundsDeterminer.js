@@ -62,7 +62,7 @@ const useMapBoundsDeterminer = () => {
     /*
      * When relevant state changes, run code to go to a location in the world.
      */
-    useEffect(() =>  {
+    useEffect(() => {
         determineMapBounds();
     }, [mapsIndoorsInstance, currentVenueName, locationId, kioskOriginLocationId, pitch, bearing, startZoomLevel, categories]);
 
@@ -116,7 +116,7 @@ const useMapBoundsDeterminer = () => {
             } else if (currentVenue) {
                 // When showing a venue, the map is fitted to the bounds of the Venue with no padding.
                 setMapPositionKnown(currentVenue.geometry);
-                goTo(currentVenue.geometry, mapsIndoorsInstance, 0, 0, startZoomLevel, currentPitch, bearing);
+                goTo(currentVenue.geometry, mapsIndoorsInstance, 0, 0, startZoomLevel, currentPitch, bearing, mapPositionKnown);
             }
         }
     }
@@ -157,15 +157,16 @@ export default useMapBoundsDeterminer;
  * @param {number} zoomLevel - Enforced zoom level.
  * @param {number} pitch - Map pitch (tilt).
  * @param {number} bearing - Mp bearing (rotation) in degrees from north.
+ * @param {boolean} [mapPositionKnown] - Checks if map position is known. Based on that, we can perform zooming to a specific geometry, once map is loaded.
  */
-function goTo(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLevel, pitch, bearing) {
+function goTo(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLevel, pitch, bearing, mapPositionKnown) {
     mapsIndoorsInstance.getMapView().tilt(pitch || 0);
     mapsIndoorsInstance.getMapView().rotate(bearing || 0);
     mapsIndoorsInstance.goTo({ type: 'Feature', geometry, properties: {}}, {
         maxZoom: zoomLevel ?? 22,
         padding: { top: 0, right: 0, bottom: paddingBottom, left: paddingLeft },
     }).then(() => {
-        if (zoomLevel) {
+        if (zoomLevel && mapPositionKnown !== false) {
             mapsIndoorsInstance.setZoom(zoomLevel);
         }
     });
