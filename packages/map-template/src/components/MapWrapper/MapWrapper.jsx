@@ -20,7 +20,6 @@ import solutionState from '../../atoms/solutionState';
 import notificationMessageState from '../../atoms/notificationMessageState';
 import useMapBoundsDeterminer from '../../hooks/useMapBoundsDeterminer';
 import hideNonMatchesState from "../../atoms/hideNonMatchesState";
-import appConfigState from "../../atoms/appConfigState";
 
 /**
  * Private variable used for storing the tile style.
@@ -58,7 +57,6 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
     const solution = useRecoilValue(solutionState);
     const [, setErrorMessage] = useRecoilState(notificationMessageState);
     const hideNonMatches = useRecoilValue(hideNonMatchesState);
-    const appConfig = useRecoilValue(appConfigState);
 
     useLiveData(apiKey);
 
@@ -283,7 +281,6 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
             gmApiKey={mapType === mapTypes.Google ? gmApiKey : undefined}
             onInitialized={onInitialized}
             resetUICounter={resetCount}
-            appConfig={appConfig}
         />}
     </>)
 };
