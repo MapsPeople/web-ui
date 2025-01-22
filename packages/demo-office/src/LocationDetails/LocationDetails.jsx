@@ -49,6 +49,32 @@ function LocationDetails({ location, onRequestClose, onHeightChanged }) {
             </h1>
             <button className="location-details__close-button" onClick={() => close()}><CloseIcon /></button>
         </div>
+
+        { /*
+            If the Location appears to be a Meeting Room, show some "fake" measurements:
+            - Occupancy (1/6)
+            - Temperature (22°C)
+            - CO2 level (1226 ppm)
+
+            Those measurements are completely mocked here, and could be replaced with
+            measurements from a real sensor system.
+
+            Beware that the temperature is hardcoded to be shown in celcius for now.
+        */ }
+        {location.properties.type.startsWith('MeetingRoom') && <ul className="location-details__measurements">
+            <li>
+                <img alt="" src="data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIgogIHdpZHRoPSIyNCIKICBoZWlnaHQ9IjI0IgogIHZpZXdCb3g9IjAgMCAyNCAyNCIKICBmaWxsPSJub25lIgogIHN0cm9rZT0iIzAwMCIKICBzdHJva2Utd2lkdGg9IjIiCiAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogIHN0cm9rZS1saW5lam9pbj0icm91bmQiCj4KICA8cGF0aCBkPSJNMTkgMjF2LTJhNCA0IDAgMCAwLTQtNEg5YTQgNCAwIDAgMC00IDR2MiIgLz4KICA8Y2lyY2xlIGN4PSIxMiIgY3k9IjciIHI9IjQiIC8+Cjwvc3ZnPgo=" />
+                1/6
+            </li>
+            <li>
+                <img alt="" src="data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIgogIHdpZHRoPSIyNCIKICBoZWlnaHQ9IjI0IgogIHZpZXdCb3g9IjAgMCAyNCAyNCIKICBmaWxsPSJub25lIgogIHN0cm9rZT0iIzAwMCIKICBzdHJva2Utd2lkdGg9IjIiCiAgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIgogIHN0cm9rZS1saW5lam9pbj0icm91bmQiCj4KICA8cGF0aCBkPSJNMTQgNHYxMC41NGE0IDQgMCAxIDEtNCAwVjRhMiAyIDAgMCAxIDQgMFoiIC8+Cjwvc3ZnPgo=" />
+                22&deg;C
+            </li>
+            <li>
+                <img alt="" src="data:image/svg+xml;base64,PHN2ZyBzdHJva2U9ImN1cnJlbnRDb2xvciIgZmlsbD0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIwIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGNsYXNzPSJoLTYgdy02IG1yLTIiIGhlaWdodD0iMWVtIiB3aWR0aD0iMWVtIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGZpbGw9Im5vbmUiIGQ9Ik0wIDBoMjR2MjRIMHoiPjwvcGF0aD48cGF0aCBkPSJNMTQgOWgtM2MtLjU1IDAtMSAuNDUtMSAxdjRjMCAuNTUuNDUgMSAxIDFoM2MuNTUgMCAxLS40NSAxLTF2LTRjMC0uNTUtLjQ1LTEtMS0xem0tLjUgNC41aC0ydi0zaDJ2M3pNOCAxM3YxYzAgLjU1LS40NSAxLTEgMUg0Yy0uNTUgMC0xLS40NS0xLTF2LTRjMC0uNTUuNDUtMSAxLTFoM2MuNTUgMCAxIC40NSAxIDF2MUg2LjV2LS41aC0ydjNoMlYxM0g4em0xMi41IDIuNWgtMnYxaDNWMThIMTd2LTIuNWMwLS41NS40NS0xIDEtMWgydi0xaC0zVjEyaDMuNWMuNTUgMCAxIC40NSAxIDF2MS41YzAgLjU1LS40NSAxLTEgMXoiPjwvcGF0aD48L3N2Zz4=" />
+                1226 ppm
+            </li>
+        </ul>}
     </div>;
 }
 

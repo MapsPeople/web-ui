@@ -50,6 +50,41 @@
     background-color: #f9fafb;
 }
 
+.location-details__measurements {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 10px;
+}
+
+.location-details__measurements li {
+    padding: 2px 8px;
+    background: grey;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/*
+    For visual differences, we hardcode different colors for each measurement by their order.
+    This could be replaced by your own logic to determine the color based on the measurement.
+ */
+.location-details__measurements li:nth-child(1) {
+    background-color: rgb(74, 222, 128);
+}
+
+.location-details__measurements li:nth-child(2) {
+    background-color: rgba(241, 245, 249, 0.963);
+}
+
+.location-details__measurements li:nth-child(3) {
+    background-color: rgba(239, 68, 68, 0.984);
+    color: white;
+}
+
 @keyframes fadeInMoveDown {
     from {
         opacity: 0;
