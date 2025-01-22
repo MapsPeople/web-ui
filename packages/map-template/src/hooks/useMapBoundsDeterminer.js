@@ -166,17 +166,8 @@ const useMapBoundsDeterminer = () => {
 
                     if (isNullOrUndefined(center)) {
                         // If center prop is not defined, pan to currentVenue.
-                        if (isDesktop) {
-                            getDesktopPaddingLeft().then(desktopPaddingLeft => {
-                                setMapPositionKnown(currentVenue.geometry);
-                                goTo(currentVenue.geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, getZoomLevel(startZoomLevel), currentPitch, bearing);
-                            });
-                        } else {
-                            getMobilePaddingBottom().then(mobilePaddingBottom => {
-                                setMapPositionKnown(currentVenue.geometry);
-                                goTo(currentVenue.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, getZoomLevel(startZoomLevel), currentPitch, bearing);
-                            });
-                        }
+                        setMapPositionKnown(currentVenue.geometry);
+                        goTo(currentVenue.geometry, mapsIndoorsInstance, 0, 0, getZoomLevel(startZoomLevel), currentPitch, bearing);
                     } else if (isNullOrUndefined(intersectingVenueWithCenterPoint)) {
                         // If center prop is defined, but it does not intersects with any Venue, pan to value that is defined by center prop.
                         if (isDesktop) {
@@ -246,8 +237,8 @@ const useMapBoundsDeterminer = () => {
     function getCenterPoint() {
         // Parse center prop into coordinates. If it is not included in the URL, latLng are undefined.
         const [latitude, longitude] = center
-        ? center.split(",").map(Number)
-        : [undefined, undefined];
+            ? center.split(",").map(Number)
+            : [undefined, undefined];
 
         const centerPoint = { geometry: { type: 'Point', coordinates: [latitude, longitude] } };
         return centerPoint;
