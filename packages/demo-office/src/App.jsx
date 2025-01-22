@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css'
 import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
 import MIMap from '@mapsindoors/react-components/src/components/MIMap/MIMap';
@@ -7,14 +7,25 @@ import addBlueDot from './tools/addBlueDot';
 import Header from './Header/Header';
 import Search from './Search/Search';
 import LocationDetails from './LocationDetails/LocationDetails';
+import useMediaQuery from './hooks/useMediaQuery';
+
+// We use this to define how a location is selected, because that has an impact on how we want to handle the zooming to the location.
+const selectedLocationInitiatorType = Object.freeze({
+    MAP_CLICK: 'MAP_CLICK',
+    SEARCH_RESULT_CLICK: 'SEARCH_RESULT_CLICK'
+});
+
 
 defineCustomElements();
 
 function App() {
+    const isDesktop = useMediaQuery('(min-width: 992px)');
 
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState(null);
 
     const [selectedLocation, setSelectedLocation] = useState(null);
+    const [selectedLocationInitiator, setSelectedLocationInitiator] = useState(null);
+    const [locationDetailsHeight, setLocationDetailsHeight] = useState(0);
 
     /**
      * Callback for when the MapsIndoors instance is initialized.
@@ -33,6 +44,7 @@ function App() {
         });
 
         initializedMapsIndoorsInstance.on('click', (location) => {
+            setSelectedLocationInitiator(selectedLocationInitiatorType.MAP_CLICK);
             setSelectedLocation(location);
         });
     };
@@ -40,13 +52,20 @@ function App() {
     /**
      * When a search result is clicked, we want to show the details for the MapsIndoors Location.
      * In this specific case (as opposed to clicking on a MapsIndoors Location on the map), we also want to zoom to the Location.
+     * That's why we also set the selectedLocationInitiator to SEARCH_RESULT_CLICK. That will be picked by a useEffect hook that will zoom to the Location.
      *
      * @param {object} location
      */
     const onSearchResultClicked = (location) => {
+        setSelectedLocationInitiator(selectedLocationInitiatorType.SEARCH_RESULT_CLICK);
         setSelectedLocation(location);
-        gotoLocation(location);
     };
+
+    useEffect(() => {
+        if (selectedLocation && selectedLocationInitiator === selectedLocationInitiatorType.SEARCH_RESULT_CLICK && locationDetailsHeight) {
+            gotoLocation(selectedLocation);
+        }
+    }, [selectedLocation, selectedLocationInitiator, locationDetailsHeight]);
 
     /**
      * Make the map center over a MapsIndoors Location on the map.
@@ -57,10 +76,19 @@ function App() {
         // Make sure to set the floor level of the map to the floor level of the Location.
         mapsIndoorsInstance.setFloor(location.properties.floor);
 
-        // TODO: Calculate any padding needed to make sure the Location is not hidden behind the UI.
-
         // Make the map pan to the Location, but don't zoom to far in.
-        mapsIndoorsInstance.goTo(location, { maxZoom: 21 });
+        // We add some padding to make sure the Location is not hidden behind the UI.
+        // We do this on mobile sized viewports only since only where the details modal can be seen to cover part of the map
+        // as opposed to larger screens where the details modal is shown on the map but large parts of the map is still visible.
+        mapsIndoorsInstance.goTo(location, {
+            maxZoom: 21,
+            padding: {
+                top: 0,
+                bottom: !isDesktop ? locationDetailsHeight : 0,
+                left: 0,
+                right: 0
+            }
+        });
     };
 
     return (
@@ -83,7 +111,7 @@ function App() {
                 />
                 <div className="app__cards">
                     <Search onSearchResultClicked={location => onSearchResultClicked(location)} selectedLocation={selectedLocation} mapsIndoorsInstance={mapsIndoorsInstance} />
-                    <LocationDetails onRequestClose={() => setSelectedLocation(null)} location={selectedLocation} />
+                    <LocationDetails onHeightChanged={height => setLocationDetailsHeight(height)} onRequestClose={() => setSelectedLocation(null)} location={selectedLocation} />
                 </div>
             </main>
         </div>
