@@ -187,7 +187,7 @@ const useMapBoundsDeterminer = () => {
                         if (isDesktop) {
                             getDesktopPaddingLeft().then(desktopPaddingLeft => {
                                 setMapPositionKnown(getCenterPoint().geometry);
-                                goTo(getCenterPoint(latitude, longitude).geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, getZoomLevel(startZoomLevel), currentPitch, bearing);
+                                goTo(getCenterPoint().geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, getZoomLevel(startZoomLevel), currentPitch, bearing);
                             });
                         } else {
                             getMobilePaddingBottom().then(mobilePaddingBottom => {
