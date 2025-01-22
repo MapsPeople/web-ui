@@ -1,6 +1,5 @@
-@import '@mapsindoors/midt/build/css/mapsindoors-map-variables';
+@use '@mapsindoors/midt/build/css/mapsindoors-map-variables';
 @import '@mapsindoors/css/toggle.css';
-@import '../../variables.scss';
 
 .mapsindoors-map {
     position: relative;
@@ -25,7 +24,7 @@
         .view-mode-switch {
             display: block;
             margin-top: 68px;
-            @media (max-width: $desktop-breakpoint) {
+            @media (max-width: 992px) {
                 margin-top: 62px;
             }
         }

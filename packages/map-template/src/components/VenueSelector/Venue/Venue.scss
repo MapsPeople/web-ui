@@ -1,5 +1,3 @@
-@import '../../../variables.scss';
-
 .venue {
     all: unset;
     width: calc(100% - var(--spacing-medium));
@@ -44,7 +42,7 @@
         padding: var(--spacing-x-small);
     }
 
-    @media (min-width: $desktop-breakpoint) {
+    @media (min-width: 992px) {
         margin: 0 72px var(--spacing-medium) 72px;
         width: calc(100% - 144px);
     }
