@@ -19,7 +19,7 @@ ViewModeSwitch.propTypes = {
     solution: PropTypes.object,
     reset: PropTypes.number,
     activeColor: PropTypes.string,
-    appConfig: PropTypes.object
+    show2DModelsIn3D: PropTypes.string
 }
 
 /**
@@ -30,12 +30,11 @@ ViewModeSwitch.propTypes = {
  * @param {Object} [props.solution] - The current MapsIndoors solution
  * @param {number} [props.reset] - Set/increase the number reset to initial 3D mode
  * @param {string} [props.activeColor='#005655'] - The color to use to mark the active view mode
- * @param {Object} [props.appConfig] - Object that contains the app settings
+ * @param {string} [props.show2DModelsIn3D] - Object that contains the app settings
  */
-function ViewModeSwitch({ mapView, pitch, reset, activeColor = '#005655', appConfig }) {
+function ViewModeSwitch({ mapView, pitch, reset, activeColor = '#005655', show2DModelsIn3D }) {
 
     const [viewMode, setViewMode] = useState(ViewModes.initial3D);
-    const show2DModelsIn3D = appConfig.appSettings?.show2DModelsIn3D;
 
     // The show2DModelsIn3D property from AppConfig is received as a string ("true"/"false") or might be undefined.
     // We need to explicitly check for the string value "true" for the setting to take effect.

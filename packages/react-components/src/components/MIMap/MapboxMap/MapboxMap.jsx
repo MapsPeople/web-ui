@@ -49,6 +49,7 @@ function MapboxMap({ accessToken, onInitialized, onPositionControl, center, zoom
     const [hasZoomControl, setHasZoomControl] = useState(false);
     const isDesktop = useIsDesktop();
     const miTransitionLevel = useRecoilValue(miTransitionLevelState);
+    const show2DModelsIn3D = appConfig?.appSettings?.show2DModelsIn3D;
 
     /*
      * React on any props that are used to control the position of the map.
@@ -152,7 +153,7 @@ function MapboxMap({ accessToken, onInitialized, onPositionControl, center, zoom
     }, []);
 
     return <div className="mapsindoors-map mapbox-map-container" id="map">
-        {viewModeSwitchVisible && <ViewModeSwitch reset={resetViewMode} mapView={mapViewInstance} pitch={pitch} activeColor={mapOptions?.brandingColor} appConfig={appConfig} />}
+        {viewModeSwitchVisible && <ViewModeSwitch reset={resetViewMode} mapView={mapViewInstance} pitch={pitch} activeColor={mapOptions?.brandingColor} show2DModelsIn3D={show2DModelsIn3D} />}
     </div>
 }
 
