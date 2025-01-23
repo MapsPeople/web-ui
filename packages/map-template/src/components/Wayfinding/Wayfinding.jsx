@@ -1,6 +1,5 @@
-import React, { useState } from "react";
 import './Wayfinding.scss';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
@@ -35,7 +34,6 @@ import hasFoundRouteState from "../../atoms/hasFoundRouteState";
 import accessibilityOnState from "../../atoms/accessibilityOnState";
 import Accessibility from "../Accessibility/Accessibility";
 import searchExternalLocationsState from "../../atoms/searchExternalLocationsState";
-import isNullOrUndefined from "../../helpers/isNullOrUndefined";
 
 const searchFieldIdentifiers = {
     TO: 'TO',

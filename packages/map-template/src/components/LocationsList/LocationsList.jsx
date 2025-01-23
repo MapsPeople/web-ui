@@ -1,4 +1,3 @@
-import React from "react";
 import './LocationsList.scss';
 import { useTranslation } from 'react-i18next';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';

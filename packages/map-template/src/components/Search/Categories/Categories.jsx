@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import './Categories.scss';
 import { ReactComponent as ChevronRight } from '../../../assets/chevron-right.svg';

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useTranslation } from 'react-i18next';
 import './QRCodeDialog.scss';
@@ -32,7 +32,7 @@ function QRCodeDialog() {
     const languageProp = useRecoilValue(languageState);
     const searchAllVenuesProp = useRecoilValue(searchAllVenuesState);
     const searchExternalLocationsProp = useRecoilValue(searchExternalLocationsState);
-    
+
     const directionsFrom = useRecoilValue(kioskLocationState);
     const directionsTo = useRecoilValue(currentLocationState);
 
@@ -42,7 +42,7 @@ function QRCodeDialog() {
             // Create the target URL when the user opens the QR code dialog
             // Replace the '/' at the end of the line
             let targetUrl = window.location.origin + window.location.pathname.replace(/\/$/, "");
-            
+
             // The interface for the existing URL search params
             const currentParams = new URLSearchParams(window.location.search);
 
