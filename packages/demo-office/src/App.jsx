@@ -61,6 +61,24 @@ function App() {
         setSelectedLocation(location);
     };
 
+    /*
+     * When the selected Location changes, we want to make sure it is visually selected on the map.
+     */
+    useEffect(() => {
+        if (!mapsIndoorsInstance) return;
+
+        if (selectedLocation) {
+            // Make the Location visually appear as selected on the map.
+            mapsIndoorsInstance.selectLocation(selectedLocation);
+        } else {
+            // Deselect the Location on the map.
+            mapsIndoorsInstance.deselectLocation();
+        }
+    }, [selectedLocation]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    /*
+     * When the selected Location changes, we want to make sure the map is centered over the Location.
+     */
     useEffect(() => {
         if (selectedLocation && selectedLocationInitiator === selectedLocationInitiatorType.SEARCH_RESULT_CLICK && locationDetailsHeight) {
             gotoLocation(selectedLocation);

@@ -46,6 +46,9 @@ function Search({ mapsIndoorsInstance, onSearchResultClicked, selectedLocation }
     useEffect(() => {
         if (!selectedLocation && searchResults.length > 0) {
             setSearchResultsVisible(true);
+
+            // Highlight the search results on the map.
+            mapsIndoorsInstance.highlight(searchResults.map(location => location.id), false);
         }
     }, [selectedLocation]);
 
@@ -59,6 +62,8 @@ function Search({ mapsIndoorsInstance, onSearchResultClicked, selectedLocation }
         setNoResultsFound(locations.length === 0);
         setSearchResults(locations);
         setSearchResultsVisible(true);
+
+        // Highlight the search results on the map.
         mapsIndoorsInstance.highlight(locations.map(location => location.id), false);
     }
 
@@ -78,6 +83,8 @@ function Search({ mapsIndoorsInstance, onSearchResultClicked, selectedLocation }
      */
     const onLocationClicked = (location) => {
         setSearchResultsVisible(false);
+        // Remove highlighting search results on the map.
+        mapsIndoorsInstance.highlight([], false);
         if (typeof onSearchResultClicked === 'function') {
             onSearchResultClicked(location);
         }
