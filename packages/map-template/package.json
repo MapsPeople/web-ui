@@ -1,7 +1,7 @@
 {
   "name": "@mapsindoors/map-template",
   "description": "Get a MapsIndoors map up and running in less than 10 mins.",
-  "version": "1.55.0",
+  "version": "1.66.4",
   "private": false,
   "files": [
     "dist/*.js",
@@ -13,16 +13,19 @@
     "@mapsindoors/css": "^3.0.0",
     "@mapsindoors/midt": "*",
     "@mapsindoors/react-components": "*",
-    "@sentry/react": "^7.105.0",
-    "@sentry/vite-plugin": "^2.14.2",
+    "@r2wc/react-to-web-component": "2.0.3",
+    "@sentry/react": "^8.34.0",
+    "@sentry/vite-plugin": "^2.22.5",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "@turf/turf": "^6.5.0",
     "@vitejs/plugin-react": "^4.0.0",
     "eslint": "^8.39.0",
-    "eslint-config-react-app": "^7.0.1",
+    "eslint-plugin-react": "^7.37.3",
+    "eslint-plugin-react-hooks": "^4.6.2",
     "i18next": "^23.7.7",
+    "jest": "^29.7.0",
     "mapbox-gl": "^3.5.2",
     "prop-types": "^15.8.1",
     "qrcode": "^1.5.3",
@@ -30,7 +33,6 @@
     "react-dom": "^18.2.0",
     "react-i18next": "^13.5.0",
     "react-swipeable": "^7.0.0",
-    "react-to-webcomponent": "2.0.0-alpha.2",
     "react-transition-group": "^4.4.5",
     "recoil": "^0.7.7",
     "sass": "^1.57.1",
@@ -48,9 +50,10 @@
     "build": "vite build",
     "build-for-npm": "node releaseTools/buildForNpm.mjs",
     "serve": "vite preview",
-    "test": "",
+    "test": "jest",
     "release": "sh ./release.sh",
-    "deploy-to-gcloud": "sh ./deploy-to-gcloud.sh"
+    "deploy-to-gcloud": "sh ./deploy-to-gcloud.sh",
+    "lint": "eslint . --ext .js,.jsx --fix"
   },
   "browserslist": {
     "production": [

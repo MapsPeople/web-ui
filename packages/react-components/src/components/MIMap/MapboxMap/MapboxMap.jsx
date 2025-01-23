@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './MapboxMap.scss';
-import ViewModeSwitch from './ViewmodeSwitch/ViewModeSwitch';
+import ViewModeSwitch from './ViewModeSwitch/ViewModeSwitch';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import isNullOrUndefined from '../../../../../map-template/src/helpers/isNullOrUndefined';
 
@@ -133,6 +133,11 @@ function MapboxMap({ accessToken, onInitialized, onPositionControl, center, zoom
             pitch: pitch ?? 0,
             ...mapOptions
         };
+
+        // If miTransitionLevel exists and it's a number, set it in the mapViewOptions
+        if (mapOptions?.miTransitionLevel && !isNaN(parseInt(mapOptions?.miTransitionLevel))) {
+            mapViewOptions.mapsIndoorsTransitionLevel = parseInt(mapOptions.miTransitionLevel);
+        }
 
         const mapView = new window.mapsindoors.mapView.MapboxV3View(mapViewOptions);
 

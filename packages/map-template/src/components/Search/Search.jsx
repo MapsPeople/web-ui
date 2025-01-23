@@ -11,7 +11,6 @@ import filteredLocationsState from '../../atoms/filteredLocationsState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import currentLocationState from '../../atoms/currentLocationState';
 import isLocationClickedState from '../../atoms/isLocationClickedState';
-import fitBoundsLocation from '../../helpers/fitBoundsLocation';
 import getDesktopPaddingLeft from '../../helpers/GetDesktopPaddingLeft';
 import languageState from '../../atoms/languageState';
 import { useTranslation } from 'react-i18next';
@@ -56,6 +55,9 @@ function Search({ onSetSize, isOpen }) {
 
     /** Referencing the keyboard element */
     const keyboardRef = useRef();
+
+    /** Maximum number of search results to show */
+    const MAX_RESULTS = 100;
 
     const [searchDisabled, setSearchDisabled] = useState(true);
     const [searchResults, setSearchResults] = useRecoilState(searchResultsState);
@@ -117,7 +119,7 @@ function Search({ onSetSize, isOpen }) {
         window.mapsindoors.services.LocationsService.getLocations({
             categories: category,
             venue: searchAllVenues ? undefined : venuesInSolution.find(venue => venue.name.toLowerCase() === currentVenueName.toLowerCase())?.name,
-        }).then(onResults);
+        }).then(results => onResults(results, true));
     }
 
     /**
@@ -134,12 +136,19 @@ function Search({ onSetSize, isOpen }) {
     /**
      * Handle search results from the search field.
      *
-     * @param {array} locations
+     * @param {array} locations - An array of MapsIndoors Location objects.
+     * @param {boolean} fitMapBounds - If the map bounds should be adjusted to fit the locations.
      */
-    function onResults(locations) {
-        setSearchResults(locations);
-        setFilteredLocations(locations);
-        setShowNotFoundMessage(locations.length === 0);
+    function onResults(locations, fitMapBounds = false) {
+        const displayResults = locations.slice(0, MAX_RESULTS);
+
+        setSearchResults(displayResults);
+        setFilteredLocations(displayResults);
+        setShowNotFoundMessage(displayResults.length === 0);
+
+        if (locations && fitMapBounds) {
+            fitMapBoundsToLocations(locations);
+        }
 
         // Handles updates to scroll buttons when the category changes.
         // When a category changes, the scroll buttons need to have their enabled/disabled states updated.
@@ -150,6 +159,46 @@ function Search({ onSetSize, isOpen }) {
             searchRef.current?.addEventListener('transitionend', () => {
                 scrollButtonsRef?.current?.updateScrollButtons();
             }, { once: true });
+        }
+    }
+
+
+    /**
+     * Adjusts the map view to fit the bounds of the provided locations.
+     * It will filter out Locations that are not on the current floor or not part of the current venue.
+     *
+     * @param {Array} locations - An array of Location objects to fit within the map bounds.
+     */
+    function fitMapBoundsToLocations(locations) {
+        if (!mapsIndoorsInstance.goTo) return; // Early exit to prevent crashes if using an older version of the MapsIndoors JS SDK. The goTo method was introduced in version 4.38.0.
+
+        const currentFloorIndex = mapsIndoorsInstance.getFloor();
+
+        // Create a GeoJSON FeatureCollection from the locations that can be used as input to the goTo method.
+        const featureCollection = {
+            type: 'FeatureCollection',
+            features: locations
+                // Filter out locations that are not on the current floor. If those were included, it could result in a wrong fit since they are not visible on the map anyway.
+                .filter(location => parseInt(location.properties.floor, 10) === parseInt(currentFloorIndex, 10))
+
+                // Filter out locations that are not part of the current venue. Including those when fitting to bounds could cause the map to zoom out too much.
+                .filter(location => location.properties.venueId.toLowerCase() === currentVenueName.toLowerCase())
+
+                // Map the locations to GeoJSON features.
+                .map(location => ({
+                    type: 'Feature',
+                    geometry: location.geometry,
+                    properties: location.properties
+                }))
+        };
+
+        if (featureCollection.features.length > 0) {
+            Promise.all([getBottomPadding(), getLeftPadding()]).then(([bottomPadding, leftPadding]) => {
+                mapsIndoorsInstance.goTo(featureCollection, {
+                    maxZoom: 22,
+                    padding: { bottom: bottomPadding, left: leftPadding, top: 0, right: 0 }
+                });
+            });
         }
     }
 
@@ -223,7 +272,10 @@ function Search({ onSetSize, isOpen }) {
         }
 
         Promise.all([getBottomPadding(), getLeftPadding()]).then(([bottomPadding, leftPadding]) => {
-            fitBoundsLocation(location, mapsIndoorsInstance, bottomPadding, leftPadding);
+            mapsIndoorsInstance.goTo(location, {
+                maxZoom: 22,
+                padding: { bottom: bottomPadding, left: leftPadding, top: 0, right: 0 }
+            });
         });
     }
 
@@ -283,6 +335,12 @@ function Search({ onSetSize, isOpen }) {
         }
     }
 
+    useEffect(() => {
+        return () => {
+            setHoveredLocation();
+        }
+    }, []);
+
     /*
      * React on changes in the venue prop.
      * Deselect category and clear results list.
@@ -309,11 +367,11 @@ function Search({ onSetSize, isOpen }) {
      * Handle location hover.
      */
     useEffect(() => {
-        mapsIndoorsInstance.on('mouseenter', onMouseEnter);
+        mapsIndoorsInstance?.on('mouseenter', onMouseEnter);
         return () => {
-            mapsIndoorsInstance.off('mouseenter', onMouseEnter);
+            mapsIndoorsInstance?.off('mouseenter', onMouseEnter);
         }
-    });
+    }, [mapsIndoorsInstance]);
 
     /*
      * Setup scroll buttons to scroll in search results list when in kiosk mode.
@@ -381,17 +439,19 @@ function Search({ onSetSize, isOpen }) {
                 {isKioskContext && showLegendButton && <button className='search__legend' onClick={() => setShowLegendDialog(true)}><Legend /></button>}
 
                 { /* Search field that allows users to search for locations (MapsIndoors Locations and external) */}
-
-                <SearchField
-                    ref={searchFieldRef}
-                    mapsindoors={true}
-                    placeholder={t('Search by name, category, building...')}
-                    results={locations => onResults(locations)}
-                    clicked={() => searchFieldClicked()}
-                    cleared={() => cleared()}
-                    category={selectedCategory}
-                    disabled={searchDisabled} // Disabled initially to prevent content jumping when clicking and changing sheet size.
-                />
+                <label className="search__label">
+                    <span>{t('Search by name, category, building...')}</span>
+                    <SearchField
+                        ref={searchFieldRef}
+                        mapsindoors={true}
+                        placeholder={t('Search by name, category, building...')}
+                        results={locations => onResults(locations)}
+                        clicked={() => searchFieldClicked()}
+                        cleared={() => cleared()}
+                        category={selectedCategory}
+                        disabled={searchDisabled} // Disabled initially to prevent content jumping when clicking and changing sheet size.
+                    />
+                </label>
             </div>
 
 
@@ -401,6 +461,7 @@ function Search({ onSetSize, isOpen }) {
             {categories.length > 0 && <Categories onSetSize={onSetSize}
                 searchFieldRef={searchFieldRef}
                 getFilteredLocations={category => getFilteredLocations(category)}
+                isOpen={!!selectedCategory}
             />}
 
 
