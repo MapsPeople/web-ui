@@ -26,7 +26,7 @@
         "no-unused-vars": "error",            // Show error for unused variables
         "react/display-name": "off",         // Disable display name requirement for components
         "no-irregular-whitespace": "off",    // Disable irregular whitespace errors
-        "no-extra-semi":"off",              // Convert extra semicolons from error to warning
+        "no-extra-semi":"error",              // Show error for extra semicolons
         "no-empty": "off"                    // Allow empty blocks
     },
     "ignorePatterns": ["build/*"]           // Ignore all files in build directory
