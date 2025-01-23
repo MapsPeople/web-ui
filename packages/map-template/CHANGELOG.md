@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Fixed
 
-- Upgraded to SDK v4.38.5.
+- Upgrade to SDK v.4.38.5.
 
 ## [1.66.1] - 2025-01-16
 
