@@ -59,7 +59,7 @@ function LocationDetails({ location, onRequestClose, onHeightChanged }) {
             Those measurements are completely mocked here, and could be replaced with
             measurements from a real sensor system.
 
-            Beware that the temperature is hardcoded to be shown in celcius for now.
+            Beware that the temperature is hardcoded to be shown in celsius for now.
         */ }
         {location.properties.type.startsWith('MeetingRoom') && <ul className="location-details__measurements">
             <li>
