@@ -165,7 +165,7 @@ const useMapBoundsDeterminer = () => {
                     });
 
                     if (isNullOrUndefined(center)) {
-                        // If center prop is not defined, pan to currentVenue.
+                        // If the center prop is not defined, pan to the current Venue.
                         setMapPositionKnown(currentVenue.geometry);
                         goTo(currentVenue.geometry, mapsIndoorsInstance, 0, 0, getZoomLevel(startZoomLevel), currentPitch, bearing);
                     } else if (isNullOrUndefined(intersectingVenueWithCenterPoint)) {
