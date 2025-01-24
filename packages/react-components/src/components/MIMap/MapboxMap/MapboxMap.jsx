@@ -150,7 +150,7 @@ function MapboxMap({ accessToken, onInitialized, onPositionControl, center, zoom
     }, []);
 
     return <div className="mapsindoors-map mapbox-map-container" id="map">
-        {viewModeSwitchVisible && <ViewModeSwitch reset={resetViewMode} mapView={mapViewInstance} pitch={pitch} activeColor={mapOptions?.brandingColor} show2DModelsIn3D={show2DModelsIn3D} />}
+        {viewModeSwitchVisible && <ViewModeSwitch reset={resetViewMode} mapView={mapViewInstance} pitch={pitch} activeColor={mapOptions?.brandingColor} show2DModelsIn3D={appConfig?.appSettings?.show2DModelsIn3D} />}
     </div>
 }
 
