@@ -81,7 +81,7 @@ function App() {
      */
     useEffect(() => {
         if (selectedLocation && selectedLocationInitiator === selectedLocationInitiatorType.SEARCH_RESULT_CLICK && locationDetailsHeight) {
-            gotoLocation(selectedLocation);
+            goToLocation(selectedLocation);
         }
     }, [selectedLocation, selectedLocationInitiator, locationDetailsHeight]);
 
@@ -90,7 +90,7 @@ function App() {
      *
      * @param {object} location
      */
-    const gotoLocation = (location) => {
+    const goToLocation = (location) => {
         // Make sure to set the floor level of the map to the floor level of the Location.
         mapsIndoorsInstance.setFloor(location.properties.floor);
 
