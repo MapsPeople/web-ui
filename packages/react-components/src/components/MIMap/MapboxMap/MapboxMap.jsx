@@ -6,8 +6,6 @@ import './MapboxMap.scss';
 import ViewModeSwitch from './ViewModeSwitch/ViewModeSwitch';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import isNullOrUndefined from '../../../../../map-template/src/helpers/isNullOrUndefined';
-import { useRecoilValue } from 'recoil';
-import miTransitionLevelState from '../../../../../map-template/src/atoms/miTransitionLevelState';
 
 MapboxMap.propTypes = {
     accessToken: PropTypes.string.isRequired,
@@ -48,7 +46,6 @@ function MapboxMap({ accessToken, onInitialized, onPositionControl, center, zoom
     const [hasPositionControl, setHasPositionControl] = useState(false);
     const [hasZoomControl, setHasZoomControl] = useState(false);
     const isDesktop = useIsDesktop();
-    const miTransitionLevel = useRecoilValue(miTransitionLevelState);
     const show2DModelsIn3D = appConfig?.appSettings?.show2DModelsIn3D;
 
     /*
@@ -141,8 +138,8 @@ function MapboxMap({ accessToken, onInitialized, onPositionControl, center, zoom
         };
 
         // If miTransitionLevel exists and it's a number, set it in the mapViewOptions
-        if (miTransitionLevel && !isNaN(parseInt(miTransitionLevel))) {
-            mapViewOptions.mapsIndoorsTransitionLevel = parseInt(miTransitionLevel);
+        if (mapOptions?.miTransitionLevel && !isNaN(parseInt(mapOptions?.miTransitionLevel))) {
+            mapViewOptions.mapsIndoorsTransitionLevel = parseInt(mapOptions.miTransitionLevel);
         }
 
         const mapView = new window.mapsindoors.mapView.MapboxV3View(mapViewOptions);
