@@ -35,7 +35,8 @@ const WebMapsIndoorsMap = r2wc(MapsIndoorsMap, {
         hideNonMatches: "boolean",
         showExternalIDs: "boolean",
         showRoadNames: "boolean",
-        searchExternalLocations: "boolean"
+        searchExternalLocations: "boolean",
+        center: "string"
     }
 
 })
