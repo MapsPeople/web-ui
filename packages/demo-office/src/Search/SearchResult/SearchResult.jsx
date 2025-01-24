@@ -63,7 +63,7 @@ function SearchResult({ location, mapsIndoorsInstance, locationClicked, isHovere
             current.removeEventListener('mouseout', unhoverHandler);
         };
 
-    }, [location]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [location]);
 
     /*
      * Add a class to the element when the location is hovered.
