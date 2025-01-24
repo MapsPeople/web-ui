@@ -1,0 +1,33 @@
+{
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:react/jsx-runtime",
+        "plugin:react-hooks/recommended"
+    ],
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module"
+    },
+    "settings": {
+        "react": {
+            "version": "18.2"
+        }
+    },
+    "env": {
+        "browser": true,
+        "es6": true,
+        "jest": true // Allow test globals like describe, it, expect
+    },
+    "rules": {
+        "react/prop-types": "off",           // Disable props validation
+        "react-hooks/exhaustive-deps": "off", // Disable hooks dependency warnings
+        "no-undef": "off",                   // Disable undefined variables errors (for global/require)
+        "no-unused-vars": "warn",            // Convert unused vars from error to warning
+        "react/display-name": "off",         // Disable display name requirement for components
+        "no-irregular-whitespace": "off",    // Disable irregular whitespace errors
+        "no-extra-semi":"off",              // Convert extra semicolons from error to warning
+        "no-empty": "off"                    // Allow empty blocks
+    },
+    "ignorePatterns": ["build/*"]           // Ignore all files in build directory
+}
