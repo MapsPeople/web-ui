@@ -46,7 +46,6 @@ function MapboxMap({ accessToken, onInitialized, onPositionControl, center, zoom
     const [hasPositionControl, setHasPositionControl] = useState(false);
     const [hasZoomControl, setHasZoomControl] = useState(false);
     const isDesktop = useIsDesktop();
-    const show2DModelsIn3D = appConfig?.appSettings?.show2DModelsIn3D;
 
     /*
      * React on any props that are used to control the position of the map.
