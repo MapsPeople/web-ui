@@ -1,0 +1,108 @@
+.location-details {
+    background-color: white;
+    overflow-y: auto;
+    margin-top: 48px;
+    padding: 16px;
+    animation: fadeInMoveUp 0.2s ease-in-out;
+
+    @media screen and (min-width: 992px) {
+        animation: fadeInMoveDown 0.2s ease-in-out;
+        margin-top: 32px;
+        margin-left: 32px;
+        width: 320px;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+}
+
+
+/*
+ * The header container contains an icon, the Location title and a close button.
+ */
+.location-details__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.location-details__heading {
+    flex: 1; /* Grow the heading to take up the available space */
+    font-size: 18px;
+    font-weight: 900;
+    margin: 0;
+}
+
+.location-details__close-button {
+    align-self: flex-start;
+    background: none;
+    border: 1px solid #e5e7eb;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.location-details__close-button:hover {
+    background-color: #f9fafb;
+}
+
+.location-details__measurements {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 10px;
+}
+
+.location-details__measurements li {
+    padding: 2px 8px;
+    background: grey;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/*
+    For visual differences, we hardcode different colors for each measurement by their order.
+    This could be replaced by your own logic to determine the color based on the measurement.
+ */
+.location-details__measurements li:nth-child(1) {
+    background-color: rgb(74, 222, 128);
+}
+
+.location-details__measurements li:nth-child(2) {
+    background-color: rgba(241, 245, 249, 0.963);
+}
+
+.location-details__measurements li:nth-child(3) {
+    background-color: rgba(239, 68, 68, 0.984);
+    color: white;
+}
+
+@keyframes fadeInMoveDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInMoveUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
