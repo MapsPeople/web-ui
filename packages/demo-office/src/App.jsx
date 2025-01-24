@@ -94,7 +94,7 @@ function App() {
         // Make sure to set the floor level of the map to the floor level of the Location.
         mapsIndoorsInstance.setFloor(location.properties.floor);
 
-        // Make the map pan to the Location, but don't zoom to far in.
+        // Make the map pan to the Location, but don't zoom too far in.
         // We add some padding to make sure the Location is not hidden behind the UI.
         // We do this on mobile sized viewports only since only where the details modal can be seen to cover part of the map
         // as opposed to larger screens where the details modal is shown on the map but large parts of the map is still visible.
