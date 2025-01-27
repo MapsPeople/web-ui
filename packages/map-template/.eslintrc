@@ -26,7 +26,7 @@
         "react-hooks/exhaustive-deps": "off", // Disable hooks dependency warnings
         "no-undef": "error",                   // Disable undefined variables errors (for global/require)
         "no-unused-vars": "error",            // Show error for unused variables
-        "react/display-name": "off",         // Disable display name requirement for components
+        "react/display-name": "error",         // Show error for missing displayName in components
         "no-irregular-whitespace": "error",    // Disable irregular whitespace errors
         "no-extra-semi":"error",              // Show error for extra semicolons
         "no-empty": "error"                    // Show error for empty blocks
