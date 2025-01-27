@@ -1,6 +1,7 @@
 import { useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
 import { useRecoilValue } from 'recoil';
 import languageState from '../../../atoms/languageState';
+import PropTypes from 'prop-types';
 
 /**
  * React wrapper around the custom element <mi-keyboard>.
@@ -34,5 +35,9 @@ const Keyboard = forwardRef(({ searchInputElement }, ref) => {
 
     return <mi-keyboard language={language} ref={elementRef}></mi-keyboard>
 });
+
+Keyboard.propTypes = {
+    searchInputElement: PropTypes.instanceOf(HTMLInputElement)
+};
 
 export default Keyboard;
