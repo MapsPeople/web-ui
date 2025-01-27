@@ -28,7 +28,7 @@
         "react/display-name": "off",         // Disable display name requirement for components
         "no-irregular-whitespace": "off",    // Disable irregular whitespace errors
         "no-extra-semi":"error",              // Show error for extra semicolons
-        "no-empty": "off"                    // Allow empty blocks
+        "no-empty": "error"                    // Show error for empty blocks
     },
     "ignorePatterns": [
         "build/*",          // Ignore build directory
