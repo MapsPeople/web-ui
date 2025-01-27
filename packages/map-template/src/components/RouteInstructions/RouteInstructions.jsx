@@ -13,6 +13,17 @@ import useSetMaxZoomLevel from '../../hooks/useSetMaxZoomLevel';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import isDestinationStepState from '../../atoms/isDestinationStepState';
 import { useIsKioskContext } from '../../hooks/useIsKioskContext';
+import PropTypes from 'prop-types';
+
+RouteInstructions.propTypes = {
+    steps: PropTypes.array,
+    onNextStep: PropTypes.func,
+    onPreviousStep: PropTypes.func,
+    originLocation: PropTypes.object,
+    isOpen: PropTypes.bool,
+    onFitCurrentDirections: PropTypes.func
+};
+
 
 /**
  * Route instructions step by step component.
@@ -23,6 +34,7 @@ import { useIsKioskContext } from '../../hooks/useIsKioskContext';
  * @param {function} props.onPreviousStep - Function handling the navigation to the previous step.
  * @param {object} props.originLocation - The initial location where the route starts from.
  * @param {boolean} props.isOpen - Indicates if the directions view is open.
+ * @param {function} props.onFitCurrentDirections - Function to fit the current directions on the map.
  *
  * @returns
  */
