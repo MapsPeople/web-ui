@@ -20,7 +20,7 @@ BottomSheet.propTypes = {
     directionsToLocation: PropTypes.string,
     pushAppView: PropTypes.func.isRequired,
     currentAppView: PropTypes.string,
-    appViews: PropTypes.array,
+    appViews: PropTypes.object,
     onRouteFinished: PropTypes.func.isRequired
 };
 /**
