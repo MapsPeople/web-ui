@@ -10,12 +10,21 @@ import Venue from './Venue/Venue';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
 import isLocationClickedState from '../../atoms/isLocationClickedState';
 import venueWasSelectedState from '../../atoms/venueWasSelectedState';
+import PropTypes from 'prop-types';
+
+VenueSelector.propTypes = {
+    onOpen: PropTypes.func,
+    onClose: PropTypes.func,
+    active: PropTypes.bool
+};
 
 /**
  * Show a list of Venues. The user can click on a Venue to select it.
  *
  * @param {object} props
  * @param {function} props.onOpen - Callback to execute when the Venue Selector is opened.
+ * @param {function} props.onClose - Callback to execute when the Venue Selector is closed.
+ * @param {boolean} props.active - Whether the Venue Selector is currently active/visible.
  * @returns
  */
 function VenueSelector({ onOpen, onClose, active }) {
