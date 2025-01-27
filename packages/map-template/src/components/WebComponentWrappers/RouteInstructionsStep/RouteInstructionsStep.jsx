@@ -18,7 +18,8 @@ import PropTypes from 'prop-types';
  * @param {object} directions - The directions object.
  *
  */
-const RouteInstructionsStep = forwardRef(({ totalSteps, activeStep, previous, originLocation, directions }, ref) => {
+const RouteInstructionsStep = forwardRef(function RouteInstructionsStepComponent(props, ref) {
+    const { totalSteps, activeStep, previous, originLocation, directions } = props;
     const elementRef = useRef();
 
     const { t } = useTranslation();
