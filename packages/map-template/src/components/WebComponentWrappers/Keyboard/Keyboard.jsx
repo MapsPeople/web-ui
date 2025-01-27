@@ -11,7 +11,8 @@ import PropTypes from 'prop-types';
  * @param {HTMLInputElement} props.searchInputElement
  *
  */
-const Keyboard = forwardRef(({ searchInputElement }, ref) => {
+const Keyboard = forwardRef(function KeyboardComponent(props, ref) {
+    const { searchInputElement } = props;
     const elementRef = useRef();
 
     const language = useRecoilValue(languageState);
