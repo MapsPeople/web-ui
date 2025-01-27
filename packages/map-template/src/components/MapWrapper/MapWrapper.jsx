@@ -21,6 +21,16 @@ import notificationMessageState from '../../atoms/notificationMessageState';
 import useMapBoundsDeterminer from '../../hooks/useMapBoundsDeterminer';
 import hideNonMatchesState from "../../atoms/hideNonMatchesState";
 import miTransitionLevelState from "../../atoms/miTransitionLevelState";
+import PropTypes from "prop-types";
+
+MapWrapper.propTypes = {
+    onLocationClick: PropTypes.func,
+    onMapPositionKnown: PropTypes.func.isRequired,
+    useMapProviderModule: PropTypes.bool.isRequired,
+    onMapPositionInvestigating: PropTypes.func.isRequired,
+    onViewModeSwitchKnown: PropTypes.func.isRequired,
+    resetCount: PropTypes.number.isRequired
+};
 
 /**
  * Private variable used for storing the tile style.
@@ -282,7 +292,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
      */
     useEffect(() => {
         if (!isNaN(parseInt(miTransitionLevel))) {
-            setMapOptions({ miTransitionLevel: miTransitionLevel})
+            setMapOptions({ miTransitionLevel: miTransitionLevel })
         }
     }, [miTransitionLevel])
 
@@ -296,6 +306,6 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
             mapOptions={mapOptions}
         />}
     </>)
-};
+}
 
 export default MapWrapper;
