@@ -18,12 +18,13 @@
     "env": {
         "browser": true,
         "es6": true,
-        "jest": true // Allow test globals like describe, it, expect
+        "jest": true, // Allow test globals like describe, it, expect
+        "node": true
     },
     "rules": {
         "react/prop-types": "error",           // Disable props validation
         "react-hooks/exhaustive-deps": "off", // Disable hooks dependency warnings
-        "no-undef": "off",                   // Disable undefined variables errors (for global/require)
+        "no-undef": "error",                   // Disable undefined variables errors (for global/require)
         "no-unused-vars": "error",            // Show error for unused variables
         "react/display-name": "off",         // Disable display name requirement for components
         "no-irregular-whitespace": "off",    // Disable irregular whitespace errors
