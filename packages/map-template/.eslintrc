@@ -1,4 +1,5 @@
 {
+    "root": true,  // Stops ESLint from looking beyond this directory
     "extends": [
         "eslint:recommended",
         "plugin:react/recommended",
@@ -20,7 +21,7 @@
         "jest": true // Allow test globals like describe, it, expect
     },
     "rules": {
-        "react/prop-types": "off",           // Disable props validation
+        "react/prop-types": "error",           // Disable props validation
         "react-hooks/exhaustive-deps": "off", // Disable hooks dependency warnings
         "no-undef": "off",                   // Disable undefined variables errors (for global/require)
         "no-unused-vars": "error",            // Show error for unused variables
@@ -29,5 +30,10 @@
         "no-extra-semi":"error",              // Show error for extra semicolons
         "no-empty": "off"                    // Allow empty blocks
     },
-    "ignorePatterns": ["build/*"]           // Ignore all files in build directory
+    "ignorePatterns": [
+        "build/*",          // Ignore build directory
+        "node_modules/*",   // Ignore node_modules
+        "dist/*",          // Ignore dist directory
+        "../*"             // Ignore other packages
+    ]
 }
