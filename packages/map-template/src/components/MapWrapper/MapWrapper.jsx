@@ -48,7 +48,7 @@ let _tileStyle;
  * @param {boolean} props.useMapProviderModule - If you want to use the Map Provider set on your solution in the MapsIndoors CMS, set this to true.
  * @param {function} onMapPositionInvestigating - Function that is run when the map position is being determined.
  * @param {function} onViewModeSwitchKnown - Function that is run when the view mode switch is known (if it is to be shown of not).
- * @param {number} resetCount - A counter that is incremented when the map should be reset.
+ * @param {number} resetCount - A counter that is incremented when the map should be reset.
  * @returns
  */
 function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating, onViewModeSwitchKnown, resetCount }) {
