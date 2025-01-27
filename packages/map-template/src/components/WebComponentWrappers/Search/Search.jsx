@@ -23,7 +23,8 @@ import PropTypes from 'prop-types';
  * @param {boolean} props.google - Set to true to include results from Google Places autocomplete service.
  * @param {boolean} props.mapbox - Set to true to include results from Mapbox Places autocomplete service.
  */
-const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cleared, changed, category, google, mapbox, disabled = false }, ref) => {
+const SearchField = forwardRef(function SearchFieldComponent(props, ref) {
+    const { placeholder, mapsindoors, results, clicked, cleared, changed, category, google, mapbox, disabled = false } = props;
     const elementRef = useRef();
 
     const userPosition = useRecoilValue(userPositionState);
