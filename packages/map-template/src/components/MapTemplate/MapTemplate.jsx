@@ -57,9 +57,42 @@ import showExternalIDsState from '../../atoms/showExternalIDsState.js'
 import showRoadNamesState from '../../atoms/showRoadNamesState.js';
 import searchExternalLocationsState from '../../atoms/searchExternalLocationsState.js';
 import isNullOrUndefined from '../../helpers/isNullOrUndefined.js';
+import PropTypes from 'prop-types';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
+
+MapTemplate.propTypes = {
+    apiKey: PropTypes.string.isRequired,
+    gmApiKey: PropTypes.string,
+    mapboxAccessToken: PropTypes.string,
+    venue: PropTypes.string,
+    locationId: PropTypes.string,
+    primaryColor: PropTypes.string,
+    logo: PropTypes.string,
+    appUserRoles: PropTypes.arrayOf(PropTypes.string),
+    directionsFrom: PropTypes.string,
+    directionsTo: PropTypes.string,
+    externalIDs: PropTypes.arrayOf(PropTypes.string),
+    tileStyle: PropTypes.string,
+    startZoomLevel: PropTypes.number,
+    bearing: PropTypes.number,
+    pitch: PropTypes.number,
+    gmMapId: PropTypes.string,
+    useMapProviderModule: PropTypes.bool,
+    kioskOriginLocationId: PropTypes.string,
+    timeout: PropTypes.number,
+    language: PropTypes.string,
+    useKeyboard: PropTypes.bool,
+    miTransitionLevel: PropTypes.number,
+    category: PropTypes.string,
+    searchAllVenues: PropTypes.bool,
+    hideNonMatches: PropTypes.bool,
+    showExternalIDs: PropTypes.bool,
+    showRoadNames: PropTypes.bool,
+    searchExternalLocations: PropTypes.bool,
+    supportsUrlParameters: PropTypes.bool
+};
 
 /**
  *
