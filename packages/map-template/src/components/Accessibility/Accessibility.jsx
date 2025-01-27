@@ -3,6 +3,11 @@ import './Accessibility.scss';
 import primaryColorState from '../../atoms/primaryColorState';
 import accessibilityOnState from '../../atoms/accessibilityOnState';
 import { t } from 'i18next';
+import PropTypes from 'prop-types';
+
+Accessibility.propTypes = {
+    onAccessibilityChanged: PropTypes.func
+};
 
 /**
  * Accessibility component which uses the mi-toggle and displays an info tooltip.
