@@ -4,6 +4,7 @@ import { useRecoilState } from 'recoil';
 import substepsToggledState from '../../../atoms/substepsToggledState';
 import triggerSubstepsState from '../../../atoms/triggerSubstepsState';
 import { useIsKioskContext } from '../../../hooks/useIsKioskContext';
+import PropTypes from 'prop-types';
 
 /**
  * React wrapper around the custom element <mi-route-instructions-step>.
@@ -101,5 +102,13 @@ const RouteInstructionsStep = forwardRef(({ totalSteps, activeStep, previous, or
         from-route-context={previous?.route_context ?? originLocation?.properties?.name ?? ""}>
     </mi-route-instructions-step>
 });
+
+RouteInstructionsStep.propTypes = {
+    totalSteps: PropTypes.array, // <- TODO There is a discrepancy between the JSDoc and the PropTypes
+    activeStep: PropTypes.number,// <- TODO There is a discrepancy between the JSDoc and the PropTypes
+    previous: PropTypes.object,
+    originLocation: PropTypes.object,
+    directions: PropTypes.object
+};
 
 export default RouteInstructionsStep;
