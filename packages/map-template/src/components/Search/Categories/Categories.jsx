@@ -16,6 +16,14 @@ import isBottomSheetLoadedState from "../../../atoms/isBottomSheetLoadedState";
 import categoryState from "../../../atoms/categoryState";
 import useOutsideMapsIndoorsDataClick from "../../../hooks/useOutsideMapsIndoorsDataClick";
 import mapsIndoorsInstanceState from "../../../atoms/mapsIndoorsInstanceState";
+import PropTypes from "prop-types";
+
+Categories.propTypes = {
+    onSetSize: PropTypes.func,
+    getFilteredLocations: PropTypes.func,
+    searchFieldRef: PropTypes.object,
+    isOpen: PropTypes.bool
+};
 
 /**
  * Show the categories list.
