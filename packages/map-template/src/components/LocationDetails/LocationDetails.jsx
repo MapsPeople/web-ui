@@ -17,12 +17,22 @@ import accessibilityOnState from '../../atoms/accessibilityOnState';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
 import showExternalIDsState from '../../atoms/showExternalIDsState';
 import useOutsideMapsIndoorsDataClick from '../../hooks/useOutsideMapsIndoorsDataClick';
+import PropTypes from 'prop-types';
+
+LocationDetails.propTypes = {
+    onBack: PropTypes.func,
+    onStartWayfinding: PropTypes.func,
+    onSetSize: PropTypes.func,
+    snapPointSwiped: PropTypes.number,
+    onStartDirections: PropTypes.func,
+    isOpen: PropTypes.bool
+}
 
 /**
  * Shows details for a MapsIndoors Location.
  *
  * @param {object} props
- * @param {function} props.onClose - Callback that fires when Location Details are closed by the user.
+ * @param {function} props.onBack - Callback that fires when Location Details are closed by the user.
  * @param {function} props.onStartWayfinding - Callback that fires when user clicks the Start Wayfinding button.
  * @param {function} props.onSetSize - Callback that is fired when the toggle full description button is clicked and the Sheet size changes.
  * @param {function} props.snapPointSwiped - Changes value when user has swiped a Bottom sheet to a new snap point.
