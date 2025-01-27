@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Fixed
 
+- Upgraded to SDK v4.38.6.
+
+## [1.66.5] - 2025-01-27
+
+## Fixed
+
 - Fixed an issue with `startZoomLevel` prop causing the map starting in a random position.
 
 ## [1.66.4] - 2025-01-23
