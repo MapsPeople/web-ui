@@ -22,6 +22,7 @@
         "node": true
     },
     "rules": {
+        "react-hooks/rules-of-hooks": "error",
         "react/prop-types": "error",           // Disable props validation
         "react-hooks/exhaustive-deps": "off", // Disable hooks dependency warnings
         "no-undef": "error",                   // Disable undefined variables errors (for global/require)
