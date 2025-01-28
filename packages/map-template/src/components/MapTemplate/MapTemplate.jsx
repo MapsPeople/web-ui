@@ -221,7 +221,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
             const languageToUse = appConfig?.appSettings?.language ? appConfig.appSettings.language : language ? language : navigator.language;
-            console.log(appConfig);
 
             // Set the language on the MapsIndoors SDK in order to get eg. Mapbox and Google directions in that language.
             // The MapsIndoors data only accepts the first part of the IETF language string, hence the split.
@@ -302,8 +301,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable && appConfig) {
-            setMapboxAccessToken(appConfig.appSettings?.mapboxAccessToken || mapboxAccessToken);
-            setGmApiKey(appConfig.appSettings?.gmKey || gmApiKey);
+            setMapboxAccessToken(mapboxAccessToken || appConfig.appSettings?.mapboxAccessToken);
+            setGmApiKey(gmApiKey || appConfig.appSettings?.gmKey);
         }
     }, [gmApiKey, mapboxAccessToken, mapsindoorsSDKAvailable, appConfig]);
 
@@ -387,10 +386,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the venue prop.
      */
     useEffect(() => {
-        if (appConfig?.appSettings?.venue) {
-            setCurrentVenueName(appConfig?.appSettings?.venue)
+        if (!isNullOrUndefined(venue)) {
+            setCurrentVenueName(venue)
         } else {
-            setCurrentVenueName(venue);
+            setCurrentVenueName(appConfig?.appSettings?.venue)
         }
     }, [venue, appConfig]);
 
@@ -405,10 +404,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the primary color prop.
      */
     useEffect(() => {
-        if (appConfig?.appSettings?.primaryColor) {
-            setPrimaryColor(appConfig?.appSettings?.primaryColor)
+        if (!isNullOrUndefined(primaryColor)) {
+            setPrimaryColor(primaryColor)
         } else {
-            setPrimaryColor(primaryColor);
+            setPrimaryColor(appConfig?.appSettings?.primaryColor)
         }
     }, [primaryColor, appConfig]);
 
@@ -416,10 +415,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the start zoom level prop.
      */
     useEffect(() => {
-        if (appConfig?.appSettings?.startZoomLevel) {
-            setStartZoomLevel(appConfig?.appSettings?.startZoomLevel)
+        if (!isNullOrUndefined(startZoomLevel)) {
+            setStartZoomLevel(startZoomLevel)
         } else {
-            setStartZoomLevel(startZoomLevel);
+            setStartZoomLevel(appConfig?.appSettings?.startZoomLevel)
         }
     }, [startZoomLevel, appConfig]);
 
@@ -428,10 +427,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * If the pitch is not set, set it to 45 degrees if the view mode switch is visible.
      */
     useEffect(() => {
-        if (appConfig?.appSettings?.pitch) {
+        if (!isNullOrUndefined(pitch)) {
+            setPitch(pitch);
+        } else if (appConfig?.appSettings?.pitch) {
             setPitch(appConfig?.appSettings?.pitch)
-        } else if (!isNullOrUndefined(pitch)) {
-            setPitch(startZoomLevel);
         } else {
             setPitch(45);
         }
@@ -441,10 +440,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the bearing prop.
      */
     useEffect(() => {
-        if (appConfig?.appSettings?.bearing) {
-            setBearing(appConfig?.appSettings?.bearing)
+        if (!isNullOrUndefined(bearing)) {
+            setBearing(bearing)
         } else {
-            setBearing(bearing);
+            setBearing(appConfig?.appSettings?.bearing)
         }
     }, [bearing, appConfig]);
 
@@ -452,10 +451,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the logo prop.
      */
     useEffect(() => {
-        if (appConfig?.appSettings?.logo) {
-            setLogo(appConfig?.appSettings?.logo)
+        if (!isNullOrUndefined(logo)) {
+            setLogo(logo)
         } else {
-            setLogo(logo);
+            setLogo(appConfig?.appSettings?.logo)
         }
     }, [logo, appConfig]);
 
