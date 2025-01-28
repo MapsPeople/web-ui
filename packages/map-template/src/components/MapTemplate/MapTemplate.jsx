@@ -302,8 +302,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable && appConfig) {
-            setMapboxAccessToken(mapboxAccessToken || appConfig.appSettings?.mapboxAccessToken);
-            setGmApiKey(gmApiKey || appConfig.appSettings?.gmKey);
+            setMapboxAccessToken(appConfig.appSettings?.mapboxAccessToken || mapboxAccessToken);
+            setGmApiKey(appConfig.appSettings?.gmKey || gmApiKey);
         }
     }, [gmApiKey, mapboxAccessToken, mapsindoorsSDKAvailable, appConfig]);
 
