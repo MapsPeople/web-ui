@@ -73,32 +73,6 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
 
     const clickedOutsideMapsIndoorsData = useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOpen);
 
-    useEffect(() => {
-        return () => {
-            setLocationDisplayRule(null);
-            setDestinationLocation();
-            setOriginLocation();
-        }
-    }, []);
-
-    useEffect(() => {
-        // Reset state
-        setShowFullDescription(false);
-        setDescriptionHasContentAbove(false);
-        setDescriptionHasContentBelow(false);
-        setLocationDisplayRule(null);
-
-        if (location) {
-            locationInfoElement.current.location = location;
-            setLocationDisplayRule(mapsIndoorsInstance.getDisplayRule(location));
-            setDestinationLocation(location)
-        }
-
-        if (kioskLocation) {
-            setOriginLocation(kioskLocation)
-        }
-    }, [location, mapsIndoorsInstance, kioskLocation]);
-
     /**
      * Communicate size change to parent component.
      * @param {number} size
@@ -108,28 +82,6 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
             onSetSize(size);
         }
     }
-
-    /*
-     * When user swipes the bottom sheet to a new snap point.
-     */
-    useEffect(() => {
-        if (snapPointSwiped === undefined) return;
-
-        // If swiping to max height, expand location details.
-        // If swiping to smaller height, collapse location details.
-        setShowFullDescription(snapPointSwiped === snapPoints.MAX);
-        if (snapPointSwiped === snapPoints.MAX) {
-            expandLocationDescription();
-        } else {
-            collapseLocationDescription();
-        }
-    }, [snapPointSwiped]); // eslint-disable-line react-hooks/exhaustive-deps
-
-    useEffect(() => {
-        if (clickedOutsideMapsIndoorsData) {
-            onBack();
-        }
-    }, [clickedOutsideMapsIndoorsData]);
 
     /**
      * Toggle the description.
@@ -216,6 +168,54 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
 
         onBack();
     }
+
+    useEffect(() => {
+        if (clickedOutsideMapsIndoorsData) {
+            onBack();
+        }
+    }, [clickedOutsideMapsIndoorsData]);
+
+    useEffect(() => {
+        return () => {
+            setLocationDisplayRule(null);
+            setDestinationLocation();
+            setOriginLocation();
+        }
+    }, []);
+
+    useEffect(() => {
+        // Reset state
+        setShowFullDescription(false);
+        setDescriptionHasContentAbove(false);
+        setDescriptionHasContentBelow(false);
+        setLocationDisplayRule(null);
+
+        if (location) {
+            locationInfoElement.current.location = location;
+            setLocationDisplayRule(mapsIndoorsInstance.getDisplayRule(location));
+            setDestinationLocation(location)
+        }
+
+        if (kioskLocation) {
+            setOriginLocation(kioskLocation)
+        }
+    }, [location, mapsIndoorsInstance, kioskLocation]);
+
+    /*
+   * When user swipes the bottom sheet to a new snap point.
+   */
+    useEffect(() => {
+        if (snapPointSwiped === undefined) return;
+
+        // If swiping to max height, expand location details.
+        // If swiping to smaller height, collapse location details.
+        setShowFullDescription(snapPointSwiped === snapPoints.MAX);
+        if (snapPointSwiped === snapPoints.MAX) {
+            expandLocationDescription();
+        } else {
+            collapseLocationDescription();
+        }
+    }, [snapPointSwiped]); // eslint-disable-line react-hooks/exhaustive-deps
 
     return <div className={`location-details ${descriptionHasContentAbove ? 'location-details--content-above' : ''} ${descriptionHasContentBelow ? 'location-details--content-below' : ''}`}>
         {location && <>
