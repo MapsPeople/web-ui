@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import './LocationDetails.scss';
 import { useTranslation } from 'react-i18next';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
@@ -72,6 +72,18 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
     const showExternalIDs = useRecoilValue(showExternalIDsState);
 
     const clickedOutsideMapsIndoorsData = useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOpen);
+
+    /**
+    * Close the Location details page.
+    */
+    const back = useCallback(() => {
+        setShowFullDescription(false);
+        setDescriptionHasContentAbove(false);
+        setDescriptionHasContentBelow(false);
+        setSize(snapPoints.FIT);
+
+        onBack();
+    });
 
     /**
      * Communicate size change to parent component.
@@ -155,18 +167,6 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
         setSize(snapPoints.FIT);
 
         onStartDirections();
-    }
-
-    /**
-     * Close the Location details page.
-     */
-    function back() {
-        setShowFullDescription(false);
-        setDescriptionHasContentAbove(false);
-        setDescriptionHasContentBelow(false);
-        setSize(snapPoints.FIT);
-
-        onBack();
     }
 
     useEffect(() => {
