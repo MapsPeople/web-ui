@@ -220,7 +220,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
-            const languageToUse = language ? language : navigator.language;
+            const languageToUse = appConfig?.appSettings?.language ? appConfig.appSettings.language : language ? language : navigator.language;
+            console.log(appConfig);
 
             // Set the language on the MapsIndoors SDK in order to get eg. Mapbox and Google directions in that language.
             // The MapsIndoors data only accepts the first part of the IETF language string, hence the split.
@@ -258,7 +259,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             setCurrentLanguage(languageToUse);
         }
-    }, [language, mapsindoorsSDKAvailable]);
+    }, [language, mapsindoorsSDKAvailable, appConfig]);
 
     /**
      * React on changes in the MapsIndoors API key by fetching the required data.
@@ -386,8 +387,12 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the venue prop.
      */
     useEffect(() => {
-        setCurrentVenueName(venue);
-    }, [venue]);
+        if (appConfig?.appSettings?.venue) {
+            setCurrentVenueName(appConfig?.appSettings?.venue)
+        } else {
+            setCurrentVenueName(venue);
+        }
+    }, [venue, appConfig]);
 
     /*
      * React on changes in the tile style prop.
@@ -400,41 +405,59 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the primary color prop.
      */
     useEffect(() => {
-        setPrimaryColor(primaryColor);
-    }, [primaryColor]);
+        if (appConfig?.appSettings?.primaryColor) {
+            setPrimaryColor(appConfig?.appSettings?.primaryColor)
+        } else {
+            setPrimaryColor(primaryColor);
+        }
+    }, [primaryColor, appConfig]);
 
     /*
      * React on changes in the start zoom level prop.
      */
     useEffect(() => {
-        setStartZoomLevel(startZoomLevel);
-    }, [startZoomLevel]);
+        if (appConfig?.appSettings?.startZoomLevel) {
+            setStartZoomLevel(appConfig?.appSettings?.startZoomLevel)
+        } else {
+            setStartZoomLevel(startZoomLevel);
+        }
+    }, [startZoomLevel, appConfig]);
 
     /*
      * React on changes in the pitch prop.
      * If the pitch is not set, set it to 45 degrees if the view mode switch is visible.
      */
     useEffect(() => {
-        if (!isNullOrUndefined(pitch)) {
-            setPitch(pitch);
-        } else if (viewModeSwitchVisible) {
+        if (appConfig?.appSettings?.pitch) {
+            setPitch(appConfig?.appSettings?.pitch)
+        } else if (!isNullOrUndefined(pitch)) {
+            setPitch(startZoomLevel);
+        } else {
             setPitch(45);
         }
-    }, [pitch, viewModeSwitchVisible]);
+    }, [pitch, viewModeSwitchVisible, appConfig]);
 
     /*
      * React on changes in the bearing prop.
      */
     useEffect(() => {
-        setBearing(bearing);
-    }, [bearing]);
+        if (appConfig?.appSettings?.bearing) {
+            setBearing(appConfig?.appSettings?.bearing)
+        } else {
+            setBearing(bearing);
+        }
+    }, [bearing, appConfig]);
 
     /*
      * React on changes in the logo prop.
      */
     useEffect(() => {
-        setLogo(logo);
-    }, [logo]);
+        if (appConfig?.appSettings?.logo) {
+            setLogo(appConfig?.appSettings?.logo)
+        } else {
+            setLogo(logo);
+        }
+    }, [logo, appConfig]);
 
     /*
      * React on changes in the miTransitionLevel prop.
