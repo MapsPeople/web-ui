@@ -18,6 +18,7 @@ import { useIsDesktop } from '../../hooks/useIsDesktop';
 import showExternalIDsState from '../../atoms/showExternalIDsState';
 import useOutsideMapsIndoorsDataClick from '../../hooks/useOutsideMapsIndoorsDataClick';
 import PropTypes from 'prop-types';
+import ContactActionButton from '../ContactActionButton/ContactActionButton';
 
 LocationDetails.propTypes = {
     onBack: PropTypes.func,
@@ -82,6 +83,62 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
     const showExternalIDs = useRecoilValue(showExternalIDsState);
 
     const clickedOutsideMapsIndoorsData = useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOpen);
+
+    // TODO - Replace with actual data from MapsIndoors
+    const mockData = [{
+        key: "whatsapp-contact",
+        detailType: "whatsapp",
+        active: true,
+        displayText: "Chat on WhatsApp",
+        value: "+1234567890",
+        icon: "https://app.mapsindoors.com/mapsindoors/cms/assets/icons/building-icons/office.png",
+        openingHours: null
+    },
+    {
+        key: "facebook-page",
+        detailType: "facebook",
+        active: false,
+        displayText: "Follow us on Facebook",
+        value: "facebook.com/businesspage",
+        icon: "https://example.com/mock-facebook-icon.png",
+        openingHours: null
+    },
+    {
+        key: "instagram-profile",
+        detailType: "instagram",
+        active: true,
+        displayText: "Follow us on Instagram",
+        value: "@test",
+        icon: "https://app.mapsindoors.com/mapsindoors/cms/assets/icons/shopping/map-kiosk.png",
+        openingHours: null
+    },
+    {
+        key: "telegram-contact",
+        detailType: "telegram",
+        active: true,
+        displayText: "Message us on Telegram",
+        value: "@telegramusername",
+        icon: "https://app.mapsindoors.com/mapsindoors/cms/assets/icons/building-icons/letter-boxes.png",
+        openingHours: null
+    },
+    {
+        key: "phone-contact",
+        detailType: "phone",
+        active: true,
+        displayText: "Call us",
+        value: "+1234567890",
+        icon: "https://app.mapsindoors.com/mapsindoors/cms/assets/icons/building-icons/video-chat-room.png",
+        openingHours: null
+    },
+    {
+        key: "keyvalue3",
+        detailType: "email",
+        active: true,
+        displayText: "Contact support",
+        value: "support@example.com",
+        icon: "https://app.mapsindoors.com/mapsindoors/cms/assets/icons/building-icons/letter-boxes.png",
+        openingHours: null
+    },];
 
     useEffect(() => {
         return () => {
@@ -272,6 +329,17 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                         {t('Close')}
                     </button>}
                 </section>}
+                {/*Work in progress */}
+                {mockData.map(button => (
+                    <ContactActionButton
+                        key={button.key}
+                        detailType={button.detailType}
+                        active={button.active}
+                        displayText={button.displayText}
+                        value={button.value}
+                        icon={button.icon}
+                    />
+                ))}
             </div>
 
             {kioskLocation && isDesktop
