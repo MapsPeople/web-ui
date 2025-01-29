@@ -59,12 +59,12 @@ export default function useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOp
      * @returns {function} A cleanup function to remove the attached listeners.
      */
     function attachGoogleClickListeners(map, mapsIndoorsInstance, isOpen, setClickedOutside) {
-        const googleMapsClickHandler = (clickResult) => {
+        const googleMapsClickHandler = () => {
             if (!isOpen) return;
             setClickedOutside(false);
         };
 
-        const googleMapsIndoorsClickHandler = (clickResult) => {
+        const googleMapsIndoorsClickHandler = () => {
             if (!isOpen) return;
             setClickedOutside(true);
         };

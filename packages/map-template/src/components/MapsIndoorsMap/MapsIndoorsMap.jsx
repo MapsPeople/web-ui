@@ -4,6 +4,40 @@ import { createRoutesFromChildren, matchRoutes, useLocation, useNavigationType }
 import { RecoilRoot } from 'recoil';
 import MapTemplate from '../MapTemplate/MapTemplate.jsx';
 import getBooleanValue from "../../helpers/GetBooleanValue.js";
+import PropTypes from "prop-types";
+
+MapsIndoorsMap.propTypes = {
+    apiKey: PropTypes.string,
+    gmApiKey: PropTypes.string,
+    mapboxAccessToken: PropTypes.string,
+    venue: PropTypes.string,
+    locationId: PropTypes.string,
+    primaryColor: PropTypes.string,
+    logo: PropTypes.string,
+    appUserRoles: PropTypes.arrayOf(PropTypes.string),
+    directionsFrom: PropTypes.string,
+    directionsTo: PropTypes.string,
+    externalIDs: PropTypes.arrayOf(PropTypes.string),
+    tileStyle: PropTypes.string,
+    startZoomLevel: PropTypes.number,
+    pitch: PropTypes.number,
+    bearing: PropTypes.number,
+    supportsUrlParameters: PropTypes.bool,
+    gmMapId: PropTypes.string,
+    useMapProviderModule: PropTypes.bool,
+    kioskOriginLocationId: PropTypes.string,
+    timeout: PropTypes.number,
+    language: PropTypes.string,
+    useKeyboard: PropTypes.bool,
+    miTransitionLevel: PropTypes.number,
+    category: PropTypes.string,
+    searchAllVenues: PropTypes.bool,
+    hideNonMatches: PropTypes.bool,
+    showExternalIDs: PropTypes.bool,
+    showRoadNames: PropTypes.bool,
+    searchExternalLocations: PropTypes.bool
+};
+
 /**
  *
  * @param {Object} props
@@ -94,7 +128,7 @@ function MapsIndoorsMap(props) {
         const searchExternalLocationsQueryParameter = queryStringParams.get('searchExternalLocations');
 
         // Set the initial props on the Map Template component.
-        
+
         // For the apiKey and venue, set the venue to "AUSTINOFFICE" if the apiKey is "mapspeople3d" and no venue is provided. We want this as the default venue for the "mapspeople3d" apiKey.
         const apiKey = props.supportsUrlParameters && apiKeyQueryParameter ? apiKeyQueryParameter : (props.apiKey || defaultProps.apiKey);
         let venue = props.supportsUrlParameters && venueQueryParameter ? venueQueryParameter : (props.venue || defaultProps.venue);

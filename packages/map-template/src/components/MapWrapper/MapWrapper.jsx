@@ -21,6 +21,16 @@ import notificationMessageState from '../../atoms/notificationMessageState';
 import useMapBoundsDeterminer from '../../hooks/useMapBoundsDeterminer';
 import hideNonMatchesState from "../../atoms/hideNonMatchesState";
 import miTransitionLevelState from "../../atoms/miTransitionLevelState";
+import PropTypes from "prop-types";
+
+MapWrapper.propTypes = {
+    onLocationClick: PropTypes.func,
+    onMapPositionKnown: PropTypes.func.isRequired,
+    useMapProviderModule: PropTypes.bool.isRequired,
+    onMapPositionInvestigating: PropTypes.func.isRequired,
+    onViewModeSwitchKnown: PropTypes.func.isRequired,
+    resetCount: PropTypes.number.isRequired
+};
 
 /**
  * Private variable used for storing the tile style.
@@ -38,7 +48,7 @@ let _tileStyle;
  * @param {boolean} props.useMapProviderModule - If you want to use the Map Provider set on your solution in the MapsIndoors CMS, set this to true.
  * @param {function} onMapPositionInvestigating - Function that is run when the map position is being determined.
  * @param {function} onViewModeSwitchKnown - Function that is run when the view mode switch is known (if it is to be shown of not).
- * @param {number} resetCount - A counter that is incremented when the map should be reset.
+ * @param {number} resetCount - A counter that is incremented when the map should be reset.
  * @returns
  */
 function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating, onViewModeSwitchKnown, resetCount }) {
@@ -282,7 +292,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
      */
     useEffect(() => {
         if (!isNaN(parseInt(miTransitionLevel))) {
-            setMapOptions({ miTransitionLevel: miTransitionLevel})
+            setMapOptions({ miTransitionLevel: miTransitionLevel })
         }
     }, [miTransitionLevel])
 
@@ -296,6 +306,6 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
             mapOptions={mapOptions}
         />}
     </>)
-};
+}
 
 export default MapWrapper;

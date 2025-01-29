@@ -3,6 +3,12 @@ import { useRecoilValue } from 'recoil';
 import substepsToggledState from '../../../atoms/substepsToggledState';
 import './Modal.scss';
 import kioskLocationState from '../../../atoms/kioskLocationState';
+import PropTypes from 'prop-types';
+
+Modal.propTypes = {
+    children: PropTypes.node,
+    isOpen: PropTypes.bool
+};
 
 /**
  * A Modal for showing content in the Sidebar.
@@ -11,6 +17,7 @@ import kioskLocationState from '../../../atoms/kioskLocationState';
  * scrollable.
  *
  * @param {Object} props
+ * @param {React.ReactNode} props.children - The content to be displayed inside the modal.
  * @param {boolean} props.isOpen - If the modal is open (visible) or not.
  */
 function Modal({ children, isOpen }) {
