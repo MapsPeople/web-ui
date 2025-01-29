@@ -11,8 +11,8 @@ import PropTypes from 'prop-types';
  *
  * @param {object} props
  * @param {object} translations - The text to be displayed on the instructions steps.
- * @param {object} totalSteps - The total steps to be rendered.
- * @param {object} activeStep - The current step to be shown.
+ * @param {array} totalSteps - The total steps to be rendered.
+ * @param {number} activeStep - The current step to be shown.
  * @param {object} previous - The previous step.
  * @param {object} originLocation - The origin location when starting the directions.
  * @param {object} directions - The directions object.
@@ -105,8 +105,8 @@ const RouteInstructionsStep = forwardRef(function RouteInstructionsStepComponent
 });
 
 RouteInstructionsStep.propTypes = {
-    totalSteps: PropTypes.array, // <- TODO There is a discrepancy between the JSDoc and the PropTypes
-    activeStep: PropTypes.number,// <- TODO There is a discrepancy between the JSDoc and the PropTypes
+    totalSteps: PropTypes.array,
+    activeStep: PropTypes.number,
     previous: PropTypes.object,
     originLocation: PropTypes.object,
     directions: PropTypes.object
