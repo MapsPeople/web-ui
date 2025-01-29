@@ -1,4 +1,3 @@
-import React from "react";
 import './LocationsList.scss';
 import { useTranslation } from 'react-i18next';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
@@ -6,6 +5,14 @@ import ListItemLocation from "../WebComponentWrappers/ListItemLocation/ListItemL
 import { usePreventSwipe } from "../../hooks/usePreventSwipe";
 import { snapPoints } from "../../constants/snapPoints";
 import { useEffect } from "react";
+import PropTypes from 'prop-types';
+
+LocationsList.propTypes = {
+    onLocationClick: PropTypes.func.isRequired,
+    onBack: PropTypes.func.isRequired,
+    locations: PropTypes.arrayOf(PropTypes.object),
+    onSetSize: PropTypes.func
+};
 
 /**
  * Show list of locations.

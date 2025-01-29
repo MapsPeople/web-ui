@@ -6,6 +6,7 @@ import languageState from '../../../atoms/languageState';
 import searchInputState from '../../../atoms/searchInputState';
 import currentVenueNameState from '../../../atoms/currentVenueNameState';
 import searchAllVenuesState from '../../../atoms/searchAllVenues';
+import PropTypes from 'prop-types';
 
 /**
  * React wrapper around the custom element <mi-search>.
@@ -22,7 +23,8 @@ import searchAllVenuesState from '../../../atoms/searchAllVenues';
  * @param {boolean} props.google - Set to true to include results from Google Places autocomplete service.
  * @param {boolean} props.mapbox - Set to true to include results from Mapbox Places autocomplete service.
  */
-const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cleared, changed, category, google, mapbox, disabled = false }, ref) => {
+const SearchField = forwardRef(function SearchFieldComponent(props, ref) {
+    const { placeholder, mapsindoors, results, clicked, cleared, changed, category, google, mapbox, disabled = false } = props;
     const elementRef = useRef();
 
     const userPosition = useRecoilValue(userPositionState);
@@ -121,5 +123,19 @@ const SearchField = forwardRef(({ placeholder, mapsindoors, results, clicked, cl
         mi-venue={searchAllVenues ? undefined : currentVenueName}
         language={language} />
 });
+
+SearchField.propTypes = {
+    placeholder: PropTypes.string,
+    mapsindoors: PropTypes.bool,
+    results: PropTypes.func,
+    clicked: PropTypes.func,
+    cleared: PropTypes.func,
+    changed: PropTypes.func,
+    category: PropTypes.string,
+    preventFocus: PropTypes.bool,
+    google: PropTypes.bool,
+    mapbox: PropTypes.bool,
+    disabled: PropTypes.bool
+};
 
 export default SearchField;

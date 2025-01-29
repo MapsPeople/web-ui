@@ -1,6 +1,5 @@
-import React, { useState } from "react";
 import './Wayfinding.scss';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import { ReactComponent as ClockIcon } from '../../assets/clock.svg';
@@ -35,7 +34,7 @@ import hasFoundRouteState from "../../atoms/hasFoundRouteState";
 import accessibilityOnState from "../../atoms/accessibilityOnState";
 import Accessibility from "../Accessibility/Accessibility";
 import searchExternalLocationsState from "../../atoms/searchExternalLocationsState";
-import isNullOrUndefined from "../../helpers/isNullOrUndefined";
+import PropTypes from 'prop-types';
 
 const searchFieldIdentifiers = {
     TO: 'TO',
@@ -43,6 +42,15 @@ const searchFieldIdentifiers = {
 };
 
 const externalLocationIcon = "data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 14 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 0C3.13 0 0 3.13 0 7C0 12.25 7 20 7 20C7 20 14 12.25 14 7C14 3.13 10.87 0 7 0ZM7 9.5C5.62 9.5 4.5 8.38 4.5 7C4.5 5.62 5.62 4.5 7 4.5C8.38 4.5 9.5 5.62 9.5 7C9.5 8.38 8.38 9.5 7 9.5Z' fill='black' fill-opacity='0.88'/%3E%3C/svg%3E%0A"
+
+Wayfinding.propTypes = {
+    onStartDirections: PropTypes.func.isRequired,
+    onBack: PropTypes.func.isRequired,
+    directionsToLocation: PropTypes.object,
+    directionsFromLocation: PropTypes.object,
+    onSetSize: PropTypes.func,
+    isActive: PropTypes.bool
+};
 
 /**
  * Show the wayfinding view.
@@ -53,6 +61,7 @@ const externalLocationIcon = "data:image/svg+xml,%3Csvg width='10' height='10' v
  * @param {object} props.directionsToLocation - Optional location to navigate to.
  * @param {object} [props.directionsFromLocation] - Optional location to navigate from. If omitted, the user has to choose in the search field.
  * @param {function} props.onSetSize - Callback that is fired when the component has loaded.
+ * @param {boolean} [props.isActive] - If the component is currently active
  *
  * @returns
  */

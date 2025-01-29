@@ -6,15 +6,25 @@ import { snapPoints } from '../../../constants/snapPoints';
 import './Sheet.scss';
 import { useRecoilState } from 'recoil';
 import isBottomSheetLoadedState from '../../../atoms/isBottomSheetLoadedState';
+import PropTypes from 'prop-types';
 
 
 let dragStartHeight;
+
+Sheet.propTypes = {
+    children: PropTypes.node.isRequired,
+    isOpen: PropTypes.bool.isRequired,
+    minHeight: PropTypes.string.isRequired,
+    preferredSizeSnapPoint: PropTypes.number,
+    onSwipedToSnapPoint: PropTypes.func
+};
 
 /**
  * A Sheet for showing content in the bottom of the screen.
  * The sheet height can be changed with swipe gestures.
  *
  * @param {Object} props
+ * @param {React.ReactNode} props.children - The content to be displayed inside the sheet
  * @param {boolean} props.isOpen - If the sheet is open (visible) or not.
  * @param {number} props.minheight - The minimum height of the sheet. It cannot be resized to below this height.
  * @param {number} props.preferredSizeSnapPoint - Change this to programatically change sheet height to a snap point.
