@@ -1,5 +1,4 @@
 import * as Sentry from "@sentry/react";
-import React from "react";
 import { useRecoilValue } from "recoil";
 import primaryColorState from "../../atoms/primaryColorState";
 import './SplashScreen.scss';
