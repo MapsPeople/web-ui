@@ -61,7 +61,7 @@ Wayfinding.propTypes = {
  * @param {object} props.directionsToLocation - Optional location to navigate to.
  * @param {object} [props.directionsFromLocation] - Optional location to navigate from. If omitted, the user has to choose in the search field.
  * @param {function} props.onSetSize - Callback that is fired when the component has loaded.
- * @param {boolean} [props.isActive] - Check if the location is active.
+ * @param {boolean} [props.isActive] - If the component is currently active
  *
  * @returns
  */
