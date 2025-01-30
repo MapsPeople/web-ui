@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react';
 import { act } from 'react';
-import { useAppHistory } from './useAppHistory';
+import { useAppHistory } from '../../hooks/useAppHistory';
 
 describe('useAppHistory', () => {
     beforeEach(() => {
