@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import './LocationDetails.scss';
 import { useTranslation } from 'react-i18next';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
@@ -150,21 +150,17 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
 
     useEffect(() => {
         // Reset state
+    /**
+    * Close the Location details page.
+    */
+    const back = useCallback(() => {
         setShowFullDescription(false);
         setDescriptionHasContentAbove(false);
         setDescriptionHasContentBelow(false);
-        setLocationDisplayRule(null);
+        setSize(snapPoints.FIT);
 
-        if (location) {
-            locationInfoElement.current.location = location;
-            setLocationDisplayRule(mapsIndoorsInstance.getDisplayRule(location));
-            setDestinationLocation(location)
-        }
-
-        if (kioskLocation) {
-            setOriginLocation(kioskLocation)
-        }
-    }, [location, mapsIndoorsInstance, kioskLocation]);
+        onBack();
+    });
 
     /**
      * Communicate size change to parent component.
@@ -175,28 +171,6 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
             onSetSize(size);
         }
     }
-
-    /*
-     * When user swipes the bottom sheet to a new snap point.
-     */
-    useEffect(() => {
-        if (snapPointSwiped === undefined) return;
-
-        // If swiping to max height, expand location details.
-        // If swiping to smaller height, collapse location details.
-        setShowFullDescription(snapPointSwiped === snapPoints.MAX);
-        if (snapPointSwiped === snapPoints.MAX) {
-            expandLocationDescription();
-        } else {
-            collapseLocationDescription();
-        }
-    }, [snapPointSwiped]); // eslint-disable-line react-hooks/exhaustive-deps
-
-    useEffect(() => {
-        if (clickedOutsideMapsIndoorsData) {
-            onBack();
-        }
-    }, [clickedOutsideMapsIndoorsData]);
 
     /**
      * Toggle the description.
@@ -272,17 +246,53 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
         onStartDirections();
     }
 
-    /**
-     * Close the Location details page.
-     */
-    function back() {
+    useEffect(() => {
+        if (clickedOutsideMapsIndoorsData) {
+            onBack();
+        }
+    }, [clickedOutsideMapsIndoorsData]);
+
+    useEffect(() => {
+        return () => {
+            setLocationDisplayRule(null);
+            setDestinationLocation();
+            setOriginLocation();
+        }
+    }, []);
+
+    useEffect(() => {
+        // Reset state
         setShowFullDescription(false);
         setDescriptionHasContentAbove(false);
         setDescriptionHasContentBelow(false);
-        setSize(snapPoints.FIT);
+        setLocationDisplayRule(null);
 
-        onBack();
-    }
+        if (location) {
+            locationInfoElement.current.location = location;
+            setLocationDisplayRule(mapsIndoorsInstance.getDisplayRule(location));
+            setDestinationLocation(location)
+        }
+
+        if (kioskLocation) {
+            setOriginLocation(kioskLocation)
+        }
+    }, [location, mapsIndoorsInstance, kioskLocation]);
+
+    /*
+   * When user swipes the bottom sheet to a new snap point.
+   */
+    useEffect(() => {
+        if (snapPointSwiped === undefined) return;
+
+        // If swiping to max height, expand location details.
+        // If swiping to smaller height, collapse location details.
+        setShowFullDescription(snapPointSwiped === snapPoints.MAX);
+        if (snapPointSwiped === snapPoints.MAX) {
+            expandLocationDescription();
+        } else {
+            collapseLocationDescription();
+        }
+    }, [snapPointSwiped]); // eslint-disable-line react-hooks/exhaustive-deps
 
     return <div className={`location-details ${descriptionHasContentAbove ? 'location-details--content-above' : ''} ${descriptionHasContentBelow ? 'location-details--content-below' : ''}`}>
         {location && <>
