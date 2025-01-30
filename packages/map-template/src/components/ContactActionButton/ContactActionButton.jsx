@@ -26,26 +26,25 @@ function ContactActionButton({ detailType, active, displayText, value, icon }) {
     const handleClick = (detailType, value) => {
         switch (detailType.toLowerCase()) {
             case 'email':
-                window.location.href = `mailto:${value}`; // Opens default email client
-                break;
+                return `mailto:${value}`; // Opens default email client
             case 'phone':
-                window.location.href = `tel:${value}`; // Opens phone dialer
-                break;
+                return `tel:${value}`; // Opens phone dialer
             default:
-                window.open(value, '_blank'); // Opens any other link in new tab
-                break;
+                return value; // Opens any other link in new tab
         }
     };
 
     return (
-        <button
+        <a
             className="action-button"
-            onClick={() => { handleClick(detailType, value) }}>
+            href={handleClick(detailType, value)}
+            target={detailType.toLowerCase() === 'email' || detailType.toLowerCase() === 'phone' ? '_self' : '_blank'}
+            rel="noopener noreferrer">
             <div className='action-button__icon-wrapper'>
                 <img src={icon} className="action-button__icon" />
             </div>
             <span className="action-button_text">{textToDisplay}</span>
-        </button>
+        </a>
     );
 }
 
