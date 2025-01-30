@@ -23,7 +23,7 @@ export function useInactive() {
 
         let timer;
 
-        const handleUserEvent = (e) => {
+        const handleUserEvent = () => {
             setIsInactive(false);
 
             window.clearTimeout(timer);

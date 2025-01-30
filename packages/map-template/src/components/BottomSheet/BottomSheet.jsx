@@ -13,7 +13,16 @@ import Directions from '../Directions/Directions';
 import Search from '../Search/Search';
 import LocationsList from '../LocationsList/LocationsList';
 import locationIdState from '../../atoms/locationIdState';
+import PropTypes from 'prop-types';
 
+BottomSheet.propTypes = {
+    directionsFromLocation: PropTypes.string,
+    directionsToLocation: PropTypes.string,
+    pushAppView: PropTypes.func.isRequired,
+    currentAppView: PropTypes.string,
+    appViews: PropTypes.object,
+    onRouteFinished: PropTypes.func.isRequired
+};
 /**
  * @param {Object} props
  * @param {string} props.directionsFromLocation - Origin Location to be used to instantly show directions.

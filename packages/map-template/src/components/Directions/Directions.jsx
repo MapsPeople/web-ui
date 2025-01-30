@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import './Directions.scss';
 import { useTranslation } from 'react-i18next';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -21,8 +21,17 @@ import primaryColorState from "../../atoms/primaryColorState";
 import { useIsKioskContext } from "../../hooks/useIsKioskContext";
 import { useIsDesktop } from "../../hooks/useIsDesktop";
 import showExternalIDsState from '../../atoms/showExternalIDsState';
+import PropTypes from "prop-types";
 
 let directionsRenderer;
+
+Directions.propTypes = {
+    isOpen: PropTypes.bool,
+    onBack: PropTypes.func,
+    onSetSize: PropTypes.func,
+    snapPointSwiped: PropTypes.func,
+    onRouteFinished: PropTypes.func
+};
 
 /**
  * Show the directions view.

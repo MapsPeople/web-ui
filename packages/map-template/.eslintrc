@@ -1,4 +1,5 @@
 {
+    "root": true,  // Stops ESLint from looking beyond this directory
     "extends": [
         "eslint:recommended",
         "plugin:react/recommended",
@@ -17,17 +18,24 @@
     "env": {
         "browser": true,
         "es6": true,
-        "jest": true // Allow test globals like describe, it, expect
+        "jest": true, // Allow test globals like describe, it, expect
+        "node": true
     },
     "rules": {
-        "react/prop-types": "off",           // Disable props validation
+        "react-hooks/rules-of-hooks": "error",
+        "react/prop-types": "error",           // Disable props validation
         "react-hooks/exhaustive-deps": "off", // Disable hooks dependency warnings
-        "no-undef": "off",                   // Disable undefined variables errors (for global/require)
-        "no-unused-vars": "warn",            // Convert unused vars from error to warning
-        "react/display-name": "off",         // Disable display name requirement for components
-        "no-irregular-whitespace": "off",    // Disable irregular whitespace errors
-        "no-extra-semi":"off",              // Convert extra semicolons from error to warning
-        "no-empty": "off"                    // Allow empty blocks
+        "no-undef": "error",                   // Disable undefined variables errors (for global/require)
+        "no-unused-vars": "error",            // Show error for unused variables
+        "react/display-name": "error",         // Show error for missing displayName in components
+        "no-irregular-whitespace": "error",    // Disable irregular whitespace errors
+        "no-extra-semi":"error",              // Show error for extra semicolons
+        "no-empty": "error"                    // Show error for empty blocks
     },
-    "ignorePatterns": ["build/*"]           // Ignore all files in build directory
+    "ignorePatterns": [
+        "build/*",          // Ignore build directory
+        "node_modules/*",   // Ignore node_modules
+        "dist/*",          // Ignore dist directory
+        "../*"             // Ignore other packages
+    ]
 }

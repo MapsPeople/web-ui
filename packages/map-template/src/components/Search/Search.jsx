@@ -32,6 +32,13 @@ import searchAllVenuesState from '../../atoms/searchAllVenues';
 import isNullOrUndefined from '../../helpers/isNullOrUndefined';
 import venuesInSolutionState from '../../atoms/venuesInSolutionState';
 import initialVenueNameState from '../../atoms/initialVenueNameState';
+import PropTypes from 'prop-types';
+
+Search.propTypes = {
+    categories: PropTypes.array,
+    onSetSize: PropTypes.func,
+    isOpen: PropTypes.bool
+};
 
 /**
  * Show the search results.

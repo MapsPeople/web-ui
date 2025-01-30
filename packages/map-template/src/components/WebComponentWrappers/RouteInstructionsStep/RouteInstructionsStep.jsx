@@ -4,20 +4,22 @@ import { useRecoilState } from 'recoil';
 import substepsToggledState from '../../../atoms/substepsToggledState';
 import triggerSubstepsState from '../../../atoms/triggerSubstepsState';
 import { useIsKioskContext } from '../../../hooks/useIsKioskContext';
+import PropTypes from 'prop-types';
 
 /**
  * React wrapper around the custom element <mi-route-instructions-step>.
  *
  * @param {object} props
  * @param {object} translations - The text to be displayed on the instructions steps.
- * @param {object} totalSteps - The total steps to be rendered.
- * @param {object} activeStep - The current step to be shown.
+ * @param {array} totalSteps - The total steps to be rendered.
+ * @param {number} activeStep - The current step to be shown.
  * @param {object} previous - The previous step.
  * @param {object} originLocation - The origin location when starting the directions.
  * @param {object} directions - The directions object.
  *
  */
-const RouteInstructionsStep = forwardRef(({ totalSteps, activeStep, previous, originLocation, directions }, ref) => {
+const RouteInstructionsStep = forwardRef(function RouteInstructionsStepComponent(props, ref) {
+    const { totalSteps, activeStep, previous, originLocation, directions } = props;
     const elementRef = useRef();
 
     const { t } = useTranslation();
@@ -101,5 +103,13 @@ const RouteInstructionsStep = forwardRef(({ totalSteps, activeStep, previous, or
         from-route-context={previous?.route_context ?? originLocation?.properties?.name ?? ""}>
     </mi-route-instructions-step>
 });
+
+RouteInstructionsStep.propTypes = {
+    totalSteps: PropTypes.array,
+    activeStep: PropTypes.number,
+    previous: PropTypes.object,
+    originLocation: PropTypes.object,
+    directions: PropTypes.object
+};
 
 export default RouteInstructionsStep;
