@@ -148,8 +148,6 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
         }
     }, []);
 
-    useEffect(() => {
-        // Reset state
     /**
     * Close the Location details page.
     */
