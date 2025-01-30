@@ -80,7 +80,6 @@ const useMapBoundsDeterminer = () => {
      */
     function determineMapBounds() {
         const currentVenue = venuesInSolution.find(venue => venue.name.toLowerCase() === currentVenueName.toLowerCase());
-        console.log(mapPositionKnown);
 
         if (mapsIndoorsInstance && currentVenue) {
             setMapPositionInvestigating(true);
