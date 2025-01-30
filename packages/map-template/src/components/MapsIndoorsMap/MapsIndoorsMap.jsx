@@ -35,7 +35,8 @@ MapsIndoorsMap.propTypes = {
     hideNonMatches: PropTypes.bool,
     showExternalIDs: PropTypes.bool,
     showRoadNames: PropTypes.bool,
-    searchExternalLocations: PropTypes.bool
+    searchExternalLocations: PropTypes.bool,
+    center: PropTypes.string
 };
 
 /**

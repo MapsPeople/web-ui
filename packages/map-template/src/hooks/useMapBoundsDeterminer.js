@@ -56,7 +56,7 @@ const useMapBoundsDeterminer = () => {
     const [kioskLocationDisplayRuleWasChanged, setKioskLocationDisplayRuleWasChanged] = useState(false);
     const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
     const isMapReady = useRecoilState(isMapReadyState);
-    const [center, setCenter] = useRecoilState(centerState);
+    const [center, ] = useRecoilState(centerState);
 
     /**
      * If the app is inactive, run code to reset to initial map position.
