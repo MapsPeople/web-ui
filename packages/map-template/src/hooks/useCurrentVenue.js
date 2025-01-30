@@ -92,10 +92,12 @@ export const useCurrentVenue = () => {
 
                 for (const key of keys) {
                     // Get the categories from the App Config that have a matching key.
-                    const appConfigCategory = appConfig?.menuInfo.mainmenu.find(category => category.categoryKey === key);
+                    if (appConfig?.menuInfo?.mainmenu) {
+                        const appConfigCategory = appConfig.menuInfo.mainmenu.find(category => category.categoryKey === key);
 
-                    if (appConfigCategory) {
-                        uniqueCategories.set(appConfigCategory.categoryKey, { displayName: location.properties.categories[key], iconUrl: appConfigCategory?.iconUrl })
+                        if (appConfigCategory) {
+                            uniqueCategories.set(appConfigCategory.categoryKey, { displayName: location.properties.categories[key], iconUrl: appConfigCategory?.iconUrl })
+                        }
                     }
                 }
             }

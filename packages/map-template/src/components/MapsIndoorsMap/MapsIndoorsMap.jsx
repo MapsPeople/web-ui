@@ -35,7 +35,8 @@ MapsIndoorsMap.propTypes = {
     hideNonMatches: PropTypes.bool,
     showExternalIDs: PropTypes.bool,
     showRoadNames: PropTypes.bool,
-    searchExternalLocations: PropTypes.bool
+    searchExternalLocations: PropTypes.bool,
+    center: PropTypes.string
 };
 
 /**
@@ -70,6 +71,7 @@ MapsIndoorsMap.propTypes = {
  * @param {boolean} [props.showExternalIDs] - Determine whether the location details on the map should have an external ID visible. The default value is set to false.
  * @param {boolean} [props.showRoadNames] - A boolean parameter that dictates whether Mapbox road names should be shown. By default, Mapbox road names are hidden when MapsIndoors data is shown. It is dictated by `mi-transition-level` which default value is 17.
  * @param {boolean} [props.searchExternalLocations] - If you want to perform search for external results in the Wayfinding mode. If set to true, Mapbox/Google places will be displayed depending on the Map Provider you are using. If set to false, the results returned will only be MapsIndoors results. The default is true.
+ * @param {string} [props.center] - Specifies the coordinates where the map should load, represented as latitude and longitude values separated by a comma. If the specified coordinates intersect with a Venue, that Venue will be set as the current Venue.
  */
 function MapsIndoorsMap(props) {
 
@@ -126,6 +128,7 @@ function MapsIndoorsMap(props) {
         const showExternalIDsQueryParameter = queryStringParams.get('showExternalIDs');
         const showRoadNamesQueryParameter = queryStringParams.get('showRoadNames');
         const searchExternalLocationsQueryParameter = queryStringParams.get('searchExternalLocations');
+        const centerQueryParameter = queryStringParams.get('center');
 
         // Set the initial props on the Map Template component.
 
@@ -158,6 +161,7 @@ function MapsIndoorsMap(props) {
             language: props.supportsUrlParameters && languageQueryParameter ? languageQueryParameter : props.language,
             miTransitionLevel: props.supportsUrlParameters && miTransitionLevelQueryParameter ? miTransitionLevelQueryParameter : props.miTransitionLevel,
             category: props.supportsUrlParameters && categoryQueryParameter ? categoryQueryParameter : props.category,
+            center: props.supportsUrlParameters && centerQueryParameter ? centerQueryParameter : props.center,
             // Handle boolean values
             useKeyboard: getBooleanValue(props.supportsUrlParameters, defaultProps.useKeyboard, props.useKeyboard, useKeyboardQueryParameter),
             useMapProviderModule: getBooleanValue(props.supportsUrlParameters, defaultProps.useMapProviderModule, props.useMapProviderModule, useMapProviderModuleQueryParameter),
@@ -168,6 +172,7 @@ function MapsIndoorsMap(props) {
             searchExternalLocations: getBooleanValue(props.supportsUrlParameters, defaultProps.searchExternalLocations, props.searchExternalLocations, searchExternalLocationsQueryParameter),
             supportsUrlParameters: props.supportsUrlParameters,
         });
+
     }, [props]);
 
     return (

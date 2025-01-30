@@ -141,6 +141,7 @@ Note that when using the React component, the properties should conform to JSX p
 |`show-road-names`|`showRoadNames`|`bool`|A boolean parameter that dictates whether Mapbox road names should be shown. By default, Mapbox road names are hidden when MapsIndoors data is shown. It is dictated by `mi-transition-level` which default value is 17. |
 |`show-external-ids`|`showExternalIDs`|`bool`|Determine whether the location details on the map should have an external ID visible. The default value is set to false. |
 |`search-external-locations`|`searchExternalLocations`|`bool`|If you want to perform search for external locations in the Wayfinding mode. If set to true, Mapbox/Google places will be displayed depending on the Map Provider you are using. If set to false, the results returned will only be MapsIndoors results. The default is true. |
+|`center`|`center`|`string`|Specifies the coordinates where the map should load, represented as latitude and longitude values separated by a comma. If the specified coordinates intersect with a Venue, that Venue will be set as the current Venue. |
 
 ## Using Query Parameters
 
@@ -176,6 +177,7 @@ The supported query parameters are the following:
 26. `showRoadNames` - A boolean parameter that dictates whether Mapbox road names should be shown. By default, Mapbox road names are hidden when MapsIndoors data is shown. It is dictated by `mi-transition-level` which default value is 17.
 27. `showExternalIDs` - Determine whether the location details on the map should have an external ID visible. The default value is set to false.
 28. `searchExternalLocations` - If you want to perform search for external locations in the Wayfinding mode. If set to true, Mapbox/Google places will be displayed depending on the Map Provider you are using. If set to false, the results returned will only be MapsIndoors results. The default is true.
+29. `center` - Specifies the coordinates where the map should load, represented as latitude and longitude values separated by a comma. If the specified coordinates intersect with a Venue, that Venue will be set as the current Venue.
 
 **Note!** All the query parameters need to be separated with the `&` symbol, without any spaces in between.
 **Note!** When using parameters such as `directionsTo`, `directionsFrom`, `locationId`, `externalIDs`, and `tileStyle` make sure you are using the correct `apiKey` parameter to which they belong.
@@ -198,7 +200,7 @@ Example of URL:
 
 ## External customization of the Map Template
 
-When using the Map Template as a React Component or as a Web Component, you can control the map and the data on it by accessing the MapsIndoors instance. To do this, listen for the `mapsIndoorsInstanceAvailable` event on the `window` object. 
+When using the Map Template as a React Component or as a Web Component, you can control the map and the data on it by accessing the MapsIndoors instance. To do this, listen for the `mapsIndoorsInstanceAvailable` event on the `window` object.
 
 You can read about all the methods that can be used on the MapsIndoors Instance [here]. (https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/mapsindoors.MapsIndoors.html)
 
@@ -228,7 +230,7 @@ function App() {
 export default App;
 ```
 
-### 2. Web Component 
+### 2. Web Component
 
 To use the MapsIndoors instance within a Web Component, include a script tag that listens for the `mapsIndoorsInstanceAvailable` event on the `window` object.
 
