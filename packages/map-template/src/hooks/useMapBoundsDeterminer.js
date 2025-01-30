@@ -80,6 +80,7 @@ const useMapBoundsDeterminer = () => {
      */
     function determineMapBounds() {
         const currentVenue = venuesInSolution.find(venue => venue.name.toLowerCase() === currentVenueName.toLowerCase());
+        console.log(mapPositionKnown);
 
         if (mapsIndoorsInstance && currentVenue) {
             setMapPositionInvestigating(true);
@@ -89,7 +90,7 @@ const useMapBoundsDeterminer = () => {
                     // When in Kiosk mode and center prop is defined, set centerPoint to be center prop.
                     getDesktopPaddingBottom().then(desktopPaddingBottom => {
                         setMapPositionKnown(getCenterPoint().geometry);
-                        goTo(getCenterPoint().geometry, mapsIndoorsInstance, desktopPaddingBottom, 0, getZoomLevel(startZoomLevel), currentPitch, bearing);
+                        goTo(getCenterPoint().geometry, mapsIndoorsInstance, desktopPaddingBottom, 0, getZoomLevel(startZoomLevel), currentPitch, bearing, mapPositionKnown);
                     });
                 } else {
                     // When in Kiosk mode (which can only happen on desktop), the map is fitted to the bounds of the given Location with some bottom padding to accommodate
@@ -103,7 +104,7 @@ const useMapBoundsDeterminer = () => {
 
                             getDesktopPaddingBottom().then(desktopPaddingBottom => {
                                 setMapPositionKnown(kioskLocation.geometry);
-                                goTo(kioskLocation.geometry, mapsIndoorsInstance, desktopPaddingBottom, 0, getZoomLevel(startZoomLevel), currentPitch, bearing);
+                                goTo(kioskLocation.geometry, mapsIndoorsInstance, desktopPaddingBottom, 0, getZoomLevel(startZoomLevel), currentPitch, bearing, mapPositionKnown);
                             });
                         }
                     });
@@ -114,12 +115,12 @@ const useMapBoundsDeterminer = () => {
                     if (isDesktop) {
                         getDesktopPaddingLeft().then(desktopPaddingLeft => {
                             setMapPositionKnown(getCenterPoint().geometry);
-                            goTo(getCenterPoint().geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, getZoomLevel(startZoomLevel), currentPitch, bearing);
+                            goTo(getCenterPoint().geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, getZoomLevel(startZoomLevel), currentPitch, bearing, mapPositionKnown);
                         });
                     } else {
                         getMobilePaddingBottom().then(mobilePaddingBottom => {
                             setMapPositionKnown(getCenterPoint().geometry);
-                            goTo(getCenterPoint().geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, getZoomLevel(startZoomLevel), currentPitch, bearing);
+                            goTo(getCenterPoint().geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, getZoomLevel(startZoomLevel), currentPitch, bearing, mapPositionKnown);
                         });
                     }
                 } else {
@@ -134,12 +135,12 @@ const useMapBoundsDeterminer = () => {
                             if (isDesktop) {
                                 getDesktopPaddingLeft().then(desktopPaddingLeft => {
                                     setMapPositionKnown(location.geometry);
-                                    goTo(location.geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, getZoomLevel(startZoomLevel), currentPitch, bearing);
+                                    goTo(location.geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, getZoomLevel(startZoomLevel), currentPitch, bearing, mapPositionKnown);
                                 });
                             } else {
                                 getMobilePaddingBottom().then(mobilePaddingBottom => {
                                     setMapPositionKnown(location.geometry);
-                                    goTo(location.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, getZoomLevel(startZoomLevel), currentPitch, bearing);
+                                    goTo(location.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, getZoomLevel(startZoomLevel), currentPitch, bearing, mapPositionKnown);
                                 });
                             }
                         }
@@ -150,12 +151,12 @@ const useMapBoundsDeterminer = () => {
                     if (isDesktop) {
                         getDesktopPaddingLeft().then(desktopPaddingLeft => {
                             setMapPositionKnown(currentVenue.geometry);
-                            goTo(currentVenue.geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, getZoomLevel(startZoomLevel), currentPitch, bearing);
+                            goTo(currentVenue.geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, getZoomLevel(startZoomLevel), currentPitch, bearing, mapPositionKnown);
                         });
                     } else {
                         getMobilePaddingBottom().then(mobilePaddingBottom => {
                             setMapPositionKnown(currentVenue.geometry);
-                            goTo(currentVenue.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, getZoomLevel(startZoomLevel), currentPitch, bearing);
+                            goTo(currentVenue.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, getZoomLevel(startZoomLevel), currentPitch, bearing, mapPositionKnown);
                         });
                     }
                 } else {
@@ -167,18 +168,18 @@ const useMapBoundsDeterminer = () => {
                     if (isNullOrUndefined(center)) {
                         // If the center prop is not defined, pan to the current Venue.
                         setMapPositionKnown(currentVenue.geometry);
-                        goTo(currentVenue.geometry, mapsIndoorsInstance, 0, 0, getZoomLevel(startZoomLevel), currentPitch, bearing);
+                        goTo(currentVenue.geometry, mapsIndoorsInstance, 0, 0, getZoomLevel(startZoomLevel), currentPitch, bearing, mapPositionKnown);
                     } else if (isNullOrUndefined(intersectingVenueWithCenterPoint)) {
                         // If center prop is defined, but it does not intersects with any Venue, pan to value that is defined by center prop.
                         if (isDesktop) {
                             getDesktopPaddingLeft().then(desktopPaddingLeft => {
                                 setMapPositionKnown(getCenterPoint().geometry);
-                                goTo(getCenterPoint().geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, getZoomLevel(startZoomLevel), currentPitch, bearing);
+                                goTo(getCenterPoint().geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, getZoomLevel(startZoomLevel), currentPitch, bearing, mapPositionKnown);
                             });
                         } else {
                             getMobilePaddingBottom().then(mobilePaddingBottom => {
                                 setMapPositionKnown(getCenterPoint().geometry);
-                                goTo(getCenterPoint().geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, getZoomLevel(startZoomLevel), currentPitch, bearing);
+                                goTo(getCenterPoint().geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, getZoomLevel(startZoomLevel), currentPitch, bearing, mapPositionKnown);
                             });
                         }
                     } else {
@@ -187,12 +188,12 @@ const useMapBoundsDeterminer = () => {
                         if (isDesktop) {
                             getDesktopPaddingLeft().then(desktopPaddingLeft => {
                                 setMapPositionKnown(getCenterPoint().geometry);
-                                goTo(getCenterPoint().geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, getZoomLevel(startZoomLevel), currentPitch, bearing);
+                                goTo(getCenterPoint().geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, getZoomLevel(startZoomLevel), currentPitch, bearing, mapPositionKnown);
                             });
                         } else {
                             getMobilePaddingBottom().then(mobilePaddingBottom => {
                                 setMapPositionKnown(getCenterPoint().geometry);
-                                goTo(getCenterPoint().geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, getZoomLevel(startZoomLevel), currentPitch, bearing);
+                                goTo(getCenterPoint().geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, getZoomLevel(startZoomLevel), currentPitch, bearing, mapPositionKnown);
                             });
                         }
 
