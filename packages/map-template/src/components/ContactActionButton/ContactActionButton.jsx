@@ -43,7 +43,7 @@ function ContactActionButton({ detailType, active, displayText, value, icon }) {
             <div className='contact-action-button__icon-wrapper'>
                 <img src={icon} className="contact-action-button__icon" />
             </div>
-            <span className="contact-action-button_text">{textToDisplay}</span>
+            <span className="contact-action-button__text">{textToDisplay}</span>
         </a>
     );
 }
