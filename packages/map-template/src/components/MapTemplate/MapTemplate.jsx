@@ -423,8 +423,12 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the venue prop.
      */
     useEffect(() => {
-        setCurrentVenueName(venue);
-    }, [venue]);
+        if (!isNullOrUndefined(venue)) {
+            setCurrentVenueName(venue)
+        } else {
+            setCurrentVenueName(appConfig?.appSettings?.venue)
+        }
+    }, [venue, appConfig]);
 
     /*
      * React on changes in the tile style prop.
