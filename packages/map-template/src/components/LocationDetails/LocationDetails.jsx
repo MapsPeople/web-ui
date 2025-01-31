@@ -244,6 +244,26 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                 </button>
             </div>
 
+            {/* Wayfinding Button */}
+            {kioskLocation && isDesktop ? (
+                <button
+                    disabled={!hasFoundRoute}
+                    onClick={() => startDirections()}
+                    className={`location-details__wayfinding ${!hasFoundRoute ? 'location-details--no-route' : ''}`}
+                    style={{ background: primaryColor }}
+                >
+                    {!hasFoundRoute ? t('Directions not available') : t('Start directions')}
+                </button>
+            ) : (
+                <button
+                    onClick={() => startWayfinding()}
+                    style={{ background: primaryColor }}
+                    className="location-details__wayfinding"
+                >
+                    {t('Start wayfinding')}
+                </button>
+            )}
+
             <div ref={locationDetailsContainer} onScroll={e => setScrollIndicators(e)} className="location-details__details">
                 {/* Location image */}
                 {location.properties.imageURL && <img alt="" src={location.properties.imageURL} className="location-details__image" />}
@@ -273,22 +293,6 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                     </button>}
                 </section>}
             </div>
-
-            {kioskLocation && isDesktop
-                ?
-                <button disabled={!hasFoundRoute}
-                    onClick={() => startDirections()}
-                    className={`location-details__wayfinding ${!hasFoundRoute ? 'location-details--no-route' : ''}`}
-                    style={{ background: primaryColor }}>
-                    {!hasFoundRoute ? t('Directions not available') : t('Start directions')}
-                </button>
-                :
-                <button onClick={() => startWayfinding()}
-                    style={{ background: primaryColor }}
-                    className="location-details__wayfinding">
-                    {t('Start wayfinding')}
-                </button>
-            }
         </>}
     </div>
 }
