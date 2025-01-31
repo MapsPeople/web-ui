@@ -273,6 +273,7 @@ export default useMapBoundsDeterminer;
 function goTo(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLevel, pitch, bearing, mapPositionKnown) {
     mapsIndoorsInstance.getMapView().tilt(pitch || 0);
     mapsIndoorsInstance.getMapView().rotate(bearing || 0);
+    console.log(mapPositionKnown);
 
     return new Promise((resolve) => {
         mapsIndoorsInstance.goTo(
@@ -282,9 +283,17 @@ function goTo(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLev
                 padding: { top: 0, right: 0, bottom: paddingBottom, left: paddingLeft },
             }
         ).then(() => {
-            if (mapPositionKnown === false) {
-                mapsIndoorsInstance.setZoom(Number(zoomLevel));
-            }
+            const mapView = mapsIndoorsInstance.getMapView();
+            console.log(mapView);
+
+            mapView.once('idle', () => {
+                console.log('moveend');
+
+                if (mapPositionKnown !== false) {
+                    console.log('setZoom');
+                    mapsIndoorsInstance.setZoom(Number(zoomLevel));
+                }
+            });
             resolve();
         });
     });
