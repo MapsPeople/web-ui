@@ -257,8 +257,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
-            const languageToUse = appConfig?.appSettings?.language ? appConfig.appSettings.language : language ? language : navigator.language;
-            console.log(appConfig);
+            // Sets language to use. Priority: URL/Query Param -> App Config -> browser's default language.
+            const languageToUse = language ? language : appConfig?.appSettings?.language ? appConfig.appSettings.language : navigator.language;
 
             // Set the language on the MapsIndoors SDK in order to get eg. Mapbox and Google directions in that language.
             // The MapsIndoors data only accepts the first part of the IETF language string, hence the split.
@@ -421,7 +421,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [currentAppView]);
 
     /*
-     * React on changes in the venue prop.
+     * React on changes in the venue prop. If not defined in the URL, check if it is defined in app config.
      */
     useEffect(() => {
         if (!isNullOrUndefined(venue)) {
@@ -439,7 +439,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [tileStyle]);
 
     /*
-     * React on changes in the primary color prop.
+     * React on changes in the primary color prop. If not defined in the URL, check if it is defined in app config. Otherwise set to default color.
      */
     useEffect(() => {
         const defaultPrimaryColor = '#005655';
@@ -455,7 +455,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [primaryColor, appConfig]);
 
     /*
-     * React on changes in the start zoom level prop.
+     * React on changes in the start zoom level prop. If not defined in the URL, check if it is defined in app config.
      */
     useEffect(() => {
         if (!isNullOrUndefined(startZoomLevel)) {
@@ -466,7 +466,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [startZoomLevel, appConfig]);
 
     /*
-     * React on changes in the pitch prop.
+     * React on changes in the pitch prop. If not defined in the URL, check if it is defined in app config.
      * If the pitch is not set, set it to 45 degrees if the view mode switch is visible.
      */
     useEffect(() => {
@@ -480,7 +480,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [pitch, viewModeSwitchVisible, appConfig]);
 
     /*
-     * React on changes in the bearing prop.
+     * React on changes in the bearing prop. If not defined in the URL, check if it is defined in app config.
      */
     useEffect(() => {
         if (!isNullOrUndefined(bearing)) {
@@ -491,7 +491,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [bearing, appConfig]);
 
     /*
-     * React on changes in the logo prop.
+     * React on changes in the logo prop. If not defined in the URL, check if it is defined in app config. Otherwise set to default logo.
      */
     useEffect(() => {
         const defaultLogo = 'https://app.mapsindoors.com/mapsindoors/gfx/mapspeople-logo/mapspeople-pin.svg';
