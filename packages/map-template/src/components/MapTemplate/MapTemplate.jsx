@@ -490,10 +490,12 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the logo prop.
      */
     useEffect(() => {
-        if (!isNullOrUndefined(logo)) {
-            setLogo(logo)
-        } else {
+
+        // TODO: App Config takes the priority. logo is always defined, so in this case URL will NOT override app config value.
+        if (appConfig?.appSettings?.logo) {
             setLogo(appConfig?.appSettings?.logo)
+        } else {
+            setLogo(logo)
         }
     }, [logo, appConfig]);
 
