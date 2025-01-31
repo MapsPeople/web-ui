@@ -39,7 +39,7 @@ import Notification from '../WebComponentWrappers/Notification/Notification.jsx'
 import kioskLocationState from '../../atoms/kioskLocationState';
 import timeoutState from '../../atoms/timoutState.js';
 import { useInactive } from '../../hooks/useInactive.js';
-import showQRCodeDialogState from '../../atoms/showQRCodeDialogState';
+import qrCodeLinkState from '../../atoms/qrCodeLinkState.js';
 import QRCodeDialog from '../QRCodeDialog/QRCodeDialog';
 import supportsUrlParametersState from '../../atoms/supportsUrlParametersState';
 import useKeyboardState from '../../atoms/useKeyboardState';
@@ -160,6 +160,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setSearchExternalLocations] = useRecoilState(searchExternalLocationsState);
     const [, setCenter] = useRecoilState(centerState);
     const [viewModeSwitchVisible, setViewModeSwitchVisible] = useState();
+    const qrCodeLink = useRecoilValue(qrCodeLinkState)
 
     const [showVenueSelector, setShowVenueSelector] = useState(true);
     const [showPositionControl, setShowPositionControl] = useState(true);
@@ -198,7 +199,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     // Indicate if the MapsIndoors JavaScript SDK is available.
     const [mapsindoorsSDKAvailable, setMapsindoorsSDKAvailable] = useState(false);
 
-    const showQRCodeDialog = useRecoilValue(showQRCodeDialogState);
     const showLegendDialog = useRecoilValue(isLegendDialogVisibleState);
 
     // The reset count is used to add a new key to the sidebar or bottomsheet, forcing it to re-render from scratch when resetting the Map Template.
@@ -652,7 +652,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             onClose={() => goBack()}
             active={currentAppView === appStates.VENUE_SELECTOR}
         />}
-        {showQRCodeDialog && <QRCodeDialog />}
+        {qrCodeLink && <QRCodeDialog />}
         {showLegendDialog && <LegendDialog />}
         {isMapPositionInvestigating &&
             <Fragment key={resetCount}>
