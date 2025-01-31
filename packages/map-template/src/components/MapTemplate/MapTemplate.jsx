@@ -258,6 +258,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
             const languageToUse = appConfig?.appSettings?.language ? appConfig.appSettings.language : language ? language : navigator.language;
+            console.log(appConfig);
 
             // Set the language on the MapsIndoors SDK in order to get eg. Mapbox and Google directions in that language.
             // The MapsIndoors data only accepts the first part of the IETF language string, hence the split.
@@ -441,8 +442,14 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the primary color prop.
      */
     useEffect(() => {
-        setPrimaryColor(primaryColor);
-    }, [primaryColor]);
+
+        // TODO: App Config takes the priority. primaryColor is always defined, so in this case URL will NOT override app config value.
+        if (appConfig?.appSettings?.primaryColor) {
+            setPrimaryColor(appConfig?.appSettings?.primaryColor)
+        } else {
+            setPrimaryColor(primaryColor)
+        }
+    }, [primaryColor, appConfig]);
 
     /*
      * React on changes in the start zoom level prop.
