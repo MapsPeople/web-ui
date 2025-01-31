@@ -274,7 +274,7 @@ function goTo(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLev
     mapsIndoorsInstance.getMapView().tilt(pitch || 0);
     mapsIndoorsInstance.getMapView().rotate(bearing || 0);
     console.log(mapPositionKnown);
-
+    const mapView = mapsIndoorsInstance.getMapView();
     return new Promise((resolve) => {
         mapsIndoorsInstance.goTo(
             { type: 'Feature', geometry, properties: {} },
@@ -283,18 +283,19 @@ function goTo(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLev
                 padding: { top: 0, right: 0, bottom: paddingBottom, left: paddingLeft },
             }
         ).then(() => {
-            const mapView = mapsIndoorsInstance.getMapView();
-            console.log(mapView);
-
-            mapView.once('idle', () => {
-                console.log('moveend');
-
-                if (mapPositionKnown !== false) {
-                    console.log('setZoom');
-                    mapsIndoorsInstance.setZoom(Number(zoomLevel));
-                }
-            });
-            resolve();
+            if (zoomLevel) {
+                mapView.easeToTwo(Number(zoomLevel));
+                resolve();
+            }
         });
     });
+
+    // SDK Function:
+
+    // easeToTwo(zoom) {
+    //     const map = this.get('map');
+    //     map.once('idle', () => {
+    //         map.easeTo({zoom: zoom, duration: 2000});
+    //     });
+    // }
 }
