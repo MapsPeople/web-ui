@@ -257,7 +257,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
-            const languageToUse = language ? language : navigator.language;
+            const languageToUse = appConfig?.appSettings?.language ? appConfig.appSettings.language : language ? language : navigator.language;
 
             // Set the language on the MapsIndoors SDK in order to get eg. Mapbox and Google directions in that language.
             // The MapsIndoors data only accepts the first part of the IETF language string, hence the split.
@@ -295,7 +295,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             setCurrentLanguage(languageToUse);
         }
-    }, [language, mapsindoorsSDKAvailable]);
+    }, [language, mapsindoorsSDKAvailable, appConfig]);
 
     /**
      * React on changes in the MapsIndoors API key by fetching the required data.
