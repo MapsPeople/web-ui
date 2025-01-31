@@ -480,9 +480,12 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the bearing prop.
      */
     useEffect(() => {
-        setBearing(bearing);
-    }, [bearing]);
-
+        if (!isNullOrUndefined(bearing)) {
+            setBearing(bearing)
+        } else {
+            setBearing(appConfig?.appSettings?.bearing)
+        }
+    }, [bearing, appConfig]);
     /*
      * React on changes in the logo prop.
      */
