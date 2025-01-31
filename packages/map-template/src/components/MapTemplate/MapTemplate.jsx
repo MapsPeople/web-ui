@@ -442,8 +442,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the primary color prop.
      */
     useEffect(() => {
-
-        // TODO: App Config takes the priority. primaryColor is always defined, so in this case URL will NOT override app config value.
         if (appConfig?.appSettings?.primaryColor) {
             setPrimaryColor(appConfig?.appSettings?.primaryColor)
         } else {
@@ -490,9 +488,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the logo prop.
      */
     useEffect(() => {
-
-        // TODO: App Config takes the priority. logo is always defined, so in this case URL will NOT override app config value.
-        if (appConfig?.appSettings?.logo) {
+        if (appConfig?.appSettings?.logo && logo) {
             setLogo(appConfig?.appSettings?.logo)
         } else {
             setLogo(logo)
