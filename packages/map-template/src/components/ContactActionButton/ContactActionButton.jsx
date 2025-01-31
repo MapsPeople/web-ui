@@ -36,14 +36,14 @@ function ContactActionButton({ detailType, active, displayText, value, icon }) {
 
     return (
         <a
-            className="action-button"
+            className="contact-action-button"
             href={handleClick(detailType, value)}
             target={detailType.toLowerCase() === 'email' || detailType.toLowerCase() === 'phone' ? '_self' : '_blank'}
             rel="noopener noreferrer">
-            <div className='action-button__icon-wrapper'>
-                <img src={icon} className="action-button__icon" />
+            <div className='contact-action-button__icon-wrapper'>
+                <img src={icon} className="contact-action-button__icon" />
             </div>
-            <span className="action-button_text">{textToDisplay}</span>
+            <span className="contact-action-button_text">{textToDisplay}</span>
         </a>
     );
 }
