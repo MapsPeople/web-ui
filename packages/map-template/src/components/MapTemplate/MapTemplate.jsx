@@ -455,8 +455,12 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the start zoom level prop.
      */
     useEffect(() => {
-        setStartZoomLevel(startZoomLevel);
-    }, [startZoomLevel]);
+        if (!isNullOrUndefined(startZoomLevel)) {
+            setStartZoomLevel(startZoomLevel)
+        } else {
+            setStartZoomLevel(appConfig?.appSettings?.startZoomLevel)
+        }
+    }, [startZoomLevel, appConfig]);
 
     /*
      * React on changes in the pitch prop.
