@@ -490,8 +490,12 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the logo prop.
      */
     useEffect(() => {
-        setLogo(logo);
-    }, [logo]);
+        if (!isNullOrUndefined(logo)) {
+            setLogo(logo)
+        } else {
+            setLogo(appConfig?.appSettings?.logo)
+        }
+    }, [logo, appConfig]);
 
     /*
      * React on changes in the miTransitionLevel prop.
