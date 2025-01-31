@@ -1,0 +1,12 @@
+.share-location-link {
+    position: relative;
+
+    > ul {
+        position: absolute;
+        left: -100px;
+        top: 0;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+}
