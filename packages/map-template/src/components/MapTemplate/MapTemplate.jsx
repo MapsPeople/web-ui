@@ -469,10 +469,12 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         if (!isNullOrUndefined(pitch)) {
             setPitch(pitch);
-        } else if (viewModeSwitchVisible) {
+        } else if (appConfig?.appSettings?.pitch) {
+            setPitch(appConfig?.appSettings?.pitch)
+        } else {
             setPitch(45);
         }
-    }, [pitch, viewModeSwitchVisible]);
+    }, [pitch, viewModeSwitchVisible, appConfig]);
 
     /*
      * React on changes in the bearing prop.
