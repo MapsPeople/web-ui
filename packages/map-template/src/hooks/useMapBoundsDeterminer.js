@@ -148,10 +148,8 @@ const useMapBoundsDeterminer = () => {
             } else if (currentVenue) {
                 if (venueWasSelected) {
                     if (isDesktop) {
-                        getDesktopPaddingLeft().then(desktopPaddingLeft => {
-                            setMapPositionKnown(currentVenue.geometry);
-                            goTo(currentVenue.geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, getZoomLevel(startZoomLevel), currentPitch, bearing, mapPositionKnown);
-                        });
+                        setMapPositionKnown(currentVenue.geometry);
+                        goTo(currentVenue.geometry, mapsIndoorsInstance, 0, 0, getZoomLevel(startZoomLevel), currentPitch, bearing, mapPositionKnown);
                     } else {
                         getMobilePaddingBottom().then(mobilePaddingBottom => {
                             setMapPositionKnown(currentVenue.geometry);
