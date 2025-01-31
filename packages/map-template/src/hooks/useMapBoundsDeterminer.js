@@ -56,7 +56,7 @@ const useMapBoundsDeterminer = () => {
     const [kioskLocationDisplayRuleWasChanged, setKioskLocationDisplayRuleWasChanged] = useState(false);
     const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
     const isMapReady = useRecoilState(isMapReadyState);
-    const [center, ] = useRecoilState(centerState);
+    const [center,] = useRecoilState(centerState);
 
     /**
      * If the app is inactive, run code to reset to initial map position.
@@ -275,12 +275,19 @@ export default useMapBoundsDeterminer;
 function goTo(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLevel, pitch, bearing, mapPositionKnown) {
     mapsIndoorsInstance.getMapView().tilt(pitch || 0);
     mapsIndoorsInstance.getMapView().rotate(bearing || 0);
-    mapsIndoorsInstance.goTo({ type: 'Feature', geometry, properties: {} }, {
-        maxZoom: zoomLevel ?? 22,
-        padding: { top: 0, right: 0, bottom: paddingBottom, left: paddingLeft },
-    }).then(() => {
-        if (zoomLevel && mapPositionKnown !== false) {
-            mapsIndoorsInstance.setZoom(zoomLevel);
-        }
+
+    return new Promise((resolve) => {
+        mapsIndoorsInstance.goTo(
+            { type: 'Feature', geometry, properties: {} },
+            {
+                maxZoom: zoomLevel ?? 22,
+                padding: { top: 0, right: 0, bottom: paddingBottom, left: paddingLeft },
+            }
+        ).then(() => {
+            if (mapPositionKnown === false) {
+                mapsIndoorsInstance.setZoom(Number(zoomLevel));
+            }
+            resolve();
+        });
     });
 }
