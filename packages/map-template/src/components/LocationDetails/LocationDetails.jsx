@@ -337,17 +337,20 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                         {t('Close')}
                     </button>}
                 </section>}
-                {/*Work in progress */}
-                {mockData.map(button => (
-                    <ContactActionButton
-                        key={button.key}
-                        detailType={button.detailType}
-                        active={button.active}
-                        displayText={button.displayText}
-                        value={button.value}
-                        icon={button.icon}
-                    />
-                ))}
+
+                {/*Contact action button container */}
+                <div className='contact-action-buttons-container'>
+                    {mockData.map(button => (
+                        <ContactActionButton
+                            key={button.key}
+                            detailType={button.detailType}
+                            active={button.active}
+                            displayText={button.displayText}
+                            value={button.value}
+                            icon={button.icon}
+                        />
+                    ))}
+                </div>
             </div>
 
             {kioskLocation && isDesktop

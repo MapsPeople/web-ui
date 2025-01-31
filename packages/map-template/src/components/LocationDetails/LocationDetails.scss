@@ -154,3 +154,9 @@
         gap: var(--spacing-xx-small);
     }
 }
+
+.contact-action-buttons-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
