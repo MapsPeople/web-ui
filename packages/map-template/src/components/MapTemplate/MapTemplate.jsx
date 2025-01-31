@@ -442,10 +442,15 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the primary color prop.
      */
     useEffect(() => {
-        if (appConfig?.appSettings?.primaryColor) {
+        const defaultPrimaryColor = '#005655';
+
+        // Sets primary color. Priority: URL/Query Param -> App Config -> Default.
+        if (!isNullOrUndefined(primaryColor)) {
+            setPrimaryColor(primaryColor)
+        } else if (!isNullOrUndefined(appConfig?.appSettings?.primaryColor)) {
             setPrimaryColor(appConfig?.appSettings?.primaryColor)
         } else {
-            setPrimaryColor(primaryColor)
+            setPrimaryColor(defaultPrimaryColor);
         }
     }, [primaryColor, appConfig]);
 
@@ -484,14 +489,20 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             setBearing(appConfig?.appSettings?.bearing)
         }
     }, [bearing, appConfig]);
+
     /*
      * React on changes in the logo prop.
      */
     useEffect(() => {
-        if (appConfig?.appSettings?.logo && logo) {
+        const defaultLogo = 'https://app.mapsindoors.com/mapsindoors/gfx/mapspeople-logo/mapspeople-pin.svg';
+
+        // Sets logo. Priority: URL/Query Param -> App Config -> Default.
+        if (!isNullOrUndefined(logo)) {
+            setLogo(logo)
+        } else if (appConfig?.appSettings?.logo) {
             setLogo(appConfig?.appSettings?.logo)
         } else {
-            setLogo(logo)
+            setLogo(defaultLogo);
         }
     }, [logo, appConfig]);
 
