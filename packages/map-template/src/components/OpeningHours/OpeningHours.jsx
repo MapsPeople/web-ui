@@ -4,16 +4,18 @@ import PropTypes from 'prop-types';
 import './OpeningHours.scss';
 
 OpeningHours.propTypes = {
-    openingHours: PropTypes.object
+    openingHours: PropTypes.object,
+    isAmFormat: PropTypes.bool
 };
 
 /**
  * 
  * @param {object} props
  * @param {object} props.openingHours // Opening hours data
+ * @param {boolen} [props.isAmFormat] // Whether to display time in AM/PM format
  * @returns 
  */
-function OpeningHours({ openingHours }) {
+function OpeningHours({ openingHours, isAmFormat = false }) {
     const { t } = useTranslation();
     const [isExpanded, setIsExpanded] = useState(false);
     const currentDay = new Date().getDay();
@@ -35,11 +37,11 @@ function OpeningHours({ openingHours }) {
         return new Date(0, 0, 0, hours, minutes).toLocaleTimeString([], {
             hour: '2-digit',
             minute: '2-digit',
-            hour12: false
+            hour12: isAmFormat
         });
     };
 
-    const getOperatingHoursForDay = (day) => {
+    const getOpeningHoursForDay = (day) => {
         const dayData = standardOpeningHours?.[day.toLowerCase()];
         if (!dayData || dayData.closedAllDay) {
             return {
@@ -84,7 +86,7 @@ function OpeningHours({ openingHours }) {
             <ul className="opening-hours__list">
                 <li className="opening-hours__list-item opening-hours__list-item--current" onClick={() => setIsExpanded(!isExpanded)}>
                     <span className="opening-hours__time">
-                        {getOperatingHoursForDay(weekdays[adjustedCurrentDay]).text}
+                        {getOpeningHoursForDay(weekdays[adjustedCurrentDay]).text}
                     </span>
                     <span className={`opening-hours__status-text opening-hours__status-text--${text.toLowerCase()}`}>
                         {text}
@@ -92,7 +94,7 @@ function OpeningHours({ openingHours }) {
                 </li>
 
                 {isExpanded && weekdays.map((day) => {
-                    const hours = getOperatingHoursForDay(day);
+                    const hours = getOpeningHoursForDay(day);
                     return (
                         <li key={day} className="opening-hours__list-item">
                             <span className="opening-hours__day">{day}</span>
