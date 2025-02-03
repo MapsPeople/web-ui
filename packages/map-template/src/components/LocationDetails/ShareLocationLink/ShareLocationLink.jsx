@@ -6,6 +6,8 @@ import shareLinkSelector from '../../../selectors/baseLink';
 import { useRecoilValue } from 'recoil';
 import './ShareLocationLink.scss';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
+import { ReactComponent as ChainLinkIcon } from '../../../assets/chain-link.svg';
+import { ReactComponent as QRCodeIcon } from '../../../assets/qrcode.svg';
 import { ReactComponent as ShareIcon } from '../../../assets/share.svg';
 import qrCodeLinkState from '../../../atoms/qrCodeLinkState';
 
@@ -45,6 +47,7 @@ function ShareLocationLink({ location, buttonClassName }) {
      */
     const copyLink = () => {
         navigator.clipboard?.writeText(locationShareLink);
+        setShareDialogueIsOpen(false);
     };
 
     /**
@@ -52,6 +55,7 @@ function ShareLocationLink({ location, buttonClassName }) {
      */
     const showQRCode = () => {
         setQrCodeLink(locationShareLink);
+        setShareDialogueIsOpen(false);
     };
 
     return <div className="share-location-link">
@@ -64,10 +68,20 @@ function ShareLocationLink({ location, buttonClassName }) {
             <ul>
 
                 {/* Make a button to copy the link */}
-                <li><button onClick={() => copyLink()}>Copy link</button></li>
+                <li>
+                    <button onClick={() => copyLink()}>
+                        <ChainLinkIcon />
+                        Copy link
+                    </button>
+                </li>
 
                 {/* Make a button to show a QR code if on larger screens only (it hardly makes sense to show a QR code on a mobile device) */}
-                {isDesktop && <li><button onClick={() => showQRCode()}>QR Code</button></li>}
+                {isDesktop && <li>
+                    <button onClick={() => showQRCode()}>
+                        <QRCodeIcon />
+                        QR Code
+                    </button>
+                </li>}
 
             </ul>
         </ClickAwayListener>}

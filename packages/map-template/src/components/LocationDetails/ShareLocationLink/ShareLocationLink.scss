@@ -2,11 +2,33 @@
     position: relative;
 
     > ul {
+        /* Position it slightly bottom & left to the button */
         position: absolute;
-        left: -100px; /* TODO: subject to change when we implement in according to provided UI */
-        top: 0;
+        right: 20px;
+        top: 30px;
+
         list-style: none;
         margin: 0;
         padding: 0;
+        background-color: white;
+        border-radius: var(--rounding-large);
+        box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2), 0px 0px 4px rgba(0, 0, 0, 0.18), 0px 0px 8px rgba(0, 0, 0, 0.16); /* modified version of --elevation-small */
+        z-index: 1;
+
+        button {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            padding: var(--spacing-x-small);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-x-small);
+            color: var(--color-black-base);
+            white-space: nowrap;
+
+            &:hover {
+                background-color: var(--color-gray-light);
+            }
+        }
     }
 }
