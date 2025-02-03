@@ -5,10 +5,12 @@ import shareLinkSelector from '../../../selectors/baseLink';
 import { useRecoilValue } from 'recoil';
 import './ShareLocationLink.scss';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
+import { ReactComponent as ShareIcon } from '../../../assets/share.svg';
 import qrCodeLinkState from '../../../atoms/qrCodeLinkState';
 
 ShareLocationLink.propTypes = {
-    location: PropTypes.object.isRequired
+    location: PropTypes.object.isRequired,
+    buttonClassName: PropTypes.string
 };
 
 /**
@@ -16,8 +18,9 @@ ShareLocationLink.propTypes = {
  *
  * @param {object} props
  * @param {object} props.location - The location to share a link to.
+ * @param {string} [props.buttonClassName] - The class name to apply to the share button.
  */
-function ShareLocationLink({ location }) {
+function ShareLocationLink({ location, buttonClassName }) {
 
     const [shareDialogueIsOpen, setShareDialogueIsOpen] = useState(false);
     const shareLink = useRecoilValue(shareLinkSelector);
@@ -51,7 +54,9 @@ function ShareLocationLink({ location }) {
     };
 
     return <div className="share-location-link">
-        <button onClick={() => setShareDialogueIsOpen(isOpen => !isOpen)}>Share</button>
+        <button className={buttonClassName} onClick={() => setShareDialogueIsOpen(isOpen => !isOpen)}>
+            <ShareIcon />
+        </button>
         {shareDialogueIsOpen && <ul>
 
             {/* Make a button to copy the link */}
