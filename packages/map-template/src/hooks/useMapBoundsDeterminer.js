@@ -56,7 +56,7 @@ const useMapBoundsDeterminer = () => {
     const [kioskLocationDisplayRuleWasChanged, setKioskLocationDisplayRuleWasChanged] = useState(false);
     const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
     const isMapReady = useRecoilState(isMapReadyState);
-    const [center, ] = useRecoilState(centerState);
+    const [center,] = useRecoilState(centerState);
 
     /**
      * If the app is inactive, run code to reset to initial map position.
@@ -148,10 +148,8 @@ const useMapBoundsDeterminer = () => {
             } else if (currentVenue) {
                 if (venueWasSelected) {
                     if (isDesktop) {
-                        getDesktopPaddingLeft().then(desktopPaddingLeft => {
-                            setMapPositionKnown(currentVenue.geometry);
-                            goTo(currentVenue.geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, getZoomLevel(startZoomLevel), currentPitch, bearing);
-                        });
+                        setMapPositionKnown(currentVenue.geometry);
+                        goTo(currentVenue.geometry, mapsIndoorsInstance, 0, 0, getZoomLevel(startZoomLevel), currentPitch, bearing);
                     } else {
                         getMobilePaddingBottom().then(mobilePaddingBottom => {
                             setMapPositionKnown(currentVenue.geometry);
@@ -285,7 +283,7 @@ function goTo(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLev
         const centerOfGeometry = turf.center(geometry);
         const mapView = mapsIndoorsInstance.getMapView();
 
-        mapView.setCenter({ lat: centerOfGeometry.geometry.coordinates[1], lng: centerOfGeometry.geometry.coordinates[0]} )
+        mapView.setCenter({ lat: centerOfGeometry.geometry.coordinates[1], lng: centerOfGeometry.geometry.coordinates[0] })
         mapsIndoorsInstance.setZoom(zoomLevel);
     }
 }
