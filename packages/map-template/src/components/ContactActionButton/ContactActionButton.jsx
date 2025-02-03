@@ -1,6 +1,11 @@
 import PropTypes from "prop-types";
 import './ContactActionButton.scss'
 
+const detailTypes = {
+    email: 'email',
+    phone: 'phone',
+};
+
 ContactActionButton.propTypes = {
     detailType: PropTypes.string,
     active: PropTypes.bool,
@@ -25,12 +30,17 @@ function ContactActionButton({ detailType, active, displayText, value, icon }) {
 
     const handleClick = (detailType, value) => {
         switch (detailType.toLowerCase()) {
-            case 'email':
+            case detailTypes.email:
                 return `mailto:${value}`; // Opens default email client
-            case 'phone':
+            case detailTypes.phone:
                 return `tel:${value}`; // Opens phone dialer
             default:
-                return value; // Opens any other link in new tab
+                try {
+                    new URL(value);
+                    return value;
+                } catch {
+                    return '#'; // If the value is not a valid URL, return '#' to prevent navigation
+                }
         }
     };
 
