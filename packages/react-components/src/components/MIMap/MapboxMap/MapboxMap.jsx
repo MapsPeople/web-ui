@@ -19,7 +19,8 @@ MapboxMap.propTypes = {
     resetViewMode: PropTypes.number,
     mapsIndoorsInstance: PropTypes.object,
     viewModeSwitchVisible: PropTypes.bool,
-    mapOptions: PropTypes.object
+    mapOptions: PropTypes.object,
+    appConfig: PropTypes.object
 }
 
 /**
@@ -36,8 +37,9 @@ MapboxMap.propTypes = {
  * @param {Object} [props.mapsIndoorsInstance] - Instance of MapsIndoors class: https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/mapsindoors.MapsIndoors.html
  * @param {Object} [props.viewModeSwitchVisible] - Set to true to show the view mode switch.
  * @param {Object} [props.mapOptions] - Options for instantiating and styling the map as well as UI elements.
+ * @param {Object} [props.appConfig] - Object that contains app config.
  */
-function MapboxMap({ accessToken, onInitialized, onPositionControl, center, zoom, bounds, bearing, pitch, resetViewMode, mapsIndoorsInstance, viewModeSwitchVisible, mapOptions }) {
+function MapboxMap({ accessToken, onInitialized, onPositionControl, center, zoom, bounds, bearing, pitch, resetViewMode, mapsIndoorsInstance, viewModeSwitchVisible, mapOptions, appConfig }) {
 
     const [mapViewInstance, setMapViewInstance] = useState();
     const [hasFloorSelector, setHasFloorSelector] = useState(false);
@@ -147,7 +149,7 @@ function MapboxMap({ accessToken, onInitialized, onPositionControl, center, zoom
     }, []);
 
     return <div className="mapsindoors-map mapbox-map-container" id="map">
-        {viewModeSwitchVisible && <ViewModeSwitch reset={resetViewMode} mapView={mapViewInstance} pitch={pitch} activeColor={mapOptions?.brandingColor} />}
+        {viewModeSwitchVisible && <ViewModeSwitch reset={resetViewMode} mapView={mapViewInstance} pitch={pitch} activeColor={mapOptions?.brandingColor} show2DModelsIn3D={appConfig?.appSettings?.show2DModelsIn3D} />}
     </div>
 }
 
