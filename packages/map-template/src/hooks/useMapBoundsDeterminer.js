@@ -270,17 +270,22 @@ export default useMapBoundsDeterminer;
  * @param {number} zoomLevel - Enforced zoom level.
  * @param {number} pitch - Map pitch (tilt).
  * @param {number} bearing - Mp bearing (rotation) in degrees from north.
- * @param {boolean} [mapPositionKnown] - Checks if map position is known. Based on that, we can perform zooming to a specific geometry, once map is loaded.
  */
-function goTo(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLevel, pitch, bearing, mapPositionKnown) {
-    mapsIndoorsInstance.getMapView().tilt(pitch || 0);
-    mapsIndoorsInstance.getMapView().rotate(bearing || 0);
-    mapsIndoorsInstance.goTo({ type: 'Feature', geometry, properties: {} }, {
-        maxZoom: zoomLevel ?? 22,
-        padding: { top: 0, right: 0, bottom: paddingBottom, left: paddingLeft },
-    }).then(() => {
-        if (zoomLevel && mapPositionKnown !== false) {
-            mapsIndoorsInstance.setZoom(zoomLevel);
-        }
-    });
+function goTo(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLevel, pitch, bearing) {
+    const defaultZoomLevel = 18;
+
+    if (zoomLevel === defaultZoomLevel) {
+        mapsIndoorsInstance.getMapView().tilt(pitch || 0);
+        mapsIndoorsInstance.getMapView().rotate(bearing || 0);
+        mapsIndoorsInstance.goTo({ type: 'Feature', geometry, properties: {} }, {
+            maxZoom: zoomLevel ?? 22,
+            padding: { top: 0, right: 0, bottom: paddingBottom, left: paddingLeft },
+        })
+    } else {
+        const centerOfBoundingBox = turf.center(geometry);
+        const mapView = mapsIndoorsInstance.getMapView();
+
+        mapView.setCenter({ lat: centerOfBoundingBox.geometry.coordinates[1], lng: centerOfBoundingBox.geometry.coordinates[0]} )
+        mapsIndoorsInstance.setZoom(zoomLevel);
+    }
 }
