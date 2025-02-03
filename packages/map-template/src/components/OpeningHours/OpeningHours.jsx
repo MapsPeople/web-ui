@@ -5,7 +5,8 @@ import './OpeningHours.scss';
 
 OpeningHours.propTypes = {
     openingHours: PropTypes.object,
-    isAmFormat: PropTypes.bool
+    isAmFormat: PropTypes.bool,
+    isMondayFirstDayOfTheWeek: PropTypes.bool
 };
 
 /**
@@ -13,9 +14,10 @@ OpeningHours.propTypes = {
  * @param {object} props
  * @param {object} props.openingHours // Opening hours data
  * @param {boolen} [props.isAmFormat] // Whether to display time in AM/PM format
+ * @param {boolean} [props.isMondayFirstDayOfTheWeek] // Whether Monday is the first day of the week
  * @returns 
  */
-function OpeningHours({ openingHours, isAmFormat = false }) {
+function OpeningHours({ openingHours, isAmFormat = false, isMondayFirstDayOfTheWeek = true }) {
     const { t } = useTranslation();
     const [isExpanded, setIsExpanded] = useState(false);
     const currentDay = new Date().getDay();
@@ -54,6 +56,12 @@ function OpeningHours({ openingHours, isAmFormat = false }) {
             isClosed: false
         };
     };
+
+    // Adjust the order of weekdays based on whether Monday is the first day of the week
+    if (!isMondayFirstDayOfTheWeek) {
+        const sunday = weekdays.pop();
+        weekdays.unshift(sunday);
+    }
 
     // Keep useCallback as this involves time calculations
     const isCurrentlyOpen = useCallback((dayData) => {
