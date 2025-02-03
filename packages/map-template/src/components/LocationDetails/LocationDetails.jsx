@@ -239,9 +239,11 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                     </div>
                     <mi-location-info level={t('Level')} ref={locationInfoElement} show-external-id={showExternalIDs} />
                 </div>
-                <button className="location-info__close" onClick={() => back()}>
-                    <CloseIcon />
-                </button>
+                <div className="location-info__actions">
+                    <button className="location-info__button" onClick={() => back()}>
+                        <CloseIcon />
+                    </button>
+                </div>
             </div>
 
             <div ref={locationDetailsContainer} onScroll={e => setScrollIndicators(e)} className="location-details__details">
