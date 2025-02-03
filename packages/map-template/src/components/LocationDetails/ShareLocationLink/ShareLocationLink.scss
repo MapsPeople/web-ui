@@ -18,7 +18,6 @@
         button {
             background-color: transparent;
             border: none;
-            cursor: pointer;
             padding: var(--spacing-x-small);
             display: flex;
             align-items: center;
@@ -27,7 +26,8 @@
             white-space: nowrap;
 
             &:hover {
-                background-color: var(--color-gray-light);
+                background-color: var(--tailwind-colors-gray-50);
+                cursor: pointer;
             }
         }
     }
