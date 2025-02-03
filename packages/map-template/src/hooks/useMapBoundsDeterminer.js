@@ -282,10 +282,10 @@ function goTo(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLev
             padding: { top: 0, right: 0, bottom: paddingBottom, left: paddingLeft },
         })
     } else {
-        const centerOfBoundingBox = turf.center(geometry);
+        const centerOfGeometry = turf.center(geometry);
         const mapView = mapsIndoorsInstance.getMapView();
 
-        mapView.setCenter({ lat: centerOfBoundingBox.geometry.coordinates[1], lng: centerOfBoundingBox.geometry.coordinates[0]} )
+        mapView.setCenter({ lat: centerOfGeometry.geometry.coordinates[1], lng: centerOfGeometry.geometry.coordinates[0]} )
         mapsIndoorsInstance.setZoom(zoomLevel);
     }
 }
