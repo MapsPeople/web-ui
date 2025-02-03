@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
+import ClickAwayListener from 'react-click-away-listener';
 import PropTypes from 'prop-types';
 import shareLinkSelector from '../../../selectors/baseLink';
 import { useRecoilValue } from 'recoil';
@@ -57,15 +58,19 @@ function ShareLocationLink({ location, buttonClassName }) {
         <button className={buttonClassName} onClick={() => setShareDialogueIsOpen(isOpen => !isOpen)}>
             <ShareIcon />
         </button>
-        {shareDialogueIsOpen && <ul>
 
-            {/* Make a button to copy the link */}
-            <li><button onClick={() => copyLink()}>Copy link</button></li>
+        { /* We use the ClickAwayListener to make sure that the dialogue closes when the user clicks outside/away from it. */ }
+        {shareDialogueIsOpen && <ClickAwayListener onClickAway={() => setShareDialogueIsOpen(false)}>
+            <ul>
 
-            {/* Make a button to show a QR code if on larger screens only (it hardly makes sense to show a QR code on a mobile device) */}
-            {isDesktop && <li><button onClick={() => showQRCode()}>QR Code</button></li>}
+                {/* Make a button to copy the link */}
+                <li><button onClick={() => copyLink()}>Copy link</button></li>
 
-        </ul>}
+                {/* Make a button to show a QR code if on larger screens only (it hardly makes sense to show a QR code on a mobile device) */}
+                {isDesktop && <li><button onClick={() => showQRCode()}>QR Code</button></li>}
+
+            </ul>
+        </ClickAwayListener>}
     </div>
 }
 
