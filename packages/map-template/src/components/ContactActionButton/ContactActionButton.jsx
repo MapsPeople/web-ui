@@ -15,6 +15,9 @@ ContactActionButton.propTypes = {
 };
 
 /**
+ * A button component that renders different types of contact actions (email, phone, website)
+ * with appropriate icons and click handlers. The button can open email clients, phone dialers,
+ * or external links based on the contact type.
  * 
  * @param {object} props
  * @param {string} props.detailType - The type of the contact detail (e.g. email, phone, website).
