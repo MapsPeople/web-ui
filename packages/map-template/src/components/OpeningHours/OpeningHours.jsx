@@ -1,4 +1,4 @@
-import { memo, useCallback, useState } from 'react';
+import { memo, useCallback, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import './OpeningHours.scss';
@@ -20,18 +20,38 @@ OpeningHours.propTypes = {
 function OpeningHours({ openingHours, isAmFormat = false, isMondayFirstDayOfTheWeek = true }) {
     const { t } = useTranslation();
     const [isExpanded, setIsExpanded] = useState(false);
+    // Get real current day (0-6, Sunday is 0)
     const currentDay = new Date().getDay();
-    const weekdays = [
-        t('Monday'),
-        t('Tuesday'),
-        t('Wednesday'),
-        t('Thursday'),
-        t('Friday'),
-        t('Saturday'),
-        t('Sunday')
-    ];
+    // Create weekdays array with display order using useMemo
+    const weekdays = useMemo(() => {
+        const days = [
+            t('Monday'),
+            t('Tuesday'),
+            t('Wednesday'),
+            t('Thursday'),
+            t('Friday'),
+            t('Saturday'),
+            t('Sunday')
+        ];
 
-    const adjustedCurrentDay = currentDay === 0 ? 6 : currentDay - 1;
+        if (!isMondayFirstDayOfTheWeek) {
+            const sunday = days.pop();
+            days.unshift(sunday);
+        }
+        return days;
+    }, [t, isMondayFirstDayOfTheWeek]);
+
+    // Calculate adjusted current day index based on display order
+    const adjustedCurrentDay = useMemo(() => {
+        if (isMondayFirstDayOfTheWeek) {
+            // When Monday is first (0-6, Monday is 0)
+            return currentDay === 0 ? 6 : currentDay - 1;
+        } else {
+            // When Sunday is first (0-6, Sunday is 0)
+            return currentDay;
+        }
+    }, [currentDay, isMondayFirstDayOfTheWeek]);
+
     const { standardOpeningHours } = openingHours || {};
 
     const formatTime = (time) => {
@@ -56,12 +76,6 @@ function OpeningHours({ openingHours, isAmFormat = false, isMondayFirstDayOfTheW
             isClosed: false
         };
     };
-
-    // Adjust the order of weekdays based on whether Monday is the first day of the week
-    if (!isMondayFirstDayOfTheWeek) {
-        const sunday = weekdays.pop();
-        weekdays.unshift(sunday);
-    }
 
     // Keep useCallback as this involves time calculations
     const isCurrentlyOpen = useCallback((dayData) => {
