@@ -69,7 +69,7 @@ function ShareLocationLink({ location, buttonClassName }) {
 
                 {/* Make a button to copy the link */}
                 <li>
-                    <button onClick={() => copyLink()}>
+                    <button className={buttonClassName} onClick={() => copyLink()}>
                         <ChainLinkIcon />
                         Copy link
                     </button>
@@ -77,7 +77,7 @@ function ShareLocationLink({ location, buttonClassName }) {
 
                 {/* Make a button to show a QR code if on larger screens only (it hardly makes sense to show a QR code on a mobile device) */}
                 {isDesktop && <li>
-                    <button onClick={() => showQRCode()}>
+                    <button className={buttonClassName} onClick={() => showQRCode()}>
                         <QRCodeIcon />
                         QR Code
                     </button>

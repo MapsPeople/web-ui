@@ -16,19 +16,14 @@
         z-index: 1;
 
         button {
-            background-color: transparent;
-            border: none;
-            padding: var(--spacing-x-small);
-            display: flex;
-            align-items: center;
-            gap: var(--spacing-x-small);
-            color: var(--color-black-base);
+            /* modify current style to fit with UX wish */
             white-space: nowrap;
-
-            &:hover {
-                background-color: var(--tailwind-colors-gray-50);
-                cursor: pointer;
-            }
+            padding: var(--spacing-x-small);
+            width: auto;
+            display: flex;
+            gap: var(--spacing-xx-small);
+            align-items: center;
+            border: none;
         }
     }
 }
