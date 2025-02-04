@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import ClickAwayListener from 'react-click-away-listener';
 import PropTypes from 'prop-types';
 import shareLinkSelector from '../../../selectors/baseLink';
-import { useRecoilValue } from 'recoil';
 import './ShareLocationLink.scss';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import { ReactComponent as ChainLinkIcon } from '../../../assets/chain-link.svg';
 import { ReactComponent as QRCodeIcon } from '../../../assets/qrcode.svg';
 import { ReactComponent as ShareIcon } from '../../../assets/share.svg';
 import qrCodeLinkState from '../../../atoms/qrCodeLinkState';
+import supportsUrlParametersState from '../../../atoms/supportsUrlParametersState';
 
 ShareLocationLink.propTypes = {
     location: PropTypes.object.isRequired,
@@ -28,6 +28,7 @@ function ShareLocationLink({ location, buttonClassName }) {
     const [shareDialogueIsOpen, setShareDialogueIsOpen] = useState(false);
     const shareLink = useRecoilValue(shareLinkSelector);
     const [locationShareLink, setLocationShareLink] = useState();
+    const supportsUrlParameters = useRecoilValue(supportsUrlParametersState);
 
     const [, setQrCodeLink] = useRecoilState(qrCodeLinkState);
 
@@ -58,7 +59,8 @@ function ShareLocationLink({ location, buttonClassName }) {
         setShareDialogueIsOpen(false);
     };
 
-    return <div className="share-location-link">
+    { /* Do not show a share button if the Map Template is set up not to support query parameters, since in that case a query parameters will not be respected. */ }
+    return supportsUrlParameters && <div className="share-location-link">
         <button className={buttonClassName} onClick={() => setShareDialogueIsOpen(isOpen => !isOpen)}>
             <ShareIcon />
         </button>
