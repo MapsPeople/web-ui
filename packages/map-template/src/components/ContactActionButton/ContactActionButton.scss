@@ -1,11 +1,11 @@
 .contact-action-button {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: var(--spacing-x-small);
     width: 100%;
-    padding: 8px;
+    padding: var(--spacing-x-small);
     border: 1px solid #e0e0e0;
-    border-radius: 5px;
+    border-radius: var(--rounding-large);
     background: white;
     cursor: pointer;
     transition: background-color 0.2s;
@@ -13,12 +13,12 @@
     color: inherit;
 
     &:hover {
-        background-color: #f5f5f5;
+        filter: brightness(90%);
     }
 
     &__icon-wrapper {
-        width: 20px;
-        height: 20px;
+        width: var(--spacing-medium);
+        height: var(--spacing-medium);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -34,7 +34,6 @@
     }
 
     &__text {
-        flex: 1;
         text-align: left;
         font-size: var(--font-size-small);
     }
