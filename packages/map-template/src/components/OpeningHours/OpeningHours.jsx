@@ -13,7 +13,7 @@ OpeningHours.propTypes = {
  * 
  * @param {object} props
  * @param {object} props.openingHours // Opening hours data
- * @param {boolen} [props.isAmFormat] // Whether to display time in AM/PM format
+ * @param {boolean} [props.isAmFormat] // Whether to display time in AM/PM format
  * @param {boolean} [props.isMondayFirstDayOfTheWeek] // Whether Monday is the first day of the week
  * @returns 
  */
