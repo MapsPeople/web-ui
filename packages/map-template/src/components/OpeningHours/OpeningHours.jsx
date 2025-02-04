@@ -2,6 +2,7 @@ import { memo, useCallback, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import './OpeningHours.scss';
+import clockIcon from '../../../public/icons/clock-icon.png'
 
 OpeningHours.propTypes = {
     openingHours: PropTypes.object,
@@ -108,6 +109,9 @@ function OpeningHours({ openingHours, isAmFormat = false, isMondayFirstDayOfTheW
             <ul className="opening-hours__list">
                 <li className="opening-hours__list-item opening-hours__list-item--current" onClick={() => setIsExpanded(!isExpanded)}>
                     <span className="opening-hours__time">
+                        <div className="opening-hours__icon-wrapper">
+                            <img src={clockIcon} alt="clock" className="opening-hours__icon" />
+                        </div>
                         {getOpeningHoursForDay(weekdays[adjustedCurrentDay]).text}
                     </span>
                     <span className={`opening-hours__status-text opening-hours__status-text--${text.toLowerCase()}`}>
