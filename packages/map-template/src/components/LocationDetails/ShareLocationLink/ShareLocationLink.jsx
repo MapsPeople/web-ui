@@ -59,7 +59,7 @@ function ShareLocationLink({ location, buttonClassName }) {
         setShareDialogueIsOpen(false);
     };
 
-    { /* Do not show a share button if the Map Template is set up not to support query parameters, since in that case a query parameters will not be respected. */ }
+    { /* Do not show a share button if the Map Template is configured not to support query parameters, since in that case a query parameters will not be respected. */ }
     return supportsUrlParameters && <div className="share-location-link">
         <button className={buttonClassName} onClick={() => setShareDialogueIsOpen(isOpen => !isOpen)}>
             <ShareIcon />

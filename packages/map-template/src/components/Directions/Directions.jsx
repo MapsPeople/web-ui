@@ -80,7 +80,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
 
     const showExternalIDs = useRecoilValue(showExternalIDsState);
 
-    const baseLink = useRecoilValue(baseLinkSelector);
+    const baseShareLink = useRecoilValue(baseLinkSelector);
 
     const currentLocation = useRecoilValue(currentLocationState);
 
@@ -265,7 +265,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
      * Build the QR code link and set the state in order to show the QR code dialog.
      */
     function showQRCode() {
-        const qrCodeLink = `${baseLink}&directionsFrom=${kioskLocation.id}&directionsTo=${currentLocation.id}`;
+        const qrCodeLink = `${baseShareLink}&directionsFrom=${kioskLocation.id}&directionsTo=${currentLocation.id}`;
         setQRCodeLink(qrCodeLink);
     }
 
