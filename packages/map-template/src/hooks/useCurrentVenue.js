@@ -74,7 +74,7 @@ export const useCurrentVenue = () => {
         }
 
         // Else take first venue sorted alphabetically
-        return [...venuesInSolution].sort(function (a, b) { return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0); })[0];
+        return [...venuesInSolution].sort(function (a, b) { return (a.venueInfo.name > b.venueInfo.name) ? 1 : ((b.venueInfo.name > a.venueInfo.name) ? -1 : 0); })[0];
     };
 
     /**
@@ -92,10 +92,12 @@ export const useCurrentVenue = () => {
 
                 for (const key of keys) {
                     // Get the categories from the App Config that have a matching key.
-                    const appConfigCategory = appConfig?.menuInfo.mainmenu.find(category => category.categoryKey === key);
+                    if (appConfig?.menuInfo?.mainmenu) {
+                        const appConfigCategory = appConfig.menuInfo.mainmenu.find(category => category.categoryKey === key);
 
-                    if (appConfigCategory) {
-                        uniqueCategories.set(appConfigCategory.categoryKey, { displayName: location.properties.categories[key], iconUrl: appConfigCategory?.iconUrl })
+                        if (appConfigCategory) {
+                            uniqueCategories.set(appConfigCategory.categoryKey, { displayName: location.properties.categories[key], iconUrl: appConfigCategory?.iconUrl })
+                        }
                     }
                 }
             }

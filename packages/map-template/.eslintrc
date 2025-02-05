@@ -1,5 +1,41 @@
 {
+    "root": true,  // Stops ESLint from looking beyond this directory
     "extends": [
-      "react-app"
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:react/jsx-runtime",
+        "plugin:react-hooks/recommended"
+    ],
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module"
+    },
+    "settings": {
+        "react": {
+            "version": "18.2"
+        }
+    },
+    "env": {
+        "browser": true,
+        "es6": true,
+        "jest": true, // Allow test globals like describe, it, expect
+        "node": true
+    },
+    "rules": {
+        "react-hooks/rules-of-hooks": "error",
+        "react/prop-types": "error",           // Disable props validation
+        "react-hooks/exhaustive-deps": "off", // Disable hooks dependency warnings
+        "no-undef": "error",                   // Disable undefined variables errors (for global/require)
+        "no-unused-vars": "error",            // Show error for unused variables
+        "react/display-name": "error",         // Show error for missing displayName in components
+        "no-irregular-whitespace": "error",    // Disable irregular whitespace errors
+        "no-extra-semi":"error",              // Show error for extra semicolons
+        "no-empty": "error"                    // Show error for empty blocks
+    },
+    "ignorePatterns": [
+        "build/*",          // Ignore build directory
+        "node_modules/*",   // Ignore node_modules
+        "dist/*",          // Ignore dist directory
+        "../*"             // Ignore other packages
     ]
-  }
+}

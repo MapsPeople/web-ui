@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import './Categories.scss';
 import { ReactComponent as ChevronRight } from '../../../assets/chevron-right.svg';
@@ -14,6 +14,16 @@ import { useIsDesktop } from "../../../hooks/useIsDesktop";
 import getActiveCategory from "../../../helpers/GetActiveCategory";
 import isBottomSheetLoadedState from "../../../atoms/isBottomSheetLoadedState";
 import categoryState from "../../../atoms/categoryState";
+import useOutsideMapsIndoorsDataClick from "../../../hooks/useOutsideMapsIndoorsDataClick";
+import mapsIndoorsInstanceState from "../../../atoms/mapsIndoorsInstanceState";
+import PropTypes from "prop-types";
+
+Categories.propTypes = {
+    onSetSize: PropTypes.func,
+    getFilteredLocations: PropTypes.func,
+    searchFieldRef: PropTypes.object,
+    isOpen: PropTypes.bool
+};
 
 /**
  * Show the categories list.
@@ -22,8 +32,9 @@ import categoryState from "../../../atoms/categoryState";
  * @param {function} props.onSetSize - Callback that is fired when the categories are clicked.
  * @param {function} props.getFilteredLocations - Function that gets the filtered locations based on the category selected.
  * @param {object} props.searchFieldRef - The reference to the search input field.
+ * @param {boolean} props.isOpen - Determines wheteher the Categories window is open or not.
  */
-function Categories({ onSetSize, getFilteredLocations, searchFieldRef }) {
+function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen }) {
     /** Referencing the categories results container DOM element */
     const categoriesListRef = useRef();
 
@@ -49,6 +60,9 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef }) {
 
     const isBottomSheetLoaded = useRecoilValue(isBottomSheetLoadedState);
     const category = useRecoilValue(categoryState);
+
+    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
+    const clickedOutsideMapsIndoorsData = useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOpen);
 
     /**
      * Communicate size change to parent component.
@@ -125,6 +139,31 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef }) {
     }
 
     /**
+     * Handles cleanup when user clicks outside MapsIndoors data area.
+     * This effect will:
+     * 1. Clear the currently selected category
+     * 2. Reset all search/filter related states to empty
+     * 3. Collapse the view back to fit size
+     * 4. Clear any existing search input
+     * 
+     * Only triggers when:
+     * - There is a currently selected category and user clicks outside MapsIndoors data
+     */
+    useEffect(() => {
+        if (clickedOutsideMapsIndoorsData && selectedCategory) {
+            setSelectedCategory(null);
+            setSearchResults([]);
+            setFilteredLocations([]);
+            setSize(snapPoints.FIT);
+
+            // If search field has a value, clear the search field.
+            if (searchFieldRef.current?.getValue()) {
+                searchFieldRef.current.clear();
+            }
+        }
+    }, [clickedOutsideMapsIndoorsData]);
+
+    /**
      * Add event listener for scrolling in the categories list
      */
     useEffect(() => {
@@ -133,14 +172,22 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef }) {
             updateScrollButtonsState();
         };
 
+        let resizeObserver;
+
         if (categoriesListRef.current) {
             // Because of timing issue, we need to listen to changes inside div element for categories.
             // Based on that we can handle disabling/enabling scroll buttons.
             // Read more: https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver
-            const resizeObserver = new ResizeObserver(handleResize)
-            resizeObserver.observe(categoriesListRef.current)
+            resizeObserver = new ResizeObserver(handleResize)
+            resizeObserver.observe(categoriesListRef.current);
             categoriesListRef.current.addEventListener('scroll', updateScrollButtonsState);
         }
+
+        return () => {
+            setActiveCategory();
+            resizeObserver?.disconnect();
+            categoriesListRef.current?.removeEventListener('scroll', updateScrollButtonsState);
+        };
     }, []);
 
     /*

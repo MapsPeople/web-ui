@@ -4,6 +4,14 @@ import mapsIndoorsInstanceState from '../../../atoms/mapsIndoorsInstanceState';
 import { useTranslation } from 'react-i18next';
 import './ListItemLocation.scss';
 import showExternalIDsState from '../../../atoms/showExternalIDsState';
+import PropTypes from 'prop-types';
+
+ListItemLocation.propTypes = {
+    location: PropTypes.object,
+    locationClicked: PropTypes.func,
+    icon: PropTypes.string,
+    isHovered: PropTypes.bool
+};
 
 /**
  * React wrapper around the custom element <mi-list-item-location>.
@@ -12,6 +20,7 @@ import showExternalIDsState from '../../../atoms/showExternalIDsState';
  * @param {object} location - MapsIndoors Location
  * @param {function} locationClicked - Function that is called when Location is clicked.
  * @param {string} icon - The icon to be shown in the list item location component.
+ * @param {boolean} isHovered - Check if the location is hovered.
  */
 function ListItemLocation({ location, locationClicked, icon, isHovered }) {
     const { t } = useTranslation();

@@ -5,6 +5,172 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.68.0] - 2024-02-03
+
+## Added
+
+- Added display of 2D models in 3D mode based on app config property
+
+## [1.67.0] - 2024-01-30
+
+### Added
+
+- Added support for `center` property.
+
+## [1.66.7] - 2025-01-29
+
+## Fixed
+
+- Enabled and fixed eslint rules
+
+## [1.66.6] - 2025-01-27
+
+## Fixed
+
+- Upgraded to SDK v4.38.6.
+
+## [1.66.5] - 2025-01-27
+
+## Fixed
+
+- Fixed an issue with `startZoomLevel` prop causing the map starting in a random position.
+
+## [1.66.4] - 2025-01-23
+
+## Fixed
+
+- Fix `miTransitionLevel` prop breaking the React Component package.
+
+## [1.66.3] - 2025-01-23
+
+## Fixed
+
+- Fix package-lock issues.
+
+## [1.66.2] - 2025-01-21
+
+## Fixed
+
+- Upgrade to SDK v.4.38.5.
+
+## [1.66.1] - 2025-01-16
+
+## Fixed
+
+- Removed Create React App dependencies and replaced with standard ESLint rules
+
+## [1.66.0] - 2025-01-16
+
+## Added
+
+- The map now fits to matching Locations when the user clicks/taps on a Category.
+
+## [1.65.3] - 2025-01-15
+
+## Fixed
+
+- Fixed issue of clicking outside of MapsIndoors data to close the Categories tab
+
+## [1.65.2] - 2025-01-13
+
+## Fixed
+
+- An issue where miTransitionLevel is not respected for Mapbox map.
+
+## [1.65.1] - 2025-01-08
+
+## Fixed
+
+- Upgrade to SDK v4.38.3.
+
+## [1.65.0] - 2025-01-08
+
+## Added
+
+- Added functionality to exit location details by clicking outside MapsIndoors data on the map for both Google Maps and Mapbox.
+
+## [1.64.0] - 2025-01-02
+
+## Added
+
+- When panning/zooming to a Location, it will no longer zoom further in than zoom level 22.
+
+## [1.63.0] - 2024-12-12
+
+## Added
+
+- Update "Accessibility" toggle text to "Avoid stairs and escalators"
+
+## [1.62.1] - 2024-12-10
+
+## Fixed
+
+- Fixed bug that would cause a Google Maps map to never show.
+
+## [1.62.0] - 2024-12-10
+
+### Added
+
+- Upgrade SDK version to v4.38.0.
+
+## [1.61.1] - 2024-12-10
+
+### Fixed
+
+- Internal code refactor: The Map Template now uses the MIMap component from the `react-components` package, and the internal map components were removed.
+
+## [1.61.0] - 2024-12-10
+
+### Added
+
+- Limit the maximum number of search results to 100 to improve render performance.
+
+### Fixed
+
+- Fixed a bug where the selected venue (in case no venue was set otherwise) was picked alphabetically by Administrative ID rather than the displayed Venue name.
+
+## [1.60.0] - 2024-12-10
+
+### Added
+
+- Upgrade UI on the Wayfinding page.
+
+## [1.59.0] - 2024-11-26
+
+### Added
+
+- Upgrade SDK version to v4.37.1.
+
+## [1.58.0] - 2024-10-28
+
+### Added
+
+- Added new boolean prop `searchExternalLocations` for searches performed in the Wayfinding mode. If set to true, Mapbox/Google places will be displayed depending on the Map Provider you are using. If set to false, the results returned will only be MapsIndoors results. The default is false.
+
+## [1.57.0] - 2024-10-22
+
+### Added
+
+- Upgrade SDK version to v4.36.3.
+
+## [1.56.0] - 2024-10-21
+
+### Added
+
+- Added new boolean prop `searchExternalLocations` for searches performed in the Wayfinding mode. If set to true, Mapbox/Google places will be displayed depending on the Map Provider you are using. If set to false, the results returned will only be MapsIndoors results. The default is true.
+
+## [1.55.2] - 2024-10-18
+
+### Fixed
+
+- Simplify documentation on the README files.
+
+## [1.55.1] - 2024-10-17
+
+### Fixed
+
+- Mitigate memory leaks by cleaning up component state when unmounting.
+
 ## [1.55.0] - 2024-09-19
 
 ### Added
@@ -27,7 +193,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fix bug whwre 2D geometry was not always shown.
+- Fix bug where 2D geometry was not always shown.
 
 ## [1.54.4] - 2024-08-14
 

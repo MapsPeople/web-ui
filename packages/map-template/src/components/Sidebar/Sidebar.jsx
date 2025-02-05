@@ -10,6 +10,17 @@ import Search from '../Search/Search';
 import LocationsList from '../LocationsList/LocationsList';
 import locationIdState from '../../atoms/locationIdState';
 import kioskLocationState from '../../atoms/kioskLocationState';
+import PropTypes from 'prop-types';
+
+Sidebar.propTypes = {
+    directionsFromLocation: PropTypes.string,
+    directionsToLocation: PropTypes.string,
+    pushAppView: PropTypes.func,
+    currentAppView: PropTypes.string,
+    appViews: PropTypes.object,
+    filteredLocationsByExternalIDs: PropTypes.array,
+    onRouteFinished: PropTypes.func
+};
 
 /**
  * @param {Object} props
@@ -105,6 +116,7 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
                 onStartWayfinding={() => pushAppView(appViews.WAYFINDING)}
                 onBack={() => closeLocationDetails()}
                 onStartDirections={() => pushAppView(appViews.DIRECTIONS)}
+                isOpen={currentAppView === appViews.LOCATION_DETAILS}
             />
         </Modal>,
         <Modal isOpen={currentAppView === appViews.WAYFINDING} key="D">

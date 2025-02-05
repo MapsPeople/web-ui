@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import './LegendDialog.scss';
 import { useRecoilState, useRecoilValue } from "recoil";
 import primaryColorState from "../../atoms/primaryColorState";

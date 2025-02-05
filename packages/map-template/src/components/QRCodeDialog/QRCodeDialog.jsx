@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useTranslation } from 'react-i18next';
 import './QRCodeDialog.scss';
@@ -13,6 +13,7 @@ import mapboxAccessTokenState from "../../atoms/mapboxAccessTokenState";
 import gmApiKeyState from "../../atoms/gmApiKeyState";
 import languageState from "../../atoms/languageState";
 import searchAllVenuesState from "../../atoms/searchAllVenues";
+import searchExternalLocationsState from "../../atoms/searchExternalLocationsState";
 
 /**
  * Handle the QR Code dialog.
@@ -30,7 +31,8 @@ function QRCodeDialog() {
     const mapboxAccessTokenProp = useRecoilValue(mapboxAccessTokenState);
     const languageProp = useRecoilValue(languageState);
     const searchAllVenuesProp = useRecoilValue(searchAllVenuesState);
-    
+    const searchExternalLocationsProp = useRecoilValue(searchExternalLocationsState);
+
     const directionsFrom = useRecoilValue(kioskLocationState);
     const directionsTo = useRecoilValue(currentLocationState);
 
@@ -40,7 +42,7 @@ function QRCodeDialog() {
             // Create the target URL when the user opens the QR code dialog
             // Replace the '/' at the end of the line
             let targetUrl = window.location.origin + window.location.pathname.replace(/\/$/, "");
-            
+
             // The interface for the existing URL search params
             const currentParams = new URLSearchParams(window.location.search);
 
@@ -57,6 +59,7 @@ function QRCodeDialog() {
             ['primaryColor', primaryColorProp],
             ['language', languageProp],
             ['searchAllVenues', searchAllVenuesProp],
+            ['searchExternalLocations', searchExternalLocationsProp],
             ['logo', logoProp]]
                 .forEach(([queryParam, prop]) => {
                     if (currentParams.has(queryParam)) {

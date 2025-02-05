@@ -1,6 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import './Venue.scss';
+import PropTypes from 'prop-types';
+
+Venue.propTypes = {
+    venue: PropTypes.object.isRequired,
+    isCurrent: PropTypes.bool,
+    onVenueClicked: PropTypes.func.isRequired
+};
+
 
 /**
  * Show a button containing Venue information.
@@ -14,6 +22,12 @@ function Venue({ venue, isCurrent, onVenueClicked }) {
     const { t } = useTranslation();
 
     const [style, setStyle] = useState({});
+
+    useEffect(() => {
+        return () => {
+            setStyle({});
+        }
+    }, []);
 
     useEffect(() => {
         const styleObject = {};
