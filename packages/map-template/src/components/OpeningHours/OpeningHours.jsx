@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import './OpeningHours.scss';
 import { ReactComponent as ClockIcon } from '../../assets/clock-light.svg';
+import { ReactComponent as ChevronDownIcon } from '../../assets/chevron-down.svg';
+import { ReactComponent as ChevronUpIcon } from '../../assets/chevron-up.svg';
 
 OpeningHours.propTypes = {
     openingHours: PropTypes.object,
@@ -116,6 +118,7 @@ function OpeningHours({ openingHours, isAmFormat = false, isMondayFirstDayOfTheW
                     </span>
                     <span className={`opening-hours__status-text opening-hours__status-text--${text.toLowerCase()}`}>
                         {text}
+                        {isExpanded ? <ChevronUpIcon /> : <ChevronDownIcon />}
                     </span>
                 </li>
 
