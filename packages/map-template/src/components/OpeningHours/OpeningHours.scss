@@ -3,24 +3,24 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 8px 0;
+        padding: var(--spacing-x-small) 0;
         
         &--current {
-            font-weight: bold;
+            font-weight: var(--font-weight-large);
         }
     }
 
     &__day {
         flex: 1;
-        font-size: 14px;
-        color: #333;
+        font-size: var(--font-size-small);
+        color: var(--color-gray-90);
     }
 
     &__time {
         text-align: left;
-        font-size: 16px;
-        font-weight: 500;
-        color: #333;
+        font-size: var(--font-size-medium);
+        font-weight: var(--font-weight-large);
+        color: var(--color-gray-90);
         display: flex;
         align-items: center;
     }
@@ -42,15 +42,18 @@
     }
 
     &__status-text {
-        font-size: 14px;
-        font-weight: 500;
+        font-size: var(--font-size-small);
+        font-weight: var(--font-weight-large);
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-x-small);
 
         &--open {
-            color: #4caf50;
+            color: var(--color-green-60);
         }
 
         &--closed {
-            color: #f44336;
+            color: var(--color-red-60);
         }
     }
 
@@ -63,30 +66,27 @@
     &__list-item {
         display: grid;
         grid-template-columns: 1fr auto;
-        gap: 16px;
+        gap: var(--spacing-medium);
         align-items: center;
-        padding: 8px 0;
-        cursor: pointer;
+        padding: var(--spacing-x-small) 0;
 
         &:not(:last-child) {
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--color-gray-20);
         }
     }
 
     &__day,
     &__hours {
-        font-size: 14px;
-        color: #333;
+        font-size: var(--font-size-small);
+        color: var(--color-gray-90);
     }
 
     &__hours {
-        font-size: 14px;
-        color: #333;
         text-align: right;
-    }
 
-    &__hours--closed {
-        color: #f44336;
+        &--closed {
+            color: var(--color-red-60);
+        }
     }
 
     &__icon-wrapper {
@@ -95,7 +95,7 @@
         justify-content: center;
         width: var(--spacing-large);
         height: var(--spacing-large);
-        margin-right: 8px;
+        margin-right: var(--spacing-x-small);
     }
 
     &__icon {
