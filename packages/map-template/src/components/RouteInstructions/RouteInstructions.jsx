@@ -5,11 +5,9 @@ import { ReactComponent as ArrowRight } from '../../assets/arrow-right.svg';
 import { ReactComponent as ArrowLeft } from '../../assets/arrow-left.svg';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import directionsResponseState from '../../atoms/directionsResponseState';
-import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import activeStepState from '../../atoms/activeStep';
 import RouteInstructionsStep from '../WebComponentWrappers/RouteInstructionsStep/RouteInstructionsStep';
 import substepsToggledState from '../../atoms/substepsToggledState';
-import useSetMaxZoomLevel from '../../hooks/useSetMaxZoomLevel';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import isDestinationStepState from '../../atoms/isDestinationStepState';
 import { useIsKioskContext } from '../../hooks/useIsKioskContext';
@@ -38,7 +36,7 @@ RouteInstructions.propTypes = {
  *
  * @returns
  */
-function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, isOpen, onFitCurrentDirections }) {
+function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, isOpen }) {
 
     const { t } = useTranslation();
 
@@ -55,13 +53,9 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
 
     const directions = useRecoilValue(directionsResponseState);
 
-    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
-
     const substepsOpen = useRecoilValue(substepsToggledState);
 
     const [, setIsDestinationStep] = useRecoilState(isDestinationStepState);
-
-    const setMaxZoomLevel = useSetMaxZoomLevel();
 
     const isKioskContext = useIsKioskContext();
 
@@ -71,11 +65,6 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
      * Push the destination step at the end of the steps array.
      */
     useEffect(() => {
-        const lastStep = steps[steps.length - 1];
-        const destinationStep = { ...lastStep }
-        destinationStep.travel_mode = 'DESTINATION';
-        destinationStep.steps = null;
-        steps.push(destinationStep);
         setTotalSteps(steps);
     }, [steps]);
 
@@ -87,16 +76,6 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
             if (activeStep === totalSteps?.length - 1 && directions?.destinationLocation) {
                 // Set the destination step boolean to true
                 setIsDestinationStep(true);
-
-                // Get the destination location
-                const destinationLocation = directions?.destinationLocation;
-
-                // Center the map to the location coordinates.
-                const destinationLocationGeometry = destinationLocation?.geometry.type === 'Point' ? destinationLocation?.geometry.coordinates : destinationLocation?.properties.anchor.coordinates;
-                mapsIndoorsInstance.getMapView().setCenter({ lat: destinationLocationGeometry[1], lng: destinationLocationGeometry[0] });
-
-                // Call function to set the map zoom level depeding on the max zoom supported on the solution
-                setMaxZoomLevel();
             } else {
                 // Reset the destination step boolean to false
                 setIsDestinationStep(false);
@@ -130,13 +109,7 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
     function previousStep() {
         setPrevious(totalSteps[activeStep - 2]);
         setActiveStep(activeStep - 1);
-
-        if (activeStep === totalSteps?.length - 1) {
-            // If coming from the "You have arrived step", reset direction bounds.
-            onFitCurrentDirections();
-        } else {
-            onPreviousStep();
-        }
+        onPreviousStep();
     }
 
     return (
