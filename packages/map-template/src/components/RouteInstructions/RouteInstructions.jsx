@@ -18,8 +18,7 @@ RouteInstructions.propTypes = {
     onNextStep: PropTypes.func,
     onPreviousStep: PropTypes.func,
     originLocation: PropTypes.object,
-    isOpen: PropTypes.bool,
-    onFitCurrentDirections: PropTypes.func
+    isOpen: PropTypes.bool
 };
 
 /**
@@ -31,7 +30,6 @@ RouteInstructions.propTypes = {
  * @param {function} props.onPreviousStep - Function handling the navigation to the previous step.
  * @param {object} props.originLocation - The initial location where the route starts from.
  * @param {boolean} props.isOpen - Indicates if the directions view is open.
- * @param {function} props.onFitCurrentDirections - Function to fit the current directions on the map.
  *
  * @returns
  */
