@@ -22,7 +22,6 @@ RouteInstructions.propTypes = {
     onFitCurrentDirections: PropTypes.func
 };
 
-
 /**
  * Route instructions step by step component.
  *
@@ -60,9 +59,7 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
     const isKioskContext = useIsKioskContext();
 
     /**
-     * Clone the last step in the directions in order to create a destination step.
-     * Assign the specific travel mode to the destination step and set the steps to null.
-     * Push the destination step at the end of the steps array.
+     * Sets total steps for a route.
      */
     useEffect(() => {
         setTotalSteps(steps);
