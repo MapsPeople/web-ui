@@ -56,12 +56,6 @@ export class RouteInstructionsStep implements ComponentInterface {
     @Prop() fromTransitStop: string;
 
     /**
-     * The final step when the user has arrived to the destination location.
-     * @type {string}
-     */
-    @Prop() destinationLocation?: string;
-
-    /**
      * Set imperial or metric as default unit system. Default is Metric unless the browser is running US English. In that case Imperial.
      * @type {UnitSystem}
      */
@@ -167,8 +161,6 @@ export class RouteInstructionsStep implements ComponentInterface {
                 return this.renderBicyclingStep();
             case 'TRANSIT':
                 return this.renderTransitStep();
-            case 'DESTINATION':
-                return this.renderDestinationStep();
             default:
                 return <div>Unknown travel mode: {this.stepData.travel_mode}</div>;
         }
@@ -197,9 +189,6 @@ export class RouteInstructionsStep implements ComponentInterface {
                 break;
             case 'TRANSIT':
                 travelModeIcon = this.getTransitVehicleIconName();
-                break;
-            case 'DESTINATION':
-                travelModeIcon = 'logo';
                 break;
         }
 
@@ -344,6 +333,7 @@ export class RouteInstructionsStep implements ComponentInterface {
      */
     renderWalkingStep(): JSX.Element {
         let heading: string;
+        console.log('log');
 
         /*
          * Determine action heading:
@@ -422,21 +412,6 @@ export class RouteInstructionsStep implements ComponentInterface {
         return <div class="step" onClick={e => this.stepClickHandler(e)}>
             <div class="step__info">
                 <div part="step-heading" class="step__heading">{this.getStepHeading()}</div>
-                {this.renderToggleButton()}
-            </div>
-            {this.showSubsteps()}
-        </div>;
-    }
-
-    /**
-     * Render the destination step.
-     *
-     * @returns {JSX.Element}
-     */
-    renderDestinationStep(): JSX.Element {
-        return <div class="step" onClick={e => this.stepClickHandler(e)}>
-            <div class="step__info">
-                <div part="step-heading" class="step__heading">{this.translationsData.destination}</div>
                 {this.renderToggleButton()}
             </div>
             {this.showSubsteps()}
