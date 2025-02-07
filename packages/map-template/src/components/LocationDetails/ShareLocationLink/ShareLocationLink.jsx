@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import ClickAwayListener from 'react-click-away-listener';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import shareLinkSelector from '../../../selectors/baseLink';
 import './ShareLocationLink.scss';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
@@ -26,6 +27,7 @@ ShareLocationLink.propTypes = {
  */
 function ShareLocationLink({ location, buttonClassName }) {
 
+    const { t } = useTranslation();
     const [shareDialogueIsOpen, setShareDialogueIsOpen] = useState(false);
     const shareLink = useRecoilValue(shareLinkSelector);
     const [locationShareLink, setLocationShareLink] = useState();
@@ -77,7 +79,7 @@ function ShareLocationLink({ location, buttonClassName }) {
     };
 
     return (showQRCodeButton || showCopyButton) && <div className="share-location-link">
-        <button className={buttonClassName} onClick={() => setShareDialogueIsOpen(isOpen => !isOpen)} aria-label="Share location">
+        <button className={buttonClassName} onClick={() => setShareDialogueIsOpen(isOpen => !isOpen)} title={t('Share')} aria-label={t('Share')}>
             <ShareIcon />
         </button>
 
@@ -89,7 +91,7 @@ function ShareLocationLink({ location, buttonClassName }) {
                 {showCopyButton &&<li>
                     <button className={buttonClassName} onClick={() => copyLink()}>
                         <ChainLinkIcon />
-                        Copy link
+                        {t('Copy link')}
                     </button>
                 </li>}
 
@@ -97,7 +99,7 @@ function ShareLocationLink({ location, buttonClassName }) {
                 {showQRCodeButton && <li>
                     <button className={buttonClassName} onClick={() => showQRCode()}>
                         <QRCodeIcon />
-                        QR Code
+                        {t('QR Code')}
                     </button>
                 </li>}
 
