@@ -13,6 +13,9 @@ OpeningHours.propTypes = {
 };
 
 /**
+ * A component that displays opening hours in an expandable list format.
+ * Shows current day's status (Open/Closed) and allows users to view full weekly schedule.
+ * Supports both 12-hour (AM/PM) and 24-hour time formats, and can adjust whether week starts on Monday or Sunday.
  * 
  * @param {object} props
  * @param {object} props.openingHours // Opening hours data
@@ -27,6 +30,7 @@ function OpeningHours({ openingHours, isAmFormat = false, isMondayFirstDayOfTheW
     // Create weekdays array with display order using useMemo
     const weekdays = useMemo(() => {
         const days = [];
+        // Create an array of 7 days starting from Sunday
         for (let i = 0; i < 7; i++) {
             days.push(new Date(2024, 0, i + 1));
         }
