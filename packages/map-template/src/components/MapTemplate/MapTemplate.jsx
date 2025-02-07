@@ -491,7 +491,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [bearing, appConfig]);
 
     /*
-     * React on changes in the logo prop. If not defined in the URL, check if it is defined in app config. Otherwise set to default logo.
+     * React on changes in the logo prop. If not defined, check if it is defined in app config. Otherwise set to default logo.
      */
     useEffect(() => {
         const defaultLogo = 'https://app.mapsindoors.com/mapsindoors/gfx/mapspeople-logo/mapspeople-pin.svg';
