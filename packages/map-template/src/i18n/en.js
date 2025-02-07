@@ -71,16 +71,6 @@ const en = {
     // Directions
     'Cancel route': 'Cancel route',
     'Finish route': 'Finish route',
-    //Opening Hours
-    'Closed': 'Closed',
-    'Open' : 'Open',
-    'Monday': 'Monday',
-    'Tuesday': 'Tuesday',
-    'Wednesday': 'Wednesday',
-    'Thursday': 'Thursday',
-    'Friday': 'Friday',
-    'Saturday': 'Saturday',
-    'Sunday': 'Sunday',
 };
 
 export default en;
