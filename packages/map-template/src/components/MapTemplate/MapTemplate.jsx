@@ -257,7 +257,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
-            // Sets language to use. Priority: URL/Query Param -> App Config -> browser's default language.
+            // Sets language to use. Priority: Prop -> App Config -> browser's default language.
             const languageToUse = language ? language : appConfig?.appSettings?.language ? appConfig.appSettings.language : navigator.language;
 
             // Set the language on the MapsIndoors SDK in order to get eg. Mapbox and Google directions in that language.
