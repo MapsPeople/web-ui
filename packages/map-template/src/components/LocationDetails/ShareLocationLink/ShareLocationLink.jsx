@@ -29,6 +29,8 @@ function ShareLocationLink({ location, buttonClassName }) {
     const shareLink = useRecoilValue(shareLinkSelector);
     const [locationShareLink, setLocationShareLink] = useState();
     const supportsUrlParameters = useRecoilValue(supportsUrlParametersState);
+    const [showQRCodeButton, setShowQRCodeButton] = useState(false);
+    const [showCopyButton, setShowCopyButton] = useState(false);
 
     const [, setQrCodeLink] = useRecoilState(qrCodeLinkState);
 
@@ -43,11 +45,24 @@ function ShareLocationLink({ location, buttonClassName }) {
         }
     }, [shareLink, location]);
 
+    /*
+     * Evaluate which action buttons to show.
+     */
+    useEffect(() => {
+        // Generally, don't show share buttons if the Map Template is configured not to support query parameters, since in that case a query parameters will not be respected.
+
+        setShowQRCodeButton(supportsUrlParameters && isDesktop); // the reason for the isDesktop check is that the QR code is not very useful on mobile devices.
+
+        // Check if the browser supports writing to the clipboard.
+        const canWriteToClipboard = typeof navigator.clipboard?.writeText === 'function';
+        setShowCopyButton(supportsUrlParameters && canWriteToClipboard);
+    }, [supportsUrlParameters, isDesktop]);
+
     /**
      * Copy the link to the clipboard.
      */
     const copyLink = () => {
-        navigator.clipboard?.writeText(locationShareLink);
+        navigator.clipboard.writeText(locationShareLink);
         setShareDialogueIsOpen(false);
     };
 
@@ -59,8 +74,7 @@ function ShareLocationLink({ location, buttonClassName }) {
         setShareDialogueIsOpen(false);
     };
 
-    { /* Do not show a share button if the Map Template is configured not to support query parameters, since in that case a query parameters will not be respected. */ }
-    return supportsUrlParameters && <div className="share-location-link">
+    return (showQRCodeButton || showCopyButton) && <div className="share-location-link">
         <button className={buttonClassName} onClick={() => setShareDialogueIsOpen(isOpen => !isOpen)}>
             <ShareIcon />
         </button>
@@ -70,15 +84,15 @@ function ShareLocationLink({ location, buttonClassName }) {
             <ul>
 
                 {/* Make a button to copy the link */}
-                <li>
+                {showCopyButton &&<li>
                     <button className={buttonClassName} onClick={() => copyLink()}>
                         <ChainLinkIcon />
                         Copy link
                     </button>
-                </li>
+                </li>}
 
-                {/* Make a button to show a QR code if on larger screens only (it hardly makes sense to show a QR code on a mobile device) */}
-                {isDesktop && <li>
+                {/* Make a button to show a QR code */}
+                {showQRCodeButton && <li>
                     <button className={buttonClassName} onClick={() => showQRCode()}>
                         <QRCodeIcon />
                         QR Code
