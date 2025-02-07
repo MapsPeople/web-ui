@@ -258,7 +258,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
             // Sets language to use. Priority: Prop -> App Config -> browser's default language.
-            const languageToUse = language ? language : appConfig?.appSettings?.language ? appConfig.appSettings.language : navigator.language;
+            const languageToUse = language ?? appConfig.appSettings.language ?? navigator.language;
 
             // Set the language on the MapsIndoors SDK in order to get eg. Mapbox and Google directions in that language.
             // The MapsIndoors data only accepts the first part of the IETF language string, hence the split.
@@ -424,10 +424,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the venue prop. If not defined, check if it is defined in app config.
      */
     useEffect(() => {
-        if (!isNullOrUndefined(venue)) {
-            setCurrentVenueName(venue)
-        } else {
-            setCurrentVenueName(appConfig?.appSettings?.venue)
+        const desiredVenue = venue ?? appConfig?.appSettings?.venue ?? null;
+        if (!isNullOrUndefined(desiredVenue)) {
+            setCurrentVenueName(desiredVenue);
         }
     }, [venue, appConfig]);
 
@@ -444,24 +443,21 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         const defaultPrimaryColor = '#005655'; // --brand-colors-dark-pine-100 from MIDT
 
-        // Sets primary color. Priority: Prop -> App Config -> Default.
-        if (!isNullOrUndefined(primaryColor)) {
-            setPrimaryColor(primaryColor)
-        } else if (!isNullOrUndefined(appConfig?.appSettings?.primaryColor)) {
-            setPrimaryColor(appConfig?.appSettings?.primaryColor)
-        } else {
-            setPrimaryColor(defaultPrimaryColor);
+        const desiredPrimaryColor = primaryColor ?? appConfig?.appSettings?.primaryColor ?? defaultPrimaryColor;
+        if (desiredPrimaryColor) {
+            setPrimaryColor(desiredPrimaryColor)
         }
+
     }, [primaryColor, appConfig]);
 
     /*
      * React on changes in the start zoom level prop. If not defined, check if it is defined in app config.
      */
     useEffect(() => {
-        if (!isNullOrUndefined(startZoomLevel)) {
-            setStartZoomLevel(startZoomLevel)
-        } else {
-            setStartZoomLevel(appConfig?.appSettings?.startZoomLevel)
+        const desiredStartZoomLevel = startZoomLevel ?? appConfig?.appSettings?.startZoomLevel ?? null;
+
+        if (!isNullOrUndefined(desiredStartZoomLevel)) {
+            setStartZoomLevel(desiredStartZoomLevel);
         }
     }, [startZoomLevel, appConfig]);
 
@@ -470,10 +466,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * If the pitch is not set, set it to 45 degrees if the view mode switch is visible.
      */
     useEffect(() => {
-        if (!isNullOrUndefined(pitch)) {
-            setPitch(pitch);
-        } else if (appConfig?.appSettings?.pitch) {
-            setPitch(appConfig?.appSettings?.pitch)
+        const desiredPitch = pitch ?? appConfig?.appSettings?.pitch ?? null;
+
+        if (!isNullOrUndefined(desiredPitch)) {
+            setPitch(desiredPitch);
         } else {
             setPitch(45);
         }
@@ -483,10 +479,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the bearing prop. If not defined, check if it is defined in app config.
      */
     useEffect(() => {
-        if (!isNullOrUndefined(bearing)) {
-            setBearing(bearing)
-        } else {
-            setBearing(appConfig?.appSettings?.bearing)
+        const desiredBearing = bearing ?? appConfig?.appSettings?.bearing ?? null;
+        if (!isNullOrUndefined(desiredBearing)) {
+            setBearing(desiredBearing)
         }
     }, [bearing, appConfig]);
 
@@ -496,13 +491,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         const defaultLogo = 'https://app.mapsindoors.com/mapsindoors/gfx/mapspeople-logo/mapspeople-pin.svg';
 
-        // Sets logo. Priority: Prop -> App Config -> Default.
-        if (!isNullOrUndefined(logo)) {
-            setLogo(logo)
-        } else if (appConfig?.appSettings?.logo) {
-            setLogo(appConfig?.appSettings?.logo)
-        } else {
-            setLogo(defaultLogo);
+        const desiredLogo = logo ?? appConfig?.appSettings?.logo ?? defaultLogo;
+        if (!isNullOrUndefined(desiredLogo)) {
+            setLogo(desiredLogo);
         }
     }, [logo, appConfig]);
 
