@@ -17,7 +17,7 @@ ShareLocationLink.propTypes = {
 };
 
 /**
- * A button to share a link to the location, either by copying a link it or showing a QR code with the link.
+ * A button to share a link to the location, either by copying a link or showing a QR code with the link.
  *
  * @param {object} props
  * @param {object} props.location - The location to share a link to.

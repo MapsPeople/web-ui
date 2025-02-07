@@ -61,7 +61,6 @@ const baseLink = selector({
                 }
             });
 
-
         return `${targetUrl}?${newParams.toString()}`;
     }
 });
