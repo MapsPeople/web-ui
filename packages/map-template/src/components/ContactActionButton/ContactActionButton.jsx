@@ -31,7 +31,7 @@ function ContactActionButton({ detailType, active, displayText, value, icon }) {
     if (!active) return null;  // Early exit to not render the button if it is not set as active in the additional details data
     const textToDisplay = detailType.toLowerCase() === 'phone' ? value : displayText; // If the detail type is a phone number, display the phone number instead of the display text
 
-    const handleClick = (detailType, value) => {
+    const generateURL = (detailType, value) => {
         switch (detailType.toLowerCase()) {
             case detailTypes.email:
                 return `mailto:${value}`; // Opens default email client
@@ -50,7 +50,7 @@ function ContactActionButton({ detailType, active, displayText, value, icon }) {
     return (
         <a
             className="contact-action-button"
-            href={handleClick(detailType, value)}
+            href={generateURL(detailType, value)}
             target={detailType.toLowerCase() === 'email' || detailType.toLowerCase() === 'phone' ? '_self' : '_blank'}
             rel="noopener noreferrer">
             <div className='contact-action-button__icon-wrapper'>
