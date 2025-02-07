@@ -18,11 +18,13 @@
         button {
             /* modify current style to fit with UX wish */
             white-space: nowrap;
+            margin-left: unset;
             padding: var(--spacing-x-small);
-            width: auto;
+            width: 100%;
             display: flex;
             gap: var(--spacing-xx-small);
             align-items: center;
+            justify-content: flex-start;
             border: none;
         }
     }
