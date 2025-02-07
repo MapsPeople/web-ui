@@ -116,12 +116,12 @@ function OpeningHours({ openingHours, isAmFormat = false, isMondayFirstDayOfTheW
         <div className="opening-hours">
             <ul className="opening-hours__list">
                 <li className="opening-hours__list-item opening-hours__list-item--current" onClick={() => setIsExpanded(!isExpanded)}>
-                    <span className="opening-hours__time">
+                    <div className="opening-hours__time">
                         <div className="opening-hours__icon-wrapper">
                             <ClockIcon />
                         </div>
                         {getOpeningHoursForDay(weekdays[adjustedCurrentDay]).text}
-                    </span>
+                    </div>
                     <span className={`opening-hours__status-text opening-hours__status-text--${currentDayOpeningHours.toLowerCase()}`}>
                         {currentDayOpeningHours}
                         {isExpanded ? <ChevronUpIcon /> : <ChevronDownIcon />}
