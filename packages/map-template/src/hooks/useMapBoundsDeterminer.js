@@ -270,11 +270,11 @@ export default useMapBoundsDeterminer;
  * @param {number} bearing - Mp bearing (rotation) in degrees from north.
  */
 function goTo(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLevel, pitch, bearing) {
-    const defaultZoomLevel = 18;
+    const initialLoadZoomLevel = 18;
 
     // If zoom level is default, use goTo() function that also fits bounds.
     // Otherwise, set center to be a center point of a given geometry with a specified zoom level.
-    if (zoomLevel === defaultZoomLevel) {
+    if (zoomLevel === initialLoadZoomLevel) {
         mapsIndoorsInstance.getMapView().tilt(pitch || 0);
         mapsIndoorsInstance.getMapView().rotate(bearing || 0);
         mapsIndoorsInstance.goTo({ type: 'Feature', geometry, properties: {} }, {
