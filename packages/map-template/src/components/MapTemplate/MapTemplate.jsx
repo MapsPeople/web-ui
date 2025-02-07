@@ -444,7 +444,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         const defaultPrimaryColor = '#005655'; // --brand-colors-dark-pine-100 from MIDT
 
-        // Sets primary color. Priority: URL/Query Param -> App Config -> Default.
+        // Sets primary color. Priority: Prop -> App Config -> Default.
         if (!isNullOrUndefined(primaryColor)) {
             setPrimaryColor(primaryColor)
         } else if (!isNullOrUndefined(appConfig?.appSettings?.primaryColor)) {
