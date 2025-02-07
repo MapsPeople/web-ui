@@ -496,7 +496,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         const defaultLogo = 'https://app.mapsindoors.com/mapsindoors/gfx/mapspeople-logo/mapspeople-pin.svg';
 
-        // Sets logo. Priority: URL/Query Param -> App Config -> Default.
+        // Sets logo. Priority: Prop -> App Config -> Default.
         if (!isNullOrUndefined(logo)) {
             setLogo(logo)
         } else if (appConfig?.appSettings?.logo) {
