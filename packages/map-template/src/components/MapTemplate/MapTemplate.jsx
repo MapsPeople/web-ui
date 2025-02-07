@@ -466,7 +466,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [startZoomLevel, appConfig]);
 
     /*
-     * React on changes in the pitch prop. If not defined in the URL, check if it is defined in app config.
+     * React on changes in the pitch prop. If not defined, check if it is defined in app config.
      * If the pitch is not set, set it to 45 degrees if the view mode switch is visible.
      */
     useEffect(() => {
