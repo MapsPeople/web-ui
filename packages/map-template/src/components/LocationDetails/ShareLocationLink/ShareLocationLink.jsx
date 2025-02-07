@@ -9,6 +9,7 @@ import { ReactComponent as ChainLinkIcon } from '../../../assets/chain-link.svg'
 import { ReactComponent as QRCodeIcon } from '../../../assets/qrcode.svg';
 import { ReactComponent as ShareIcon } from '../../../assets/share.svg';
 import qrCodeLinkState from '../../../atoms/qrCodeLinkState';
+import kioskLocationState from '../../../atoms/kioskLocationState';
 import supportsUrlParametersState from '../../../atoms/supportsUrlParametersState';
 
 ShareLocationLink.propTypes = {
@@ -31,6 +32,7 @@ function ShareLocationLink({ location, buttonClassName }) {
     const supportsUrlParameters = useRecoilValue(supportsUrlParametersState);
     const [showQRCodeButton, setShowQRCodeButton] = useState(false);
     const [showCopyButton, setShowCopyButton] = useState(false);
+    const kioskLocation = useRecoilValue(kioskLocationState);
 
     const [, setQrCodeLink] = useRecoilState(qrCodeLinkState);
 
@@ -49,14 +51,14 @@ function ShareLocationLink({ location, buttonClassName }) {
      * Evaluate which action buttons to show.
      */
     useEffect(() => {
-        // Generally, don't show share buttons if the Map Template is configured not to support query parameters, since in that case a query parameters will not be respected.
+        // Generally, don't show share buttons if the Map Template is running in "kiosk mode" or is configured not to support query parameters (since in that case a query parameters will not be respected).
 
-        setShowQRCodeButton(supportsUrlParameters && isDesktop); // the reason for the isDesktop check is that the QR code is not very useful on mobile devices.
+        setShowQRCodeButton(!kioskLocation && supportsUrlParameters && isDesktop); // the reason for the isDesktop check is that the QR code is not very useful on mobile devices.
 
         // Check if the browser supports writing to the clipboard.
         const canWriteToClipboard = typeof navigator.clipboard?.writeText === 'function';
-        setShowCopyButton(supportsUrlParameters && canWriteToClipboard);
-    }, [supportsUrlParameters, isDesktop]);
+        setShowCopyButton(!kioskLocation && supportsUrlParameters && canWriteToClipboard);
+    }, [supportsUrlParameters, kioskLocation, isDesktop]);
 
     /**
      * Copy the link to the clipboard.
@@ -75,7 +77,7 @@ function ShareLocationLink({ location, buttonClassName }) {
     };
 
     return (showQRCodeButton || showCopyButton) && <div className="share-location-link">
-        <button className={buttonClassName} onClick={() => setShareDialogueIsOpen(isOpen => !isOpen)}>
+        <button className={buttonClassName} onClick={() => setShareDialogueIsOpen(isOpen => !isOpen)} aria-label="Share location">
             <ShareIcon />
         </button>
 
