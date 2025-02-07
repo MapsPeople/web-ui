@@ -23,26 +23,19 @@ OpeningHours.propTypes = {
 function OpeningHours({ openingHours, isAmFormat = false, isMondayFirstDayOfTheWeek = true }) {
     const { t } = useTranslation();
     const [isExpanded, setIsExpanded] = useState(false);
-    // Get real current day (0-6, Sunday is 0)
-    const currentDay = new Date().getDay();
+    const currentDay = new Date().getDay(); // Get current day (0-6, Sunday is 0)
     // Create weekdays array with display order using useMemo
     const weekdays = useMemo(() => {
-        const days = [
-            t('Monday'),
-            t('Tuesday'),
-            t('Wednesday'),
-            t('Thursday'),
-            t('Friday'),
-            t('Saturday'),
-            t('Sunday')
-        ];
-
+        const days = [];
+        for (let i = 0; i < 7; i++) {
+            days.push(new Date(2024, 0, i + 1));
+        }
         if (!isMondayFirstDayOfTheWeek) {
             const sunday = days.pop();
             days.unshift(sunday);
         }
         return days;
-    }, [t, isMondayFirstDayOfTheWeek]);
+    }, [isMondayFirstDayOfTheWeek]);
 
     // Calculate adjusted current day index based on display order
     const adjustedCurrentDay = useMemo(() => {
@@ -57,6 +50,7 @@ function OpeningHours({ openingHours, isAmFormat = false, isMondayFirstDayOfTheW
 
     const { standardOpeningHours } = openingHours || {};
 
+    // Helper function that takes a time string (e.g., "09:00") and returns a formatted time string
     const formatTime = (time) => {
         const [hours, minutes] = time.split(':');
         return new Date(0, 0, 0, hours, minutes).toLocaleTimeString([], {
@@ -66,8 +60,10 @@ function OpeningHours({ openingHours, isAmFormat = false, isMondayFirstDayOfTheW
         });
     };
 
+    // Helper function that takes a date object (day) and returns the opening hours information for that specific day.
     const getOpeningHoursForDay = (day) => {
-        const dayData = standardOpeningHours?.[day.toLowerCase()];
+        const dayName = day.toLocaleString('en-US', { weekday: 'long' }).toLowerCase();
+        const dayData = standardOpeningHours?.[dayName];
         if (!dayData || dayData.closedAllDay) {
             return {
                 text: t('Closed'),
@@ -80,7 +76,7 @@ function OpeningHours({ openingHours, isAmFormat = false, isMondayFirstDayOfTheW
         };
     };
 
-    // Keep useCallback as this involves time calculations
+    // Determines if a location is currently open based on its operating hours
     const isCurrentlyOpen = useCallback((dayData) => {
         if (!dayData || dayData.closedAllDay) return false;
 
@@ -96,10 +92,16 @@ function OpeningHours({ openingHours, isAmFormat = false, isMondayFirstDayOfTheW
         return currentTime >= startTime && currentTime <= endTime;
     }, []);
 
+    /**
+     * Determines if the location is currently open or closed based on the current day's operating hours.
+     * Uses toLocaleString to convert a Date object into a weekday string (e.g., "monday", "tuesday", etc.)
+     */
     const getCurrentDayStatus = useCallback(() => {
-        const isOpen = isCurrentlyOpen(
-            standardOpeningHours?.[weekdays[adjustedCurrentDay].toLowerCase()]
-        );
+        const currentDayName = weekdays[adjustedCurrentDay]
+            .toLocaleString('en-US', { weekday: 'long' })
+            .toLowerCase();
+
+        const isOpen = isCurrentlyOpen(standardOpeningHours?.[currentDayName]);
 
         return isOpen ? t('Open') : t('Closed');
     }, [standardOpeningHours, weekdays, adjustedCurrentDay, isCurrentlyOpen, t]);
@@ -126,7 +128,7 @@ function OpeningHours({ openingHours, isAmFormat = false, isMondayFirstDayOfTheW
                     const hours = getOpeningHoursForDay(day);
                     return (
                         <li key={day} className="opening-hours__list-item">
-                            <span className="opening-hours__day">{day}</span>
+                            <span className="opening-hours__day">{day.toLocaleString(undefined, { weekday: 'long' })}</span>
                             <span className={`opening-hours__hours ${hours.isClosed ? 'opening-hours__hours--closed' : ''}`}>
                                 {hours.text}
                             </span>
