@@ -480,7 +480,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [pitch, viewModeSwitchVisible, appConfig]);
 
     /*
-     * React on changes in the bearing prop. If not defined in the URL, check if it is defined in app config.
+     * React on changes in the bearing prop. If not defined, check if it is defined in app config.
      */
     useEffect(() => {
         if (!isNullOrUndefined(bearing)) {
