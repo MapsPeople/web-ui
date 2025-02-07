@@ -439,7 +439,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [tileStyle]);
 
     /*
-     * React on changes in the primary color prop. If not defined in the URL, check if it is defined in app config. Otherwise set to default color.
+     * React on changes in the primary color prop. If not defined, check if it is defined in app config. Otherwise set to default color.
      */
     useEffect(() => {
         const defaultPrimaryColor = '#005655'; // --brand-colors-dark-pine-100 from MIDT
