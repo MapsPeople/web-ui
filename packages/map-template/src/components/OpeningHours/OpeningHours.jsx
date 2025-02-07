@@ -106,7 +106,7 @@ function OpeningHours({ openingHours, isAmFormat = false, isMondayFirstDayOfTheW
         return isOpen ? t('Open') : t('Closed');
     }, [standardOpeningHours, weekdays, adjustedCurrentDay, isCurrentlyOpen, t]);
 
-    const text = getCurrentDayStatus();
+    const currentDayOpeningHours = getCurrentDayStatus();
 
     return (
         <div className="opening-hours">
@@ -118,8 +118,8 @@ function OpeningHours({ openingHours, isAmFormat = false, isMondayFirstDayOfTheW
                         </div>
                         {getOpeningHoursForDay(weekdays[adjustedCurrentDay]).text}
                     </span>
-                    <span className={`opening-hours__status-text opening-hours__status-text--${text.toLowerCase()}`}>
-                        {text}
+                    <span className={`opening-hours__status-text opening-hours__status-text--${currentDayOpeningHours.toLowerCase()}`}>
+                        {currentDayOpeningHours}
                         {isExpanded ? <ChevronUpIcon /> : <ChevronDownIcon />}
                     </span>
                 </li>
