@@ -251,6 +251,13 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         }
     }, []);
 
+    /**
+     * Sets app title based on app config.
+     */
+    useEffect(() => {
+        document.title = appConfig?.appSettings?.title ?? 'MapsIndoors Web';
+    }, [appConfig])
+
     /*
      * React on changes in the language prop.
      * If it is undefined, try to use the browser language. It will fall back to English if the language is not supported.
