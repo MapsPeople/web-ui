@@ -133,6 +133,15 @@ function GoogleMapsMap({ apiKey, onInitialized, onPositionControl, center, zoom,
         });
     }, []);
 
+    // TODO - Remove this event listener after testing
+    useEffect(() => {
+        if (mapViewInstance && google) {
+            mapViewInstance.getMap().addListener('zoom_changed', () => {
+                console.log('Current zoom level:', mapViewInstance.getMap().getZoom());
+            });
+        }
+    }, [mapViewInstance, google]);
+
     return <div className="mapsindoors-map google-maps-map-container" id="map"></div>
 }
 
