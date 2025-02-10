@@ -148,15 +148,6 @@ function MapboxMap({ accessToken, onInitialized, onPositionControl, center, zoom
         onInitialized(mapView);
     }, []);
 
-    // TODO - Remove this event listener after testing
-    useEffect(() => {
-        if (mapViewInstance) {
-            mapViewInstance.getMap().on('zoom', () => {
-                console.log('Current zoom level:', mapViewInstance.getMap().getZoom().toFixed(2));
-            });
-        }
-    }, [mapViewInstance]);
-
     return <div className="mapsindoors-map mapbox-map-container" id="map">
         {viewModeSwitchVisible && <ViewModeSwitch reset={resetViewMode} mapView={mapViewInstance} pitch={pitch} activeColor={mapOptions?.brandingColor} show2DModelsIn3D={appConfig?.appSettings?.show2DModelsIn3D} />}
     </div>
