@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.68.1] - 2024-02-10
 
-## Fixed
+## Added
 
 - Add default minimum zoom 14 to mapOptions inside MIMap component.
 
