@@ -5,13 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.68.0] - 2024-02-03
+## [1.68.1] - 2025-02-11
+
+## Fixed
+
+- An issue when on initial load map would stop in a random position.
+
+## [1.68.0] - 2025-02-03
 
 ## Added
 
 - Added display of 2D models in 3D mode based on app config property
 
-## [1.67.0] - 2024-01-30
+## [1.67.0] - 2025-01-30
 
 ### Added
 
