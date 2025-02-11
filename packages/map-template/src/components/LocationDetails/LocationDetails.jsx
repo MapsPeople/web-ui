@@ -84,8 +84,8 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
     const clickedOutsideMapsIndoorsData = useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOpen);
 
     /**
-    * Close the Location details page.
-    */
+     * Sets full description, content above/below flags to false and triggers the onBack callback.
+     */
     const back = useCallback(() => {
         setShowFullDescription(false);
         setDescriptionHasContentAbove(false);
@@ -185,6 +185,9 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
         }
     }, [clickedOutsideMapsIndoorsData]);
 
+    /**
+     * Cleanup on unmount: resets location display rule and direction locations.
+     */
     useEffect(() => {
         return () => {
             setLocationDisplayRule(null);
@@ -193,6 +196,9 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
         }
     }, []);
 
+    /**
+     * Updates location details and routing state when location dependencies change.
+     */
     useEffect(() => {
         // Reset state
         setShowFullDescription(false);
