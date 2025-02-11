@@ -81,7 +81,7 @@ function OpeningHours({ openingHours, isAmFormat = false, isMondayFirstDayOfTheW
     };
 
     // Determines if a location is currently open based on its operating hours
-    const isCurrentlyOpen = useCallback((dayData) => {
+    const isLocationCurrentlyOpen = useCallback((dayData) => {
         if (!dayData || dayData.closedAllDay) return false;
 
         const now = new Date();
@@ -105,10 +105,10 @@ function OpeningHours({ openingHours, isAmFormat = false, isMondayFirstDayOfTheW
             .toLocaleString('en-US', { weekday: 'long' })
             .toLowerCase();
 
-        const isOpen = isCurrentlyOpen(standardOpeningHours?.[currentDayName]);
+        const isOpen = isLocationCurrentlyOpen(standardOpeningHours?.[currentDayName]);
 
         return isOpen ? t('Open') : t('Closed');
-    }, [standardOpeningHours, weekdays, adjustedCurrentDay, isCurrentlyOpen, t]);
+    }, [standardOpeningHours, weekdays, adjustedCurrentDay, isLocationCurrentlyOpen, t]);
 
     const currentDayOpeningHours = getCurrentDayStatus();
 
