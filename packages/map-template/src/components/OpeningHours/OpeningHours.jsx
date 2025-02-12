@@ -26,8 +26,19 @@ OpeningHours.propTypes = {
 function OpeningHours({ openingHours, isAmFormat = false, isMondayFirstDayOfTheWeek = true }) {
     const { t } = useTranslation();
     const [isExpanded, setIsExpanded] = useState(false);
-    const currentDay = new Date().getDay(); // Get current day (0-6, Sunday is 0)
-    // Create weekdays array with display order using useMemo
+
+    /**
+     * Gets the current day of the week (0-6, where Sunday is 0)
+     * Used to determine which day's opening hours to highlight
+     * @type {number}
+     */
+    const currentDay = new Date().getDay();
+    
+    /**
+     * Creates an array of weekdays in the correct display order
+     * Adjusts the order based on whether Monday or Sunday is considered first day
+     * @type {Date[]}
+     */
     const weekdays = useMemo(() => {
         const days = [];
         // Create an array of 7 days starting from Sunday
