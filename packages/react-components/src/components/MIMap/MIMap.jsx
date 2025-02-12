@@ -48,6 +48,11 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bear
     const [positionControl, setPositionControl] = useState();
     const [viewModeSwitchVisible, setViewModeSwitchVisible] = useState();
     const [solution, setSolution] = useState();
+    const [appConfig, setAppConfig] = useState();
+    const defaultMapOptions = {
+        ...mapOptions,
+        minZoom: 14,
+    }
 
     useEffect(() => {
         // Make sure to define the MI Components custom elements if they are not already defined.
@@ -67,6 +72,11 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bear
                 window.mapsindoors.services.SolutionsService.getSolution().then(solutionResult => {
                     setSolution(solutionResult);
                 });
+                // Fetch the App Config
+                window.mapsindoors.services.AppConfigService.getConfig()
+                    .then(appConfigResult => {
+                        setAppConfig(appConfigResult);
+                    });
             }
         }
     }, [apiKey, mapType]);
@@ -81,7 +91,7 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bear
         // This is a workaround for the SDK not setting the venue automatically, thus not loading 2D geometry.
         mi.once('building_changed', (building) => {
             const venue = mi.getVenue();
-            if (building && venue && building.venueId !== venue.id ) {
+            if (building && venue && building.venueId !== venue.id) {
                 mi.setVenue(building.venueId);
             }
         });
@@ -135,8 +145,8 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bear
     }, [gmApiKey, mapboxAccessToken]);
 
     return <>
-        {mapType === mapTypes.Google && <GoogleMapsMap mapsIndoorsInstance={mapsIndoorsInstance} apiKey={gmApiKey} onInitialized={onMapViewInitialized} onPositionControl={setPositionControl} center={center} zoom={zoom} mapOptions={mapOptions} heading={bearing} tilt={pitch} bounds={bounds} />}
-        {mapType === mapTypes.Mapbox && <MapboxMap mapsIndoorsInstance={mapsIndoorsInstance} accessToken={mapboxAccessToken} onInitialized={onMapViewInitialized} onPositionControl={setPositionControl} center={center} zoom={zoom} mapOptions={mapOptions} bearing={bearing} pitch={pitch} bounds={bounds} resetViewMode={resetUICounter} viewModeSwitchVisible={viewModeSwitchVisible} />}
+        {mapType === mapTypes.Google && <GoogleMapsMap mapsIndoorsInstance={mapsIndoorsInstance} apiKey={gmApiKey} onInitialized={onMapViewInitialized} onPositionControl={setPositionControl} center={center} zoom={zoom} mapOptions={defaultMapOptions} heading={bearing} tilt={pitch} bounds={bounds} />}
+        {mapType === mapTypes.Mapbox && <MapboxMap mapsIndoorsInstance={mapsIndoorsInstance} accessToken={mapboxAccessToken} onInitialized={onMapViewInitialized} onPositionControl={setPositionControl} center={center} zoom={zoom} mapOptions={defaultMapOptions} bearing={bearing} pitch={pitch} bounds={bounds} resetViewMode={resetUICounter} viewModeSwitchVisible={viewModeSwitchVisible} appConfig={appConfig} />}
     </>
 }
 
