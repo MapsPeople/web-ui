@@ -33,15 +33,20 @@ function OpeningHours({ openingHours, isAmFormat = false, isMondayFirstDayOfTheW
      * @type {number}
      */
     const currentDay = new Date().getDay();
-    
+
     /**
      * Creates an array of weekdays in the correct display order
      * Adjusts the order based on whether Monday or Sunday is considered first day
      * @type {Date[]}
      */
     const weekdays = useMemo(() => {
+        /**
+         * Creates reference week array starting from Jan 1st 2024 (Monday)
+         * Used for locale-specific day name formatting
+         * @type {Date[]} Array of dates [Mon-Sun] or [Sun-Sat] based on isMondayFirstDayOfTheWeek
+         * @note Reorders array to start with Sunday if isMondayFirstDayOfTheWeek=false
+         */
         const days = [];
-        // Create an array of 7 days starting from Sunday
         for (let i = 0; i < 7; i++) {
             days.push(new Date(2024, 0, i + 1));
         }
