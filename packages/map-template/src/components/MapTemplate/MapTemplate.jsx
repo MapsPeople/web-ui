@@ -131,6 +131,7 @@ MapTemplate.propTypes = {
  */
 function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations, center }) {
 
+    const [mapOptions, setMapOptions] = useState();
     const [, setApiKey] = useRecoilState(apiKeyState);
     const [, setGmApiKey] = useRecoilState(gmApiKeyState);
     const [, setMapboxAccessToken] = useRecoilState(mapboxAccessTokenState);
@@ -228,6 +229,18 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             }
         });
     }
+
+    /**
+     * Updates the map options state by merging new options with existing ones
+     * @param {Object} newMapOptions - The new map options to merge with existing options
+     * @returns {void}
+     */
+    const handleMapOptionsChange = (newMapOptions) => {
+        setMapOptions(previousMapOptions => ({
+            ...previousMapOptions,
+            ...newMapOptions
+        }))
+    };
 
     /*
      * If the app is inactive, run code to reset UI and state.
@@ -685,6 +698,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             onLocationClick={(location) => locationClicked(location)}
             onViewModeSwitchKnown={visible => setViewModeSwitchVisible(visible)}
             resetCount={resetCount}
+            mapOptions={mapOptions}
+            onMapOptionsChange={handleMapOptionsChange}
         />
     </div>
 }
