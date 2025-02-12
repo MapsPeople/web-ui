@@ -131,7 +131,7 @@ MapTemplate.propTypes = {
  */
 function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations, center }) {
 
-    const [mapOptions, setMapOptions] = useState();
+    const [mapOptions, setMapOptions] = useState({ brandingColor: primaryColor });
     const [, setApiKey] = useRecoilState(apiKeyState);
     const [, setGmApiKey] = useRecoilState(gmApiKeyState);
     const [, setMapboxAccessToken] = useRecoilState(mapboxAccessTokenState);
