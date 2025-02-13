@@ -71,6 +71,9 @@ const fr = {
      // Directions
      'Cancel route': 'Annuler l\'itinéraire',
      'Finish route': 'Terminer l\'itinéraire',
+     // Opening Hours
+    'Open': 'Ouvert',
+    'Closed': 'Fermé',
 };
 
 export default fr;

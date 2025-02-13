@@ -71,6 +71,9 @@ const en = {
     // Directions
     'Cancel route': 'Cancel route',
     'Finish route': 'Finish route',
+    // Opening Hours
+    'Open': 'Open',
+    'Closed': 'Closed',
 };
 
 export default en;

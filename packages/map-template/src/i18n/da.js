@@ -71,6 +71,9 @@ const da = {
     // Directions
     'Cancel route': 'Annullér ruten',
     'Finish route': 'Afslut ruten',
+    //Opening Hours
+    'Open': 'Åben',
+    'Closed': 'Lukket',
 };
 
 export default da;

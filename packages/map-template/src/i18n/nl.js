@@ -71,6 +71,9 @@ const nl = {
     // Directions
     'Cancel route': 'Route annuleren',
     'Finish route': 'Route voltooien ',
+    // Opening Hours
+    'Open': 'Open',
+    'Closed': 'Gesloten',
 };
 
 export default nl;
