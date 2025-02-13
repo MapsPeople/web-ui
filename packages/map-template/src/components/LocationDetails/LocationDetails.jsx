@@ -17,7 +17,7 @@ import accessibilityOnState from '../../atoms/accessibilityOnState';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
 import showExternalIDsState from '../../atoms/showExternalIDsState';
 import useOutsideMapsIndoorsDataClick from '../../hooks/useOutsideMapsIndoorsDataClick';
-import OpeningHours from '../OpeningHours/OpeningHours';
+import OpeningHours from './OpeningHours/OpeningHours';
 import PropTypes from 'prop-types';
 
 LocationDetails.propTypes = {

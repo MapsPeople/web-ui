@@ -2,9 +2,9 @@ import { memo, useCallback, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import './OpeningHours.scss';
-import { ReactComponent as ClockIcon } from '../../assets/clock-light.svg';
-import { ReactComponent as ChevronDownIcon } from '../../assets/chevron-down.svg';
-import { ReactComponent as ChevronUpIcon } from '../../assets/chevron-up.svg';
+import { ReactComponent as ClockIcon } from '../../../assets/clock-light.svg';
+import { ReactComponent as ChevronDownIcon } from '../../../assets/chevron-down.svg';
+import { ReactComponent as ChevronUpIcon } from '../../../assets/chevron-up.svg';
 
 OpeningHours.propTypes = {
     openingHours: PropTypes.object,
