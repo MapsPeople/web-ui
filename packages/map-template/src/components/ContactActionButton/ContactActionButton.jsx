@@ -53,7 +53,7 @@ function ContactActionButton({ detailType, active, displayText, value, icon }) {
             href={generateURL(detailType, value)}
             target={detailType.toLowerCase() === 'email' || detailType.toLowerCase() === 'phone' ? '_self' : '_blank'}
             rel="noopener noreferrer">
-            <div className='contact-action-button__icon-wrapper'>
+            <div className="contact-action-button__icon-wrapper">
                 <img alt="" src={icon} className="contact-action-button__icon" />
             </div>
             <span className="contact-action-button__text">{textToDisplay}</span>
