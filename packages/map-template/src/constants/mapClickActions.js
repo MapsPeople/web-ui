@@ -1,6 +1,5 @@
 export const mapClickActions = {
     SetCurrentLocation: 'setCurrentLocation',
-    SetWayfindingFrom: 'setWayfindingFrom',
-    SetWayfindingTo: 'setWayfindingTo',
+    SetWayfindingLocation: 'setWayfindingLocation',
     None: 'none'
 };

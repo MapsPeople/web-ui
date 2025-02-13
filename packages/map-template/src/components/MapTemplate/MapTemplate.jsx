@@ -414,7 +414,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 mapClickActionRef.current = mapClickActions.SetCurrentLocation;
                 break;
             case appStates.WAYFINDING:
-                mapClickActionRef.current = mapClickActions.SetWayfindingTo;
+                mapClickActionRef.current = mapClickActions.SetWayfindingLocation;
                 break;
             case appStates.DIRECTIONS:
                 mapClickActionRef.current = mapClickActions.None;
@@ -642,8 +642,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                     setCurrentLocation(location);
                 }
                 break;
-            case mapClickActions.SetWayfindingFrom:
-            case mapClickActions.SetWayfindingTo:
+            case mapClickActions.SetWayfindingLocation:
                 setWayfindingLocation(location);
                 break;
             case mapClickActions.None:
