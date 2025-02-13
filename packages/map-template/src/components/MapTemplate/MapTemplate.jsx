@@ -258,7 +258,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
             // Sets language to use. Priority: Prop -> App Config -> browser's default language.
-            const languageToUse = language ?? appConfig.appSettings.language ?? navigator.language;
+            const languageToUse = language ?? appConfig?.appSettings?.language ?? navigator.language;
 
             // Set the language on the MapsIndoors SDK in order to get eg. Mapbox and Google directions in that language.
             // The MapsIndoors data only accepts the first part of the IETF language string, hence the split.
