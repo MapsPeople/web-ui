@@ -345,14 +345,18 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         if (!wayfindingLocation) return;
 
         if (activeSearchField === searchFieldIdentifiers.FROM) {
+            // If the FROM field is active, set the wayfindingLocation as the originLocation.
             fromFieldRef.current.setDisplayText(wayfindingLocation.properties.name);
             setOriginLocation(wayfindingLocation);
-        } else if (activeSearchField === searchFieldIdentifiers.TO) {
+        } else if (activeSearchField === searchFieldIdentifiers.TO && !toFieldRef.current.getValue()) {
+            // If the TO field is active and empty, set the wayfindingLocation as the destinationLocation.
             toFieldRef.current.setDisplayText(wayfindingLocation.properties.name);
             setDestinationLocation(wayfindingLocation);
+        } else {
+            return;
         }
 
-        // Trigger route search by resetting all these
+        // Trigger route search by resetting all these:
         setSearchResults([]);
         setSearchTriggered(false);
         setHasGooglePlaces(false);
