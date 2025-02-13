@@ -411,6 +411,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             case appStates.SEARCH:
             case appStates.EXTERNALIDS:
             case appStates.VENUE_SELECTOR:
+                mapClickActionRef.current = mapClickActions.SetCurrentLocation;
+                break;
             case appStates.LOCATION_DETAILS:
                 if (currentAppViewPayload && !currentLocation) {
                     // If there is a history payload and the current location is not set, set it
