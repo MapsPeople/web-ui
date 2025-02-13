@@ -35,6 +35,7 @@ import accessibilityOnState from "../../atoms/accessibilityOnState";
 import Accessibility from "../Accessibility/Accessibility";
 import searchExternalLocationsState from "../../atoms/searchExternalLocationsState";
 import PropTypes from 'prop-types';
+import wayfindingLocationState from '../../atoms/wayfindingLocation';
 
 const searchFieldIdentifiers = {
     TO: 'TO',
@@ -82,6 +83,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     const currentLocation = useRecoilValue(currentLocationState);
     const selectedMapType = useRecoilValue(mapTypeState);
     const primaryColor = useRecoilValue(primaryColorState);
+    const [wayfindingLocation, setWayfindingLocation] = useRecoilState(wayfindingLocationState);
 
     const [activeSearchField, setActiveSearchField] = useState();
 
@@ -334,6 +336,29 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
             setOriginLocation();
         }
     }, []);
+
+    /*
+     * React on changes on the wayfindingLocation, meaning that the user has clicked on a MapsIndoors Location on the map.
+     * This Location should now be used as the origin or destination location, depending on which search field is active.
+     */
+    useEffect(() => {
+        if (!wayfindingLocation) return;
+
+        if (activeSearchField === searchFieldIdentifiers.FROM) {
+            fromFieldRef.current.setDisplayText(wayfindingLocation.properties.name);
+            setOriginLocation(wayfindingLocation);
+        } else if (activeSearchField === searchFieldIdentifiers.TO) {
+            toFieldRef.current.setDisplayText(wayfindingLocation.properties.name);
+            setDestinationLocation(wayfindingLocation);
+        }
+
+        // Trigger route search by resetting all these
+        setSearchResults([]);
+        setSearchTriggered(false);
+        setHasGooglePlaces(false);
+        setShowMyPositionOption(false);
+        setWayfindingLocation(null); // will re-trigger another run with early exit but necessary in order to be able to re-click already clicked locations on the map
+    }, [wayfindingLocation]);
 
     useEffect(() => {
         setSize(snapPoints.MAX);
