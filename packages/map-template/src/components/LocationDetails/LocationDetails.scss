@@ -158,5 +158,5 @@
 .contact-action-buttons-container {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: var(--spacing-x-small);
 }
