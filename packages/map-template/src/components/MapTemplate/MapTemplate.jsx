@@ -460,7 +460,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         if (!isNullOrUndefined(desiredPitch)) {
             setPitch(desiredPitch);
         } else {
-            setPitch(45);
+            if (viewModeSwitchVisible) {
+                setPitch(45);
+            }
         }
     }, [pitch, viewModeSwitchVisible, appConfig]);
 
