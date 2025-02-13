@@ -113,8 +113,8 @@ function OpeningHours({ openingHours, isAmFormat = false, isMondayFirstDayOfTheW
     }, []);
 
     /**
-     * Determines if the location is currently open or closed based on the current day's operating hours.
-     * Uses toLocaleString to convert a Date object into a weekday string (e.g., "monday", "tuesday", etc.)
+     * Determines if the business location is currently open or closed based on the current day's opening hours.
+     * @returns {'Open'|'Closed'} Returns 'Open' if the location is currently open, or 'Closed' if it is not.
      */
     const getCurrentDayStatus = useCallback(() => {
         const currentDayName = weekdays[adjustedCurrentDay]
@@ -123,7 +123,7 @@ function OpeningHours({ openingHours, isAmFormat = false, isMondayFirstDayOfTheW
 
         const isOpen = isLocationCurrentlyOpen(standardOpeningHours?.[currentDayName]);
 
-        return isOpen ? t('Open') : t('Closed');
+        return isOpen ? 'Open' : 'Closed';
     }, [standardOpeningHours, weekdays, adjustedCurrentDay, isLocationCurrentlyOpen, t]);
 
     const currentDayOpeningHours = getCurrentDayStatus();
@@ -139,7 +139,7 @@ function OpeningHours({ openingHours, isAmFormat = false, isMondayFirstDayOfTheW
                         {getOpeningHoursForDay(weekdays[adjustedCurrentDay]).text}
                     </div>
                     <span className={`opening-hours__status-text opening-hours__status-text--${currentDayOpeningHours.toLowerCase()}`}>
-                        {currentDayOpeningHours}
+                        {t(currentDayOpeningHours)}
                         {isExpanded ? <ChevronUpIcon /> : <ChevronDownIcon />}
                     </span>
                 </li>
