@@ -406,11 +406,16 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React to changes in the currentAppView in order to set various global states.
      */
     useEffect(() => {
+        locationsDisabledRef.current = false;
         switch (currentAppView) {
             case appStates.SEARCH:
             case appStates.EXTERNALIDS:
             case appStates.VENUE_SELECTOR:
             case appStates.LOCATION_DETAILS:
+                if (currentAppViewPayload && !currentLocation) {
+                    // If there is a history payload and the current location is not set, set it
+                    setCurrentLocation(currentAppViewPayload);
+                }
                 mapClickActionRef.current = mapClickActions.SetCurrentLocation;
                 break;
             case appStates.WAYFINDING:
@@ -418,16 +423,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 break;
             case appStates.DIRECTIONS:
                 mapClickActionRef.current = mapClickActions.None;
+                locationsDisabledRef.current = true;
                 break;
         }
-
-        // TODO: Refactor all of the below to be included in the switch:
-
-        if (currentAppView === appStates.LOCATION_DETAILS && currentAppViewPayload && !currentLocation) {
-            setCurrentLocation(currentAppViewPayload);
-        }
-
-        locationsDisabledRef.current = currentAppView === appStates.DIRECTIONS;
 
         // Reset all the filters when in directions mode.
         // Store the filtered locations in another state, to be able to access them again.
