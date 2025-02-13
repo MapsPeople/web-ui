@@ -59,6 +59,8 @@ import searchExternalLocationsState from '../../atoms/searchExternalLocationsSta
 import isNullOrUndefined from '../../helpers/isNullOrUndefined.js';
 import centerState from '../../atoms/centerState.js';
 import PropTypes from 'prop-types';
+import { mapClickActions } from '../../constants/mapClickActions.js';
+import wayfindingLocationState from '../../atoms/wayfindingLocation.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -160,6 +162,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setSearchExternalLocations] = useRecoilState(searchExternalLocationsState);
     const [, setCenter] = useRecoilState(centerState);
     const [viewModeSwitchVisible, setViewModeSwitchVisible] = useState();
+    const mapClickActionRef = useRef();
+    const [, setWayfindingLocation] = useRecoilState(wayfindingLocationState);
 
     const [showVenueSelector, setShowVenueSelector] = useState(true);
     const [showPositionControl, setShowPositionControl] = useState(true);
@@ -399,9 +403,26 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [gmMapId, mapsindoorsSDKAvailable]);
 
     /*
-     * Add Location to history payload to make it possible to re-enter location details with that Location.
+     * React to changes in the currentAppView in order to set various global states.
      */
     useEffect(() => {
+        switch (currentAppView) {
+            case appStates.SEARCH:
+            case appStates.EXTERNALIDS:
+            case appStates.VENUE_SELECTOR:
+            case appStates.LOCATION_DETAILS:
+                mapClickActionRef.current = mapClickActions.SetCurrentLocation;
+                break;
+            case appStates.WAYFINDING:
+                mapClickActionRef.current = mapClickActions.SetWayfindingTo;
+                break;
+            case appStates.DIRECTIONS:
+                mapClickActionRef.current = mapClickActions.None;
+                break;
+        }
+
+        // TODO: Refactor all of the below to be included in the switch:
+
         if (currentAppView === appStates.LOCATION_DETAILS && currentAppViewPayload && !currentLocation) {
             setCurrentLocation(currentAppViewPayload);
         }
@@ -608,15 +629,27 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }
 
     /**
-     * Handle the clicked location on the map. Set the current location if not in directions mode.
-     * Do not set the current location if the clicked location is the same as the kioskOriginLocationId,
-     * due to the logic of displaying directions right away when selecting a location on the map, when in kiosk mode.
+     * Handle the clicked location on the map.
      *
      * @param {object} location
      */
     function locationClicked(location) {
-        if (locationsDisabledRef.current !== true && location.id !== kioskOriginLocationId) {
-            setCurrentLocation(location);
+        switch (mapClickActionRef.current) {
+            case mapClickActions.SetCurrentLocation:
+                // Do not set the current location if the clicked location is the same as the kioskOriginLocationId,
+                // due to the logic of displaying directions right away when selecting a location on the map, when in kiosk mode.
+                if (locationsDisabledRef.current !== true && location.id !== kioskOriginLocationId) {
+                    setCurrentLocation(location);
+                }
+                break;
+            case mapClickActions.SetWayfindingFrom:
+            case mapClickActions.SetWayfindingTo:
+                setWayfindingLocation(location);
+                break;
+            case mapClickActions.None:
+            default:
+                // Intentionally left blank.
+                break;
         }
     }
 
