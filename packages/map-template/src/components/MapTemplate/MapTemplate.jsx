@@ -424,10 +424,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the venue prop. If not defined, check if it is defined in app config.
      */
     useEffect(() => {
-        const desiredVenue = venue ?? appConfig?.appSettings?.venue ?? null;
-        if (!isNullOrUndefined(desiredVenue)) {
-            setCurrentVenueName(desiredVenue);
-        }
+        setCurrentVenueName(venue ?? appConfig?.appSettings?.venue);
     }, [venue, appConfig]);
 
     /*
@@ -454,11 +451,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the start zoom level prop. If not defined, check if it is defined in app config.
      */
     useEffect(() => {
-        const desiredStartZoomLevel = startZoomLevel ?? appConfig?.appSettings?.startZoomLevel ?? null;
-
-        if (!isNullOrUndefined(desiredStartZoomLevel)) {
-            setStartZoomLevel(desiredStartZoomLevel);
-        }
+        setStartZoomLevel(startZoomLevel ?? appConfig?.appSettings?.startZoomLevel);
     }, [startZoomLevel, appConfig]);
 
     /*
@@ -479,10 +472,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the bearing prop. If not defined, check if it is defined in app config.
      */
     useEffect(() => {
-        const desiredBearing = bearing ?? appConfig?.appSettings?.bearing ?? null;
-        if (!isNullOrUndefined(desiredBearing)) {
-            setBearing(desiredBearing)
-        }
+        setBearing(bearing ?? appConfig?.appSettings?.bearing ?? null);
     }, [bearing, appConfig]);
 
     /*
