@@ -439,7 +439,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         const defaultPrimaryColor = '#005655'; // --brand-colors-dark-pine-100 from MIDT
-        setPrimaryColor(primaryColor ?? appConfig?.appSettings?.primaryColor ?? defaultPrimaryColor)
+        setPrimaryColor(primaryColor ?? appConfig?.appSettings?.primaryColor ?? defaultPrimaryColor);
     }, [primaryColor, appConfig]);
 
     /*
