@@ -439,7 +439,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         const defaultPrimaryColor = '#005655'; // --brand-colors-dark-pine-100 from MIDT
-
         setPrimaryColor(primaryColor ?? appConfig?.appSettings?.primaryColor ?? defaultPrimaryColor)
     }, [primaryColor, appConfig]);
 
@@ -478,11 +477,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         const defaultLogo = 'https://app.mapsindoors.com/mapsindoors/gfx/mapspeople-logo/mapspeople-pin.svg';
-
-        const desiredLogo = logo ?? appConfig?.appSettings?.logo ?? defaultLogo;
-        if (!isNullOrUndefined(desiredLogo)) {
-            setLogo(desiredLogo);
-        }
+        setLogo(logo ?? appConfig?.appSettings?.logo ?? defaultLogo);
     }, [logo, appConfig]);
 
     /*
