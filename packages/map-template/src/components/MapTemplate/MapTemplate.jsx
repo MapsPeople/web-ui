@@ -196,9 +196,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const resetState = useReset();
     const [pushAppView, goBack, currentAppView, currentAppViewPayload, appStates, resetAppHistory] = useAppHistory();
 
-    // Declare the reference to the disabled locations.
-    const locationsDisabledRef = useRef();
-
     // Indicate if the MapsIndoors JavaScript SDK is available.
     const [mapsindoorsSDKAvailable, setMapsindoorsSDKAvailable] = useState(false);
 
@@ -404,9 +401,11 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     /*
      * React to changes in the currentAppView in order to set various global states.
+     *
+     * We need to use a ref for the map click action, as it is used in the locationClicked function,
+     * which is caused by a MapsIndoors JS SDK event, which comes with the risk of reading stale state.
      */
     useEffect(() => {
-        locationsDisabledRef.current = false;
         switch (currentAppView) {
             case appStates.SEARCH:
             case appStates.EXTERNALIDS:
@@ -425,13 +424,12 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 break;
             case appStates.DIRECTIONS:
                 mapClickActionRef.current = mapClickActions.None;
-                locationsDisabledRef.current = true;
                 break;
         }
 
         // Reset all the filters when in directions mode.
         // Store the filtered locations in another state, to be able to access them again.
-        if (locationsDisabledRef.current) {
+        if (currentAppView === appStates.DIRECTIONS) {
             setInitialFilteredLocations(filteredLocations)
             setFilteredLocations([]);
         } else {
@@ -638,7 +636,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             case mapClickActions.SetCurrentLocation:
                 // Do not set the current location if the clicked location is the same as the kioskOriginLocationId,
                 // due to the logic of displaying directions right away when selecting a location on the map, when in kiosk mode.
-                if (locationsDisabledRef.current !== true && location.id !== kioskOriginLocationId) {
+                if (location.id !== kioskOriginLocationId) {
                     setCurrentLocation(location);
                 }
                 break;
@@ -674,7 +672,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [category, categories, mapsindoorsSDKAvailable]);
 
     return <div className={`mapsindoors-map
-    ${locationsDisabledRef.current ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}
+    ${currentAppView === appStates.DIRECTIONS ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}
     ${(venuesInSolution.length > 1 && showVenueSelector) ? '' : 'mapsindoors-map--hide-venue-selector'}
     ${showPositionControl ? 'mapsindoors-map--show-my-position' : 'mapsindoors-map--hide-my-position'}`}>
         <Notification />
