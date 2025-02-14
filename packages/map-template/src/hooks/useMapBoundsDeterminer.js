@@ -56,7 +56,7 @@ const useMapBoundsDeterminer = () => {
     const [kioskLocationDisplayRuleWasChanged, setKioskLocationDisplayRuleWasChanged] = useState(false);
     const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
     const isMapReady = useRecoilState(isMapReadyState);
-    const [center, ] = useRecoilState(centerState);
+    const [center,] = useRecoilState(centerState);
 
     /**
      * If the app is inactive, run code to reset to initial map position.
@@ -148,10 +148,8 @@ const useMapBoundsDeterminer = () => {
             } else if (currentVenue) {
                 if (venueWasSelected) {
                     if (isDesktop) {
-                        getDesktopPaddingLeft().then(desktopPaddingLeft => {
-                            setMapPositionKnown(currentVenue.geometry);
-                            goTo(currentVenue.geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, getZoomLevel(startZoomLevel), currentPitch, bearing);
-                        });
+                        setMapPositionKnown(currentVenue.geometry);
+                        goTo(currentVenue.geometry, mapsIndoorsInstance, 0, 0, getZoomLevel(startZoomLevel), currentPitch, bearing);
                     } else {
                         getMobilePaddingBottom().then(mobilePaddingBottom => {
                             setMapPositionKnown(currentVenue.geometry);
@@ -270,17 +268,24 @@ export default useMapBoundsDeterminer;
  * @param {number} zoomLevel - Enforced zoom level.
  * @param {number} pitch - Map pitch (tilt).
  * @param {number} bearing - Mp bearing (rotation) in degrees from north.
- * @param {boolean} [mapPositionKnown] - Checks if map position is known. Based on that, we can perform zooming to a specific geometry, once map is loaded.
  */
-function goTo(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLevel, pitch, bearing, mapPositionKnown) {
-    mapsIndoorsInstance.getMapView().tilt(pitch || 0);
-    mapsIndoorsInstance.getMapView().rotate(bearing || 0);
-    mapsIndoorsInstance.goTo({ type: 'Feature', geometry, properties: {} }, {
-        maxZoom: zoomLevel ?? 22,
-        padding: { top: 0, right: 0, bottom: paddingBottom, left: paddingLeft },
-    }).then(() => {
-        if (zoomLevel && mapPositionKnown !== false) {
-            mapsIndoorsInstance.setZoom(zoomLevel);
-        }
-    });
+function goTo(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLevel, pitch, bearing) {
+    const initialLoadZoomLevel = 18;
+
+    // If zoom level is default, use goTo() function that also fits bounds.
+    // Otherwise, set center to be a center point of a given geometry with a specified zoom level.
+    if (zoomLevel === initialLoadZoomLevel) {
+        mapsIndoorsInstance.getMapView().tilt(pitch || 0);
+        mapsIndoorsInstance.getMapView().rotate(bearing || 0);
+        mapsIndoorsInstance.goTo({ type: 'Feature', geometry, properties: {} }, {
+            maxZoom: zoomLevel ?? 22,
+            padding: { top: 0, right: 0, bottom: paddingBottom, left: paddingLeft },
+        })
+    } else {
+        const centerOfGeometry = turf.center(geometry);
+        const mapView = mapsIndoorsInstance.getMapView();
+
+        mapView.setCenter({ lat: centerOfGeometry.geometry.coordinates[1], lng: centerOfGeometry.geometry.coordinates[0] })
+        mapsIndoorsInstance.setZoom(zoomLevel);
+    }
 }
