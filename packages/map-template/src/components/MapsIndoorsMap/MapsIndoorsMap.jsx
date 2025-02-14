@@ -141,7 +141,7 @@ function MapsIndoorsMap(props) {
             apiKey,
             venue,
             locationId: props.supportsUrlParameters && locationIdQueryParameter ? locationIdQueryParameter : props.locationId,
-            logo: props.supportsUrlParameters && logoQueryParameter ? logoQueryParameter : (props.logo),
+            logo: props.supportsUrlParameters && logoQueryParameter ? logoQueryParameter : props.logo,
             directionsFrom: props.supportsUrlParameters && directionsFromQueryParameter ? directionsFromQueryParameter : props.directionsFrom,
             directionsTo: props.supportsUrlParameters && directionsToQueryParameter ? directionsToQueryParameter : props.directionsTo,
             tileStyle: props.supportsUrlParameters && tileStyleQueryParameter ? tileStyleQueryParameter : props.tileStyle,
