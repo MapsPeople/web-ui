@@ -1,10 +1,12 @@
 import { memo, useCallback, useState, useMemo } from 'react';
+import { useRecoilValue } from 'recoil';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import './OpeningHours.scss';
 import { ReactComponent as ClockIcon } from '../../../assets/clock-light.svg';
 import { ReactComponent as ChevronDownIcon } from '../../../assets/chevron-down.svg';
 import { ReactComponent as ChevronUpIcon } from '../../../assets/chevron-up.svg';
+import languageState from '../../../atoms/languageState';
 
 OpeningHours.propTypes = {
     openingHours: PropTypes.object,
@@ -26,6 +28,8 @@ OpeningHours.propTypes = {
 function OpeningHours({ openingHours, isAmFormat = false, isMondayFirstDayOfTheWeek = true }) {
     const { t } = useTranslation();
     const [isExpanded, setIsExpanded] = useState(false);
+    const currentLanguage = useRecoilValue(languageState);
+    const languageToUse = currentLanguage ?? navigator.language;
 
     /**
      * Gets the current day of the week (0-6, where Sunday is 0)
@@ -157,7 +161,7 @@ function OpeningHours({ openingHours, isAmFormat = false, isMondayFirstDayOfTheW
                     const hours = getOpeningHoursForDay(day);
                     return (
                         <li key={day} className="opening-hours__list-item">
-                            <span className="opening-hours__day">{day.toLocaleString(undefined, { weekday: 'long' })}</span>
+                            <span className="opening-hours__day">{day.toLocaleString(languageToUse, { weekday: 'long' })}</span>
                             <span className={`opening-hours__hours ${hours.isClosed ? 'opening-hours__hours--closed' : ''}`}>
                                 {hours.text}
                             </span>
