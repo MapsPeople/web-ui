@@ -5,6 +5,7 @@ import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js
 import i18n from 'i18next';
 import initI18n from '../../i18n/initialize.js';
 import './MapTemplate.scss';
+import { mapClickActions } from '../../constants/mapClickActions.js';
 import MapWrapper from "../MapWrapper/MapWrapper";
 import SplashScreen from '../SplashScreen/SplashScreen';
 import VenueSelector from '../VenueSelector/VenueSelector';
@@ -56,11 +57,10 @@ import { useCurrentVenue } from '../../hooks/useCurrentVenue.js';
 import showExternalIDsState from '../../atoms/showExternalIDsState.js'
 import showRoadNamesState from '../../atoms/showRoadNamesState.js';
 import searchExternalLocationsState from '../../atoms/searchExternalLocationsState.js';
+import wayfindingLocationState from '../../atoms/wayfindingLocation.js';
 import isNullOrUndefined from '../../helpers/isNullOrUndefined.js';
 import centerState from '../../atoms/centerState.js';
 import PropTypes from 'prop-types';
-import { mapClickActions } from '../../constants/mapClickActions.js';
-import wayfindingLocationState from '../../atoms/wayfindingLocation.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
