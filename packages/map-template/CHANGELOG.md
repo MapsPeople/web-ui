@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Share functionality: From the Location details view the user can now copy a URL or scan a QR code that links to the Location.
+- Share functionality: From the Location details view the user can now copy a URL or scan a QR code that links to the Location (requires the `supportsUrlParameters` prop to be true).
 
 ## [1.68.3] - 2025-02-13
 
