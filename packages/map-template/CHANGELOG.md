@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.70.0] - 2025-02-18
+
+### Added
+
+- If `language`, `primaryColor`, `logo`, `venue`, `startZoomLevel`, `pitch` and `bearing` props are not defined in the URL, their value is going to be dictated by App Config object.
+
 ## [1.69.1] - 2025-02-18
 
 ### Fixed
