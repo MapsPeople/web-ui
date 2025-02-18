@@ -10,11 +10,12 @@ import directionsResponseState from "../../atoms/directionsResponseState";
 import activeStepState from "../../atoms/activeStep";
 import { snapPoints } from "../../constants/snapPoints";
 import substepsToggledState from "../../atoms/substepsToggledState";
+import currentLocationState from '../../atoms/currentLocationState';
 import getDesktopPaddingLeft from "../../helpers/GetDesktopPaddingLeft";
 import getMobilePaddingBottom from "../../helpers/GetMobilePaddingBottom";
 import getDesktopPaddingBottom from "../../helpers/GetDesktopPaddingBottom";
 import kioskLocationState from "../../atoms/kioskLocationState";
-import showQRCodeDialogState from "../../atoms/showQRCodeDialogState";
+import qrCodeLinkState from '../../atoms/qrCodeLinkState';
 import Accessibility from "../Accessibility/Accessibility";
 import isDestinationStepState from "../../atoms/isDestinationStepState";
 import primaryColorState from "../../atoms/primaryColorState";
@@ -22,6 +23,7 @@ import { useIsKioskContext } from "../../hooks/useIsKioskContext";
 import { useIsDesktop } from "../../hooks/useIsDesktop";
 import showExternalIDsState from '../../atoms/showExternalIDsState';
 import PropTypes from "prop-types";
+import baseLinkSelector from '../../selectors/baseLink';
 
 let directionsRenderer;
 
@@ -68,7 +70,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
 
     const isDesktop = useIsDesktop();
 
-    const [, setShowQRCodeDialog] = useRecoilState(showQRCodeDialogState);
+    const [, setQRCodeLink] = useRecoilState(qrCodeLinkState)
 
     const isDestinationStep = useRecoilValue(isDestinationStepState);
 
@@ -77,6 +79,10 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
     const isKioskContext = useIsKioskContext();
 
     const showExternalIDs = useRecoilValue(showExternalIDsState);
+
+    const baseShareLink = useRecoilValue(baseLinkSelector);
+
+    const currentLocation = useRecoilValue(currentLocationState);
 
     useEffect(() => {
         return () => {
@@ -256,6 +262,14 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
     }
 
     /**
+     * Build the QR code link and set the state in order to show the QR code dialog.
+     */
+    function showQRCode() {
+        const qrCodeLink = `${baseShareLink}&directionsFrom=${kioskLocation.id}&directionsTo=${currentLocation.id}`;
+        setQRCodeLink(qrCodeLink);
+    }
+
+    /**
      * Set the size of the bottom sheet depending on the substepsOpen state.
      */
     useEffect(() => {
@@ -289,7 +303,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
                     <hr />
                     <div className="directions__kiosk">
                         <Accessibility onAccessibilityChanged={() => resetSubsteps()} />
-                        <button className="directions__qr-code" onClick={() => setShowQRCodeDialog(true)}><QRCode />{t('Scan QR code')}</button>
+                        <button className="directions__qr-code" onClick={() => showQRCode()}><QRCode />{t('Scan QR code')}</button>
                     </div>
                 </>
             }
