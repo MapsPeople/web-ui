@@ -18,6 +18,7 @@ import { useIsDesktop } from '../../hooks/useIsDesktop';
 import showExternalIDsState from '../../atoms/showExternalIDsState';
 import useOutsideMapsIndoorsDataClick from '../../hooks/useOutsideMapsIndoorsDataClick';
 import PropTypes from 'prop-types';
+import ShareLocationLink from './ShareLocationLink/ShareLocationLink';
 
 LocationDetails.propTypes = {
     onBack: PropTypes.func,
@@ -239,9 +240,12 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                     </div>
                     <mi-location-info level={t('Level')} ref={locationInfoElement} show-external-id={showExternalIDs} />
                 </div>
-                <button className="location-info__close" onClick={() => back()}>
-                    <CloseIcon />
-                </button>
+                <div className="location-info__actions">
+                    <ShareLocationLink buttonClassName="location-info__button" location={location} />
+                    <button className="location-info__button" onClick={() => back()}>
+                        <CloseIcon />
+                    </button>
+                </div>
             </div>
 
             <div ref={locationDetailsContainer} onScroll={e => setScrollIndicators(e)} className="location-details__details">

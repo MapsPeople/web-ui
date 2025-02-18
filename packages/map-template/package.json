@@ -1,7 +1,7 @@
 {
   "name": "@mapsindoors/map-template",
   "description": "Get a MapsIndoors map up and running in less than 10 mins.",
-  "version": "1.68.3",
+  "version": "1.69.1",
   "private": false,
   "files": [
     "dist/*.js",
@@ -30,6 +30,7 @@
     "prop-types": "^15.8.1",
     "qrcode": "^1.5.3",
     "react": "^18.2.0",
+    "react-click-away-listener": "2.3.0",
     "react-dom": "^18.2.0",
     "react-i18next": "^13.5.0",
     "react-swipeable": "^7.0.0",

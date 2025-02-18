@@ -103,7 +103,7 @@ const useMapBoundsDeterminer = () => {
 
                             getDesktopPaddingBottom().then(desktopPaddingBottom => {
                                 setMapPositionKnown(kioskLocation.geometry);
-                                goTo(kioskLocation.geometry, mapsIndoorsInstance, desktopPaddingBottom, 0, getZoomLevel(startZoomLevel), currentPitch, bearing);
+                                goTo(kioskLocation.geometry, mapsIndoorsInstance, desktopPaddingBottom, 0, undefined, currentPitch, bearing);
                             });
                         }
                     });
@@ -134,12 +134,12 @@ const useMapBoundsDeterminer = () => {
                             if (isDesktop) {
                                 getDesktopPaddingLeft().then(desktopPaddingLeft => {
                                     setMapPositionKnown(location.geometry);
-                                    goTo(location.geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, getZoomLevel(startZoomLevel), currentPitch, bearing);
+                                    goTo(location.geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, undefined, currentPitch, bearing);
                                 });
                             } else {
                                 getMobilePaddingBottom().then(mobilePaddingBottom => {
                                     setMapPositionKnown(location.geometry);
-                                    goTo(location.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, getZoomLevel(startZoomLevel), currentPitch, bearing);
+                                    goTo(location.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, undefined, currentPitch, bearing);
                                 });
                             }
                         }
@@ -272,9 +272,9 @@ export default useMapBoundsDeterminer;
 function goTo(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLevel, pitch, bearing) {
     const initialLoadZoomLevel = 18;
 
-    // If zoom level is default, use goTo() function that also fits bounds.
+    // If zoom level is undefined or default, use goTo() function that also fits bounds.
     // Otherwise, set center to be a center point of a given geometry with a specified zoom level.
-    if (zoomLevel === initialLoadZoomLevel) {
+    if (zoomLevel === undefined || zoomLevel === initialLoadZoomLevel) {
         mapsIndoorsInstance.getMapView().tilt(pitch || 0);
         mapsIndoorsInstance.getMapView().rotate(bearing || 0);
         mapsIndoorsInstance.goTo({ type: 'Feature', geometry, properties: {} }, {
