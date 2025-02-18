@@ -169,3 +169,9 @@
         gap: var(--spacing-xx-small);
     }
 }
+
+.contact-action-buttons-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-x-small);
+}
