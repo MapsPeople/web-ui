@@ -35,6 +35,7 @@ import accessibilityOnState from "../../atoms/accessibilityOnState";
 import Accessibility from "../Accessibility/Accessibility";
 import searchExternalLocationsState from "../../atoms/searchExternalLocationsState";
 import PropTypes from 'prop-types';
+import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 
 const searchFieldIdentifiers = {
     TO: 'TO',
@@ -118,6 +119,8 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     const [totalDistance, totalTime, hasFoundRoute, areDirectionsReady] = useDirectionsInfo(originLocation, destinationLocation, directionsService, travelMode, accessibilityOn)
 
     const searchExternalLocations = useRecoilValue(searchExternalLocationsState);
+
+    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
 
     /**
      * Decorates location with data that is required for wayfinding to work.
@@ -314,6 +317,13 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
             }
             setDestinationLocation(originLocation);
             setOriginLocation(destinationLocation);
+
+            // When switching route order from A->B to B->A, remove selection pin and select new originLocation.
+            mapsIndoorsInstance.deselectLocation();
+
+            if (mapsIndoorsInstance.deselectLocation) {
+                mapsIndoorsInstance.selectLocation(originLocation)
+            }
         }
     }
 
