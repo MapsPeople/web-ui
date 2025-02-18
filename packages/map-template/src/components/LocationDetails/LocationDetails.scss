@@ -121,7 +121,7 @@
     display: grid;
     align-items: center;
     font-size: var(--font-size-small);
-    grid-template-columns: min-content 1fr var(--spacing-xx-large);
+    grid-template-columns: min-content 1fr min-content;
     gap: var(--spacing-x-small);
 
     &__icon {
@@ -133,7 +133,13 @@
         }
     }
 
-    &__close {
+    &__actions {
+        margin-left: auto;
+        display: flex;
+        gap: var(--spacing-x-small);
+    }
+
+    &__button {
         background: none;
         border: 1px solid var(--tailwind-colors-gray-200);
         margin-left: auto;
