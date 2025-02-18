@@ -619,6 +619,13 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [center]);
 
     /**
+     * Sets app title based on app config.
+     */
+    useEffect(() => {
+        document.title = appConfig?.appSettings?.title ?? 'MapsIndoors Web';
+    }, [appConfig])
+
+    /**
      * When map position is known while initializing the data,
      * set map to be ready.
      */
