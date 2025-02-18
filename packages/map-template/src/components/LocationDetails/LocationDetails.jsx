@@ -150,8 +150,8 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
     }, []);
 
     /**
-    * Close the Location details page.
-    */
+     * Sets full description, content above/below flags to false and triggers the onBack callback.
+     */
     const back = useCallback(() => {
         setShowFullDescription(false);
         setDescriptionHasContentAbove(false);
@@ -245,12 +245,18 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
         onStartDirections();
     }
 
+    /*
+     * Closes location details when user clicks outside MapsIndoors data.
+     */
     useEffect(() => {
         if (clickedOutsideMapsIndoorsData) {
             onBack();
         }
     }, [clickedOutsideMapsIndoorsData]);
 
+    /*
+     * Cleanup on unmount: resets location display rule and direction locations.
+     */
     useEffect(() => {
         return () => {
             setLocationDisplayRule(null);
@@ -259,6 +265,9 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
         }
     }, []);
 
+    /*
+     * Updates location details and routing state when location dependencies change.
+     */
     useEffect(() => {
         // Reset state
         setShowFullDescription(false);
@@ -278,8 +287,8 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
     }, [location, mapsIndoorsInstance, kioskLocation]);
 
     /*
-   * When user swipes the bottom sheet to a new snap point.
-   */
+     * When user swipes the bottom sheet to a new snap point.
+     */
     useEffect(() => {
         if (snapPointSwiped === undefined) return;
 
@@ -312,6 +321,26 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                     </button>
                 </div>
             </div>
+
+            {/* Wayfinding Button */}
+            {kioskLocation && isDesktop ? (
+                <button
+                    disabled={!hasFoundRoute}
+                    onClick={() => startDirections()}
+                    className={`location-details__wayfinding ${!hasFoundRoute ? 'location-details--no-route' : ''}`}
+                    style={{ background: primaryColor }}
+                >
+                    {!hasFoundRoute ? t('Directions not available') : t('Start directions')}
+                </button>
+            ) : (
+                <button
+                    onClick={() => startWayfinding()}
+                    style={{ background: primaryColor }}
+                    className="location-details__wayfinding"
+                >
+                    {t('Start wayfinding')}
+                </button>
+            )}
 
             <div ref={locationDetailsContainer} onScroll={e => setScrollIndicators(e)} className="location-details__details">
                 {/* Location image */}
@@ -356,22 +385,6 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                     ))}
                 </div>
             </div>
-
-            {kioskLocation && isDesktop
-                ?
-                <button disabled={!hasFoundRoute}
-                    onClick={() => startDirections()}
-                    className={`location-details__wayfinding ${!hasFoundRoute ? 'location-details--no-route' : ''}`}
-                    style={{ background: primaryColor }}>
-                    {!hasFoundRoute ? t('Directions not available') : t('Start directions')}
-                </button>
-                :
-                <button onClick={() => startWayfinding()}
-                    style={{ background: primaryColor }}
-                    className="location-details__wayfinding">
-                    {t('Start wayfinding')}
-                </button>
-            }
         </>}
     </div>
 }
