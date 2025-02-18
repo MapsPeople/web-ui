@@ -784,11 +784,6 @@ export namespace Components {
          */
         "closeSubsteps": () => Promise<void>;
         /**
-          * The final step when the user has arrived to the destination location.
-          * @type {string}
-         */
-        "destinationLocation"?: string;
-        /**
           * The route context of previous step, if any.
           * @type {string}
          */
@@ -2161,11 +2156,6 @@ declare namespace LocalJSX {
     }
     interface MiRouteInstructionsStep {
         /**
-          * The final step when the user has arrived to the destination location.
-          * @type {string}
-         */
-        "destinationLocation"?: string;
-        /**
           * The route context of previous step, if any.
           * @type {string}
          */
@@ -2189,7 +2179,6 @@ declare namespace LocalJSX {
           * Event emitted when clicking on a step (not sub step).
           * @event stepClicked
           * @type {object}
-          * @properties Object
          */
         "onStepClicked"?: (event: MiRouteInstructionsStepCustomEvent<object>) => void;
         /**
