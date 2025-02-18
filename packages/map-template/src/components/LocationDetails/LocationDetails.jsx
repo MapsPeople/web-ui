@@ -179,7 +179,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
         onStartDirections();
     }
 
-    /**
+    /*
      * Closes location details when user clicks outside MapsIndoors data.
      */
     useEffect(() => {
@@ -188,7 +188,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
         }
     }, [clickedOutsideMapsIndoorsData]);
 
-    /**
+    /*
      * Cleanup on unmount: resets location display rule and direction locations.
      */
     useEffect(() => {
@@ -199,7 +199,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
         }
     }, []);
 
-    /**
+    /*
      * Updates location details and routing state when location dependencies change.
      */
     useEffect(() => {
@@ -220,7 +220,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
         }
     }, [location, mapsIndoorsInstance, kioskLocation]);
 
-    /**
+    /*
      * When user swipes the bottom sheet to a new snap point.
      */
     useEffect(() => {
