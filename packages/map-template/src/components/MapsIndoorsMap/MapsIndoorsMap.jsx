@@ -88,8 +88,6 @@ function MapsIndoorsMap(props) {
 
         const defaultProps = {
             apiKey: 'mapspeople3d',
-            logo: 'https://app.mapsindoors.com/mapsindoors/gfx/mapspeople-logo/mapspeople-pin.svg',
-            primaryColor: '#005655', // --brand-colors-dark-pine-100 from MIDT
             useMapProviderModule: false,
             useKeyboard: false,
             searchAllVenues: false,
@@ -143,7 +141,7 @@ function MapsIndoorsMap(props) {
             apiKey,
             venue,
             locationId: props.supportsUrlParameters && locationIdQueryParameter ? locationIdQueryParameter : props.locationId,
-            logo: props.supportsUrlParameters && logoQueryParameter ? logoQueryParameter : (props.logo || defaultProps.logo),
+            logo: props.supportsUrlParameters && logoQueryParameter ? logoQueryParameter : props.logo,
             directionsFrom: props.supportsUrlParameters && directionsFromQueryParameter ? directionsFromQueryParameter : props.directionsFrom,
             directionsTo: props.supportsUrlParameters && directionsToQueryParameter ? directionsToQueryParameter : props.directionsTo,
             tileStyle: props.supportsUrlParameters && tileStyleQueryParameter ? tileStyleQueryParameter : props.tileStyle,
@@ -152,7 +150,7 @@ function MapsIndoorsMap(props) {
             bearing: props.supportsUrlParameters && bearingQueryParameter ? bearingQueryParameter : props.bearing,
             gmApiKey: props.supportsUrlParameters && gmApiKeyQueryParameter ? gmApiKeyQueryParameter : props.gmApiKey,
             mapboxAccessToken: props.supportsUrlParameters && mapboxAccessTokenQueryParameter ? mapboxAccessTokenQueryParameter : props.mapboxAccessToken,
-            primaryColor: props.supportsUrlParameters && primaryColorQueryParameter ? '#' + primaryColorQueryParameter : (props.primaryColor || defaultProps.primaryColor),
+            primaryColor: props.supportsUrlParameters && primaryColorQueryParameter ? '#' + primaryColorQueryParameter : props.primaryColor,
             appUserRoles: props.supportsUrlParameters && appUserRolesQueryParameter ? appUserRolesQueryParameter : props.appUserRoles,
             externalIDs: props.supportsUrlParameters && externalIDsQueryParameter ? externalIDsQueryParameter : props.externalIDs,
             gmMapId: props.supportsUrlParameters && gmMapIdQueryParameter ? gmMapIdQueryParameter : props.gmMapId,
