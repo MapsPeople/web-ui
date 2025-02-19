@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRecoilState, useRecoilValue } from 'recoil';
 import MIMap from '@mapsindoors/react-components/src/components/MIMap/MIMap';
 import { mapTypes } from "../../constants/mapTypes";
@@ -29,7 +29,9 @@ MapWrapper.propTypes = {
     useMapProviderModule: PropTypes.bool.isRequired,
     onMapPositionInvestigating: PropTypes.func.isRequired,
     onViewModeSwitchKnown: PropTypes.func.isRequired,
-    resetCount: PropTypes.number.isRequired
+    resetCount: PropTypes.number.isRequired,
+    mapOptions: PropTypes.object,
+    onMapOptionsChange: PropTypes.func,
 };
 
 /**
@@ -49,9 +51,11 @@ let _tileStyle;
  * @param {function} onMapPositionInvestigating - Function that is run when the map position is being determined.
  * @param {function} onViewModeSwitchKnown - Function that is run when the view mode switch is known (if it is to be shown of not).
  * @param {number} resetCount - A counter that is incremented when the map should be reset.
+ * @param {object} props.mapOptions - Options for instantiating and styling the map as well as UI elements.
+ * @param {function} props.onMapOptionsChange - Function that is run when the map options are changed.
  * @returns
  */
-function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating, onViewModeSwitchKnown, resetCount }) {
+function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating, onViewModeSwitchKnown, resetCount, mapOptions, onMapOptionsChange }) {
     const apiKey = useRecoilValue(apiKeyState);
     const gmApiKey = useRecoilValue(gmApiKeyState);
     const mapboxAccessToken = useRecoilValue(mapboxAccessTokenState);
@@ -68,7 +72,6 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
     const solution = useRecoilValue(solutionState);
     const [, setErrorMessage] = useRecoilState(notificationMessageState);
     const hideNonMatches = useRecoilValue(hideNonMatchesState);
-    const [mapOptions, setMapOptions] = useState({});
     const miTransitionLevel = useRecoilValue(miTransitionLevelState);
 
     useLiveData(apiKey);
@@ -292,7 +295,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
      */
     useEffect(() => {
         if (!isNaN(parseInt(miTransitionLevel))) {
-            setMapOptions({ miTransitionLevel: miTransitionLevel })
+            onMapOptionsChange({ miTransitionLevel: miTransitionLevel })
         }
     }, [miTransitionLevel])
 

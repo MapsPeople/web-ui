@@ -39,7 +39,7 @@ import Notification from '../WebComponentWrappers/Notification/Notification.jsx'
 import kioskLocationState from '../../atoms/kioskLocationState';
 import timeoutState from '../../atoms/timoutState.js';
 import { useInactive } from '../../hooks/useInactive.js';
-import showQRCodeDialogState from '../../atoms/showQRCodeDialogState';
+import qrCodeLinkState from '../../atoms/qrCodeLinkState.js';
 import QRCodeDialog from '../QRCodeDialog/QRCodeDialog';
 import supportsUrlParametersState from '../../atoms/supportsUrlParametersState';
 import useKeyboardState from '../../atoms/useKeyboardState';
@@ -131,6 +131,7 @@ MapTemplate.propTypes = {
  */
 function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations, center }) {
 
+    const [mapOptions, setMapOptions] = useState({ brandingColor: primaryColor });
     const [, setApiKey] = useRecoilState(apiKeyState);
     const [, setGmApiKey] = useRecoilState(gmApiKeyState);
     const [, setMapboxAccessToken] = useRecoilState(mapboxAccessTokenState);
@@ -160,6 +161,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setSearchExternalLocations] = useRecoilState(searchExternalLocationsState);
     const [, setCenter] = useRecoilState(centerState);
     const [viewModeSwitchVisible, setViewModeSwitchVisible] = useState();
+    const qrCodeLink = useRecoilValue(qrCodeLinkState)
 
     const [showVenueSelector, setShowVenueSelector] = useState(true);
     const [showPositionControl, setShowPositionControl] = useState(true);
@@ -198,7 +200,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     // Indicate if the MapsIndoors JavaScript SDK is available.
     const [mapsindoorsSDKAvailable, setMapsindoorsSDKAvailable] = useState(false);
 
-    const showQRCodeDialog = useRecoilValue(showQRCodeDialogState);
     const showLegendDialog = useRecoilValue(isLegendDialogVisibleState);
 
     // The reset count is used to add a new key to the sidebar or bottomsheet, forcing it to re-render from scratch when resetting the Map Template.
@@ -228,6 +229,18 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             }
         });
     }
+
+    /**
+     * Updates the map options state by merging new options with existing ones
+     * @param {Object} newMapOptions - The new map options to merge with existing options
+     * @returns {void}
+     */
+    const handleMapOptionsChange = (newMapOptions) => {
+        setMapOptions(previousMapOptions => ({
+            ...previousMapOptions,
+            ...newMapOptions
+        }))
+    };
 
     /*
      * If the app is inactive, run code to reset UI and state.
@@ -652,7 +665,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             onClose={() => goBack()}
             active={currentAppView === appStates.VENUE_SELECTOR}
         />}
-        {showQRCodeDialog && <QRCodeDialog />}
+        {qrCodeLink && <QRCodeDialog />}
         {showLegendDialog && <LegendDialog />}
         {isMapPositionInvestigating &&
             <Fragment key={resetCount}>
@@ -685,6 +698,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             onLocationClick={(location) => locationClicked(location)}
             onViewModeSwitchKnown={visible => setViewModeSwitchVisible(visible)}
             resetCount={resetCount}
+            mapOptions={mapOptions}
+            onMapOptionsChange={handleMapOptionsChange}
         />
     </div>
 }
