@@ -71,6 +71,10 @@ const da = {
     // Directions
     'Cancel route': 'Annullér ruten',
     'Finish route': 'Afslut ruten',
+    // Share location link
+    'Share': 'Del',
+    'Copy link': 'Kopiér link',
+    'QR Code': 'QR-kode',
     //Opening Hours
     'Open': 'Åben',
     'Closed': 'Lukket',

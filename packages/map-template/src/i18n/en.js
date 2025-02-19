@@ -71,6 +71,10 @@ const en = {
     // Directions
     'Cancel route': 'Cancel route',
     'Finish route': 'Finish route',
+    // Share location link
+    'Share': 'Share',
+    'Copy link': 'Copy link',
+    'QR Code': 'QR Code',
     // Opening Hours
     'Open': 'Open',
     'Closed': 'Closed',

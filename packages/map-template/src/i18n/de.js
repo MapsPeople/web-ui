@@ -71,6 +71,10 @@ const de = {
     // Directions
     'Cancel route': 'Route abbrechen',
     'Finish route': 'Route beenden',
+    // Share location link
+    'Share': 'Teilen',
+    'Copy link': 'Link kopieren',
+    'QR Code': 'QR code',
     // Opening Hours
     'Open': 'Geöffnet',
     'Closed': 'Geschlossen',

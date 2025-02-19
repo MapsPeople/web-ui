@@ -19,6 +19,8 @@ import showExternalIDsState from '../../atoms/showExternalIDsState';
 import useOutsideMapsIndoorsDataClick from '../../hooks/useOutsideMapsIndoorsDataClick';
 import OpeningHours from './OpeningHours/OpeningHours';
 import PropTypes from 'prop-types';
+import ShareLocationLink from './ShareLocationLink/ShareLocationLink';
+import ContactActionButton from '../ContactActionButton/ContactActionButton';
 
 LocationDetails.propTypes = {
     onBack: PropTypes.func,
@@ -123,9 +125,73 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
             }
         }
     };
+    // TODO - Replace with actual data from MapsIndoors
+    const mockData = [{
+        key: "whatsapp-contact",
+        detailType: "whatsapp",
+        active: true,
+        displayText: "Chat on WhatsApp",
+        value: "+1234567890",
+        icon: "https://app.mapsindoors.com/mapsindoors/cms/assets/icons/building-icons/office.png",
+        openingHours: null
+    },
+    {
+        key: "facebook-page",
+        detailType: "facebook",
+        active: false,
+        displayText: "Follow us on Facebook",
+        value: "facebook.com/businesspage",
+        icon: "https://example.com/mock-facebook-icon.png",
+        openingHours: null
+    },
+    {
+        key: "instagram-profile",
+        detailType: "instagram",
+        active: true,
+        displayText: "Follow us on Instagram",
+        value: "@test",
+        icon: "https://app.mapsindoors.com/mapsindoors/cms/assets/icons/shopping/map-kiosk.png",
+        openingHours: null
+    },
+    {
+        key: "telegram-contact",
+        detailType: "telegram",
+        active: true,
+        displayText: "Message us on Telegram",
+        value: "@telegramusername",
+        icon: "https://app.mapsindoors.com/mapsindoors/cms/assets/icons/building-icons/letter-boxes.png",
+        openingHours: null
+    },
+    {
+        key: "phone-contact",
+        detailType: "phone",
+        active: true,
+        displayText: "Call us",
+        value: "+1234567890",
+        icon: "https://app.mapsindoors.com/mapsindoors/cms/assets/icons/building-icons/video-chat-room.png",
+        openingHours: null
+    },
+    {
+        key: "keyvalue3",
+        detailType: "email",
+        active: true,
+        displayText: "Contact support",
+        value: "support@example.com",
+        icon: "https://app.mapsindoors.com/mapsindoors/cms/assets/icons/building-icons/letter-boxes.png",
+        openingHours: null
+    },];
+
+    useEffect(() => {
+        return () => {
+            setLocationDisplayRule(null);
+            setDestinationLocation();
+            setOriginLocation();
+        }
+    }, []);
+
     /**
-    * Close the Location details page.
-    */
+     * Sets full description, content above/below flags to false and triggers the onBack callback.
+     */
     const back = useCallback(() => {
         setShowFullDescription(false);
         setDescriptionHasContentAbove(false);
@@ -219,12 +285,18 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
         onStartDirections();
     }
 
+    /*
+     * Closes location details when user clicks outside MapsIndoors data.
+     */
     useEffect(() => {
         if (clickedOutsideMapsIndoorsData) {
             onBack();
         }
     }, [clickedOutsideMapsIndoorsData]);
 
+    /*
+     * Cleanup on unmount: resets location display rule and direction locations.
+     */
     useEffect(() => {
         return () => {
             setLocationDisplayRule(null);
@@ -233,6 +305,9 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
         }
     }, []);
 
+    /*
+     * Updates location details and routing state when location dependencies change.
+     */
     useEffect(() => {
         // Reset state
         setShowFullDescription(false);
@@ -252,8 +327,8 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
     }, [location, mapsIndoorsInstance, kioskLocation]);
 
     /*
-   * When user swipes the bottom sheet to a new snap point.
-   */
+     * When user swipes the bottom sheet to a new snap point.
+     */
     useEffect(() => {
         if (snapPointSwiped === undefined) return;
 
@@ -279,10 +354,33 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                     </div>
                     <mi-location-info level={t('Level')} ref={locationInfoElement} show-external-id={showExternalIDs} />
                 </div>
-                <button className="location-info__close" onClick={() => back()}>
-                    <CloseIcon />
-                </button>
+                <div className="location-info__actions">
+                    <ShareLocationLink buttonClassName="location-info__button" location={location} />
+                    <button className="location-info__button" onClick={() => back()}>
+                        <CloseIcon />
+                    </button>
+                </div>
             </div>
+
+            {/* Wayfinding Button */}
+            {kioskLocation && isDesktop ? (
+                <button
+                    disabled={!hasFoundRoute}
+                    onClick={() => startDirections()}
+                    className={`location-details__wayfinding ${!hasFoundRoute ? 'location-details--no-route' : ''}`}
+                    style={{ background: primaryColor }}
+                >
+                    {!hasFoundRoute ? t('Directions not available') : t('Start directions')}
+                </button>
+            ) : (
+                <button
+                    onClick={() => startWayfinding()}
+                    style={{ background: primaryColor }}
+                    className="location-details__wayfinding"
+                >
+                    {t('Start wayfinding')}
+                </button>
+            )}
 
             <div ref={locationDetailsContainer} onScroll={e => setScrollIndicators(e)} className="location-details__details">
                 {/* Location image */}
@@ -312,23 +410,21 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                         {t('Close')}
                     </button>}
                 </section>}
-            </div>
 
-            {kioskLocation && isDesktop
-                ?
-                <button disabled={!hasFoundRoute}
-                    onClick={() => startDirections()}
-                    className={`location-details__wayfinding ${!hasFoundRoute ? 'location-details--no-route' : ''}`}
-                    style={{ background: primaryColor }}>
-                    {!hasFoundRoute ? t('Directions not available') : t('Start directions')}
-                </button>
-                :
-                <button onClick={() => startWayfinding()}
-                    style={{ background: primaryColor }}
-                    className="location-details__wayfinding">
-                    {t('Start wayfinding')}
-                </button>
-            }
+                {/*Contact action button container */}
+                <div className='contact-action-buttons-container'>
+                    {mockData.map(button => (
+                        <ContactActionButton
+                            key={button.key}
+                            detailType={button.detailType}
+                            active={button.active}
+                            displayText={button.displayText}
+                            value={button.value}
+                            icon={button.icon}
+                        />
+                    ))}
+                </div>
+            </div>
         </>}
     </div>
 }

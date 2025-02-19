@@ -71,6 +71,10 @@ const fr = {
      // Directions
      'Cancel route': 'Annuler l\'itinéraire',
      'Finish route': 'Terminer l\'itinéraire',
+     // Share location link
+    'Share': 'Partager',
+    'Copy link': 'Copier le lien',
+    'QR Code': 'Code QR',
      // Opening Hours
     'Open': 'Ouvert',
     'Closed': 'Fermé',
