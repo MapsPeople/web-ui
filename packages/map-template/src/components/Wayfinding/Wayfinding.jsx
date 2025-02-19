@@ -320,10 +320,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
 
             // When switching route order from A->B to B->A, remove selection pin and select new originLocation.
             mapsIndoorsInstance.deselectLocation();
-
-            if (mapsIndoorsInstance.deselectLocation) {
-                mapsIndoorsInstance.selectLocation(originLocation)
-            }
+            mapsIndoorsInstance.selectLocation(originLocation)
         }
     }
 
