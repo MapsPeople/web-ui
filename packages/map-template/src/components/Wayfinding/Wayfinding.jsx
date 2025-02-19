@@ -329,6 +329,16 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         onBack();
     }
 
+    /**
+     * Trigger route search (by resetting variables).
+     */
+    function triggerRouteSearch() {
+        setSearchResults([]);
+        setSearchTriggered(false);
+        setHasGooglePlaces(false);
+        setShowMyPositionOption(false);
+    }
+
     useEffect(() => {
         return () => {
             setSearchResults([]);
@@ -356,11 +366,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
             return;
         }
 
-        // Trigger route search by resetting all these:
-        setSearchResults([]);
-        setSearchTriggered(false);
-        setHasGooglePlaces(false);
-        setShowMyPositionOption(false);
+        triggerRouteSearch();
         setWayfindingLocation(null); // will re-trigger another run with early exit but necessary in order to be able to re-click already clicked locations on the map
     }, [wayfindingLocation]);
 
