@@ -85,13 +85,13 @@ function OpeningHours({ openingHours, isAmFormat = false, isMondayFirstDayOfTheW
     };
 
     /**
-    * @note We use 'en-US' locale in both getOpeningHoursForDay() and getCurrentDayStatus() 
-    * to generate consistent lowercase English day names as keys (e.g. "monday", "tuesday").
-    * These keys must match the standardOpeningHours object structure.
-    * 
-    * Then we can use toLocaleString in the JSX return to show weekdays based on the browser's locale, 
-    * but internal lookups need standardized English keys.
-    */
+     * @note We use 'en-US' locale in both getOpeningHoursForDay() and getCurrentDayStatus() 
+     * to generate consistent lowercase English day names as keys (e.g. "monday", "tuesday").
+     * These keys must match the standardOpeningHours object structure.
+     * 
+     * Then we can use toLocaleString in the JSX return to show weekdays based on the browser's locale, 
+     * but internal lookups need standardized English keys.
+     */
 
     // Helper function that takes a date object (day) and returns the opening hours information for that specific day.
     const getOpeningHoursForDay = (day) => {
