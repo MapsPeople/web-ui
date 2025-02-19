@@ -91,9 +91,9 @@ function OpeningHours({ openingHours, isAmFormat = false, isMondayFirstDayOfTheW
      * 
      * Then we can use toLocaleString in the JSX return to show weekdays based on the browser's locale, 
      * but internal lookups need standardized English keys.
+     * 
+     * Helper function that takes a date object (day) and returns the opening hours information for that specific day.
      */
-
-    // Helper function that takes a date object (day) and returns the opening hours information for that specific day.
     const getOpeningHoursForDay = (day) => {
         const dayName = day.toLocaleString('en-US', { weekday: 'long' }).toLowerCase();
         const dayData = standardOpeningHours?.[dayName];
