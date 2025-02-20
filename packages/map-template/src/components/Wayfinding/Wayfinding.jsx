@@ -371,7 +371,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     }, [wayfindingLocation]);
 
     useEffect(() => {
-        setSize(snapPoints.MAX);
+        setSize(snapPoints.FIT);
         let originLocationWasSet = false;
 
         // In case both the from and to locations are the user's position, unset the directionsToLocation. We don't want the user to be able to navigate to and from the user's position.
