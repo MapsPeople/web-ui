@@ -53,3 +53,38 @@
         padding: var(--spacing-medium) var(--spacing-x-small) var(--spacing-medium) var(--spacing-x-small);
     }
 }
+.categories__scroll-button {
+    display: flex; // Enables flexbox layout
+    align-items: center; // Ensures vertical alignment
+    justify-content: flex-start; // Aligns items to the left
+    gap: var(--spacing-small); // Adds space between the icon and text
+    padding: var(--spacing-small) var(--spacing-medium);
+    width: 100% !important; // Adjusts width based on content
+    min-width: var(--spacing-xxx-large);
+    height: var(--spacing-xxx-large);
+    background-color: var(--brand-colors-white-100);
+    border: 1px solid var(--color-gray-30);
+    border-radius: var(--spacing-x-small);
+    cursor: pointer;
+    font-weight: bold;
+    white-space: nowrap; // Prevents text from wrapping
+    transition: background 0.3s ease, transform 0.2s ease;
+    margin-top: 8px !important;
+
+    svg {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0; // Prevents icon from shrinking
+    }
+
+    &:hover {
+        background-color: var(--color-gray-10);
+        transform: scale(1.05);
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+        opacity: 0.3;
+        transform: none;
+    }
+}

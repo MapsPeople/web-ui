@@ -33,6 +33,7 @@ import isNullOrUndefined from '../../helpers/isNullOrUndefined';
 import venuesInSolutionState from '../../atoms/venuesInSolutionState';
 import initialVenueNameState from '../../atoms/initialVenueNameState';
 import PropTypes from 'prop-types';
+import { ReactComponent as ChevronLeft } from '../../assets/chevron-left.svg';
 
 Search.propTypes = {
     categories: PropTypes.array,
@@ -215,6 +216,7 @@ function Search({ onSetSize, isOpen }) {
     function cleared() {
         setSearchResults([]);
         setShowNotFoundMessage(false);
+
         if (selectedCategory) {
             getFilteredLocations(selectedCategory);
         }
@@ -236,6 +238,7 @@ function Search({ onSetSize, isOpen }) {
         setSize(snapPoints.MAX);
         setSearchDisabled(false);
         searchFieldRef.current.getInputField();
+        console.log('clicked');
 
         const sheet = searchRef.current.closest('.sheet');
         if (sheet) {
@@ -342,6 +345,13 @@ function Search({ onSetSize, isOpen }) {
         }
     }
 
+    function onBack() {
+        console.log(searchResults);
+        setSearchResults([]);
+        setSelectedCategory(null);
+        setFilteredLocations([]);
+    }
+
     useEffect(() => {
         return () => {
             setHoveredLocation();
@@ -421,6 +431,8 @@ function Search({ onSetSize, isOpen }) {
      */
     useEffect(() => {
         if (selectedCategory) {
+            console.log(selectedCategory);
+
             getFilteredLocations(selectedCategory);
         }
     }, [selectedCategory]);
@@ -461,11 +473,29 @@ function Search({ onSetSize, isOpen }) {
                 </label>
             </div>
 
-
+            {isDesktop && searchResults.length > 0 && selectedCategory && (
+                <button
+                    className="categories__scroll-button"
+                    onClick={() => {
+                        onBack(); // Deselects category
+                        // updateScrollPosition(300); // Moves category list
+                    }}
+                    // disabled={isRightButtonDisabled}
+                >
+                    <ChevronLeft />
+                    {selectedCategory}
+                </button>
+            )}
 
             { /* Horizontal list of Categories */}
 
-            {categories.length > 0 && <Categories onSetSize={onSetSize}
+            {!showNotFoundMessage && isDesktop && categories.length > 0 && searchResults.length === 0 && <Categories onSetSize={onSetSize}
+                searchFieldRef={searchFieldRef}
+                getFilteredLocations={category => getFilteredLocations(category)}
+                isOpen={!!selectedCategory}
+            />}
+
+            {!isDesktop && categories.length > 0 && <Categories onSetSize={onSetSize}
                 searchFieldRef={searchFieldRef}
                 getFilteredLocations={category => getFilteredLocations(category)}
                 isOpen={!!selectedCategory}
