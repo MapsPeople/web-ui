@@ -17,6 +17,7 @@ import accessibilityOnState from '../../atoms/accessibilityOnState';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
 import showExternalIDsState from '../../atoms/showExternalIDsState';
 import useOutsideMapsIndoorsDataClick from '../../hooks/useOutsideMapsIndoorsDataClick';
+import OpeningHours from './OpeningHours/OpeningHours';
 import PropTypes from 'prop-types';
 import ShareLocationLink from './ShareLocationLink/ShareLocationLink';
 import ContactActionButton from '../ContactActionButton/ContactActionButton';
@@ -85,6 +86,45 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
 
     const clickedOutsideMapsIndoorsData = useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOpen);
 
+    const mockOpeningHours = {
+        standardOpeningHours: {
+            monday: {
+                closedAllDay: false,
+                startTime: "00:00",
+                endTime: "23:59"
+            },
+            tuesday: {
+                closedAllDay: false,
+                startTime: "09:00",
+                endTime: "15:00"
+            },
+            wednesday: {
+                closedAllDay: false,
+                startTime: "09:20",
+                endTime: "12:50"
+            },
+            thursday: {
+                closedAllDay: false,
+                startTime: "07:00",
+                endTime: "23:59"
+            },
+            friday: {
+                closedAllDay: false,
+                startTime: "00:00",
+                endTime: "17:59"
+            },
+            saturday: {
+                closedAllDay: true,
+                startTime: "00:00",
+                endTime: "23:59"
+            },
+            sunday: {
+                closedAllDay: true,
+                startTime: "00:00",
+                endTime: "23:59"
+            }
+        }
+    };
     // TODO - Replace with actual data from MapsIndoors
     const mockData = [{
         key: "whatsapp-contact",
@@ -352,7 +392,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                         return <React.Fragment key={category}>{category}{index < array.length - 1 && <>・</>}</React.Fragment>
                     })}
                 </p>}
-
+                <OpeningHours openingHours={mockOpeningHours} isMondayFirstDayOfTheWeek={false} />
                 {/* Location description */}
                 {location.properties.description && !showFullDescription && <section className="location-details__description">
                     <div ref={locationDetailsElement}>
