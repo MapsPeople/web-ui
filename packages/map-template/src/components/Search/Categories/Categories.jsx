@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import './Categories.scss';
-import { ReactComponent as ChevronRight } from '../../../assets/chevron-right.svg';
-import { ReactComponent as ChevronLeft } from '../../../assets/chevron-left.svg';
 import categoriesState from "../../../atoms/categoriesState";
 import primaryColorState from "../../../atoms/primaryColorState";
 import { snapPoints } from "../../../constants/snapPoints";
@@ -43,8 +41,6 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
     const isDesktop = useIsDesktop();
 
     const [isLeftButtonDisabled, setIsLeftButtonDisabled] = useState(true);
-
-    const [isRightButtonDisabled, setIsRightButtonDisabled] = useState(false);
 
     const primaryColor = useRecoilValue(primaryColorState);
 
@@ -109,7 +105,7 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
      * Update the state of the left and right scroll buttons
      */
     function updateScrollButtonsState() {
-        const { scrollLeft, scrollWidth, clientWidth } = categoriesListRef?.current || {};
+        const { scrollLeft } = categoriesListRef?.current || {};
 
         // Disable or enable the scroll left button
         if (scrollLeft === 0) {
@@ -117,25 +113,6 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
         } else if (isLeftButtonDisabled) {
             setIsLeftButtonDisabled(false);
         }
-
-        // Disable or enable the scroll right button
-        if (scrollWidth - scrollLeft === clientWidth) {
-            setIsRightButtonDisabled(true);
-        } else if (scrollWidth - scrollLeft > clientWidth) {
-            setIsRightButtonDisabled(false);
-        }
-    }
-
-    /**
-     * Update the scroll position based on the value
-     *
-     * @param {number} value
-     */
-    function updateScrollPosition(value) {
-        categoriesListRef?.current.scroll({
-            left: categoriesListRef?.current.scrollLeft + value,
-            behavior: 'smooth'
-        });
     }
 
     /**
@@ -145,7 +122,7 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
      * 2. Reset all search/filter related states to empty
      * 3. Collapse the view back to fit size
      * 4. Clear any existing search input
-     * 
+     *
      * Only triggers when:
      * - There is a currently selected category and user clicks outside MapsIndoors data
      */
@@ -214,13 +191,6 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
         <div className="categories prevent-scroll" {...scrollableContentSwipePrevent}>
             {categories.length > 0 &&
                 <>
-                    {isDesktop &&
-                        <button className={`categories__scroll-button`}
-                            onClick={() => updateScrollPosition(-300)}
-                            disabled={isLeftButtonDisabled}>
-                            <ChevronLeft />
-                        </button>
-                    }
                     <div ref={categoriesListRef} className="categories__list">
                         {categories?.map(([category, categoryInfo]) =>
                             <mi-chip
@@ -233,13 +203,6 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
                             </mi-chip>
                         )}
                     </div>
-                    {isDesktop &&
-                        <button className={`categories__scroll-button`}
-                            onClick={() => updateScrollPosition(300)}
-                            disabled={isRightButtonDisabled}>
-                            <ChevronRight />
-                        </button>
-                    }
                 </>}
         </div>
     )
