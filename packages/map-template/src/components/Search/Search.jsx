@@ -349,8 +349,6 @@ function Search({ onSetSize, isOpen }) {
             }
 
             return { display: 'flex', flexDirection: 'column', maxHeight, overflow: 'hidden' };
-        } else {
-            return { minHeight: categories.length > 0 ? '136px' : '80px' };
         }
     }
 
