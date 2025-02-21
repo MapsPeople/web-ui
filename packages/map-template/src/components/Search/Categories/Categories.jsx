@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import './Categories.scss';
 // import { ReactComponent as ChevronRight } from '../../../assets/chevron-right.svg';
-import { ReactComponent as ChevronLeft } from '../../../assets/chevron-left.svg';
+// import { ReactComponent as ChevronLeft } from '../../../assets/chevron-left.svg';
 import categoriesState from "../../../atoms/categoriesState";
 import primaryColorState from "../../../atoms/primaryColorState";
 import { snapPoints } from "../../../constants/snapPoints";
@@ -63,10 +63,8 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
     const category = useRecoilValue(categoryState);
 
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
-    const clickedOutsideMapsIndoorsData = useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOpen);
 
-    // Add new state for view mode
-    const [isListView, setIsListView] = useState(true);
+    const clickedOutsideMapsIndoorsData = useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOpen);
 
     /**
      * Communicate size change to parent component.
@@ -87,14 +85,12 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
     // eslint-disable-next-line no-unused-vars
     function categoryClicked(category) {
         setSelectedCategory(category);
-        setIsListView(false);
         setSize(snapPoints.MAX);
 
         if (selectedCategory === category) {
             // If the clicked category is the same as currently selected, "deselect" it.
             setSearchResults([]);
             setSelectedCategory(null);
-            setIsListView(true);
 
             // Pass an empty array to the filtered locations in order to reset the locations.
             setFilteredLocations([]);
@@ -110,15 +106,6 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
             // If the search field is empty, show all locations with that category.
             getFilteredLocations(category);
         }
-    }
-
-    // Add back navigation handler
-    function handleBack() {
-        setSelectedCategory(null);
-        setIsListView(true);
-        setSearchResults([]);
-        setFilteredLocations([]);
-        setSize(snapPoints.FIT);
     }
 
     /**
@@ -230,16 +217,10 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
         <div className="categories prevent-scroll" {...scrollableContentSwipePrevent}>
             {categories.length > 0 && (
                 <div className="categories__list">
-                    {!isListView && selectedCategory && (
-                        <button className="categories__header" onClick={handleBack}>
-                            <ChevronLeft />
-                            {categories.find(([cat]) => cat === selectedCategory)?.[1].displayName}
-                        </button>
-                    )}
-                    {isListView && categories?.map(([category, categoryInfo]) => (
+                    {categories?.map(([category, categoryInfo]) => (
                         <div key={category} className="categories__list--item">
                             <button onClick={() => categoryClicked(category)}>
-                                <img src={categoryInfo.iconUrl} alt="" />
+                                <img src={categoryInfo.iconUrl} />
                                 <div>{categoryInfo.displayName}</div>
                             </button>
                         </div>

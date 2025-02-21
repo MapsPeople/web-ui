@@ -33,6 +33,7 @@ import isNullOrUndefined from '../../helpers/isNullOrUndefined';
 import venuesInSolutionState from '../../atoms/venuesInSolutionState';
 import initialVenueNameState from '../../atoms/initialVenueNameState';
 import PropTypes from 'prop-types';
+import { ReactComponent as ChevronLeft } from '../../assets/chevron-left.svg';
 
 Search.propTypes = {
     categories: PropTypes.array,
@@ -112,6 +113,8 @@ function Search({ onSetSize, isOpen }) {
 
     const venuesInSolution = useRecoilValue(venuesInSolutionState);
     const initialVenueName = useRecoilValue(initialVenueNameState);
+    const [isInputFieldInFocus, setIsInputFieldInFocus] = useState();
+
 
     /**
      *
@@ -337,8 +340,6 @@ function Search({ onSetSize, isOpen }) {
             }
 
             return { display: 'flex', flexDirection: 'column', maxHeight, overflow: 'hidden' };
-        } else {
-            return { minHeight: categories.length > 0 ? '136px' : '80px' };
         }
     }
 
@@ -415,6 +416,14 @@ function Search({ onSetSize, isOpen }) {
         }
     }, [useKeyboard]);
 
+    // Add back navigation handler
+    function handleBack() {
+        setSelectedCategory(null);
+        setSearchResults([]);
+        setFilteredLocations([]);
+        setSize(snapPoints.FIT);
+    }
+
     /*
      * React on changes in the selected category state.
      * If the selected category is present, get the filtered locations based on the selected category.
@@ -434,6 +443,20 @@ function Search({ onSetSize, isOpen }) {
             setShowLegendButton(legendSections.length > 0);
         }
     }, [kioskLocation]);
+
+
+    useEffect(() => {
+        const onClick = (ev) => {
+            const isInputFocused = ev.target.tagName === "INPUT" && ev.target === document.activeElement;
+            setIsInputFieldInFocus(isInputFocused)
+        };
+
+        window.addEventListener("click", onClick);
+
+        return () => {
+            window.removeEventListener("click", onClick);
+        };
+    }, []);
 
     return (
         <div className="search"
@@ -461,17 +484,20 @@ function Search({ onSetSize, isOpen }) {
                 </label>
             </div>
 
-
-
             { /* Horizontal list of Categories */}
 
-            {categories.length > 0 && <Categories onSetSize={onSetSize}
+            {searchResults.length > 0 && selectedCategory && (
+                <button className="categories__header" onClick={handleBack}>
+                    <ChevronLeft />
+                    {selectedCategory}
+                </button>
+            )}
+
+            {isInputFieldInFocus && !showNotFoundMessage && categories.length > 0 && searchResults.length === 0 && <Categories onSetSize={onSetSize}
                 searchFieldRef={searchFieldRef}
                 getFilteredLocations={category => getFilteredLocations(category)}
                 isOpen={!!selectedCategory}
             />}
-
-
 
             { /* Message shown if no search results were found */}
 
