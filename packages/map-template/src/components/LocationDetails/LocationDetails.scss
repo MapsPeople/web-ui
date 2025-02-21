@@ -14,7 +14,7 @@
         &::before {
             content: '';
             position: absolute;
-            bottom: calc(64px + var(--spacing-medium));
+            bottom: var(--spacing-medium);
             left: 0;
             right: 0;
             height: var(--spacing-xx-large);
@@ -28,7 +28,7 @@
         &::after {
             content: '';
             position: absolute;
-            top: 56px;
+            top: 120px;
             left: 0;
             right: 0;
             height: var(--spacing-xx-large);
