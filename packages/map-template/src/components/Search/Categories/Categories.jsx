@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import './Categories.scss';
 import categoriesState from "../../../atoms/categoriesState";
-import primaryColorState from "../../../atoms/primaryColorState";
 import { snapPoints } from "../../../constants/snapPoints";
 import searchResultsState from "../../../atoms/searchResultsState";
 import filteredLocationsState from "../../../atoms/filteredLocationsState";
@@ -41,8 +40,6 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
     const isDesktop = useIsDesktop();
 
     const [isLeftButtonDisabled, setIsLeftButtonDisabled] = useState(true);
-
-    const primaryColor = useRecoilValue(primaryColorState);
 
     const [selectedCategory, setSelectedCategory] = useRecoilState(selectedCategoryState);
 
@@ -189,21 +186,18 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
 
     return (
         <div className="categories prevent-scroll" {...scrollableContentSwipePrevent}>
-            {categories.length > 0 &&
-                <>
-                    <div ref={categoriesListRef} className="categories__list">
-                        {categories?.map(([category, categoryInfo]) =>
-                            <mi-chip
-                                icon={categoryInfo.iconUrl}
-                                background-color={primaryColor}
-                                content={categoryInfo.displayName}
-                                active={selectedCategory === category}
-                                onClick={() => categoryClicked(category)}
-                                key={category}>
-                            </mi-chip>
-                        )}
-                    </div>
-                </>}
+            {categories.length > 0 && (
+                <div className="categories__list">
+                    {categories?.map(([category, categoryInfo]) => (
+                        <div key={category} className="categories__list--item">
+                            <button onClick={() => categoryClicked(category)}>
+                                <img src={categoryInfo.iconUrl} />
+                                <div>{categoryInfo.displayName}</div>
+                            </button>
+                        </div>
+                    ))}
+                </div>
+            )}
         </div>
     )
 }
