@@ -46,6 +46,7 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
 
     // const [isRightButtonDisabled, setIsRightButtonDisabled] = useState(false);
 
+    // eslint-disable-next-line no-unused-vars
     const primaryColor = useRecoilValue(primaryColorState);
 
     const [selectedCategory, setSelectedCategory] = useRecoilState(selectedCategoryState);
@@ -83,6 +84,7 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
      *
      * @param {string} category
      */
+    // eslint-disable-next-line no-unused-vars
     function categoryClicked(category) {
         setSelectedCategory(category);
         setIsListView(false);
@@ -159,7 +161,7 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
      * 2. Reset all search/filter related states to empty
      * 3. Collapse the view back to fit size
      * 4. Clear any existing search input
-     * 
+     *
      * Only triggers when:
      * - There is a currently selected category and user clicks outside MapsIndoors data
      */
@@ -235,14 +237,12 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
                         </button>
                     )}
                     {isListView && categories?.map(([category, categoryInfo]) => (
-                        <mi-chip
-                            icon={categoryInfo.iconUrl}
-                            background-color={primaryColor}
-                            content={categoryInfo.displayName}
-                            active={selectedCategory === category}
-                            onClick={() => categoryClicked(category)}
-                            key={category}>
-                        </mi-chip>
+                        <div key={category} className="categories__list--item">
+                            <button onClick={() => categoryClicked(category)}>
+                                <img src={categoryInfo.iconUrl} alt="" />
+                                <div>{categoryInfo.displayName}</div>
+                            </button>
+                        </div>
                     ))}
                 </div>
             )}
