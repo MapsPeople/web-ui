@@ -1,3 +1,5 @@
+$desktop-breakpoint: 992px;
+
 .modal {
     position: absolute;
     z-index: var(--z-index-overlay);
@@ -39,5 +41,15 @@
         margin-left: auto;
         margin-right: auto;
         max-height: none;
+    }
+
+    @media screen and (min-width: $desktop-breakpoint) {
+        top: var(--spacing-x-large);
+        bottom: auto;
+        transform: translateX(-100%);
+
+        &--open {
+            transform: translateX(0);
+        }
     }
 }
