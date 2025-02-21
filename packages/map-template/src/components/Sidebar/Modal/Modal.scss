@@ -51,11 +51,6 @@ $desktop-breakpoint: 992px;
         &--open {
             transform: translateX(0);
         }
-
-        &--kiosk {
-            top:0;
-            left: 0;
-        }
     }
         
 }
