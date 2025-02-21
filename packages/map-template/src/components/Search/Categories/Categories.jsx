@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import './Categories.scss';
-import { ReactComponent as ChevronRight } from '../../../assets/chevron-right.svg';
+// import { ReactComponent as ChevronRight } from '../../../assets/chevron-right.svg';
 import { ReactComponent as ChevronLeft } from '../../../assets/chevron-left.svg';
 import categoriesState from "../../../atoms/categoriesState";
 import primaryColorState from "../../../atoms/primaryColorState";
@@ -44,7 +44,7 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
 
     const [isLeftButtonDisabled, setIsLeftButtonDisabled] = useState(true);
 
-    const [isRightButtonDisabled, setIsRightButtonDisabled] = useState(false);
+    // const [isRightButtonDisabled, setIsRightButtonDisabled] = useState(false);
 
     const primaryColor = useRecoilValue(primaryColorState);
 
@@ -64,6 +64,9 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const clickedOutsideMapsIndoorsData = useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOpen);
 
+    // Add new state for view mode
+    const [isListView, setIsListView] = useState(true);
+
     /**
      * Communicate size change to parent component.
      *
@@ -82,12 +85,14 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
      */
     function categoryClicked(category) {
         setSelectedCategory(category);
+        setIsListView(false);
         setSize(snapPoints.MAX);
 
         if (selectedCategory === category) {
             // If the clicked category is the same as currently selected, "deselect" it.
             setSearchResults([]);
             setSelectedCategory(null);
+            setIsListView(true);
 
             // Pass an empty array to the filtered locations in order to reset the locations.
             setFilteredLocations([]);
@@ -105,11 +110,20 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
         }
     }
 
+    // Add back navigation handler
+    function handleBack() {
+        setSelectedCategory(null);
+        setIsListView(true);
+        setSearchResults([]);
+        setFilteredLocations([]);
+        setSize(snapPoints.FIT);
+    }
+
     /**
      * Update the state of the left and right scroll buttons
      */
     function updateScrollButtonsState() {
-        const { scrollLeft, scrollWidth, clientWidth } = categoriesListRef?.current || {};
+        const { scrollLeft } = categoriesListRef?.current || {};
 
         // Disable or enable the scroll left button
         if (scrollLeft === 0) {
@@ -118,25 +132,25 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
             setIsLeftButtonDisabled(false);
         }
 
-        // Disable or enable the scroll right button
-        if (scrollWidth - scrollLeft === clientWidth) {
-            setIsRightButtonDisabled(true);
-        } else if (scrollWidth - scrollLeft > clientWidth) {
-            setIsRightButtonDisabled(false);
-        }
+        // // Disable or enable the scroll right button
+        // if (scrollWidth - scrollLeft === clientWidth) {
+        //     setIsRightButtonDisabled(true);
+        // } else if (scrollWidth - scrollLeft > clientWidth) {
+        //     setIsRightButtonDisabled(false);
+        // }
     }
 
     /**
      * Update the scroll position based on the value
      *
      * @param {number} value
-     */
-    function updateScrollPosition(value) {
-        categoriesListRef?.current.scroll({
-            left: categoriesListRef?.current.scrollLeft + value,
-            behavior: 'smooth'
-        });
-    }
+    //  */
+    // function updateScrollPosition(value) {
+    //     categoriesListRef?.current.scroll({
+    //         left: categoriesListRef?.current.scrollLeft + value,
+    //         behavior: 'smooth'
+    //     });
+    // }
 
     /**
      * Handles cleanup when user clicks outside MapsIndoors data area.
@@ -212,37 +226,28 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
 
     return (
         <div className="categories prevent-scroll" {...scrollableContentSwipePrevent}>
-            {categories.length > 0 &&
-                <>
-                    {isDesktop &&
-                        <button className={`categories__scroll-button`}
-                            onClick={() => updateScrollPosition(-300)}
-                            disabled={isLeftButtonDisabled}>
+            {categories.length > 0 && (
+                <div className="categories__list">
+                    {!isListView && selectedCategory && (
+                        <button className="categories__header" onClick={handleBack}>
                             <ChevronLeft />
+                            {categories.find(([cat]) => cat === selectedCategory)?.[1].displayName}
                         </button>
-                    }
-                    <div ref={categoriesListRef} className="categories__list">
-                        {categories?.map(([category, categoryInfo]) =>
-                            <mi-chip
-                                icon={categoryInfo.iconUrl}
-                                background-color={primaryColor}
-                                content={categoryInfo.displayName}
-                                active={selectedCategory === category}
-                                onClick={() => categoryClicked(category)}
-                                key={category}>
-                            </mi-chip>
-                        )}
-                    </div>
-                    {isDesktop &&
-                        <button className={`categories__scroll-button`}
-                            onClick={() => updateScrollPosition(300)}
-                            disabled={isRightButtonDisabled}>
-                            <ChevronRight />
-                        </button>
-                    }
-                </>}
+                    )}
+                    {isListView && categories?.map(([category, categoryInfo]) => (
+                        <mi-chip
+                            icon={categoryInfo.iconUrl}
+                            background-color={primaryColor}
+                            content={categoryInfo.displayName}
+                            active={selectedCategory === category}
+                            onClick={() => categoryClicked(category)}
+                            key={category}>
+                        </mi-chip>
+                    ))}
+                </div>
+            )}
         </div>
-    )
+    );
 }
 
 export default Categories;
