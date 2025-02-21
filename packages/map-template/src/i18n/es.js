@@ -75,6 +75,9 @@ const es = {
     'Share': 'Compartir',
     'Copy link': 'Copiar link',
     'QR Code': 'Código QR',
+    // Opening Hours
+    'Open': 'Abierto',
+    'Closed': 'Cerrado',
 };
 
 export default es;

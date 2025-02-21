@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import './LocationDetails.scss';
 import { useTranslation } from 'react-i18next';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
@@ -17,8 +17,10 @@ import accessibilityOnState from '../../atoms/accessibilityOnState';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
 import showExternalIDsState from '../../atoms/showExternalIDsState';
 import useOutsideMapsIndoorsDataClick from '../../hooks/useOutsideMapsIndoorsDataClick';
+import OpeningHours from './OpeningHours/OpeningHours';
 import PropTypes from 'prop-types';
 import ShareLocationLink from './ShareLocationLink/ShareLocationLink';
+import ContactActionButton from '../ContactActionButton/ContactActionButton';
 
 LocationDetails.propTypes = {
     onBack: PropTypes.func,
@@ -84,6 +86,101 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
 
     const clickedOutsideMapsIndoorsData = useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOpen);
 
+    const mockOpeningHours = {
+        standardOpeningHours: {
+            monday: {
+                closedAllDay: false,
+                startTime: "00:00",
+                endTime: "23:59"
+            },
+            tuesday: {
+                closedAllDay: false,
+                startTime: "09:00",
+                endTime: "15:00"
+            },
+            wednesday: {
+                closedAllDay: false,
+                startTime: "09:20",
+                endTime: "12:50"
+            },
+            thursday: {
+                closedAllDay: false,
+                startTime: "07:00",
+                endTime: "23:59"
+            },
+            friday: {
+                closedAllDay: false,
+                startTime: "00:00",
+                endTime: "17:59"
+            },
+            saturday: {
+                closedAllDay: true,
+                startTime: "00:00",
+                endTime: "23:59"
+            },
+            sunday: {
+                closedAllDay: true,
+                startTime: "00:00",
+                endTime: "23:59"
+            }
+        }
+    };
+    // TODO - Replace with actual data from MapsIndoors
+    const mockData = [{
+        key: "whatsapp-contact",
+        detailType: "whatsapp",
+        active: true,
+        displayText: "Chat on WhatsApp",
+        value: "+1234567890",
+        icon: "https://app.mapsindoors.com/mapsindoors/cms/assets/icons/building-icons/office.png",
+        openingHours: null
+    },
+    {
+        key: "facebook-page",
+        detailType: "facebook",
+        active: false,
+        displayText: "Follow us on Facebook",
+        value: "facebook.com/businesspage",
+        icon: "https://example.com/mock-facebook-icon.png",
+        openingHours: null
+    },
+    {
+        key: "instagram-profile",
+        detailType: "instagram",
+        active: true,
+        displayText: "Follow us on Instagram",
+        value: "@test",
+        icon: "https://app.mapsindoors.com/mapsindoors/cms/assets/icons/shopping/map-kiosk.png",
+        openingHours: null
+    },
+    {
+        key: "telegram-contact",
+        detailType: "telegram",
+        active: true,
+        displayText: "Message us on Telegram",
+        value: "@telegramusername",
+        icon: "https://app.mapsindoors.com/mapsindoors/cms/assets/icons/building-icons/letter-boxes.png",
+        openingHours: null
+    },
+    {
+        key: "phone-contact",
+        detailType: "phone",
+        active: true,
+        displayText: "Call us",
+        value: "+1234567890",
+        icon: "https://app.mapsindoors.com/mapsindoors/cms/assets/icons/building-icons/video-chat-room.png",
+        openingHours: null
+    },
+    {
+        key: "keyvalue3",
+        detailType: "email",
+        active: true,
+        displayText: "Contact support",
+        value: "support@example.com",
+        icon: "https://app.mapsindoors.com/mapsindoors/cms/assets/icons/building-icons/letter-boxes.png",
+        openingHours: null
+    },];
+
     useEffect(() => {
         return () => {
             setLocationDisplayRule(null);
@@ -92,23 +189,17 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
         }
     }, []);
 
-    useEffect(() => {
-        // Reset state
+    /**
+     * Sets full description, content above/below flags to false and triggers the onBack callback.
+     */
+    const back = useCallback(() => {
         setShowFullDescription(false);
         setDescriptionHasContentAbove(false);
         setDescriptionHasContentBelow(false);
-        setLocationDisplayRule(null);
+        setSize(snapPoints.FIT);
 
-        if (location) {
-            locationInfoElement.current.location = location;
-            setLocationDisplayRule(mapsIndoorsInstance.getDisplayRule(location));
-            setDestinationLocation(location)
-        }
-
-        if (kioskLocation) {
-            setOriginLocation(kioskLocation)
-        }
-    }, [location, mapsIndoorsInstance, kioskLocation]);
+        onBack();
+    });
 
     /**
      * Communicate size change to parent component.
@@ -119,28 +210,6 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
             onSetSize(size);
         }
     }
-
-    /*
-     * When user swipes the bottom sheet to a new snap point.
-     */
-    useEffect(() => {
-        if (snapPointSwiped === undefined) return;
-
-        // If swiping to max height, expand location details.
-        // If swiping to smaller height, collapse location details.
-        setShowFullDescription(snapPointSwiped === snapPoints.MAX);
-        if (snapPointSwiped === snapPoints.MAX) {
-            expandLocationDescription();
-        } else {
-            collapseLocationDescription();
-        }
-    }, [snapPointSwiped]); // eslint-disable-line react-hooks/exhaustive-deps
-
-    useEffect(() => {
-        if (clickedOutsideMapsIndoorsData) {
-            onBack();
-        }
-    }, [clickedOutsideMapsIndoorsData]);
 
     /**
      * Toggle the description.
@@ -216,17 +285,62 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
         onStartDirections();
     }
 
-    /**
-     * Close the Location details page.
+    /*
+     * Closes location details when user clicks outside MapsIndoors data.
      */
-    function back() {
+    useEffect(() => {
+        if (clickedOutsideMapsIndoorsData) {
+            onBack();
+        }
+    }, [clickedOutsideMapsIndoorsData]);
+
+    /*
+     * Cleanup on unmount: resets location display rule and direction locations.
+     */
+    useEffect(() => {
+        return () => {
+            setLocationDisplayRule(null);
+            setDestinationLocation();
+            setOriginLocation();
+        }
+    }, []);
+
+    /*
+     * Updates location details and routing state when location dependencies change.
+     */
+    useEffect(() => {
+        // Reset state
         setShowFullDescription(false);
         setDescriptionHasContentAbove(false);
         setDescriptionHasContentBelow(false);
-        setSize(snapPoints.FIT);
+        setLocationDisplayRule(null);
 
-        onBack();
-    }
+        if (location) {
+            locationInfoElement.current.location = location;
+            setLocationDisplayRule(mapsIndoorsInstance.getDisplayRule(location));
+            setDestinationLocation(location)
+        }
+
+        if (kioskLocation) {
+            setOriginLocation(kioskLocation)
+        }
+    }, [location, mapsIndoorsInstance, kioskLocation]);
+
+    /*
+     * When user swipes the bottom sheet to a new snap point.
+     */
+    useEffect(() => {
+        if (snapPointSwiped === undefined) return;
+
+        // If swiping to max height, expand location details.
+        // If swiping to smaller height, collapse location details.
+        setShowFullDescription(snapPointSwiped === snapPoints.MAX);
+        if (snapPointSwiped === snapPoints.MAX) {
+            expandLocationDescription();
+        } else {
+            collapseLocationDescription();
+        }
+    }, [snapPointSwiped]); // eslint-disable-line react-hooks/exhaustive-deps
 
     return <div className={`location-details ${descriptionHasContentAbove ? 'location-details--content-above' : ''} ${descriptionHasContentBelow ? 'location-details--content-below' : ''}`}>
         {location && <>
@@ -248,6 +362,26 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                 </div>
             </div>
 
+            {/* Wayfinding Button */}
+            {kioskLocation && isDesktop ? (
+                <button
+                    disabled={!hasFoundRoute}
+                    onClick={() => startDirections()}
+                    className={`location-details__wayfinding ${!hasFoundRoute ? 'location-details--no-route' : ''}`}
+                    style={{ background: primaryColor }}
+                >
+                    {!hasFoundRoute ? t('Directions not available') : t('Start directions')}
+                </button>
+            ) : (
+                <button
+                    onClick={() => startWayfinding()}
+                    style={{ background: primaryColor }}
+                    className="location-details__wayfinding"
+                >
+                    {t('Start wayfinding')}
+                </button>
+            )}
+
             <div ref={locationDetailsContainer} onScroll={e => setScrollIndicators(e)} className="location-details__details">
                 {/* Location image */}
                 {location.properties.imageURL && <img alt="" src={location.properties.imageURL} className="location-details__image" />}
@@ -258,7 +392,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                         return <React.Fragment key={category}>{category}{index < array.length - 1 && <>・</>}</React.Fragment>
                     })}
                 </p>}
-
+                <OpeningHours openingHours={mockOpeningHours} isMondayFirstDayOfTheWeek={false} />
                 {/* Location description */}
                 {location.properties.description && !showFullDescription && <section className="location-details__description">
                     <div ref={locationDetailsElement}>
@@ -276,23 +410,21 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                         {t('Close')}
                     </button>}
                 </section>}
-            </div>
 
-            {kioskLocation && isDesktop
-                ?
-                <button disabled={!hasFoundRoute}
-                    onClick={() => startDirections()}
-                    className={`location-details__wayfinding ${!hasFoundRoute ? 'location-details--no-route' : ''}`}
-                    style={{ background: primaryColor }}>
-                    {!hasFoundRoute ? t('Directions not available') : t('Start directions')}
-                </button>
-                :
-                <button onClick={() => startWayfinding()}
-                    style={{ background: primaryColor }}
-                    className="location-details__wayfinding">
-                    {t('Start wayfinding')}
-                </button>
-            }
+                {/*Contact action button container */}
+                <div className='contact-action-buttons-container'>
+                    {mockData.map(button => (
+                        <ContactActionButton
+                            key={button.key}
+                            detailType={button.detailType}
+                            active={button.active}
+                            displayText={button.displayText}
+                            value={button.value}
+                            icon={button.icon}
+                        />
+                    ))}
+                </div>
+            </div>
         </>}
     </div>
 }
