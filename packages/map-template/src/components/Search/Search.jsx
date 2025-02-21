@@ -117,12 +117,15 @@ function Search({ onSetSize, isOpen }) {
 
     const [isInputFieldInFocus, setIsInputFieldInFocus] = useState();
 
-    // Add back navigation handler
+    /**
+     * Handles go back function.
+     */
     function handleBack() {
         setSelectedCategory(null);
         setSearchResults([]);
         setFilteredLocations([]);
         setSize(snapPoints.FIT);
+        setIsInputFieldInFocus(true);
     }
 
     /**
@@ -352,10 +355,19 @@ function Search({ onSetSize, isOpen }) {
         }
     }
 
+    /**
+     * Sets if performed click was inside search input field or outside it.
+     */
     useEffect(() => {
         const onClick = (ev) => {
-            const isInputFocused = ev.target.tagName === "INPUT" && ev.target === document.activeElement;
-            setIsInputFieldInFocus(isInputFocused)
+            console.log(ev);
+
+            const isInputFocused = ev.target.tagName === "INPUT" && ev.target === document.activeElement || ev.target.tagName === "BUTTON" || ev.target.tagName === "svg";
+            if (isInputFocused) {
+                setIsInputFieldInFocus(isInputFocused)
+            } else {
+                setIsInputFieldInFocus(false)
+            }
         };
 
         window.addEventListener("click", onClick);
@@ -365,6 +377,9 @@ function Search({ onSetSize, isOpen }) {
         };
     }, []);
 
+    /**
+     * Sets currently hovered location.
+     */
     useEffect(() => {
         return () => {
             setHoveredLocation();
