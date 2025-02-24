@@ -37,7 +37,18 @@ $desktop-breakpoint: 992px;
     }
     .mapboxgl-ctrl-top-right {
         @media (min-width: $desktop-breakpoint) {
-            top: calc(3 * var(--spacing-xxxx-large));
+            // Default spacing when no elements present
+            top: var(--spacing-xxxx-large);
+
+            // When view mode switch exists but no venue selector in parent
+            .mapsindoors-map:not(:has(.venue-selector__button)) .mapbox-map-container:has(.view-mode-switch) & {
+                top: calc(2 * var(--spacing-xxxx-large));
+            }
+
+            // Larger spacing when both view mode switch and venue selector exist
+            .mapsindoors-map:has(.venue-selector__button) .mapbox-map-container:has(.view-mode-switch) & {
+                top: calc(3 * var(--spacing-xxxx-large));
+            }
         }
     }
 }
