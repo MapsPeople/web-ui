@@ -360,9 +360,7 @@ function Search({ onSetSize, isOpen }) {
      */
     useEffect(() => {
         const onClick = (ev) => {
-            console.log(ev);
-
-            const isInputFocused = ev.target.tagName === "INPUT" && ev.target === document.activeElement || ev.target.tagName === "BUTTON" || ev.target.tagName === "svg";
+            const isInputFocused = ev.target.tagName === "INPUT" && ev.target === document.activeElement || ev.target.className === 'search__back-button'
             if (isInputFocused) {
                 setIsInputFieldInFocus(isInputFocused)
             } else {
@@ -502,7 +500,7 @@ function Search({ onSetSize, isOpen }) {
             { /* Horizontal list of Categories */}
 
             {searchResults.length > 0 && selectedCategory && (
-                <button className="categories__header" onClick={handleBack}>
+                <button className="search__back-button" onClick={handleBack}>
                     <ChevronLeft />
                     {selectedCategory}
                 </button>
