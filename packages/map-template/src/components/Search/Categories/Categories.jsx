@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import './Categories.scss';
 import categoriesState from "../../../atoms/categoriesState";
@@ -32,14 +32,10 @@ Categories.propTypes = {
  * @param {boolean} props.isOpen - Determines wheteher the Categories window is open or not.
  */
 function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen }) {
-    /** Referencing the categories results container DOM element */
-    const categoriesListRef = useRef();
 
     const categories = useRecoilValue(categoriesState);
 
     const isDesktop = useIsDesktop();
-
-    const [isLeftButtonDisabled, setIsLeftButtonDisabled] = useState(true);
 
     const [selectedCategory, setSelectedCategory] = useRecoilState(selectedCategoryState);
 
@@ -99,20 +95,6 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
     }
 
     /**
-     * Update the state of the left and right scroll buttons
-     */
-    function updateScrollButtonsState() {
-        const { scrollLeft } = categoriesListRef?.current || {};
-
-        // Disable or enable the scroll left button
-        if (scrollLeft === 0) {
-            setIsLeftButtonDisabled(true);
-        } else if (isLeftButtonDisabled) {
-            setIsLeftButtonDisabled(false);
-        }
-    }
-
-    /**
      * Handles cleanup when user clicks outside MapsIndoors data area.
      * This effect will:
      * 1. Clear the currently selected category
@@ -136,33 +118,6 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
             }
         }
     }, [clickedOutsideMapsIndoorsData]);
-
-    /**
-     * Add event listener for scrolling in the categories list
-     */
-    useEffect(() => {
-        // When categoriesListRef.current element resizes, update scroll button states.
-        const handleResize = () => {
-            updateScrollButtonsState();
-        };
-
-        let resizeObserver;
-
-        if (categoriesListRef.current) {
-            // Because of timing issue, we need to listen to changes inside div element for categories.
-            // Based on that we can handle disabling/enabling scroll buttons.
-            // Read more: https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver
-            resizeObserver = new ResizeObserver(handleResize)
-            resizeObserver.observe(categoriesListRef.current);
-            categoriesListRef.current.addEventListener('scroll', updateScrollButtonsState);
-        }
-
-        return () => {
-            setActiveCategory();
-            resizeObserver?.disconnect();
-            categoriesListRef.current?.removeEventListener('scroll', updateScrollButtonsState);
-        };
-    }, []);
 
     /*
      * Get the active category element.
