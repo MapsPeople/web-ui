@@ -37,9 +37,6 @@ $desktop-breakpoint: 992px;
     }
     .mapboxgl-ctrl-top-right {
         @media (min-width: $desktop-breakpoint) {
-            // Default spacing when no elements present
-            top: var(--spacing-xxxx-large);
-
             // When view mode switch exists but no venue selector in parent
             .mapsindoors-map:not(:has(.venue-selector__button)) .mapbox-map-container:has(.view-mode-switch) & {
                 top: calc(2 * var(--spacing-xxxx-large));
