@@ -18,8 +18,8 @@
                 display: flex;
                 align-items: center;
                 width: 100%;
-                padding: 10px;
-                border-radius: 8px;
+                padding: var(--spacing-small);
+                border-radius: var(--spacing-x-small);
                 border: 1px solid var(--color-gray-30);
                 background: none;
                 cursor: pointer;
@@ -27,14 +27,14 @@
             }
 
             img {
-                width: 24px;
-                height: 24px;
-                margin-right: 10px;
+                width: var(--spacing-large);
+                height: var(--spacing-large);
+                margin-right: var(--spacing-small);
             }
 
             &:hover {
                 background-color: var(--tailwind-colors-gray-200);
-                border-radius: 8px;
+                border-radius: var(--spacing-x-small);
             }
 
             width: 100%;
