@@ -46,6 +46,10 @@ $desktop-breakpoint: 992px;
             .mapsindoors-map:has(.venue-selector__button) .mapbox-map-container:has(.view-mode-switch) & {
                 top: calc(3 * var(--spacing-xxxx-large));
             }
+
+            .app__main .mapbox-map-container:has(.view-mode-switch) & {
+                top: 0;
+              }
         }
     }
 }
