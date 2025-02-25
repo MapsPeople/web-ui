@@ -392,7 +392,6 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                         return <React.Fragment key={category}>{category}{index < array.length - 1 && <>・</>}</React.Fragment>
                     })}
                 </p>}
-                <OpeningHours openingHours={mockOpeningHours} isMondayFirstDayOfTheWeek={false} />
                 {/* Location description */}
                 {location.properties.description && !showFullDescription && <section className="location-details__description">
                     <div ref={locationDetailsElement}>
@@ -423,6 +422,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                             icon={button.icon}
                         />
                     ))}
+                    <OpeningHours openingHours={mockOpeningHours} isMondayFirstDayOfTheWeek={false} />
                 </div>
             </div>
         </>}
