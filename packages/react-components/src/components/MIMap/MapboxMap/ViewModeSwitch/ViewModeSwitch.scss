@@ -1,3 +1,4 @@
+
 $desktop-breakpoint: 992px;
 
 .view-mode-switch {
@@ -11,7 +12,7 @@ $desktop-breakpoint: 992px;
     position: absolute;
     z-index: var(--z-index-sticky);
     top: var(--spacing-x-large);
-    left: var(--spacing-x-small);
+    left: var(--spacing-x-large);
 
     &__button {
         border-radius: var(--rounding-large);
@@ -23,9 +24,8 @@ $desktop-breakpoint: 992px;
         border: none;
     }
 
-    @media (min-width: $desktop-breakpoint) {
-        top: var(--spacing-x-large);
-        right: var(--spacing-small);
-        left: auto;
+    @media (max-width: $desktop-breakpoint) {
+        top:var(--spacing-x-small);
+        left: var(--spacing-x-small);
     }
 }
