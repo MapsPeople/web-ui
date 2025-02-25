@@ -143,14 +143,17 @@ function OpeningHours({ openingHours, isAmFormat = false, isMondayFirstDayOfTheW
 
     return (
         <div className="opening-hours">
-            <button className="contact-action-button" onClick={() => setIsExpanded(!isExpanded)}>
+            <button
+                className="contact-action-button contact-action-button--opening-hours"
+                onClick={() => setIsExpanded(!isExpanded)}>
                 <div className="contact-action-button__icon-wrapper">
                     <ClockIcon />
                 </div>
                 <div className="contact-action-button__text">
                     {getOpeningHoursForDay(weekdays[adjustedCurrentDay]).text}
                 </div>
-                <span className={`opening-hours__status-text opening-hours__status-text--${currentDayOpeningHours.toLowerCase()}`}>
+                <span
+                    className={`contact-action-button--opening-hours__status contact-action-button--opening-hours__status--${currentDayOpeningHours.toLowerCase()}`}>
                     {t(currentDayOpeningHours)}
                 </span>
                 {isExpanded ? <ChevronUpIcon /> : <ChevronDownIcon />}
@@ -162,12 +165,14 @@ function OpeningHours({ openingHours, isAmFormat = false, isMondayFirstDayOfTheW
                         const hours = getOpeningHoursForDay(day);
                         return (
                             <li key={day} className="opening-hours__list-item">
-                                <span className="opening-hours__day">{day.toLocaleString(languageToUse, { weekday: 'long' })}</span>
-                                <span className={`opening-hours__hours ${hours.isClosed ? 'opening-hours__hours--closed' : ''}`}>
+                                <span className="opening-hours__day">
+                                    {day.toLocaleString(languageToUse, { weekday: 'long' })}
+                                </span>
+                                <span
+                                    className={`opening-hours__hours ${hours.isClosed ? 'opening-hours__hours--closed' : ''}`}>
                                     {hours.text}
                                 </span>
-                            </li>
-                        );
+                            </li>);
                     })}
                 </ul>
             )}

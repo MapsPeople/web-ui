@@ -1,44 +1,8 @@
 .opening-hours {
-    &__row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: var(--spacing-x-small) 0;
-        
-        &--current {
-            font-weight: var(--font-weight-large);
-        }
-    }
-
     &__day {
         flex: 1;
         font-size: var(--font-size-small);
         color: var(--color-gray-90);
-    }
-
-    &__time {
-        text-align: left;
-        font-size: var(--font-size-medium);
-        font-weight: var(--font-weight-large);
-        color: var(--color-gray-90);
-        display: flex;
-        align-items: center;
-    }
-
-    &__container {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: var(--space-m);
-        background-color: #f5f5f5;
-        border-radius: var(--radius-m);
-    }
-
-    &__status {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-left: auto;
     }
 
     &__status-text {
@@ -88,22 +52,10 @@
             color: var(--color-red-60);
         }
     }
-
-
-    &__icon {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-    }
 }
 
-// Override contact-action-button styles for opening hours
-// We're extending the base contact-action-button component but customizing it
-// specifically for the opening hours use case which has different layout requirements:
-// - Shows current day's opening hours
-// - Displays open/closed status
-// - Includes a chevron for expandable behavior
-.contact-action-button {
+// Opening hours specific contact action button styles
+.contact-action-button--opening-hours {
     display: flex;
     align-items: center;
     width: 100%;
@@ -112,20 +64,17 @@
     border-radius: var(--rounding-large);
     background: white;
 
-    // The text container needs flex:1 to ensure proper spacing between
-    // the clock icon and the status text/chevron on the right
-    .contact-action-button__text {
+    &__text {
         display: flex;
         align-items: center;
         flex: 1;
     }
 
-    // Status text (Open/Closed) needs specific positioning:
-    // - Pushed to the right side with margin-left: auto
-    // - Small gap before the chevron with margin-right
-    // - Consistent styling with the design system
-    .opening-hours__status-text {
-     // Status-specific colors following the design system
+    &__status {
+        font-size: var(--font-size-small);
+        font-weight: var(--font-weight-large);
+        margin-left: auto;
+
         &--open {
             color: var(--color-green-60);
         }
