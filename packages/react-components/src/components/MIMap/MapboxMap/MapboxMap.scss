@@ -48,7 +48,7 @@ $desktop-breakpoint: 992px;
             }
 
             .app__main .mapbox-map-container:has(.view-mode-switch) & {
-                top: 0;
+                top: 0 !important;
               }
         }
     }
