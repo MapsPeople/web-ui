@@ -143,32 +143,34 @@ function OpeningHours({ openingHours, isAmFormat = false, isMondayFirstDayOfTheW
 
     return (
         <div className="opening-hours">
-            <ul className="opening-hours__list">
-                <li className="opening-hours__list-item opening-hours__list-item--current" onClick={() => setIsExpanded(!isExpanded)}>
-                    <div className="opening-hours__time">
-                        <div className="opening-hours__icon-wrapper">
-                            <ClockIcon />
-                        </div>
-                        {getOpeningHoursForDay(weekdays[adjustedCurrentDay]).text}
-                    </div>
-                    <span className={`opening-hours__status-text opening-hours__status-text--${currentDayOpeningHours.toLowerCase()}`}>
-                        {t(currentDayOpeningHours)}
-                        {isExpanded ? <ChevronUpIcon /> : <ChevronDownIcon />}
-                    </span>
-                </li>
+            <button className="contact-action-button" onClick={() => setIsExpanded(!isExpanded)}>
+                <div className="contact-action-button__icon-wrapper">
+                    <ClockIcon />
+                </div>
+                <div className="contact-action-button__text">
+                    {getOpeningHoursForDay(weekdays[adjustedCurrentDay]).text}
+                </div>
+                <span className={`opening-hours__status-text opening-hours__status-text--${currentDayOpeningHours.toLowerCase()}`}>
+                    {t(currentDayOpeningHours)}
+                </span>
+                {isExpanded ? <ChevronUpIcon /> : <ChevronDownIcon />}
+            </button>
 
-                {isExpanded && weekdays.map((day) => {
-                    const hours = getOpeningHoursForDay(day);
-                    return (
-                        <li key={day} className="opening-hours__list-item">
-                            <span className="opening-hours__day">{day.toLocaleString(languageToUse, { weekday: 'long' })}</span>
-                            <span className={`opening-hours__hours ${hours.isClosed ? 'opening-hours__hours--closed' : ''}`}>
-                                {hours.text}
-                            </span>
-                        </li>
-                    );
-                })}
-            </ul>
+            {isExpanded && (
+                <ul className="opening-hours__list">
+                    {weekdays.map((day) => {
+                        const hours = getOpeningHoursForDay(day);
+                        return (
+                            <li key={day} className="opening-hours__list-item">
+                                <span className="opening-hours__day">{day.toLocaleString(languageToUse, { weekday: 'long' })}</span>
+                                <span className={`opening-hours__hours ${hours.isClosed ? 'opening-hours__hours--closed' : ''}`}>
+                                    {hours.text}
+                                </span>
+                            </li>
+                        );
+                    })}
+                </ul>
+            )}
         </div>
     );
 }
