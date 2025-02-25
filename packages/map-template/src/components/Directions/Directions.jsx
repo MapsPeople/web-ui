@@ -215,15 +215,6 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
     }
 
     /**
-     * Trigger to directions renderer to fit the map to the current directions step.
-     */
-    function onFitCurrentDirections() {
-        if (directionsRenderer) {
-            directionsRenderer.setStepIndex(directionsRenderer.getStepIndex(), directionsRenderer.getLegIndex());
-        }
-    }
-
-    /**
      * Stop rendering directions on the map.
      */
     function stopRendering() {
@@ -294,8 +285,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
                     originLocation={directions?.originLocation}
                     onNextStep={() => onNext()}
                     isOpen={isOpen}
-                    onPreviousStep={() => onPrevious()}
-                    onFitCurrentDirections={() => onFitCurrentDirections()} >
+                    onPreviousStep={() => onPrevious()} >
                 </RouteInstructions>
             </div>
             {isKioskContext &&
