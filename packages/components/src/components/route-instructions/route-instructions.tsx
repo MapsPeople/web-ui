@@ -98,7 +98,6 @@ export class RouteInstructions implements ComponentInterface {
         bike: 'Bike',
         transit: 'Transit',
         drive: 'Drive',
-        destination: 'You have arrived',
         leave: 'Leave',
         from: 'From',
         park: 'Park',
