@@ -451,7 +451,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the primary color prop. If not defined, check if it is defined in app config. Otherwise set to default color.
      */
     useEffect(() => {
-        const defaultPrimaryColor = '#005655'; // --brand-colors-dark-pine-100 from MIDT
+        const defaultPrimaryColor = '#003C3B'; // --brand-colors-dark-pine-100 from MIDT
         setPrimaryColor(primaryColor ?? appConfig?.appSettings?.primaryColor ?? defaultPrimaryColor);
         setMapOptions({ brandingColor: primaryColor ?? appConfig?.appSettings?.primaryColor ?? defaultPrimaryColor })
 
