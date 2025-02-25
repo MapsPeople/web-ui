@@ -1,3 +1,5 @@
+$desktop-breakpoint: 992px;
+
 .mapbox-map-container {
     width: 100%;
     height: 100%;
@@ -31,6 +33,28 @@
 
         &-icon {
             background-image: none;
+        }
+    }
+    .mapboxgl-ctrl-top-right {
+        @media (min-width: $desktop-breakpoint) {
+            // Base case: Only venue selector (no view mode switch)
+            .mapsindoors-map:has(> .venue-selector__button):not(:has(.view-mode-switch)) & {
+                top: calc(1.4 * var(--spacing-xxxx-large));
+            }
+
+            // When only view mode switch exists (no venue selector)
+            .mapsindoors-map:not(:has(> .venue-selector__button)):has(.view-mode-switch) & {
+                top: calc(2 * var(--spacing-xxxx-large));
+            }
+
+            // When both view mode switch and venue selector exist
+            .mapsindoors-map:has(> .venue-selector__button):has(.view-mode-switch) & {
+                top: calc(3 * var(--spacing-xxxx-large));
+            }
+
+            .app__main .mapbox-map-container:has(.view-mode-switch) & {
+                top: 0 !important;
+            }
         }
     }
 }
