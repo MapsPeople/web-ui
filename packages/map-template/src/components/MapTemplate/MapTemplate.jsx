@@ -491,7 +491,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         const defaultLogo = 'https://app.mapsindoors.com/mapsindoors/gfx/mapspeople-logo/mapspeople-pin.svg';
-        setLogo(logo ?? appConfig?.appSettings?.logo ?? defaultLogo);
+        if (appConfig) {
+            setLogo(logo ?? appConfig?.appSettings?.logo ?? defaultLogo);
+        }
     }, [logo, appConfig]);
 
     /*
