@@ -12,56 +12,32 @@
         gap: var(--spacing-x-small);
         overflow: auto;
         scrollbar-width: none;
-
-        &--item {
-            button {
-                display: flex;
-                align-items: center;
-                width: 100%;
-                padding: var(--spacing-small);
-                border-radius: var(--spacing-x-small);
-                border: 1px solid var(--color-gray-30);
-                background: none;
-                cursor: pointer;
-                text-align: left;
-            }
-
-            img {
-                width: var(--spacing-large);
-                height: var(--spacing-large);
-                margin-right: var(--spacing-small);
-            }
-
-            &:hover {
-                background-color: var(--tailwind-colors-gray-200);
-                border-radius: var(--spacing-x-small);
-            }
-
-            width: 100%;
-        }
     }
 
     &__item {
-        padding: var(--spacing-small);
-        border: 1px solid var(--color-gray-30);
-        border-radius: var(--spacing-x-small);
-        cursor: pointer;
+        button {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: var(--spacing-small);
+            border-radius: var(--spacing-x-small);
+            border: 1px solid var(--color-gray-30);
+            background: none;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        img {
+            width: var(--spacing-large);
+            height: var(--spacing-large);
+            margin-right: var(--spacing-small);
+        }
 
         &:hover {
-            background-color: var(--color-gray-10);
+            background-color: var(--tailwind-colors-gray-200);
+            border-radius: var(--spacing-x-small);
         }
-    }
 
-    &__scroll-button {
-        width: var(--spacing-xxx-large);
-        height: var(--spacing-xxx-large);
-        background-color: var(--brand-colors-white-100);
-        border: 1px solid var(--color-gray-30);
-        border-radius: var(--spacing-x-small);
-
-        &:disabled {
-            cursor: not-allowed;
-            opacity: 0.3;
-        }
+        width: 100%;
     }
 }
