@@ -59,7 +59,9 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
 
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const location = useRecoilValue(currentLocationState);
-    const locationAdditionalDetails = location?.properties.additionalDetails;
+    const locationAdditionalDetails = location?.properties?.additionalDetails;
+    // Get the first opening hours detail that is active
+    const openingHours = locationAdditionalDetails?.find(detail => detail.key.toLowerCase().includes('openinghours') && detail.active === true)?.openingHours;
 
     // Check if the content of the Location details is overflowing
     const [isOverflowing, initialOverflow] = useIsVerticalOverflow(location, locationDetailsElement);
@@ -86,46 +88,6 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
     const showExternalIDs = useRecoilValue(showExternalIDsState);
 
     const clickedOutsideMapsIndoorsData = useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOpen);
-
-    const mockOpeningHours = {
-        standardOpeningHours: {
-            monday: {
-                closedAllDay: false,
-                startTime: "00:00",
-                endTime: "23:59"
-            },
-            tuesday: {
-                closedAllDay: false,
-                startTime: "09:00",
-                endTime: "15:00"
-            },
-            wednesday: {
-                closedAllDay: false,
-                startTime: "09:20",
-                endTime: "12:50"
-            },
-            thursday: {
-                closedAllDay: false,
-                startTime: "07:00",
-                endTime: "23:59"
-            },
-            friday: {
-                closedAllDay: false,
-                startTime: "00:00",
-                endTime: "17:59"
-            },
-            saturday: {
-                closedAllDay: true,
-                startTime: "00:00",
-                endTime: "23:59"
-            },
-            sunday: {
-                closedAllDay: true,
-                startTime: "00:00",
-                endTime: "23:59"
-            }
-        }
-    };
 
     useEffect(() => {
         return () => {
@@ -356,8 +318,8 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                     </button>}
                 </section>}
 
-                {/*Contact action button container */}
-                <div className='contact-action-buttons-container'>
+                {/*Contact action / opening hours button container */}
+                {locationAdditionalDetails && <div className='contact-action-buttons-container'>
                     {locationAdditionalDetails.map(button => (
                         <ContactActionButton
                             key={button.key}
@@ -368,8 +330,8 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                             icon={button.icon}
                         />
                     ))}
-                    <OpeningHours openingHours={mockOpeningHours} isMondayFirstDayOfTheWeek={false} />
-                </div>
+                    <OpeningHours openingHours={openingHours} />
+                </div>}
             </div>
         </>}
     </div>
