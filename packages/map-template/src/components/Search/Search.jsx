@@ -499,12 +499,14 @@ function Search({ onSetSize, isOpen }) {
 
             { /* Horizontal list of Categories */}
 
-            {searchResults.length > 0 && selectedCategory && (
-                <button className="search__back-button" onClick={handleBack}>
-                    <ChevronLeft />
-                    {selectedCategory}
-                </button>
-            )}
+            <div className='search__back'>
+                {searchResults.length > 0 && selectedCategory && (
+                    <button className="search__back-button" onClick={handleBack}>
+                        <ChevronLeft />
+                        {selectedCategory}
+                    </button>
+                )}
+            </div>
 
             {isInputFieldInFocus && !showNotFoundMessage && categories.length > 0 && searchResults.length === 0 && <Categories onSetSize={onSetSize}
                 searchFieldRef={searchFieldRef}
