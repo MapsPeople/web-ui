@@ -28,7 +28,9 @@ ContactActionButton.propTypes = {
  * @returns 
  */
 function ContactActionButton({ detailType, active, displayText, value, icon }) {
-    if (!active) return null;  // Early exit to not render the button if it is not set as active in the additional details data
+    // Early exit for inactive or opening hours buttons (opening hours are displayed in a different component)
+    if (!active || detailType.toLowerCase() === 'openinghours') return null;
+
     const textToDisplay = detailType.toLowerCase() === 'phone' ? value : displayText; // If the detail type is a phone number, display the phone number instead of the display text
 
     const generateURL = (detailType, value) => {
