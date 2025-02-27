@@ -147,7 +147,7 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
                         <div key={category} className="categories__item">
                             <button onClick={() => categoryClicked(category)}>
                                 <img src={categoryInfo.iconUrl} />
-                                <div>{categoryInfo.displayName}</div>
+                                {categoryInfo.displayName}
                             </button>
                         </div>
                     ))}
