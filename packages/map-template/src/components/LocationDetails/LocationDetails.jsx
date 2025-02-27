@@ -120,14 +120,12 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
     }
 
     /**
-     * Toggle the description.
+     * Toggle the description text expansion.
      */
     function toggleDescription() {
         if (showFullDescription === false) {
-            setSize(snapPoints.MAX);
             expandLocationDescription();
         } else {
-            setSize(snapPoints.FIT);
             collapseLocationDescription();
         }
     }
@@ -234,6 +232,16 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
         }
     }, [location, mapsIndoorsInstance, kioskLocation]);
 
+    useEffect(() => {
+        const hasAdditionalDetails = locationAdditionalDetails?.length > 0;
+        // Expand the sheet when location changes, is open, and has additional details
+        if (location && isOpen && hasAdditionalDetails) {
+            setSize(snapPoints.FIT);
+        } else {
+            setSize(snapPoints.MIN);
+        }
+    }, [location, isOpen, locationAdditionalDetails]);
+
     /*
      * When user swipes the bottom sheet to a new snap point.
      */
@@ -242,8 +250,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
 
         // If swiping to max height, expand location details.
         // If swiping to smaller height, collapse location details.
-        setShowFullDescription(snapPointSwiped === snapPoints.MAX);
-        if (snapPointSwiped === snapPoints.MAX) {
+        if (showFullDescription) {
             expandLocationDescription();
         } else {
             collapseLocationDescription();
@@ -290,7 +297,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                 </button>
             )}
 
-            <div ref={locationDetailsContainer} onScroll={e => setScrollIndicators(e)} className="location-details__details">
+            <div ref={locationDetailsContainer} onScroll={e => setScrollIndicators(e)} className="location-details__details prevent-scroll" {...scrollableContentSwipePrevent}>
                 {/* Location image */}
                 {location.properties.imageURL && <img alt="" src={location.properties.imageURL} className="location-details__image" />}
 
@@ -301,22 +308,18 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                     })}
                 </p>}
                 {/* Location description */}
-                {location.properties.description && !showFullDescription && <section className="location-details__description">
-                    <div ref={locationDetailsElement}>
-                        {location.properties.description}
-                    </div>
-                    {(isOverflowing || initialOverflow) && <button onClick={() => toggleDescription()}>
-                        {t('Read full description')}
-                    </button>}
-                </section>}
-                {location.properties.description && showFullDescription && <section className="location-details__description location-details__description--full prevent-scroll" {...scrollableContentSwipePrevent}>
-                    <div>
-                        {location.properties.description}
-                    </div>
-                    {initialOverflow && <button onClick={() => toggleDescription()}>
-                        {t('Close')}
-                    </button>}
-                </section>}
+                {location.properties.description && (
+                    <section className={`location-details__description ${showFullDescription ? 'location-details__description--full' : ''}`}>
+                        <div ref={locationDetailsElement}>
+                            {location.properties.description}
+                        </div>
+                        {(isOverflowing || initialOverflow || showFullDescription) && (
+                            <button onClick={() => toggleDescription()}>
+                                {t(showFullDescription ? 'Close' : 'Read full description')}
+                            </button>
+                        )}
+                    </section>
+                )}
 
                 {/*Contact action / opening hours button container */}
                 {locationAdditionalDetails && <div className='contact-action-buttons-container'>
