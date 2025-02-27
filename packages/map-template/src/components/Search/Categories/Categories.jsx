@@ -143,7 +143,7 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
         <div className="categories prevent-scroll" {...scrollableContentSwipePrevent}>
             {categories.length > 0 && (
                 <div className="categories__list">
-                    {categories?.map(([category, categoryInfo]) => (
+                    {categories.map(([category, categoryInfo]) => (
                         <div key={category} className="categories__item">
                             <button onClick={() => categoryClicked(category)}>
                                 <img src={categoryInfo.iconUrl} />
