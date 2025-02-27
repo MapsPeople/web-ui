@@ -503,7 +503,7 @@ function Search({ onSetSize, isOpen }) {
 
             { /* Horizontal list of Categories */}
 
-            <div className='search__back'>
+            <div className="search__back">
                 {searchResults.length > 0 && selectedCategory && (
                     <button className="search__back-button" onClick={handleBack}>
                         <ChevronLeft />
