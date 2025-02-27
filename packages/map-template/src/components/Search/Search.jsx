@@ -356,7 +356,11 @@ function Search({ onSetSize, isOpen }) {
     }
 
     /**
-     * Sets if performed click was inside search input field or outside it.
+     * Adds a click event listener to track whether a click occurred inside the search input field
+     * or outside of it. Updates state accordingly to toggle category list visibility.
+     *
+     * - If the click is inside an input field or the search back button, the field is considered in focus.
+     * - Otherwise, the field is considered out of focus.
      */
     useEffect(() => {
         const onClick = (ev) => {
