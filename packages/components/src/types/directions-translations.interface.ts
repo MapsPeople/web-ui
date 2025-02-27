@@ -30,5 +30,4 @@ export interface DirectionsTranslations {
     days: string;
     hours: string;
     minutes: string;
-    destination: string;
 }

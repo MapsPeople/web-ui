@@ -39,6 +39,7 @@ const useDirectionsInfo = (originLocation, destinationLocation, directionsServic
                         totalTime,
                         directionsResult
                     });
+                    setHasFoundRoute(true);
                     setAreDirectionReady(true);
                 } else {
                     setHasFoundRoute(false);
