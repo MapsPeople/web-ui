@@ -134,7 +134,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
      * Expand the location description to be fully shown.
      */
     function expandLocationDescription() {
-        requestAnimationFrame(() => {
+        requestAnimationFrame(() => { // Necessary to preserve transition
             setShowFullDescription(true);
             setScrollIndicators();
         });
