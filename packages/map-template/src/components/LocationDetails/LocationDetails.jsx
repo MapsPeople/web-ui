@@ -233,11 +233,14 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
     }, [location, mapsIndoorsInstance, kioskLocation]);
 
     useEffect(() => {
-        // Whenever the location changes and isOpen is true, expand the sheet.
-        if (location && isOpen) {
-            setSize(snapPoints.MAX);
+        const hasAdditionalDetails = locationAdditionalDetails?.length > 0;
+        // Expand the sheet when location changes, is open, and has additional details
+        if (location && isOpen && hasAdditionalDetails) {
+            setSize(snapPoints.FIT);
+        } else {
+            setSize(snapPoints.MIN);
         }
-    }, [location, isOpen]);
+    }, [location, isOpen, locationAdditionalDetails]);
 
     /*
      * When user swipes the bottom sheet to a new snap point.
