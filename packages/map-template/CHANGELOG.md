@@ -5,12 +5,6 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.71.1] - 2025-02-27
-
-### FIxed
-
-- Set up jest and add initial test cases for a custom hook.
-
 ## [1.71.0] - 2025-02-26
 
 ### Added
