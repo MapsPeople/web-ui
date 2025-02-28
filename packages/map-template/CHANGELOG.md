@@ -5,13 +5,67 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.68.0] - 2024-02-03
+## [1.71.1] - 2025-02-27
 
-## Added
+### FIxed
+
+- Set up jest and add initial test cases for a custom hook.
+
+## [1.71.0] - 2025-02-26
+
+### Added
+
+- In Wayfinding view, is is now possible to click on a MapsIndoors Location on the map to set it as either origin or destination, depending on which field is active (note: to set destination, the destination field must be empty)
+
+## [1.70.0] - 2025-02-20
+
+### Changed
+
+- Removed last step `You have arrived.` from the wayfinding.
+
+## [1.69.2] - 2025-02-19
+
+### Fixed
+
+- When route is Finished, category selected before is now unselected.
+
+## [1.69.1] - 2025-02-18
+
+### Fixed
+
+- The map now correctly zoom to a Location as expected when using the `locationId` or `kioskOriginLocationId` prop.
+
+## [1.69.0] - 2025-02-17
+
+### Added
+
+- Share functionality: From the Location details view the user can now copy a URL or scan a QR code that links to the Location (requires the `supportsUrlParameters` prop to be true).
+
+## [1.68.3] - 2025-02-13
+
+### Fixed
+
+- Fix 2D/3D selector not respecting the primaryColor query parameter
+
+## [1.68.2] - 2025-02-11
+
+### Fixed
+
+- Aligned map-template version in package-lock.
+
+## [1.68.1] - 2025-02-11
+
+### Fixed
+
+- An issue when on initial load map would stop in a random position.
+
+## [1.68.0] - 2025-02-03
+
+### Added
 
 - Added display of 2D models in 3D mode based on app config property
 
-## [1.67.0] - 2024-01-30
+## [1.67.0] - 2025-01-30
 
 ### Added
 
@@ -19,91 +73,91 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.66.7] - 2025-01-29
 
-## Fixed
+### Fixed
 
 - Enabled and fixed eslint rules
 
 ## [1.66.6] - 2025-01-27
 
-## Fixed
+### Fixed
 
 - Upgraded to SDK v4.38.6.
 
 ## [1.66.5] - 2025-01-27
 
-## Fixed
+### Fixed
 
 - Fixed an issue with `startZoomLevel` prop causing the map starting in a random position.
 
 ## [1.66.4] - 2025-01-23
 
-## Fixed
+### Fixed
 
 - Fix `miTransitionLevel` prop breaking the React Component package.
 
 ## [1.66.3] - 2025-01-23
 
-## Fixed
+### Fixed
 
 - Fix package-lock issues.
 
 ## [1.66.2] - 2025-01-21
 
-## Fixed
+### Fixed
 
 - Upgrade to SDK v.4.38.5.
 
 ## [1.66.1] - 2025-01-16
 
-## Fixed
+### Fixed
 
 - Removed Create React App dependencies and replaced with standard ESLint rules
 
 ## [1.66.0] - 2025-01-16
 
-## Added
+### Added
 
 - The map now fits to matching Locations when the user clicks/taps on a Category.
 
 ## [1.65.3] - 2025-01-15
 
-## Fixed
+### Fixed
 
 - Fixed issue of clicking outside of MapsIndoors data to close the Categories tab
 
 ## [1.65.2] - 2025-01-13
 
-## Fixed
+### Fixed
 
 - An issue where miTransitionLevel is not respected for Mapbox map.
 
 ## [1.65.1] - 2025-01-08
 
-## Fixed
+### Fixed
 
 - Upgrade to SDK v4.38.3.
 
 ## [1.65.0] - 2025-01-08
 
-## Added
+### Added
 
 - Added functionality to exit location details by clicking outside MapsIndoors data on the map for both Google Maps and Mapbox.
 
 ## [1.64.0] - 2025-01-02
 
-## Added
+### Added
 
 - When panning/zooming to a Location, it will no longer zoom further in than zoom level 22.
 
 ## [1.63.0] - 2024-12-12
 
-## Added
+### Added
 
 - Update "Accessibility" toggle text to "Avoid stairs and escalators"
 
 ## [1.62.1] - 2024-12-10
 
-## Fixed
+### Fixed
 
 - Fixed bug that would cause a Google Maps map to never show.
 

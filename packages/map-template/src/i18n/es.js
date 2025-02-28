@@ -71,6 +71,10 @@ const es = {
     // Directions
     'Cancel route': 'Cancelar ruta',
     'Finish route': 'Finalizar ruta',
+    // Share location link
+    'Share': 'Compartir',
+    'Copy link': 'Copiar link',
+    'QR Code': 'Código QR',
 };
 
 export default es;

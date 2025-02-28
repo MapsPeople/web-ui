@@ -35,6 +35,7 @@ import accessibilityOnState from "../../atoms/accessibilityOnState";
 import Accessibility from "../Accessibility/Accessibility";
 import searchExternalLocationsState from "../../atoms/searchExternalLocationsState";
 import PropTypes from 'prop-types';
+import wayfindingLocationState from '../../atoms/wayfindingLocation';
 
 const searchFieldIdentifiers = {
     TO: 'TO',
@@ -82,6 +83,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     const currentLocation = useRecoilValue(currentLocationState);
     const selectedMapType = useRecoilValue(mapTypeState);
     const primaryColor = useRecoilValue(primaryColorState);
+    const [wayfindingLocation, setWayfindingLocation] = useRecoilState(wayfindingLocationState);
 
     const [activeSearchField, setActiveSearchField] = useState();
 
@@ -327,6 +329,16 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         onBack();
     }
 
+    /**
+     * Trigger route search (by resetting variables).
+     */
+    function triggerRouteSearch() {
+        setSearchResults([]);
+        setSearchTriggered(false);
+        setHasGooglePlaces(false);
+        setShowMyPositionOption(false);
+    }
+
     useEffect(() => {
         return () => {
             setSearchResults([]);
@@ -334,6 +346,29 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
             setOriginLocation();
         }
     }, []);
+
+    /*
+     * React on changes on the wayfindingLocation, meaning that the user has clicked on a MapsIndoors Location on the map.
+     * This Location should now be used as the origin or destination location, depending on which search field is active.
+     */
+    useEffect(() => {
+        if (!wayfindingLocation) return;
+
+        if (activeSearchField === searchFieldIdentifiers.FROM) {
+            // If the FROM field is active, set the wayfindingLocation as the originLocation.
+            fromFieldRef.current.setDisplayText(wayfindingLocation.properties.name);
+            setOriginLocation(wayfindingLocation);
+        } else if (activeSearchField === searchFieldIdentifiers.TO && !toFieldRef.current.getValue()) {
+            // If the TO field is active and empty, set the wayfindingLocation as the destinationLocation.
+            toFieldRef.current.setDisplayText(wayfindingLocation.properties.name);
+            setDestinationLocation(wayfindingLocation);
+        } else {
+            return;
+        }
+
+        triggerRouteSearch();
+        setWayfindingLocation(null); // will re-trigger another run with early exit but necessary in order to be able to re-click already clicked locations on the map
+    }, [wayfindingLocation]);
 
     useEffect(() => {
         setSize(snapPoints.MAX);
