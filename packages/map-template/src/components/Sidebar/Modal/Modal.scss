@@ -43,13 +43,11 @@ $desktop-breakpoint: 992px;
         max-height: none;
     }
 
-    @media screen and (min-width: $desktop-breakpoint) {
-        top: var(--spacing-x-large);
-        bottom: auto;
-        transform: translateX(-100%);
+    top: var(--spacing-x-large);
+    bottom: auto;
+    transform: translateX(-100%);
 
-        &--open {
-            transform: translateX(0);
-        }
+    &--open {
+        transform: translateX(0);
     }
 }
