@@ -140,7 +140,7 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
             />
         </Sheet>,
         <Sheet
-            minHeight="238"
+            minHeight="190"
             isOpen={currentAppView === appViews.WAYFINDING}
             preferredSizeSnapPoint={wayfindingSheetSize}
             reFitWhenContentChanges={true}
