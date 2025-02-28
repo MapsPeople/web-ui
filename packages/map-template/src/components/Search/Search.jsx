@@ -33,6 +33,7 @@ import isNullOrUndefined from '../../helpers/isNullOrUndefined';
 import venuesInSolutionState from '../../atoms/venuesInSolutionState';
 import initialVenueNameState from '../../atoms/initialVenueNameState';
 import PropTypes from 'prop-types';
+import { ReactComponent as ChevronLeft } from '../../assets/chevron-left.svg';
 
 Search.propTypes = {
     categories: PropTypes.array,
@@ -111,7 +112,21 @@ function Search({ onSetSize, isOpen }) {
     const searchAllVenues = useRecoilValue(searchAllVenuesState);
 
     const venuesInSolution = useRecoilValue(venuesInSolutionState);
+
     const initialVenueName = useRecoilValue(initialVenueNameState);
+
+    const [isInputFieldInFocus, setIsInputFieldInFocus] = useState();
+
+    /**
+     * Handles go back function.
+     */
+    function handleBack() {
+        setSelectedCategory(null);
+        setSearchResults([]);
+        setFilteredLocations([]);
+        setSize(snapPoints.FIT);
+        setIsInputFieldInFocus(true);
+    }
 
     /**
      *
@@ -337,11 +352,36 @@ function Search({ onSetSize, isOpen }) {
             }
 
             return { display: 'flex', flexDirection: 'column', maxHeight, overflow: 'hidden' };
-        } else {
-            return { minHeight: categories.length > 0 ? '136px' : '80px' };
         }
     }
 
+    /**
+     * Adds a click event listener to track whether a click occurred inside the search input field
+     * or outside of it. Updates state accordingly to toggle category list visibility.
+     *
+     * - If the click is inside an input field or the search back button, the field is considered in focus.
+     * - Otherwise, the field is considered out of focus.
+     */
+    useEffect(() => {
+        const onClick = (ev) => {
+            const isInputFocused = ev.target.tagName === "INPUT" && ev.target === document.activeElement || ev.target.className === 'search__back-button'
+            if (isInputFocused) {
+                setIsInputFieldInFocus(isInputFocused)
+            } else {
+                setIsInputFieldInFocus(false)
+            }
+        };
+
+        window.addEventListener("click", onClick);
+
+        return () => {
+            window.removeEventListener("click", onClick);
+        };
+    }, []);
+
+    /**
+     * Sets currently hovered location.
+     */
     useEffect(() => {
         return () => {
             setHoveredLocation();
@@ -461,17 +501,22 @@ function Search({ onSetSize, isOpen }) {
                 </label>
             </div>
 
-
-
             { /* Horizontal list of Categories */}
 
-            {categories.length > 0 && <Categories onSetSize={onSetSize}
+            <div className="search__back">
+                {searchResults.length > 0 && selectedCategory && (
+                    <button className="search__back-button" onClick={handleBack}>
+                        <ChevronLeft />
+                        {selectedCategory}
+                    </button>
+                )}
+            </div>
+
+            {isInputFieldInFocus && !showNotFoundMessage && categories.length > 0 && searchResults.length === 0 && <Categories onSetSize={onSetSize}
                 searchFieldRef={searchFieldRef}
                 getFilteredLocations={category => getFilteredLocations(category)}
                 isOpen={!!selectedCategory}
             />}
-
-
 
             { /* Message shown if no search results were found */}
 
