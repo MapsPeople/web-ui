@@ -75,6 +75,9 @@ const en = {
     'Share': 'Share',
     'Copy link': 'Copy link',
     'QR Code': 'QR Code',
+    // Opening Hours
+    'Open': 'Open',
+    'Closed': 'Closed',
 };
 
 export default en;

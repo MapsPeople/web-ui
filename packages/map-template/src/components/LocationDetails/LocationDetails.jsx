@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import './LocationDetails.scss';
 import { useTranslation } from 'react-i18next';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
@@ -17,8 +17,10 @@ import accessibilityOnState from '../../atoms/accessibilityOnState';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
 import showExternalIDsState from '../../atoms/showExternalIDsState';
 import useOutsideMapsIndoorsDataClick from '../../hooks/useOutsideMapsIndoorsDataClick';
+import OpeningHours from './OpeningHours/OpeningHours';
 import PropTypes from 'prop-types';
 import ShareLocationLink from './ShareLocationLink/ShareLocationLink';
+import ContactActionButton from '../ContactActionButton/ContactActionButton';
 
 LocationDetails.propTypes = {
     onBack: PropTypes.func,
@@ -57,6 +59,9 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
 
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const location = useRecoilValue(currentLocationState);
+    const locationAdditionalDetails = location?.properties?.additionalDetails;
+    // Get the first opening hours detail that is active
+    const openingHours = locationAdditionalDetails?.find(detail => detail.key.toLowerCase().includes('openinghours') && detail.active === true)?.openingHours;
 
     // Check if the content of the Location details is overflowing
     const [isOverflowing, initialOverflow] = useIsVerticalOverflow(location, locationDetailsElement);
@@ -92,23 +97,17 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
         }
     }, []);
 
-    useEffect(() => {
-        // Reset state
+    /**
+     * Sets full description, content above/below flags to false and triggers the onBack callback.
+     */
+    const back = useCallback(() => {
         setShowFullDescription(false);
         setDescriptionHasContentAbove(false);
         setDescriptionHasContentBelow(false);
-        setLocationDisplayRule(null);
+        setSize(snapPoints.FIT);
 
-        if (location) {
-            locationInfoElement.current.location = location;
-            setLocationDisplayRule(mapsIndoorsInstance.getDisplayRule(location));
-            setDestinationLocation(location)
-        }
-
-        if (kioskLocation) {
-            setOriginLocation(kioskLocation)
-        }
-    }, [location, mapsIndoorsInstance, kioskLocation]);
+        onBack();
+    });
 
     /**
      * Communicate size change to parent component.
@@ -119,28 +118,6 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
             onSetSize(size);
         }
     }
-
-    /*
-     * When user swipes the bottom sheet to a new snap point.
-     */
-    useEffect(() => {
-        if (snapPointSwiped === undefined) return;
-
-        // If swiping to max height, expand location details.
-        // If swiping to smaller height, collapse location details.
-        setShowFullDescription(snapPointSwiped === snapPoints.MAX);
-        if (snapPointSwiped === snapPoints.MAX) {
-            expandLocationDescription();
-        } else {
-            collapseLocationDescription();
-        }
-    }, [snapPointSwiped]); // eslint-disable-line react-hooks/exhaustive-deps
-
-    useEffect(() => {
-        if (clickedOutsideMapsIndoorsData) {
-            onBack();
-        }
-    }, [clickedOutsideMapsIndoorsData]);
 
     /**
      * Toggle the description.
@@ -216,17 +193,62 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
         onStartDirections();
     }
 
-    /**
-     * Close the Location details page.
+    /*
+     * Closes location details when user clicks outside MapsIndoors data.
      */
-    function back() {
+    useEffect(() => {
+        if (clickedOutsideMapsIndoorsData) {
+            onBack();
+        }
+    }, [clickedOutsideMapsIndoorsData]);
+
+    /*
+     * Cleanup on unmount: resets location display rule and direction locations.
+     */
+    useEffect(() => {
+        return () => {
+            setLocationDisplayRule(null);
+            setDestinationLocation();
+            setOriginLocation();
+        }
+    }, []);
+
+    /*
+     * Updates location details and routing state when location dependencies change.
+     */
+    useEffect(() => {
+        // Reset state
         setShowFullDescription(false);
         setDescriptionHasContentAbove(false);
         setDescriptionHasContentBelow(false);
-        setSize(snapPoints.FIT);
+        setLocationDisplayRule(null);
 
-        onBack();
-    }
+        if (location) {
+            locationInfoElement.current.location = location;
+            setLocationDisplayRule(mapsIndoorsInstance.getDisplayRule(location));
+            setDestinationLocation(location)
+        }
+
+        if (kioskLocation) {
+            setOriginLocation(kioskLocation)
+        }
+    }, [location, mapsIndoorsInstance, kioskLocation]);
+
+    /*
+     * When user swipes the bottom sheet to a new snap point.
+     */
+    useEffect(() => {
+        if (snapPointSwiped === undefined) return;
+
+        // If swiping to max height, expand location details.
+        // If swiping to smaller height, collapse location details.
+        setShowFullDescription(snapPointSwiped === snapPoints.MAX);
+        if (snapPointSwiped === snapPoints.MAX) {
+            expandLocationDescription();
+        } else {
+            collapseLocationDescription();
+        }
+    }, [snapPointSwiped]); // eslint-disable-line react-hooks/exhaustive-deps
 
     return <div className={`location-details ${descriptionHasContentAbove ? 'location-details--content-above' : ''} ${descriptionHasContentBelow ? 'location-details--content-below' : ''}`}>
         {location && <>
@@ -248,6 +270,26 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                 </div>
             </div>
 
+            {/* Wayfinding Button */}
+            {kioskLocation && isDesktop ? (
+                <button
+                    disabled={!hasFoundRoute}
+                    onClick={() => startDirections()}
+                    className={`location-details__wayfinding ${!hasFoundRoute ? 'location-details--no-route' : ''}`}
+                    style={{ background: primaryColor }}
+                >
+                    {!hasFoundRoute ? t('Directions not available') : t('Start directions')}
+                </button>
+            ) : (
+                <button
+                    onClick={() => startWayfinding()}
+                    style={{ background: primaryColor }}
+                    className="location-details__wayfinding"
+                >
+                    {t('Start wayfinding')}
+                </button>
+            )}
+
             <div ref={locationDetailsContainer} onScroll={e => setScrollIndicators(e)} className="location-details__details">
                 {/* Location image */}
                 {location.properties.imageURL && <img alt="" src={location.properties.imageURL} className="location-details__image" />}
@@ -258,7 +300,6 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                         return <React.Fragment key={category}>{category}{index < array.length - 1 && <>・</>}</React.Fragment>
                     })}
                 </p>}
-
                 {/* Location description */}
                 {location.properties.description && !showFullDescription && <section className="location-details__description">
                     <div ref={locationDetailsElement}>
@@ -276,23 +317,22 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                         {t('Close')}
                     </button>}
                 </section>}
-            </div>
 
-            {kioskLocation && isDesktop
-                ?
-                <button disabled={!hasFoundRoute}
-                    onClick={() => startDirections()}
-                    className={`location-details__wayfinding ${!hasFoundRoute ? 'location-details--no-route' : ''}`}
-                    style={{ background: primaryColor }}>
-                    {!hasFoundRoute ? t('Directions not available') : t('Start directions')}
-                </button>
-                :
-                <button onClick={() => startWayfinding()}
-                    style={{ background: primaryColor }}
-                    className="location-details__wayfinding">
-                    {t('Start wayfinding')}
-                </button>
-            }
+                {/*Contact action / opening hours button container */}
+                {locationAdditionalDetails && <div className='contact-action-buttons-container'>
+                    {locationAdditionalDetails.map(button => (
+                        <ContactActionButton
+                            key={button.key}
+                            detailType={button.detailType}
+                            active={button.active}
+                            displayText={button.displayText}
+                            value={button.value}
+                            icon={button.icon}
+                        />
+                    ))}
+                    <OpeningHours openingHours={openingHours} />
+                </div>}
+            </div>
         </>}
     </div>
 }
