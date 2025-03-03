@@ -76,8 +76,8 @@ function Sheet({ children, isOpen, minHeight, preferredSizeSnapPoint, onSwipedTo
         });
 
         fitMutationObserver.observe(contentRef.current, {
-            childList: true,
-            subtree: true
+            childList: true, // checks if children are added or removed
+            subtree: true // check if descendants are added or removed all the way down the tree of DOM nodes
         });
     }
 
