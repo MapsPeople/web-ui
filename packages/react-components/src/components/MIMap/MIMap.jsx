@@ -51,7 +51,7 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bear
     const [appConfig, setAppConfig] = useState();
     const defaultMapOptions = {
         ...mapOptions,
-        minZoom: 14,
+        minZoom: 10,
     }
 
     useEffect(() => {
