@@ -25,6 +25,12 @@ import showExternalIDsState from '../../atoms/showExternalIDsState';
 import PropTypes from "prop-types";
 import baseLinkSelector from '../../selectors/baseLink';
 import mapTypeState from "../../atoms/mapTypeState";
+import { getZoomLevel, goTo } from "../../hooks/useMapBoundsDeterminer";
+import venuesInSolutionState from "../../atoms/venuesInSolutionState";
+import currentVenueNameState from "../../atoms/currentVenueNameState";
+import startZoomLevelState from "../../atoms/startZoomLevelState";
+import bearingState from "../../atoms/bearingState";
+import pitchState from "../../atoms/pitchState";
 
 let directionsRenderer;
 
@@ -86,6 +92,18 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
     const currentLocation = useRecoilValue(currentLocationState);
 
     const mapType = useRecoilValue(mapTypeState);
+
+    const venuesInSolution = useRecoilValue(venuesInSolutionState);
+
+    const currentVenueName = useRecoilValue(currentVenueNameState);
+    
+    const currentVenue = venuesInSolution?.find(venue => venue?.name?.toLowerCase() === currentVenueName?.toLowerCase());
+
+    const startZoomLevel = useRecoilValue(startZoomLevelState);
+
+    const bearing = useRecoilValue(bearingState);
+    
+    const pitch = useRecoilValue(pitchState);
 
     useEffect(() => {
         return () => {
@@ -261,6 +279,14 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
         } else if (mapType === 'google') {
             mapsIndoorsInstance.getMapView().getMap().setOptions({ minZoom: 10})
         }
+
+        if (isDesktop) {
+            goTo(currentVenue.geometry, mapsIndoorsInstance, 0, 0, getZoomLevel(startZoomLevel), pitch, bearing);
+                } else {
+            getMobilePaddingBottom().then(mobilePaddingBottom => {
+                goTo(currentVenue.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, getZoomLevel(startZoomLevel), pitch, bearing);
+            });
+       }
     }
 
     /**
