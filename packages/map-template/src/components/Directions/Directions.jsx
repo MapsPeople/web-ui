@@ -24,6 +24,7 @@ import { useIsDesktop } from "../../hooks/useIsDesktop";
 import showExternalIDsState from '../../atoms/showExternalIDsState';
 import PropTypes from "prop-types";
 import baseLinkSelector from '../../selectors/baseLink';
+import mapTypeState from "../../atoms/mapTypeState";
 
 let directionsRenderer;
 
@@ -84,6 +85,8 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
 
     const currentLocation = useRecoilValue(currentLocationState);
 
+    const mapType = useRecoilValue(mapTypeState);
+
     useEffect(() => {
         return () => {
             setDestinationDisplayRule(null);
@@ -128,6 +131,12 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
                     setDestinationDisplayRule(mapsIndoorsInstance.getDisplayRule(directions.destinationLocation));
                 }
             });
+
+            if (mapType === 'mapbox') {
+                mapsIndoorsInstance.getMapView().getMap().setMinZoom(null);
+            } else if (mapType === 'google') {
+                mapsIndoorsInstance.getMapView().getMap().setOptions({ minZoom: null})
+            }
         }
     }, [isOpen, directions, mapsIndoorsInstance, travelMode]);
 
@@ -175,6 +184,12 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
     useEffect(() => {
         if (!isOpen && directionsRenderer) {
             stopRendering();
+
+            if (mapType === 'mapbox') {
+                mapsIndoorsInstance.getMapView().getMap().setMinZoom(10);
+            } else if (mapType === 'google') {
+                mapsIndoorsInstance.getMapView().getMap().setOptions({ minZoom: 10})
+            }
         }
     }, [isOpen]);
 
