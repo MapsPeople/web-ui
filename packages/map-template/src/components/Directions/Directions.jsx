@@ -131,7 +131,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
                     setDestinationDisplayRule(mapsIndoorsInstance.getDisplayRule(directions.destinationLocation));
                 }
             });
-
+            
             if (mapType === 'mapbox') {
                 mapsIndoorsInstance.getMapView().getMap().setMinZoom(null);
             } else if (mapType === 'google') {
@@ -255,6 +255,12 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
         resetSubsteps();
         stopRendering();
         onBack();
+
+        if (mapType === 'mapbox') {
+            mapsIndoorsInstance.getMapView().getMap().setMinZoom(10);
+        } else if (mapType === 'google') {
+            mapsIndoorsInstance.getMapView().getMap().setOptions({ minZoom: 10})
+        }
     }
 
     /**
