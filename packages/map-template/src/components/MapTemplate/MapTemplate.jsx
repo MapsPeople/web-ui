@@ -61,6 +61,9 @@ import wayfindingLocationState from '../../atoms/wayfindingLocation.js';
 import isNullOrUndefined from '../../helpers/isNullOrUndefined.js';
 import centerState from '../../atoms/centerState.js';
 import PropTypes from 'prop-types';
+import currentVenueNameState from '../../atoms/currentVenueNameState.js';
+import { getZoomLevel, goTo } from '../../hooks/useMapBoundsDeterminer.js';
+import getMobilePaddingBottom from '../../helpers/GetMobilePaddingBottom.js'
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -207,6 +210,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [resetCount, setResetCount] = useState(0);
 
     const [setCurrentVenueName, updateCategories] = useCurrentVenue();
+
+    const currentVenueName = useRecoilValue(currentVenueNameState);
+
+    const currentVenue = venuesInSolution.find(venue => venue?.name?.toLowerCase() === currentVenueName?.toLowerCase());
 
     /**
      * Ensure that MapsIndoors Web SDK is available.
@@ -671,6 +678,14 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         resetAppHistory();
         setResetCount(curr => curr + 1); // will force a re-render of bottom sheet and sidebar.
         setSelectedCategory(null); // unselect category when route is finished
+
+        if (isDesktop) {
+            goTo(currentVenue.geometry, mapsIndoorsInstance, 0, 0, getZoomLevel(startZoomLevel), pitch, bearing);
+        } else {
+            getMobilePaddingBottom().then(mobilePaddingBottom => {
+                goTo(currentVenue.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, getZoomLevel(startZoomLevel), pitch, bearing);
+            });
+        }
     }
 
     /*
