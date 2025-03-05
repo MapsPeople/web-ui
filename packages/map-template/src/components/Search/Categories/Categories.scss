@@ -25,12 +25,12 @@
             background: none;
             cursor: pointer;
             text-align: left;
+            gap: var(--spacing-small);
         }
 
         img {
             width: var(--spacing-large);
             height: var(--spacing-large);
-            margin-right: var(--spacing-small);
         }
 
         &:hover {
