@@ -96,13 +96,13 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
     const venuesInSolution = useRecoilValue(venuesInSolutionState);
 
     const currentVenueName = useRecoilValue(currentVenueNameState);
-    
+
     const currentVenue = venuesInSolution?.find(venue => venue?.name?.toLowerCase() === currentVenueName?.toLowerCase());
 
     const startZoomLevel = useRecoilValue(startZoomLevelState);
 
     const bearing = useRecoilValue(bearingState);
-    
+
     const pitch = useRecoilValue(pitchState);
 
     useEffect(() => {
@@ -149,11 +149,11 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
                     setDestinationDisplayRule(mapsIndoorsInstance.getDisplayRule(directions.destinationLocation));
                 }
             });
-            
+
             if (mapType === 'mapbox') {
                 mapsIndoorsInstance.getMapView().getMap().setMinZoom(null);
             } else if (mapType === 'google') {
-                mapsIndoorsInstance.getMapView().getMap().setOptions({ minZoom: null})
+                mapsIndoorsInstance.getMapView().getMap().setOptions({ minZoom: null })
             }
         }
     }, [isOpen, directions, mapsIndoorsInstance, travelMode]);
@@ -206,7 +206,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
             if (mapType === 'mapbox') {
                 mapsIndoorsInstance.getMapView().getMap().setMinZoom(10);
             } else if (mapType === 'google') {
-                mapsIndoorsInstance.getMapView().getMap().setOptions({ minZoom: 10})
+                mapsIndoorsInstance.getMapView().getMap().setOptions({ minZoom: 10 })
             }
         }
     }, [isOpen]);
@@ -277,16 +277,16 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
         if (mapType === 'mapbox') {
             mapsIndoorsInstance.getMapView().getMap().setMinZoom(10);
         } else if (mapType === 'google') {
-            mapsIndoorsInstance.getMapView().getMap().setOptions({ minZoom: 10})
+            mapsIndoorsInstance.getMapView().getMap().setOptions({ minZoom: 10 })
         }
-
+        
         if (isDesktop) {
             goTo(currentVenue.geometry, mapsIndoorsInstance, 0, 0, getZoomLevel(startZoomLevel), pitch, bearing);
-                } else {
+        } else {
             getMobilePaddingBottom().then(mobilePaddingBottom => {
                 goTo(currentVenue.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, getZoomLevel(startZoomLevel), pitch, bearing);
             });
-       }
+        }
     }
 
     /**
