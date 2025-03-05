@@ -216,7 +216,7 @@ function Sheet({ children, isOpen, minHeight, preferredSizeSnapPoint, onSwipedTo
      */
     useEffect(() => {
         if (isOpen === false) {
-            contentHeightRef.current = undefined;
+            contentHeightRef.current = minHeight;
             sheetRef.current.style.height = '';
         } else {
             contentHeightRef.current = contentRef.current.clientHeight;
