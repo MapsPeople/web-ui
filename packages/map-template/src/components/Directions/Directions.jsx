@@ -202,12 +202,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
     useEffect(() => {
         if (!isOpen && directionsRenderer) {
             stopRendering();
-
-            if (mapType === 'mapbox') {
-                mapsIndoorsInstance.getMapView().getMap().setMinZoom(10);
-            } else if (mapType === 'google') {
-                mapsIndoorsInstance.getMapView().getMap().setOptions({ minZoom: 10 })
-            }
+            setMinZoom(mapType);
         }
     }, [isOpen]);
 
@@ -273,19 +268,28 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
         resetSubsteps();
         stopRendering();
         onBack();
-
-        if (mapType === 'mapbox') {
-            mapsIndoorsInstance.getMapView().getMap().setMinZoom(10);
-        } else if (mapType === 'google') {
-            mapsIndoorsInstance.getMapView().getMap().setOptions({ minZoom: 10 })
-        }
+        setMinZoom(mapType);
         
+        // Go to current venue once directions are 'Closed'
         if (isDesktop) {
             goTo(currentVenue.geometry, mapsIndoorsInstance, 0, 0, getZoomLevel(startZoomLevel), pitch, bearing);
         } else {
             getMobilePaddingBottom().then(mobilePaddingBottom => {
                 goTo(currentVenue.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, getZoomLevel(startZoomLevel), pitch, bearing);
             });
+        }
+    }
+
+    /**
+     * Sets minZoom for a specific map provider.
+     * 
+     * @param {string} mapType 
+     */
+    function setMinZoom(mapType) {
+        if (mapType === 'mapbox') {
+            mapsIndoorsInstance.getMapView().getMap().setMinZoom(10);
+        } else if (mapType === 'google') {
+            mapsIndoorsInstance.getMapView().getMap().setOptions({ minZoom: 10 })
         }
     }
 
