@@ -24,6 +24,13 @@ import { useIsDesktop } from "../../hooks/useIsDesktop";
 import showExternalIDsState from '../../atoms/showExternalIDsState';
 import PropTypes from "prop-types";
 import baseLinkSelector from '../../selectors/baseLink';
+import mapTypeState from "../../atoms/mapTypeState";
+import { getZoomLevel, goTo } from "../../hooks/useMapBoundsDeterminer";
+import venuesInSolutionState from "../../atoms/venuesInSolutionState";
+import currentVenueNameState from "../../atoms/currentVenueNameState";
+import startZoomLevelState from "../../atoms/startZoomLevelState";
+import bearingState from "../../atoms/bearingState";
+import pitchState from "../../atoms/pitchState";
 
 let directionsRenderer;
 
@@ -84,6 +91,20 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
 
     const currentLocation = useRecoilValue(currentLocationState);
 
+    const mapType = useRecoilValue(mapTypeState);
+
+    const venuesInSolution = useRecoilValue(venuesInSolutionState);
+
+    const currentVenueName = useRecoilValue(currentVenueNameState);
+
+    const currentVenue = venuesInSolution?.find(venue => venue?.name?.toLowerCase() === currentVenueName?.toLowerCase());
+
+    const startZoomLevel = useRecoilValue(startZoomLevelState);
+
+    const bearing = useRecoilValue(bearingState);
+
+    const pitch = useRecoilValue(pitchState);
+
     useEffect(() => {
         return () => {
             setDestinationDisplayRule(null);
@@ -128,6 +149,12 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
                     setDestinationDisplayRule(mapsIndoorsInstance.getDisplayRule(directions.destinationLocation));
                 }
             });
+
+            if (mapType === 'mapbox') {
+                mapsIndoorsInstance.getMapView().getMap().setMinZoom(null);
+            } else if (mapType === 'google') {
+                mapsIndoorsInstance.getMapView().getMap().setOptions({ minZoom: null })
+            }
         }
     }, [isOpen, directions, mapsIndoorsInstance, travelMode]);
 
@@ -175,6 +202,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
     useEffect(() => {
         if (!isOpen && directionsRenderer) {
             stopRendering();
+            setMinZoom(mapType);
         }
     }, [isOpen]);
 
@@ -240,6 +268,29 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
         resetSubsteps();
         stopRendering();
         onBack();
+        setMinZoom(mapType);
+        
+        // Go to current venue once directions are 'Closed'
+        if (isDesktop) {
+            goTo(currentVenue.geometry, mapsIndoorsInstance, 0, 0, getZoomLevel(startZoomLevel), pitch, bearing);
+        } else {
+            getMobilePaddingBottom().then(mobilePaddingBottom => {
+                goTo(currentVenue.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, getZoomLevel(startZoomLevel), pitch, bearing);
+            });
+        }
+    }
+
+    /**
+     * Sets minZoom for a specific map provider.
+     * 
+     * @param {string} mapType 
+     */
+    function setMinZoom(mapType) {
+        if (mapType === 'mapbox') {
+            mapsIndoorsInstance.getMapView().getMap().setMinZoom(10);
+        } else if (mapType === 'google') {
+            mapsIndoorsInstance.getMapView().getMap().setOptions({ minZoom: 10 })
+        }
     }
 
     /**
