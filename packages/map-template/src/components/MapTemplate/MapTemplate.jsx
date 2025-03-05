@@ -679,11 +679,23 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         setResetCount(curr => curr + 1); // will force a re-render of bottom sheet and sidebar.
         setSelectedCategory(null); // unselect category when route is finished
 
+        console.log('pitch', pitch);
+        console.log('bearing', bearing);
+        console.log(viewModeSwitchVisible);
+        
         if (isDesktop) {
-            goTo(currentVenue.geometry, mapsIndoorsInstance, 0, 0, getZoomLevel(startZoomLevel), pitch, bearing);
+            if (viewModeSwitchVisible) {
+                goTo(currentVenue.geometry, mapsIndoorsInstance, 0, 0, getZoomLevel(startZoomLevel), 45, bearing);
+            } else {
+                goTo(currentVenue.geometry, mapsIndoorsInstance, 0, 0, getZoomLevel(startZoomLevel), 0, bearing);
+            }
         } else {
             getMobilePaddingBottom().then(mobilePaddingBottom => {
-                goTo(currentVenue.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, getZoomLevel(startZoomLevel), pitch, bearing);
+                if (viewModeSwitchVisible) {
+                    goTo(currentVenue.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, getZoomLevel(startZoomLevel), 45, bearing);
+                } else {
+                    goTo(currentVenue.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, getZoomLevel(startZoomLevel), 0, bearing);
+                }
             });
         }
     }
