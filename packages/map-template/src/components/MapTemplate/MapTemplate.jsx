@@ -674,25 +674,22 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * Function that handles the reset of the state and UI.
      */
     function resetStateAndUI() {
+        const mapboxPitch = 45;
         resetState();
         resetAppHistory();
         setResetCount(curr => curr + 1); // will force a re-render of bottom sheet and sidebar.
         setSelectedCategory(null); // unselect category when route is finished
 
-        console.log('pitch', pitch);
-        console.log('bearing', bearing);
-        console.log(viewModeSwitchVisible);
-        
         if (isDesktop) {
             if (viewModeSwitchVisible) {
-                goTo(currentVenue.geometry, mapsIndoorsInstance, 0, 0, getZoomLevel(startZoomLevel), 45, bearing);
+                goTo(currentVenue.geometry, mapsIndoorsInstance, 0, 0, getZoomLevel(startZoomLevel), mapboxPitch, bearing);
             } else {
                 goTo(currentVenue.geometry, mapsIndoorsInstance, 0, 0, getZoomLevel(startZoomLevel), 0, bearing);
             }
         } else {
             getMobilePaddingBottom().then(mobilePaddingBottom => {
                 if (viewModeSwitchVisible) {
-                    goTo(currentVenue.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, getZoomLevel(startZoomLevel), 45, bearing);
+                    goTo(currentVenue.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, getZoomLevel(startZoomLevel), mapboxPitch, bearing);
                 } else {
                     goTo(currentVenue.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, getZoomLevel(startZoomLevel), 0, bearing);
                 }
