@@ -21,6 +21,7 @@ import notificationMessageState from '../../atoms/notificationMessageState';
 import useMapBoundsDeterminer from '../../hooks/useMapBoundsDeterminer';
 import hideNonMatchesState from "../../atoms/hideNonMatchesState";
 import miTransitionLevelState from "../../atoms/miTransitionLevelState";
+import showRoadNamesState from "../../atoms/showRoadNamesState";
 import PropTypes from "prop-types";
 
 MapWrapper.propTypes = {
@@ -73,6 +74,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
     const [, setErrorMessage] = useRecoilState(notificationMessageState);
     const hideNonMatches = useRecoilValue(hideNonMatchesState);
     const miTransitionLevel = useRecoilValue(miTransitionLevelState);
+    const showRoadNames = useRecoilValue(showRoadNamesState);
 
     useLiveData(apiKey);
 
@@ -298,6 +300,13 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
             onMapOptionsChange({ miTransitionLevel: miTransitionLevel })
         }
     }, [miTransitionLevel])
+
+    /**
+     * React on changes in the showRoadNames prop.
+     */
+    useEffect(() => {
+        onMapOptionsChange({ showRoadNames: showRoadNames })
+    }, [showRoadNames])
 
     return (<>
         {apiKey && <MIMap
