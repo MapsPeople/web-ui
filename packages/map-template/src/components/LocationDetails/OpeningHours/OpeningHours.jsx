@@ -10,7 +10,6 @@ import languageState from '../../../atoms/languageState';
 
 OpeningHours.propTypes = {
     openingHours: PropTypes.object,
-    isAmFormat: PropTypes.bool,
     isMondayFirstDayOfTheWeek: PropTypes.bool
 };
 
@@ -21,15 +20,24 @@ OpeningHours.propTypes = {
  * 
  * @param {object} props
  * @param {object} props.openingHours // Opening hours data
- * @param {boolean} [props.isAmFormat] // Whether to display time in AM/PM format
  * @param {boolean} [props.isMondayFirstDayOfTheWeek] // Whether Monday is the first day of the week
  * @returns 
  */
-function OpeningHours({ openingHours, isAmFormat = false, isMondayFirstDayOfTheWeek = true }) {
+function OpeningHours({ openingHours, isMondayFirstDayOfTheWeek = true }) {
     const { t } = useTranslation();
     const [isExpanded, setIsExpanded] = useState(false);
     const currentLanguage = useRecoilValue(languageState);
     const languageToUse = currentLanguage ?? navigator.language;
+
+    /**
+     * Determines if the locale uses 12-hour time format
+     * @returns {boolean} True if the locale uses 12-hour time format, false if it uses 24-hour format
+     */
+    const uses12HourFormat = useMemo(() => {
+        // Test if the locale uses 12-hour format by checking if AM/PM appears
+        const test = new Date(2020, 0, 1, 13).toLocaleTimeString(languageToUse);
+        return test.match(/AM|PM/) !== null;
+    }, [languageToUse]);
 
     /**
      * Gets the current day of the week (0-6, where Sunday is 0)
@@ -77,10 +85,10 @@ function OpeningHours({ openingHours, isAmFormat = false, isMondayFirstDayOfTheW
     // Helper function that takes a time string (e.g., "09:00") and returns a formatted time string
     const formatTime = (time) => {
         const [hours, minutes] = time.split(':');
-        return new Date(0, 0, 0, hours, minutes).toLocaleTimeString([], {
+        return new Date(0, 0, 0, hours, minutes).toLocaleTimeString(languageToUse, {
             hour: '2-digit',
             minute: '2-digit',
-            hour12: isAmFormat
+            hour12: uses12HourFormat
         });
     };
 
