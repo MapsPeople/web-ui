@@ -31,7 +31,8 @@ function ContactActionButton({ detailType, active, displayText, value, icon }) {
     // Early exit for inactive or opening hours buttons (opening hours are displayed in a different component)
     if (!active || detailType.toLowerCase() === 'openinghours') return null;
 
-    const textToDisplay = detailType.toLowerCase() === 'phone' ? value : displayText; // If the detail type is a phone number, display the phone number instead of the display text
+    // Use value for phone numbers; for other types, use displayText if available and non-empty, otherwise fallback to value
+    const textToDisplay = !displayText?.trim() || detailType?.toLowerCase() === 'phone' ? value : displayText;
 
     const generateURL = (detailType, value) => {
         switch (detailType.toLowerCase()) {
