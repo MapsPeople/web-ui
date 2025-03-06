@@ -61,6 +61,9 @@ import wayfindingLocationState from '../../atoms/wayfindingLocation.js';
 import isNullOrUndefined from '../../helpers/isNullOrUndefined.js';
 import centerState from '../../atoms/centerState.js';
 import PropTypes from 'prop-types';
+import currentVenueNameState from '../../atoms/currentVenueNameState.js';
+import { getZoomLevel, goTo } from '../../hooks/useMapBoundsDeterminer.js';
+import getMobilePaddingBottom from '../../helpers/GetMobilePaddingBottom.js'
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -208,6 +211,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     const [setCurrentVenueName, updateCategories] = useCurrentVenue();
 
+    const currentVenueName = useRecoilValue(currentVenueNameState);
+
+    const currentVenue = venuesInSolution.find(venue => venue?.name?.toLowerCase() === currentVenueName?.toLowerCase());
+
     /**
      * Ensure that MapsIndoors Web SDK is available.
      *
@@ -239,7 +246,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const handleMapOptionsChange = (newMapOptions) => {
         setMapOptions(previousMapOptions => ({
             ...previousMapOptions,
-            ...newMapOptions
+            ...newMapOptions,
+            minZoom: 14
         }))
     };
 
@@ -361,6 +369,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the app user roles prop.
      */
     useEffect(() => {
+        console.log(mapOptions);
+        
         if (mapsindoorsSDKAvailable) {
             window.mapsindoors.services.SolutionsService.getUserRoles().then(userRoles => {
                 const roles = userRoles.filter(role => appUserRoles?.includes(role.name));
@@ -667,10 +677,27 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * Function that handles the reset of the state and UI.
      */
     function resetStateAndUI() {
+        const mapboxPitch = 45;
         resetState();
         resetAppHistory();
         setResetCount(curr => curr + 1); // will force a re-render of bottom sheet and sidebar.
         setSelectedCategory(null); // unselect category when route is finished
+
+        if (isDesktop) {
+            if (viewModeSwitchVisible) {
+                goTo(currentVenue.geometry, mapsIndoorsInstance, 0, 0, getZoomLevel(startZoomLevel), mapboxPitch, bearing);
+            } else {
+                goTo(currentVenue.geometry, mapsIndoorsInstance, 0, 0, getZoomLevel(startZoomLevel), 0, bearing);
+            }
+        } else {
+            getMobilePaddingBottom().then(mobilePaddingBottom => {
+                if (viewModeSwitchVisible) {
+                    goTo(currentVenue.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, getZoomLevel(startZoomLevel), mapboxPitch, bearing);
+                } else {
+                    goTo(currentVenue.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, getZoomLevel(startZoomLevel), 0, bearing);
+                }
+            });
+        }
     }
 
     /*
