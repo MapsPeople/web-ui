@@ -141,6 +141,13 @@ function OpeningHours({ openingHours, isAmFormat = false, isMondayFirstDayOfTheW
 
     const currentDayOpeningHours = getCurrentDayStatus();
 
+    /**
+     * Utility function to capitalize the first letter
+     * @param {string} string - The string to capitalize
+     * @returns {string} The input string with its first letter capitalized
+     */
+    const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
+
     return (
         <div className="opening-hours">
             <button
@@ -166,7 +173,7 @@ function OpeningHours({ openingHours, isAmFormat = false, isMondayFirstDayOfTheW
                         return (
                             <li key={day} className="opening-hours__list-item">
                                 <span className="opening-hours__day">
-                                    {day.toLocaleString(languageToUse, { weekday: 'long' })}
+                                    {capitalizeFirstLetter(day.toLocaleString(languageToUse, { weekday: 'long' }))}
                                 </span>
                                 <span
                                     className={`opening-hours__hours ${hours.isClosed ? 'opening-hours__hours--closed' : ''}`}>
