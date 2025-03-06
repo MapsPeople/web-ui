@@ -369,8 +369,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes in the app user roles prop.
      */
     useEffect(() => {
-        console.log(mapOptions);
-        
         if (mapsindoorsSDKAvailable) {
             window.mapsindoors.services.SolutionsService.getUserRoles().then(userRoles => {
                 const roles = userRoles.filter(role => appUserRoles?.includes(role.name));
