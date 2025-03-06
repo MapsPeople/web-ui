@@ -105,7 +105,9 @@ function OpeningHours({ openingHours, isMondayFirstDayOfTheWeek = true }) {
     const getOpeningHoursForDay = (day) => {
         const dayName = day.toLocaleString('en-US', { weekday: 'long' }).toLowerCase();
         const dayData = standardOpeningHours?.[dayName];
-        if (!dayData || dayData.closedAllDay) {
+
+        // If no opening hours are available for the day, or the location is closed all day, return 'Closed'
+        if (!dayData?.startTime || !dayData?.endTime || dayData.closedAllDay) {
             return {
                 text: t('Closed'),
                 isClosed: true
