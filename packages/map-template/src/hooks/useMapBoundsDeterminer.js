@@ -242,17 +242,6 @@ const useMapBoundsDeterminer = () => {
         return centerPoint;
     }
 
-    /**
-     * Returns startZoomLevel if it is defined. Otherwise it returns default zoom level
-     *
-     * @param {number} startZoomLevel
-     * @returns {number}
-     */
-    function getZoomLevel(startZoomLevel) {
-        const defaultZoomLevel = 18;
-        return isNullOrUndefined(startZoomLevel) ? defaultZoomLevel : startZoomLevel;
-    }
-
     return [mapPositionInvestigating, mapPositionKnown];
 };
 
@@ -269,7 +258,7 @@ export default useMapBoundsDeterminer;
  * @param {number} pitch - Map pitch (tilt).
  * @param {number} bearing - Mp bearing (rotation) in degrees from north.
  */
-function goTo(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLevel, pitch, bearing) {
+export function goTo(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLevel, pitch, bearing) {
     const initialLoadZoomLevel = 18;
 
     // If zoom level is undefined or default, use goTo() function that also fits bounds.
@@ -288,4 +277,15 @@ function goTo(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLev
         mapView.setCenter({ lat: centerOfGeometry.geometry.coordinates[1], lng: centerOfGeometry.geometry.coordinates[0] })
         mapsIndoorsInstance.setZoom(zoomLevel);
     }
+}
+
+/**
+* Returns startZoomLevel if it is defined. Otherwise it returns default zoom level
+*
+* @param {number} startZoomLevel
+* @returns {number}
+*/
+export function getZoomLevel(startZoomLevel) {
+    const defaultZoomLevel = 18;
+    return isNullOrUndefined(startZoomLevel) ? defaultZoomLevel : startZoomLevel;
 }
