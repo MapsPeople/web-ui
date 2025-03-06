@@ -155,7 +155,7 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
             />
         </Sheet>,
         <Sheet
-            minHeight="220"
+            minHeight="273"
             isOpen={currentAppView === appViews.DIRECTIONS}
             preferredSizeSnapPoint={directionsSheetSize}
             onSwipedToSnapPoint={snapPoint => setDirectionsSheetSwiped(snapPoint)}
