@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- New `useAppTitle` prop that Specifices if the app should use title defined by appConfig object.
+- New `useAppTitle` prop that specifies if the Map Template should set the document title as defined in the App Config.
 
 ## [1.71.2] - 2025-03-10
 
