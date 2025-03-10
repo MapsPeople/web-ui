@@ -73,7 +73,7 @@ MapsIndoorsMap.propTypes = {
  * @param {boolean} [props.showRoadNames] - A boolean parameter that dictates whether Mapbox road names should be shown. By default, Mapbox road names are hidden when MapsIndoors data is shown. It is dictated by `mi-transition-level` which default value is 17.
  * @param {boolean} [props.searchExternalLocations] - If you want to perform search for external results in the Wayfinding mode. If set to true, Mapbox/Google places will be displayed depending on the Map Provider you are using. If set to false, the results returned will only be MapsIndoors results. The default is true.
  * @param {string} [props.center] - Specifies the coordinates where the map should load, represented as latitude and longitude values separated by a comma. If the specified coordinates intersect with a Venue, that Venue will be set as the current Venue.
- * @param {string} [props.useAppTitle] - TODO
+ * @param {boolean} [props.useAppTitle] - Specifices if the app should use title defined by appConfig object. Default to 'MapsIndoors Web'.
  */
 function MapsIndoorsMap(props) {
 
