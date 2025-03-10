@@ -333,7 +333,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
                             icon={button.icon}
                         />
                     ))}
-                    <OpeningHours openingHours={openingHours} />
+                    {openingHours && <OpeningHours openingHours={openingHours} />}
                 </div>}
             </div>
         </>}
