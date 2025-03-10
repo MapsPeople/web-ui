@@ -153,10 +153,18 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
      * indicating if there is more content above or below what is visible.
      */
     function setScrollIndicators() {
-        requestAnimationFrame(() => {
-            setDescriptionHasContentAbove(locationDetailsContainer.current.scrollTop > 0);
-            setDescriptionHasContentBelow(locationDetailsContainer.current.scrollTop < (locationDetailsContainer.current.scrollHeight - locationDetailsContainer.current.offsetHeight - 1));
+        const frameId = requestAnimationFrame(() => {
+            if (locationDetailsContainer.current) {
+                setDescriptionHasContentAbove(locationDetailsContainer.current.scrollTop > 0);
+                setDescriptionHasContentBelow(
+                    locationDetailsContainer.current.scrollTop < 
+                    (locationDetailsContainer.current.scrollHeight - 
+                    locationDetailsContainer.current.offsetHeight - 1)
+                );
+            }
         });
+        
+        return () => cancelAnimationFrame(frameId);
     }
 
     /**
