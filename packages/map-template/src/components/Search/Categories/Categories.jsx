@@ -144,7 +144,7 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
             {categories.length > 0 && (
                 <div className="categories__list">
                     {categories.map(([category, categoryInfo]) => (
-                        <div key={category} className="categories__item">
+                        <div key={category} className="categories__category">
                             <button onClick={() => categoryClicked(category)}>
                                 <img src={categoryInfo.iconUrl} alt="" />
                                 {categoryInfo.displayName}
