@@ -635,7 +635,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * Sets app title.
      */
     useEffect(() => {
-        document.title = (useAppTitle && appConfig) ? appConfig?.appSettings?.title : 'MapsIndoors Web'
+        if (useAppTitle && appConfig) {
+            document.title = appConfig?.appSettings?.title;
+        }
     }, [useAppTitle, appConfig])
 
     /**
