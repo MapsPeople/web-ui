@@ -240,7 +240,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         setMapOptions(previousMapOptions => ({
             ...previousMapOptions,
             ...newMapOptions,
-            minZoom: 14
+            minZoom: 10
         }))
     };
 

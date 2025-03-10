@@ -180,7 +180,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
     useEffect(() => {
         if (!isOpen && directionsRenderer) {
             stopRendering();
-            setMinZoom(mapType, 14);
+            setMinZoom(mapType, 10);
         }
     }, [isOpen]);
 
