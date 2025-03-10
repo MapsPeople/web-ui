@@ -62,6 +62,4 @@ export function useReset() {
             setCurrentVenueName(initialVenueName);
         }
     };
-
-    
 }

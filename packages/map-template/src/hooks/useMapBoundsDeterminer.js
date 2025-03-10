@@ -251,7 +251,7 @@ const useMapBoundsDeterminer = () => {
     function getZoomLevel(startZoomLevel) {
         const defaultZoomLevel = 18;
         return isNullOrUndefined(startZoomLevel) ? defaultZoomLevel : startZoomLevel;
-    }  
+    }
 
     return [mapPositionInvestigating, mapPositionKnown];
 };
