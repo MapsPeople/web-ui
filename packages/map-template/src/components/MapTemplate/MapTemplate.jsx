@@ -95,7 +95,8 @@ MapTemplate.propTypes = {
     showRoadNames: PropTypes.bool,
     searchExternalLocations: PropTypes.bool,
     supportsUrlParameters: PropTypes.bool,
-    center: PropTypes.string
+    center: PropTypes.string,
+    useAppTitle: PropTypes.bool
 };
 
 /**
@@ -130,8 +131,9 @@ MapTemplate.propTypes = {
  * @param {boolean} [props.showExternalIDs] - Determine whether the location details on the map should have an external ID visible. The default value is set to false.
  * @param {boolean} [props.searchExternalLocations] - If you want to perform search for external locations in the Wayfinding mode. If set to true, Mapbox/Google places will be displayed depending on the Map Provider you are using. If set to false, the results returned will only be MapsIndoors results. The default is true.
  * @param {string} [props.center] - Specifies the coordinates where the map should load, represented as latitude and longitude values separated by a comma. If the specified coordinates intersect with a Venue, that Venue will be set as the current Venue.
+ * @param {string} [props.useAppTitle] - TODO
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations, center }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations, center, useAppTitle }) {
 
     const [mapOptions, setMapOptions] = useState({ brandingColor: primaryColor });
     const [, setApiKey] = useRecoilState(apiKeyState);
@@ -628,6 +630,13 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         setCenter(center);
     }, [center]);
+
+    /**
+     * Sets app title.
+     */
+    useEffect(() => {
+        document.title = (useAppTitle && appConfig) ? appConfig?.appSettings?.title : 'MapsIndoors Web'
+    }, [useAppTitle, appConfig])
 
     /**
      * When map position is known while initializing the data,
