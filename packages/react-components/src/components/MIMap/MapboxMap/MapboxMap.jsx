@@ -141,6 +141,11 @@ function MapboxMap({ accessToken, onInitialized, onPositionControl, center, zoom
             mapViewOptions.mapsIndoorsTransitionLevel = parseInt(mapOptions.miTransitionLevel);
         }
 
+        // If showRoadNames is not null or undefined, set it as showRoadNames in the mapViewOptions.
+        if (!isNullOrUndefined(mapOptions?.showRoadNames)) {
+            mapViewOptions.showRoadNameLabels = mapOptions.showRoadNames;
+        }
+
         const mapView = new window.mapsindoors.mapView.MapboxV3View(mapViewOptions);
 
         setMapViewInstance(mapView);

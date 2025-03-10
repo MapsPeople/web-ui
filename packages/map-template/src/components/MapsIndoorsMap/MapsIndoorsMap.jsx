@@ -92,7 +92,6 @@ function MapsIndoorsMap(props) {
             useKeyboard: false,
             searchAllVenues: false,
             searchExternalLocations: true,
-            showRoadNames: true,
             showExternalIDs: false,
             hideNonMatches: false,
         };
