@@ -276,9 +276,9 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
      */
     function setMinZoom(mapType) {
         if (mapType === 'mapbox') {
-            mapsIndoorsInstance.getMapView().getMap().setMinZoom(10);
+            mapsIndoorsInstance.getMapView().getMap().setMinZoom(14);
         } else if (mapType === 'google') {
-            mapsIndoorsInstance.getMapView().getMap().setOptions({ minZoom: 10 })
+            mapsIndoorsInstance.getMapView().getMap().setOptions({ minZoom: 14 })
         }
     }
 
