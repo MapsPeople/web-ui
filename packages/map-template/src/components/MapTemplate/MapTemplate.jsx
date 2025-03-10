@@ -635,8 +635,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * Sets app title.
      */
     useEffect(() => {
-        if (useAppTitle && appConfig) {
-            document.title = appConfig?.appSettings?.title;
+        if (useAppTitle && !isNullOrUndefined(appConfig?.appSettings?.title)) {
+            document.title = appConfig.appSettings.title;
         }
     }, [useAppTitle, appConfig])
 
