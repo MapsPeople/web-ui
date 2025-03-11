@@ -131,7 +131,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
                     setDestinationDisplayRule(mapsIndoorsInstance.getDisplayRule(directions.destinationLocation));
                 }
 
-                setMinZoom(mapType, null);
+                setMinZoom(null);
             });
         }
     }, [isOpen, directions, mapsIndoorsInstance, travelMode]);
@@ -180,7 +180,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
     useEffect(() => {
         if (!isOpen && directionsRenderer) {
             stopRendering();
-            setMinZoom(mapType, 10);
+            setMinZoom(10);
         }
     }, [isOpen]);
 
@@ -241,10 +241,9 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
     /**
      * Sets minZoom for a specific map provider.
      * 
-     * @param {string} mapType 
      * @param {number} zoomLevel 
      */
-    function setMinZoom(mapType, zoomLevel) {
+    function setMinZoom(zoomLevel) {
         if (mapType === 'mapbox') {
             mapsIndoorsInstance.getMapView().getMap().setMinZoom(zoomLevel);
         } else if (mapType === 'google') {
