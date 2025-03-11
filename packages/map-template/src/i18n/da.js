@@ -75,6 +75,9 @@ const da = {
     'Share': 'Del',
     'Copy link': 'Kopiér link',
     'QR Code': 'QR-kode',
+    //Opening Hours
+    'Open': 'Åben',
+    'Closed': 'Lukket',
 };
 
 export default da;
