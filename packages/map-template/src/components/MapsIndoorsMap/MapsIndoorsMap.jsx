@@ -105,9 +105,9 @@ function MapsIndoorsMap(props) {
         const directionsFromQueryParameter = queryStringParams.get('directionsFrom');
         const directionsToQueryParameter = queryStringParams.get('directionsTo');
         const tileStyleQueryParameter = queryStringParams.get('tileStyle');
-        const startZoomLevelQueryParameter = queryStringParams.get('startZoomLevel');
-        const pitchQueryParameter = queryStringParams.get('pitch');
-        const bearingQueryParameter = queryStringParams.get('bearing');
+        const startZoomLevelQueryParameter = Number(queryStringParams.get('startZoomLevel'));
+        const pitchQueryParameter = Number(queryStringParams.get('pitch'));
+        const bearingQueryParameter = Number(queryStringParams.get('bearing'));
         const gmApiKeyQueryParameter = queryStringParams.get('gmApiKey');
         const mapboxAccessTokenQueryParameter = queryStringParams.get('mapboxAccessToken');
         const primaryColorQueryParameter = queryStringParams.get('primaryColor'); // use without '#'. It will be prepended.
@@ -115,9 +115,9 @@ function MapsIndoorsMap(props) {
         const externalIDsQueryParameter = queryStringParams.get('externalIDs')?.split(',');
         const gmMapIdQueryParameter = queryStringParams.get('gmMapId');
         const kioskOriginLocationIdQueryParameter = queryStringParams.get('kioskOriginLocationId');
-        const timeoutQueryParameter = queryStringParams.get('timeout');
+        const timeoutQueryParameter = Number(queryStringParams.get('timeout'));
         const languageQueryParameter = queryStringParams.get('language');
-        const miTransitionLevelQueryParameter = queryStringParams.get('miTransitionLevel');
+        const miTransitionLevelQueryParameter = Number(queryStringParams.get('miTransitionLevel'));
         const categoryQueryParameter = queryStringParams.get('category');
         // Boolean query parameters
         const useMapProviderModuleQueryParameter = queryStringParams.get('useMapProviderModule');
