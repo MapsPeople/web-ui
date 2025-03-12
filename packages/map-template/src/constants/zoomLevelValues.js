@@ -1,3 +1,3 @@
-export const ZoomLevel = Object.freeze({
+export const ZoomLevelValues = Object.freeze({
     minZoom: 10
 });
