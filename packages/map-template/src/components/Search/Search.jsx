@@ -508,7 +508,7 @@ function Search({ onSetSize, isOpen }) {
                 {searchResults.length > 0 && selectedCategory && (
                     <button className="search__back-button" onClick={handleBack}>
                         <ChevronLeft />
-                        {selectedCategory}
+                        {categories?.find(([category]) => category === selectedCategory)[1]?.displayName}
                     </button>
                 )}
             </div>
