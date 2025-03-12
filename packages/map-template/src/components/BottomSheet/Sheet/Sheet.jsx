@@ -152,8 +152,6 @@ function Sheet({ children, isOpen, minHeight, preferredSizeSnapPoint, onSwipedTo
             return;
         }
 
-        sheetRef.current.style.height = `${sheetRef.current.clientHeight}px`;
-
         requestAnimationFrame(() => {
             changeSheetHeight(preferredSizeSnapPoint);
         });
