@@ -359,7 +359,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
             // If the FROM field is active, set the wayfindingLocation as the originLocation.
             fromFieldRef.current.setDisplayText(wayfindingLocation.properties.name);
             setOriginLocation(wayfindingLocation);
-        } else if (activeSearchField === searchFieldIdentifiers.TO && !toFieldRef.current.getValue()) {
+        } else if (activeSearchField === searchFieldIdentifiers.TO) {
             // If the TO field is active and empty, set the wayfindingLocation as the destinationLocation.
             toFieldRef.current.setDisplayText(wayfindingLocation.properties.name);
             setDestinationLocation(wayfindingLocation);
