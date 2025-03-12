@@ -61,6 +61,7 @@ import wayfindingLocationState from '../../atoms/wayfindingLocation.js';
 import isNullOrUndefined from '../../helpers/isNullOrUndefined.js';
 import centerState from '../../atoms/centerState.js';
 import PropTypes from 'prop-types';
+import { ZoomLevel } from '../../constants/zoomLevelValues.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -240,7 +241,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         setMapOptions(previousMapOptions => ({
             ...previousMapOptions,
             ...newMapOptions,
-            minZoom: 10
+            minZoom: ZoomLevel.minZoom
         }))
     };
 

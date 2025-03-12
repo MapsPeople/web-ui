@@ -25,6 +25,7 @@ import showExternalIDsState from '../../atoms/showExternalIDsState';
 import PropTypes from "prop-types";
 import baseLinkSelector from '../../selectors/baseLink';
 import mapTypeState from "../../atoms/mapTypeState";
+import { ZoomLevel } from "../../constants/zoomLevelValues";
 
 let directionsRenderer;
 
@@ -180,7 +181,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
     useEffect(() => {
         if (!isOpen && directionsRenderer) {
             stopRendering();
-            setMinZoom(10);
+            setMinZoom(ZoomLevel.minZoom);
         }
     }, [isOpen]);
 
