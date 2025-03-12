@@ -256,6 +256,7 @@ function Search({ onSetSize, isOpen }) {
         if (sheet) {
             sheet.addEventListener('transitionend', () => {
                 searchFieldRef.current.focusInput();
+                setIsInputFieldInFocus(true);
             }, { once: true });
         } else {
             searchFieldRef.current.focusInput();
