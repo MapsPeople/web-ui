@@ -6,6 +6,7 @@ $button-height: $button-width;
 
 $transition-speed: 400ms;
 $transition-timing-function: ease;
+$align-offset: 2px;
 
 .venue-selector {
     &__content {
@@ -38,6 +39,11 @@ $transition-timing-function: ease;
             width: var(--spacing-xx-large);
             transition: all $transition-speed $transition-timing-function;
             opacity: 0;
+
+            @media (min-width: $desktop-breakpoint) {
+                right: var(--spacing-small);
+                left: auto;
+            }
         }
 
         &-enter-active,
@@ -47,6 +53,11 @@ $transition-timing-function: ease;
             left: 0;
             width: 100%;
             opacity: 1;
+
+            @media (min-width: $desktop-breakpoint) {
+                right: 0;
+                left: auto;
+            }
         }
 
         &-exit {
@@ -56,6 +67,11 @@ $transition-timing-function: ease;
             width: 100%;
             transition: all $transition-speed $transition-timing-function;
             opacity: 1;
+
+            @media (min-width: $desktop-breakpoint) {
+                right: 0;
+                left: auto;
+            }
         }
 
         &-exit-active {
@@ -64,6 +80,11 @@ $transition-timing-function: ease;
             left: var(--spacing-x-small);
             width: var(--spacing-xx-large);
             opacity: 0;
+
+            @media (min-width: $desktop-breakpoint) {
+                right: var(--spacing-small);
+                left: auto;
+            }
         }
     }
 
@@ -79,7 +100,7 @@ $transition-timing-function: ease;
         width: var(--spacing-xxx-large);
         height: var(--spacing-xxx-large);
         top: $button-from-top;
-        left: var(--spacing-x-small);
+        left: calc(var(--spacing-small) - $align-offset);
         z-index: var(--z-index-sticky);
 
         &--open {
@@ -95,12 +116,18 @@ $transition-timing-function: ease;
             background-color: var(--tailwind-colors-gray-100);
             border: 1px solid var(--tailwind-colors-gray-200);
         }
+
+        @media (min-width: $desktop-breakpoint) {
+            top: var(--spacing-x-large);
+            right: var(--spacing-small);
+            left: auto;
+        }
     }
 
     @media (min-width: $desktop-breakpoint) {
         &__content {
             width: 568px;
-            left: var(--spacing-large);
+            right: var(--spacing-small);
             bottom: var(--spacing-large);
             top: var(--spacing-large);
             border-radius: var(--rounding-large);
@@ -108,9 +135,8 @@ $transition-timing-function: ease;
 
         &__button {
             top: var(--spacing-x-large);
-            left: var(--spacing-x-large);
+            right: calc(var(--spacing-small) + $align-offset);
         }
     }
-
 
 }

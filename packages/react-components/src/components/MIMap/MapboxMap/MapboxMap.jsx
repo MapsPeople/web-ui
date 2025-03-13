@@ -101,7 +101,7 @@ function MapboxMap({ accessToken, onInitialized, onPositionControl, center, zoom
         if (mapsIndoorsInstance && mapViewInstance && !hasZoomControl && isDesktop) {
             mapViewInstance
                 .getMap()
-                .addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
+                .addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'bottom-right');
 
             setHasZoomControl(true);
         }
