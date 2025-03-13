@@ -122,6 +122,12 @@ function GoogleMapsMap({ apiKey, onInitialized, onPositionControl, center, zoom,
                 zoom: zoom ?? 21,
                 heading: heading ?? 0,
                 tilt: tilt ?? 0,
+                styles: [
+                    {
+                        featureType: 'all',
+                        stylers: [{ visibility: 'off' }]
+                    }
+                ],
                 ...mapOptions
             };
 
