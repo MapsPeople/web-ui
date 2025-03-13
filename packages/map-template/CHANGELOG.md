@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.72.3] - 2025-03-13
+
+### Fixed
+
+- Don't snap bottom sheet on small screens to full height when entering Wayfinding in order to make space for selecting Locations on the map.
+
+## [1.72.2] - 2025-03-13
+
+### Fixed
+
+- Fix focus state colors and text.
+
+## [1.72.1] - 2025-03-12
+
+### Fixed
+
+- An issue when `startZoomLevel` prop would not work on zoom level 18.
+
+## [1.72.0] - 2025-03-11
+
+### Added
+
+- Add support for additional location details that can be configured in the CMS
+
 ## [1.71.2] - 2025-03-10
 
 ### Fixed
