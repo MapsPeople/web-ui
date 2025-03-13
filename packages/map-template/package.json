@@ -1,7 +1,7 @@
 {
   "name": "@mapsindoors/map-template",
   "description": "Get a MapsIndoors map up and running in less than 10 mins.",
-  "version": "1.71.0",
+  "version": "1.72.2",
   "private": false,
   "files": [
     "dist/*.js",

@@ -1,0 +1,41 @@
+.contact-action-button {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-x-small);
+    width: 100%;
+    padding: var(--spacing-x-small);
+    border: 1px solid #e0e0e0;
+    border-radius: var(--rounding-large);
+    background: white;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    text-decoration: none;
+    color: inherit;
+
+    &:hover {
+        background-color: var(--tailwind-colors-gray-50);
+        cursor: pointer;
+    }
+
+    &__icon-wrapper {
+        width: var(--spacing-large);
+        height: var(--spacing-large);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    &__icon {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        object-position: center;
+        display: block;
+    }
+
+    &__text {
+        text-align: left;
+        font-size: var(--font-size-medium);
+    }
+}
