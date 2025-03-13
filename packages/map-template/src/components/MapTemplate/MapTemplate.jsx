@@ -631,8 +631,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         setCenter(center);
     }, [center]);
 
-    /**
-     * Sets app title.
+    /*
+     * Sets document title based on useAppTitle and appConfig values.
      */
     useEffect(() => {
         if (useAppTitle === true && !isNullOrUndefined(appConfig?.appSettings?.title)) {
