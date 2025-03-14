@@ -4,7 +4,10 @@
     color: var(--brand-colors-black-100);
     display: grid;
     grid-template-rows: 190px min-content;
-    min-height: 435px;
+
+    @media (min-width: $desktop-breakpoint) {
+        min-height: 435px; // avoid content jumping on larger screens. On smaller screens we control the height more explicitly.
+    }
 
     &__directions {
         background-color: var(--color-gray-20);
@@ -178,6 +181,7 @@
         grid-auto-flow: column;
         justify-content: space-between;
         width: 100%;
+        height: 40px;
         align-items: center;
     }
 

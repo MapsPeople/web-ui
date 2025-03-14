@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - New `useAppTitle` prop that specifies if the Map Template should set the document title as defined in the App Config.
 
+## [1.72.3] - 2025-03-13
+
+### Fixed
+
+- Don't snap bottom sheet on small screens to full height when entering Wayfinding in order to make space for selecting Locations on the map.
+
 ## [1.72.2] - 2025-03-13
 
 ### Fixed
