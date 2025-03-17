@@ -31,7 +31,7 @@ BottomSheet.propTypes = {
  * @param {string} props.currentAppView - Holds the current view/state of the Map Template.
  * @param {array} props.appViews - Array of all possible views.
  * @param {function} props.onRouteFinished - Callback that fires when the route has finished.
- * 
+ *
  */
 function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews, onRouteFinished }) {
 
@@ -66,7 +66,7 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
             pushAppView(appViews.LOCATION_DETAILS, currentLocation);
         } else if (filteredLocationsByExternalIDs?.length > 1) {
             pushAppView(appViews.EXTERNALIDS);
-            // If there is only one external ID, behave the same as having the location ID prop. 
+            // If there is only one external ID, behave the same as having the location ID prop.
         } else if (filteredLocationsByExternalIDs?.length === 1) {
             setCurrentLocation(filteredLocationsByExternalIDs[0])
             setLocationId(filteredLocationsByExternalIDs[0].id)
@@ -140,9 +140,10 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
             />
         </Sheet>,
         <Sheet
-            minHeight="238"
+            minHeight="190"
             isOpen={currentAppView === appViews.WAYFINDING}
             preferredSizeSnapPoint={wayfindingSheetSize}
+            reFitWhenContentChanges={true}
             key="D">
             <Wayfinding
                 onSetSize={size => setWayfindingSheetSize(size)}
@@ -154,7 +155,7 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
             />
         </Sheet>,
         <Sheet
-            minHeight="220"
+            minHeight="273"
             isOpen={currentAppView === appViews.DIRECTIONS}
             preferredSizeSnapPoint={directionsSheetSize}
             onSwipedToSnapPoint={snapPoint => setDirectionsSheetSwiped(snapPoint)}
