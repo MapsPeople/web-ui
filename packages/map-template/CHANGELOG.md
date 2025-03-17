@@ -15,8 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- New minZoom vlaue which is 14.
-- Fixed an issue when wayfinding would not show the whole route, but it's part.
+- New minZoom value which is 10.
+- Fixed an issue when wayfinding would not show the whole route.
 
 ## [1.72.3] - 2025-03-13
 
