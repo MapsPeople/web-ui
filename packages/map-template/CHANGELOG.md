@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- An issue when during Wayfinding, minZoom level would block the view from seeing the whole route .
+- An issue when during Wayfinding, minZoom level would block the view from seeing the whole route.
 
 ## [1.72.3] - 2025-03-13
 
