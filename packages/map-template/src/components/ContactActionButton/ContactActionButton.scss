@@ -13,7 +13,8 @@
     color: inherit;
 
     &:hover {
-        filter: brightness(90%);
+        background-color: var(--tailwind-colors-gray-50);
+        cursor: pointer;
     }
 
     &__icon-wrapper {

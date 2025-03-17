@@ -16,7 +16,8 @@ Sheet.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     minHeight: PropTypes.string.isRequired,
     preferredSizeSnapPoint: PropTypes.number,
-    onSwipedToSnapPoint: PropTypes.func
+    onSwipedToSnapPoint: PropTypes.func,
+    reFitWhenContentChanges: PropTypes.bool
 };
 
 /**
@@ -30,7 +31,7 @@ Sheet.propTypes = {
  * @param {number} props.preferredSizeSnapPoint - Change this to programatically change sheet height to a snap point.
  * @param {function} [props.onSwipedToSnapPoint] - Callback function is run when user swiped to a snap points. Has the snap point as parameter.
  */
-function Sheet({ children, isOpen, minHeight, preferredSizeSnapPoint, onSwipedToSnapPoint }) {
+function Sheet({ children, isOpen, minHeight, preferredSizeSnapPoint, onSwipedToSnapPoint, reFitWhenContentChanges }) {
 
     /** Referencing the sheet DOM element */
     const sheetRef = useRef();
@@ -51,11 +52,34 @@ function Sheet({ children, isOpen, minHeight, preferredSizeSnapPoint, onSwipedTo
     const container = useContext(ContainerContext);
 
     /** The current height of the content in pixels */
-    const [contentHeight, setContentHeight] = useState();
+    const contentHeightRef = useRef();
 
     const [style, setStyle] = useState({});
 
     const [, setIsBottomSheetLoaded] = useRecoilState(isBottomSheetLoadedState);
+
+    let fitMutationObserver;
+
+    /**
+     * Set up a mutation observer to listen to changes in child content.
+     * When changes are detected, we will re-fit the sheet to the content.
+     */
+    function setupFitMutationObserver() {
+        if (fitMutationObserver) {
+            fitMutationObserver.disconnect();
+        }
+
+        fitMutationObserver = new MutationObserver(() => {
+            const height = contentRef.current.children.item(0).clientHeight;
+            contentHeightRef.current = height;
+            changeSheetHeight(snapPoints.FIT);
+        });
+
+        fitMutationObserver.observe(contentRef.current, {
+            childList: true, // checks if children are added or removed
+            subtree: true // check if descendants are added or removed all the way down the tree of DOM nodes
+        });
+    }
 
     /**
      * Change the height of the sheet to one of the preset sizes (min, fit, max).
@@ -64,12 +88,12 @@ function Sheet({ children, isOpen, minHeight, preferredSizeSnapPoint, onSwipedTo
      */
     function changeSheetHeight(targetSize) {
         // Prevent going to minimum size state if the content size is the same in order to prevent the need for double swipes to change height.
-        if (targetSize === snapPoints.MIN && contentHeight <= minHeight) {
+        if (targetSize === snapPoints.MIN && contentHeightRef.current <= minHeight) {
             return;
         }
 
         if (currentSnapPoint === snapPoints.FIT) {
-            sheetRef.current.style.height = `${contentHeight}px`;
+            sheetRef.current.style.height = `${contentHeightRef.current}px`;
         }
 
         // Set the actual pixel height of the sheet.
@@ -81,7 +105,7 @@ function Sheet({ children, isOpen, minHeight, preferredSizeSnapPoint, onSwipedTo
                     setStyle({ height: `${container.current.clientHeight}px` });
                     break;
                 case snapPoints.FIT:
-                    setStyle({ height: `${contentHeight}px` });
+                    setStyle({ height: `${contentHeightRef.current}px` });
                     break;
                 case snapPoints.MIN:
                     setStyle({ height: `${minHeight}px` });
@@ -114,17 +138,30 @@ function Sheet({ children, isOpen, minHeight, preferredSizeSnapPoint, onSwipedTo
      * the sheet to be set to a certain snap point.
      */
     useEffect(() => {
+        // If the sheet is instructed to fit to content, set up a mutation observer to listen to changes.
+        if (isOpen && reFitWhenContentChanges && preferredSizeSnapPoint === snapPoints.FIT) {
+            setupFitMutationObserver();
+        } else if (reFitWhenContentChanges) {
+            if (fitMutationObserver) {
+                fitMutationObserver.disconnect();
+            }
+        }
+
         // Do not set the height of the sheet if the preferredSizeSnapPoint is undefined.
         if (preferredSizeSnapPoint === undefined) {
             return;
         }
 
-        sheetRef.current.style.height = `${sheetRef.current.clientHeight}px`;
-
         requestAnimationFrame(() => {
             changeSheetHeight(preferredSizeSnapPoint);
         });
-    }, [preferredSizeSnapPoint]); // eslint-disable-line react-hooks/exhaustive-deps
+
+        return () => {
+            if (fitMutationObserver) {
+                fitMutationObserver.disconnect();
+            }
+        };
+    }, [preferredSizeSnapPoint, isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
 
     /**
      * Handler for swipe gestures on the sheet.
@@ -150,11 +187,11 @@ function Sheet({ children, isOpen, minHeight, preferredSizeSnapPoint, onSwipedTo
 
             let minThreshold, maxThreshold;
             if (swipeGestureDirection.toUpperCase() === 'DOWN') {
-                minThreshold = contentHeight - 60;
+                minThreshold = contentHeightRef.current - 60;
                 maxThreshold = container.current.clientHeight - 60;
             } else {
                 minThreshold = parseInt(minHeight) + 60;
-                maxThreshold = contentHeight + 60;
+                maxThreshold = contentHeightRef.current + 60;
             }
 
             let targetSnapPoint;
@@ -177,10 +214,10 @@ function Sheet({ children, isOpen, minHeight, preferredSizeSnapPoint, onSwipedTo
      */
     useEffect(() => {
         if (isOpen === false) {
-            setContentHeight();
+            contentHeightRef.current = minHeight;
             sheetRef.current.style.height = '';
         } else {
-            setContentHeight(contentRef.current.clientHeight);
+            contentHeightRef.current = contentRef.current.clientHeight;
         }
     }, [children.length, isOpen]);
 

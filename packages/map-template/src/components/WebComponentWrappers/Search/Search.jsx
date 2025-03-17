@@ -82,18 +82,12 @@ const SearchField = forwardRef(function SearchFieldComponent(props, ref) {
 
     useEffect(() => {
         const searchResultsHandler = customEvent => results(customEvent.detail);
+        const onCleared = () => cleared();
 
         const { current } = elementRef;
 
         if (mapsindoors === true) {
             current.mapsindoors = 'true';
-        }
-
-        function onCleared() {
-            if (!current.getValue) {
-                current.focusInput();
-            }
-            cleared();
         }
 
         current.addEventListener('results', searchResultsHandler);

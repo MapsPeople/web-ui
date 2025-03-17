@@ -1,12 +1,12 @@
 .opening-hours {
     &__day {
         flex: 1;
-        font-size: var(--font-size-small);
+        font-size: var(--font-size-medium);
         color: var(--color-gray-90);
     }
 
     &__status-text {
-        font-size: var(--font-size-small);
+        font-size: var(--font-size-medium);
         font-weight: var(--font-weight-large);
         display: inline-block;
         margin-left: var(--spacing-x-small);
@@ -41,7 +41,7 @@
 
     &__day,
     &__hours {
-        font-size: var(--font-size-small);
+        font-size: var(--font-size-medium);
         color: var(--color-gray-90);
     }
 
@@ -71,7 +71,7 @@
     }
 
     &__status {
-        font-size: var(--font-size-small);
+        font-size: var(--font-size-medium);
         font-weight: var(--font-weight-large);
         margin-left: auto;
 
