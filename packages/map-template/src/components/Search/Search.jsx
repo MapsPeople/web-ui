@@ -356,27 +356,21 @@ function Search({ onSetSize, isOpen }) {
         }
     }
 
-    /**
-     * Adds a click event listener to track whether a click occurred inside the search input field
-     * or outside of it. Updates state accordingly to toggle category list visibility.
-     *
-     * - If the click is inside an input field or the search back button, the field is considered in focus.
-     * - Otherwise, the field is considered out of focus.
+    /*
+     * Monitors clicks on search-related elements.
+     * Updates the input field focus state accordingly.
      */
     useEffect(() => {
-        const onClick = (ev) => {
-            const isInputFocused = ev.target.tagName === "INPUT" && ev.target === document.activeElement || ev.target.className === 'search__back-button'
-            if (isInputFocused) {
-                setIsInputFieldInFocus(isInputFocused)
-            } else {
-                setIsInputFieldInFocus(false)
-            }
+        const SEARCH_FOCUS_ELEMENTS = ['.search__info', '.search__back-button', '.categories'];
+
+        const handleSearchFieldFocus = (event) => {
+            const clickedInsideSearchArea = SEARCH_FOCUS_ELEMENTS.some(selector => event.target.closest(selector));
+            setIsInputFieldInFocus(clickedInsideSearchArea);
         };
 
-        window.addEventListener("click", onClick);
-
+        document.addEventListener('click', handleSearchFieldFocus);
         return () => {
-            window.removeEventListener("click", onClick);
+            document.removeEventListener('click', handleSearchFieldFocus);
         };
     }, []);
 
