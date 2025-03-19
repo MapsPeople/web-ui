@@ -179,6 +179,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
             setSearchResults(results);
             const resultsHaveGooglePlaces = results.filter(result => result.properties.type === 'google_places').length > 0;
             setHasGooglePlaces(resultsHaveGooglePlaces);
+            setSize(snapPoints.MAX);
         }
     }
 
@@ -358,7 +359,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
             // If the FROM field is active, set the wayfindingLocation as the originLocation.
             fromFieldRef.current.setDisplayText(wayfindingLocation.properties.name);
             setOriginLocation(wayfindingLocation);
-        } else if (activeSearchField === searchFieldIdentifiers.TO && !toFieldRef.current.getValue()) {
+        } else if (activeSearchField === searchFieldIdentifiers.TO) {
             // If the TO field is active and empty, set the wayfindingLocation as the destinationLocation.
             toFieldRef.current.setDisplayText(wayfindingLocation.properties.name);
             setDestinationLocation(wayfindingLocation);
@@ -371,7 +372,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     }, [wayfindingLocation]);
 
     useEffect(() => {
-        setSize(snapPoints.MAX);
+        setSize(snapPoints.FIT);
         let originLocationWasSet = false;
 
         // In case both the from and to locations are the user's position, unset the directionsToLocation. We don't want the user to be able to navigate to and from the user's position.
@@ -397,19 +398,6 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         }
 
         if (isActive && !fromFieldRef.current?.getValue()) {
-            // Set focus on the from field.
-            // But wait for any bottom sheet transition to end before doing that to avoid content jumping when virtual keyboard appears.
-            const sheet = wayfindingRef.current.closest('.sheet');
-            if (sheet) {
-                sheet.addEventListener('transitionend', () => {
-                    if (directionsFromLocation !== 'USER_POSITION_PENDING' && directionsToLocation?.id !== 'USER_POSITION') {
-                        fromFieldRef.current.focusInput();
-                    }
-                }, { once: true });
-            } else if (directionsFromLocation !== 'USER_POSITION_PENDING' && directionsToLocation?.id !== 'USER_POSITION') {
-                fromFieldRef.current.focusInput();
-            }
-
             if (userPosition && !originLocation && directionsToLocation?.id !== 'USER_POSITION' && !originLocationWasSet) {
                 // If the user's position is known and no origin location is set, use the position as Origin.
 
