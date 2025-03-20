@@ -357,8 +357,8 @@ function Search({ onSetSize, isOpen }) {
     }
 
     /*
-     * Monitors clicks on search-related elements.
-     * Updates the input field focus state accordingly.
+     * Monitors clicks on search-related elements to manage input focus state.
+     * Prevents expandable categories, to collapse unintentionally while clicking on search focus elements.  
      */
     useEffect(() => {
         const SEARCH_FOCUS_ELEMENTS = ['.search__info', '.search__back-button', '.categories'];
