@@ -33,6 +33,7 @@ import isNullOrUndefined from '../../helpers/isNullOrUndefined';
 import venuesInSolutionState from '../../atoms/venuesInSolutionState';
 import initialVenueNameState from '../../atoms/initialVenueNameState';
 import PropTypes from 'prop-types';
+import { ReactComponent as ChevronLeft } from '../../assets/chevron-left.svg';
 
 Search.propTypes = {
     categories: PropTypes.array,
@@ -111,7 +112,21 @@ function Search({ onSetSize, isOpen }) {
     const searchAllVenues = useRecoilValue(searchAllVenuesState);
 
     const venuesInSolution = useRecoilValue(venuesInSolutionState);
+
     const initialVenueName = useRecoilValue(initialVenueNameState);
+
+    const [isInputFieldInFocus, setIsInputFieldInFocus] = useState();
+
+    /**
+     * Handles go back function.
+     */
+    function handleBack() {
+        setSelectedCategory(null);
+        setSearchResults([]);
+        setFilteredLocations([]);
+        setSize(snapPoints.FIT);
+        setIsInputFieldInFocus(true);
+    }
 
     /**
      *
@@ -241,6 +256,7 @@ function Search({ onSetSize, isOpen }) {
         if (sheet) {
             sheet.addEventListener('transitionend', () => {
                 searchFieldRef.current.focusInput();
+                setIsInputFieldInFocus(true);
             }, { once: true });
         } else {
             searchFieldRef.current.focusInput();
@@ -337,11 +353,30 @@ function Search({ onSetSize, isOpen }) {
             }
 
             return { display: 'flex', flexDirection: 'column', maxHeight, overflow: 'hidden' };
-        } else {
-            return { minHeight: categories.length > 0 ? '136px' : '80px' };
         }
     }
 
+    /*
+     * Monitors clicks on search-related elements.
+     * Updates the input field focus state accordingly.
+     */
+    useEffect(() => {
+        const SEARCH_FOCUS_ELEMENTS = ['.search__info', '.search__back-button', '.categories'];
+
+        const handleSearchFieldFocus = (event) => {
+            const clickedInsideSearchArea = SEARCH_FOCUS_ELEMENTS.some(selector => event.target.closest(selector));
+            setIsInputFieldInFocus(clickedInsideSearchArea);
+        };
+
+        document.addEventListener('click', handleSearchFieldFocus);
+        return () => {
+            document.removeEventListener('click', handleSearchFieldFocus);
+        };
+    }, []);
+
+    /**
+     * Sets currently hovered location.
+     */
     useEffect(() => {
         return () => {
             setHoveredLocation();
@@ -461,17 +496,22 @@ function Search({ onSetSize, isOpen }) {
                 </label>
             </div>
 
-
-
             { /* Horizontal list of Categories */}
 
-            {categories.length > 0 && <Categories onSetSize={onSetSize}
+            <div className="search__back">
+                {searchResults.length > 0 && selectedCategory && (
+                    <button className="search__back-button" onClick={handleBack}>
+                        <ChevronLeft />
+                        {categories?.find(([category]) => category === selectedCategory)[1]?.displayName}
+                    </button>
+                )}
+            </div>
+
+            {isInputFieldInFocus && !showNotFoundMessage && categories.length > 0 && searchResults.length === 0 && <Categories onSetSize={onSetSize}
                 searchFieldRef={searchFieldRef}
                 getFilteredLocations={category => getFilteredLocations(category)}
                 isOpen={!!selectedCategory}
             />}
-
-
 
             { /* Message shown if no search results were found */}
 
