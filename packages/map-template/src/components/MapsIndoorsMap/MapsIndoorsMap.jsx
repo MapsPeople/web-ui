@@ -187,7 +187,7 @@ function MapsIndoorsMap(props) {
 }
 
 Sentry.init({
-    dsn: "https://0ee7fa162023d958c96db25e99c8ff6c@o351128.ingest.sentry.io/4506851619831808",
+    dsn: process.env.NODE_ENV === 'production' ? "https://0ee7fa162023d958c96db25e99c8ff6c@o351128.ingest.sentry.io/4506851619831808" : undefined,
     // Set environment to localhost if the url includes it. Otherwise, set to production.
     environment: window.location.hostname === 'localhost' ? 'localhost' : 'production',
     integrations: [
