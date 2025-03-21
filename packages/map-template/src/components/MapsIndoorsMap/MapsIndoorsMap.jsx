@@ -189,6 +189,7 @@ function MapsIndoorsMap(props) {
 Sentry.init({
     dsn: "https://0ee7fa162023d958c96db25e99c8ff6c@o351128.ingest.sentry.io/4506851619831808",
     // Set environment to localhost if the url includes it. Otherwise, set to production.
+    release: `map-template@${process.env.npm_package_version}`, // This will use version from /packages/map-template/package.json
     environment: window.location.hostname === 'localhost' ? 'localhost' : 'production',
     integrations: [
         // See docs for support of different versions of variation of react router
