@@ -36,7 +36,8 @@ MapsIndoorsMap.propTypes = {
     showExternalIDs: PropTypes.bool,
     showRoadNames: PropTypes.bool,
     searchExternalLocations: PropTypes.bool,
-    center: PropTypes.string
+    center: PropTypes.string,
+    useAppTitle: PropTypes.bool
 };
 
 /**
@@ -72,6 +73,7 @@ MapsIndoorsMap.propTypes = {
  * @param {boolean} [props.showRoadNames] - A boolean parameter that dictates whether Mapbox road names should be shown. By default, Mapbox road names are hidden when MapsIndoors data is shown. It is dictated by `mi-transition-level` which default value is 17.
  * @param {boolean} [props.searchExternalLocations] - If you want to perform search for external results in the Wayfinding mode. If set to true, Mapbox/Google places will be displayed depending on the Map Provider you are using. If set to false, the results returned will only be MapsIndoors results. The default is true.
  * @param {string} [props.center] - Specifies the coordinates where the map should load, represented as latitude and longitude values separated by a comma. If the specified coordinates intersect with a Venue, that Venue will be set as the current Venue.
+ * @param {boolean} [props.useAppTitle] - Specifies if the Map Template should set the document title as defined in the App Config. The default value is set to false.
  */
 function MapsIndoorsMap(props) {
 
@@ -96,6 +98,7 @@ function MapsIndoorsMap(props) {
             searchExternalLocations: true,
             showExternalIDs: false,
             hideNonMatches: false,
+            useAppTitle: false
         };
 
         const apiKeyQueryParameter = queryStringParams.get('apiKey');
@@ -105,9 +108,9 @@ function MapsIndoorsMap(props) {
         const directionsFromQueryParameter = queryStringParams.get('directionsFrom');
         const directionsToQueryParameter = queryStringParams.get('directionsTo');
         const tileStyleQueryParameter = queryStringParams.get('tileStyle');
-        const startZoomLevelQueryParameter = queryStringParams.get('startZoomLevel');
-        const pitchQueryParameter = queryStringParams.get('pitch');
-        const bearingQueryParameter = queryStringParams.get('bearing');
+        const startZoomLevelQueryParameter = Number(queryStringParams.get('startZoomLevel'));
+        const pitchQueryParameter = Number(queryStringParams.get('pitch'));
+        const bearingQueryParameter = Number(queryStringParams.get('bearing'));
         const gmApiKeyQueryParameter = queryStringParams.get('gmApiKey');
         const mapboxAccessTokenQueryParameter = queryStringParams.get('mapboxAccessToken');
         const primaryColorQueryParameter = queryStringParams.get('primaryColor'); // use without '#'. It will be prepended.
@@ -115,9 +118,9 @@ function MapsIndoorsMap(props) {
         const externalIDsQueryParameter = queryStringParams.get('externalIDs')?.split(',');
         const gmMapIdQueryParameter = queryStringParams.get('gmMapId');
         const kioskOriginLocationIdQueryParameter = queryStringParams.get('kioskOriginLocationId');
-        const timeoutQueryParameter = queryStringParams.get('timeout');
+        const timeoutQueryParameter = Number(queryStringParams.get('timeout'));
         const languageQueryParameter = queryStringParams.get('language');
-        const miTransitionLevelQueryParameter = queryStringParams.get('miTransitionLevel');
+        const miTransitionLevelQueryParameter = Number(queryStringParams.get('miTransitionLevel'));
         const categoryQueryParameter = queryStringParams.get('category');
         // Boolean query parameters
         const useMapProviderModuleQueryParameter = queryStringParams.get('useMapProviderModule');
@@ -128,6 +131,7 @@ function MapsIndoorsMap(props) {
         const showRoadNamesQueryParameter = queryStringParams.get('showRoadNames');
         const searchExternalLocationsQueryParameter = queryStringParams.get('searchExternalLocations');
         const centerQueryParameter = queryStringParams.get('center');
+        const useAppTitleQueryParameter = queryStringParams.get('useAppTitle');
 
         // Set the initial props on the Map Template component.
 
@@ -170,6 +174,7 @@ function MapsIndoorsMap(props) {
             showExternalIDs: getBooleanValue(props.supportsUrlParameters, defaultProps.showExternalIDs, props.showExternalIDs, showExternalIDsQueryParameter),
             searchExternalLocations: getBooleanValue(props.supportsUrlParameters, defaultProps.searchExternalLocations, props.searchExternalLocations, searchExternalLocationsQueryParameter),
             supportsUrlParameters: props.supportsUrlParameters,
+            useAppTitle: getBooleanValue(props.supportsUrlParameters, defaultProps.useAppTitle, props.useAppTitle, useAppTitleQueryParameter)
         });
 
     }, [props]);
