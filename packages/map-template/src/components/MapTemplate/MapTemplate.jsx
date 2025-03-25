@@ -62,6 +62,7 @@ import isNullOrUndefined from '../../helpers/isNullOrUndefined.js';
 import centerState from '../../atoms/centerState.js';
 import PropTypes from 'prop-types';
 import { ZoomLevelValues } from '../../constants/zoomLevelValues.js';
+import { useOnRouteFinished } from '../../hooks/useOnRouteFinished.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -210,6 +211,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [resetCount, setResetCount] = useState(0);
 
     const [setCurrentVenueName, updateCategories] = useCurrentVenue();
+
+    const finishRoute = useOnRouteFinished();
 
     /**
      * Ensure that MapsIndoors Web SDK is available.
@@ -683,6 +686,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         resetState();
         resetAppHistory();
         setResetCount(curr => curr + 1); // will force a re-render of bottom sheet and sidebar.
+    }
+    
+    function onRouteFinish() {
+        finishRoute();
         setSelectedCategory(null); // unselect category when route is finished
     }
 
@@ -720,7 +727,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                         pushAppView={pushAppView}
                         currentAppView={currentAppView}
                         appViews={appStates}
-                        onRouteFinished={() => resetStateAndUI()}
+                        onRouteFinished={() => onRouteFinish()}
                     />
                 }
                 {isMobile &&
@@ -730,7 +737,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                         pushAppView={pushAppView}
                         currentAppView={currentAppView}
                         appViews={appStates}
-                        onRouteFinished={() => resetStateAndUI()}
+                        onRouteFinished={() => onRouteFinish()}
                     />
                 }
             </Fragment>
