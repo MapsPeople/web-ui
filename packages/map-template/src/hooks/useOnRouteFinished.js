@@ -5,15 +5,14 @@ import directionsResponseState from '../atoms/directionsResponseState';
 import hasFoundRouteState from '../atoms/hasFoundRouteState';
 import isLocationClickedState from '../atoms/isLocationClickedState';
 import notificationMessageState from '../atoms/notificationMessageState';
-import showQRCodeDialogState from '../atoms/showQRCodeDialogState';
-import substepsToggledState from '../atoms/substepsToggledState';
 import travelModeState from '../atoms/travelModeState';
-import searchResultsState from '../atoms/searchResultsState';
 import accessibilityOnState from '../atoms/accessibilityOnState';
-import isLegendDialogVisibleState from '../atoms/isLegendDialogVisibleState';
-import mapboxViewModeState from '../atoms/mapboxViewModeState';
-import venueWasSelectedState from '../atoms/venueWasSelectedState';
 
+/**
+ * Reset a number of Recoil atoms to initial values when route is finished.
+ *
+ * @returns {function}
+ */
 export function useOnRouteFinished() {
 
     const activeStep = useResetRecoilState(activeStepState);
@@ -22,14 +21,8 @@ export function useOnRouteFinished() {
     const hasFoundRoute = useResetRecoilState(hasFoundRouteState);
     const isLocationClicked = useResetRecoilState(isLocationClickedState);
     const notificationMessage = useResetRecoilState(notificationMessageState);
-    const showQRCodeDialog = useResetRecoilState(showQRCodeDialogState);
-    const substepsToggled = useResetRecoilState(substepsToggledState);
     const travelMode = useResetRecoilState(travelModeState);
-    const searchResults = useResetRecoilState(searchResultsState);
     const accessibilityOn = useResetRecoilState(accessibilityOnState);
-    const isLegendDialogVisible  = useResetRecoilState(isLegendDialogVisibleState);
-    const mapboxViewMode = useResetRecoilState(mapboxViewModeState);
-    const venueWasSelected = useResetRecoilState(venueWasSelectedState);
 
     return () => {
         activeStep();
@@ -38,13 +31,7 @@ export function useOnRouteFinished() {
         hasFoundRoute();
         isLocationClicked();
         notificationMessage();
-        showQRCodeDialog();
-        substepsToggled();
         travelMode();
-        searchResults();
         accessibilityOn();
-        isLegendDialogVisible();
-        mapboxViewMode();
-        venueWasSelected();
     };
 }
