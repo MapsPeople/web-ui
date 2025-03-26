@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.74.2] - 2025-03-25
+
+### Fixed
+
+- Order of longitude and latitude for the center prop was wrongly documented.
+
+## [1.74.1] - 2025-03-19
+
+### Fixed
+
+- Fixed query parameter console error.
+
+## [1.74.0] - 2025-03-18
+
+### Added
+
+- New `useAppTitle` prop that specifies if the Map Template should set the document title as defined in the App Config.
+
+## [1.73.0] - 2025-03-17
+
+### Added
+
+- New minZoom value which is 10.
+- Fixed an issue when wayfinding would not show the whole route.
+
 ## [1.72.3] - 2025-03-13
 
 ### Fixed

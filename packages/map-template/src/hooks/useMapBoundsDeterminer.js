@@ -225,20 +225,16 @@ const useMapBoundsDeterminer = () => {
     }
 
     /**
-     * Gets center point GeoJSON object based on latitude and longitude.
-     * If such a point does not exists, undefined is returned.
+     * Gets center point GeoJSON Point feature based on longitude and latitude from the center state.
      *
-     * @param {number} latitude
-     * @param {number} longitude
      * @returns {GeoJSON.Point}
      */
     function getCenterPoint() {
-        // Parse center prop into coordinates. If it is not included in the URL, latLng are undefined.
-        const [latitude, longitude] = center
+        const [longitude, latitude] = center
             ? center.split(",").map(Number)
             : [undefined, undefined];
 
-        const centerPoint = { geometry: { type: 'Point', coordinates: [latitude, longitude] } };
+        const centerPoint = { geometry: { type: 'Point', coordinates: [longitude, latitude] } };
         return centerPoint;
     }
 
