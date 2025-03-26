@@ -1,0 +1,2 @@
+import{r as e,c as i}from"./index-584d014c.js";const s=class{constructor(t){e(this,t),this.clicked=i(this,"clicked",7),this.monospace=!1,this.alignContent="left",this.label=void 0,this.sortable=void 0,this.sort=void 0,this.binding=void 0,this.fitContent=!1,this.width="auto"}cellContentClickedHandler(t){this.clicked.emit(t.detail)}render(){}};export{s as mi_column};
+//# sourceMappingURL=mi-column.entry-9e08eee0.js.map
