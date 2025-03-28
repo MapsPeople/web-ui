@@ -122,6 +122,7 @@ function Search({ onSetSize, isOpen }) {
      */
     function handleBack() {
         setSelectedCategory(null);
+        setSearchResults([]);
         setFilteredLocations([]);
         setSize(snapPoints.FIT);
         setIsInputFieldInFocus(true);
