@@ -8,7 +8,7 @@ function App() {
             {/* This is the Map Template component */}
             <MapsIndoorsMap supportsUrlParameters={true}
                 gmApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
-                mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
+                mapboxAccessToken="pk.eyJ1IjoibWFwc3Blb3BsZSIsImEiOiJjbTh3ejhoODYwMGlhMmpzMmV5ZjYzMThpIn0.iqAnfv8K_PZRbg_G8pVrwQ"
                 />
         </div>
     );
