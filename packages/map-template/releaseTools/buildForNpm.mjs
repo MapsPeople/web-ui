@@ -20,6 +20,12 @@ const libraries = [
             },
             emptyOutDir: false,
             rollupOptions: {
+                external: [
+                    /\.test\.(js|jsx|ts|tsx)$/,
+                    /\.spec\.(js|jsx|ts|tsx)$/,
+                    /\.e2e\.(js|jsx|ts|tsx)$/,
+                    '**/src/__tests__/**'
+                ],
                 output: {
                     manualChunks: false,
                     inlineDynamicImports: true
@@ -45,7 +51,14 @@ const libraries = [
             },
             emptyOutDir: false,
             rollupOptions: {
-                external: ['react', 'react-dom'],
+                external: [
+                    'react',
+                    'react-dom',
+                    /\.test\.(js|jsx|ts|tsx)$/,
+                    /\.spec\.(js|jsx|ts|tsx)$/,
+                    /\.e2e\.(js|jsx|ts|tsx)$/,
+                    '**/src/__tests__/**'
+                ],
                 output: {
                     globals: {
                         react: 'React',
