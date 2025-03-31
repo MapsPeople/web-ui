@@ -14,6 +14,19 @@ export default defineConfig(() => {
         build: {
             outDir: 'build',
             sourcemap: true,
+            rollupOptions: {
+                // Exclude test files from the production build
+                // - *.test.* files (Jest unit tests)
+                // - *.spec.* files (component specs)
+                // - *.e2e.* files (end-to-end tests)
+                // - Any files in __tests__ directories
+                external: [
+                    /\.test\.(js|jsx|ts|tsx)$/,
+                    /\.spec\.(js|jsx|ts|tsx)$/,
+                    /\.e2e\.(js|jsx|ts|tsx)$/,
+                    '**/__tests__/**'
+                ]
+            }
         },
         plugins: [
             react(),
@@ -23,7 +36,7 @@ export default defineConfig(() => {
             sentryVitePlugin({
                 org: process.env.SENTRY_ORG,
                 project: process.env.SENTRY_PROJECT,
-          
+
                 // Auth tokens can be obtained from https://sentry.io/orgredirect/organizations/:orgslug/settings/auth-tokens/
                 authToken: process.env.SENTRY_AUTH_TOKEN,
                 reactComponentAnnotation: { enabled: true },
