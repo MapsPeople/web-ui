@@ -34,8 +34,8 @@
         }
 
         &:hover {
-            background-color: var(--tailwind-colors-gray-200);
-            border-radius: var(--spacing-x-small);
+            background-color: var(--tailwind-colors-gray-50);
+            border: var(--tailwind-colors-gray-200);
         }
 
         width: 100%;
