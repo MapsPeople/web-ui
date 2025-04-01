@@ -121,6 +121,11 @@ $align-offset: 2px;
             top: var(--spacing-x-large);
             right: var(--spacing-small);
             left: auto;
+
+            /* Adjust button position when open to avoid overlapping with scrollbar */
+            &.venue-selector__button--open {
+                right: calc(3 * var(--spacing-x-small));
+            }
         }
     }
 
@@ -138,5 +143,4 @@ $align-offset: 2px;
             right: calc(var(--spacing-small) + $align-offset);
         }
     }
-
 }
