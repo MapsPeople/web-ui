@@ -4,7 +4,7 @@ $desktop-breakpoint: 992px;
     position: absolute;
     z-index: var(--z-index-overlay);
     width: 568px;
-    left: var(--spacing-x-large);
+    left: var(--spacing-medium);
     bottom: var(--spacing-x-large);
     border-radius: var(--spacing-x-small);
     border: 1px solid var(--color-gray-30);
@@ -43,7 +43,7 @@ $desktop-breakpoint: 992px;
         max-height: none;
     }
 
-    top: var(--spacing-x-large);
+    top: var(--spacing-medium);
     bottom: auto;
     transform: translateX(-100%);
 
