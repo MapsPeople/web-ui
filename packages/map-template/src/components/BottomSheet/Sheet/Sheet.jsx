@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 Sheet.propTypes = {
     children: PropTypes.node.isRequired,
     isOpen: PropTypes.bool.isRequired,
-    initialSnapPoint: PropTypes.number.isRequired,
+    initialSnapPoint: PropTypes.string.isRequired,
     minimizedHeight: PropTypes.number.isRequired
 };
 
