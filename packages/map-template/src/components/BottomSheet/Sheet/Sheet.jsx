@@ -115,30 +115,17 @@ function Sheet({ children, isOpen, initialSnapPoint, minimizedHeight }) {
         },
         onSwiped: swipeEvent => {
             setIsDragging(false);
-            if (Math.abs(swipeEvent.deltaY) < 60) {
-                // If the user swiped less than 60 pixels, it doesn't count as a change, and the sheet
-                // should snap back to the current snap point.
-                snapSheetHeightToSnapPoint(snappedTo.current);
-            } else {
-                // Determine new snapped point based on the swipe direction and the current snap point.
-                let newSnapPoint;
-                if (swipeEvent.dir.toUpperCase() === 'DOWN') {
-                    if (snappedTo.current === snapPoints.MAX) {
-                        newSnapPoint = snapPoints.FIT;
-                    } else if (snappedTo.current === snapPoints.FIT) {
-                        newSnapPoint = snapPoints.MIN;
-                    }
-                } else if (swipeEvent.dir.toUpperCase() === 'UP') {
-                    if (snappedTo.current === snapPoints.MIN) {
-                        newSnapPoint = snapPoints.FIT;
-                    } else if (snappedTo.current === snapPoints.FIT) {
-                        newSnapPoint = snapPoints.MAX;
-                    }
-                }
+            const snapPoint = calculateSnapPoint(
+                swipeEvent.dir,
+                swipeEvent.deltaY,
+                snappedTo.current,
+                contentRef.current.children.item(0).clientHeight,
+                minimizedHeight,
+                container.current.clientHeight
+            );
 
-                if (newSnapPoint) {
-                    snapSheetHeightToSnapPoint(newSnapPoint);
-                }
+            if (snapPoint) {
+                snapSheetHeightToSnapPoint(snapPoint);
             }
         },
         trackMouse: true,
@@ -180,3 +167,55 @@ function Sheet({ children, isOpen, initialSnapPoint, minimizedHeight }) {
 }
 
 export default Sheet;
+
+/**
+ * Calculate the snap point of the sheet based on the swipe direction.
+ *
+ * @param {string} swipeDirection - 'UP' or 'DOWN'
+ * @param {*} swipeLength - The length of the swipe in pixels
+ * @param {*} currentSnapPoint - The current snap point of the sheet
+ * @param {*} contentHeight - The height of the content inside the sheet in pisels
+ * @param {*} minHeight - The minimum height of the sheet in pixels
+ * @param {*} maxHeight - The maximum height of the sheet in pixels
+ * @returns
+ */
+export function calculateSnapPoint(swipeDirection, swipeLength, currentSnapPoint, contentHeight, minHeight, maxHeight) {
+
+    const minSwipeLength = 60; // Minimum swipe length to consider a change
+
+    // If the user swiped less than the minimum length, we don't consider it a deliberate swipe
+    if (Math.abs(swipeLength) < minSwipeLength) {
+        return currentSnapPoint;
+    }
+
+    let newSnapPoint;
+
+    if (swipeDirection.toUpperCase() === 'DOWN') {
+        if (currentSnapPoint === snapPoints.MAX) {
+            // If the content height is less than or equal to the maximum height and larger than min height, we go directly to FIT, otherwise we go to MIN
+            if (contentHeight <= maxHeight && contentHeight > minHeight) {
+                newSnapPoint = snapPoints.FIT;
+            } else {
+                newSnapPoint = snapPoints.MIN;
+            }
+        } else if (currentSnapPoint === snapPoints.FIT) {
+            newSnapPoint = snapPoints.MIN;
+        }
+    } else if (swipeDirection.toUpperCase() === 'UP') {
+
+
+        if (currentSnapPoint === snapPoints.MIN) {
+            // If the content height is less than or equal to the minimum height, we go directly to MAX, otherwise we go to FIT
+            if (contentHeight <= minHeight) {
+                newSnapPoint = snapPoints.MAX;
+            } else {
+                newSnapPoint = snapPoints.FIT;
+            }
+
+        } else if (currentSnapPoint === snapPoints.FIT) {
+            newSnapPoint = snapPoints.MAX;
+        }
+    }
+
+    return newSnapPoint;
+}
