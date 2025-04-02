@@ -54,13 +54,14 @@ function Sheet({ children, isOpen, initialSnapPoint, minimizedHeight }) {
      */
     const container = useContext(ContainerContext);
 
+    const fitMutationObserver = useRef();
+
     /**
      * Change sheet height to one of the three snap points.
      *
      * @param {number} snapPoint
      */
     function snapSheetHeightToSnapPoint(snapPoint) {
-
         // Set the actual pixel height of the sheet.
         // RequestAnimationFrame is needed in order to the height style change to kick in thus enabling the transition of height.
         // Inspired by https://css-tricks.com/using-css-transitions-auto-dimensions/#aa-technique-3-javascript
@@ -96,6 +97,44 @@ function Sheet({ children, isOpen, initialSnapPoint, minimizedHeight }) {
         });
 
         snappedTo.current = snapPoint;
+
+        // When fitting to content, setup a mutation observer to watch for changes in the content height
+        // and update the height of the sheet accordingly
+        if (snapPoint === snapPoints.FIT) {
+            observeContentHeight();
+        } else {
+            stopObserveContentHeight();
+        }
+    }
+
+    /**
+     * Observe the content height of the sheet and update the height of the sheet accordingly.
+     * This should only be used when the sheet is set to FIT snap point.
+     */
+    function observeContentHeight() {
+        if (fitMutationObserver.current) {
+            fitMutationObserver.current.disconnect();
+        }
+
+        fitMutationObserver.current = new MutationObserver(() => {
+            // const height = contentRef.current.children.item(0).clientHeight;
+            contentHeightRef.current = contentRef.current.children.item(0).clientHeight;
+            snapSheetHeightToSnapPoint(snapPoints.FIT);
+        });
+
+        fitMutationObserver.current.observe(contentRef.current, {
+            childList: true, // checks if children are added or removed
+            subtree: true // check if descendants are added or removed all the way down the tree of DOM nodes
+        });
+    }
+
+    /**
+     * Disconnect the mutation observer that is observing the content height of the sheet.
+     */
+    function stopObserveContentHeight() {
+        if (fitMutationObserver.current) {
+            fitMutationObserver.current.disconnect();
+        }
     }
 
     /**
