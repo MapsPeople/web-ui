@@ -1,4 +1,5 @@
 import { useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { CSSTransition } from 'react-transition-group';
 import './VenueSelector.scss';
@@ -38,6 +39,8 @@ function VenueSelector({ onOpen, onClose, active }) {
 
     const [, setIsLocationClicked] = useRecoilState(isLocationClickedState);
 
+    const portalTarget = document.getElementById('venue-selector-portal');
+
     /**
      * When a Venue is selected, close the list of Venues and do the callback.
      *
@@ -70,19 +73,44 @@ function VenueSelector({ onOpen, onClose, active }) {
         setIsLocationClicked(false);
     }
 
-    return <>
-        <button className={`venue-selector__button ${active ? 'venue-selector__button--open' : ''}`} onClick={() => toggle()} aria-label={t('Venues')}>
+    const venueButton = (
+        <button
+            className={`venue-selector__button ${active ? 'venue-selector__button--open' : ''}`}
+            onClick={() => toggle()}
+            aria-label={t('Venues')}
+        >
             {active ? <CloseIcon /> : <BuildingIcon />}
         </button>
-        <CSSTransition unmountOnExit in={active} nodeRef={venueSelectorContentRef} timeout={400} classNames="venue-selector__content">
-            <div className="venue-selector__content" ref={venueSelectorContentRef}>
-                <h1>{t('Select venue')}</h1>
-                <div className="venue-selector__list">
-                    {venuesInSolution.map(venue => (<Venue key={venue.id} isCurrent={currentVenueName?.toLowerCase() === venue.name.toLowerCase()} venue={venue} onVenueClicked={() => onVenueSelected(venue)} />))}
-                </div>
-            </div>
-        </CSSTransition>
-    </>
+    );
+
+    return (
+        <>
+            {createPortal(venueButton, portalTarget)}
+            {active && (
+                <CSSTransition
+                    unmountOnExit
+                    in={active}
+                    nodeRef={venueSelectorContentRef}
+                    timeout={400}
+                    classNames="venue-selector__content"
+                >
+                    <div className="venue-selector__content" ref={venueSelectorContentRef}>
+                        <h1>{t('Select venue')}</h1>
+                        <div className="venue-selector__list">
+                            {venuesInSolution.map(venue => (
+                                <Venue
+                                    key={venue.id}
+                                    isCurrent={currentVenueName?.toLowerCase() === venue.name.toLowerCase()}
+                                    venue={venue}
+                                    onVenueClicked={() => onVenueSelected(venue)}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                </CSSTransition>
+            )}
+        </>
+    );
 }
 
 export default VenueSelector;
