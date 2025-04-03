@@ -211,12 +211,11 @@ export default Sheet;
  * Calculate the snap point of the sheet based on the swipe direction.
  *
  * @param {string} swipeDirection - 'UP' or 'DOWN'
- * @param {*} swipeLength - The length of the swipe in pixels
- * @param {*} currentSnapPoint - The current snap point of the sheet
- * @param {*} contentHeight - The height of the content inside the sheet in pisels
- * @param {*} minHeight - The minimum height of the sheet in pixels
- * @param {*} maxHeight - The maximum height of the sheet in pixels
- * @returns
+ * @param {number} swipeLength - The length of the swipe in pixels
+ * @param {string} currentSnapPoint - The current snap point of the sheet
+ * @param {number} contentHeight - The height of the content inside the sheet in pisels
+ * @param {number} minHeight - The minimum height of the sheet in pixels
+ * @param {number} maxHeight - The maximum height of the sheet in pixels
  */
 export function calculateSnapPoint(swipeDirection, swipeLength, currentSnapPoint, contentHeight, minHeight, maxHeight) {
 
@@ -241,8 +240,6 @@ export function calculateSnapPoint(swipeDirection, swipeLength, currentSnapPoint
             newSnapPoint = snapPoints.MIN;
         }
     } else if (swipeDirection.toUpperCase() === 'UP') {
-
-
         if (currentSnapPoint === snapPoints.MIN) {
             // If the content height is less than or equal to the minimum height, we go directly to MAX, otherwise we go to FIT
             if (contentHeight <= minHeight) {
