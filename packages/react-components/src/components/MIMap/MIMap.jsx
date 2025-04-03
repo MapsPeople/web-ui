@@ -50,6 +50,7 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bear
     const [viewModeSwitchVisible, setViewModeSwitchVisible] = useState();
     const [solution, setSolution] = useState();
     const [appConfig, setAppConfig] = useState();
+    const [mapViewInstance, setMapViewInstance] = useState();
 
     useEffect(() => {
         // Make sure to define the MI Components custom elements if they are not already defined.
@@ -159,11 +160,14 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bear
                     resetViewMode={resetUICounter}
                     viewModeSwitchVisible={viewModeSwitchVisible}
                     appConfig={appConfig}
+                    onMapViewInstanceChange={setMapViewInstance}
                 />
-                {mapsIndoorsInstance && (
+                {mapsIndoorsInstance && mapViewInstance && (
                     <MapControls
                         mapType={mapTypes.Mapbox}
                         mapsIndoorsInstance={mapsIndoorsInstance}
+                        mapInstance={mapViewInstance}
+                        onPositionControl={setPositionControl}
                     />
                 )}
             </>
