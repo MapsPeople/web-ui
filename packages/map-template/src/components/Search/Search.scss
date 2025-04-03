@@ -53,12 +53,12 @@
         &-button {
             display: flex;
             align-items: center;
-            gap: var(--spacing-small);
+            gap: var(--spacing-x-large);
             padding: var(--spacing-small);
             cursor: pointer;
             background: none;
             border: none;
-            font-size: 1rem;
+            font-size: var(--font-size-medium);
             color: var(--color-gray-90);
 
             svg {
