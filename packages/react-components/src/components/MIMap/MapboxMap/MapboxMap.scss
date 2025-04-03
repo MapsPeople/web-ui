@@ -1,3 +1,5 @@
+$desktop-breakpoint: 992px;
+
 .mapbox-map-container {
     width: 100%;
     height: 100%;
@@ -6,7 +8,7 @@
 .mapboxgl-control-container {
     .mapboxgl-ctrl {
         &-group {
-            margin: 10px var(--spacing-small) 10px 0 !important;
+            margin: 10px var(--spacing-small) 30px 0 !important;
             border-radius: var(--rounding-large);
             box-shadow: 0 0 0 var(--spacing-xxx-small) #e5e7eb !important;
 
@@ -33,4 +35,5 @@
             background-image: none;
         }
     }
+
 }
