@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import MapboxMap from './MapboxMap/MapboxMap';
 import GoogleMapsMap from './GoogleMapsMap/GoogleMapsMap';
+import MapControls from './MapControls/MapControls';
 import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
 import './MIMap.scss';
 
@@ -142,7 +143,31 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bear
 
     return <>
         {mapType === mapTypes.Google && <GoogleMapsMap mapsIndoorsInstance={mapsIndoorsInstance} apiKey={gmApiKey} onInitialized={onMapViewInitialized} onPositionControl={setPositionControl} center={center} zoom={zoom} mapOptions={mapOptions} heading={bearing} tilt={pitch} bounds={bounds} />}
-        {mapType === mapTypes.Mapbox && <MapboxMap mapsIndoorsInstance={mapsIndoorsInstance} accessToken={mapboxAccessToken} onInitialized={onMapViewInitialized} onPositionControl={setPositionControl} center={center} zoom={zoom} mapOptions={mapOptions} bearing={bearing} pitch={pitch} bounds={bounds} resetViewMode={resetUICounter} viewModeSwitchVisible={viewModeSwitchVisible} appConfig={appConfig} />}
+        {mapType === mapTypes.Mapbox && (
+            <>
+                <MapboxMap
+                    mapsIndoorsInstance={mapsIndoorsInstance}
+                    accessToken={mapboxAccessToken}
+                    onInitialized={onMapViewInitialized}
+                    onPositionControl={setPositionControl}
+                    center={center}
+                    zoom={zoom}
+                    mapOptions={mapOptions}
+                    bearing={bearing}
+                    pitch={pitch}
+                    bounds={bounds}
+                    resetViewMode={resetUICounter}
+                    viewModeSwitchVisible={viewModeSwitchVisible}
+                    appConfig={appConfig}
+                />
+                {mapsIndoorsInstance && (
+                    <MapControls
+                        mapType={mapTypes.Mapbox}
+                        mapsIndoorsInstance={mapsIndoorsInstance}
+                    />
+                )}
+            </>
+        )}
     </>
 }
 
