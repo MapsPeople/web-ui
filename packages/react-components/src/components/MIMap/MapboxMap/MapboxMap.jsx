@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import mapboxgl from 'mapbox-gl';
@@ -42,10 +41,9 @@ MapboxMap.propTypes = {
  * @param {Object} [props.appConfig] - Object that contains app config.
  * @param {function} [props.onMapViewInstanceChange] - Callback called when the mapViewInstance changes.
  */
-function MapboxMap({ accessToken, onInitialized, onPositionControl, center, zoom, bounds, bearing, pitch, resetViewMode, mapsIndoorsInstance, viewModeSwitchVisible, mapOptions, appConfig, onMapViewInstanceChange }) {
+function MapboxMap({ accessToken, onInitialized, center, zoom, bounds, bearing, pitch, resetViewMode, mapsIndoorsInstance, viewModeSwitchVisible, mapOptions, appConfig, onMapViewInstanceChange }) {
 
     const [mapViewInstance, setMapViewInstance] = useState();
-    const [hasFloorSelector, setHasFloorSelector] = useState(false);
     const [hasZoomControl, setHasZoomControl] = useState(false);
     const isDesktop = useIsDesktop();
 
@@ -96,23 +94,6 @@ function MapboxMap({ accessToken, onInitialized, onPositionControl, center, zoom
         }
     }, [mapsIndoorsInstance, mapViewInstance, hasZoomControl]);
 
-    useEffect(() => {
-        if (mapsIndoorsInstance && mapViewInstance) {
-            if (!hasFloorSelector) {
-                const floorSelectorElement = document.createElement('mi-floor-selector');
-                floorSelectorElement.mapsindoors = mapsIndoorsInstance;
-                if (mapOptions?.brandingColor) {
-                    floorSelectorElement.primaryColor = mapOptions.brandingColor;
-                }
-
-                mapViewInstance.getMap().addControl({
-                    onAdd: () => floorSelectorElement,
-                    onRemove: function () { floorSelectorElement.parentNode.removeChild(floorSelectorElement); }
-                }, 'top-right');
-                setHasFloorSelector(true);
-            }
-        }
-    }, [mapsIndoorsInstance, mapViewInstance, hasFloorSelector]);
 
     useEffect(() => {
         // Initialize MapboxV3View MapView
