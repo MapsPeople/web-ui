@@ -61,6 +61,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
             <div id="venue-selector-portal" />
             <div id="floor-selector-portal" />
             <div id="my-position-element-portal" />
+            <div id="view-mode-switch-portal" />
         </div>
     );
 }
