@@ -481,7 +481,8 @@ export class Dropdown {
     filter(): void {
         if (this.filterElement) {
             const inputQuery: string = this.filterElement.value;
-            // Normalize text for all the items in the dropdown
+            // Normalize text by trimming whitespace, converting to lowercase, and removing diacritics.
+            // This ensures consistent matching/comparison of dropdown items.
             const miDropdownItemTexts: string[] = this.items.map(item => (normalizeText(item.text) || normalizeText(item.innerText)));
             const numberOfItemsDisplayed = this.currentItems.length;
 
