@@ -2,7 +2,12 @@
     position: absolute;
     top: var(--spacing-medium);
     right: var(--spacing-medium);
-    z-index: 1000;
+    // z-index: 1000;
+
+    #venue-selector-portal.__open {
+        // z-index: 1
+        // Possible fix for z-index issue
+    }
 
     display: flex;
     flex-direction: column;
@@ -22,3 +27,41 @@
     
     
 }
+
+
+
+// %control-container {
+//     position: absolute;
+//     display: flex;
+//     flex-direction: column;
+//     gap: var(--spacing-medium);
+//     top: var(--spacing-medium);
+//     --mi-position-margin: 10px;
+
+//     #floor-selector-portal,
+//     #my-position-element-portal {
+//         margin: calc(var(--mi-position-margin) * -1);
+//     }
+// }
+
+// // Desktop layout
+// #map-controls-container.desktop {
+//     @extend %control-container;
+//     right: var(--spacing-medium);
+// }
+
+// // Mobile layout
+// .mobile-column {
+//     @extend %control-container;
+    
+//     &#map-controls-left-column {
+//         left: var(--spacing-medium);
+//     }
+    
+//     &#map-controls-right-column {
+//         right: var(--spacing-medium);
+//     }
+// }
+
+
+

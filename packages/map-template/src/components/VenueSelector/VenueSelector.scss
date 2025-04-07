@@ -96,35 +96,15 @@ $align-offset: 2px;
         background-color: var(--tailwind-colors-white);
         border-radius: var(--rounding-large);
         border: 1px solid #E6E6E6;
-        position: absolute;
         width: var(--spacing-xxx-large);
         height: var(--spacing-xxx-large);
-        top: $button-from-top;
-        left: calc(var(--spacing-small) - $align-offset);
-        z-index: var(--z-index-sticky);
 
-        &--open {
-            z-index: calc(var(--z-index-popup) + 1);
-        }
-
-        svg {
-            display: block;
-            margin: 0 auto;
-        }
-
-        &:hover {
-            background-color: var(--tailwind-colors-gray-100);
-            border: 1px solid var(--tailwind-colors-gray-200);
-        }
+        // &--open {
+        // }
 
         @media (min-width: $desktop-breakpoint) {
-            top: var(--spacing-x-large);
-            right: var(--spacing-small);
-            left: auto;
-
             /* Adjust button position when open to avoid overlapping with scrollbar */
             &.venue-selector__button--open {
-                right: calc(3 * var(--spacing-x-small));
             }
         }
     }
@@ -136,11 +116,6 @@ $align-offset: 2px;
             bottom: var(--spacing-large);
             top: var(--spacing-large);
             border-radius: var(--rounding-large);
-        }
-
-        &__button {
-            top: var(--spacing-x-large);
-            right: calc(var(--spacing-small) + $align-offset);
         }
     }
 }

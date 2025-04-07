@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import './MapControls.scss';
+import { useIsDesktop } from '../../../hooks/useIsDesktop';
 
 // Unique IDs for the elements to maintain persistence
 const FLOOR_SELECTOR_ID = 'mi-floor-selector-element';
@@ -15,6 +16,10 @@ MapControls.propTypes = {
 };
 
 function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionControl, mapOptions }) {
+    const isDesktop = useIsDesktop();
+
+    console.log(isDesktop);
+
     useEffect(() => {
         if (!mapsIndoorsInstance || !mapInstance) return;
 
@@ -82,6 +87,33 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
             <div id="view-mode-switch-portal" />
         </div>
     );
+
+    // if (isDesktop) {
+    //     // Desktop layout - single column in top right
+    //     return (
+    //         <div id="map-controls-container" className="desktop">
+    //             <div id="venue-selector-portal" />
+    //             <div id="floor-selector-portal" />
+    //             <div id="my-position-element-portal" />
+    //             <div id="view-mode-switch-portal" />
+    //         </div>
+    //     )
+    // } else {
+    //     // Mobile layout - two separate columns
+    //     return (
+    //         <>
+    //             <div id="map-controls-left-column" className="mobile-column">
+    //                 <div id="venue-selector-portal" />
+    //                 <div id="view-mode-switch-portal" />
+
+    //             </div>
+    //             <div id="map-controls-right-column" className="mobile-column">
+    //                 <div id="floor-selector-portal" />
+    //                 <div id="my-position-element-portal" />
+    //             </div>
+    //         </>
+    //     )
+    // }
 }
 
 export default MapControls;

@@ -24,11 +24,11 @@
 
         .view-mode-switch {
             display: block;
-            margin-top: 60px;
+            // margin-top: 60px;
             @media (min-width: $desktop-breakpoint) {
-                margin-top: 60px;
-                right: var(--spacing-small);
-                left: auto;
+                // margin-top: 60px;
+                // right: var(--spacing-small);
+                // left: auto;
             }
         }
     }
