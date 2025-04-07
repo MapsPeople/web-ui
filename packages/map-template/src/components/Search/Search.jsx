@@ -361,7 +361,7 @@ function Search({ onSetSize, isOpen }) {
      * Prevents expandable categories, to collapse unintentionally while clicking on search focus elements.  
      */
     useEffect(() => {
-        const SEARCH_FOCUS_ELEMENTS = ['.search__info', '.search__back-button', '.categories'];
+        const SEARCH_FOCUS_ELEMENTS = ['.search__info', '.search__back-button', '.categories', '.sheet--active'];
 
         const handleSearchFieldFocus = (event) => {
             const clickedInsideSearchArea = SEARCH_FOCUS_ELEMENTS.some(selector => event.target.closest(selector));
