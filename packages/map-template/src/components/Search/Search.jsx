@@ -364,8 +364,23 @@ function Search({ onSetSize, isOpen }) {
         const SEARCH_FOCUS_ELEMENTS = ['.search__info', '.search__back-button', '.categories', '.sheet--active'];
 
         const handleSearchFieldFocus = (event) => {
-            const clickedInsideSearchArea = SEARCH_FOCUS_ELEMENTS.some(selector => event.target.closest(selector));
-            setIsInputFieldInFocus(clickedInsideSearchArea);
+            const clickedInsideSearchArea = SEARCH_FOCUS_ELEMENTS.some(selector =>
+                event.target.closest(selector)
+            );
+
+            const clickedInsideResults = event.target.closest('.search__results');
+
+            if (clickedInsideSearchArea) {
+                // Set focus on the search field and expand the sheet size.
+                setIsInputFieldInFocus(true);
+            } else if (!clickedInsideResults) {
+                // If the click is outside the search area and not on the results, collapse the sheet.
+                setIsInputFieldInFocus(false);
+                setSelectedCategory(null);
+                setSearchResults([]);
+                setFilteredLocations([]);
+            }
+            // Do nothing when clicking inside results (maintain current state)
         };
 
         document.addEventListener('click', handleSearchFieldFocus);
