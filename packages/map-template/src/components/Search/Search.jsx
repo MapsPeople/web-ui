@@ -126,6 +126,15 @@ function Search({ onSetSize, isOpen }) {
         setFilteredLocations([]);
         setSize(snapPoints.FIT);
         setIsInputFieldInFocus(true);
+
+        // If there's a search term and it's not just whitespace, re-trigger the search without category filter
+        const searchValue = searchFieldRef.current?.getValue()?.trim();
+        if (searchValue) {
+            searchFieldRef.current.triggerSearch();
+        } else {
+            // If it's empty or just whitespace, clear the search field
+            searchFieldRef.current?.clear();
+        }
     }
 
     /**
@@ -361,7 +370,7 @@ function Search({ onSetSize, isOpen }) {
      * Prevents expandable categories, to collapse unintentionally while clicking on search focus elements.  
      */
     useEffect(() => {
-        const SEARCH_FOCUS_ELEMENTS = ['.search__info', '.search__back-button', '.categories', '.sheet--active'];
+        const SEARCH_FOCUS_ELEMENTS = ['.search__info', '.search__back-button', '.categories', '.modal--open'];
 
         const handleSearchFieldFocus = (event) => {
             const clickedInsideSearchArea = SEARCH_FOCUS_ELEMENTS.some(selector =>
