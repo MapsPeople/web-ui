@@ -30,10 +30,9 @@ BottomSheet.propTypes = {
  * @param {function} props.pushAppView - Function to push to app view to browser history.
  * @param {string} props.currentAppView - Holds the current view/state of the Map Template.
  * @param {array} props.appViews - Array of all possible views.
- * @param {function} props.onRouteFinished - Callback that fires when the route has finished.
  *
  */
-function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews, onRouteFinished }) {
+function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews }) {
 
     const bottomSheetRef = useRef();
 
@@ -165,7 +164,6 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
                 isOpen={currentAppView === appViews.DIRECTIONS}
                 onBack={() => pushAppView(appViews.WAYFINDING)}
                 snapPointSwiped={directionsSheetSwiped}
-                onRouteFinished={() => onRouteFinished()}
             />
         </Sheet>
     ]
