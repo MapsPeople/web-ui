@@ -1,0 +1,22 @@
+{
+    "terminal.integrated.profiles.osx": {
+        "UseNvmrcNodeVersion": {
+            "path": "bash",
+            "args": [
+                "-c",
+                "${workspaceFolder}/.vscode/nvm-init.sh"
+            ]
+        }
+    },
+    "terminal.integrated.profiles.linux": {
+        "UseNvmrcNodeVersion": {
+            "path": "bash",
+            "args": [
+                "-c",
+                "${workspaceFolder}/.vscode/nvm-init.sh"
+            ]
+        }
+    },
+    "terminal.integrated.defaultProfile.osx": "UseNvmrcNodeVersion",
+    "terminal.integrated.defaultProfile.linux": "UseNvmrcNodeVersion"
+}
