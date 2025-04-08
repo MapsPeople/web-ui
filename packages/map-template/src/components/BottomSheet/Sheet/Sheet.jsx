@@ -1,17 +1,10 @@
-import { useContext, useEffect } from 'react';
+import { forwardRef, useContext, useEffect, useImperativeHandle } from 'react'; // eslint-disable-line
 import { useRef, useState } from 'react';
 import { ContainerContext } from '../ContainerContext';
 import { useSwipeable } from 'react-swipeable';
 import { snapPoints } from '../../../constants/snapPoints';
 import './Sheet.scss';
 import PropTypes from 'prop-types';
-
-Sheet.propTypes = {
-    children: PropTypes.node.isRequired,
-    isOpen: PropTypes.bool.isRequired,
-    initialSnapPoint: PropTypes.string.isRequired,
-    minimizedHeight: PropTypes.number.isRequired
-};
 
 /**
  * A Sheet for showing content in the bottom of the screen inside the BottomSheet.
@@ -25,7 +18,7 @@ Sheet.propTypes = {
  * @param {number} props.initialSnapPoint - The initial snap point of the sheet.
  * @param {number} props.minimizedHeight - The minimum height of the sheet. It cannot be resized below this height.
  */
-function Sheet({ children, isOpen, initialSnapPoint, minimizedHeight }) {
+const Sheet = forwardRef(function SheetComponent({ children, isOpen, initialSnapPoint, minimizedHeight }, ref) {
     /** Referencing the sheet DOM element */
     const sheetRef = useRef();
 
@@ -55,6 +48,20 @@ function Sheet({ children, isOpen, initialSnapPoint, minimizedHeight }) {
     const container = useContext(ContainerContext);
 
     const fitMutationObserver = useRef();
+
+    /*
+     * Methods to be called from outside the component.
+     */
+    useImperativeHandle(ref, () => ({
+        /**
+         * Set the height of the sheet to the given snap point.
+         *
+         * @param {string} snapPoint - The snap point to set the height to.
+         */
+        setSnapPoint(snapPoint) {
+            snapSheetHeightToSnapPoint(snapPoint);
+        }
+    }));
 
     /**
      * Change sheet height to one of the three snap points.
@@ -203,7 +210,14 @@ function Sheet({ children, isOpen, initialSnapPoint, minimizedHeight }) {
             </div>
         </div>
     );
-}
+});
+
+Sheet.propTypes = {
+    children: PropTypes.node.isRequired,
+    isOpen: PropTypes.bool.isRequired,
+    initialSnapPoint: PropTypes.string.isRequired,
+    minimizedHeight: PropTypes.number.isRequired
+};
 
 export default Sheet;
 
