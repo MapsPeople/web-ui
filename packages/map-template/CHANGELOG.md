@@ -5,6 +5,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.74.6] - 2025-03-31
+
+### Fixed
+
+- Upgraded to SDK v4.39.2.
+
+## [1.74.5] - 2025-03-26
+
+### Fixed
+
+- Disable sentry logging when running locally.
+
+## [1.74.4] - 2025-03-26
+
+### Fixed
+
+- An issue when `pitch` and `bearing` props would not be respected when `startZoomLevel` prop is present.
+
+## [1.74.3] - 2025-03-26
+
+### Fixed
+
+- An issue when `startZoomLevel` prop would not be respected when using `kioskOriginLocationId` or `locationId` props.
+
+## [1.74.2] - 2025-03-25
+
+### Fixed
+
+- Order of longitude and latitude for the center prop was wrongly documented.
+
 ## [1.74.1] - 2025-03-19
 
 ### Fixed

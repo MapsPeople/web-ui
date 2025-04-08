@@ -103,7 +103,7 @@ const useMapBoundsDeterminer = () => {
 
                             getDesktopPaddingBottom().then(desktopPaddingBottom => {
                                 setMapPositionKnown(kioskLocation.geometry);
-                                goTo(kioskLocation.geometry, mapsIndoorsInstance, desktopPaddingBottom, 0, undefined, currentPitch, bearing);
+                                goTo(kioskLocation.geometry, mapsIndoorsInstance, desktopPaddingBottom, 0, startZoomLevel ? getZoomLevel(startZoomLevel) : undefined, currentPitch, bearing);
                             });
                         }
                     });
@@ -134,12 +134,12 @@ const useMapBoundsDeterminer = () => {
                             if (isDesktop) {
                                 getDesktopPaddingLeft().then(desktopPaddingLeft => {
                                     setMapPositionKnown(location.geometry);
-                                    goTo(location.geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, undefined, currentPitch, bearing);
+                                    goTo(location.geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, startZoomLevel ? getZoomLevel(startZoomLevel) : undefined, currentPitch, bearing);
                                 });
                             } else {
                                 getMobilePaddingBottom().then(mobilePaddingBottom => {
                                     setMapPositionKnown(location.geometry);
-                                    goTo(location.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, undefined, currentPitch, bearing);
+                                    goTo(location.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, startZoomLevel ? getZoomLevel(startZoomLevel) : undefined, currentPitch, bearing);
                                 });
                             }
                         }
@@ -225,20 +225,16 @@ const useMapBoundsDeterminer = () => {
     }
 
     /**
-     * Gets center point GeoJSON object based on latitude and longitude.
-     * If such a point does not exists, undefined is returned.
+     * Gets center point GeoJSON Point feature based on longitude and latitude from the center state.
      *
-     * @param {number} latitude
-     * @param {number} longitude
      * @returns {GeoJSON.Point}
      */
     function getCenterPoint() {
-        // Parse center prop into coordinates. If it is not included in the URL, latLng are undefined.
-        const [latitude, longitude] = center
+        const [longitude, latitude] = center
             ? center.split(",").map(Number)
             : [undefined, undefined];
 
-        const centerPoint = { geometry: { type: 'Point', coordinates: [latitude, longitude] } };
+        const centerPoint = { geometry: { type: 'Point', coordinates: [longitude, latitude] } };
         return centerPoint;
     }
 
@@ -284,6 +280,8 @@ function goTo(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLev
         const mapView = mapsIndoorsInstance.getMapView();
 
         mapView.setCenter({ lat: centerOfGeometry.geometry.coordinates[1], lng: centerOfGeometry.geometry.coordinates[0] })
+        mapsIndoorsInstance.getMapView().tilt(pitch || 0);
+        mapsIndoorsInstance.getMapView().rotate(bearing || 0);
         mapsIndoorsInstance.setZoom(zoomLevel);
     }
 }
