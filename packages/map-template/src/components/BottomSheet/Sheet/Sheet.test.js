@@ -20,13 +20,18 @@ describe('findSnapPoint', () => {
     // From MIN
 
     describe('swiping UP from MIN', () => {
-        it('Should return the FIX snap point when the content height is more than the minimum height', () => {
-            const result = calculateSnapPoint('UP', 100, snapPoints.MIN, 100, 80);
+        it('Should return the FIT snap point when the content height is more than the minimum height', () => {
+            const result = calculateSnapPoint('UP', 100, snapPoints.MIN, 100, 80, 300);
             expect(result).toBe(snapPoints.FIT);
         });
 
-        it('Should return the MAX snap point when the content height is less than the minimum height', () => {
-            const result = calculateSnapPoint('UP', 100, snapPoints.MIN, 40, 80);
+        it('Should return the MAX snap point when the content height is more than the max height', () => {
+            const result = calculateSnapPoint('UP', 100, snapPoints.MIN, 400, 80, 300);
+            expect(result).toBe(snapPoints.MAX);
+         });
+
+         it('Should return the MAX snap point when the content height is less than the min height', () => {
+            const result = calculateSnapPoint('UP', 100, snapPoints.MIN, 60, 80, 300);
             expect(result).toBe(snapPoints.MAX);
          });
     });

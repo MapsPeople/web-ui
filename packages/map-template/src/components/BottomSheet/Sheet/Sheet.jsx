@@ -227,12 +227,11 @@ export default Sheet;
  * @param {string} swipeDirection - 'UP' or 'DOWN'
  * @param {number} swipeLength - The length of the swipe in pixels
  * @param {string} currentSnapPoint - The current snap point of the sheet
- * @param {number} contentHeight - The height of the content inside the sheet in pisels
+ * @param {number} contentHeight - The height of the content inside the sheet in pixels
  * @param {number} minHeight - The minimum height of the sheet in pixels
  * @param {number} maxHeight - The maximum height of the sheet in pixels
  */
 export function calculateSnapPoint(swipeDirection, swipeLength, currentSnapPoint, contentHeight, minHeight, maxHeight) {
-
     const minSwipeLength = 60; // Minimum swipe length to consider a change
 
     // If the user swiped less than the minimum length, we don't consider it a deliberate swipe
@@ -255,8 +254,8 @@ export function calculateSnapPoint(swipeDirection, swipeLength, currentSnapPoint
         }
     } else if (swipeDirection.toUpperCase() === 'UP') {
         if (currentSnapPoint === snapPoints.MIN) {
-            // If the content height is less than or equal to the minimum height, we go directly to MAX, otherwise we go to FIT
-            if (contentHeight <= minHeight) {
+            // If the content height is less than or equal to the min height or larger than max height, we go directly to MAX, otherwise we go to FIT
+            if (contentHeight <= minHeight || contentHeight > maxHeight) {
                 newSnapPoint = snapPoints.MAX;
             } else {
                 newSnapPoint = snapPoints.FIT;
