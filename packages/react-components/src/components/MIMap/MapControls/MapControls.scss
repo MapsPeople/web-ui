@@ -36,8 +36,3 @@
         right: var(--spacing-medium);
     }
 }
-
-// Optional: Add any specific overrides for open state
-#venue-selector-portal.__open {
-    z-index: 1;
-}

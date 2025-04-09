@@ -98,15 +98,8 @@ $align-offset: 2px;
         border: 1px solid #E6E6E6;
         width: var(--spacing-xxx-large);
         height: var(--spacing-xxx-large);
-
-        // &--open {
-        // }
-
-        @media (min-width: $desktop-breakpoint) {
-            /* Adjust button position when open to avoid overlapping with scrollbar */
-            &.venue-selector__button--open {
-            }
-        }
+        position: relative;
+        z-index: calc(var(--z-index-popup) + 1);
     }
 
     @media (min-width: $desktop-breakpoint) {
