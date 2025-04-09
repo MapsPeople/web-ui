@@ -76,7 +76,7 @@ function VenueSelector({ onOpen, onClose, active }) {
     return (
         <>
             {/* Portal the BuildingIcon button to the map controls container. Only rendered when the venue selector content is not visible */}
-            {!active && createPortal(
+            {!active && portalTarget && createPortal(
                 <button className="venue-selector__button" onClick={() => onOpen()} aria-label={t('Venues')}>
                     <BuildingIcon />
                 </button>,
