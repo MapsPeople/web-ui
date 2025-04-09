@@ -16,7 +16,8 @@ GoogleMapsMap.propTypes = {
     heading: PropTypes.number,
     tilt: PropTypes.number,
     mapsIndoorsInstance: PropTypes.object,
-    mapOptions: PropTypes.object
+    mapOptions: PropTypes.object,
+    onMapViewInstanceChange: PropTypes.func
 }
 /**
  * @param {Object} props
@@ -30,8 +31,9 @@ GoogleMapsMap.propTypes = {
  * @param {number} [props.tilt] - The tilt of the map as a number. Not recommended for maps with 2D Models.
  * @param {Object} [props.mapsIndoorsInstance] - Instance of MapsIndoors class: https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/mapsindoors.MapsIndoors.html
  * @param {Object} [props.mapOptions] - Options for instantiating and styling the map as well as UI elements.
+ * @param {function} [props.onMapViewInstanceChange] - Callback called when the map view instance changes.
  */
-function GoogleMapsMap({ apiKey, onInitialized, onPositionControl, center, zoom, bounds, heading, tilt, mapsIndoorsInstance, mapOptions }) {
+function GoogleMapsMap({ apiKey, onInitialized, onPositionControl, center, zoom, bounds, heading, tilt, mapsIndoorsInstance, mapOptions, onMapViewInstanceChange }) {
 
     const [google, setGoogle] = useState();
     const [mapViewInstance, setMapViewInstance] = useState();
@@ -132,6 +134,12 @@ function GoogleMapsMap({ apiKey, onInitialized, onPositionControl, center, zoom,
             onInitialized(mapView);
         });
     }, []);
+
+    useEffect(() => {
+        if (mapViewInstance) {
+            onMapViewInstanceChange?.(mapViewInstance);
+        }
+    }, [mapViewInstance, onMapViewInstanceChange]);
 
     return <div className="mapsindoors-map google-maps-map-container" id="map"></div>
 }

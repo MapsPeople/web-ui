@@ -143,7 +143,31 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bear
     }, [gmApiKey, mapboxAccessToken]);
 
     return <>
-        {mapType === mapTypes.Google && <GoogleMapsMap mapsIndoorsInstance={mapsIndoorsInstance} apiKey={gmApiKey} onInitialized={onMapViewInitialized} onPositionControl={setPositionControl} center={center} zoom={zoom} mapOptions={mapOptions} heading={bearing} tilt={pitch} bounds={bounds} />}
+        {mapType === mapTypes.Google && (
+            <>
+                <GoogleMapsMap
+                    mapsIndoorsInstance={mapsIndoorsInstance}
+                    apiKey={gmApiKey}
+                    onInitialized={onMapViewInitialized}
+                    onPositionControl={setPositionControl}
+                    center={center}
+                    zoom={zoom}
+                    mapOptions={mapOptions}
+                    heading={bearing}
+                    tilt={pitch}
+                    bounds={bounds}
+                />
+                {mapsIndoorsInstance && mapViewInstance && (
+                    <MapControls
+                        mapType={mapTypes.Google}
+                        mapsIndoorsInstance={mapsIndoorsInstance}
+                        mapInstance={mapViewInstance}
+                        onPositionControl={setPositionControl}
+                        mapOptions={mapOptions}
+                    />
+                )}
+            </>
+        )}
         {mapType === mapTypes.Mapbox && (
             <>
                 <MapboxMap
