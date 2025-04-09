@@ -34,7 +34,8 @@ Categories.propTypes = {
 function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen }) {
 
     const categories = useRecoilValue(categoriesState);
-
+    console.log(categories);
+    
     const isDesktop = useIsDesktop();
 
     const [selectedCategory, setSelectedCategory] = useRecoilState(selectedCategoryState);
@@ -52,6 +53,12 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
 
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const clickedOutsideMapsIndoorsData = useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOpen);
+
+    // Find child categories of the selected category
+    // const childCategories = categories.filter(([, categoryInfo]) =>
+    //     categoryInfo.parentKeys?.includes(selectedCategory)
+    // );
+
 
     /**
      * Communicate size change to parent component.
@@ -143,18 +150,20 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
         <div className="categories prevent-scroll" {...scrollableContentSwipePrevent}>
             {categories.length > 0 && (
                 <div className="categories__list">
-                    {categories.map(([category, categoryInfo]) => (
-                        <div key={category} className="categories__category">
-                            <button onClick={() => categoryClicked(category)}>
-                                <img src={categoryInfo.iconUrl} alt="" />
-                                {categoryInfo.displayName}
-                            </button>
-                        </div>
-                    ))}
+                    {categories
+                        .filter(([, categoryInfo]) => !categoryInfo.parentKeys || categoryInfo.parentKeys.length === 0) // Filter out categories with parentKeys
+                        .map(([category, categoryInfo]) => (
+                            <div key={category} className="categories__category">
+                                <button onClick={() => categoryClicked(category)}>
+                                    <img src={categoryInfo.iconUrl} alt="" />
+                                    {categoryInfo.displayName}
+                                </button>
+                            </div>
+                        ))}
                 </div>
             )}
         </div>
-    )
+    );
 }
 
 export default Categories;

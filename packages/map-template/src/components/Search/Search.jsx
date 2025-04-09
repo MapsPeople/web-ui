@@ -470,6 +470,11 @@ function Search({ onSetSize, isOpen }) {
         }
     }, [kioskLocation]);
 
+    function handleClear() {
+        setSelectedCategory(null)
+        setShowNotFoundMessage(false);
+    }
+
     return (
         <div className="search"
             ref={searchRef}
@@ -498,23 +503,51 @@ function Search({ onSetSize, isOpen }) {
 
             { /* Horizontal list of Categories */}
 
-            {searchResults.length > 0 && selectedCategory && (<div className="search__back">
-                <button type="button" className="search__back-button" onClick={handleBack}>
-                    <ChevronLeft />
-                </button>
-                <div className="search__back-text">
-                    {categories?.find(([category]) => category === selectedCategory)[1]?.displayName}
-                </div>
-            </div>
+            {searchResults.length > 0 && selectedCategory && (
+                <>
+                    <div className="search__back">
+                        <button type="button" className="search__back-button" onClick={handleBack}>
+                            <ChevronLeft />
+                        </button>
+                        <div className="search__back-text">
+                            {categories?.find(([category]) => category === selectedCategory)[1]?.displayName}
+                        </div>
+                    </div>
+
+                    {/* Show child categories when viewing search results */}
+                    {categories
+                        .filter(([, info]) => info.parentKeys?.includes(selectedCategory))
+                        .map(([childKey, childInfo]) => (
+                            <div key={childKey} className="categories__category">
+                                <button onClick={() => getFilteredLocations(childKey)}>
+                                    <img src={childInfo.iconUrl} alt="" />
+                                    {childInfo.displayName}
+                                </button>
+                            </div>
+                        ))}
+                </>
             )}
-            {isInputFieldInFocus && !showNotFoundMessage && categories.length > 0 && searchResults.length === 0 && <Categories onSetSize={onSetSize}
-                searchFieldRef={searchFieldRef}
-                getFilteredLocations={category => getFilteredLocations(category)}
-                isOpen={!!selectedCategory}
-            />}
 
-            { /* Message shown if no search results were found */}
+            {/* Show full category list only when searchResults are empty */}
+            {isInputFieldInFocus && !showNotFoundMessage && categories.length > 0 && searchResults.length === 0 && (
+                <Categories
+                    onSetSize={onSetSize}
+                    searchFieldRef={searchFieldRef}
+                    getFilteredLocations={(category) => getFilteredLocations(category)}
+                    isOpen={!!selectedCategory}
+                />
+            )}
 
+            {/* Show X button only when no search results were found */}
+            {showNotFoundMessage && (
+                <div className="search__clear">
+                    <button type="button" className="search__clear-button" onClick={handleClear}>
+                        <span className="search__clear-icon">X</span>
+                    </button>
+                </div>
+            )}
+
+            {/* Message shown if no search results were found */}
             {showNotFoundMessage && <p className="search__error"> {t('Nothing was found')}</p>}
 
 

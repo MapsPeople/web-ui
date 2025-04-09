@@ -102,6 +102,24 @@ export const useCurrentVenue = () => {
                 }
             }
 
+            uniqueCategories.set('mock-category-key', {
+                displayName: 'Mock Category',
+                iconUrl: 'https://example.com/mock-icon.svg', // or leave it null/undefined if no icon,
+                parentKeys: ['Canteen']
+            });
+
+            uniqueCategories.set('test1', {
+                displayName: 'test1',
+                iconUrl: 'https://example.com/mock-icon.svg', // or leave it null/undefined if no icon,
+                parentKeys: ['Canteen']
+            });
+
+            uniqueCategories.set('test2', {
+                displayName: 'test2',
+                iconUrl: 'https://example.com/mock-icon.svg', // or leave it null/undefined if no icon,
+                parentKeys: ['Canteen', 'Elevator']
+            });
+
             // Sort categories by the place in the mainmenu array. Use index to do that.
             const sortedCategories = Array.from(uniqueCategories).sort((a, b) => {
                 const orderA = appConfig.menuInfo.mainmenu.findIndex(category => category.categoryKey === a[0]);
