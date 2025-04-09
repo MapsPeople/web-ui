@@ -61,6 +61,7 @@ import wayfindingLocationState from '../../atoms/wayfindingLocation.js';
 import isNullOrUndefined from '../../helpers/isNullOrUndefined.js';
 import centerState from '../../atoms/centerState.js';
 import PropTypes from 'prop-types';
+import { ZoomLevelValues } from '../../constants/zoomLevelValues.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -95,7 +96,8 @@ MapTemplate.propTypes = {
     showRoadNames: PropTypes.bool,
     searchExternalLocations: PropTypes.bool,
     supportsUrlParameters: PropTypes.bool,
-    center: PropTypes.string
+    center: PropTypes.string,
+    useAppTitle: PropTypes.bool
 };
 
 /**
@@ -129,9 +131,10 @@ MapTemplate.propTypes = {
  * @param {boolean} [props.showRoadNames] - A boolean parameter that dictates whether Mapbox road names should be shown. By default, Mapbox road names are hidden when MapsIndoors data is shown. It is dictated by `mi-transition-level` which default value is 17.
  * @param {boolean} [props.showExternalIDs] - Determine whether the location details on the map should have an external ID visible. The default value is set to false.
  * @param {boolean} [props.searchExternalLocations] - If you want to perform search for external locations in the Wayfinding mode. If set to true, Mapbox/Google places will be displayed depending on the Map Provider you are using. If set to false, the results returned will only be MapsIndoors results. The default is true.
- * @param {string} [props.center] - Specifies the coordinates where the map should load, represented as latitude and longitude values separated by a comma. If the specified coordinates intersect with a Venue, that Venue will be set as the current Venue.
+ * @param {string} [props.center] - Specifies the coordinates where the map should load, represented as longitude and latitude values separated by a comma. If the specified coordinates intersect with a Venue, that Venue will be set as the current Venue.
+ * @param {boolean} [props.useAppTitle] - Specifies if the Map Template should set the document title as defined in the App Config. The default value is set to false.
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations, center }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations, center, useAppTitle }) {
 
     const [mapOptions, setMapOptions] = useState({ brandingColor: primaryColor });
     const [, setApiKey] = useRecoilState(apiKeyState);
@@ -221,8 +224,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             const miSdkApiTag = document.createElement('script');
             miSdkApiTag.setAttribute('type', 'text/javascript');
-            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.38.6/mapsindoors-4.38.6.js.gz');
-            miSdkApiTag.setAttribute('integrity', 'sha384-KgcghquvjXEHX5M0Z6ZxykdoQqrLI7vfijQxuGYuafr1q3NNWaNNiXgFYeb6ZawZ');
+            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.39.2/mapsindoors-4.39.2.js.gz');
+            miSdkApiTag.setAttribute('integrity', 'sha384-+Lvi/laUwP/QZixVuIXpTn6ckln8itxc4ErCg9xwYY/QSyTqPTgGGqnLkfnhS2zo');
             miSdkApiTag.setAttribute('crossorigin', 'anonymous');
             document.body.appendChild(miSdkApiTag);
             miSdkApiTag.onload = () => {
@@ -239,7 +242,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const handleMapOptionsChange = (newMapOptions) => {
         setMapOptions(previousMapOptions => ({
             ...previousMapOptions,
-            ...newMapOptions
+            ...newMapOptions,
+            minZoom: ZoomLevelValues.minZoom
         }))
     };
 
@@ -638,6 +642,15 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         setCenter(center);
     }, [center]);
+
+    /*
+     * Sets document title based on useAppTitle and appConfig values.
+     */
+    useEffect(() => {
+        if (useAppTitle === true && !isNullOrUndefined(appConfig?.appSettings?.title)) {
+            document.title = appConfig.appSettings.title;
+        }
+    }, [useAppTitle, appConfig])
 
     /**
      * When map position is known while initializing the data,

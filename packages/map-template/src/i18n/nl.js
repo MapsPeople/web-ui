@@ -75,6 +75,9 @@ const nl = {
     'Share': 'Deel',
     'Copy link': 'Link kopiëren',
     'QR Code': 'QR code',
+    // Opening Hours
+    'Open': 'Open',
+    'Closed': 'Gesloten',
 };
 
 export default nl;
