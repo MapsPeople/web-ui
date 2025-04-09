@@ -73,42 +73,43 @@ function VenueSelector({ onOpen, onClose, active }) {
         setIsLocationClicked(false);
     }
 
-    const venueButton = (
-        <button
-            className={`venue-selector__button ${active ? 'venue-selector__button--open' : ''}`}
-            onClick={() => toggle()}
-            aria-label={t('Venues')}
-        >
-            {active ? <CloseIcon /> : <BuildingIcon />}
-        </button>
-    );
-
     return (
         <>
-            {createPortal(venueButton, portalTarget)}
-            {active && (
-                <CSSTransition
-                    unmountOnExit
-                    in={active}
-                    nodeRef={venueSelectorContentRef}
-                    timeout={400}
-                    classNames="venue-selector__content"
-                >
-                    <div className="venue-selector__content" ref={venueSelectorContentRef}>
-                        <h1>{t('Select venue')}</h1>
-                        <div className="venue-selector__list">
-                            {venuesInSolution.map(venue => (
-                                <Venue
-                                    key={venue.id}
-                                    isCurrent={currentVenueName?.toLowerCase() === venue.name.toLowerCase()}
-                                    venue={venue}
-                                    onVenueClicked={() => onVenueSelected(venue)}
-                                />
-                            ))}
-                        </div>
-                    </div>
-                </CSSTransition>
+            {/* Portal the BuildingIcon button to the map controls container. Only rendered when the venue selector content is not visible */}
+            {!active && createPortal(
+                <button className="venue-selector__button" onClick={() => onOpen()} aria-label={t('Venues')}>
+                    <BuildingIcon />
+                </button>,
+                portalTarget
             )}
+            <CSSTransition
+                in={active}
+                nodeRef={venueSelectorContentRef}
+                timeout={400}
+                classNames="venue-selector__content"
+                unmountOnExit
+            >
+                {/* Render the venue selector content */}
+                <div className="venue-selector__content" ref={venueSelectorContentRef}>
+                    <div className="venue-selector__header">
+                        <h1>{t('Select venue')}</h1>
+                        {/* Close button rendered within the venue selector header */}
+                        <button className="venue-selector__button" onClick={() => onClose()} aria-label={t('Close')}>
+                            <CloseIcon />
+                        </button>
+                    </div>
+                    <div className="venue-selector__list">
+                        {venuesInSolution.map(venue => (
+                            <Venue
+                                key={venue.id}
+                                isCurrent={currentVenueName?.toLowerCase() === venue.name.toLowerCase()}
+                                venue={venue}
+                                onVenueClicked={() => onVenueSelected(venue)}
+                            />
+                        ))}
+                    </div>
+                </div>
+            </CSSTransition>
         </>
     );
 }
