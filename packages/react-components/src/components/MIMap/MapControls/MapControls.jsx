@@ -15,6 +15,23 @@ MapControls.propTypes = {
     mapOptions: PropTypes.object
 };
 
+/**
+ * MapControls component manages the positioning and rendering of map control elements.
+ * It handles both desktop and mobile layouts, and manages creation of the web components for floor selection
+ * and position control.
+ * 
+ * @component
+ * @param {Object} props - Component properties
+ * @param {'google'|'mapbox'} props.mapType - The type of map being used
+ * @param {Object} props.mapsIndoorsInstance - MapsIndoors SDK instance
+ * @param {Object} props.mapInstance - Map instance (Google Maps or Mapbox)
+ * @param {Function} [props.onPositionControl] - Callback function for position control events
+ * @param {Object} [props.mapOptions] - Additional map configuration options
+ * @param {string} [props.mapOptions.brandingColor] - Custom branding color for controls
+ * 
+ * @returns {JSX.Element} Map controls container with venue selector, floor selector,
+ * position button, and view mode switch, arranged differently for desktop and mobile layouts
+ */
 function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionControl, mapOptions }) {
     const isDesktop = useIsDesktop();
     const floorSelectorRef = useRef(null);
@@ -33,19 +50,21 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
     useEffect(() => {
         if (!mapsIndoorsInstance || !mapInstance) return;
 
+        // Create the web components if they don't exist
         if (!floorSelectorRef.current) {
             const floorSelector = document.createElement('mi-floor-selector');
             floorSelector.id = FLOOR_SELECTOR_ID;
             floorSelectorRef.current = floorSelector;
         }
 
+        // Create the position button if it doesn't exist
         if (!positionButtonRef.current) {
             const positionButton = document.createElement('mi-my-position');
             positionButton.id = POSITION_BUTTON_ID;
             positionButtonRef.current = positionButton;
         }
 
-        // Update properties
+        // Update properties of the floor selector and position button
         floorSelectorRef.current.mapsindoors = mapsIndoorsInstance;
         positionButtonRef.current.mapsindoors = mapsIndoorsInstance;
 
@@ -84,6 +103,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
     }, [isDesktop]); // Only re-run when layout changes
 
     if (isDesktop) {
+        {/* For desktop layout, we render all controls in a single container */ }
         return (
             <div id="map-controls-container" className="desktop">
                 {venueSelectorPortal}
@@ -93,6 +113,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
             </div>
         );
     } else {
+        {/* For mobile layout, we split controls into two columns */ }
         return (
             <>
                 <div id="map-controls-left-column" className="mobile-column">
