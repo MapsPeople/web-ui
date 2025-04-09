@@ -1,67 +1,39 @@
-#map-controls-container {
+// Base styles for map controls
+%control-container {
     position: absolute;
-    top: var(--spacing-medium);
-    right: var(--spacing-medium);
-    // z-index: 1000;
-
-    #venue-selector-portal.__open {
-        // z-index: 1
-        // Possible fix for z-index issue
-    }
-
     display: flex;
     flex-direction: column;
     gap: var(--spacing-medium);
-
-    // Use CSS variable with fallback
     --mi-position-margin: 10px;
 
-    // Compensate for margin set in mi-my-position scss component
+    #floor-selector-portal,
     #my-position-element-portal {
-        margin: calc(var(--mi-position-margin) * -1);  // Counteract the margin
+        margin: calc(var(--mi-position-margin) * -1);
     }
-
-    #floor-selector-portal {
-        margin: calc(var(--mi-position-margin) * -1);  // Counteract the margin
-    }
-    
-    
 }
 
+// Desktop layout, one column aligned to the top right
+#map-controls-container {
+    @extend %control-container;
+    top: var(--spacing-medium);
+    right: var(--spacing-medium);
+}
 
-
-// %control-container {
-//     position: absolute;
-//     display: flex;
-//     flex-direction: column;
-//     gap: var(--spacing-medium);
-//     top: var(--spacing-medium);
-//     --mi-position-margin: 10px;
-
-//     #floor-selector-portal,
-//     #my-position-element-portal {
-//         margin: calc(var(--mi-position-margin) * -1);
-//     }
-// }
-
-// // Desktop layout
-// #map-controls-container.desktop {
-//     @extend %control-container;
-//     right: var(--spacing-medium);
-// }
-
-// // Mobile layout
-// .mobile-column {
-//     @extend %control-container;
+// Mobile layout, two columns aligned to the top left and right
+.mobile-column {
+    @extend %control-container;
+    top: var(--spacing-medium);
     
-//     &#map-controls-left-column {
-//         left: var(--spacing-medium);
-//     }
+    &#map-controls-left-column {
+        left: var(--spacing-medium);
+    }
     
-//     &#map-controls-right-column {
-//         right: var(--spacing-medium);
-//     }
-// }
+    &#map-controls-right-column {
+        right: var(--spacing-medium);
+    }
+}
 
-
-
+// Optional: Add any specific overrides for open state
+#venue-selector-portal.__open {
+    z-index: 1;
+}

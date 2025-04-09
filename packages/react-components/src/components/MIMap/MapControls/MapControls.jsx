@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import './MapControls.scss';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
@@ -17,103 +17,95 @@ MapControls.propTypes = {
 
 function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionControl, mapOptions }) {
     const isDesktop = useIsDesktop();
+    const floorSelectorRef = useRef(null);
+    const positionButtonRef = useRef(null);
 
-    console.log(isDesktop);
+    // Define portal elements as constants
+    const venueSelectorPortal = <div key="venue-selector" id="venue-selector-portal" />;
+    const floorSelectorPortal = <div key="floor-selector" id="floor-selector-portal" />;
+    const myPositionPortal = <div key="my-position-component" id="my-position-element-portal" />;
+    const viewModeSwitchPortal = <div key="viewmode-switch" id="view-mode-switch-portal" />;
 
+    // Create and configure web components
+    // This useEffect will run when the component mounts and when the mapsIndoorsInstance or mapInstance changes.
+    // It will create the web components and set their properties.
+    // The web components are created only once and reused when the component re-renders.
     useEffect(() => {
         if (!mapsIndoorsInstance || !mapInstance) return;
 
-        // Get portal targets
-        const positionTarget = document.getElementById('my-position-element-portal');
-        const floorTarget = document.getElementById('floor-selector-portal');
-
-        // Look for existing elements first
-        let floorSelectorElement = document.getElementById(FLOOR_SELECTOR_ID);
-        let myPositionButtonElement = document.getElementById(POSITION_BUTTON_ID);
-        // Handle different map types
-        switch (mapType) {
-            case 'mapbox': {
-                // Create the position button element if it doesn't exist
-                // This element allows users to center the map on their current position
-                if (!myPositionButtonElement) {
-                    myPositionButtonElement = document.createElement('mi-my-position');
-                    myPositionButtonElement.id = POSITION_BUTTON_ID;
-                }
-
-                // Create the floor selector element if it doesn't exist
-                // This element allows users to switch between different floor levels
-                if (!floorSelectorElement) {
-                    floorSelectorElement = document.createElement('mi-floor-selector');
-                    floorSelectorElement.id = FLOOR_SELECTOR_ID;
-                }
-
-                // Update the MapsIndoors instance reference for the position button
-                // This ensures the button has access to the latest map state
-                myPositionButtonElement.mapsindoors = mapsIndoorsInstance;
-
-                // Update the MapsIndoors instance and styling for the floor selector
-                floorSelectorElement.mapsindoors = mapsIndoorsInstance;
-                // Apply custom branding color if provided in map options
-                if (mapOptions?.brandingColor) {
-                    floorSelectorElement.primaryColor = mapOptions.brandingColor;
-                }
-
-                // Add the position button to the DOM if not already present
-                // Also trigger the position control callback if provided
-                if (positionTarget && !positionTarget.contains(myPositionButtonElement)) {
-                    positionTarget.appendChild(myPositionButtonElement);
-                    if (onPositionControl) {
-                        onPositionControl(myPositionButtonElement);
-                    }
-                }
-
-                // Add the floor selector to the DOM if not already present
-                if (floorTarget && !floorTarget.contains(floorSelectorElement)) {
-                    floorTarget.appendChild(floorSelectorElement);
-                }
-
-                break;
-            }
-            default:
-                break;
+        if (!floorSelectorRef.current) {
+            const floorSelector = document.createElement('mi-floor-selector');
+            floorSelector.id = FLOOR_SELECTOR_ID;
+            floorSelectorRef.current = floorSelector;
         }
+
+        if (!positionButtonRef.current) {
+            const positionButton = document.createElement('mi-my-position');
+            positionButton.id = POSITION_BUTTON_ID;
+            positionButtonRef.current = positionButton;
+        }
+
+        // Update properties
+        floorSelectorRef.current.mapsindoors = mapsIndoorsInstance;
+        positionButtonRef.current.mapsindoors = mapsIndoorsInstance;
+
+        if (mapOptions?.brandingColor) {
+            floorSelectorRef.current.primaryColor = mapOptions.brandingColor;
+        }
+
+        // Setup position control
+        if (onPositionControl && positionButtonRef.current) {
+            onPositionControl(positionButtonRef.current);
+        }
+
     }, [mapType, mapsIndoorsInstance, mapInstance, onPositionControl, mapOptions]);
 
-    return (
-        <div id="map-controls-container">
-            <div id="venue-selector-portal" />
-            <div id="floor-selector-portal" />
-            <div id="my-position-element-portal" />
-            <div id="view-mode-switch-portal" />
-        </div>
-    );
+    // Handle layout changes and element movement, this handles moving the elements to the correct DOM location based on the layout
+    // and ensures that the elements are not duplicated in the DOM.
+    // This is important for performance and to avoid issues with the web components.
+    // The useEffect will run when the component mounts and when the layout changes (isDesktop changes).
+    useEffect(() => {
+        if (!floorSelectorRef.current || !positionButtonRef.current) return;
 
-    // if (isDesktop) {
-    //     // Desktop layout - single column in top right
-    //     return (
-    //         <div id="map-controls-container" className="desktop">
-    //             <div id="venue-selector-portal" />
-    //             <div id="floor-selector-portal" />
-    //             <div id="my-position-element-portal" />
-    //             <div id="view-mode-switch-portal" />
-    //         </div>
-    //     )
-    // } else {
-    //     // Mobile layout - two separate columns
-    //     return (
-    //         <>
-    //             <div id="map-controls-left-column" className="mobile-column">
-    //                 <div id="venue-selector-portal" />
-    //                 <div id="view-mode-switch-portal" />
+        // Function to move elements to the target container
+        // This function will check if the element is already in the target container and move it if not.
+        const moveElementToTarget = (element, targetId) => {
+            const target = document.getElementById(targetId);
+            if (target && !target.contains(element)) {
+                element.parentElement?.removeChild(element);
+                target.appendChild(element);
+            }
+        };
 
-    //             </div>
-    //             <div id="map-controls-right-column" className="mobile-column">
-    //                 <div id="floor-selector-portal" />
-    //                 <div id="my-position-element-portal" />
-    //             </div>
-    //         </>
-    //     )
-    // }
+        // Move elements to appropriate targets based on current layout
+        moveElementToTarget(floorSelectorRef.current, 'floor-selector-portal');
+        moveElementToTarget(positionButtonRef.current, 'my-position-element-portal');
+
+    }, [isDesktop]); // Only re-run when layout changes
+
+    if (isDesktop) {
+        return (
+            <div id="map-controls-container" className="desktop">
+                {venueSelectorPortal}
+                {viewModeSwitchPortal}
+                {myPositionPortal}
+                {floorSelectorPortal}
+            </div>
+        );
+    } else {
+        return (
+            <>
+                <div id="map-controls-left-column" className="mobile-column">
+                    {venueSelectorPortal}
+                    {viewModeSwitchPortal}
+                </div>
+                <div id="map-controls-right-column" className="mobile-column">
+                    {myPositionPortal}
+                    {floorSelectorPortal}
+                </div>
+            </>
+        );
+    }
 }
 
 export default MapControls;
