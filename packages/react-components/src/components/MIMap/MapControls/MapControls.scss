@@ -14,6 +14,11 @@
        // Neutralize the web components' internal margin to align with other controls
         margin: calc(var(--web-component-margin) * -1);
     }
+
+    // Hide empty portal containers to prevent unwanted spacing
+    > div:empty {
+        display: none;
+    }
 }
 
 // Desktop layout, one column aligned to the top right
