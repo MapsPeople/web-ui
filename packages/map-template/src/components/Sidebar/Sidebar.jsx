@@ -108,7 +108,6 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
                 onBack={() => closeLocationsList()}
                 locations={filteredLocationsByExternalIDs}
                 onLocationClick={(location) => setCurrentLocation(location)}
-                onLocationsFiltered={(locations) => setFilteredLocationsByExternalID(locations)}
             />
         </Modal>,
         <Modal isOpen={currentAppView === appViews.LOCATION_DETAILS} key="C">
