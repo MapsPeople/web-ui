@@ -501,7 +501,8 @@ export class Dropdown {
                 threshold: -10000
             };
 
-            // Normalize text for search terms
+            // Normalize text by trimming whitespace, converting to lowercase, and removing diacritics.
+            // This ensures consistent matching/comparison of dropdown items.
             const fuzzyResults = fuzzysort.go(normalizeText(inputQuery), miDropdownItemTexts, searchResultsOptions);
             const filteredItems = fuzzyResults.map(result => this.items.find(item => (normalizeText(item.text) || normalizeText(item.innerText)) === normalizeText(result.target)));
 
