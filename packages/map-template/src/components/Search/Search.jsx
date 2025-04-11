@@ -116,7 +116,7 @@ function Search({ onSetSize, isOpen }) {
     const initialVenueName = useRecoilValue(initialVenueNameState);
 
     const [isInputFieldInFocus, setIsInputFieldInFocus] = useState();
-
+    
     /**
      * Handles go back function.
      */
@@ -126,6 +126,15 @@ function Search({ onSetSize, isOpen }) {
         setFilteredLocations([]);
         setSize(snapPoints.FIT);
         setIsInputFieldInFocus(true);
+
+        // If there's a search term and it's not just whitespace, re-trigger the search without category filter
+        const searchValue = searchFieldRef.current?.getValue()?.trim();
+        if (searchValue) {
+            searchFieldRef.current.triggerSearch();
+        } else {
+            // If it's empty or just whitespace, clear the search field
+            searchFieldRef.current?.clear();
+        }
     }
 
     /**
@@ -361,11 +370,26 @@ function Search({ onSetSize, isOpen }) {
      * Prevents expandable categories, to collapse unintentionally while clicking on search focus elements.  
      */
     useEffect(() => {
-        const SEARCH_FOCUS_ELEMENTS = ['.search__info', '.search__back-button', '.categories', '.sheet--active'];
+        const SEARCH_FOCUS_ELEMENTS = ['.search__info', '.search__back-button', '.categories', '.modal--open', '.sheet__content'];
 
         const handleSearchFieldFocus = (event) => {
-            const clickedInsideSearchArea = SEARCH_FOCUS_ELEMENTS.some(selector => event.target.closest(selector));
-            setIsInputFieldInFocus(clickedInsideSearchArea);
+            const clickedInsideSearchArea = SEARCH_FOCUS_ELEMENTS.some(selector =>
+                event.target.closest(selector)
+            );
+
+            const clickedInsideResults = event.target.closest('.search__results');
+
+            if (clickedInsideSearchArea) {
+                // Set focus on the search field and expand the sheet size.
+                setIsInputFieldInFocus(true);
+            } else if (!clickedInsideResults) {
+                // If the click is outside the search area and not on the results, collapse the sheet.
+                setIsInputFieldInFocus(false);
+                setSelectedCategory(null);
+                setSearchResults([]);
+                setFilteredLocations([]);
+            }
+            // Do nothing when clicking inside results (maintain current state)
         };
 
         document.addEventListener('click', handleSearchFieldFocus);
@@ -503,30 +527,7 @@ function Search({ onSetSize, isOpen }) {
 
             { /* Horizontal list of Categories */}
 
-            {searchResults.length > 0 && selectedCategory && (
-                <>
-                    <div className="search__back">
-                        <button type="button" className="search__back-button" onClick={handleBack}>
-                            <ChevronLeft />
-                        </button>
-                        <div className="search__back-text">
-                            {categories?.find(([category]) => category === selectedCategory)[1]?.displayName}
-                        </div>
-                    </div>
 
-                    {/* Show child categories when viewing search results */}
-                    {categories
-                        .filter(([, info]) => info.parentKeys?.includes(selectedCategory))
-                        .map(([childKey, childInfo]) => (
-                            <div key={childKey} className="categories__category">
-                                <button onClick={() => getFilteredLocations(childKey)}>
-                                    <img src={childInfo.iconUrl} alt="" />
-                                    {childInfo.displayName}
-                                </button>
-                            </div>
-                        ))}
-                </>
-            )}
 
             {/* Show full category list only when searchResults are empty */}
             {isInputFieldInFocus && !showNotFoundMessage && categories.length > 0 && searchResults.length === 0 && (
@@ -551,10 +552,52 @@ function Search({ onSetSize, isOpen }) {
             {showNotFoundMessage && <p className="search__error"> {t('Nothing was found')}</p>}
 
 
+            {searchResults.length > 0 && (
+                <div className="search__results prevent-scroll" {...scrollableContentSwipePrevent}>
+    
+                    {/* Conditionally render selectedCategory */}
+                    {selectedCategory && (
+                        <>
+                            <div className="search__back">
+                                <button type="button" className="search__back-button" onClick={handleBack}>
+                                    <ChevronLeft />
+                                </button>
+                                <div className="search__back-text">
+                                    {categories?.find(([category]) => category === selectedCategory)[1]?.displayName}
+                                </div>
+                            </div>
+
+                            {/* Show child categories when viewing search results */}
+                            <div className='search__results--sub_categories'>
+                                {categories
+                                    .filter(([, info]) => info.childKeys?.includes(selectedCategory))
+                                    .map(([parentKey, parentInfo]) => (
+                                        <div key={parentKey} className="categories__category">
+                                            <button onClick={() => getFilteredLocations(parentKey)}>
+                                                <img src={parentInfo.iconUrl} alt="" />
+                                                {parentInfo.displayName}
+                                            </button>
+                                        </div>
+                                    ))}
+                            </div>
+                        </>
+                    )}
+                    <div className='search__results--locations'>
+                        {searchResults.map(location =>
+                            <ListItemLocation
+                                key={location.id}
+                                location={location}
+                                locationClicked={() => onLocationClicked(location)}
+                                isHovered={location?.id === hoveredLocation?.id}
+                            />
+                        )}
+                    </div>
+                </div>
+            )}
 
             { /* Vertical list of search results. Scrollable. */}
 
-            {searchResults.length > 0 &&
+            {/* {searchResults.length > 0 &&
                 <div className="search__results prevent-scroll" {...scrollableContentSwipePrevent}>
                     {searchResults.map(location =>
                         <ListItemLocation
@@ -565,7 +608,7 @@ function Search({ onSetSize, isOpen }) {
                         />
                     )}
                 </div>
-            }
+            } */}
 
 
 

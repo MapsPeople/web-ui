@@ -151,7 +151,7 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
             {categories.length > 0 && (
                 <div className="categories__list">
                     {categories
-                        .filter(([, categoryInfo]) => !categoryInfo.parentKeys || categoryInfo.parentKeys.length === 0) // Filter out categories with parentKeys
+                        .filter(([, categoryInfo]) => !categoryInfo.childKeys || categoryInfo.childKeys.length === 0) // Filter out categories with parentKeys
                         .map(([category, categoryInfo]) => (
                             <div key={category} className="categories__category">
                                 <button onClick={() => categoryClicked(category)}>

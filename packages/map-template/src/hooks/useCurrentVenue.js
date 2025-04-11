@@ -93,8 +93,10 @@ export const useCurrentVenue = () => {
                 for (const key of keys) {
                     // Get the categories from the App Config that have a matching key.
                     if (appConfig?.menuInfo?.mainmenu) {
+                        console.log(appConfig);
+                        
                         const appConfigCategory = appConfig.menuInfo.mainmenu.find(category => category.categoryKey === key);
-
+                        
                         if (appConfigCategory) {
                             uniqueCategories.set(appConfigCategory.categoryKey, { displayName: location.properties.categories[key], iconUrl: appConfigCategory?.iconUrl })
                         }
@@ -105,25 +107,25 @@ export const useCurrentVenue = () => {
             uniqueCategories.set('mock-category-key', {
                 displayName: 'Mock Category',
                 iconUrl: 'https://example.com/mock-icon.svg', // or leave it null/undefined if no icon,
-                parentKeys: ['Canteen']
+                childKeys: ['Canteen']
             });
 
             uniqueCategories.set('test1', {
                 displayName: 'test1',
                 iconUrl: 'https://example.com/mock-icon.svg', // or leave it null/undefined if no icon,
-                parentKeys: ['Canteen']
+                childKeys: ['Canteen']
             });
 
             uniqueCategories.set('test2', {
                 displayName: 'test2',
                 iconUrl: 'https://example.com/mock-icon.svg', // or leave it null/undefined if no icon,
-                parentKeys: ['Canteen', 'Elevator']
+                childKeys: ['Elevator']
             });
 
             // Sort categories by the place in the mainmenu array. Use index to do that.
             const sortedCategories = Array.from(uniqueCategories).sort((a, b) => {
-                const orderA = appConfig.menuInfo.mainmenu.findIndex(category => category.categoryKey === a[0]);
-                const orderB = appConfig.menuInfo.mainmenu.findIndex(category => category.categoryKey === b[0]);
+                const orderA = appConfig.menuInfo?.mainmenu?.findIndex(category => category.categoryKey === a[0]);
+                const orderB = appConfig.menuInfo?.mainmenu?.findIndex(category => category.categoryKey === b[0]);
                 return orderA - orderB;
             });
 

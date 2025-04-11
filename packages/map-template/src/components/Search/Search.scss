@@ -15,16 +15,37 @@
         display: grid;
         gap: var(--spacing-x-small);
         overflow: auto;
-        flex: 1 1 auto;
 
-        > * {
-            height: fit-content; /* fixing issue on mobile Safari causing them to bee too large in case of just one search result */
+        >* {
+            height: fit-content;
+            /* fixing issue on mobile Safari causing them to bee too large in case of just one search result */
+        }
+
+        &--sub_categories {
+            display: grid;
+            gap: var(--spacing-x-small);
+
+            >* {
+                height: fit-content;
+                /* fixing issue on mobile Safari causing them to bee too large in case of just one search result */
+            }
+        }
+
+        &--locations {
+            display: grid;
+            gap: var(--spacing-x-small);
+
+            >* {
+                height: fit-content;
+                /* fixing issue on mobile Safari causing them to bee too large in case of just one search result */
+            }
         }
     }
 
     &__scroll-buttons {
         position: fixed;
-        left: calc(50% + 284px + 20px); /* Half viewport width + half modal width + gap */
+        left: calc(50% + 284px + 20px);
+        /* Half viewport width + half modal width + gap */
         bottom: var(--spacing-x-large);
     }
 
