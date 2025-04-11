@@ -20,7 +20,8 @@ MapboxMap.propTypes = {
     mapsIndoorsInstance: PropTypes.object,
     viewModeSwitchVisible: PropTypes.bool,
     mapOptions: PropTypes.object,
-    appConfig: PropTypes.object
+    appConfig: PropTypes.object,
+    onMapViewInstanceChange: PropTypes.func
 }
 
 /**
@@ -38,12 +39,11 @@ MapboxMap.propTypes = {
  * @param {Object} [props.viewModeSwitchVisible] - Set to true to show the view mode switch.
  * @param {Object} [props.mapOptions] - Options for instantiating and styling the map as well as UI elements.
  * @param {Object} [props.appConfig] - Object that contains app config.
+ * @param {function} [props.onMapViewInstanceChange] - Callback called when the mapViewInstance changes.
  */
-function MapboxMap({ accessToken, onInitialized, onPositionControl, center, zoom, bounds, bearing, pitch, resetViewMode, mapsIndoorsInstance, viewModeSwitchVisible, mapOptions, appConfig }) {
+function MapboxMap({ accessToken, onInitialized, center, zoom, bounds, bearing, pitch, resetViewMode, mapsIndoorsInstance, viewModeSwitchVisible, mapOptions, appConfig, onMapViewInstanceChange }) {
 
     const [mapViewInstance, setMapViewInstance] = useState();
-    const [hasFloorSelector, setHasFloorSelector] = useState(false);
-    const [hasPositionControl, setHasPositionControl] = useState(false);
     const [hasZoomControl, setHasZoomControl] = useState(false);
     const isDesktop = useIsDesktop();
 
@@ -83,44 +83,17 @@ function MapboxMap({ accessToken, onInitialized, onPositionControl, center, zoom
         }
     }, [mapViewInstance, center, zoom, bearing, pitch, bounds, mapOptions]);
 
-
-    // Add map controls to the map when ready
     useEffect(() => {
-        if (mapsIndoorsInstance && mapViewInstance && !hasPositionControl) {
-            const myPositionButtonElement = document.createElement('mi-my-position');
-            myPositionButtonElement.mapsindoors = mapsIndoorsInstance;
-
-            mapViewInstance.getMap().addControl({
-                onAdd: () => myPositionButtonElement,
-                onRemove: function () { }
-            }, 'top-right');
-            setHasPositionControl(true);
-            onPositionControl(myPositionButtonElement);
-        }
-
-        if (mapsIndoorsInstance && mapViewInstance && !hasZoomControl && isDesktop) {
-            mapViewInstance
-                .getMap()
-                .addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'bottom-right');
-
-            setHasZoomControl(true);
-        }
-
-        if (mapsIndoorsInstance && mapViewInstance && !hasFloorSelector) {
-            const floorSelectorElement = document.createElement('mi-floor-selector');
-            floorSelectorElement.mapsindoors = mapsIndoorsInstance;
-            if (mapOptions?.brandingColor) {
-                floorSelectorElement.primaryColor = mapOptions.brandingColor;
+        if (mapsIndoorsInstance && mapViewInstance) {
+            if (!hasZoomControl && isDesktop) {
+                mapViewInstance
+                    .getMap()
+                    .addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'bottom-right');
+                setHasZoomControl(true);
             }
-
-            mapViewInstance.getMap().addControl({
-                onAdd: () => floorSelectorElement,
-                onRemove: function () { floorSelectorElement.parentNode.removeChild(floorSelectorElement); }
-            }, 'top-right');
-
-            setHasFloorSelector(true);
         }
-    }, [mapsIndoorsInstance, mapViewInstance, hasFloorSelector, hasPositionControl, hasZoomControl]);
+    }, [mapsIndoorsInstance, mapViewInstance, hasZoomControl]);
+
 
     useEffect(() => {
         // Initialize MapboxV3View MapView
@@ -149,6 +122,10 @@ function MapboxMap({ accessToken, onInitialized, onPositionControl, center, zoom
         const mapView = new window.mapsindoors.mapView.MapboxV3View(mapViewOptions);
 
         setMapViewInstance(mapView);
+
+        if (onMapViewInstanceChange) {
+            onMapViewInstanceChange(mapView);
+        }
 
         onInitialized(mapView);
     }, []);

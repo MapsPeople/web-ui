@@ -16,7 +16,8 @@ GoogleMapsMap.propTypes = {
     heading: PropTypes.number,
     tilt: PropTypes.number,
     mapsIndoorsInstance: PropTypes.object,
-    mapOptions: PropTypes.object
+    mapOptions: PropTypes.object,
+    onMapViewInstanceChange: PropTypes.func
 }
 /**
  * @param {Object} props
@@ -30,13 +31,12 @@ GoogleMapsMap.propTypes = {
  * @param {number} [props.tilt] - The tilt of the map as a number. Not recommended for maps with 2D Models.
  * @param {Object} [props.mapsIndoorsInstance] - Instance of MapsIndoors class: https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/mapsindoors.MapsIndoors.html
  * @param {Object} [props.mapOptions] - Options for instantiating and styling the map as well as UI elements.
+ * @param {function} [props.onMapViewInstanceChange] - Callback called when the map view instance changes.
  */
-function GoogleMapsMap({ apiKey, onInitialized, onPositionControl, center, zoom, bounds, heading, tilt, mapsIndoorsInstance, mapOptions }) {
+function GoogleMapsMap({ apiKey, onInitialized, center, zoom, bounds, heading, tilt, mapsIndoorsInstance, mapOptions, onMapViewInstanceChange }) {
 
     const [google, setGoogle] = useState();
     const [mapViewInstance, setMapViewInstance] = useState();
-    const [hasFloorSelector, setHasFloorSelector] = useState(false);
-    const [hasPositionControl, setHasPositionControl] = useState(false);
     const [hasZoomControl, setHasZoomControl] = useState(false);
     const isDesktop = useIsDesktop();
 
@@ -72,37 +72,19 @@ function GoogleMapsMap({ apiKey, onInitialized, onPositionControl, center, zoom,
 
     // Add map controls to the map when ready.
     useEffect(() => {
-        if (mapsIndoorsInstance && mapViewInstance && google && !hasPositionControl) {
-            const myPositionButtonElement = document.createElement('mi-my-position');
-            myPositionButtonElement.mapsindoors = mapsIndoorsInstance;
-            mapViewInstance.getMap().controls[google.maps.ControlPosition.RIGHT_TOP].push(myPositionButtonElement);
-            setHasPositionControl(true);
-            onPositionControl(myPositionButtonElement);
-        }
-
-        if (mapsIndoorsInstance && mapViewInstance && google && !hasFloorSelector) {
-            const floorSelectorElement = document.createElement('mi-floor-selector');
-            floorSelectorElement.mapsindoors = mapsIndoorsInstance;
-            if (mapOptions?.brandingColor) {
-                floorSelectorElement.primaryColor = mapOptions.brandingColor;
-            }
-            mapViewInstance.getMap().controls[google.maps.ControlPosition.RIGHT_TOP].push(floorSelectorElement);
-            setHasFloorSelector(true);
-        }
-
         if (mapsIndoorsInstance && mapViewInstance && google && !hasZoomControl && isDesktop) {
             // Enable only the Zoom control
             mapViewInstance.getMap().setOptions({
                 zoomControl: true,
                 zoomControlOptions: {
                     style: google.maps.ZoomControlStyle.DEFAULT,
-                    position: google.maps.ControlPosition.RIGHT_TOP,
+                    position: google.maps.ControlPosition.RIGHT_BOTTOM,
                 }
             });
             setHasZoomControl(true);
         }
 
-    }, [mapsIndoorsInstance, mapViewInstance, google, hasFloorSelector, hasPositionControl])
+    }, [mapsIndoorsInstance, mapViewInstance, google])
 
     useEffect(() => {
         const loader = new GoogleMapsApiLoader({
@@ -132,6 +114,12 @@ function GoogleMapsMap({ apiKey, onInitialized, onPositionControl, center, zoom,
             onInitialized(mapView);
         });
     }, []);
+
+    useEffect(() => {
+        if (mapViewInstance) {
+            onMapViewInstanceChange?.(mapViewInstance);
+        }
+    }, [mapViewInstance, onMapViewInstanceChange]);
 
     return <div className="mapsindoors-map google-maps-map-container" id="map"></div>
 }
