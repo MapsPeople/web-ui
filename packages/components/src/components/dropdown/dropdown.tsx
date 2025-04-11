@@ -1,6 +1,7 @@
 import { Component, Element, Event, EventEmitter, Host, JSX, Prop, State, Watch, Listen, h, Method } from '@stencil/core';
 import fuzzysort from 'fuzzysort';
 import { SortOrder } from '../../enums/sort-order.enum';
+import { normalizeText } from 'normalize-text';
 
 enum KeyCode {
     ArrowDown = 'ArrowDown',
@@ -147,7 +148,7 @@ export class Dropdown {
      *
      * @type {('right' | 'left')}
      */
-    @Prop({attribute: 'alignment'}) dropdownAlignment: 'right' | 'left' = 'left';
+    @Prop({ attribute: 'alignment' }) dropdownAlignment: 'right' | 'left' = 'left';
 
     @State() currentItems: Array<HTMLMiDropdownItemElement> = [];
 
@@ -480,7 +481,9 @@ export class Dropdown {
     filter(): void {
         if (this.filterElement) {
             const inputQuery: string = this.filterElement.value;
-            const miDropdownItemTexts: string[] = this.items.map(item => (item.text || item.innerText));
+            // Normalize text by trimming whitespace, converting to lowercase, and removing diacritics.
+            // This ensures consistent matching/comparison of dropdown items.
+            const miDropdownItemTexts: string[] = this.items.map(item => (normalizeText(item.text) || normalizeText(item.innerText)));
             const numberOfItemsDisplayed = this.currentItems.length;
 
             if (inputQuery === '') {
@@ -497,8 +500,11 @@ export class Dropdown {
                 allowTypo: false,
                 threshold: -10000
             };
-            const fuzzyResults = fuzzysort.go(inputQuery, miDropdownItemTexts, searchResultsOptions);
-            const filteredItems = fuzzyResults.map(result => this.items.find(item => (item.text || item.innerText) === result.target));
+
+            // Normalize text by trimming whitespace, converting to lowercase, and removing diacritics.
+            // This ensures consistent matching/comparison of dropdown items.
+            const fuzzyResults = fuzzysort.go(normalizeText(inputQuery), miDropdownItemTexts, searchResultsOptions);
+            const filteredItems = fuzzyResults.map(result => this.items.find(item => (normalizeText(item.text) || normalizeText(item.innerText)) === normalizeText(result.target)));
 
             this.currentItems = filteredItems;
 
