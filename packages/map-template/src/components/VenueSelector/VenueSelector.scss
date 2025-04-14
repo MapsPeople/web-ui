@@ -20,6 +20,10 @@ $align-offset: 2px;
 
     &__header {
         display: grid;
+        // Three-column grid:
+        // 1. Empty space (--spacing-xxx-large)
+        // 2. Heading with flexible width
+        // 3. Close button (--spacing-xxx-large)
         grid-template-columns: var(--spacing-xxx-large) 1fr var(--spacing-xxx-large); // Three columns layout
         align-items: center;
         padding: var(--spacing-medium);
