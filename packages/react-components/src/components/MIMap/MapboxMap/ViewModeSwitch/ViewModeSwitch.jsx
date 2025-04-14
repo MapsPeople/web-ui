@@ -36,7 +36,7 @@ ViewModeSwitch.propTypes = {
 function ViewModeSwitch({ mapView, pitch, reset, activeColor = '#005655', show2DModelsIn3D }) {
 
     const [viewMode, setViewMode] = useState(ViewModes.initial3D);
-    const portalTarget = document.getElementById('view-mode-switch-portal');
+    const portalTarget = document.querySelector('.viewmode-switch-portal');
 
     // The show2DModelsIn3D property from AppConfig is received as a string ("true"/"false") or might be undefined.
     // We need to explicitly check for the string value "true" for the setting to take effect.

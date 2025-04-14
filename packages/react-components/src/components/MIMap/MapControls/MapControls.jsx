@@ -38,10 +38,10 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
     const positionButtonRef = useRef(null);
 
     // Define portal elements as constants
-    const venueSelectorPortal = <div key="venue-selector" id="venue-selector-portal" />;
-    const floorSelectorPortal = <div key="floor-selector" id="floor-selector-portal" />;
-    const myPositionPortal = <div key="my-position-component" id="my-position-element-portal" />;
-    const viewModeSwitchPortal = <div key="viewmode-switch" id="view-mode-switch-portal" />;
+    const venueSelectorPortal = <div key="venue-selector" className="venue-selector-portal" />;
+    const floorSelectorPortal = <div key="floor-selector" className="floor-selector-portal" />;
+    const myPositionPortal = <div key="my-position" className="my-position-element-portal" />;
+    const viewModeSwitchPortal = <div key="viewmode-switch" className="viewmode-switch-portal" />;
 
     // Create and configure web components
     // This useEffect will run when the component mounts and when the mapsIndoorsInstance or mapInstance changes.
@@ -88,8 +88,8 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
 
         // Function to move elements to the target container
         // This function will check if the element is already in the target container and move it if not.
-        const moveElementToTarget = (element, targetId) => {
-            const target = document.getElementById(targetId);
+        const moveElementToTarget = (element, targetClass) => {
+            const target = document.querySelector(`.${targetClass}`);
             if (target && !target.contains(element)) {
                 element.parentElement?.removeChild(element);
                 target.appendChild(element);
@@ -105,7 +105,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
     if (isDesktop) {
         {/* For desktop layout, we render all controls in a single container */ }
         return (
-            <div id="map-controls-container" className="desktop">
+            <div className="map-controls-container desktop">
                 {venueSelectorPortal}
                 {viewModeSwitchPortal}
                 {myPositionPortal}
@@ -116,11 +116,11 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
         {/* For mobile layout, we split controls into two columns */ }
         return (
             <>
-                <div id="map-controls-left-column" className="mobile-column">
+                <div className="map-controls-left-column mobile-column">
                     {venueSelectorPortal}
                     {viewModeSwitchPortal}
                 </div>
-                <div id="map-controls-right-column" className="mobile-column">
+                <div className="map-controls-right-column mobile-column">
                     {myPositionPortal}
                     {floorSelectorPortal}
                 </div>

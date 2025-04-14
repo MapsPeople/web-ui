@@ -9,9 +9,9 @@
     // This cannot be overridden directly due to web component encapsulation.
     --web-component-margin: 10px;
 
-    #floor-selector-portal,
-    #my-position-element-portal {
-       // Neutralize the web components' internal margin to align with other controls
+    // Neutralize web components' internal margins
+    .floor-selector-portal,
+    .my-position-element-portal {
         margin: calc(var(--web-component-margin) * -1);
     }
 
@@ -22,7 +22,7 @@
 }
 
 // Desktop layout, one column aligned to the top right
-#map-controls-container {
+.map-controls-container {
     @extend %control-container;
     top: var(--spacing-medium);
     right: var(--spacing-medium);
@@ -33,11 +33,11 @@
     @extend %control-container;
     top: var(--spacing-medium);
     
-    &#map-controls-left-column {
+    &.map-controls-left-column {
         left: var(--spacing-medium);
     }
     
-    &#map-controls-right-column {
+    &.map-controls-right-column {
         right: var(--spacing-medium);
     }
 }

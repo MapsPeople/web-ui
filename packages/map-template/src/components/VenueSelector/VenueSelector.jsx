@@ -39,7 +39,7 @@ function VenueSelector({ onOpen, onClose, active }) {
 
     const [, setIsLocationClicked] = useRecoilState(isLocationClickedState);
 
-    const portalTarget = document.getElementById('venue-selector-portal');
+    const portalTarget = document.querySelector('.venue-selector-portal');
 
     /**
      * When a Venue is selected, close the list of Venues and do the callback.
