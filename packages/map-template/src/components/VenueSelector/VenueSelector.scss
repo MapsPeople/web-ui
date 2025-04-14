@@ -52,6 +52,11 @@ $align-offset: 2px;
         width: var(--spacing-xxx-large);
         height: var(--spacing-xxx-large);
         position: relative;
+
+        &:hover {
+            background-color: var(--tailwind-colors-gray-100);
+            border: 1px solid var(--tailwind-colors-gray-200);
+        }
     }
 
     /*
