@@ -122,6 +122,7 @@ function GoogleMapsMap({ apiKey, onInitialized, onPositionControl, center, zoom,
                 zoom: zoom ?? 21,
                 heading: heading ?? 0,
                 tilt: tilt ?? 0,
+                mapId: "2060b1aa05f5b5d",
                 ...mapOptions
             };
 

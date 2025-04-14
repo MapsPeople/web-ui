@@ -7,7 +7,7 @@ function App() {
         <div className="app">
             {/* This is the Map Template component */}
             <MapsIndoorsMap supportsUrlParameters={true}
-                gmApiKey="AIzaSyBlmOEyv_ixzM9nyct3THvjxehqijgf6W4"
+                gmApiKey="AIzaSyA5w4TjF_18glN6LRCkbNweUoEHNpARdy8"
                 // apiKey="13355626fe0c4e42ad16518c"
                 // mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
                 />
