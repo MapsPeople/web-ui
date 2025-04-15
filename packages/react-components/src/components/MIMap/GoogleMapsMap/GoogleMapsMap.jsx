@@ -9,7 +9,6 @@ import isNullOrUndefined from '../../../../../map-template/src/helpers/isNullOrU
 GoogleMapsMap.propTypes = {
     apiKey: PropTypes.string.isRequired,
     onInitialized: PropTypes.func.isRequired,
-    onPositionControl: PropTypes.func.isRequired,
     center: PropTypes.object,
     zoom: PropTypes.number,
     bounds: PropTypes.object,
@@ -23,7 +22,6 @@ GoogleMapsMap.propTypes = {
  * @param {Object} props
  * @param {string} props.apiKey - Google Maps API key.
  * @param {function} props.onInitialized - Function that is called when the map view is initialized.
- * @param {function} props.onPositionControl - Callback called when the position control is initialized. Payload is the position control.
  * @param {Object} [props.center] - Object with latitude and longitude on which the map will center. Example: { lat: 55, lng: 10 }
  * @param {number} [props.zoom] - Zoom level for the map.
  * @param {object} [props.bounds] - Map bounds. Will win over center+zoom if set. Use the format { south: number, west: number, north: number, east: number }
