@@ -174,7 +174,6 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bear
                     mapsIndoorsInstance={mapsIndoorsInstance}
                     accessToken={mapboxAccessToken}
                     onInitialized={onMapViewInitialized}
-                    onPositionControl={setPositionControl}
                     center={center}
                     zoom={zoom}
                     mapOptions={mapOptions}
