@@ -53,6 +53,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
         // Create the web components if they don't exist
         if (!floorSelectorRef.current) {
             const floorSelector = document.createElement('mi-floor-selector');
+            // Set the ID to ensure it is unique and can be referenced later, helps maintain persistence when the component re-renders
             floorSelector.id = FLOOR_SELECTOR_ID;
             floorSelectorRef.current = floorSelector;
         }
@@ -60,6 +61,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
         // Create the position button if it doesn't exist
         if (!positionButtonRef.current) {
             const positionButton = document.createElement('mi-my-position');
+            // Set the ID to ensure it is unique and can be referenced later, helps maintain persistence when the component re-renders
             positionButton.id = POSITION_BUTTON_ID;
             positionButtonRef.current = positionButton;
         }
