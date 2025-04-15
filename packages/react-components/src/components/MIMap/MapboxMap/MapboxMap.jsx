@@ -82,13 +82,11 @@ function MapboxMap({ accessToken, onInitialized, center, zoom, bounds, bearing, 
     }, [mapViewInstance, center, zoom, bearing, pitch, bounds, mapOptions]);
 
     useEffect(() => {
-        if (mapsIndoorsInstance && mapViewInstance) {
-            if (!hasZoomControl && isDesktop) {
-                mapViewInstance
-                    .getMap()
-                    .addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'bottom-right');
-                setHasZoomControl(true);
-            }
+        if (mapsIndoorsInstance && mapViewInstance && !hasZoomControl && isDesktop) {
+            mapViewInstance
+                .getMap()
+                .addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'bottom-right');
+            setHasZoomControl(true);
         }
     }, [mapsIndoorsInstance, mapViewInstance, hasZoomControl]);
 
