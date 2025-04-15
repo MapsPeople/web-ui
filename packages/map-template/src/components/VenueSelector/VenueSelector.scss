@@ -16,22 +16,59 @@ $align-offset: 2px;
         overflow-y: hidden;
         display: grid;
         grid-template-rows: var(--spacing-xxxx-large) 1fr;
+    }
+
+    &__header {
+        display: grid;
+        // Three-column grid:
+        // 1. Empty space (--spacing-xxx-large)
+        // 2. Heading with flexible width
+        // 3. Close button (--spacing-xxx-large)
+        grid-template-columns: var(--spacing-xxx-large) 1fr var(--spacing-xxx-large); // Three columns layout
+        align-items: center;
+        padding: var(--spacing-medium);
+        height: calc($button-height + 2 * var(--spacing-small));
 
         h1 {
             color: var(--color-gray-90);
             font-size: var(--font-size-small);
             margin: 0;
-            height: calc($button-height + 2 * var(--spacing-small));
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            text-align: center; // Center text
+            grid-column: 2; // Place in middle column
         }
 
-        /*
-         * Transition classes.
-         * The transitions make the Venue selector appear to be expanding from and disappearing into the toggle button.
-         */
+        // Place close button in last column
+        .venue-selector__button {
+            grid-column: 3;
+            justify-self: end;
+        }
+    }
 
+    &__list {
+        overflow-y: auto;
+        padding: var(--spacing-medium);
+    }
+
+    &__button {
+        background-color: var(--tailwind-colors-white);
+        border-radius: var(--rounding-large);
+        border: 1px solid #E6E6E6;
+        width: var(--spacing-xxx-large);
+        height: var(--spacing-xxx-large);
+        position: relative;
+
+        &:hover {
+            background-color: var(--tailwind-colors-gray-100);
+            border: 1px solid var(--tailwind-colors-gray-200);
+        }
+    }
+
+    /*
+     * Transition classes.
+     * The transitions make the Venue selector appear to be expanding from and disappearing into the toggle button.
+     */
+
+    &__content {
         &-enter {
             top: $button-from-top;
             bottom: calc(100% - var(--spacing-xxxx-large));
@@ -88,59 +125,13 @@ $align-offset: 2px;
         }
     }
 
-    &__list {
-        overflow-y: auto;
-    }
-
-    &__button {
-        background-color: var(--tailwind-colors-white);
-        border-radius: var(--rounding-large);
-        border: 1px solid #E6E6E6;
-        position: absolute;
-        width: var(--spacing-xxx-large);
-        height: var(--spacing-xxx-large);
-        top: $button-from-top;
-        left: calc(var(--spacing-small) - $align-offset);
-        z-index: var(--z-index-sticky);
-
-        &--open {
-            z-index: calc(var(--z-index-popup) + 1);
-        }
-
-        svg {
-            display: block;
-            margin: 0 auto;
-        }
-
-        &:hover {
-            background-color: var(--tailwind-colors-gray-100);
-            border: 1px solid var(--tailwind-colors-gray-200);
-        }
-
-        @media (min-width: $desktop-breakpoint) {
-            top: var(--spacing-x-large);
-            right: var(--spacing-small);
-            left: auto;
-
-            /* Adjust button position when open to avoid overlapping with scrollbar */
-            &.venue-selector__button--open {
-                right: calc(3 * var(--spacing-x-small));
-            }
-        }
-    }
-
     @media (min-width: $desktop-breakpoint) {
         &__content {
             width: 568px;
             right: var(--spacing-small);
             bottom: var(--spacing-large);
-            top: var(--spacing-large);
+            top: var(--spacing-small);
             border-radius: var(--rounding-large);
-        }
-
-        &__button {
-            top: var(--spacing-x-large);
-            right: calc(var(--spacing-small) + $align-offset);
         }
     }
 }

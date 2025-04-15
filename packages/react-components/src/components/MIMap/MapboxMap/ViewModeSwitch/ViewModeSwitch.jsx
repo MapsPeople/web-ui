@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
 import './ViewModeSwitch.scss';
 import isNullOrUndefined from '../../../../../../map-template/src/helpers/isNullOrUndefined';
@@ -35,6 +36,7 @@ ViewModeSwitch.propTypes = {
 function ViewModeSwitch({ mapView, pitch, reset, activeColor = '#005655', show2DModelsIn3D }) {
 
     const [viewMode, setViewMode] = useState(ViewModes.initial3D);
+    const portalTarget = document.querySelector('.viewmode-switch-portal');
 
     // The show2DModelsIn3D property from AppConfig is received as a string ("true"/"false") or might be undefined.
     // We need to explicitly check for the string value "true" for the setting to take effect.
@@ -95,20 +97,23 @@ function ViewModeSwitch({ mapView, pitch, reset, activeColor = '#005655', show2D
         }
     }, [viewMode, mapView]);
 
-    return <div className="view-mode-switch">
-        <button className="view-mode-switch__button"
-            onClick={() => setViewMode(ViewModes.clicked2D)}
-            style={{ backgroundColor: viewMode === ViewModes.clicked2D ? activeColor : 'white' }}
-        >
-            {viewMode === ViewModes.clicked2D ? <Light2D /> : <Dark2D />}
-        </button>
-        <button className="view-mode-switch__button"
-            onClick={() => setViewMode(ViewModes.clicked3D)}
-            style={{ backgroundColor: [ViewModes.initial3D, ViewModes.clicked3D].includes(viewMode) ? activeColor : 'white' }}
-        >
-            {[ViewModes.initial3D, ViewModes.clicked3D].includes(viewMode) ? <Light3D /> : <Dark3D />}
-        </button>
-    </div>
+    return createPortal(
+        <div className="view-mode-switch">
+            <button className="view-mode-switch__button"
+                onClick={() => setViewMode(ViewModes.clicked2D)}
+                style={{ backgroundColor: viewMode === ViewModes.clicked2D ? activeColor : 'white' }}
+            >
+                {viewMode === ViewModes.clicked2D ? <Light2D /> : <Dark2D />}
+            </button>
+            <button className="view-mode-switch__button"
+                onClick={() => setViewMode(ViewModes.clicked3D)}
+                style={{ backgroundColor: [ViewModes.initial3D, ViewModes.clicked3D].includes(viewMode) ? activeColor : 'white' }}
+            >
+                {[ViewModes.initial3D, ViewModes.clicked3D].includes(viewMode) ? <Light3D /> : <Dark3D />}
+            </button>
+        </div>,
+        portalTarget
+    );
 }
 
 export default ViewModeSwitch;

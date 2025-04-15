@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import MapboxMap from './MapboxMap/MapboxMap';
 import GoogleMapsMap from './GoogleMapsMap/GoogleMapsMap';
+import MapControls from './MapControls/MapControls';
 import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
 import './MIMap.scss';
 
@@ -49,6 +50,7 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bear
     const [viewModeSwitchVisible, setViewModeSwitchVisible] = useState();
     const [solution, setSolution] = useState();
     const [appConfig, setAppConfig] = useState();
+    const [mapViewInstance, setMapViewInstance] = useState();
 
     useEffect(() => {
         // Make sure to define the MI Components custom elements if they are not already defined.
@@ -141,8 +143,59 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bear
     }, [gmApiKey, mapboxAccessToken]);
 
     return <>
-        {mapType === mapTypes.Google && <GoogleMapsMap mapsIndoorsInstance={mapsIndoorsInstance} apiKey={gmApiKey} onInitialized={onMapViewInitialized} onPositionControl={setPositionControl} center={center} zoom={zoom} mapOptions={mapOptions} heading={bearing} tilt={pitch} bounds={bounds} />}
-        {mapType === mapTypes.Mapbox && <MapboxMap mapsIndoorsInstance={mapsIndoorsInstance} accessToken={mapboxAccessToken} onInitialized={onMapViewInitialized} onPositionControl={setPositionControl} center={center} zoom={zoom} mapOptions={mapOptions} bearing={bearing} pitch={pitch} bounds={bounds} resetViewMode={resetUICounter} viewModeSwitchVisible={viewModeSwitchVisible} appConfig={appConfig} />}
+        {mapType === mapTypes.Google && (
+            <>
+                <GoogleMapsMap
+                    mapsIndoorsInstance={mapsIndoorsInstance}
+                    apiKey={gmApiKey}
+                    onInitialized={onMapViewInitialized}
+                    center={center}
+                    zoom={zoom}
+                    mapOptions={mapOptions}
+                    heading={bearing}
+                    tilt={pitch}
+                    bounds={bounds}
+                />
+                {mapsIndoorsInstance && mapViewInstance && (
+                    <MapControls
+                        mapType={mapTypes.Google}
+                        mapsIndoorsInstance={mapsIndoorsInstance}
+                        mapInstance={mapViewInstance}
+                        onPositionControl={setPositionControl}
+                        mapOptions={mapOptions}
+                        brandingColor={mapOptions?.brandingColor}
+                    />
+                )}
+            </>
+        )}
+        {mapType === mapTypes.Mapbox && (
+            <>
+                <MapboxMap
+                    mapsIndoorsInstance={mapsIndoorsInstance}
+                    accessToken={mapboxAccessToken}
+                    onInitialized={onMapViewInitialized}
+                    center={center}
+                    zoom={zoom}
+                    mapOptions={mapOptions}
+                    bearing={bearing}
+                    pitch={pitch}
+                    bounds={bounds}
+                    resetViewMode={resetUICounter}
+                    viewModeSwitchVisible={viewModeSwitchVisible}
+                    appConfig={appConfig}
+                    onMapViewInstanceChange={setMapViewInstance}
+                />
+                {mapsIndoorsInstance && mapViewInstance && (
+                    <MapControls
+                        mapType={mapTypes.Mapbox}
+                        mapsIndoorsInstance={mapsIndoorsInstance}
+                        mapInstance={mapViewInstance}
+                        onPositionControl={setPositionControl}
+                        brandingColor={mapOptions?.brandingColor}
+                    />
+                )}
+            </>
+        )}
     </>
 }
 
