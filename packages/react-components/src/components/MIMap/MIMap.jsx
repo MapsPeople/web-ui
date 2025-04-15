@@ -163,6 +163,7 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bear
                         mapInstance={mapViewInstance}
                         onPositionControl={setPositionControl}
                         mapOptions={mapOptions}
+                        brandingColor={mapOptions?.brandingColor}
                     />
                 )}
             </>
@@ -190,6 +191,7 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bear
                         mapsIndoorsInstance={mapsIndoorsInstance}
                         mapInstance={mapViewInstance}
                         onPositionControl={setPositionControl}
+                        brandingColor={mapOptions?.brandingColor}
                     />
                 )}
             </>

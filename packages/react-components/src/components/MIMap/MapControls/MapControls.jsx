@@ -12,7 +12,7 @@ MapControls.propTypes = {
     mapsIndoorsInstance: PropTypes.object.isRequired,
     mapInstance: PropTypes.object.isRequired,
     onPositionControl: PropTypes.func,
-    mapOptions: PropTypes.object
+    brandingColor: PropTypes.string
 };
 
 /**
@@ -26,13 +26,12 @@ MapControls.propTypes = {
  * @param {Object} props.mapsIndoorsInstance - MapsIndoors SDK instance
  * @param {Object} props.mapInstance - Map instance (Google Maps or Mapbox)
  * @param {Function} [props.onPositionControl] - Callback function for position control events
- * @param {Object} [props.mapOptions] - Additional map configuration options
- * @param {string} [props.mapOptions.brandingColor] - Custom branding color for controls
+ * @param {string} [props.brandingColor] - Custom branding color for controls
  * 
  * @returns {JSX.Element} Map controls container with venue selector, floor selector,
  * position button, and view mode switch, arranged differently for desktop and mobile layouts
  */
-function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionControl, mapOptions }) {
+function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionControl, brandingColor }) {
     const isDesktop = useIsDesktop();
     const floorSelectorRef = useRef(null);
     const positionButtonRef = useRef(null);
@@ -70,8 +69,8 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
         floorSelectorRef.current.mapsindoors = mapsIndoorsInstance;
         positionButtonRef.current.mapsindoors = mapsIndoorsInstance;
 
-        if (mapOptions?.brandingColor) {
-            floorSelectorRef.current.primaryColor = mapOptions.brandingColor;
+        if (brandingColor) {
+            floorSelectorRef.current.primaryColor = brandingColor;
         }
 
         // Setup position control
@@ -79,7 +78,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
             onPositionControl(positionButtonRef.current);
         }
 
-    }, [mapType, mapsIndoorsInstance, mapInstance, onPositionControl, mapOptions]);
+    }, [mapType, mapsIndoorsInstance, mapInstance, onPositionControl, brandingColor]);
 
     // Handle layout changes and element movement, this handles moving the elements to the correct DOM location based on the layout
     // and ensures that the elements are not duplicated in the DOM.
