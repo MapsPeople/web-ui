@@ -62,6 +62,7 @@ import isNullOrUndefined from '../../helpers/isNullOrUndefined.js';
 import centerState from '../../atoms/centerState.js';
 import PropTypes from 'prop-types';
 import { ZoomLevelValues } from '../../constants/zoomLevelValues.js';
+import mapTypeState from '../../atoms/mapTypeState.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -210,6 +211,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [resetCount, setResetCount] = useState(0);
 
     const [setCurrentVenueName, updateCategories] = useCurrentVenue();
+
+    const mapType = useRecoilValue(mapTypeState);
 
     /**
      * Ensure that MapsIndoors Web SDK is available.
@@ -632,6 +635,27 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         setCenter(center);
     }, [center]);
+
+    /*
+     * Fallback mechanism for setting the center position.
+     * If no center is specified (neither through URL parameter nor prop),
+     * and the appSettings contains both latitude and longitude,
+     * use those coordinates as the center position.
+     * The coordinates are formatted based on the map provider:
+     * - For Google Maps: "latitude,longitude"
+     * - For Mapbox: "longitude,latitude"
+     */
+    useEffect(() => {
+        if (!center && appConfig?.appSettings?.latitude && appConfig?.appSettings?.longitude) {
+            let formattedCenter;
+            if (mapType === 'mapbox') {
+                formattedCenter = `${appConfig.appSettings.longitude},${appConfig.appSettings.latitude}`;
+            } else {
+                formattedCenter = `${appConfig.appSettings.latitude},${appConfig.appSettings.longitude}`;
+            }
+            setCenter(formattedCenter);
+        }
+    }, [center, appConfig, mapType]);
 
     /*
      * Sets document title based on useAppTitle and appConfig values.
