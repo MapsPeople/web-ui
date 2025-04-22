@@ -227,8 +227,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             const miSdkApiTag = document.createElement('script');
             miSdkApiTag.setAttribute('type', 'text/javascript');
-            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.39.2/mapsindoors-4.39.2.js.gz');
-            miSdkApiTag.setAttribute('integrity', 'sha384-+Lvi/laUwP/QZixVuIXpTn6ckln8itxc4ErCg9xwYY/QSyTqPTgGGqnLkfnhS2zo');
+            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.39.0/mapsindoors-4.39.0.js.gz');
+            miSdkApiTag.setAttribute('integrity', 'sha384-3S9Jvub8zrQ8mn1GlIvVw+LQTsvSF9tz/1e+mr18/rHZfAjUsQ7Vy6cnzidMoyq7');
             miSdkApiTag.setAttribute('crossorigin', 'anonymous');
             document.body.appendChild(miSdkApiTag);
             miSdkApiTag.onload = () => {
@@ -631,10 +631,25 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     /*
      * React on changes to the center prop.
+     * This sets the center position from either:
+     * 1. The center URL parameter (if supportsUrlParameters is true)
+     * 2. The center prop passed directly to the component
+     * The coordinates are formatted based on the map provider:
+     * - For Google Maps: "latitude,longitude"
+     * - For Mapbox: "longitude,latitude"
      */
     useEffect(() => {
-        setCenter(center);
-    }, [center]);
+        if (center) {
+            const [latitude, longitude] = center.split(',');
+            let formattedCenter;
+            if (mapType === 'mapbox') {
+                formattedCenter = `${longitude},${latitude}`;  // Convert to longitude,latitude for Mapbox
+            } else {
+                formattedCenter = `${latitude},${longitude}`; // Keep as latitude,longitude for Google Maps
+            }
+            setCenter(formattedCenter);
+        }
+    }, [center, mapType]);
 
     /*
      * Fallback mechanism for setting the center position.
