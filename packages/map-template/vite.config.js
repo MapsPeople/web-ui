@@ -27,9 +27,15 @@ export default defineConfig(({ mode }) => {
                 project: env.VITE_SENTRY_PROJECT,
                 authToken: env.VITE_SENTRY_AUTH_TOKEN,
                 release: {
-                    name: `map-template@${process.env.npm_package_version}`
+                    name: `map-template@${process.env.npm_package_version}`,
+                    uploadSourceMaps: true,
+                    finalize: true,
                 },
-                setCommits: false,
+                sourceMaps: {
+                    include: ['./build', './dist'],
+                    ignore: ['node_modules'],
+                    urlPrefix: '~/',
+                },
                 reactComponentAnnotation: { enabled: true },
             }),
         ]
