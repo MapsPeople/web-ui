@@ -1,4 +1,4 @@
-import { forwardRef, useContext, useEffect, useImperativeHandle } from 'react'; // eslint-disable-line
+import React, { cloneElement, forwardRef, useContext, useEffect, useImperativeHandle } from 'react'; // eslint-disable-line
 import { useRef, useState } from 'react';
 import { ContainerContext } from '../ContainerContext';
 import { useSwipeable } from 'react-swipeable';
@@ -40,6 +40,9 @@ const Sheet = forwardRef(function SheetComponent({ children, isOpen, initialSnap
 
     /** True if the sheet is currently being dragged with pointer (mouse, finger) */
     const [isDragging, setIsDragging] = useState(false); // eslint-disable-line
+
+    /** Hold the snap point that the user has swiped to (and thus never initial or programatically set snap point) */
+    const [swipedSnapPoint, setSwipedSnapPoint] = useState(null);
 
     /**
      * Reference to the DOM element of the container element of all bottom sheets.
@@ -172,6 +175,7 @@ const Sheet = forwardRef(function SheetComponent({ children, isOpen, initialSnap
 
             if (snapPoint) {
                 snapSheetHeightToSnapPoint(snapPoint);
+                setSwipedSnapPoint(snapPoint);
             }
         },
         trackMouse: true,
@@ -197,6 +201,17 @@ const Sheet = forwardRef(function SheetComponent({ children, isOpen, initialSnap
         sheetRef.current = el;
     }
 
+    /**
+     * Clone the children.
+     *
+     * We do that because we want to pass the snapPointSwipedByUser prop to the children.
+     * Since it is not possible to pass props to children in React (they are immutable), we need to clone the children and then add the prop.
+     * See https://frontarm.com/james-k-nelson/passing-data-props-children/
+     */
+    const clonedChildren = React.Children.map(children, child =>
+        cloneElement(child, { snapPointSwipedByUser: swipedSnapPoint })
+    );
+
     return (
         <div
             {...swipeHandler}
@@ -206,7 +221,7 @@ const Sheet = forwardRef(function SheetComponent({ children, isOpen, initialSnap
         >
             {/* We need to have a div in a div for it being able to scroll content separately and for the height to be measurable */}
             <div ref={contentRef} className="sheet__content" style={style}>
-                {children}
+                {clonedChildren}
             </div>
         </div>
     );

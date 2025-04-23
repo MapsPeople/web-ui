@@ -28,7 +28,8 @@ LocationDetails.propTypes = {
     onSetSize: PropTypes.func,
     snapPointSwiped: PropTypes.number,
     onStartDirections: PropTypes.func,
-    isOpen: PropTypes.bool
+    isOpen: PropTypes.bool,
+    snapPointSwipedByUser: PropTypes.string
 }
 
 /**
@@ -38,12 +39,12 @@ LocationDetails.propTypes = {
  * @param {function} props.onBack - Callback that fires when Location Details are closed by the user.
  * @param {function} props.onStartWayfinding - Callback that fires when user clicks the Start Wayfinding button.
  * @param {function} props.onSetSize - Callback that is fired when the toggle full description button is clicked and the Sheet size changes.
- * @param {function} props.snapPointSwiped - Changes value when user has swiped a Bottom sheet to a new snap point.
  * @param {function} props.onStartDirections - Callback that fires when user clicks the Start directions button.
  * @param {boolean} props.isOpen - Whether the Location Details are open or not.
+ * @param {function} props.snapPointSwipedByUser - Changes value when user has swiped a Bottom sheet to a new snap point.
  *
  */
-function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped, onStartDirections, isOpen }) {
+function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirections, isOpen, snapPointSwipedByUser }) {
     const { t } = useTranslation();
 
     const locationInfoElement = useRef(null);
@@ -157,13 +158,13 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
             if (locationDetailsContainer.current) {
                 setDescriptionHasContentAbove(locationDetailsContainer.current.scrollTop > 0);
                 setDescriptionHasContentBelow(
-                    locationDetailsContainer.current.scrollTop < 
-                    (locationDetailsContainer.current.scrollHeight - 
+                    locationDetailsContainer.current.scrollTop <
+                    (locationDetailsContainer.current.scrollHeight -
                     locationDetailsContainer.current.offsetHeight - 1)
                 );
             }
         });
-        
+
         return () => cancelAnimationFrame(frameId);
     }
 
@@ -254,16 +255,17 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
      * When user swipes the bottom sheet to a new snap point.
      */
     useEffect(() => {
-        if (snapPointSwiped === undefined) return;
+        if (!snapPointSwipedByUser) return;
 
         // If swiping to max height, expand location details.
         // If swiping to smaller height, collapse location details.
-        if (showFullDescription) {
+        setShowFullDescription(snapPointSwipedByUser === snapPoints.MAX);
+        if (snapPointSwipedByUser === snapPoints.MAX) {
             expandLocationDescription();
         } else {
             collapseLocationDescription();
         }
-    }, [snapPointSwiped]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [snapPointSwipedByUser]);
 
     return <div className={`location-details ${descriptionHasContentAbove ? 'location-details--content-above' : ''} ${descriptionHasContentBelow ? 'location-details--content-below' : ''}`}>
         {location && <>

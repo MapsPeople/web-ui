@@ -31,8 +31,8 @@ Directions.propTypes = {
     isOpen: PropTypes.bool,
     onBack: PropTypes.func,
     onSetSize: PropTypes.func,
-    snapPointSwiped: PropTypes.func,
-    onRouteFinished: PropTypes.func
+    onRouteFinished: PropTypes.func,
+    snapPointSwipedByUser: PropTypes.string
 };
 
 /**
@@ -42,11 +42,11 @@ Directions.propTypes = {
  * @param {boolean} props.isOpen - Indicates if the directions view is open.
  * @param {function} props.onBack - Callback that fires when the directions view is closed by the user.
  * @param {function} props.onSetSize - Callback that is fired when the component has loaded.
- * @param {function} props.snapPointSwiped - Changes value when user has swiped a Bottom sheet to a new snap point.
  * @param {function} props.onRouteFinished - Callback that fires when the route has finished.
+ * @param {function} props.snapPointSwipedByUser - Changes value when user has swiped a Bottom sheet to a new snap point.
  *
  */
-function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinished }) {
+function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipedByUser }) {
     const { t } = useTranslation();
 
     // Holds the MapsIndoors DisplayRule for the destination
@@ -271,10 +271,10 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
      * When user swipes the bottom sheet to a new snap point.
      */
     useEffect(() => {
-        if (isOpen && snapPointSwiped) {
-            setSubstepsOpen(snapPointSwiped === snapPoints.MAX);
+        if (isOpen && snapPointSwipedByUser) {
+            setSubstepsOpen(snapPointSwipedByUser === snapPoints.MAX);
         }
-    }, [isOpen, snapPointSwiped]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [isOpen, snapPointSwipedByUser]);
 
     return (
         <div className="directions" style={{ display: !isKioskContext ? 'grid' : 'block' }}>
