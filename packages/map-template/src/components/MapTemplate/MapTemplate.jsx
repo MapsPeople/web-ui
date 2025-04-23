@@ -643,9 +643,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             const [latitude, longitude] = center.split(',');
             let formattedCenter;
             if (mapType === 'mapbox') {
-                formattedCenter = `${longitude},${latitude}`;  // Convert to longitude,latitude for Mapbox
+                formattedCenter = longitude + ',' + latitude;  // Convert to longitude,latitude for Mapbox
             } else {
-                formattedCenter = `${latitude},${longitude}`; // Keep as latitude,longitude for Google Maps
+                formattedCenter = latitude + ',' + longitude; // Keep as latitude,longitude for Google Maps
             }
             setCenter(formattedCenter);
         }
@@ -664,9 +664,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         if (!center && appConfig?.appSettings?.latitude && appConfig?.appSettings?.longitude) {
             let formattedCenter;
             if (mapType === 'mapbox') {
-                formattedCenter = `${appConfig.appSettings.longitude},${appConfig.appSettings.latitude}`;
+                formattedCenter = appConfig.appSettings.longitude + ',' + appConfig.appSettings.latitude;
             } else {
-                formattedCenter = `${appConfig.appSettings.latitude},${appConfig.appSettings.longitude}`;
+                formattedCenter = appConfig.appSettings.latitude + ',' + appConfig.appSettings.longitude;
             }
             setCenter(formattedCenter);
         }
