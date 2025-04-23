@@ -24,6 +24,8 @@ import { useIsDesktop } from "../../hooks/useIsDesktop";
 import showExternalIDsState from '../../atoms/showExternalIDsState';
 import PropTypes from "prop-types";
 import baseLinkSelector from '../../selectors/baseLink';
+import mapTypeState from "../../atoms/mapTypeState";
+import { ZoomLevelValues } from "../../constants/zoomLevelValues";
 
 let directionsRenderer;
 
@@ -84,6 +86,8 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
 
     const currentLocation = useRecoilValue(currentLocationState);
 
+    const mapType = useRecoilValue(mapTypeState);
+
     useEffect(() => {
         return () => {
             setDestinationDisplayRule(null);
@@ -127,6 +131,8 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
                 } else {
                     setDestinationDisplayRule(mapsIndoorsInstance.getDisplayRule(directions.destinationLocation));
                 }
+
+                setMinZoom(null);
             });
         }
     }, [isOpen, directions, mapsIndoorsInstance, travelMode]);
@@ -175,6 +181,7 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
     useEffect(() => {
         if (!isOpen && directionsRenderer) {
             stopRendering();
+            setMinZoom(ZoomLevelValues.minZoom);
         }
     }, [isOpen]);
 
@@ -233,6 +240,19 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
     }
 
     /**
+     * Sets minZoom for a specific map provider.
+     * 
+     * @param {number} zoomLevel 
+     */
+    function setMinZoom(zoomLevel) {
+        if (mapType === 'mapbox') {
+            mapsIndoorsInstance.getMapView().getMap().setMinZoom(zoomLevel);
+        } else if (mapType === 'google') {
+            mapsIndoorsInstance.getMapView().getMap().setOptions({ minZoom: zoomLevel })
+        }
+    }
+
+    /**
      * Close the directions.
      * Reset the active steps and stop rendering directions.
      */
@@ -240,6 +260,7 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
         resetSubsteps();
         stopRendering();
         onBack();
+        
     }
 
     /**
