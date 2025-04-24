@@ -8,7 +8,7 @@ $desktop-breakpoint: 992px;
     border: 1px solid #E6E6E6;
     gap: var(--spacing-xx-small);
     padding: var(--spacing-xx-small);
-    grid-auto-flow: column; // Make buttons flow horizontally
+    grid-auto-flow: row; // Stack buttons vertically
     width: fit-content; // Only take up needed space
     
     &__button {
