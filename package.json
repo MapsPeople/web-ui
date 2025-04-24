@@ -3,8 +3,8 @@
   "version": "0.1.0-alpha",
   "description": "JavaScript UI components for MapsIndoors.",
   "engines": {
-    "node": ">=22.14.0",
-    "npm": ">=10.9.2"
+    "node": ">=18.20.7",
+    "npm": ">=10.8.2"
   },
   "main": "index.js",
   "scripts": {
