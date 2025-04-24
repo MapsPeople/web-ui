@@ -62,7 +62,6 @@ import isNullOrUndefined from '../../helpers/isNullOrUndefined.js';
 import centerState from '../../atoms/centerState.js';
 import PropTypes from 'prop-types';
 import { ZoomLevelValues } from '../../constants/zoomLevelValues.js';
-import mapTypeState from '../../atoms/mapTypeState.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
