@@ -3,10 +3,6 @@ import PropTypes from 'prop-types';
 import './MapControls.scss';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
 
-// Unique IDs for the elements to maintain persistence
-const FLOOR_SELECTOR_ID = 'mi-floor-selector-element';
-const POSITION_BUTTON_ID = 'mi-position-button-element';
-
 MapControls.propTypes = {
     mapType: PropTypes.oneOf(['google', 'mapbox']).isRequired,
     mapsIndoorsInstance: PropTypes.object.isRequired,
@@ -52,16 +48,12 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
         // Create the web components if they don't exist
         if (!floorSelectorRef.current) {
             const floorSelector = document.createElement('mi-floor-selector');
-            // Set the ID to ensure it is unique and can be referenced later, helps maintain persistence when the component re-renders
-            floorSelector.id = FLOOR_SELECTOR_ID;
             floorSelectorRef.current = floorSelector;
         }
 
         // Create the position button if it doesn't exist
         if (!positionButtonRef.current) {
             const positionButton = document.createElement('mi-my-position');
-            // Set the ID to ensure it is unique and can be referenced later, helps maintain persistence when the component re-renders
-            positionButton.id = POSITION_BUTTON_ID;
             positionButtonRef.current = positionButton;
         }
 
