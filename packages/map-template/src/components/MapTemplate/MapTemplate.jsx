@@ -212,8 +212,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     const [setCurrentVenueName, updateCategories] = useCurrentVenue();
 
-    const mapType = useRecoilValue(mapTypeState);
-
     /**
      * Ensure that MapsIndoors Web SDK is available.
      *
@@ -393,7 +391,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [externalIDs, mapsindoorsSDKAvailable]);
 
     /*
-     * React on changes to the locationId prop.
+     * React to changes in the locationId prop.
      * Set as current location and change the venue according to the venue that the location belongs to.
      */
     useEffect(() => {
@@ -631,46 +629,23 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     /*
      * React on changes to the center prop.
-     * This sets the center position from either:
-     * 1. The center URL parameter (if supportsUrlParameters is true)
-     * 2. The center prop passed directly to the component
-     * The coordinates are formatted based on the map provider:
-     * - For Google Maps: "latitude,longitude"
-     * - For Mapbox: "longitude,latitude"
      */
     useEffect(() => {
-        if (center) {
-            const [latitude, longitude] = center.split(',');
-            let formattedCenter;
-            if (mapType === 'mapbox') {
-                formattedCenter = longitude + ',' + latitude;  // Convert to longitude,latitude for Mapbox
-            } else {
-                formattedCenter = latitude + ',' + longitude; // Keep as latitude,longitude for Google Maps
-            }
-            setCenter(formattedCenter);
-        }
-    }, [center, mapType]);
+        setCenter(center);
+    }, [center]);
 
     /*
      * Fallback mechanism for setting the center position.
      * If no center is specified (neither through URL parameter nor prop),
      * and the appSettings contains both latitude and longitude,
-     * use those coordinates as the center position.
-     * The coordinates are formatted based on the map provider:
-     * - For Google Maps: "latitude,longitude"
-     * - For Mapbox: "longitude,latitude"
+     * use those coordinates in longitude,latitude format
      */
     useEffect(() => {
         if (!center && appConfig?.appSettings?.latitude && appConfig?.appSettings?.longitude) {
-            let formattedCenter;
-            if (mapType === 'mapbox') {
-                formattedCenter = appConfig.appSettings.longitude + ',' + appConfig.appSettings.latitude;
-            } else {
-                formattedCenter = appConfig.appSettings.latitude + ',' + appConfig.appSettings.longitude;
-            }
+            const formattedCenter = appConfig.appSettings.longitude + ',' + appConfig.appSettings.latitude;
             setCenter(formattedCenter);
         }
-    }, [center, appConfig, mapType]);
+    }, [center, appConfig]);
 
     /*
      * Sets document title based on useAppTitle and appConfig values.
