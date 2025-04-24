@@ -181,7 +181,9 @@ function MapsIndoorsMap(props) {
 
     return (
         <RecoilRoot>
-            {mapTemplateProps && <MapTemplate {...mapTemplateProps}></MapTemplate>}
+            <Sentry.ErrorBoundary>
+                {mapTemplateProps && <MapTemplate {...mapTemplateProps}></MapTemplate>}
+            </Sentry.ErrorBoundary>
         </RecoilRoot>
     )
 }
@@ -218,4 +220,4 @@ Sentry.init({
     replaysOnErrorSampleRate: 1.0,
 });
 
-export default MapsIndoorsMap;
+export default Sentry.withProfiler(MapsIndoorsMap, { name: "MapsIndoorsMap" });
