@@ -126,6 +126,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
     function toggleDescription() {
         if (showFullDescription === false) {
             expandLocationDescription();
+            setSize(snapPoints.MAX);
         } else {
             collapseLocationDescription();
         }
