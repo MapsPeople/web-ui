@@ -538,8 +538,6 @@ function Search({ onSetSize, isOpen }) {
 
             {showNotFoundMessage && <p className="search__error"> {t('Nothing was found')}</p>}
 
-
-
             { /* Vertical list of search results. Scrollable. */}
 
             {searchResults.length > 0 &&
@@ -555,13 +553,9 @@ function Search({ onSetSize, isOpen }) {
                 </div>
             }
 
-
-
             { /* Keyboard */}
 
             {isKeyboardVisible && isDesktop && <Keyboard ref={keyboardRef} searchInputElement={searchInput}></Keyboard>}
-
-
 
             { /* Buttons to scroll in the list of search results if in kiosk context */}
 
