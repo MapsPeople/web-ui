@@ -16,7 +16,5 @@
                 "${workspaceFolder}/.vscode/nvm-init.sh"
             ]
         }
-    },
-    "terminal.integrated.defaultProfile.osx": "UseNvmrcNodeVersion",
-    "terminal.integrated.defaultProfile.linux": "UseNvmrcNodeVersion"
+    }
 }
