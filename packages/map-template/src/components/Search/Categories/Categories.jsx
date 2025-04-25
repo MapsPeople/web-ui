@@ -19,7 +19,8 @@ Categories.propTypes = {
     onSetSize: PropTypes.func,
     getFilteredLocations: PropTypes.func,
     searchFieldRef: PropTypes.object,
-    isOpen: PropTypes.bool
+    isOpen: PropTypes.bool,
+    selectedCategories: PropTypes.any
 };
 
 /**
@@ -31,11 +32,10 @@ Categories.propTypes = {
  * @param {object} props.searchFieldRef - The reference to the search input field.
  * @param {boolean} props.isOpen - Determines wheteher the Categories window is open or not.
  */
-function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen }) {
-
-    const categories = useRecoilValue(categoriesState);
-    console.log(categories);
+function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, selectedCategories }) {
     
+    const categories = useRecoilValue(categoriesState);
+
     const isDesktop = useIsDesktop();
 
     const [selectedCategory, setSelectedCategory] = useRecoilState(selectedCategoryState);
@@ -49,16 +49,12 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
     const [activeCategory, setActiveCategory] = useState();
 
     const isBottomSheetLoaded = useRecoilValue(isBottomSheetLoadedState);
+
     const category = useRecoilValue(categoryState);
 
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
+
     const clickedOutsideMapsIndoorsData = useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOpen);
-
-    // Find child categories of the selected category
-    // const childCategories = categories.filter(([, categoryInfo]) =>
-    //     categoryInfo.parentKeys?.includes(selectedCategory)
-    // );
-
 
     /**
      * Communicate size change to parent component.
@@ -79,7 +75,7 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
     function categoryClicked(category) {
         setSelectedCategory(category);
         setSize(snapPoints.MAX);
-
+        selectedCategories.current = [];
         if (selectedCategory === category) {
             // If the clicked category is the same as currently selected, "deselect" it.
             setSearchResults([]);
@@ -146,12 +142,16 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
         }
     }, [activeCategory, category, isBottomSheetLoaded]);
 
+
+    // First, collect all child keys from all categories
+    const allChildKeys = categories.flatMap(([, info]) => info.childKeys || []);
+
     return (
         <div className="categories prevent-scroll" {...scrollableContentSwipePrevent}>
             {categories.length > 0 && (
                 <div className="categories__list">
                     {categories
-                        .filter(([, categoryInfo]) => !categoryInfo.childKeys || categoryInfo.childKeys.length === 0) // Filter out categories with parentKeys
+                        .filter(([key]) => !allChildKeys.includes(key))
                         .map(([category, categoryInfo]) => (
                             <div key={category} className="categories__category">
                                 <button onClick={() => categoryClicked(category)}>

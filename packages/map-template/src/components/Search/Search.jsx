@@ -116,24 +116,34 @@ function Search({ onSetSize, isOpen }) {
     const initialVenueName = useRecoilValue(initialVenueNameState);
 
     const [isInputFieldInFocus, setIsInputFieldInFocus] = useState();
-    
+
+    const selectedCategories = useRef([])
+
     /**
      * Handles go back function.
      */
     function handleBack() {
-        setSelectedCategory(null);
-        setSearchResults([]);
-        setFilteredLocations([]);
-        setSize(snapPoints.FIT);
-        setIsInputFieldInFocus(true);
-
-        // If there's a search term and it's not just whitespace, re-trigger the search without category filter
-        const searchValue = searchFieldRef.current?.getValue()?.trim();
-        if (searchValue) {
-            searchFieldRef.current.triggerSearch();
+        console.log(selectedCategories.current);
+        
+        if (selectedCategories.current.length === 1) {
+            setSelectedCategory(null);
+            setSearchResults([]);
+            setFilteredLocations([]);
+            setSize(snapPoints.FIT);
+            setIsInputFieldInFocus(true);
+    
+            // If there's a search term and it's not just whitespace, re-trigger the search without category filter
+            const searchValue = searchFieldRef.current?.getValue()?.trim();
+            if (searchValue) {
+                searchFieldRef.current.triggerSearch();
+            } else {
+                // If it's empty or just whitespace, clear the search field
+                searchFieldRef.current?.clear();
+            }
+            selectedCategories.current.pop();
         } else {
-            // If it's empty or just whitespace, clear the search field
-            searchFieldRef.current?.clear();
+            selectedCategories.current.pop()
+            setSelectedCategory(selectedCategories.current[0])
         }
     }
 
@@ -144,6 +154,19 @@ function Search({ onSetSize, isOpen }) {
      * @param {string} category
      */
     function getFilteredLocations(category) {
+        // Ensure category is unique before pushing to selectedCategories.current
+        if (!selectedCategories.current.includes(category)) {
+            selectedCategories.current.push(category);
+        }
+
+        if (selectedCategory) {
+            setSelectedCategory([]);
+            setSearchResults([]);
+            setFilteredLocations([]);
+        }
+        setSelectedCategory(category)
+        console.log(selectedCategories);
+
         // Regarding the venue name: The venue parameter in the SDK's getLocations method is case sensitive.
         // So when the currentVenueName is set based on a Locations venue property, the casing may differ.
         // Thus we need to find the venue name from the list of venues.
@@ -494,10 +517,8 @@ function Search({ onSetSize, isOpen }) {
         }
     }, [kioskLocation]);
 
-    function handleClear() {
-        setSelectedCategory(null)
-        setShowNotFoundMessage(false);
-    }
+    const selectedCategoryInfo = categories.find(([key]) => key === selectedCategory)?.[1];
+    const childKeys = selectedCategoryInfo?.childKeys || [];
 
     return (
         <div className="search"
@@ -525,10 +546,6 @@ function Search({ onSetSize, isOpen }) {
                 </label>
             </div>
 
-            { /* Horizontal list of Categories */}
-
-
-
             {/* Show full category list only when searchResults are empty */}
             {isInputFieldInFocus && !showNotFoundMessage && categories.length > 0 && searchResults.length === 0 && (
                 <Categories
@@ -536,25 +553,16 @@ function Search({ onSetSize, isOpen }) {
                     searchFieldRef={searchFieldRef}
                     getFilteredLocations={(category) => getFilteredLocations(category)}
                     isOpen={!!selectedCategory}
+                    selectedCategories={selectedCategories}
                 />
-            )}
-
-            {/* Show X button only when no search results were found */}
-            {showNotFoundMessage && (
-                <div className="search__clear">
-                    <button type="button" className="search__clear-button" onClick={handleClear}>
-                        <span className="search__clear-icon">X</span>
-                    </button>
-                </div>
             )}
 
             {/* Message shown if no search results were found */}
             {showNotFoundMessage && <p className="search__error"> {t('Nothing was found')}</p>}
 
-
             {searchResults.length > 0 && (
                 <div className="search__results prevent-scroll" {...scrollableContentSwipePrevent}>
-    
+
                     {/* Conditionally render selectedCategory */}
                     {selectedCategory && (
                         <>
@@ -567,19 +575,21 @@ function Search({ onSetSize, isOpen }) {
                                 </div>
                             </div>
 
-                            {/* Show child categories when viewing search results */}
-                            <div className='search__results--sub_categories'>
-                                {categories
-                                    .filter(([, info]) => info.childKeys?.includes(selectedCategory))
-                                    .map(([parentKey, parentInfo]) => (
-                                        <div key={parentKey} className="categories__category">
-                                            <button onClick={() => getFilteredLocations(parentKey)}>
-                                                <img src={parentInfo.iconUrl} alt="" />
-                                                {parentInfo.displayName}
-                                            </button>
-                                        </div>
-                                    ))}
-                            </div>
+                            {/* Show subcategories only if selectedCategory is NOT a sub-category itself */}
+                            {!childKeys.includes(selectedCategory) && (
+                                <div className='search__results--sub_categories'>
+                                    {categories
+                                        .filter(([key]) => childKeys.includes(key))
+                                        .map(([childKey, childInfo]) => (
+                                            <div key={childKey} className="categories__category">
+                                                <button onClick={() => getFilteredLocations(childKey)}>
+                                                    <img src={childInfo.iconUrl} alt="" />
+                                                    {childInfo.displayName}
+                                                </button>
+                                            </div>
+                                        ))}
+                                </div>
+                            )}
                         </>
                     )}
                     <div className='search__results--locations'>
@@ -595,28 +605,9 @@ function Search({ onSetSize, isOpen }) {
                 </div>
             )}
 
-            { /* Vertical list of search results. Scrollable. */}
-
-            {/* {searchResults.length > 0 &&
-                <div className="search__results prevent-scroll" {...scrollableContentSwipePrevent}>
-                    {searchResults.map(location =>
-                        <ListItemLocation
-                            key={location.id}
-                            location={location}
-                            locationClicked={() => onLocationClicked(location)}
-                            isHovered={location?.id === hoveredLocation?.id}
-                        />
-                    )}
-                </div>
-            } */}
-
-
-
             { /* Keyboard */}
 
             {isKeyboardVisible && isDesktop && <Keyboard ref={keyboardRef} searchInputElement={searchInput}></Keyboard>}
-
-
 
             { /* Buttons to scroll in the list of search results if in kiosk context */}
 

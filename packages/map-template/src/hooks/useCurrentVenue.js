@@ -54,8 +54,11 @@ export const useCurrentVenue = () => {
      */
     useEffect(() => {
         if (mapsIndoorsInstance && venuesInSolution.length && currentVenueName && appConfig) {
+            window.mapsindoors.services.SolutionsService.getCategories().then(categories => {
+                updateCategories(categories);
+            });
+
             mapsIndoorsInstance.setVenue(venuesInSolution.find(venue => venue.name.toLowerCase() === currentVenueName.toLowerCase()));
-            updateCategories();
             setSearchResults([]);
             if (searchInput) {
                 searchInput.value = '';
@@ -80,7 +83,17 @@ export const useCurrentVenue = () => {
     /**
      * Generate list of categories that exist on Locations in the current Venue.
      */
-    const updateCategories = () => {
+    const updateCategories = (categories) => {
+        const mainmenu = appConfig?.menuInfo?.mainmenu ?? [];
+        const categoriesMap = new Map(
+            categories.map(cat => [cat.key, cat.childKeys])
+        );
+
+        const enrichedMainmenu = mainmenu.map(item => ({
+            ...item,
+            childKeys: categoriesMap.get(item.categoryKey) ?? []
+        }));
+
         // The venue parameter in the SDK's getLocations method is case sensitive.
         // So when the currentVenueName is set based on a Locations venue property, the casing may differ.
         // Thus we need to find the exact venue name.
@@ -89,38 +102,18 @@ export const useCurrentVenue = () => {
             let uniqueCategories = new Map();
             for (const location of locationsInVenue) {
                 const keys = Object.keys(location.properties.categories);
-
                 for (const key of keys) {
                     // Get the categories from the App Config that have a matching key.
                     if (appConfig?.menuInfo?.mainmenu) {
-                        console.log(appConfig);
-                        
-                        const appConfigCategory = appConfig.menuInfo.mainmenu.find(category => category.categoryKey === key);
-                        
+
+                        const appConfigCategory = enrichedMainmenu.find(category => category.categoryKey === key);
+
                         if (appConfigCategory) {
-                            uniqueCategories.set(appConfigCategory.categoryKey, { displayName: location.properties.categories[key], iconUrl: appConfigCategory?.iconUrl })
+                            uniqueCategories.set(appConfigCategory.categoryKey, { displayName: location.properties.categories[key], iconUrl: appConfigCategory?.iconUrl, childKeys: appConfigCategory.childKeys ?? [] })
                         }
                     }
                 }
             }
-
-            uniqueCategories.set('mock-category-key', {
-                displayName: 'Mock Category',
-                iconUrl: 'https://example.com/mock-icon.svg', // or leave it null/undefined if no icon,
-                childKeys: ['Canteen']
-            });
-
-            uniqueCategories.set('test1', {
-                displayName: 'test1',
-                iconUrl: 'https://example.com/mock-icon.svg', // or leave it null/undefined if no icon,
-                childKeys: ['Canteen']
-            });
-
-            uniqueCategories.set('test2', {
-                displayName: 'test2',
-                iconUrl: 'https://example.com/mock-icon.svg', // or leave it null/undefined if no icon,
-                childKeys: ['Elevator']
-            });
 
             // Sort categories by the place in the mainmenu array. Use index to do that.
             const sortedCategories = Array.from(uniqueCategories).sort((a, b) => {
