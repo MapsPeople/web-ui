@@ -280,7 +280,6 @@ function Search({ onSetSize, isOpen }) {
      * But wait for any bottom sheet transition to end before doing that to avoid content jumping when virtual keyboard appears.
      */
     function searchFieldClicked() {
-        setSize(snapPoints.MAX);
         setSearchDisabled(false);
         searchFieldRef.current.getInputField();
 
@@ -292,6 +291,7 @@ function Search({ onSetSize, isOpen }) {
             }, { once: true });
         } else {
             searchFieldRef.current.focusInput();
+            setIsInputFieldInFocus(true);
         }
     }
 
@@ -389,8 +389,7 @@ function Search({ onSetSize, isOpen }) {
     }
 
     /*
-     * Monitors clicks on search-related elements to manage input focus state.
-     * Prevents expandable categories, to collapse unintentionally while clicking on search focus elements.  
+     * Monitors clicks to manage sheet size and input focus state
      */
     useEffect(() => {
         const SEARCH_FOCUS_ELEMENTS = ['.search__info', '.search__back-button', '.categories', '.modal--open', '.sheet__content'];
@@ -399,15 +398,14 @@ function Search({ onSetSize, isOpen }) {
             const clickedInsideSearchArea = SEARCH_FOCUS_ELEMENTS.some(selector =>
                 event.target.closest(selector)
             );
-
             const clickedInsideResults = event.target.closest('.search__results');
 
             if (clickedInsideSearchArea) {
-                // Set focus on the search field and expand the sheet size.
                 setIsInputFieldInFocus(true);
+                setSize(snapPoints.FIT);
             } else if (!clickedInsideResults) {
-                // If the click is outside the search area and not on the results, collapse the sheet.
                 setIsInputFieldInFocus(false);
+                setSize(snapPoints.MIN);
                 setSelectedCategory(null);
                 setSearchResults([]);
                 setFilteredLocations([]);
@@ -421,7 +419,7 @@ function Search({ onSetSize, isOpen }) {
         };
     }, []);
 
-    /**
+    /*
      * Sets currently hovered location.
      */
     useEffect(() => {

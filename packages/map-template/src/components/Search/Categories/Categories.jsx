@@ -57,10 +57,10 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, s
     const clickedOutsideMapsIndoorsData = useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOpen);
 
     /**
-     * Communicate size change to parent component.
-     *
-     * @param {number} size
-     */
+    * Communicate size change to parent component.
+    *
+    * @param {number} size
+    */
     function setSize(size) {
         if (typeof onSetSize === 'function') {
             onSetSize(size);
@@ -113,7 +113,6 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, s
             setSelectedCategory(null);
             setSearchResults([]);
             setFilteredLocations([]);
-            setSize(snapPoints.FIT);
 
             // If search field has a value, clear the search field.
             if (searchFieldRef.current?.getValue()) {
