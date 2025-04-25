@@ -137,22 +137,29 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
         }
     }, [activeCategory, category, isBottomSheetLoaded]);
 
+
+    // Collect all child keys from all categories
+    const allChildKeys = categories.flatMap(([, info]) => info.childKeys || []);
+
     return (
         <div className="categories prevent-scroll" {...scrollableContentSwipePrevent}>
             {categories.length > 0 && (
                 <div className="categories__list">
-                    {categories.map(([category, categoryInfo]) => (
-                        <div key={category} className="categories__category">
-                            <button onClick={() => categoryClicked(category)}>
-                                <img src={categoryInfo.iconUrl} alt="" />
-                                {categoryInfo.displayName}
-                            </button>
-                        </div>
-                    ))}
+                    {categories
+                        // Filter out all categories that are someone else children.
+                        .filter(([key]) => !allChildKeys.includes(key))
+                        .map(([category, categoryInfo]) => (
+                            <div key={category} className="categories__category">
+                                <button onClick={() => categoryClicked(category)}>
+                                    <img src={categoryInfo.iconUrl} alt="" />
+                                    {categoryInfo.displayName}
+                                </button>
+                            </div>
+                        ))}
                 </div>
             )}
         </div>
-    )
+    );
 }
 
 export default Categories;
