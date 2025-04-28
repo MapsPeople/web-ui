@@ -48,9 +48,11 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
     const [activeCategory, setActiveCategory] = useState();
 
     const isBottomSheetLoaded = useRecoilValue(isBottomSheetLoadedState);
+    
     const category = useRecoilValue(categoryState);
 
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
+
     const clickedOutsideMapsIndoorsData = useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOpen);
 
     /**

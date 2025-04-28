@@ -123,7 +123,7 @@ function Search({ onSetSize, isOpen }) {
      * Handles go back function.
      */
     function handleBack() {
-        // If selected categories tree has only parent category, then on back, we need to perform thos functions.
+        // If selected categories tree has only parent category, then on back, we need to perform those clear functions.
         // Else, remove child category from selected categories tree array.
         if (selectedCategoriesTree.current.length === 1) {
             setSelectedCategory(null);
@@ -552,7 +552,6 @@ function Search({ onSetSize, isOpen }) {
                     searchFieldRef={searchFieldRef}
                     getFilteredLocations={(category) => getFilteredLocations(category)}
                     isOpen={!!selectedCategory}
-                // selectedCategories={selectedCategories}
                 />
             )}
 
