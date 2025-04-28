@@ -491,6 +491,9 @@ function Search({ onSetSize, isOpen }) {
         }
     }, [kioskLocation]);
 
+    const selectedCategoryInfo = categories.find(([key]) => key === selectedCategory)?.[1];
+    const childKeys = selectedCategoryInfo?.childKeys || [];
+
     return (
         <div className="search"
             ref={searchRef}
@@ -517,41 +520,68 @@ function Search({ onSetSize, isOpen }) {
                 </label>
             </div>
 
-            { /* Horizontal list of Categories */}
-
-            {searchResults.length > 0 && selectedCategory && (<div className="search__back">
-                <button type="button" className="search__back-button" onClick={handleBack}>
-                    <ChevronLeft />
-                </button>
-                <div className="search__back-text">
-                    {categories?.find(([category]) => category === selectedCategory)[1]?.displayName}
-                </div>
-            </div>
+            {/* Vertical list of Categories */}
+            {/* Show full category list only when searchResults are empty */}
+            {isInputFieldInFocus && !showNotFoundMessage && categories.length > 0 && searchResults.length === 0 && (
+                <Categories
+                    onSetSize={onSetSize}
+                    searchFieldRef={searchFieldRef}
+                    getFilteredLocations={(category) => getFilteredLocations(category)}
+                    isOpen={!!selectedCategory}
+                // selectedCategories={selectedCategories}
+                />
             )}
-            {isInputFieldInFocus && !showNotFoundMessage && categories.length > 0 && searchResults.length === 0 && <Categories onSetSize={onSetSize}
-                searchFieldRef={searchFieldRef}
-                getFilteredLocations={category => getFilteredLocations(category)}
-                isOpen={!!selectedCategory}
-            />}
 
-            { /* Message shown if no search results were found */}
-
+            {/* Message shown if no search results were found */}
             {showNotFoundMessage && <p className="search__error"> {t('Nothing was found')}</p>}
 
-            { /* Vertical list of search results. Scrollable. */}
-
-            {searchResults.length > 0 &&
+            {/* When search results are found (category is selected or search term is used) */}
+            {searchResults.length > 0 && (
                 <div className="search__results prevent-scroll" {...scrollableContentSwipePrevent}>
-                    {searchResults.map(location =>
-                        <ListItemLocation
-                            key={location.id}
-                            location={location}
-                            locationClicked={() => onLocationClicked(location)}
-                            isHovered={location?.id === hoveredLocation?.id}
-                        />
+
+                    {/* If parent category is selected, render back button, sub-categories (if any) and Locations for that parent category */}
+                    {selectedCategory && (
+                        <>
+                            <div className="search__back">
+                                <button type="button" className="search__back-button" onClick={handleBack}>
+                                    <ChevronLeft />
+                                </button>
+                                <div className="search__back-text">
+                                    {categories?.find(([category]) => category === selectedCategory)[1]?.displayName}
+                                </div>
+                            </div>
+
+                            {/* Show subcategories only if selectedCategory is NOT a sub-category itself */}
+                            {!childKeys.includes(selectedCategory) && (
+                                <div className='search__results--sub_categories'>
+                                    {categories
+                                        .filter(([key]) => childKeys.includes(key))
+                                        .map(([childKey, childInfo]) => (
+                                            <div key={childKey} className="categories__category">
+                                                <button onClick={() => getFilteredLocations(childKey)}>
+                                                    <img src={childInfo.iconUrl} alt="" />
+                                                    {childInfo.displayName}
+                                                </button>
+                                            </div>
+                                        ))}
+                                </div>
+                            )}
+                        </>
                     )}
+
+                    {/* Render list of Locations for category/sub-category. */}
+                    <div className='search__results--locations'>
+                        {searchResults.map(location =>
+                            <ListItemLocation
+                                key={location.id}
+                                location={location}
+                                locationClicked={() => onLocationClicked(location)}
+                                isHovered={location?.id === hoveredLocation?.id}
+                            />
+                        )}
+                    </div>
                 </div>
-            }
+            )}
 
             { /* Keyboard */}
 
