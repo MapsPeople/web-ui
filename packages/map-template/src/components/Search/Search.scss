@@ -16,6 +16,10 @@
         gap: var(--spacing-x-small);
         overflow: auto;
 
+        > *:first-child {
+            margin-top: var(--spacing-x-small);
+        }
+
         >* {
             height: fit-content;
         }
