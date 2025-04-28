@@ -117,23 +117,33 @@ function Search({ onSetSize, isOpen }) {
 
     const [isInputFieldInFocus, setIsInputFieldInFocus] = useState();
 
+    const selectedCategoriesTree = useRef([]);
+
     /**
      * Handles go back function.
      */
     function handleBack() {
-        setSelectedCategory(null);
-        setSearchResults([]);
-        setFilteredLocations([]);
-        setSize(snapPoints.FIT);
-        setIsInputFieldInFocus(true);
+        // If selected categories tree has only parent category, then on back, we need to perform thos functions.
+        // Else, remove child category from selected categories tree array.
+        if (selectedCategoriesTree.current.length === 1) {
+            setSelectedCategory(null);
+            setSearchResults([]);
+            setFilteredLocations([]);
+            setSize(snapPoints.FIT);
+            setIsInputFieldInFocus(true);
 
-        // If there's a search term and it's not just whitespace, re-trigger the search without category filter
-        const searchValue = searchFieldRef.current?.getValue()?.trim();
-        if (searchValue) {
-            searchFieldRef.current.triggerSearch();
+            // If there's a search term and it's not just whitespace, re-trigger the search without category filter
+            const searchValue = searchFieldRef.current?.getValue()?.trim();
+            if (searchValue) {
+                searchFieldRef.current.triggerSearch();
+            } else {
+                // If it's empty or just whitespace, clear the search field
+                searchFieldRef.current?.clear();
+            }
+            selectedCategoriesTree.current.pop();
         } else {
-            // If it's empty or just whitespace, clear the search field
-            searchFieldRef.current?.clear();
+            selectedCategoriesTree.current.pop()
+            setSelectedCategory(selectedCategoriesTree.current[0])
         }
     }
 
@@ -144,6 +154,20 @@ function Search({ onSetSize, isOpen }) {
      * @param {string} category
      */
     function getFilteredLocations(category) {
+        // Creates a selected categoriers tree, where first category in the array is parent and second one is child
+        // Ensure category is unique before pushing to selectedCategories.current
+        if (!selectedCategoriesTree.current.includes(category)) {
+            selectedCategoriesTree.current.push(category);
+        }
+
+        // If child category is being selected, we need to clear parent categories results in order to load proper data that belongs to child category. 
+        if (selectedCategory) {
+            setSelectedCategory([]);
+            setSearchResults([]);
+            setFilteredLocations([]);
+        }
+        setSelectedCategory(category)
+
         // Regarding the venue name: The venue parameter in the SDK's getLocations method is case sensitive.
         // So when the currentVenueName is set based on a Locations venue property, the casing may differ.
         // Thus we need to find the venue name from the list of venues.
