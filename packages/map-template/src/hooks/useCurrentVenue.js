@@ -83,10 +83,10 @@ export const useCurrentVenue = () => {
      * Generate list of categories that exist on Locations in the current Venue.
      */
     const updateCategories = async () => {
-        const result = await window?.mapsindoors?.services?.SolutionsService?.getCategories();
+        const categories = await window?.mapsindoors?.services?.SolutionsService?.getCategories();
         const mainmenu = appConfig?.menuInfo?.mainmenu ?? [];
         const categoriesMap = new Map(
-            result.map(cat => [cat.key, cat.childKeys])
+            categories.map(cat => [cat.key, cat.childKeys])
         );
 
         const categoriesWithChildKeys = mainmenu.map(item => ({
