@@ -140,7 +140,7 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
 
     // Collect all child keys from all categories
     const allChildKeys = categories.flatMap(([, info]) => info.childKeys || []);
-
+    
     return (
         <div className="categories prevent-scroll" {...scrollableContentSwipePrevent}>
             {categories.length > 0 && (

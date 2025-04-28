@@ -108,7 +108,7 @@ export const useCurrentVenue = () => {
                         const appConfigCategory = categoriesWithChildKeys.find(category => category.categoryKey === key);
 
                         if (appConfigCategory) {
-                            uniqueCategories.set(appConfigCategory.categoryKey, { displayName: location.properties.categories[key], iconUrl: appConfigCategory?.iconUrl })
+                            uniqueCategories.set(appConfigCategory.categoryKey, { displayName: location.properties.categories[key], iconUrl: appConfigCategory?.iconUrl, childKeys: appConfigCategory?.childKeys ?? [] })
                         }
                     }
                 }
