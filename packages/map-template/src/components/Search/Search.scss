@@ -15,7 +15,28 @@
         display: grid;
         gap: var(--spacing-x-small);
         overflow: auto;
-        flex: 1 1 auto;
+
+        >* {
+            height: fit-content;
+        }
+
+        &--sub_categories {
+            display: grid;
+            gap: var(--spacing-x-small);
+
+            >* {
+                height: fit-content;
+            }
+        }
+
+        &--locations {
+            display: grid;
+            gap: var(--spacing-x-small);
+
+            >* {
+                height: fit-content;
+            }
+        }
 
         > * {
             height: fit-content; /* fixing issue on mobile Safari causing them to bee too large in case of just one search result */
