@@ -1,17 +1,20 @@
-import { useState } from "react";
-import isNullOrUndefined from "../helpers/isNullOrUndefined";
+import { useState, useEffect } from "react";
 
 /*
- * Hook to get all Categories for a specific solution.
+ * Hook to get categories for current solution
  */
 export function useGetCategories() {
-    const [getCategories, setGetCategories] = useState([]);
-    
-    if (isNullOrUndefined(getCategories)) {
-        window?.mapsindoors?.services?.SolutionsService?.getCategories().then(categories => {
-            setGetCategories(categories);
-        });
-    }
+    const [categories, setCategories] = useState([]);
 
-    return getCategories;
+    useEffect(() => {
+        window?.mapsindoors?.services?.SolutionsService?.getCategories()
+            .then(categories => {
+                setCategories(categories)
+            })
+            .catch(err => {
+                console.error("Failed to fetch categories", err);
+            });
+    });
+
+    return categories;
 }
