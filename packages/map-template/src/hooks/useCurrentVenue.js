@@ -8,7 +8,7 @@ import categoriesState from '../atoms/categoriesState';
 import searchResultsState from '../atoms/searchResultsState';
 import searchInputState from '../atoms/searchInputState';
 import initialVenueNameState from '../atoms/initialVenueNameState';
-import { useGetCategories } from './useGetCategories';
+// import { useGetCategories } from './useGetCategories';
 
 /**
  * Hook to handle the current Venue in the app based on the venue prop or other ways to set the Venue.
@@ -27,7 +27,7 @@ export const useCurrentVenue = () => {
     const [, setSearchResults] = useRecoilState(searchResultsState);
     const searchInput = useRecoilValue(searchInputState);
     const [initialVenueName, setInitialVenueName] = useRecoilState(initialVenueNameState);
-    const getCategories = useGetCategories();
+    // const getCategories = useGetCategories();
     
     /*
      * Responsible for setting the Venue state whenever venueName changes (and all Venues in the Solution are loaded).
@@ -82,10 +82,11 @@ export const useCurrentVenue = () => {
     /**
      * Generate list of categories that exist on Locations in the current Venue.
      */
-    const updateCategories = () => {
+    const updateCategories = async () => {
+        const result = await window?.mapsindoors?.services?.SolutionsService?.getCategories();
         const mainmenu = appConfig?.menuInfo?.mainmenu ?? [];
         const categoriesMap = new Map(
-            getCategories.map(cat => [cat.key, cat.childKeys])
+            result.map(cat => [cat.key, cat.childKeys])
         );
 
         const categoriesWithChildKeys = mainmenu.map(item => ({
