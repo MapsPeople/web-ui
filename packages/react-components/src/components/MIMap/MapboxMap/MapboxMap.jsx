@@ -19,8 +19,7 @@ MapboxMap.propTypes = {
     mapsIndoorsInstance: PropTypes.object,
     viewModeSwitchVisible: PropTypes.bool,
     mapOptions: PropTypes.object,
-    appConfig: PropTypes.object,
-    onMapViewInstanceChange: PropTypes.func
+    appConfig: PropTypes.object
 }
 
 /**
@@ -37,9 +36,8 @@ MapboxMap.propTypes = {
  * @param {Object} [props.viewModeSwitchVisible] - Set to true to show the view mode switch.
  * @param {Object} [props.mapOptions] - Options for instantiating and styling the map as well as UI elements.
  * @param {Object} [props.appConfig] - Object that contains app config.
- * @param {function} [props.onMapViewInstanceChange] - Callback called when the mapViewInstance changes.
  */
-function MapboxMap({ accessToken, onInitialized, center, zoom, bounds, bearing, pitch, resetViewMode, mapsIndoorsInstance, viewModeSwitchVisible, mapOptions, appConfig, onMapViewInstanceChange }) {
+function MapboxMap({ accessToken, onInitialized, center, zoom, bounds, bearing, pitch, resetViewMode, mapsIndoorsInstance, viewModeSwitchVisible, mapOptions, appConfig }) {
 
     const [mapViewInstance, setMapViewInstance] = useState();
     const [hasZoomControl, setHasZoomControl] = useState(false);
@@ -118,10 +116,6 @@ function MapboxMap({ accessToken, onInitialized, center, zoom, bounds, bearing, 
         const mapView = new window.mapsindoors.mapView.MapboxV3View(mapViewOptions);
 
         setMapViewInstance(mapView);
-
-        if (onMapViewInstanceChange) {
-            onMapViewInstanceChange(mapView);
-        }
 
         onInitialized(mapView);
     }, []);

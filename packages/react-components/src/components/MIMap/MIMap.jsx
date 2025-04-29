@@ -80,6 +80,9 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bear
     }, [apiKey, mapType]);
 
     const onMapViewInitialized = (mapView) => {
+        // Set mapViewInstance first so MapControls can use it
+        setMapViewInstance(mapView);
+
         // Instantiate MapsIndoors instance
         const mi = new window.mapsindoors.MapsIndoors({
             mapView
@@ -154,7 +157,6 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bear
                 heading={bearing}
                 tilt={pitch}
                 bounds={bounds}
-                onMapViewInstanceChange={setMapViewInstance}
             />
         )}
         {mapType === mapTypes.Mapbox && (
@@ -171,7 +173,6 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bear
                 resetViewMode={resetUICounter}
                 viewModeSwitchVisible={viewModeSwitchVisible}
                 appConfig={appConfig}
-                onMapViewInstanceChange={setMapViewInstance}
             />
         )}
         {mapsIndoorsInstance && mapViewInstance && mapType && (
