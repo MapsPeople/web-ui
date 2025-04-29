@@ -72,10 +72,12 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
 
     }, [mapType, mapsIndoorsInstance, mapInstance, onPositionControl, brandingColor]);
 
-    // Handle layout changes and element movement, this handles moving the elements to the correct DOM location based on the layout
-    // and ensures that the elements are not duplicated in the DOM.
-    // This is important for performance and to avoid issues with the web components.
-    // The useEffect will run when the component mounts and when the layout changes (isDesktop changes).
+    /* 
+     * Handle layout changes and element movement, this handles moving the elements to the correct DOM location based on the layout
+     * and ensures that the elements are not duplicated in the DOM.
+     * This is important for performance and to avoid issues with the web components.
+     * The useEffect will run when the component mounts and when the layout changes (isDesktop changes).
+     */
     useEffect(() => {
         if (!floorSelectorRef.current || !positionButtonRef.current) return;
 
