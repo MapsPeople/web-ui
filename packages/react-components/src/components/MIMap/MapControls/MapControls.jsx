@@ -84,7 +84,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
         const moveElementToTarget = (element, targetClass) => {
             const target = document.querySelector(`.${targetClass}`);
             if (target && !target.contains(element)) {
-                element.parentElement?.removeChild(element);
+                element.remove();
                 target.appendChild(element);
             }
         };
