@@ -144,57 +144,44 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bear
 
     return <>
         {mapType === mapTypes.Google && (
-            <>
-                <GoogleMapsMap
-                    mapsIndoorsInstance={mapsIndoorsInstance}
-                    apiKey={gmApiKey}
-                    onInitialized={onMapViewInitialized}
-                    center={center}
-                    zoom={zoom}
-                    mapOptions={mapOptions}
-                    heading={bearing}
-                    tilt={pitch}
-                    bounds={bounds}
-                />
-                {mapsIndoorsInstance && mapViewInstance && (
-                    <MapControls
-                        mapType={mapTypes.Google}
-                        mapsIndoorsInstance={mapsIndoorsInstance}
-                        mapInstance={mapViewInstance}
-                        onPositionControl={setPositionControl}
-                        mapOptions={mapOptions}
-                        brandingColor={mapOptions?.brandingColor}
-                    />
-                )}
-            </>
+            <GoogleMapsMap
+                mapsIndoorsInstance={mapsIndoorsInstance}
+                apiKey={gmApiKey}
+                onInitialized={onMapViewInitialized}
+                center={center}
+                zoom={zoom}
+                mapOptions={mapOptions}
+                heading={bearing}
+                tilt={pitch}
+                bounds={bounds}
+                onMapViewInstanceChange={setMapViewInstance}
+            />
         )}
         {mapType === mapTypes.Mapbox && (
-            <>
-                <MapboxMap
-                    mapsIndoorsInstance={mapsIndoorsInstance}
-                    accessToken={mapboxAccessToken}
-                    onInitialized={onMapViewInitialized}
-                    center={center}
-                    zoom={zoom}
-                    mapOptions={mapOptions}
-                    bearing={bearing}
-                    pitch={pitch}
-                    bounds={bounds}
-                    resetViewMode={resetUICounter}
-                    viewModeSwitchVisible={viewModeSwitchVisible}
-                    appConfig={appConfig}
-                    onMapViewInstanceChange={setMapViewInstance}
-                />
-                {mapsIndoorsInstance && mapViewInstance && (
-                    <MapControls
-                        mapType={mapTypes.Mapbox}
-                        mapsIndoorsInstance={mapsIndoorsInstance}
-                        mapInstance={mapViewInstance}
-                        onPositionControl={setPositionControl}
-                        brandingColor={mapOptions?.brandingColor}
-                    />
-                )}
-            </>
+            <MapboxMap
+                mapsIndoorsInstance={mapsIndoorsInstance}
+                accessToken={mapboxAccessToken}
+                onInitialized={onMapViewInitialized}
+                center={center}
+                zoom={zoom}
+                mapOptions={mapOptions}
+                bearing={bearing}
+                pitch={pitch}
+                bounds={bounds}
+                resetViewMode={resetUICounter}
+                viewModeSwitchVisible={viewModeSwitchVisible}
+                appConfig={appConfig}
+                onMapViewInstanceChange={setMapViewInstance}
+            />
+        )}
+        {mapsIndoorsInstance && mapViewInstance && mapType && (
+            <MapControls
+                mapType={mapType}
+                mapsIndoorsInstance={mapsIndoorsInstance}
+                mapInstance={mapViewInstance}
+                onPositionControl={setPositionControl}
+                brandingColor={mapOptions?.brandingColor}
+            />
         )}
     </>
 }
