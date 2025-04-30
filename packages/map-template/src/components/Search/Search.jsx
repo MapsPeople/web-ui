@@ -583,7 +583,7 @@ function Search({ onSetSize, isOpen }) {
                                 </div>
                             </div>
 
-                            {/* Show subcategories only if selectedCategory is NOT a sub-category itself */}
+                            {/* Show child category only if selectedCategory is NOT a child category to itself */}
                             {!childKeys.includes(selectedCategory) && (
                                 <div className='search__results--sub_categories'>
                                     {categories
