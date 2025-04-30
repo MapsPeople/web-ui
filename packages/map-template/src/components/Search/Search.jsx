@@ -119,6 +119,8 @@ function Search({ onSetSize, isOpen }) {
 
     const selectedCategoriesArray = useRef([]);
 
+    const [childKeys, setChildKeys] = useState([]);
+
     /**
      * Handles go back function.
      */
@@ -515,8 +517,15 @@ function Search({ onSetSize, isOpen }) {
         }
     }, [kioskLocation]);
 
-    const selectedCategoryInfo = categories.find(([key]) => key === selectedCategory)?.[1];
-    const childKeys = selectedCategoryInfo?.childKeys || [];
+    /**
+     * 
+     */
+    useEffect(() => {
+        const selectedCategoryInfo = categories.find(([key]) => key === selectedCategory)?.[1];
+        const childKeys = selectedCategoryInfo?.childKeys || [];
+        setChildKeys(childKeys)
+    }, [categories, selectedCategory])
+
 
     return (
         <div className="search"
