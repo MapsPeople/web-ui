@@ -584,20 +584,18 @@ function Search({ onSetSize, isOpen }) {
                             </div>
 
                             {/* Show child category only if selectedCategory is NOT a child category to itself */}
-                            {!childKeys.includes(selectedCategory) && (
-                                <div className='search__results--sub_categories'>
-                                    {categories
-                                        .filter(([key]) => childKeys.includes(key))
-                                        .map(([childKey, childInfo]) => (
-                                            <div key={childKey} className="categories__category">
-                                                <button onClick={() => getFilteredLocations(childKey)}>
-                                                    <img src={childInfo.iconUrl} alt="" />
-                                                    {childInfo.displayName}
-                                                </button>
-                                            </div>
-                                        ))}
-                                </div>
-                            )}
+                            <div className='search__results--sub_categories'>
+                                {categories
+                                    .filter(([key]) => childKeys.includes(key))
+                                    .map(([childKey, childInfo]) => (
+                                        <div key={childKey} className="categories__category">
+                                            <button onClick={() => getFilteredLocations(childKey)}>
+                                                <img src={childInfo.iconUrl} alt="" />
+                                                {childInfo.displayName}
+                                            </button>
+                                        </div>
+                                    ))}
+                            </div>
                         </>
                     )}
 
