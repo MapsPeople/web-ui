@@ -601,7 +601,7 @@ function Search({ onSetSize, isOpen }) {
                         </>
                     )}
 
-                    {/* Render list of Locations for category/sub-category. */}
+                    {/* Render list of Locations for category/sub-category. It also renders Locations based on a search result. */}
                     <div className='search__results--locations'>
                         {searchResults.map(location =>
                             <ListItemLocation
