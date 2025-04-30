@@ -23,9 +23,10 @@ export default defineConfig(({ mode }) => {
             ViteFaviconsPlugin('./public/favicon.png'),
             eslint(),
             sentryVitePlugin({
-                org: env.VITE_SENTRY_ORG,
-                project: env.VITE_SENTRY_PROJECT,
-                authToken: env.VITE_SENTRY_AUTH_TOKEN,
+                org: env.SENTRY_ORG,
+                project: env.SENTRY_PROJECT,
+                // Auth tokens can be obtained from https://sentry.io/orgredirect/organizations/:orgslug/settings/auth-tokens/
+                authToken: env.SENTRY_AUTH_TOKEN,
                 release: {
                     name: `map-template@${process.env.npm_package_version}`,
                     uploadSourceMaps: true,
@@ -37,6 +38,7 @@ export default defineConfig(({ mode }) => {
                     urlPrefix: '~/',
                 },
                 reactComponentAnnotation: { enabled: true },
+                denyUrls: [/https?:\/\/app\.mapsindoors\.com\/mapsindoors\/js\/sdk\//], // Exclude the MapsIndoors SDK from Sentry error tracking
             }),
         ]
     }

@@ -1,4 +1,3 @@
-import * as Sentry from "@sentry/react";
 import './App.css';
 import MapsIndoorsMap from './components/MapsIndoorsMap/MapsIndoorsMap';
 
@@ -9,9 +8,9 @@ function App() {
             <MapsIndoorsMap supportsUrlParameters={true}
                 gmApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
                 mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
-                />
+            />
         </div>
     );
 }
 
-export default Sentry.withProfiler(App, { name: "App" });
+export default App;
