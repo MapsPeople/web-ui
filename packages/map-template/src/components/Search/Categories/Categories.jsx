@@ -55,6 +55,8 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
 
     const clickedOutsideMapsIndoorsData = useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOpen);
 
+    const [allChildKeys, setAllChildKeys] = useState([]);
+
     /**
     * Communicate size change to parent component.
     *
@@ -139,9 +141,13 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
         }
     }, [activeCategory, category, isBottomSheetLoaded]);
 
-
-    // Collect all child keys from all categories
-    const allChildKeys = categories.flatMap(([, info]) => info.childKeys || []);
+    /**
+     * Collect all child keys from all categories.
+     */
+    useEffect(() => {
+        const childKeys = categories.flatMap(([, category]) => category.childKeys || []);
+        setAllChildKeys(childKeys)
+    }, [categories])
     
     return (
         <div className="categories prevent-scroll" {...scrollableContentSwipePrevent}>
