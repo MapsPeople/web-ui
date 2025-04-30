@@ -78,7 +78,9 @@ export const useCurrentVenue = () => {
     };
 
     /**
-     * Generate list of categories that exist on Locations in the current Venue.
+     * Generates a list of categories that exist on Locations in the current Venue.
+     * To obtain `childKeys`, we fetch all categories from `SolutionsService.getCategories()`.
+     * We then compare category keys from `mainMenu` and the fetched categories, and apply the corresponding `childKeys` to the relevant items.
      */
     const updateCategories = async () => {
         const categories = await window?.mapsindoors?.services?.SolutionsService?.getCategories();
