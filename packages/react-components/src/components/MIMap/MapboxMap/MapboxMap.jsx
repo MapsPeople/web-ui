@@ -10,7 +10,6 @@ import isNullOrUndefined from '../../../../../map-template/src/helpers/isNullOrU
 MapboxMap.propTypes = {
     accessToken: PropTypes.string.isRequired,
     onInitialized: PropTypes.func.isRequired,
-    onPositionControl: PropTypes.func.isRequired,
     center: PropTypes.object,
     zoom: PropTypes.number,
     bounds: PropTypes.object,
@@ -27,7 +26,6 @@ MapboxMap.propTypes = {
  * @param {Object} props
  * @param {string} props.accessToken -  Mapbox Access Token.
  * @param {function} props.onInitialized - Function that is called when the map view is initialized.
- * @param {function} props.onPositionControl - Callback called when the position control is initialized. Payload is the position control.
  * @param {Object} [props.center] - Object with latitude and longitude on which the map will center. Example: { lat: 55, lng: 10 }
  * @param {number} [props.zoom] - Zoom level for the map.
  * @param {object} [props.bounds] - Map bounds. Will win over center+zoom if set. Use the format { south: number, west: number, north: number, east: number }
@@ -39,11 +37,9 @@ MapboxMap.propTypes = {
  * @param {Object} [props.mapOptions] - Options for instantiating and styling the map as well as UI elements.
  * @param {Object} [props.appConfig] - Object that contains app config.
  */
-function MapboxMap({ accessToken, onInitialized, onPositionControl, center, zoom, bounds, bearing, pitch, resetViewMode, mapsIndoorsInstance, viewModeSwitchVisible, mapOptions, appConfig }) {
+function MapboxMap({ accessToken, onInitialized, center, zoom, bounds, bearing, pitch, resetViewMode, mapsIndoorsInstance, viewModeSwitchVisible, mapOptions, appConfig }) {
 
     const [mapViewInstance, setMapViewInstance] = useState();
-    const [hasFloorSelector, setHasFloorSelector] = useState(false);
-    const [hasPositionControl, setHasPositionControl] = useState(false);
     const [hasZoomControl, setHasZoomControl] = useState(false);
     const isDesktop = useIsDesktop();
 
@@ -83,44 +79,15 @@ function MapboxMap({ accessToken, onInitialized, onPositionControl, center, zoom
         }
     }, [mapViewInstance, center, zoom, bearing, pitch, bounds, mapOptions]);
 
-
-    // Add map controls to the map when ready
     useEffect(() => {
-        if (mapsIndoorsInstance && mapViewInstance && !hasPositionControl) {
-            const myPositionButtonElement = document.createElement('mi-my-position');
-            myPositionButtonElement.mapsindoors = mapsIndoorsInstance;
-
-            mapViewInstance.getMap().addControl({
-                onAdd: () => myPositionButtonElement,
-                onRemove: function () { }
-            }, 'top-right');
-            setHasPositionControl(true);
-            onPositionControl(myPositionButtonElement);
-        }
-
         if (mapsIndoorsInstance && mapViewInstance && !hasZoomControl && isDesktop) {
             mapViewInstance
                 .getMap()
                 .addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'bottom-right');
-
             setHasZoomControl(true);
         }
+    }, [mapsIndoorsInstance, mapViewInstance, hasZoomControl]);
 
-        if (mapsIndoorsInstance && mapViewInstance && !hasFloorSelector) {
-            const floorSelectorElement = document.createElement('mi-floor-selector');
-            floorSelectorElement.mapsindoors = mapsIndoorsInstance;
-            if (mapOptions?.brandingColor) {
-                floorSelectorElement.primaryColor = mapOptions.brandingColor;
-            }
-
-            mapViewInstance.getMap().addControl({
-                onAdd: () => floorSelectorElement,
-                onRemove: function () { floorSelectorElement.parentNode.removeChild(floorSelectorElement); }
-            }, 'top-right');
-
-            setHasFloorSelector(true);
-        }
-    }, [mapsIndoorsInstance, mapViewInstance, hasFloorSelector, hasPositionControl, hasZoomControl]);
 
     useEffect(() => {
         // Initialize MapboxV3View MapView
