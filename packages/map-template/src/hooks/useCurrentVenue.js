@@ -82,7 +82,7 @@ export const useCurrentVenue = () => {
      */
     const updateCategories = async () => {
         const categories = await window?.mapsindoors?.services?.SolutionsService?.getCategories();
-        const mainmenu = appConfig?.menuInfo?.mainmenu ?? [];
+        const mainMenu = appConfig?.menuInfo?.mainmenu ?? [];
         const categoriesMap = new Map(
             categories.map(cat => [cat.key, cat.childKeys])
         );
