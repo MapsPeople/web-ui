@@ -115,7 +115,7 @@ function Search({ onSetSize, isOpen }) {
 
     const initialVenueName = useRecoilValue(initialVenueNameState);
 
-    const [isInputFieldInFocus, setIsInputFieldInFocus] = useState();
+    const [isInputFieldInFocus, setIsInputFieldInFocus] = useState(false);
 
     /**
      * Handles go back function.
@@ -369,7 +369,7 @@ function Search({ onSetSize, isOpen }) {
      * Monitors clicks to manage sheet size and input focus state
      */
     useEffect(() => {
-        const SEARCH_FOCUS_ELEMENTS = ['.search__info', '.search__back-button', '.categories', '.modal--open', '.sheet__content'];
+        const SEARCH_FOCUS_ELEMENTS = ['.search__info', '.search__back-button', '.categories', '.sheet__content'];
 
         const handleSearchFieldFocus = (event) => {
             const clickedInsideSearchArea = SEARCH_FOCUS_ELEMENTS.some(selector =>
