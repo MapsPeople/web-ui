@@ -84,7 +84,7 @@ export const useCurrentVenue = () => {
         const categories = await window?.mapsindoors?.services?.SolutionsService?.getCategories();
         const mainMenu = appConfig?.menuInfo?.mainmenu ?? [];
         const categoriesMap = new Map(
-            categories.map(cat => [cat.key, cat.childKeys])
+            categories.map(category => [category.key, category.childKeys])
         );
 
         const categoriesWithChildKeys = mainMenu.map(item => ({
