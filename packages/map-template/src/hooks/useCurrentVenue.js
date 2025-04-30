@@ -87,7 +87,7 @@ export const useCurrentVenue = () => {
             categories.map(cat => [cat.key, cat.childKeys])
         );
 
-        const categoriesWithChildKeys = mainmenu.map(item => ({
+        const categoriesWithChildKeys = mainMenu.map(item => ({
             ...item,
             childKeys: categoriesMap.get(item.categoryKey) ?? []
         }));
@@ -103,7 +103,7 @@ export const useCurrentVenue = () => {
 
                 for (const key of keys) {
                     // Get the categories from the App Config that have a matching key.
-                    if (mainmenu) {
+                    if (mainMenu) {
                         const appConfigCategory = categoriesWithChildKeys.find(category => category.categoryKey === key);
 
                         if (appConfigCategory) {
