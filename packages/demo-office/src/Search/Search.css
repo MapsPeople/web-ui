@@ -1,7 +1,8 @@
 .search {
     margin-left: 80px;
-    margin-top: 8px;
-    width: calc(100% - 160px); /* 80px padding on each side to accommodate for the 2D/3D switch and the Floor Selector */
+    margin-top: 16px;
+    width: calc(100% - 160px);
+    /* 80px padding on each side to accommodate for the 2D/3D switch and the Floor Selector */
     max-width: 360px;
     background-color: white;
     border-radius: 8px;
@@ -9,7 +10,6 @@
 
     /* On larger screens, accommodate that the 2D/3D switch adds more margin to itself */
     @media screen and (min-width: 992px) {
-        margin-left: 132px;
         margin-top: 32px;
         width: 320px;
     }
