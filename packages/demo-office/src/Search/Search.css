@@ -10,7 +10,6 @@
 
     /* On larger screens, accommodate that the 2D/3D switch adds more margin to itself */
     @media screen and (min-width: 992px) {
-        margin-left: 132px;
         margin-top: 32px;
         width: 320px;
     }
