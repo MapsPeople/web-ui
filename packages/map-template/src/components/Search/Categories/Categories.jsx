@@ -48,14 +48,14 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
     const [activeCategory, setActiveCategory] = useState();
 
     const isBottomSheetLoaded = useRecoilValue(isBottomSheetLoadedState);
-    
+
     const category = useRecoilValue(categoryState);
 
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
 
     const clickedOutsideMapsIndoorsData = useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOpen);
 
-    const [allChildKeys, setAllChildKeys] = useState([]);
+    const [categoriesWithoutChildKeys, setCategoriesWithoutChildKeys] = useState([]);
 
     /**
     * Communicate size change to parent component.
@@ -142,20 +142,20 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
     }, [activeCategory, category, isBottomSheetLoaded]);
 
     /**
-     * Collect all child keys from all categories.
+     * Collects all child keys from all categories.
+     * Filters out categories from the initial view that are listed as a child to another category.
      */
     useEffect(() => {
         const childKeys = categories.flatMap(([, category]) => category.childKeys || []);
-        setAllChildKeys(childKeys)
+        const categoriesWithoutChildKeys = categories.filter(([key]) => !childKeys.includes(key));
+        setCategoriesWithoutChildKeys(categoriesWithoutChildKeys)
     }, [categories])
-    
+
     return (
         <div className="categories prevent-scroll" {...scrollableContentSwipePrevent}>
             {categories.length > 0 && (
                 <div className="categories__list">
-                    {categories
-                        // Filter out all categories that are someone else children.
-                        .filter(([key]) => !allChildKeys.includes(key))
+                    {categoriesWithoutChildKeys
                         .map(([category, categoryInfo]) => (
                             <div key={category} className="categories__category">
                                 <button onClick={() => categoryClicked(category)}>
