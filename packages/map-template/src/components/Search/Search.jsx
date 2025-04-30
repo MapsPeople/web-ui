@@ -117,7 +117,7 @@ function Search({ onSetSize, isOpen }) {
 
     const [isInputFieldInFocus, setIsInputFieldInFocus] = useState();
 
-    const selectedCategoriesTree = useRef([]);
+    const selectedCategoriesArray = useRef([]);
 
     /**
      * Handles go back function.
@@ -125,7 +125,7 @@ function Search({ onSetSize, isOpen }) {
     function handleBack() {
         // If selected categories tree has only parent category, then on back, we need to perform those clear functions.
         // Else, remove child category from selected categories tree array.
-        if (selectedCategoriesTree.current.length === 1) {
+        if (selectedCategoriesArray.current.length === 1) {
             setSelectedCategory(null);
             setSearchResults([]);
             setFilteredLocations([]);
@@ -140,10 +140,10 @@ function Search({ onSetSize, isOpen }) {
                 // If it's empty or just whitespace, clear the search field
                 searchFieldRef.current?.clear();
             }
-            selectedCategoriesTree.current.pop();
+            selectedCategoriesArray.current.pop();
         } else {
-            selectedCategoriesTree.current.pop()
-            setSelectedCategory(selectedCategoriesTree.current[0])
+            selectedCategoriesArray.current.pop()
+            setSelectedCategory(selectedCategoriesArray.current[0])
         }
     }
 
@@ -156,8 +156,8 @@ function Search({ onSetSize, isOpen }) {
     function getFilteredLocations(category) {
         // Creates a selected categoriers tree, where first category in the array is parent and second one is child
         // Ensure category is unique before pushing to selectedCategories.current
-        if (!selectedCategoriesTree.current.includes(category)) {
-            selectedCategoriesTree.current.push(category);
+        if (!selectedCategoriesArray.current.includes(category)) {
+            selectedCategoriesArray.current.push(category);
         }
 
         // If child category is being selected, we need to clear parent categories results in order to load proper data that belongs to child category. 
