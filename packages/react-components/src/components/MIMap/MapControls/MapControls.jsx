@@ -16,7 +16,6 @@ MapControls.propTypes = {
  * It handles both desktop and mobile layouts, and manages creation of the web components for floor selection
  * and position control.
  * 
- * @component
  * @param {Object} props - Component properties
  * @param {'google'|'mapbox'} props.mapType - The type of map being used
  * @param {Object} props.mapsIndoorsInstance - MapsIndoors SDK instance
