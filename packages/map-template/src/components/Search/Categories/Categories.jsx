@@ -148,8 +148,8 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
     useEffect(() => {
         const childKeys = categories.flatMap(([, category]) => category.childKeys || []);
         const topLevelCategories = categories.filter(([key]) => !childKeys.includes(key));
-        setCategoriesWithoutChildKeys(topLevelCategories)
-    }, [categories])
+        setCategoriesWithoutChildKeys(topLevelCategories);
+    }, [categories]);
 
     return (
         <div className="categories prevent-scroll" {...scrollableContentSwipePrevent}>
