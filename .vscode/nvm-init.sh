@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# filepath: /Users/anlu/Projects/Work/web-ui/.vscode/nvm-init.sh
 
 # Load NVM
 source "$HOME/.nvm/nvm.sh"
