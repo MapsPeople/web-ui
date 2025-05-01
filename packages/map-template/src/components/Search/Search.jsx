@@ -33,7 +33,6 @@ import isNullOrUndefined from '../../helpers/isNullOrUndefined';
 import venuesInSolutionState from '../../atoms/venuesInSolutionState';
 import initialVenueNameState from '../../atoms/initialVenueNameState';
 import PropTypes from 'prop-types';
-// import { ReactComponent as ChevronLeft } from '../../assets/chevron-left.svg';
 import SubCategories from './SubCategories/SubCategories';
 
 Search.propTypes = {
@@ -571,7 +570,7 @@ function Search({ onSetSize, isOpen }) {
             {searchResults.length > 0 && (
                 <div className="search__results prevent-scroll" {...scrollableContentSwipePrevent}>
 
-                    {/* Subcategories should only show if a parent category is selected */}
+                    {/* Subcategories should only show if a top level category is selected and if that top level category has any childKeys */}
                     {selectedCategory && (
                         <SubCategories
                             handleBack={handleBack}
@@ -581,7 +580,7 @@ function Search({ onSetSize, isOpen }) {
                         />
                     )}
 
-                    {/* Locations always show when there are searchResults */}
+                    {/* Show locations when there are any searchResults */}
                     <div className='search__results--locations'>
                         {searchResults.map(location =>
                             <ListItemLocation
