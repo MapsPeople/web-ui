@@ -521,8 +521,7 @@ function Search({ onSetSize, isOpen }) {
      * 
      */
     useEffect(() => {
-        const selectedCategoryInfo = categories.find(([key]) => key === selectedCategory)?.[1];
-        const childKeys = selectedCategoryInfo?.childKeys || [];
+        const childKeys = categories.find(([key]) => key === selectedCategory)?.[1]?.childKeys || [];
         setChildKeys(childKeys)
     }, [categories, selectedCategory])
 
