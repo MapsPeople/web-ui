@@ -571,7 +571,7 @@ function Search({ onSetSize, isOpen }) {
             {searchResults.length > 0 && (
                 <div className="search__results prevent-scroll" {...scrollableContentSwipePrevent}>
 
-                    {/* If parent category is selected, render back button, sub-categories (if any) and Locations for that parent category */}
+                    {/* If category is selected, render back button, sub-categories (if any) and Locations for that parent category */}
                     {selectedCategory && (
                         <>
                             <div className="search__nav">
