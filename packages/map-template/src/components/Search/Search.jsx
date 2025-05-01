@@ -573,11 +573,11 @@ function Search({ onSetSize, isOpen }) {
                     {/* If category is selected, render back button, sub-categories (if any) and Locations for that parent category */}
                     {selectedCategory && (
                         <>
-                            <div className="search__nav">
-                                <button aria-label='Back' type="button" className="search__nav-button" onClick={handleBack}>
+                            <div className="search-nav">
+                                <button aria-label='Back' type="button" className="search-nav__button" onClick={handleBack}>
                                     <ChevronLeft />
                                 </button>
-                                <div className="search__nav-text">
+                                <div className="search-nav__text">
                                     {categories?.find(([category]) => category === selectedCategory)[1]?.displayName}
                                 </div>
                             </div>

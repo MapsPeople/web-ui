@@ -73,14 +73,14 @@
         }
     }
 
-    &__nav {
+    &-nav {
         display: flex;
         align-items: center;
         gap: var(--spacing-x-large);
         padding-top: var(--spacing-medium);
         padding-bottom: var(--spacing-medium);
 
-        &-button {
+        &__button {
             display: flex;
             align-items: center;
             cursor: pointer;
