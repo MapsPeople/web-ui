@@ -583,7 +583,7 @@ function Search({ onSetSize, isOpen }) {
                             </div>
 
                             {/* Show child category only if selectedCategory is NOT a child category to itself */}
-                            <div className='search__results--sub-categories'>
+                            <div className='search__results__sub-categories'>
                                 {categories
                                     .filter(([key]) => childKeys.includes(key))
                                     .map(([childKey, childInfo]) => (
