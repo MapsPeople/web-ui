@@ -147,8 +147,8 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
      */
     useEffect(() => {
         const childKeys = categories.flatMap(([, category]) => category.childKeys || []);
-        const categoriesWithoutChildKeys = categories.filter(([key]) => !childKeys.includes(key));
-        setCategoriesWithoutChildKeys(categoriesWithoutChildKeys)
+        const topLevelCategories = categories.filter(([key]) => !childKeys.includes(key));
+        setCategoriesWithoutChildKeys(topLevelCategories)
     }, [categories])
 
     return (
