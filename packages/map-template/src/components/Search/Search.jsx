@@ -574,7 +574,7 @@ function Search({ onSetSize, isOpen }) {
                     {selectedCategory && (
                         <>
                             <div className="search-nav">
-                                <button aria-label='Back' type="button" className="search-nav__button" onClick={handleBack}>
+                                <button aria-label={t('Back')} type="button" className="search-nav__button" onClick={handleBack}>
                                     <ChevronLeft />
                                 </button>
                                 <div className="search-nav__text">
