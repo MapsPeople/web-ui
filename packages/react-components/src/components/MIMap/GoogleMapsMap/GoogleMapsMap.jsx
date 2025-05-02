@@ -128,8 +128,6 @@ function GoogleMapsMap({ apiKey, onInitialized, onPositionControl, center, zoom,
                 ...mapOptions
             };
 
-            console.log(gmMapId);
-
 
             const mapView = new window.mapsindoors.mapView.GoogleMapsView(mapViewOptions);
 
