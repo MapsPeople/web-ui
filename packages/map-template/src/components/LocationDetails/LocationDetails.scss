@@ -7,6 +7,10 @@
     overflow-y: hidden;
     grid-template-rows: auto auto 1fr auto;
 
+    &--max-height {
+        height: 100%;
+    }
+
     &--content-below {
         position: relative;
 

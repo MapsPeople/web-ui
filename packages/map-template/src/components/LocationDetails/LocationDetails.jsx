@@ -54,6 +54,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
     const [showFullDescription, setShowFullDescription] = useState(false);
     const [descriptionHasContentAbove, setDescriptionHasContentAbove] = useState(false);
     const [descriptionHasContentBelow, setDescriptionHasContentBelow] = useState(false);
+    const isInFullHeightRef = useRef(false);
 
     // Holds the MapsIndoors DisplayRule for the location
     const [locationDisplayRule, setLocationDisplayRule] = useState(null);
@@ -256,11 +257,15 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
      * When user swipes the bottom sheet to a new snap point.
      */
     useEffect(() => {
-        if (!snapPointSwipedByUser) return;
+        if (!snapPointSwipedByUser) {
+            isInFullHeightRef.current = false;
+            return;
+        }
 
         // If swiping to max height, expand location details.
         // If swiping to smaller height, collapse location details.
         setShowFullDescription(snapPointSwipedByUser === snapPoints.MAX);
+        isInFullHeightRef.current = snapPointSwipedByUser === snapPoints.MAX;
         if (snapPointSwipedByUser === snapPoints.MAX) {
             expandLocationDescription();
         } else {
@@ -268,7 +273,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
         }
     }, [snapPointSwipedByUser]);
 
-    return <div className={`location-details ${descriptionHasContentAbove ? 'location-details--content-above' : ''} ${descriptionHasContentBelow ? 'location-details--content-below' : ''}`}>
+    return <div className={`location-details ${isInFullHeightRef.current === true ? 'location-details--max-height' : ''} ${descriptionHasContentAbove ? 'location-details--content-above' : ''} ${descriptionHasContentBelow ? 'location-details--content-below' : ''}`}>
         {location && <>
             <div className="location-info">
                 <div className="location-info__icon">
