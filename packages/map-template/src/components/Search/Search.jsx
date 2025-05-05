@@ -33,7 +33,6 @@ import isNullOrUndefined from '../../helpers/isNullOrUndefined';
 import venuesInSolutionState from '../../atoms/venuesInSolutionState';
 import initialVenueNameState from '../../atoms/initialVenueNameState';
 import PropTypes from 'prop-types';
-import SubCategories from './SubCategories/SubCategories';
 
 Search.propTypes = {
     categories: PropTypes.array,
@@ -560,6 +559,7 @@ function Search({ onSetSize, isOpen }) {
                     searchFieldRef={searchFieldRef}
                     getFilteredLocations={(category) => getFilteredLocations(category)}
                     isOpen={!!selectedCategory}
+                    topLevelCategory={true}
                 />
             )}
 
@@ -572,11 +572,13 @@ function Search({ onSetSize, isOpen }) {
 
                     {/* Subcategories should only show if a top level category is selected and if that top level category has any childKeys */}
                     {selectedCategory && (
-                        <SubCategories
+                        <Categories
                             handleBack={handleBack}
-                            getFilteredLocations={getFilteredLocations}
+                            getFilteredLocations={(category) => getFilteredLocations(category)}
                             onLocationClicked={onLocationClicked}
                             childKeys={childKeys}
+                            topLevelCategory={false}
+                            selectedCategoriesArray={selectedCategoriesArray}
                         />
                     )}
 
