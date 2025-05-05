@@ -1,3 +1,5 @@
+@import '../../../variables.scss';
+
 .categories {
     overflow: auto;
     display: flex;
@@ -40,5 +42,30 @@
         }
 
         width: 100%;
+    }
+
+    &__nav {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-x-large);
+        padding-top: var(--spacing-medium);
+        padding-bottom: var(--spacing-medium);
+
+        &--button {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: var(--font-size-medium);
+            color: var(--color-gray-90);
+            padding: var(--spacing-small);
+            margin: calc(-1 * var(--spacing-small)) calc(-1 * var(--spacing-small)) calc(-1 * var(--spacing-small)) 0; // Counter the padding with negative margins except left
+
+            svg {
+                width: 20px;
+                height: 20px;
+            }
+        }
     }
 }

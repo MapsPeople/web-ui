@@ -189,15 +189,15 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, t
                         ))
                     ) : (
                         <>
-                            <div className="subcategories__nav">
+                            <div className="categories__nav">
                                 <button
                                     aria-label="Back"
                                     type="button"
-                                    className="subcategories__nav--button"
+                                    className="categories__nav--button"
                                     onClick={handleBack}>
                                     <ChevronLeft />
                                 </button>
-                                <div className="search__nav-text">{selectedCategoryDisplayName}</div>
+                                <div>{selectedCategoryDisplayName}</div>
                             </div>
                             {selectedCategoriesArray.current.length === 1 &&
                                 categoriesWithChildKeys.map(([category, categoryInfo]) => (
