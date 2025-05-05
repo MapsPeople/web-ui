@@ -14,12 +14,16 @@ import categoryState from "../../../atoms/categoryState";
 import useOutsideMapsIndoorsDataClick from "../../../hooks/useOutsideMapsIndoorsDataClick";
 import mapsIndoorsInstanceState from "../../../atoms/mapsIndoorsInstanceState";
 import PropTypes from "prop-types";
+import { ReactComponent as ChevronLeft } from '../../../assets/chevron-left.svg';
 
 Categories.propTypes = {
     onSetSize: PropTypes.func,
     getFilteredLocations: PropTypes.func,
     searchFieldRef: PropTypes.object,
-    isOpen: PropTypes.bool
+    isOpen: PropTypes.bool,
+    topLevelCategory: PropTypes.bool,
+    handleBack: PropTypes.func,
+    selectedCategoriesArray: PropTypes.object
 };
 
 /**
@@ -31,7 +35,7 @@ Categories.propTypes = {
  * @param {object} props.searchFieldRef - The reference to the search input field.
  * @param {boolean} props.isOpen - Determines wheteher the Categories window is open or not.
  */
-function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen }) {
+function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, topLevelCategory, handleBack, selectedCategoriesArray }) {
 
     const categories = useRecoilValue(categoriesState);
 
@@ -56,6 +60,10 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
     const clickedOutsideMapsIndoorsData = useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOpen);
 
     const [categoriesWithoutChildKeys, setCategoriesWithoutChildKeys] = useState([]);
+
+    const [categoriesWithChildKeys, setCategoriesWithChildKeys] = useState([]);
+
+    const [selectedCategoryDisplayName, setSelectedCategoryDisplayName] = useState([]);
 
     /**
     * Communicate size change to parent component.
@@ -151,19 +159,57 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
         setCategoriesWithoutChildKeys(topLevelCategories);
     }, [categories]);
 
+    /**
+     * Collects all child keys from all categories.
+     * Filters out categories from the initial view that are not listed as a child to another category.
+     */
+    useEffect(() => {
+        const childKeys = categories.flatMap(([, category]) => category.childKeys || []);
+        const childLevelCategories = categories.filter(([key]) => childKeys.includes(key));
+        setCategoriesWithChildKeys(childLevelCategories);
+    }, [categories]);
+
+    useEffect(() => {
+        const selectedCat = categories.find(([key]) => key === selectedCategory)?.[1]?.displayName;
+        setSelectedCategoryDisplayName(selectedCat)
+    }, [categories])
+
     return (
         <div className="categories prevent-scroll" {...scrollableContentSwipePrevent}>
             {categories.length > 0 && (
                 <div className="categories__list">
-                    {categoriesWithoutChildKeys
-                        .map(([category, categoryInfo]) => (
+                    {topLevelCategory ? (
+                        categoriesWithoutChildKeys.map(([category, categoryInfo]) => (
                             <div key={category} className="categories__category">
                                 <button onClick={() => categoryClicked(category)}>
                                     <img src={categoryInfo.iconUrl} alt="" />
                                     {categoryInfo.displayName}
                                 </button>
                             </div>
-                        ))}
+                        ))
+                    ) : (
+                        <>
+                            <div className="subcategories__nav">
+                                <button
+                                    aria-label="Back"
+                                    type="button"
+                                    className="subcategories__nav--button"
+                                    onClick={handleBack}>
+                                    <ChevronLeft />
+                                </button>
+                                <div className="search__nav-text">{selectedCategoryDisplayName}</div>
+                            </div>
+                            {selectedCategoriesArray.current.length === 1 &&
+                                categoriesWithChildKeys.map(([category, categoryInfo]) => (
+                                    <div key={category} className="categories__category">
+                                        <button onClick={() => getFilteredLocations(category)}>
+                                            <img src={categoryInfo.iconUrl} alt="" />
+                                            {categoryInfo.displayName}
+                                        </button>
+                                    </div>
+                                ))}
+                        </>
+                    )}
                 </div>
             )}
         </div>
