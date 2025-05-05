@@ -169,9 +169,12 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, t
         setCategoriesWithChildKeys(childLevelCategories);
     }, [categories]);
 
+    /**
+     * Gets display name of selected category.
+     */
     useEffect(() => {
-        const selectedCat = categories.find(([key]) => key === selectedCategory)?.[1]?.displayName;
-        setSelectedCategoryDisplayName(selectedCat)
+        const categoryDisplayName = categories.find(([key]) => key === selectedCategory)?.[1]?.displayName;
+        setSelectedCategoryDisplayName(categoryDisplayName)
     }, [categories])
 
     return (
