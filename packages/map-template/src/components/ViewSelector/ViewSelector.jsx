@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useIsDesktop } from '../../hooks/useIsDesktop';
 import { ReactComponent as ChevronDownIcon } from '../../assets/chevron-down.svg';
 import { ReactComponent as ChevronUpIcon } from '../../assets/chevron-up.svg';
 import { ReactComponent as QuestionMarkIcon } from '../../assets/question.svg';
@@ -6,7 +7,7 @@ import './ViewSelector.scss';
 
 function ViewSelector() {
     const [isExpanded, setIsExpanded] = useState(false);
-    const isDesktop = window.innerWidth > 768;
+    const isDesktop = useIsDesktop();
 
     /**
      * Toggle button component that renders different content based on the isDesktop prop
@@ -54,7 +55,7 @@ function ViewSelector() {
                     {/* Desktop view building selector list */}
                 </div>
             )}
-            
+
             <ToggleButton isDesktop={true} buttonText="Pan Map to View" />
         </div>
     );
