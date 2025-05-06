@@ -1,3 +1,35 @@
-.view-selector {
-  // Styles will go here
+.view-selector-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
 } 
+
+.view-selector-toggle-button {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-x-small);
+    padding: var(--spacing-x-small);
+    border: 1px solid #E6E6E6;
+    border-radius: var(--rounding-large);
+    background: var(--tailwind-colors-white);
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+    color: inherit;
+    font: inherit;
+    outline: none;
+
+    &:hover {
+        background-color: var(--tailwind-colors-gray-100);
+        border: 1px solid var(--tailwind-colors-gray-200);
+    }
+    
+    svg {
+        display: block;
+    }
+    
+    span {
+        font-size: var(--font-size-medium);
+    }
+}
