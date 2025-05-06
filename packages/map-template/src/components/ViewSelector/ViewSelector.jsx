@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
 import { ReactComponent as ChevronDownIcon } from '../../assets/chevron-down.svg';
 import { ReactComponent as ChevronUpIcon } from '../../assets/chevron-up.svg';
@@ -11,11 +11,12 @@ import { useRecoilValue } from 'recoil';
 
 function ViewSelector() {
     const [isExpanded, setIsExpanded] = useState(false);
-    const [buildings, setBuildings] = useState([]);
+    const [buildingsData, setBuildingsData] = useState([]);
     const isDesktop = useIsDesktop();
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const currentVenueName = useRecoilValue(currentVenueNameState);
 
+    // use building.buildingInfo.name to show the name of the building name
     // Get all buildings for the current venue
     useEffect(() => {
         if (mapsIndoorsInstance && currentVenueName) {
@@ -26,13 +27,19 @@ function ViewSelector() {
                     return window.mapsindoors.services.VenuesService.getBuildings();
                 })
                 .then(buildingsData => {
-                    setBuildings(buildingsData);
+                    setBuildingsData(buildingsData);
                 })
                 .catch(error => {
                     console.error('Error fetching buildings:', error);
                 });
         }
     }, [mapsIndoorsInstance, currentVenueName]);
+
+    // Memoize the buildings array to prevent unnecessary re-renders
+    const buildings = useMemo(() => {
+        return buildingsData;
+    }, [buildingsData])
+
 
     // Early return if the current venue has one building
     if (buildings.length == 1) {
