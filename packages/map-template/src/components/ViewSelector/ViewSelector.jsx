@@ -34,6 +34,11 @@ function ViewSelector() {
         }
     }, [mapsIndoorsInstance, currentVenueName]);
 
+    // Early return if the current venue has one building
+    if (buildings.length == 1) {
+        return null;
+    }
+
     /**
      * Toggle button component that renders different content based on the isDesktop prop
      * @param {boolean} props.isDesktop Whether the component is being rendered on desktop
