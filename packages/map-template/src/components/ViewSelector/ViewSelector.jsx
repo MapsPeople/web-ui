@@ -6,17 +6,18 @@ import './ViewSelector.scss';
 
 function ViewSelector() {
     const [isExpanded, setIsExpanded] = useState(false);
+    const isDesktop = window.innerWidth > 768;
 
     /**
-     * Toggle button component that renders differently for mobile vs desktop
-     * @param {boolean} props.isMobile Whether the component is being rendered on mobile
+     * Toggle button component that renders different content based on the isDesktop prop
+     * @param {boolean} props.isDesktop Whether the component is being rendered on desktop
      * @param {string} props.buttonText Text to display on the button (desktop only)
      */
     // eslint-disable-next-line react/prop-types
-    const ToggleButton = ({ isMobile, buttonText }) => {
+    const ToggleButton = ({ isDesktop, buttonText }) => {
 
-        /** Return mobile toggle button if isMobile is true */
-        if (isMobile) {
+        /* Render mobile list toggle button if isDesktop is false */
+        if (!isDesktop) {
             return (
                 <button className="view-selector-toggle-button" onClick={() => setIsExpanded(!isExpanded)}>
                     <QuestionMarkIcon />
@@ -24,7 +25,7 @@ function ViewSelector() {
             );
         }
 
-        /** Render desktop toggle button */
+        /* Render desktop list toggle button if isDesktop is true */
         return (
             <button className="view-selector-toggle-button" onClick={() => setIsExpanded(!isExpanded)}>
                 <QuestionMarkIcon /> {/* <- ask for icon, we need to make a new one */}
@@ -36,15 +37,25 @@ function ViewSelector() {
 
     return (
         <div className="view-selector-container">
-
-            {isExpanded && (
-                <div className="view-selector-list">
-                    <button className="view-selector-option">
-                        <p>Is Test</p>
-                    </button>
+            {/* Mobile view selector container */}
+            {!isDesktop && isExpanded && (
+                <div className="mobile-view-selector-container">
+                    <div className="mobile-header">
+                        <button className="mobile-exit-button" onClick={() => setIsExpanded(false)}>X</button>
+                        <span>Pan Map to View</span>
+                    </div>
+                    {/* Mobile view building selector list */}
                 </div>
             )}
-            <ToggleButton isMobile={false} buttonText="Pan Map to View" />
+
+            {/* Desktop view selector container */}
+            {isDesktop && isExpanded && (
+                <div className="desktop-view-selector-container">
+                    {/* Desktop view building selector list */}
+                </div>
+            )}
+            
+            <ToggleButton isDesktop={true} buttonText="Pan Map to View" />
         </div>
     );
 }
