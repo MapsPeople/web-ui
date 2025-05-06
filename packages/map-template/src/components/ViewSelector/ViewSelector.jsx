@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
 import { ReactComponent as ChevronDownIcon } from '../../assets/chevron-down.svg';
 import { ReactComponent as ChevronUpIcon } from '../../assets/chevron-up.svg';
-import { ReactComponent as QuestionMarkIcon } from '../../assets/question.svg';
+import { ReactComponent as PanViewIcon } from '../../assets/pan-view-icon.svg';
 import './ViewSelector.scss';
 
 function ViewSelector() {
@@ -21,7 +21,7 @@ function ViewSelector() {
         if (!isDesktop) {
             return (
                 <button className="view-selector-toggle-button" onClick={() => setIsExpanded(!isExpanded)}>
-                    <QuestionMarkIcon />
+                    <PanViewIcon />
                 </button>
             );
         }
@@ -29,7 +29,7 @@ function ViewSelector() {
         /* Render desktop list toggle button if isDesktop is true */
         return (
             <button className="view-selector-toggle-button" onClick={() => setIsExpanded(!isExpanded)}>
-                <QuestionMarkIcon /> {/* <- ask for icon, we need to make a new one */}
+                <PanViewIcon />
                 <span> {buttonText}</span>
                 {isExpanded ? <ChevronDownIcon /> : <ChevronUpIcon />}
             </button>
@@ -46,6 +46,7 @@ function ViewSelector() {
                         <span>Pan Map to View</span>
                     </div>
                     {/* Mobile view building selector list */}
+
                 </div>
             )}
 
@@ -53,10 +54,10 @@ function ViewSelector() {
             {isDesktop && isExpanded && (
                 <div className="desktop-view-selector-container">
                     {/* Desktop view building selector list */}
+
                 </div>
             )}
-
-            <ToggleButton isDesktop={true} buttonText="Pan Map to View" />
+            <ToggleButton isDesktop={isDesktop} buttonText="Pan map to view" />
         </div>
     );
 }
