@@ -73,6 +73,27 @@ function ViewSelector() {
         );
     };
 
+    /**
+     * Render a list of buildings for the current venue
+     */
+    const BuildingList = () => {
+        return (
+            <div className="building-list">
+                {buildings.map(building => (
+                    <button
+                        key={building.id}
+                        className="building-list-item"
+                        onClick={() => {
+                            mapsIndoorsInstance.fitBuilding(building.id);
+                            setIsExpanded(false);
+                        }}>
+                        <p>{building.buildingInfo?.name}</p>
+                    </button>
+                ))}
+            </div>
+        );
+    };
+
     return (
         <div className="view-selector-container">
             {/* Mobile view selector container */}
@@ -83,11 +104,7 @@ function ViewSelector() {
                         <span>Pan Map to View</span>
                     </div>
                     {/* Mobile view building selector list */}
-                    <div className="mobile-view-selector-list">
-                        <button className="mobile-view-selector-option">
-                            <p>Is Test</p>
-                        </button>
-                    </div>
+                    <BuildingList />
                 </div>
             )}
 
@@ -95,11 +112,7 @@ function ViewSelector() {
             {isDesktop && isExpanded && (
                 <div className="desktop-view-selector-container">
                     {/* Desktop view building selector list */}
-                    <div className="desktop-view-selector-list">
-                        <button className="desktop-view-selector-option">
-                            <p>Is Test</p>
-                        </button>
-                    </div>
+                    <BuildingList />
                 </div>
             )}
             {/* Button to toggle the view selector 
