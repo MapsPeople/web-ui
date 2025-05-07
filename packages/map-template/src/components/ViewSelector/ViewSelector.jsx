@@ -108,19 +108,10 @@ function ViewSelector() {
                 </div>
             )}
 
-            {/* Desktop view selector container */}
-            {isDesktop && isExpanded && (
-                <div className="desktop-view-selector-container">
-                    {/* Desktop view building selector list */}
-                    <BuildingList />
-                </div>
-            )}
-            {/* Button to toggle the view selector 
-            
-            Long button on desktop (Icont + Text -> Placement bottom right)
-            Icon only on mobile (placement top left , between venue selector and view selector)
-            Needs exit button on mobile
-            */}
+            {/* Render building list directly when expanded on desktop */}
+            {isDesktop && isExpanded && <BuildingList />}
+
+            {/* Desktop view selector button */}
             <ToggleButton isDesktop={isDesktop} buttonText="Pan map to view" />
         </div>
     );
