@@ -50,7 +50,7 @@ function ViewSelector() {
      * @param {string} props.buttonText Text to display on the button (desktop only)
      */
     // eslint-disable-next-line react/prop-types
-    const ToggleButton = ({ isDesktop, buttonText }) => {
+    const ToggleButton = ({ buttonText }) => {
 
         /* Render mobile list toggle button if isDesktop is false */
         if (!isDesktop) {
