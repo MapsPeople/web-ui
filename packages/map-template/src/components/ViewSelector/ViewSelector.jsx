@@ -111,7 +111,7 @@ function ViewSelector() {
             {/* Render building list directly when expanded on desktop */}
             {isDesktop && isExpanded && <BuildingList />}
 
-            {/* Desktop view selector button */}
+            {/* Toggle button that changes appearance based on mobile/desktop */}
             <ToggleButton isDesktop={isDesktop} buttonText="Pan map to view" />
         </div>
     );
