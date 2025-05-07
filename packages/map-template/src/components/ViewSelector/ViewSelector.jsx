@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { useEffect, useState, useMemo } from 'react';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
 import { ReactComponent as ChevronDownIcon } from '../../assets/chevron-down.svg';
@@ -21,7 +20,7 @@ function ViewSelector() {
         if (mapsIndoorsInstance && currentVenueName) {
             // Get the current venue
             window.mapsindoors.services.VenuesService.getVenue(currentVenueName)
-                .then(venue => {
+                .then(() => {
                     // Get all buildings for the current venue
                     return window.mapsindoors.services.VenuesService.getBuildings();
                 })
@@ -111,7 +110,7 @@ function ViewSelector() {
             {isDesktop && isExpanded && <BuildingList />}
 
             {/* Toggle button that changes appearance based on mobile/desktop */}
-            <ToggleButton isDesktop={isDesktop} buttonText="Pan map to view" />
+            <ToggleButton buttonText="Pan map to view" />
         </div>
     );
 }
