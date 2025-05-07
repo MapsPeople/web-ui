@@ -16,30 +16,11 @@
         gap: var(--spacing-x-small);
         overflow: auto;
 
-        > * {
-            height: fit-content;
-        
-            &:first-child {
-                margin-top: var(--spacing-x-small);
-            }
-        }
-
-        &__sub-categories {
-            display: grid;
-            gap: var(--spacing-x-small);
-
-            > * {
-                height: fit-content;
-            }
-        }
-
         &--locations {
+            flex-grow: 1;
+            overflow-y: auto;
             display: grid;
             gap: var(--spacing-x-small);
-
-            > * {
-                height: fit-content;
-            }
         }
 
         > * {
@@ -70,31 +51,6 @@
     &__label {
         span {
             display: none;
-        }
-    }
-
-    &-nav {
-        display: flex;
-        align-items: center;
-        gap: var(--spacing-x-large);
-        padding-top: var(--spacing-medium);
-        padding-bottom: var(--spacing-medium);
-
-        &__button {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            background: none;
-            border: none;
-            font-size: var(--font-size-medium);
-            color: var(--color-gray-90);
-            padding: var(--spacing-small); // Add padding for larger clickable area
-            margin: calc(-1 * var(--spacing-small)) calc(-1 * var(--spacing-small)) calc(-1 * var(--spacing-small)) 0; // Counter the padding with negative margins except left
-            
-            svg {
-                width: 20px;
-                height: 20px;
-            }
         }
     }
 

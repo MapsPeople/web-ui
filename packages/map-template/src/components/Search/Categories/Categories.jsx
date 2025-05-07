@@ -14,12 +14,17 @@ import categoryState from "../../../atoms/categoryState";
 import useOutsideMapsIndoorsDataClick from "../../../hooks/useOutsideMapsIndoorsDataClick";
 import mapsIndoorsInstanceState from "../../../atoms/mapsIndoorsInstanceState";
 import PropTypes from "prop-types";
+import { ReactComponent as ChevronLeft } from '../../../assets/chevron-left.svg';
+import { useTranslation } from "react-i18next";
 
 Categories.propTypes = {
     onSetSize: PropTypes.func,
     getFilteredLocations: PropTypes.func,
     searchFieldRef: PropTypes.object,
-    isOpen: PropTypes.bool
+    isOpen: PropTypes.bool,
+    topLevelCategory: PropTypes.bool,
+    handleBack: PropTypes.func,
+    selectedCategoriesArray: PropTypes.object
 };
 
 /**
@@ -30,8 +35,11 @@ Categories.propTypes = {
  * @param {function} props.getFilteredLocations - Function that gets the filtered locations based on the category selected.
  * @param {object} props.searchFieldRef - The reference to the search input field.
  * @param {boolean} props.isOpen - Determines wheteher the Categories window is open or not.
+ * @param {boolean} props.topLevelCategory - If true, renders top-level categories; otherwise, renders sub-categories.
+ * @param {function} props.handleBack - Callback function to handle back navigation between categories.
+ * @param {Array<string>} props.selectedCategoriesArray - Array containing selected categories (e.g., top-level and sub-category).
  */
-function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen }) {
+function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, topLevelCategory, handleBack, selectedCategoriesArray }) {
 
     const categories = useRecoilValue(categoriesState);
 
@@ -55,7 +63,11 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
 
     const clickedOutsideMapsIndoorsData = useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOpen);
 
-    const [categoriesWithoutChildKeys, setCategoriesWithoutChildKeys] = useState([]);
+    const [categoriesToShow, setCategoriesToShow] = useState([]);
+
+    const [selectedCategoryDisplayName, setSelectedCategoryDisplayName] = useState([])
+
+    const { t } = useTranslation();
 
     /**
     * Communicate size change to parent component.
@@ -141,29 +153,69 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
         }
     }, [activeCategory, category, isBottomSheetLoaded]);
 
-    /**
-     * Collects all child keys from all categories.
-     * Filters out categories from the initial view that are listed as a child to another category.
+    /*
+     * Filters and sets the categories to display based on whether top-level or sub-categories should be shown.
+     * If `topLevelCategory` is true, it excludes categories that appear as children.
+     * Otherwise, it includes only categories that are children.
+     * 
+     * Sets selected category display name, based on currently selected category.
      */
     useEffect(() => {
-        const childKeys = categories.flatMap(([, category]) => category.childKeys || []);
-        const topLevelCategories = categories.filter(([key]) => !childKeys.includes(key));
-        setCategoriesWithoutChildKeys(topLevelCategories);
-    }, [categories]);
+        let categoriesToDisplay = [];
+
+        if (topLevelCategory) {
+            // Show only top-level categories
+            const allChildKeys = categories.flatMap(([, category]) => category.childKeys || []);
+            categoriesToDisplay = categories.filter(([key]) => !allChildKeys.includes(key));
+        } else if (selectedCategory) {
+            // Show only the children of the selected category
+            const selectedCategoryData = categories.find(([key]) => key === selectedCategory)?.[1];
+            const selectedCategoryChildKeys = selectedCategoryData?.childKeys || [];
+            categoriesToDisplay = categories.filter(([key]) => selectedCategoryChildKeys.includes(key));
+        }
+
+        setCategoriesToShow(categoriesToDisplay);
+
+        const categoryDisplayName = categories.find(([key]) => key === selectedCategory)?.[1]?.displayName;
+        setSelectedCategoryDisplayName(categoryDisplayName);
+    }, [categories])
 
     return (
         <div className="categories prevent-scroll" {...scrollableContentSwipePrevent}>
             {categories.length > 0 && (
                 <div className="categories__list">
-                    {categoriesWithoutChildKeys
-                        .map(([category, categoryInfo]) => (
+                    {!topLevelCategory && (
+                        <div className="categories__nav">
+                            <button
+                                aria-label={t('Back')}
+                                type="button"
+                                className="categories__nav--button"
+                                onClick={handleBack}>
+                                <ChevronLeft />
+                            </button>
+                            <div>{selectedCategoryDisplayName}</div>
+                        </div>
+                    )}
+    
+                    {categoriesToShow.map(([category, categoryInfo]) => {
+                        if (!topLevelCategory && selectedCategoriesArray.current.length !== 1) {
+                            return null;
+                        }
+    
+                        return (
                             <div key={category} className="categories__category">
-                                <button onClick={() => categoryClicked(category)}>
+                                <button
+                                    onClick={() =>
+                                        topLevelCategory
+                                            ? categoryClicked(category)
+                                            : getFilteredLocations(category)
+                                    }>
                                     <img src={categoryInfo.iconUrl} alt="" />
                                     {categoryInfo.displayName}
                                 </button>
                             </div>
-                        ))}
+                        );
+                    })}
                 </div>
             )}
         </div>

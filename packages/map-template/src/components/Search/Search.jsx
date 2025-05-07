@@ -33,7 +33,6 @@ import isNullOrUndefined from '../../helpers/isNullOrUndefined';
 import venuesInSolutionState from '../../atoms/venuesInSolutionState';
 import initialVenueNameState from '../../atoms/initialVenueNameState';
 import PropTypes from 'prop-types';
-import { ReactComponent as ChevronLeft } from '../../assets/chevron-left.svg';
 
 Search.propTypes = {
     categories: PropTypes.array,
@@ -412,6 +411,7 @@ function Search({ onSetSize, isOpen }) {
                 setSelectedCategory(null);
                 setSearchResults([]);
                 setFilteredLocations([]);
+                selectedCategoriesArray.current = [];
             }
         };
 
@@ -560,6 +560,7 @@ function Search({ onSetSize, isOpen }) {
                     searchFieldRef={searchFieldRef}
                     getFilteredLocations={(category) => getFilteredLocations(category)}
                     isOpen={!!selectedCategory}
+                    topLevelCategory={true}
                 />
             )}
 
@@ -570,35 +571,19 @@ function Search({ onSetSize, isOpen }) {
             {searchResults.length > 0 && (
                 <div className="search__results prevent-scroll" {...scrollableContentSwipePrevent}>
 
-                    {/* If category is selected, render back button, sub-categories (if any) and Locations for that parent category */}
+                    {/* Subcategories should only show if a top level category is selected and if that top level category has any childKeys */}
                     {selectedCategory && (
-                        <>
-                            <div className="search-nav">
-                                <button aria-label={t('Back')} type="button" className="search-nav__button" onClick={handleBack}>
-                                    <ChevronLeft />
-                                </button>
-                                <div className="search-nav__text">
-                                    {categories?.find(([category]) => category === selectedCategory)[1]?.displayName}
-                                </div>
-                            </div>
-
-                            {/* Show child category only if selectedCategory is NOT a child category to itself */}
-                            <div className='search__results__sub-categories'>
-                                {categories
-                                    .filter(([key]) => childKeys.includes(key))
-                                    .map(([childKey, childInfo]) => (
-                                        <div key={childKey} className="categories__category">
-                                            <button onClick={() => getFilteredLocations(childKey)}>
-                                                <img src={childInfo.iconUrl} alt="" />
-                                                {childInfo.displayName}
-                                            </button>
-                                        </div>
-                                    ))}
-                            </div>
-                        </>
+                        <Categories
+                            handleBack={handleBack}
+                            getFilteredLocations={(category) => getFilteredLocations(category)}
+                            onLocationClicked={onLocationClicked}
+                            childKeys={childKeys}
+                            topLevelCategory={false}
+                            selectedCategoriesArray={selectedCategoriesArray}
+                        />
                     )}
 
-                    {/* Render list of Locations for category/sub-category. It also renders Locations based on a search result. */}
+                    {/* Show locations when there are any searchResults */}
                     <div className='search__results--locations'>
                         {searchResults.map(location =>
                             <ListItemLocation
