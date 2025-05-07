@@ -20,12 +20,14 @@ import Accessibility from "../Accessibility/Accessibility";
 import isDestinationStepState from "../../atoms/isDestinationStepState";
 import primaryColorState from "../../atoms/primaryColorState";
 import { useIsKioskContext } from "../../hooks/useIsKioskContext";
+import { useOnRouteFinished } from "../../hooks/useOnRouteFinished";
 import { useIsDesktop } from "../../hooks/useIsDesktop";
 import showExternalIDsState from '../../atoms/showExternalIDsState';
 import PropTypes from "prop-types";
 import baseLinkSelector from '../../selectors/baseLink';
 import mapTypeState from "../../atoms/mapTypeState";
 import { ZoomLevelValues } from "../../constants/zoomLevelValues";
+import selectedCategoryState from "../../atoms/selectedCategoryState";
 
 let directionsRenderer;
 
@@ -48,7 +50,7 @@ Directions.propTypes = {
  * @param {function} props.onRouteFinished - Callback that fires when the route has finished.
  *
  */
-function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinished }) {
+function Directions({ isOpen, onBack, onSetSize, snapPointSwiped }) {
     const { t } = useTranslation();
 
     // Holds the MapsIndoors DisplayRule for the destination
@@ -87,6 +89,10 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
     const currentLocation = useRecoilValue(currentLocationState);
 
     const mapType = useRecoilValue(mapTypeState);
+
+    const finishRoute = useOnRouteFinished();
+
+    const [, setSelectedCategory] = useRecoilState(selectedCategoryState);
 
     useEffect(() => {
         return () => {
@@ -260,7 +266,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
         resetSubsteps();
         stopRendering();
         onBack();
-        
+
     }
 
     /**
@@ -279,6 +285,14 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
     function showQRCode() {
         const qrCodeLink = `${baseShareLink}&directionsFrom=${kioskLocation.id}&directionsTo=${currentLocation.id}`;
         setQRCodeLink(qrCodeLink);
+    }
+
+    /**
+     * Function that handles the logic when finish route button is clicked.
+     */
+    function onRouteFinished() {
+        finishRoute();
+        setSelectedCategory(null); // unselect category when route is finished
     }
 
     /**

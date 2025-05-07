@@ -683,9 +683,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         resetState();
         resetAppHistory();
         setResetCount(curr => curr + 1); // will force a re-render of bottom sheet and sidebar.
-        setSelectedCategory(null); // unselect category when route is finished
     }
-
+    
     /*
      * React on changes in the category prop.
      * Check if the category property matches with any of the existing categories.
@@ -720,7 +719,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                         pushAppView={pushAppView}
                         currentAppView={currentAppView}
                         appViews={appStates}
-                        onRouteFinished={() => resetStateAndUI()}
                     />
                 }
                 {isMobile &&
@@ -730,7 +728,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                         pushAppView={pushAppView}
                         currentAppView={currentAppView}
                         appViews={appStates}
-                        onRouteFinished={() => resetStateAndUI()}
                     />
                 }
             </Fragment>
