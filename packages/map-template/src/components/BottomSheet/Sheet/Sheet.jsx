@@ -156,6 +156,7 @@ const Sheet = forwardRef(function SheetComponent({ children, isOpen, initialSnap
     const swipeHandler = useSwipeable({
         onSwipeStart: () => {
             setIsDragging(true);
+            setSwipedSnapPoint(null);
             dragStartHeight.current = sheetRef.current.clientHeight;
         },
         onSwiping: swipeEvent => {
@@ -168,9 +169,9 @@ const Sheet = forwardRef(function SheetComponent({ children, isOpen, initialSnap
                 swipeEvent.dir,
                 swipeEvent.deltaY,
                 snappedTo.current,
-                contentRef.current.children.item(0).clientHeight,
                 minimizedHeight,
-                container.current.clientHeight
+                container.current.clientHeight, // max available height: the height of the bottom sheet container
+                contentRef.current.children.item(0) // the dom element of the sheet content (child)
             );
 
             if (snapPoint) {
@@ -242,11 +243,11 @@ export default Sheet;
  * @param {string} swipeDirection - 'UP' or 'DOWN'
  * @param {number} swipeLength - The length of the swipe in pixels
  * @param {string} currentSnapPoint - The current snap point of the sheet
- * @param {number} contentHeight - The height of the content inside the sheet in pixels
  * @param {number} minHeight - The minimum height of the sheet in pixels
- * @param {number} maxHeight - The maximum height of the sheet in pixels
+ * @param {number} maxHeight - The maximum height of that the sheet can take up in pixels
+ * @param {HTMLElement} element - The DOM element of the sheet content
  */
-export function calculateSnapPoint(swipeDirection, swipeLength, currentSnapPoint, contentHeight, minHeight, maxHeight) {
+export function calculateSnapPoint(swipeDirection, swipeLength, currentSnapPoint, minHeight, maxHeight, element) {
     const minSwipeLength = 60; // Minimum swipe length to consider a change
 
     // If the user swiped less than the minimum length, we don't consider it a deliberate swipe
@@ -258,8 +259,11 @@ export function calculateSnapPoint(swipeDirection, swipeLength, currentSnapPoint
 
     if (swipeDirection.toUpperCase() === 'DOWN') {
         if (currentSnapPoint === snapPoints.MAX) {
-            // If the content height is less than or equal to the maximum height and larger than min height, we go directly to FIT, otherwise we go to MIN
-            if (contentHeight <= maxHeight && contentHeight > minHeight) {
+            if (hasScrollableContent(element)) {
+                // If the content has scrollable content, it means that the fit height would be larger than that. So we go to MIN.
+                newSnapPoint = snapPoints.MIN;
+            } else if (element.clientHeight <= maxHeight && element.clientHeight > minHeight) {
+                // If the content height is less than or equal to the maximum height and larger than min height, we go directly to FIT, otherwise we go to MIN
                 newSnapPoint = snapPoints.FIT;
             } else {
                 newSnapPoint = snapPoints.MIN;
@@ -270,7 +274,7 @@ export function calculateSnapPoint(swipeDirection, swipeLength, currentSnapPoint
     } else if (swipeDirection.toUpperCase() === 'UP') {
         if (currentSnapPoint === snapPoints.MIN) {
             // If the content height is less than or equal to the min height or larger than max height, we go directly to MAX, otherwise we go to FIT
-            if (contentHeight <= minHeight || contentHeight > maxHeight) {
+            if (element.clientHeight <= minHeight || element.clientHeight > maxHeight) {
                 newSnapPoint = snapPoints.MAX;
             } else {
                 newSnapPoint = snapPoints.FIT;
@@ -282,4 +286,30 @@ export function calculateSnapPoint(swipeDirection, swipeLength, currentSnapPoint
     }
 
     return newSnapPoint;
+}
+
+/**
+ * Check if a DOM element or any of its direct children has scrollable content.
+ *
+ * @param {HTMLElement} element - The DOM element to check.
+ * @returns {boolean} - True if the element or any of its direct children has scrollable content, false otherwise.
+ */
+function hasScrollableContent(element) {
+    if (!element) {
+        return false;
+    }
+
+    // Check if the element itself has scrollable content
+    if (element.scrollHeight > element.clientHeight) {
+        return true;
+    }
+
+    // Check if any direct child has scrollable content
+    for (const child of element.children) {
+        if (child.scrollHeight > child.clientHeight) {
+            return true;
+        }
+    }
+
+    return false;
 }
