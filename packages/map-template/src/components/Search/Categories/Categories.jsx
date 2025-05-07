@@ -159,7 +159,7 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, t
         setCategoriesWithoutChildKeys(topLevelCategories);
     }, [categories]);
 
-    /**
+    /*
      * Collects all child keys from all categories.
      * Filters out categories from the initial view that are not listed as a child to another category.
      */
