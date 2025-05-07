@@ -117,14 +117,14 @@
 .mobile-header {
     display: flex;
     align-items: center;
-    padding: var(--spacing-small);
+    padding: var(--spacing-x-small);
     border-bottom: 1px solid var(--tailwind-colors-gray-100);
     // z-index: var(--z-index-sticky);
     
     span {
         text-align: left;
         font-size: var(--font-size-medium);
-        padding: var(--spacing-large);
+        padding: var(--spacing-medium);
         font-weight: bold;
     }
 }
