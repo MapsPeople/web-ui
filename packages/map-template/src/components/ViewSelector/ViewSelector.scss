@@ -66,20 +66,51 @@
         border: 1px solid var(--tailwind-colors-gray-200);
     }
 }
+// Button to toggle the view selector
+.view-selector-button-container {
+    position: fixed;
+    z-index: var(--z-index-sticky);
+    
+    // Desktop positioning
+    &.desktop {
+        top: 25%;
+        left: 24%;
+        transform: translate(-50%, -50%);
+    }
+    
+    // Mobile positioning
+    &.mobile {
+        top: 25%;
+        left: 24%;
+        bottom: var(--spacing-large);
+        right: var(--spacing-large);
+    }
+}
 
-.mobile-view-selector-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+.view-selector-container {
     background: var(--tailwind-colors-white);
     border-radius: var(--rounding-large);
-    overflow: hidden;
     display: flex;
     flex-direction: column;
-    pointer-events: auto;
-    z-index: var(--z-index-popup);
-    width: 40vh; /* Added width property */
+    
+    &.desktop {
+        position: fixed;
+        top: calc(25% - 40px);
+        left: 24%;
+        transform: translate(-50%, -100%);
+        z-index: var(--z-index-sticky);
+    }
+    
+    &.mobile {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        overflow: hidden;
+        pointer-events: auto;
+        z-index: var(--z-index-popup);
+        width: 40vh;
+    }
 }
 
 .mobile-header {
@@ -92,7 +123,7 @@
     span {
         text-align: left;
         font-size: var(--font-size-medium);
-        padding: var(--spacing-medium);
+        padding: var(--spacing-large);
         font-weight: bold;
     }
 }
@@ -115,13 +146,4 @@
     background: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(1px);
     z-index: var(--z-index-overlay); /* 700 - below popup but above most content */
-}
-
-// Button container (lower z-index)
-.desktop-view-selector-container {
-    position: fixed;
-    top: 25%;
-    left: 24%;
-    transform: translate(-50%, -50%);
-    // z-index: var(--z-index-modal); /* 900 */
 }

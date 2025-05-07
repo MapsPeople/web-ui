@@ -102,13 +102,14 @@ function ViewSelector() {
 
     return (
         <>
+            {/* Mobile view with overlay and modal */}
             {!isDesktop && isExpanded && (
                 <div className="mobile-overlay">
                     {/* Backdrop with blur effect */}
                     <div className="modal-backdrop" onClick={() => setIsExpanded(false)}></div>
 
                     {/* Modal container */}
-                    <div className="mobile-view-selector-container">
+                    <div className="view-selector-container mobile">
                         <div className="mobile-header">
                             <button className="mobile-exit-button" onClick={() => setIsExpanded(false)}>{<CloseIcon />}</button>
                             <span>Pan Map to View</span>
@@ -118,11 +119,15 @@ function ViewSelector() {
                 </div>
             )}
 
-            {/* Button container (stays at a lower z-index) */}
-            <div className="desktop-view-selector-container">
-                {/* Desktop only: building list appears as dropdown when expanded */}
-                {isDesktop && isExpanded && <BuildingList />}
+            {/* Desktop expanded view */}
+            {isDesktop && isExpanded && (
+                <div className="view-selector-container desktop">
+                    <BuildingList />
+                </div>
+            )}
 
+            {/* Toggle button - always visible, positioned differently based on viewport */}
+            <div className={`view-selector-button-container ${isDesktop ? 'desktop' : 'mobile'}`}>
                 <ToggleButton buttonText="Pan map to view" />
             </div>
         </>
