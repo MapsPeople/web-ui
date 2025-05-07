@@ -411,6 +411,7 @@ function Search({ onSetSize, isOpen }) {
                 setSelectedCategory(null);
                 setSearchResults([]);
                 setFilteredLocations([]);
+                selectedCategoriesArray.current = [];
             }
         };
 
