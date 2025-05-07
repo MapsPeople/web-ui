@@ -75,7 +75,7 @@ function ViewSelector() {
         return (
             <button className="view-selector-toggle-button" onClick={() => setIsExpanded(!isExpanded)}>
                 <PanViewIcon />
-                <span> {t('Pan map to view')}</span>
+                <span> {t('Pan Map to view')}</span>
                 {isExpanded ? <ChevronDownIcon /> : <ChevronUpIcon />}
             </button>
         );
