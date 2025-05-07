@@ -63,9 +63,7 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, t
 
     const clickedOutsideMapsIndoorsData = useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOpen);
 
-    const [categoriesWithoutChildKeys, setCategoriesWithoutChildKeys] = useState([]);
-
-    const [categoriesWithChildKeys, setCategoriesWithChildKeys] = useState([]);
+    const [categoriesToShow, setCategoriesToShow] = useState([]);
 
     const [selectedCategoryDisplayName, setSelectedCategoryDisplayName] = useState([])
 
@@ -156,24 +154,15 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, t
     }, [activeCategory, category, isBottomSheetLoaded]);
 
     /*
-     * Collects all child keys from all categories.
-     * Filters out categories from the initial view that are listed as a child to another category.
+     * Filters and sets the categories to display based on whether top-level or sub-categories should be shown.
+     * If `topLevelCategory` is true, it excludes categories that appear as children.
+     * Otherwise, it includes only categories that are children.
      */
     useEffect(() => {
         const childKeys = categories.flatMap(([, category]) => category.childKeys || []);
-        const topLevelCategories = categories.filter(([key]) => !childKeys.includes(key));
-        setCategoriesWithoutChildKeys(topLevelCategories);
-    }, [categories]);
-
-    /*
-     * Collects all child keys from all categories.
-     * Filters out categories from the initial view that are not listed as a child to another category.
-     */
-    useEffect(() => {
-        const childKeys = categories.flatMap(([, category]) => category.childKeys || []);
-        const childLevelCategories = categories.filter(([key]) => childKeys.includes(key));
-        setCategoriesWithChildKeys(childLevelCategories);
-    }, [categories]);
+        const categoriesToDisplay = topLevelCategory ? categories.filter(([key]) => !childKeys.includes(key)) : categories.filter(([key]) => childKeys.includes(key));
+        setCategoriesToShow(categoriesToDisplay)
+    }, [categories])
 
     /*
      * Gets display name of selected category.
@@ -188,7 +177,7 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, t
             {categories.length > 0 && (
                 <div className="categories__list">
                     {topLevelCategory ? (
-                        categoriesWithoutChildKeys.map(([category, categoryInfo]) => (
+                        categoriesToShow.map(([category, categoryInfo]) => (
                             <div key={category} className="categories__category">
                                 <button onClick={() => categoryClicked(category)}>
                                     <img src={categoryInfo.iconUrl} alt="" />
@@ -209,7 +198,7 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, t
                                 <div>{selectedCategoryDisplayName}</div>
                             </div>
                             {selectedCategoriesArray.current.length === 1 &&
-                                categoriesWithChildKeys.map(([category, categoryInfo]) => (
+                                categoriesToShow.map(([category, categoryInfo]) => (
                                     <div key={category} className="categories__category">
                                         <button onClick={() => getFilteredLocations(category)}>
                                             <img src={categoryInfo.iconUrl} alt="" />
