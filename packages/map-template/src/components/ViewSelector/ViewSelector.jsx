@@ -16,7 +16,6 @@ function ViewSelector() {
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const currentVenueName = useRecoilValue(currentVenueNameState);
 
-    // use building.buildingInfo.name to show the name of the building name
     // Get all buildings for the current venue
     useEffect(() => {
         if (mapsIndoorsInstance && currentVenueName) {
