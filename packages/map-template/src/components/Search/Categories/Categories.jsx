@@ -157,17 +157,14 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, t
      * Filters and sets the categories to display based on whether top-level or sub-categories should be shown.
      * If `topLevelCategory` is true, it excludes categories that appear as children.
      * Otherwise, it includes only categories that are children.
+     * 
+     * Sets selected category display name, based on currently selected category.
      */
     useEffect(() => {
         const childKeys = categories.flatMap(([, category]) => category.childKeys || []);
         const categoriesToDisplay = topLevelCategory ? categories.filter(([key]) => !childKeys.includes(key)) : categories.filter(([key]) => childKeys.includes(key));
         setCategoriesToShow(categoriesToDisplay)
-    }, [categories])
 
-    /*
-     * Gets display name of selected category.
-     */
-    useEffect(() => {
         const categoryDisplayName = categories.find(([key]) => key === selectedCategory)?.[1]?.displayName;
         setSelectedCategoryDisplayName(categoryDisplayName)
     }, [categories])
