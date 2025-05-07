@@ -8,8 +8,10 @@ import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
 import './ViewSelector.scss';
 import { useRecoilValue } from 'recoil';
+import { useTranslation } from 'react-i18next';
 
 function ViewSelector() {
+    const { t } = useTranslation();
     const [isExpanded, setIsExpanded] = useState(false);
     const [buildingsData, setBuildingsData] = useState([]);
     const isDesktop = useIsDesktop();
@@ -58,11 +60,8 @@ function ViewSelector() {
     /**
      * Toggle button component that renders different content based on the isDesktop prop
      * @param {boolean} props.isDesktop Whether the component is being rendered on desktop
-     * @param {string} props.buttonText Text to display on the button (desktop only)
      */
-    // eslint-disable-next-line react/prop-types
-    const ToggleButton = ({ buttonText }) => {
-
+    const ToggleButton = () => {
         /* Render mobile list toggle button if isDesktop is false */
         if (!isDesktop) {
             return (
@@ -76,7 +75,7 @@ function ViewSelector() {
         return (
             <button className="view-selector-toggle-button" onClick={() => setIsExpanded(!isExpanded)}>
                 <PanViewIcon />
-                <span> {buttonText}</span>
+                <span> {t('Pan map to view')}</span>
                 {isExpanded ? <ChevronDownIcon /> : <ChevronUpIcon />}
             </button>
         );
@@ -112,7 +111,7 @@ function ViewSelector() {
                     <div className="view-selector-container mobile">
                         <div className="mobile-header">
                             <button className="mobile-exit-button" onClick={() => setIsExpanded(false)}>{<CloseIcon />}</button>
-                            <span>Pan Map to View</span>
+                            <span>{t('Pan Map to View')}</span>
                         </div>
                         <BuildingList />
                     </div>
@@ -128,7 +127,7 @@ function ViewSelector() {
 
             {/* Toggle button - always visible, positioned differently based on viewport */}
             <div className={`view-selector-button-container ${isDesktop ? 'desktop' : 'mobile'}`}>
-                <ToggleButton buttonText="Pan map to view" />
+                <ToggleButton />
             </div>
         </>
     );
