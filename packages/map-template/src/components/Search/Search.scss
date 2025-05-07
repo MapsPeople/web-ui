@@ -16,13 +16,6 @@
         gap: var(--spacing-x-small);
         overflow: auto;
 
-        &--locations {
-            flex-grow: 1;
-            overflow-y: auto;
-            display: grid;
-            gap: var(--spacing-x-small);
-        }
-
         > * {
             height: fit-content; /* fixing issue on mobile Safari causing them to bee too large in case of just one search result */
         }
