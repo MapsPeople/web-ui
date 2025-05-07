@@ -161,50 +161,61 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, t
      * Sets selected category display name, based on currently selected category.
      */
     useEffect(() => {
-        const childKeys = categories.flatMap(([, category]) => category.childKeys || []);
-        const categoriesToDisplay = topLevelCategory ? categories.filter(([key]) => !childKeys.includes(key)) : categories.filter(([key]) => childKeys.includes(key));
-        setCategoriesToShow(categoriesToDisplay)
+        let categoriesToDisplay = [];
+
+        if (topLevelCategory) {
+            // Show only top-level categories
+            const allChildKeys = categories.flatMap(([, category]) => category.childKeys || []);
+            categoriesToDisplay = categories.filter(([key]) => !allChildKeys.includes(key));
+        } else if (selectedCategory) {
+            // Show only the children of the selected category
+            const selectedCategoryData = categories.find(([key]) => key === selectedCategory)?.[1];
+            const selectedCategoryChildKeys = selectedCategoryData?.childKeys || [];
+            categoriesToDisplay = categories.filter(([key]) => selectedCategoryChildKeys.includes(key));
+        }
+
+        setCategoriesToShow(categoriesToDisplay);
 
         const categoryDisplayName = categories.find(([key]) => key === selectedCategory)?.[1]?.displayName;
-        setSelectedCategoryDisplayName(categoryDisplayName)
+        setSelectedCategoryDisplayName(categoryDisplayName);
     }, [categories])
 
     return (
         <div className="categories prevent-scroll" {...scrollableContentSwipePrevent}>
             {categories.length > 0 && (
                 <div className="categories__list">
-                    {topLevelCategory ? (
-                        categoriesToShow.map(([category, categoryInfo]) => (
+                    {!topLevelCategory && (
+                        <div className="categories__nav">
+                            <button
+                                aria-label={t('Back')}
+                                type="button"
+                                className="categories__nav--button"
+                                onClick={handleBack}>
+                                <ChevronLeft />
+                            </button>
+                            <div>{selectedCategoryDisplayName}</div>
+                        </div>
+                    )}
+    
+                    {categoriesToShow.map(([category, categoryInfo]) => {
+                        if (!topLevelCategory && selectedCategoriesArray.current.length !== 1) {
+                            return null;
+                        }
+    
+                        return (
                             <div key={category} className="categories__category">
-                                <button onClick={() => categoryClicked(category)}>
+                                <button
+                                    onClick={() =>
+                                        topLevelCategory
+                                            ? categoryClicked(category)
+                                            : getFilteredLocations(category)
+                                    }>
                                     <img src={categoryInfo.iconUrl} alt="" />
                                     {categoryInfo.displayName}
                                 </button>
                             </div>
-                        ))
-                    ) : (
-                        <>
-                            <div className="categories__nav">
-                                <button
-                                    aria-label={t('Back')}
-                                    type="button"
-                                    className="categories__nav--button"
-                                    onClick={handleBack}>
-                                    <ChevronLeft />
-                                </button>
-                                <div>{selectedCategoryDisplayName}</div>
-                            </div>
-                            {selectedCategoriesArray.current.length === 1 &&
-                                categoriesToShow.map(([category, categoryInfo]) => (
-                                    <div key={category} className="categories__category">
-                                        <button onClick={() => getFilteredLocations(category)}>
-                                            <img src={categoryInfo.iconUrl} alt="" />
-                                            {categoryInfo.displayName}
-                                        </button>
-                                    </div>
-                                ))}
-                        </>
-                    )}
+                        );
+                    })}
                 </div>
             )}
         </div>
