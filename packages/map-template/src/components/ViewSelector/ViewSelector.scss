@@ -33,6 +33,25 @@
     }
 }
 
+.mobile-exit-button {
+    background-color: var(--tailwind-colors-white);
+    border-radius: var(--rounding-large);
+    border: 1px solid #E6E6E6;
+    width: var(--spacing-xxx-large);
+    height: var(--spacing-xxx-large);
+    z-index: var(--z-index-sticky);
+
+    svg {
+        display: block;
+        margin: 0 auto;
+    }
+
+    &:hover {
+        background-color: var(--tailwind-colors-gray-100);
+        border: 1px solid var(--tailwind-colors-gray-200);
+    }
+}
+
 .building-list {
     background: var(--color-white-white);
     border-radius: var(--rounding-large);
