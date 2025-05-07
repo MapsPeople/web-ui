@@ -33,9 +33,12 @@ function ViewSelector() {
         }
     }, [mapsIndoorsInstance, currentVenueName]);
 
-    // Memoize the buildings array to prevent unnecessary re-renders
+    // Extract only necessary building properties to create a simplified data structure, memoize the result
     const buildings = useMemo(() => {
-        return buildingsData;
+        return buildingsData.map(building => ({
+            id: building.id,
+            name: building.buildingInfo.name,
+        }));
     }, [buildingsData]);
 
     // Handle building click event - uses useCallback to maintain a stable reference
@@ -88,7 +91,7 @@ function ViewSelector() {
                         key={building.id}
                         className="building-list-item"
                         onClick={() => handleBuildingClick(building.id)}>
-                        <p>{building.buildingInfo?.name}</p>
+                        <p>{building.name}</p>
                     </button>
                 ))}
             </div>
