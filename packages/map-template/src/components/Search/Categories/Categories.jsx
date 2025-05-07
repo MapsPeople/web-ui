@@ -15,6 +15,7 @@ import useOutsideMapsIndoorsDataClick from "../../../hooks/useOutsideMapsIndoors
 import mapsIndoorsInstanceState from "../../../atoms/mapsIndoorsInstanceState";
 import PropTypes from "prop-types";
 import { ReactComponent as ChevronLeft } from '../../../assets/chevron-left.svg';
+import { useTranslation } from "react-i18next";
 
 Categories.propTypes = {
     onSetSize: PropTypes.func,
@@ -66,7 +67,9 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, t
 
     const [categoriesWithChildKeys, setCategoriesWithChildKeys] = useState([]);
 
-    const [selectedCategoryDisplayName, setSelectedCategoryDisplayName] = useState([]);
+    const [selectedCategoryDisplayName, setSelectedCategoryDisplayName] = useState([])
+
+    const { t } = useTranslation();
 
     /**
     * Communicate size change to parent component.
@@ -197,7 +200,7 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, t
                         <>
                             <div className="categories__nav">
                                 <button
-                                    aria-label="Back"
+                                    aria-label={t('Back')}
                                     type="button"
                                     className="categories__nav--button"
                                     onClick={handleBack}>
