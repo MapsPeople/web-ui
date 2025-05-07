@@ -33,7 +33,17 @@ LocationDetails.propTypes = {
 }
 
 /**
- * Shows details for a MapsIndoors Location.
+ * This component is used to show the details of a MapsIndoors Location.
+ *
+ * It will always show the location name, icon and a info about floor, building and venue.
+ * and a button to start wayfinding.
+ *
+ * It will also show the location description, image, categories and additional details
+ * if they are available.
+ *
+ * In case the Location description is long, it will be truncated and a button to expand the description will be shown.
+ * On small screens, when the description is expanded, the bottom sheet will be expanded to full height. Also, if the user
+ * swipes to full height, the description will be expanded.
  *
  * @param {object} props
  * @param {function} props.onBack - Callback that fires when Location Details are closed by the user.

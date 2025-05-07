@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
  * A Sheet for showing content in the bottom of the screen inside the BottomSheet.
  *
  * The user can swipe the sheet up and down to change its height.
- * The sheet can be set to one of three snap points: MAX, FIT, MIN.
+ * The sheet can be set to one of three snap points. These can be set programatically or by the user swiping.
  *
  * @param {Object} props
  * @param {React.ReactNode} props.children - The content to be displayed inside the sheet.
