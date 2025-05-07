@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
 import { ReactComponent as ChevronDownIcon } from '../../assets/chevron-down.svg';
 import { ReactComponent as ChevronUpIcon } from '../../assets/chevron-up.svg';
@@ -36,8 +36,14 @@ function ViewSelector() {
     // Memoize the buildings array to prevent unnecessary re-renders
     const buildings = useMemo(() => {
         return buildingsData;
-    }, [buildingsData])
+    }, [buildingsData]);
 
+    // Handle building click event - uses useCallback to maintain a stable reference
+    // This prevents creating new function instances on each render when passed to BuildingList items
+    const handleBuildingClick = useCallback((buildingId) => {
+        mapsIndoorsInstance.fitBuilding(buildingId);
+        setIsExpanded(false);
+    }, [mapsIndoorsInstance]);
 
     // Early return if the current venue has one building
     if (buildings.length == 1) {
@@ -81,10 +87,7 @@ function ViewSelector() {
                     <button
                         key={building.id}
                         className="building-list-item"
-                        onClick={() => {
-                            mapsIndoorsInstance.fitBuilding(building.id);
-                            setIsExpanded(false);
-                        }}>
+                        onClick={() => handleBuildingClick(building.id)}>
                         <p>{building.buildingInfo?.name}</p>
                     </button>
                 ))}
