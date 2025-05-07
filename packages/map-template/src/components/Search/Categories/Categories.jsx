@@ -34,6 +34,9 @@ Categories.propTypes = {
  * @param {function} props.getFilteredLocations - Function that gets the filtered locations based on the category selected.
  * @param {object} props.searchFieldRef - The reference to the search input field.
  * @param {boolean} props.isOpen - Determines wheteher the Categories window is open or not.
+ * @param {boolean} props.topLevelCategory - If true, renders top-level categories; otherwise, renders sub-categories.
+ * @param {function} props.handleBack - Callback function to handle back navigation between categories.
+ * @param {Array<string>} props.selectedCategoriesArray - Array containing selected categories (e.g., top-level and sub-category).
  */
 function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, topLevelCategory, handleBack, selectedCategoriesArray }) {
 
@@ -149,7 +152,7 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, t
         }
     }, [activeCategory, category, isBottomSheetLoaded]);
 
-    /**
+    /*
      * Collects all child keys from all categories.
      * Filters out categories from the initial view that are listed as a child to another category.
      */
