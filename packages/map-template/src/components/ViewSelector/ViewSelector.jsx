@@ -3,6 +3,7 @@ import { useIsDesktop } from '../../hooks/useIsDesktop';
 import { ReactComponent as ChevronDownIcon } from '../../assets/chevron-down.svg';
 import { ReactComponent as ChevronUpIcon } from '../../assets/chevron-up.svg';
 import { ReactComponent as PanViewIcon } from '../../assets/pan-view-icon.svg';
+import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
 import './ViewSelector.scss';
@@ -14,6 +15,7 @@ function ViewSelector() {
     const isDesktop = useIsDesktop();
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const currentVenueName = useRecoilValue(currentVenueNameState);
+
 
     // Get all buildings for the current venue
     useEffect(() => {
@@ -99,25 +101,31 @@ function ViewSelector() {
     };
 
     return (
-        <div className="view-selector-container">
-            {/* Mobile view selector container */}
+        <>
             {!isDesktop && isExpanded && (
-                <div className="mobile-view-selector-container">
-                    <div className="mobile-header">
-                        <button className="mobile-exit-button" onClick={() => setIsExpanded(false)}>X</button>
-                        <span>Pan Map to View</span>
+                <div className="mobile-overlay">
+                    {/* Backdrop with blur effect */}
+                    <div className="modal-backdrop" onClick={() => setIsExpanded(false)}></div>
+
+                    {/* Modal container */}
+                    <div className="mobile-view-selector-container">
+                        <div className="mobile-header">
+                            <button className="mobile-exit-button" onClick={() => setIsExpanded(false)}>{<CloseIcon />}</button>
+                            <span>Pan Map to View</span>
+                        </div>
+                        <BuildingList />
                     </div>
-                    {/* Mobile view building selector list */}
-                    <BuildingList />
                 </div>
             )}
 
-            {/* Render building list directly when expanded on desktop */}
-            {isDesktop && isExpanded && <BuildingList />}
+            {/* Button container (stays at a lower z-index) */}
+            <div className="desktop-view-selector-container">
+                {/* Desktop only: building list appears as dropdown when expanded */}
+                {isDesktop && isExpanded && <BuildingList />}
 
-            {/* Toggle button that changes appearance based on mobile/desktop */}
-            <ToggleButton buttonText="Pan map to view" />
-        </div>
+                <ToggleButton buttonText="Pan map to view" />
+            </div>
+        </>
     );
 }
 
