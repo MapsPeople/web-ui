@@ -16,7 +16,6 @@
         gap: var(--spacing-x-small);
         overflow: auto;
         flex: 1 1 auto;
-        margin-top: var(--spacing-x-small);
 
         > * {
             height: fit-content; /* fixing issue on mobile Safari causing them to bee too large in case of just one search result */
@@ -46,6 +45,31 @@
     &__label {
         span {
             display: none;
+        }
+    }
+
+    &__back {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-x-large);
+        padding-top: var(--spacing-medium);
+        padding-bottom: var(--spacing-medium);
+
+        &-button {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: var(--font-size-medium);
+            color: var(--color-gray-90);
+            padding: var(--spacing-small); // Add padding for larger clickable area
+            margin: calc(-1 * var(--spacing-small)) calc(-1 * var(--spacing-small)) calc(-1 * var(--spacing-small)) 0; // Counter the padding with negative margins except left
+            
+            svg {
+                width: 20px;
+                height: 20px;
+            }
         }
     }
 

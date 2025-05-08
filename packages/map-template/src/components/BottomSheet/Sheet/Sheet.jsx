@@ -39,9 +39,6 @@ function Sheet({ children, isOpen, minHeight, preferredSizeSnapPoint, onSwipedTo
     /** Referencing the DOM element of the sheet content div. */
     const contentRef = useRef();
 
-    /** The current size preset ("snap point") */
-    const [currentSnapPoint, setCurrentSnapPoint] = useState(snapPoints.FIT);
-
     /** True if the sheet is currently being dragged with pointer (mouse, finger) */
     const [isDragging, setIsDragging] = useState(false);
 
@@ -87,34 +84,49 @@ function Sheet({ children, isOpen, minHeight, preferredSizeSnapPoint, onSwipedTo
      * @param {number} targetSize - Which of the sizes to change to.
      */
     function changeSheetHeight(targetSize) {
-        // Prevent going to minimum size state if the content size is the same in order to prevent the need for double swipes to change height.
+        // Prevent going to minimum size state if the content size is the same
         if (targetSize === snapPoints.MIN && contentHeightRef.current <= minHeight) {
             return;
         }
 
-        if (currentSnapPoint === snapPoints.FIT) {
-            sheetRef.current.style.height = `${contentHeightRef.current}px`;
-        }
+        // For FIT size, first set to auto to get real content height
+        if (targetSize === snapPoints.FIT) {
+            // Set initial auto height to measure content
+            setStyle({ height: 'auto' });
 
-        // Set the actual pixel height of the sheet.
-        // RequestAnimationFrame is needed in order to the height style change to kick in thus enabling the transition of height.
-        // Inspired by https://css-tricks.com/using-css-transitions-auto-dimensions/#aa-technique-3-javascript
-        requestAnimationFrame(() => {
-            switch (targetSize) {
-                case snapPoints.MAX:
-                    setStyle({ height: `${container.current.clientHeight}px` });
-                    break;
-                case snapPoints.FIT:
-                    setStyle({ height: `${contentHeightRef.current}px` });
-                    break;
-                case snapPoints.MIN:
-                    setStyle({ height: `${minHeight}px` });
-                    break;
-                default:
-                    break;
-            }
-            setCurrentSnapPoint(targetSize);
-        });
+            // Set the actual pixel height of the sheet.
+            // RequestAnimationFrame is needed in order to the height style change to kick in thus enabling the transition of height.
+            // Inspired by https://css-tricks.com/using-css-transitions-auto-dimensions/#aa-technique-3-javascript
+            // Wait for next frame to get actual content height
+            requestAnimationFrame(() => {
+                // Get the active sheet content height
+                const activeContent = sheetRef.current.querySelector('.sheet--active .sheet__content');
+                // Ensure sheet height is never smaller than minHeight while using either active sheet or content or fallback content height
+                const actualHeight = Math.max(parseInt(minHeight), activeContent ? activeContent.scrollHeight : contentRef.current.scrollHeight);
+
+                // Store the measured height
+                contentHeightRef.current = actualHeight;
+
+                // Now set the fixed height
+                requestAnimationFrame(() => {
+                    setStyle({ height: `${actualHeight}px` });
+                });
+            });
+        } else {
+            // For other snap points, use existing logic
+            requestAnimationFrame(() => {
+                switch (targetSize) {
+                    case snapPoints.MAX:
+                        setStyle({ height: `${container.current.clientHeight}px` });
+                        break;
+                    case snapPoints.MIN:
+                        setStyle({ height: `${minHeight}px` });
+                        break;
+                    default:
+                        break;
+                }
+            });
+        }
 
         if (typeof onSwipedToSnapPoint === 'function') {
             // When snap transition has ended, call the callback
@@ -217,7 +229,18 @@ function Sheet({ children, isOpen, minHeight, preferredSizeSnapPoint, onSwipedTo
             contentHeightRef.current = minHeight;
             sheetRef.current.style.height = '';
         } else {
-            contentHeightRef.current = contentRef.current.clientHeight;
+            // When opening, temporarily set to auto to measure
+            setStyle({ height: 'auto' });
+
+            requestAnimationFrame(() => {
+                // Get real content height
+                const activeContent = sheetRef.current.querySelector('.sheet--active .sheet__content');
+                const actualHeight = activeContent ? activeContent.scrollHeight : contentRef.current.scrollHeight;
+                contentHeightRef.current = actualHeight;
+
+                // Set measured height
+                setStyle({ height: `${actualHeight}px` });
+            });
         }
     }, [children.length, isOpen]);
 

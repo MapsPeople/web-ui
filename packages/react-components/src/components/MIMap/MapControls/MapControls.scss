@@ -1,0 +1,33 @@
+// Base styles for map controls
+%control-container {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-medium);
+
+    // Hide empty portal containers to prevent unwanted spacing
+    > div:empty {
+        display: none;
+    }
+}
+
+// Desktop layout, one column aligned to the top right
+.map-controls-container {
+    @extend %control-container;
+    top: var(--spacing-medium);
+    right: var(--spacing-medium);
+}
+
+// Mobile layout, two columns aligned to the top left and right
+.mobile-column {
+    @extend %control-container;
+    top: var(--spacing-medium);
+    
+    &.map-controls-left-column {
+        left: var(--spacing-medium);
+    }
+    
+    &.map-controls-right-column {
+        right: var(--spacing-medium);
+    }
+}
