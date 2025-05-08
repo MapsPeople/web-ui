@@ -101,7 +101,8 @@ function Sheet({ children, isOpen, minHeight, preferredSizeSnapPoint, onSwipedTo
             requestAnimationFrame(() => {
                 // Get the active sheet content height
                 const activeContent = sheetRef.current.querySelector('.sheet--active .sheet__content');
-                const actualHeight = activeContent ? activeContent.scrollHeight : contentRef.current.scrollHeight;
+                // Ensure sheet height is never smaller than minHeight while using either active sheet or content or fallback content height
+                const actualHeight = Math.max(parseInt(minHeight), activeContent ? activeContent.scrollHeight : contentRef.current.scrollHeight);
 
                 // Store the measured height
                 contentHeightRef.current = actualHeight;

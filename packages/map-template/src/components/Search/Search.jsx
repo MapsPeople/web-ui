@@ -198,6 +198,9 @@ function Search({ onSetSize, isOpen }) {
     function onResults(locations, fitMapBounds = false) {
         const displayResults = locations.slice(0, MAX_RESULTS);
 
+        // Expand the sheet to occupy the entire screen
+        setSize(snapPoints.MAX);
+        
         setSearchResults(displayResults);
         setFilteredLocations(displayResults);
         setShowNotFoundMessage(displayResults.length === 0);

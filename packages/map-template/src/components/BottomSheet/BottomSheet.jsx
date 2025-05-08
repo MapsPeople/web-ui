@@ -85,9 +85,12 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
             pushAppView(appViews.SEARCH);
             setCurrentLocation();
             setFilteredLocationsByExternalID([]);
+            // Reset the search sheet height to its minimum size when closing location details
+            setSearchSheetSize(snapPoints.MIN);
         } else {
             pushAppView(appViews.SEARCH);
             setCurrentLocation();
+            setSearchSheetSize(snapPoints.MIN);
         }
     }
 
