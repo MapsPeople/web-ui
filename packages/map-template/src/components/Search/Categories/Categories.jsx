@@ -189,7 +189,7 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, t
                             <button
                                 aria-label={t('Back')}
                                 type="button"
-                                className="categories__nav--button"
+                                className="categories__nav-button"
                                 onClick={handleBack}>
                                 <ChevronLeft />
                             </button>
