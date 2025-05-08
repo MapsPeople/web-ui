@@ -38,7 +38,7 @@ LocationDetails.propTypes = {
  * @param {function} props.onBack - Callback that fires when Location Details are closed by the user.
  * @param {function} props.onStartWayfinding - Callback that fires when user clicks the Start Wayfinding button.
  * @param {function} props.onSetSize - Callback that is fired when the toggle full description button is clicked and the Sheet size changes.
- * @param {function} props.snapPointSwiped - Changes value when user has swiped a Bottom sheet to a new snap point.
+ * @param {number} props.snapPointSwiped - Changes value when user has swiped a Bottom sheet to a new snap point.
  * @param {function} props.onStartDirections - Callback that fires when user clicks the Start directions button.
  * @param {boolean} props.isOpen - Whether the Location Details are open or not.
  *
@@ -157,13 +157,13 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
             if (locationDetailsContainer.current) {
                 setDescriptionHasContentAbove(locationDetailsContainer.current.scrollTop > 0);
                 setDescriptionHasContentBelow(
-                    locationDetailsContainer.current.scrollTop < 
-                    (locationDetailsContainer.current.scrollHeight - 
-                    locationDetailsContainer.current.offsetHeight - 1)
+                    locationDetailsContainer.current.scrollTop <
+                    (locationDetailsContainer.current.scrollHeight -
+                        locationDetailsContainer.current.offsetHeight - 1)
                 );
             }
         });
-        
+
         return () => cancelAnimationFrame(frameId);
     }
 
