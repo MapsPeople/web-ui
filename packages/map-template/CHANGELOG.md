@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Rearanged user interface elements and made categories expandable
+- Rearranged user interface elements and made categories expandable
 
 ## [1.74.9] - 2025-05-06
 
