@@ -16,6 +16,7 @@ const da = {
     'Transit': 'Offentlig transport',
     'Drive': 'Kørsel',
     'Start wayfinding': 'Start rutebeskrivelse',
+    'Pan Map to View': 'Panorer kortet for at se',
     // Location Details
     'Read full description': 'Læs hel beskrivelse',
     // Locations List

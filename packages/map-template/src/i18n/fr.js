@@ -16,6 +16,7 @@ const fr = {
     'Transit': 'En transports',
     'Drive': 'Voiture',
     'Start wayfinding': 'Commencer la navigation',
+    'Pan Map to View': 'Déplacer la carte pour voir',
     // Location Details
     'Read full description': 'Lire la description complète',
     // Locations list

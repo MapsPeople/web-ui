@@ -16,6 +16,7 @@ const de = {
     'Transit': 'Öffentliche Verkehrsmittel',
     'Drive': 'Auto',
     'Start wayfinding': 'Starte Navigation',
+    'Pan Map to View': 'Karte verschieben zur Ansicht',
     // Location Details
     'Read full description': 'Öffne vollständige Beschreibung',
     // Locations list
