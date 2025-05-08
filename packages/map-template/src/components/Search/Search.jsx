@@ -33,7 +33,6 @@ import isNullOrUndefined from '../../helpers/isNullOrUndefined';
 import venuesInSolutionState from '../../atoms/venuesInSolutionState';
 import initialVenueNameState from '../../atoms/initialVenueNameState';
 import PropTypes from 'prop-types';
-import { ReactComponent as ChevronLeft } from '../../assets/chevron-left.svg';
 
 Search.propTypes = {
     categories: PropTypes.array,
@@ -117,23 +116,35 @@ function Search({ onSetSize, isOpen }) {
 
     const [isInputFieldInFocus, setIsInputFieldInFocus] = useState(false);
 
+    const selectedCategoriesArray = useRef([]);
+
+    const [childKeys, setChildKeys] = useState([]);
+
     /**
      * Handles go back function.
      */
     function handleBack() {
-        setSelectedCategory(null);
-        setSearchResults([]);
-        setFilteredLocations([]);
-        setSize(snapPoints.FIT);
-        setIsInputFieldInFocus(true);
+        // If selected categories tree has only parent category, then on back, we need to perform those clear functions.
+        // Else, remove child category from selected categories tree array.
+        if (selectedCategoriesArray.current.length === 1) {
+            setSelectedCategory(null);
+            setSearchResults([]);
+            setFilteredLocations([]);
+            setSize(snapPoints.FIT);
+            setIsInputFieldInFocus(true);
 
-        // If there's a search term and it's not just whitespace, re-trigger the search without category filter
-        const searchValue = searchFieldRef.current?.getValue()?.trim();
-        if (searchValue) {
-            searchFieldRef.current.triggerSearch();
+            // If there's a search term and it's not just whitespace, re-trigger the search without category filter
+            const searchValue = searchFieldRef.current?.getValue()?.trim();
+            if (searchValue) {
+                searchFieldRef.current.triggerSearch();
+            } else {
+                // If it's empty or just whitespace, clear the search field
+                searchFieldRef.current?.clear();
+            }
+            selectedCategoriesArray.current.pop();
         } else {
-            // If it's empty or just whitespace, clear the search field
-            searchFieldRef.current?.clear();
+            selectedCategoriesArray.current.pop()
+            setSelectedCategory(selectedCategoriesArray.current[0])
         }
     }
 
@@ -144,6 +155,20 @@ function Search({ onSetSize, isOpen }) {
      * @param {string} category
      */
     function getFilteredLocations(category) {
+        // Creates a selected categoriers tree, where first category in the array is parent and second one is child
+        // Ensure category is unique before pushing to selectedCategories.current
+        if (!selectedCategoriesArray.current.includes(category)) {
+            selectedCategoriesArray.current.push(category);
+        }
+
+        // If child category is being selected, we need to clear parent categories results in order to load proper data that belongs to child category. 
+        if (selectedCategory) {
+            setSelectedCategory([]);
+            setSearchResults([]);
+            setFilteredLocations([]);
+        }
+        setSelectedCategory(category)
+
         // Regarding the venue name: The venue parameter in the SDK's getLocations method is case sensitive.
         // So when the currentVenueName is set based on a Locations venue property, the casing may differ.
         // Thus we need to find the venue name from the list of venues.
@@ -389,6 +414,7 @@ function Search({ onSetSize, isOpen }) {
                 setSelectedCategory(null);
                 setSearchResults([]);
                 setFilteredLocations([]);
+                selectedCategoriesArray.current = [];
             }
         };
 
@@ -494,6 +520,15 @@ function Search({ onSetSize, isOpen }) {
         }
     }, [kioskLocation]);
 
+    /**
+     * 
+     */
+    useEffect(() => {
+        const childKeys = categories.find(([key]) => key === selectedCategory)?.[1]?.childKeys || [];
+        setChildKeys(childKeys)
+    }, [categories, selectedCategory])
+
+
     return (
         <div className="search"
             ref={searchRef}
@@ -520,51 +555,54 @@ function Search({ onSetSize, isOpen }) {
                 </label>
             </div>
 
-            { /* Horizontal list of Categories */}
-
-            {searchResults.length > 0 && selectedCategory && (<div className="search__back">
-                <button type="button" className="search__back-button" onClick={handleBack}>
-                    <ChevronLeft />
-                </button>
-                <div className="search__back-text">
-                    {categories?.find(([category]) => category === selectedCategory)[1]?.displayName}
-                </div>
-            </div>
+            {/* Vertical list of Categories */}
+            {/* Show full category list only when searchResults are empty */}
+            {isInputFieldInFocus && !showNotFoundMessage && categories.length > 0 && searchResults.length === 0 && (
+                <Categories
+                    onSetSize={onSetSize}
+                    searchFieldRef={searchFieldRef}
+                    getFilteredLocations={(category) => getFilteredLocations(category)}
+                    isOpen={!!selectedCategory}
+                    topLevelCategory={true}
+                />
             )}
-            {isInputFieldInFocus && !showNotFoundMessage && categories.length > 0 && searchResults.length === 0 && <Categories onSetSize={onSetSize}
-                searchFieldRef={searchFieldRef}
-                getFilteredLocations={category => getFilteredLocations(category)}
-                isOpen={!!selectedCategory}
-            />}
 
-            { /* Message shown if no search results were found */}
-
+            {/* Message shown if no search results were found */}
             {showNotFoundMessage && <p className="search__error"> {t('Nothing was found')}</p>}
 
-
-
-            { /* Vertical list of search results. Scrollable. */}
-
-            {searchResults.length > 0 &&
+            {/* When search results are found (category is selected or search term is used) */}
+            {searchResults.length > 0 && (
                 <div className="search__results prevent-scroll" {...scrollableContentSwipePrevent}>
-                    {searchResults.map(location =>
-                        <ListItemLocation
-                            key={location.id}
-                            location={location}
-                            locationClicked={() => onLocationClicked(location)}
-                            isHovered={location?.id === hoveredLocation?.id}
+
+                    {/* Subcategories should only show if a top level category is selected and if that top level category has any childKeys */}
+                    {selectedCategory && (
+                        <Categories
+                            handleBack={handleBack}
+                            getFilteredLocations={(category) => getFilteredLocations(category)}
+                            onLocationClicked={onLocationClicked}
+                            childKeys={childKeys}
+                            topLevelCategory={false}
+                            selectedCategoriesArray={selectedCategoriesArray}
                         />
                     )}
+
+                    {/* Show locations when there are any searchResults */}
+                    <div className='search__results'>
+                        {searchResults.map(location =>
+                            <ListItemLocation
+                                key={location.id}
+                                location={location}
+                                locationClicked={() => onLocationClicked(location)}
+                                isHovered={location?.id === hoveredLocation?.id}
+                            />
+                        )}
+                    </div>
                 </div>
-            }
-
-
+            )}
 
             { /* Keyboard */}
 
             {isKeyboardVisible && isDesktop && <Keyboard ref={keyboardRef} searchInputElement={searchInput}></Keyboard>}
-
-
 
             { /* Buttons to scroll in the list of search results if in kiosk context */}
 
