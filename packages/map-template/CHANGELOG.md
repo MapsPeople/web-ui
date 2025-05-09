@@ -11,6 +11,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - If `language`, `primaryColor`, `logo`, `venue`, `startZoomLevel`, `pitch` and `bearing` props are not explicitly provided, their value will be determined by the App Config object
 
+## [1.75.1] - 2025-05-08
+
+### Fixed
+
+- Downgraded SDK to version 4.39.1
+
+## [1.75.0] - 2025-05-08
+
+### Added
+
+- Rearranged user interface elements and made categories expandable
+
+## [1.74.9] - 2025-05-06
+
+### Fixed
+
+- Fixed sentry version identifiers. Added mapsindoors sdk to sentry ignore list
+
+## [1.74.8] - 2025-05-01
+
+### Fixed
+
+- Upgraded SDK version v4.40.1.
+
+## [1.74.7] - 2025-04-30
+
+### Fixed
+
+- Fixed Sentry error boundaries for MapsIndoorsMap.
+
 ## [1.74.6] - 2025-03-31
 
 ### Fixed

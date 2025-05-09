@@ -1,8 +1,10 @@
+$desktop-breakpoint: 992px;
+
 .modal {
     position: absolute;
     z-index: var(--z-index-overlay);
     width: 568px;
-    left: var(--spacing-x-large);
+    left: var(--spacing-medium);
     bottom: var(--spacing-x-large);
     border-radius: var(--spacing-x-small);
     border: 1px solid var(--color-gray-30);
@@ -39,5 +41,13 @@
         margin-left: auto;
         margin-right: auto;
         max-height: none;
+    }
+
+    top: var(--spacing-medium);
+    bottom: auto;
+    transform: translateX(-100%);
+
+    &--open {
+        transform: translateX(0);
     }
 }
