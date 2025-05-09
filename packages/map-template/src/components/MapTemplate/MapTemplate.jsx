@@ -390,7 +390,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [externalIDs, mapsindoorsSDKAvailable]);
 
     /*
-     * React on changes to the locationId prop.
+     * React to changes in the locationId prop.
      * Set as current location and change the venue according to the venue that the location belongs to.
      */
     useEffect(() => {
@@ -632,6 +632,19 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         setCenter(center);
     }, [center]);
+
+    /*
+     * Fallback mechanism for setting the center position.
+     * If no center is specified (neither through URL parameter nor prop),
+     * and the appSettings contains both latitude and longitude,
+     * use those coordinates in longitude,latitude format
+     */
+    useEffect(() => {
+        if (!center && appConfig?.appSettings?.latitude && appConfig?.appSettings?.longitude) {
+            const formattedCenter = appConfig.appSettings.longitude + ',' + appConfig.appSettings.latitude;
+            setCenter(formattedCenter);
+        }
+    }, [center, appConfig]);
 
     /*
      * Sets document title based on useAppTitle and appConfig values.
