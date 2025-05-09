@@ -33,11 +33,11 @@ function ViewSelector() {
         }
 
         // If not found, set up a MutationObserver
-        const observer = new MutationObserver((obs) => {
+        const observer = new MutationObserver(() => {
             target = document.querySelector(portalTargetSelector);
             if (target) {
                 setActualPortalTarget(target);
-                obs.disconnect(); // Stop observing once found
+                observer.disconnect(); // Stop observing once found - use the observer instance
             }
         });
 
