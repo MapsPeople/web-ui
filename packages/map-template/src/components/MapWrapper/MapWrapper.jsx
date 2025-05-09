@@ -23,6 +23,7 @@ import hideNonMatchesState from "../../atoms/hideNonMatchesState";
 import miTransitionLevelState from "../../atoms/miTransitionLevelState";
 import showRoadNamesState from "../../atoms/showRoadNamesState";
 import PropTypes from "prop-types";
+import ViewSelector from "../ViewSelector/ViewSelector";
 
 MapWrapper.propTypes = {
     onLocationClick: PropTypes.func,
@@ -317,6 +318,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
             resetUICounter={resetCount}
             mapOptions={mapOptions}
         />}
+        {apiKey && <ViewSelector />}
     </>)
 }
 

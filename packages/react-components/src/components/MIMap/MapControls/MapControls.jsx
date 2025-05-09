@@ -103,9 +103,9 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
             <div className="map-controls-container desktop">
                 {venueSelectorPortal}
                 {viewModeSwitchPortal}
-                {viewSelectorPortal}
                 {myPositionPortal}
                 {floorSelectorPortal}
+                {viewSelectorPortal}
             </div>
         );
     } else {

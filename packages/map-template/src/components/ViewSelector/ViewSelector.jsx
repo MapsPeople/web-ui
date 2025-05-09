@@ -18,8 +18,40 @@ function ViewSelector() {
     const isDesktop = useIsDesktop();
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const currentVenueName = useRecoilValue(currentVenueNameState);
-    const portalTarget = document.querySelector('.view-selector-portal');
+    const [actualPortalTarget, setActualPortalTarget] = useState(null);
+    const portalTargetSelector = '.view-selector-portal';
 
+    // Effect to find the portal target DOM node.
+    // It tries to find it immediately, and if not found,
+    // uses a MutationObserver to detect when it's added to the DOM.
+    useEffect(() => {
+        // Attempt to find the target immediately
+        let target = document.querySelector(portalTargetSelector);
+        if (target) {
+            setActualPortalTarget(target);
+            return; // Found it, no observer needed
+        }
+
+        // If not found, set up a MutationObserver
+        const observer = new MutationObserver((obs) => {
+            target = document.querySelector(portalTargetSelector);
+            if (target) {
+                setActualPortalTarget(target);
+                obs.disconnect(); // Stop observing once found
+            }
+        });
+
+        // Start observing the document body for additions of child elements.
+        // For better performance, observe a more specific parent element if possible,
+        const observerTargetElement = document.body;
+        const config = { childList: true, subtree: true };
+
+        observer.observe(observerTargetElement, config);
+
+        return () => {
+            observer.disconnect(); // Cleanup observer on component unmount
+        };
+    }, []); // Empty dependency array, so it runs once on mount to set up the finder/observer.
 
     // Get all buildings for the current venue
     useEffect(() => {
@@ -134,9 +166,12 @@ function ViewSelector() {
         </>
     );
 
-    // Directly return createPortal, assuming portalTarget exists, similar to ViewModeSwitch.
-    // The early return for 'buildings.length == 1' handles cases where ViewSelector shouldn't render at all.
-    return createPortal(viewSelectorContent, portalTarget);
+    // Only attempt to create portal if the actualPortalTarget DOM node has been found
+    if (!actualPortalTarget) {
+        return null; // Don't render anything if the target isn't found
+    }
+
+    return createPortal(viewSelectorContent, actualPortalTarget);
 }
 
 export default ViewSelector;
