@@ -9,6 +9,7 @@ import currentVenueNameState from '../../atoms/currentVenueNameState';
 import './ViewSelector.scss';
 import { useRecoilValue } from 'recoil';
 import { useTranslation } from 'react-i18next';
+import { createPortal } from 'react-dom';
 
 function ViewSelector() {
     const { t } = useTranslation();
@@ -17,6 +18,7 @@ function ViewSelector() {
     const isDesktop = useIsDesktop();
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const currentVenueName = useRecoilValue(currentVenueNameState);
+    const portalTarget = document.querySelector('.view-selector-portal');
 
 
     // Get all buildings for the current venue
@@ -99,7 +101,7 @@ function ViewSelector() {
         );
     };
 
-    return (
+    const viewSelectorContent = (
         <>
             {/* Mobile view with overlay and modal */}
             {!isDesktop && isExpanded && (
@@ -131,6 +133,10 @@ function ViewSelector() {
             </div>
         </>
     );
+
+    // Directly return createPortal, assuming portalTarget exists, similar to ViewModeSwitch.
+    // The early return for 'buildings.length == 1' handles cases where ViewSelector shouldn't render at all.
+    return createPortal(viewSelectorContent, portalTarget);
 }
 
 export default ViewSelector;
