@@ -744,6 +744,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             resetCount={resetCount}
             mapOptions={mapOptions}
             onMapOptionsChange={handleMapOptionsChange}
+            gmMapId={gmMapId}
         />
     </div>
 }

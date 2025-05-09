@@ -15,7 +15,8 @@ GoogleMapsMap.propTypes = {
     heading: PropTypes.number,
     tilt: PropTypes.number,
     mapsIndoorsInstance: PropTypes.object,
-    mapOptions: PropTypes.object
+    mapOptions: PropTypes.object,
+    gmMapId: PropTypes.string
 }
 /**
  * @param {Object} props
@@ -28,8 +29,9 @@ GoogleMapsMap.propTypes = {
  * @param {number} [props.tilt] - The tilt of the map as a number. Not recommended for maps with 2D Models.
  * @param {Object} [props.mapsIndoorsInstance] - Instance of MapsIndoors class: https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/mapsindoors.MapsIndoors.html
  * @param {Object} [props.mapOptions] - Options for instantiating and styling the map as well as UI elements.
+ * @param {string} [props.gmMapId] - The Google Maps Map ID for custom styling.
  */
-function GoogleMapsMap({ apiKey, onInitialized, center, zoom, bounds, heading, tilt, mapsIndoorsInstance, mapOptions }) {
+function GoogleMapsMap({ apiKey, onInitialized, center, zoom, bounds, heading, tilt, mapsIndoorsInstance, mapOptions, gmMapId }) {
 
     const [google, setGoogle] = useState();
     const [mapViewInstance, setMapViewInstance] = useState();
@@ -100,8 +102,10 @@ function GoogleMapsMap({ apiKey, onInitialized, center, zoom, bounds, heading, t
                 zoom: zoom ?? 21,
                 heading: heading ?? 0,
                 tilt: tilt ?? 0,
+                mapId: gmMapId,
                 ...mapOptions
             };
+
 
             const mapView = new window.mapsindoors.mapView.GoogleMapsView(mapViewOptions);
 

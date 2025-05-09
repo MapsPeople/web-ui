@@ -33,6 +33,7 @@ MapWrapper.propTypes = {
     resetCount: PropTypes.number.isRequired,
     mapOptions: PropTypes.object,
     onMapOptionsChange: PropTypes.func,
+    gmMapId: PropTypes.string
 };
 
 /**
@@ -54,9 +55,10 @@ let _tileStyle;
  * @param {number} resetCount - A counter that is incremented when the map should be reset.
  * @param {object} props.mapOptions - Options for instantiating and styling the map as well as UI elements.
  * @param {function} props.onMapOptionsChange - Function that is run when the map options are changed.
+ * @param {string} props.gmMapId - Google Maps Map ID for custom styling.
  * @returns
  */
-function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating, onViewModeSwitchKnown, resetCount, mapOptions, onMapOptionsChange }) {
+function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating, onViewModeSwitchKnown, resetCount, mapOptions, onMapOptionsChange, gmMapId }) {
     const apiKey = useRecoilValue(apiKeyState);
     const gmApiKey = useRecoilValue(gmApiKeyState);
     const mapboxAccessToken = useRecoilValue(mapboxAccessTokenState);
@@ -316,6 +318,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
             onInitialized={onInitialized}
             resetUICounter={resetCount}
             mapOptions={mapOptions}
+            gmMapId={gmMapId}
         />}
     </>)
 }
