@@ -1,37 +1,44 @@
 .categories {
-    overflow: auto hidden;
-    flex-shrink: 0;
-    display: grid;
-    grid-auto-flow: column;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
     gap: var(--spacing-x-small);
     margin-top: var(--spacing-x-small);
-    justify-content: space-between;
-
-    ::-webkit-scrollbar {
-        width: 0;
-        height: 0;
-        background: transparent;
-    }
 
     &__list {
-        display: grid;
-        grid-auto-flow: column;
+        display: flex;
+        flex-direction: column;
         gap: var(--spacing-x-small);
-        overflow: auto hidden;
-        grid-auto-columns: min-content;
+        overflow: auto;
         scrollbar-width: none;
     }
 
-    &__scroll-button {
-        width: var(--spacing-xxx-large);
-        height: var(--spacing-xxx-large);
-        background-color: var(--brand-colors-white-100);
-        border: 1px solid var(--color-gray-30);
-        border-radius: var(--spacing-x-small);
-
-        &:disabled {
-            cursor: not-allowed;
-            opacity: 0.3;
+    &__category {
+        button {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: var(--spacing-small);
+            border-radius: var(--spacing-x-small);
+            border: 1px solid var(--color-gray-30);
+            background: none;
+            cursor: pointer;
+            text-align: left;
+            gap: var(--spacing-small);
+            font-size: var(--font-size-medium);
+            color: black;
         }
+
+        img {
+            width: var(--spacing-large);
+            height: var(--spacing-large);
+        }
+
+        &:hover {
+            background-color: var(--tailwind-colors-gray-50);
+            border: var(--tailwind-colors-gray-200);
+        }
+
+        width: 100%;
     }
 }

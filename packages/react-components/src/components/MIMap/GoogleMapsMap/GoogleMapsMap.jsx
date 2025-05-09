@@ -9,7 +9,6 @@ import isNullOrUndefined from '../../../../../map-template/src/helpers/isNullOrU
 GoogleMapsMap.propTypes = {
     apiKey: PropTypes.string.isRequired,
     onInitialized: PropTypes.func.isRequired,
-    onPositionControl: PropTypes.func.isRequired,
     center: PropTypes.object,
     zoom: PropTypes.number,
     bounds: PropTypes.object,
@@ -23,7 +22,6 @@ GoogleMapsMap.propTypes = {
  * @param {Object} props
  * @param {string} props.apiKey - Google Maps API key.
  * @param {function} props.onInitialized - Function that is called when the map view is initialized.
- * @param {function} props.onPositionControl - Callback called when the position control is initialized. Payload is the position control.
  * @param {Object} [props.center] - Object with latitude and longitude on which the map will center. Example: { lat: 55, lng: 10 }
  * @param {number} [props.zoom] - Zoom level for the map.
  * @param {object} [props.bounds] - Map bounds. Will win over center+zoom if set. Use the format { south: number, west: number, north: number, east: number }
@@ -33,12 +31,10 @@ GoogleMapsMap.propTypes = {
  * @param {Object} [props.mapOptions] - Options for instantiating and styling the map as well as UI elements.
  * @param {string} [props.gmMapId] - The Google Maps Map ID for custom styling.
  */
-function GoogleMapsMap({ apiKey, onInitialized, onPositionControl, center, zoom, bounds, heading, tilt, mapsIndoorsInstance, mapOptions, gmMapId }) {
+function GoogleMapsMap({ apiKey, onInitialized, center, zoom, bounds, heading, tilt, mapsIndoorsInstance, mapOptions, gmMapId }) {
 
     const [google, setGoogle] = useState();
     const [mapViewInstance, setMapViewInstance] = useState();
-    const [hasFloorSelector, setHasFloorSelector] = useState(false);
-    const [hasPositionControl, setHasPositionControl] = useState(false);
     const [hasZoomControl, setHasZoomControl] = useState(false);
     const isDesktop = useIsDesktop();
 
@@ -74,37 +70,19 @@ function GoogleMapsMap({ apiKey, onInitialized, onPositionControl, center, zoom,
 
     // Add map controls to the map when ready.
     useEffect(() => {
-        if (mapsIndoorsInstance && mapViewInstance && google && !hasPositionControl) {
-            const myPositionButtonElement = document.createElement('mi-my-position');
-            myPositionButtonElement.mapsindoors = mapsIndoorsInstance;
-            mapViewInstance.getMap().controls[google.maps.ControlPosition.RIGHT_TOP].push(myPositionButtonElement);
-            setHasPositionControl(true);
-            onPositionControl(myPositionButtonElement);
-        }
-
-        if (mapsIndoorsInstance && mapViewInstance && google && !hasFloorSelector) {
-            const floorSelectorElement = document.createElement('mi-floor-selector');
-            floorSelectorElement.mapsindoors = mapsIndoorsInstance;
-            if (mapOptions?.brandingColor) {
-                floorSelectorElement.primaryColor = mapOptions.brandingColor;
-            }
-            mapViewInstance.getMap().controls[google.maps.ControlPosition.RIGHT_TOP].push(floorSelectorElement);
-            setHasFloorSelector(true);
-        }
-
         if (mapsIndoorsInstance && mapViewInstance && google && !hasZoomControl && isDesktop) {
             // Enable only the Zoom control
             mapViewInstance.getMap().setOptions({
                 zoomControl: true,
                 zoomControlOptions: {
                     style: google.maps.ZoomControlStyle.DEFAULT,
-                    position: google.maps.ControlPosition.RIGHT_TOP,
+                    position: google.maps.ControlPosition.RIGHT_BOTTOM,
                 }
             });
             setHasZoomControl(true);
         }
 
-    }, [mapsIndoorsInstance, mapViewInstance, google, hasFloorSelector, hasPositionControl])
+    }, [mapsIndoorsInstance, mapViewInstance, google])
 
     useEffect(() => {
         const loader = new GoogleMapsApiLoader({
