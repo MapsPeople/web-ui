@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Support for displaying NestedCategories.
+- Add support for displaying Nested Categories.
 
 ## [1.75.1] - 2025-05-08
 
