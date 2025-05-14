@@ -558,7 +558,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [kioskOriginLocationId, mapsindoorsSDKAvailable]);
 
     /*
-     * React on changes to the timout prop
+     * React on changes to the timeout prop
      */
     useEffect(() => {
         setTimeoutValue(timeout);
