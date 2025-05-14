@@ -187,10 +187,7 @@ const Sheet = forwardRef(function SheetComponent({ children, isOpen, initialSnap
         if (isOpen) {
             snappedTo.current = initialSnapPoint;
             snapSheetHeightToSnapPoint(initialSnapPoint);
-        } else {
-            // TODO Anything?
         }
-
     }, [minimizedHeight, initialSnapPoint, isOpen]);
 
 
