@@ -25,6 +25,11 @@ BottomSheet.propTypes = {
     onRouteFinished: PropTypes.func.isRequired
 };
 /**
+ * The BottomSheet component is responsible for rendering other components (Search, Wayfinding etc.) in a bottom sheet.
+ * It is used on smaller screens. On larger screens, the Sidebar component is used.
+ *
+ * All components are wrapped in a Sheet component, which handles user interactions to resizing.
+ *
  * @param {Object} props
  * @param {string} props.directionsFromLocation - Origin Location to be used to instantly show directions.
  * @param {string} props.directionsToLocation - Destination Location to be used to instantly show directions.

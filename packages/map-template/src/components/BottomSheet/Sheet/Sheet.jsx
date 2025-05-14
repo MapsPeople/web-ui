@@ -10,7 +10,17 @@ import PropTypes from 'prop-types';
  * A Sheet for showing content in the bottom of the screen inside the BottomSheet.
  *
  * The user can swipe the sheet up and down to change its height.
- * The sheet can be set to one of three snap points. These can be set programatically or by the user swiping.
+ * The sheet height can be set to one of three snap points. These can be set programatically or by the user making a swipe up/down gesture.
+ * We use the react-swipeable library to handle swipe gestures.
+ *
+ * To set sheet height programatically, use the setSnapPoint method. This method can be called from outside the component.
+ *
+ * The snap points are (see the constants/snapPoints.js file): MIN, FIT, MAX where MIN is a value specified by us in pixels (the minimizedHeight prop),
+ * fit is fitting the content of the sheet and MAX is the maximum allowed height of the sheet (the height of the container element).
+ *
+ * The swipe up/down gesture can be set to not react on scrollable content, using the usePreventSwipe hook. This way, the user can scroll the content of the sheet without
+ * the sheet reacting to the swipe gesture. This is useful for eg. a list of search results.
+ *
  *
  * @param {Object} props
  * @param {React.ReactNode} props.children - The content to be displayed inside the sheet.
@@ -39,7 +49,7 @@ const Sheet = forwardRef(function SheetComponent({ children, isOpen, initialSnap
     const [style, setStyle] = useState({});
 
     /** True if the sheet is currently being dragged with pointer (mouse, finger) */
-    const [isDragging, setIsDragging] = useState(false); // eslint-disable-line
+    const [isDragging, setIsDragging] = useState(false);
 
     /** Hold the snap point that the user has swiped to (and thus never initial or programatically set snap point) */
     const [swipedSnapPoint, setSwipedSnapPoint] = useState(null);
@@ -50,6 +60,12 @@ const Sheet = forwardRef(function SheetComponent({ children, isOpen, initialSnap
      */
     const container = useContext(ContainerContext);
 
+    /**
+     * Mutation observer to watch for changes in the content height of the sheet.
+     * This is used when the sheet is set to FIT snap point.
+     * When the content height changes, the height of the sheet is updated accordingly.
+     * This is needed because the content of the sheet can change dynamically (eg. when the user types in a search field).
+     */
     const fitMutationObserver = useRef();
 
     /*
@@ -179,8 +195,8 @@ const Sheet = forwardRef(function SheetComponent({ children, isOpen, initialSnap
                 setSwipedSnapPoint(snapPoint);
             }
         },
-        trackMouse: true,
-        preventScrollOnSwipe: true
+        trackMouse: true, // Allow mouse swipes. Usually only used while development, but no harm in keeping it.
+        preventScrollOnSwipe: true // Prevent scrolling of the page when swiping (using preventDefault). See https://nearform.com/open-source/react-swipeable/docs/api/#preventscrollonswipe-details
     });
 
     useEffect(() => {

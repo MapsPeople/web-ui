@@ -23,6 +23,11 @@ Sidebar.propTypes = {
 };
 
 /**
+ * The Sidebar component is responsible for rendering other components (Search, Wayfinding etc.) in a sidebar.
+ * It is used on larger screens. On smaller screens, the BottomSheet component is used.
+ *
+ * On kiosk screens, the sidebar is centered in the middle of the screen.
+ *
  * @param {Object} props
  * @param {string} props.directionsFromLocation - Origin Location to be used to instantly show directions.
  * @param {string} props.directionsToLocation - Destination Location to be used to instantly show directions.
@@ -53,7 +58,7 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
             pushAppView(appViews.LOCATION_DETAILS, currentLocation);
         } else if (filteredLocationsByExternalIDs?.length > 1) {
             pushAppView(appViews.EXTERNALIDS);
-            // If there is only one external ID, behave the same as having the location ID prop. 
+            // If there is only one external ID, behave the same as having the location ID prop.
         } else if (filteredLocationsByExternalIDs?.length === 1) {
             setCurrentLocation(filteredLocationsByExternalIDs[0])
             setLocationId(filteredLocationsByExternalIDs[0].id)
