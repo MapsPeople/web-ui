@@ -5,6 +5,48 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.76.1] - 2025-05-14
+
+### Fixed
+
+- Improved German translations.
+
+## [1.76.0] - 2025-05-13
+
+### Added
+
+- Add support for displaying Nested Categories.
+
+## [1.75.1] - 2025-05-08
+
+### Fixed
+
+- Downgraded SDK to version 4.39.1
+
+## [1.75.0] - 2025-05-08
+
+### Added
+
+- Rearranged user interface elements and made categories expandable
+
+## [1.74.9] - 2025-05-06
+
+### Fixed
+
+- Fixed sentry version identifiers. Added mapsindoors sdk to sentry ignore list
+
+## [1.74.8] - 2025-05-01
+
+### Fixed
+
+- Upgraded SDK version v4.40.1.
+
+## [1.74.7] - 2025-04-30
+
+### Fixed
+
+- Fixed Sentry error boundaries for MapsIndoorsMap.
+
 ## [1.74.6] - 2025-03-31
 
 ### Fixed

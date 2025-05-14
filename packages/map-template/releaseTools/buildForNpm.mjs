@@ -12,6 +12,7 @@ const libraries = [
     {
         build: {
             outDir: './dist',
+            sourcemap: true,
             lib: {
                 entry: path.resolve(__dirname, 'webcomponent.js'),
                 name: 'MapTemplate', // unused, but required
@@ -30,13 +31,15 @@ const libraries = [
             cssInjectedByJsPlugin()
         ],
         define: {
-            'process.env.NODE_ENV': '"production"'
+            'process.env.NODE_ENV': '"production"',
+            'process.env.npm_package_version': JSON.stringify(process.env.npm_package_version)
         }
     },
     // React Component
     {
         build: {
             outDir: './dist',
+            sourcemap: true,
             lib: {
                 entry: path.resolve(__dirname, 'reactcomponent.js'),
                 name: 'MapTemplateReact', // unused, but required

@@ -172,7 +172,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
                 setDescriptionHasContentBelow(
                     locationDetailsContainer.current.scrollTop <
                     (locationDetailsContainer.current.scrollHeight -
-                    locationDetailsContainer.current.offsetHeight - 1)
+                        locationDetailsContainer.current.offsetHeight - 1)
                 );
             }
         });

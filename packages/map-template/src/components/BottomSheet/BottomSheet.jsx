@@ -1,10 +1,9 @@
 import { useEffect, useRef } from 'react';
 import { useState } from 'react';
 import { ContainerContext } from './ContainerContext';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import currentLocationState from '../../atoms/currentLocationState';
 import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
-import categoriesState from '../../atoms/categoriesState';
 import Sheet from './Sheet/Sheet';
 import './BottomSheet.scss';
 import LocationDetails from '../LocationDetails/LocationDetails';
@@ -49,7 +48,6 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
     const wayfindingSheetRef = useRef();
     const directionsSheetRef = useRef();
 
-    const categories = useRecoilValue(categoriesState);
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
 
     // Holds boolean depicting if the current Location contains more information than just the basic info that is shown in minimal height bottom sheet.
@@ -109,9 +107,12 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
             pushAppView(appViews.SEARCH);
             setCurrentLocation();
             setFilteredLocationsByExternalID([]);
+            // Reset the search sheet height to its minimum size when closing location details
+            searchSheetRef.current.setSnapPoint(snapPoints.MIN);
         } else {
             pushAppView(appViews.SEARCH);
             setCurrentLocation();
+            searchSheetRef.current.setSnapPoint(snapPoints.MIN);
         }
     }
 
@@ -126,7 +127,7 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
 
     const bottomSheets = [
         <Sheet
-            minimizedHeight={categories.length > 0 ? 136 : 80}
+            minimizedHeight={80}
             initialSnapPoint={snapPoints.MIN}
             key="SEARCH"
             isOpen={currentAppView === appViews.SEARCH}
