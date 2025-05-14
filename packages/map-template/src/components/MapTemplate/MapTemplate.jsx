@@ -640,9 +640,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * use those coordinates in longitude,latitude format
      */
     useEffect(() => {
-        if (!center && appConfig?.appSettings?.latitude && appConfig?.appSettings?.longitude) {
-            const formattedCenter = appConfig.appSettings.longitude + ',' + appConfig.appSettings.latitude;
-            setCenter(formattedCenter);
+        if (!center && appConfig?.appSettings?.center) {
+            setCenter(appConfig.appSettings.center);
         }
     }, [center, appConfig]);
 
