@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.76.3] - 2025-05-15
+
+### Fixed
+
+- Upgraded to SDK v4.40.2.
+
+## [1.76.2] - 2025-05-15
+
+### Fixed
+
+- Fix missing gmMapId prop
+
+## [1.76.1] - 2025-05-14
+
+### Fixed
+
+- Improved German translations.
+
+## [1.76.0] - 2025-05-13
+
+### Added
+
+- Add support for displaying Nested Categories.
+
 ## [1.75.1] - 2025-05-08
 
 ### Fixed
