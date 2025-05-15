@@ -43,7 +43,6 @@ function ViewSelector() {
         });
 
         // Start observing the document body for additions of child elements.
-        // For better performance, observe a more specific parent element if possible,
         const observerTargetElement = document.body;
         const config = { childList: true, subtree: true };
 
