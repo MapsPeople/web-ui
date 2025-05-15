@@ -2,27 +2,29 @@
     position: relative;
     display: flex;
     align-items: center;
-    gap: var(--spacing-x-small);
-    padding: var(--spacing-x-small);
+    justify-content: center;
     border: 1px solid #E6E6E6;
     border-radius: var(--rounding-large);
+    width: var(--spacing-xxx-large);
+    height: var(--spacing-xxx-large);
     background: var(--tailwind-colors-white);
     transition: background-color 0.2s, border-color 0.2s;
     color: inherit;
     font: inherit;
-    outline: none;
 
     &:hover {
         background-color: var(--tailwind-colors-gray-50);
         border: 1px solid var(--tailwind-colors-gray-200);
     }
+}
 
-    svg {
-        display: block;
-    }
+.view-selector-button-container {
+    display: flex;
 
-    span {
-        font-size: var(--font-size-medium);
+    &.desktop .view-selector-toggle-button {
+        width: auto;
+        padding: var(--spacing-x-small);
+        gap: var(--spacing-x-small);
     }
 }
 
@@ -65,26 +67,6 @@
     &:hover {
         background-color: var(--tailwind-colors-gray-100);
         border: 1px solid var(--tailwind-colors-gray-200);
-    }
-}
-
-// Button to toggle the view selector
-.view-selector-button-container {
-    z-index: var(--z-index-sticky);
-
-    // Only apply fixed positioning for mobile
-    &.mobile {
-        position: fixed;
-        top: 25%;
-        left: 24%;
-        bottom: var(--spacing-large);
-        right: var(--spacing-large);
-    }
-
-    // For desktop, let the MapControls component position it
-    &.desktop {
-        position: relative;
-        width: fit-content;
     }
 }
 
