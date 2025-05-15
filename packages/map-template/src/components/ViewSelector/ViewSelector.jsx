@@ -113,7 +113,7 @@ function ViewSelector() {
     }, [mapsIndoorsInstance]);
 
     // Early return if the current venue has one building
-    if (buildings.length == 1) {
+    if (buildings.length === 1) {
         return null;
     }
 
