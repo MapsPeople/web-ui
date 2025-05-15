@@ -640,8 +640,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes to the center prop.
      */
     useEffect(() => {
-        setCenter(center);
-    }, [center]);
+        setCenter(center ?? appConfig?.appSettings?.center);
+    }, [center, appConfig]);
 
     /*
      * Sets document title based on useAppTitle and appConfig values.
