@@ -11,16 +11,16 @@
     color: inherit;
     font: inherit;
     outline: none;
-        
+
     &:hover {
         background-color: var(--tailwind-colors-gray-50);
         border: 1px solid var(--tailwind-colors-gray-200);
     }
-    
+
     svg {
         display: block;
     }
-    
+
     span {
         font-size: var(--font-size-medium);
     }
@@ -31,11 +31,11 @@
     border-radius: var(--rounding-large);
     padding: var(--spacing-x-small);
     overflow-y: auto;
-    // margin-bottom: var(--spacing-large);
     display: flex;
     flex-direction: column;
     gap: 0;
     z-index: var(--z-index-sticky);
+    max-height: 40vh; // Limit height for long building lists
 }
 
 .building-list-item {
@@ -67,24 +67,24 @@
         border: 1px solid var(--tailwind-colors-gray-200);
     }
 }
+
 // Button to toggle the view selector
 .view-selector-button-container {
-    position: fixed;
     z-index: var(--z-index-sticky);
-    
-    // Desktop positioning
-    &.desktop {
-        top: 25%;
-        left: 24%;
-        transform: translate(-50%, -50%);
-    }
-    
-    // Mobile positioning
+
+    // Only apply fixed positioning for mobile
     &.mobile {
+        position: fixed;
         top: 25%;
         left: 24%;
         bottom: var(--spacing-large);
         right: var(--spacing-large);
+    }
+
+    // For desktop, let the MapControls component position it
+    &.desktop {
+        position: relative;
+        width: fit-content;
     }
 }
 
@@ -93,15 +93,15 @@
     border-radius: var(--rounding-large);
     display: flex;
     flex-direction: column;
-    
+
     &.desktop {
-        position: fixed;
-        top: calc(25% - 40px);
-        left: 24%;
-        transform: translate(-50%, -100%);
+        position: absolute;
+        bottom: calc(100% + var(--spacing-medium));
+        margin-top: var(--spacing-xx-small);
         z-index: var(--z-index-sticky);
+        min-width: 200px;
     }
-    
+
     &.mobile {
         position: absolute;
         top: 50%;
@@ -119,8 +119,7 @@
     align-items: center;
     padding: var(--spacing-x-small);
     border-bottom: 1px solid var(--tailwind-colors-gray-100);
-    // z-index: var(--z-index-sticky);
-    
+
     span {
         text-align: left;
         font-size: var(--font-size-medium);
