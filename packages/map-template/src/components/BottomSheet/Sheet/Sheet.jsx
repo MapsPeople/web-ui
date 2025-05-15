@@ -91,9 +91,6 @@ function Sheet({ children, isOpen, minHeight, preferredSizeSnapPoint, onSwipedTo
 
         // For FIT size, first set to auto to get real content height
         if (targetSize === snapPoints.FIT) {
-            // Set initial auto height to measure content
-            setStyle({ height: 'auto' });
-
             // Set the actual pixel height of the sheet.
             // RequestAnimationFrame is needed in order to the height style change to kick in thus enabling the transition of height.
             // Inspired by https://css-tricks.com/using-css-transitions-auto-dimensions/#aa-technique-3-javascript
