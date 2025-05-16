@@ -16,6 +16,7 @@ const nl = {
     'Transit': 'Overgang',
     'Drive': 'Rijden',
     'Start wayfinding': 'Begin met navigeren ',
+    'Pan Map to View': 'Kaart verschuiven naar weergave',
     // Location Details
     'Read full description': 'Lees de volledige beschrijving',
     // Locations List
