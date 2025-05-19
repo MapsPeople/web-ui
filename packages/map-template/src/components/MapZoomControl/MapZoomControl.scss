@@ -1,0 +1,58 @@
+/* Debug positioning - centers the control in the middle of the screen */
+.map-zoom-control {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000; /* Ensure it appears above other elements */
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  
+  /* Add a debug border to make it more visible */
+//   border: 2px dashed red;
+//   padding: 4px;
+}
+
+/* Style for the buttons */
+.map-zoom-control__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background-color: white;
+  border: none;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: #f5f5f5;
+  }
+  
+  &:active {
+    background-color: #e0e0e0;
+  }
+  
+  /* Remove outline but keep it accessible */
+  &:focus {
+    outline: 2px solid #4285f4;
+    outline-offset: -2px;
+  }
+  
+  /* Add separator between buttons */
+  &--plus {
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  /* Style SVG icons */
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* Add comment to remove these debug styles later */
+/* TODO: Remove debug positioning and place the control in the appropriate location */
