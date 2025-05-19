@@ -24,6 +24,7 @@ import miTransitionLevelState from "../../atoms/miTransitionLevelState";
 import showRoadNamesState from "../../atoms/showRoadNamesState";
 import PropTypes from "prop-types";
 import ViewSelector from "../ViewSelector/ViewSelector";
+import MapZoomControl from "../MapZoomControl/MapZoomControl";
 
 MapWrapper.propTypes = {
     onLocationClick: PropTypes.func,
@@ -319,6 +320,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
             mapOptions={mapOptions}
         />}
         {apiKey && <ViewSelector />}
+        {apiKey && <MapZoomControl />}
     </>)
 }
 
