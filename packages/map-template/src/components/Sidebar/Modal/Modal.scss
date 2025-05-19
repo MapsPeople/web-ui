@@ -21,10 +21,6 @@ $desktop-breakpoint: 992px;
 
     &--full:not(.modal--kiosk) {
         height: 100%;
-
-        .modal__content {
-            height: 100%;
-        }
     }
 
     &--substeps {
