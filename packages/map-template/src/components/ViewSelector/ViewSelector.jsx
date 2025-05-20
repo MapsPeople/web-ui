@@ -5,7 +5,6 @@ import { ReactComponent as ChevronUpIcon } from '../../assets/chevron-up.svg';
 import { ReactComponent as PanViewIcon } from '../../assets/pan-view-icon.svg';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
-import currentVenueNameState from '../../atoms/currentVenueNameState';
 import './ViewSelector.scss';
 import { useRecoilValue } from 'recoil';
 import { useTranslation } from 'react-i18next';
@@ -24,7 +23,6 @@ function ViewSelector() {
     const [buildingsData, setBuildingsData] = useState([]);
     const isDesktop = useIsDesktop();
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
-    const currentVenueName = useRecoilValue(currentVenueNameState);
     const viewSelectorMountPoint = '.view-selector-portal';
     const [portalContainer, setPortalContainer] = useState(null);
     const desktopDropdownRef = useRef(null);
@@ -89,23 +87,20 @@ function ViewSelector() {
         };
     }, [isDesktop]); // Include isDesktop in the dependency array
 
-    // Get all buildings for the current venue
+    // Get all buildings of the current venue
     useEffect(() => {
-        if (mapsIndoorsInstance && currentVenueName) {
-            // Get the current venue
-            window.mapsindoors.services.VenuesService.getVenue(currentVenueName)
-                .then(() => {
-                    // Get all buildings for the current venue
-                    return window.mapsindoors.services.VenuesService.getBuildings();
-                })
-                .then(buildingsData => {
-                    setBuildingsData(buildingsData);
-                })
-                .catch(error => {
-                    console.error('Error fetching buildings:', error);
-                });
+        if (mapsIndoorsInstance) {
+            const venueId = mapsIndoorsInstance.getVenue()?.id;
+
+            // Check if venueId is valid before fetching buildings
+            if (venueId) {
+                window.mapsindoors.services.VenuesService.getBuildings(venueId)
+                    .then(buildingsData => {
+                        setBuildingsData(buildingsData);
+                    })
+            }
         }
-    }, [mapsIndoorsInstance, currentVenueName]);
+    }, [mapsIndoorsInstance]);
 
     // Extract only necessary building properties to create a simplified data structure, memoize the result
     const buildings = useMemo(() => {
