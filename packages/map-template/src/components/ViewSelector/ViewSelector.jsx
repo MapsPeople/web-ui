@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useCallback } from 'react';
+import { useEffect, useState, useMemo, useCallback, useRef } from 'react';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
 import { ReactComponent as ChevronDownIcon } from '../../assets/chevron-down.svg';
 import { ReactComponent as ChevronUpIcon } from '../../assets/chevron-up.svg';
@@ -20,6 +20,8 @@ function ViewSelector() {
     const currentVenueName = useRecoilValue(currentVenueNameState);
     const viewSelectorMountPoint = '.view-selector-portal';
     const [portalContainer, setPortalContainer] = useState(null);
+    const desktopDropdownRef = useRef(null);
+    const toggleButtonRef = useRef(null);
 
     // Effect to find the portal target DOM node.
     // It tries to find it immediately, and if not found,
@@ -111,6 +113,28 @@ function ViewSelector() {
         setIsExpanded(false);
     }, [mapsIndoorsInstance]);
 
+    // Add effect for handling outside clicks on desktop only
+    useEffect(() => {
+        // Only add listener when expanded and on desktop
+        if (!isExpanded || !isDesktop) return;
+
+        function handleClickOutside(event) {
+            // Check if click was outside the dropdown and not on the toggle button
+            if (desktopDropdownRef.current &&
+                !desktopDropdownRef.current.contains(event.target) &&
+                !event.target.closest(toggleButtonRef.current)) {
+                setIsExpanded(false);
+            }
+        }
+
+        document.addEventListener('mousedown', handleClickOutside);
+
+        // Clean up
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isExpanded, isDesktop]);
+
     // Early return if the current venue has one building
     if (buildings.length === 1) {
         return null;
@@ -124,7 +148,7 @@ function ViewSelector() {
         /* Render mobile list toggle button if isDesktop is false */
         if (!isDesktop) {
             return (
-                <button className="view-selector-toggle-button" onClick={() => setIsExpanded(!isExpanded)}>
+                <button ref={toggleButtonRef} className="view-selector-toggle-button" onClick={() => setIsExpanded(!isExpanded)}>
                     <PanViewIcon />
                 </button>
             );
@@ -177,9 +201,9 @@ function ViewSelector() {
                 </div>
             )}
 
-            {/* Desktop expanded view */}
+            {/* Desktop expanded view with ref for click-outside detection */}
             {isDesktop && isExpanded && (
-                <div className="view-selector-container desktop">
+                <div ref={desktopDropdownRef} className="view-selector-container desktop">
                     <BuildingList />
                 </div>
             )}
