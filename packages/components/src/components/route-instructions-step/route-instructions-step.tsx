@@ -141,7 +141,7 @@ export class RouteInstructionsStep implements ComponentInterface {
     /**
      * Emits stepClicked event (if click target is not related to an action).
      *
-     * @param event Event
+     * @param event - Event.
      */
     stepClickHandler(event): void {
         // Don't emit click event if clicked on elements that are actions to other things
@@ -271,9 +271,9 @@ export class RouteInstructionsStep implements ComponentInterface {
         return (
             <span class='step__toggle' onClick={(): void => this.toggleSubsteps()}>
                 {this.substepsAreOpen ?
-                    <mi-icon part="step-toggle" icon-name="chevron-down"></mi-icon>
-                    :
                     <mi-icon part="step-toggle" icon-name="chevron-up"></mi-icon>
+                    :
+                    <mi-icon part="step-toggle" icon-name="chevron-down"></mi-icon>
                 }
             </span>
         );
