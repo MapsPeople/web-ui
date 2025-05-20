@@ -22,6 +22,8 @@ function ViewSelector() {
     const [portalContainer, setPortalContainer] = useState(null);
     const desktopDropdownRef = useRef(null);
     const toggleButtonRef = useRef(null);
+    const MAX_BUILDINGS_DESKTOP = 600;
+    const BUILDING_LIST_ITEM_HEIGHT = 60; // Height of each building list item in pixels
 
     // Effect to find the portal target DOM node.
     // It tries to find it immediately, and if not found,
@@ -166,10 +168,23 @@ function ViewSelector() {
 
     /**
      * Render a list of buildings for the current venue
+     * 
      */
     const BuildingList = () => {
+        // Calculate height for desktop list (based on MAX_BUILDINGS_DESKTOP value)
+        const desktopListStyle = useMemo(() => {
+            if (isDesktop && buildings.length > MAX_BUILDINGS_DESKTOP) {
+                return {
+                    height: `${MAX_BUILDINGS_DESKTOP * BUILDING_LIST_ITEM_HEIGHT}px`,
+                };
+            }
+            return {};
+        }, [isDesktop, buildings.length]);
+
         return (
-            <div className="building-list">
+            <div
+                className={`building-list`}
+                style={desktopListStyle}>
                 {buildings.map(building => (
                     <button
                         key={building.id}

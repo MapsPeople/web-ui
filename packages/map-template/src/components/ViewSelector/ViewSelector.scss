@@ -38,6 +38,11 @@
     gap: 0;
     z-index: var(--z-index-sticky);
     max-height: 40vh; // Limit height for long building lists
+    scrollbar-width: "none"; // Firefox
+    -ms-overflow-style: "none"; // IE/Edge
+     &::-webkit-scrollbar {
+        display: none;
+    } 
 }
 
 .building-list-item {
