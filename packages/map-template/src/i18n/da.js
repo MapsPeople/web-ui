@@ -16,7 +16,6 @@ const da = {
     'Transit': 'Offentlig transport',
     'Drive': 'Kørsel',
     'Start wayfinding': 'Start rutebeskrivelse',
-    'Pan Map to View': 'Panorer kortet for at se',
     // Location Details
     'Read full description': 'Læs hel beskrivelse',
     // Locations List
@@ -79,6 +78,8 @@ const da = {
     //Opening Hours
     'Open': 'Åben',
     'Closed': 'Lukket',
+    // View Selector
+    'Pan map to view': 'Panorer kortet for at se',
 };
 
 export default da;

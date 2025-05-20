@@ -16,7 +16,6 @@ const nl = {
     'Transit': 'Overgang',
     'Drive': 'Rijden',
     'Start wayfinding': 'Begin met navigeren ',
-    'Pan Map to View': 'Kaart verschuiven naar weergave',
     // Location Details
     'Read full description': 'Lees de volledige beschrijving',
     // Locations List
@@ -79,6 +78,8 @@ const nl = {
     // Opening Hours
     'Open': 'Open',
     'Closed': 'Gesloten',
+    // View Selector
+    'Pan map to view': 'Kaart verschuiven naar weergave',
 };
 
 export default nl;

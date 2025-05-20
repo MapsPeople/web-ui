@@ -16,7 +16,6 @@ const it = {
     'Transit': 'Trasporto pubblico',
     'Drive': 'In auto',
     'Start wayfinding': 'Inizia percorso',
-    'Pan Map to View': 'Sposta la mappa per visualizzare',
     // Location Details
     'Read full description': 'Leggi la descrizione completa',
     // Locations List
@@ -79,6 +78,8 @@ const it = {
     //Opening Hours
     'Open': 'Aperto',
     'Closed': 'Chiuso',
+    // View Selector
+    'Pan map to view': 'Sposta la mappa per visualizzare',
 };
 
 export default it;

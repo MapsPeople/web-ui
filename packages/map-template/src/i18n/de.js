@@ -16,7 +16,6 @@ const de = {
     'Transit': 'Öffentliche Verkehrsmittel',
     'Drive': 'Auto',
     'Start wayfinding': 'Starte Navigation',
-    'Pan Map to View': 'Karte verschieben zur Ansicht',
     // Location Details
     'Read full description': 'Öffne vollständige Beschreibung',
     // Locations list
@@ -79,6 +78,8 @@ const de = {
     // Opening Hours
     'Open': 'Geöffnet',
     'Closed': 'Geschlossen',
+    // View Selector
+    'Pan Map to View': 'Karte verschieben zur Ansicht',
 };
 
 export default de;

@@ -16,7 +16,6 @@ const fr = {
     'Transit': 'En transports',
     'Drive': 'Voiture',
     'Start wayfinding': 'Commencer la navigation',
-    'Pan Map to View': 'Déplacer la carte pour voir',
     // Location Details
     'Read full description': 'Lire la description complète',
     // Locations list
@@ -69,16 +68,18 @@ const fr = {
     'Scan QR code': 'Scanne le code QR',
     'Scan the QR code to see the route on your phone': 'Scannez le code QR pour voir l\'itinéraire sur votre téléphone',
     'Done': 'Fini',
-     // Directions
-     'Cancel route': 'Annuler l\'itinéraire',
-     'Finish route': 'Terminer l\'itinéraire',
-     // Share location link
+    // Directions
+    'Cancel route': 'Annuler l\'itinéraire',
+    'Finish route': 'Terminer l\'itinéraire',
+    // Share location link
     'Share': 'Partager',
     'Copy link': 'Copier le lien',
     'QR Code': 'Code QR',
-     // Opening Hours
+    // Opening Hours
     'Open': 'Ouvert',
     'Closed': 'Fermé',
+    // View Selector
+    'Pan map to view': 'Déplacer la carte pour voir',
 };
 
 export default fr;

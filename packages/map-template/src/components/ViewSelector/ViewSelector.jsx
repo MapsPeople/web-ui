@@ -160,7 +160,7 @@ function ViewSelector() {
         return (
             <button className="view-selector-toggle-button" onClick={() => setIsExpanded(!isExpanded)}>
                 <PanViewIcon />
-                <span> {t('Pan Map to view')}</span>
+                <span> {t('Pan map to view')}</span>
                 {isExpanded ? <ChevronDownIcon /> : <ChevronUpIcon />}
             </button>
         );
@@ -209,7 +209,7 @@ function ViewSelector() {
                     <div className="view-selector-container mobile">
                         <div className="mobile-header">
                             <button className="mobile-exit-button" onClick={() => setIsExpanded(false)}>{<CloseIcon />}</button>
-                            <span>{t('Pan Map to View')}</span>
+                            <span>{t('Pan map to view')}</span>
                         </div>
                         <BuildingList />
                     </div>
