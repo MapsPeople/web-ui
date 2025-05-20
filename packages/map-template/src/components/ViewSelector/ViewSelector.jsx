@@ -11,6 +11,13 @@ import { useRecoilValue } from 'recoil';
 import { useTranslation } from 'react-i18next';
 import { createPortal } from 'react-dom';
 
+/**
+ * Component for selecting and viewing buildings in a venue.
+ * It provides a toggle button to expand/collapse the building list.
+ * On mobile, it shows a modal with a backdrop, while on desktop it shows a dropdown.
+ * 
+ * @returns {JSX.Element} ViewSelector component
+ */
 function ViewSelector() {
     const { t } = useTranslation();
     const [isExpanded, setIsExpanded] = useState(false);
