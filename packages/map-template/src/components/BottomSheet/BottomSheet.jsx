@@ -1,10 +1,9 @@
 import { useEffect, useRef } from 'react';
 import { useState } from 'react';
 import { ContainerContext } from './ContainerContext';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import currentLocationState from '../../atoms/currentLocationState';
 import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
-import categoriesState from '../../atoms/categoriesState';
 import Sheet from './Sheet/Sheet';
 import './BottomSheet.scss';
 import LocationDetails from '../LocationDetails/LocationDetails';
@@ -14,6 +13,7 @@ import Search from '../Search/Search';
 import LocationsList from '../LocationsList/LocationsList';
 import locationIdState from '../../atoms/locationIdState';
 import PropTypes from 'prop-types';
+import { snapPoints } from '../../constants/snapPoints';
 
 BottomSheet.propTypes = {
     directionsFromLocation: PropTypes.string,
@@ -43,9 +43,8 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
     const [directionsSheetSwiped, setDirectionsSheetSwiped] = useState();
 
     const [wayfindingSheetSize, setWayfindingSheetSize] = useState();
-    const [searchSheetSize, setSearchSheetSize] = useState();
+    const [searchSheetSize, setSearchSheetSize] = useState(snapPoints.MIN);
     const [locationsListSheetSize, setLocationsListSheetSize] = useState();
-    const categories = useRecoilValue(categoriesState);
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
 
@@ -85,9 +84,12 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
             pushAppView(appViews.SEARCH);
             setCurrentLocation();
             setFilteredLocationsByExternalID([]);
+            // Reset the search sheet height to its minimum size when closing location details
+            setSearchSheetSize(snapPoints.MIN);
         } else {
             pushAppView(appViews.SEARCH);
             setCurrentLocation();
+            setSearchSheetSize(snapPoints.MIN);
         }
     }
 
@@ -102,7 +104,7 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
 
     const bottomSheets = [
         <Sheet
-            minHeight={categories.length > 0 ? "136" : "80"}
+            minHeight={"80"}
             preferredSizeSnapPoint={searchSheetSize}
             isOpen={currentAppView === appViews.SEARCH}
             key="A">

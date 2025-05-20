@@ -1,10 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import './Categories.scss';
-import { ReactComponent as ChevronRight } from '../../../assets/chevron-right.svg';
-import { ReactComponent as ChevronLeft } from '../../../assets/chevron-left.svg';
 import categoriesState from "../../../atoms/categoriesState";
-import primaryColorState from "../../../atoms/primaryColorState";
 import { snapPoints } from "../../../constants/snapPoints";
 import searchResultsState from "../../../atoms/searchResultsState";
 import filteredLocationsState from "../../../atoms/filteredLocationsState";
@@ -17,12 +14,17 @@ import categoryState from "../../../atoms/categoryState";
 import useOutsideMapsIndoorsDataClick from "../../../hooks/useOutsideMapsIndoorsDataClick";
 import mapsIndoorsInstanceState from "../../../atoms/mapsIndoorsInstanceState";
 import PropTypes from "prop-types";
+import { ReactComponent as ChevronLeft } from '../../../assets/chevron-left.svg';
+import { useTranslation } from "react-i18next";
 
 Categories.propTypes = {
     onSetSize: PropTypes.func,
     getFilteredLocations: PropTypes.func,
     searchFieldRef: PropTypes.object,
-    isOpen: PropTypes.bool
+    isOpen: PropTypes.bool,
+    topLevelCategory: PropTypes.bool,
+    handleBack: PropTypes.func,
+    selectedCategoriesArray: PropTypes.object
 };
 
 /**
@@ -33,20 +35,15 @@ Categories.propTypes = {
  * @param {function} props.getFilteredLocations - Function that gets the filtered locations based on the category selected.
  * @param {object} props.searchFieldRef - The reference to the search input field.
  * @param {boolean} props.isOpen - Determines wheteher the Categories window is open or not.
+ * @param {boolean} props.topLevelCategory - If true, renders top-level categories; otherwise, renders sub-categories.
+ * @param {function} props.handleBack - Callback function to handle back navigation between categories.
+ * @param {Array<string>} props.selectedCategoriesArray - Array containing selected categories (e.g., top-level and sub-category).
  */
-function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen }) {
-    /** Referencing the categories results container DOM element */
-    const categoriesListRef = useRef();
+function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, topLevelCategory, handleBack, selectedCategoriesArray }) {
 
     const categories = useRecoilValue(categoriesState);
 
     const isDesktop = useIsDesktop();
-
-    const [isLeftButtonDisabled, setIsLeftButtonDisabled] = useState(true);
-
-    const [isRightButtonDisabled, setIsRightButtonDisabled] = useState(false);
-
-    const primaryColor = useRecoilValue(primaryColorState);
 
     const [selectedCategory, setSelectedCategory] = useRecoilState(selectedCategoryState);
 
@@ -59,16 +56,24 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
     const [activeCategory, setActiveCategory] = useState();
 
     const isBottomSheetLoaded = useRecoilValue(isBottomSheetLoadedState);
+
     const category = useRecoilValue(categoryState);
 
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
+
     const clickedOutsideMapsIndoorsData = useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOpen);
 
+    const [categoriesToShow, setCategoriesToShow] = useState([]);
+
+    const [selectedCategoryDisplayName, setSelectedCategoryDisplayName] = useState([])
+
+    const { t } = useTranslation();
+
     /**
-     * Communicate size change to parent component.
-     *
-     * @param {number} size
-     */
+    * Communicate size change to parent component.
+    *
+    * @param {number} size
+    */
     function setSize(size) {
         if (typeof onSetSize === 'function') {
             onSetSize(size);
@@ -82,7 +87,6 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
      */
     function categoryClicked(category) {
         setSelectedCategory(category);
-        setSize(snapPoints.MAX);
 
         if (selectedCategory === category) {
             // If the clicked category is the same as currently selected, "deselect" it.
@@ -106,46 +110,13 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
     }
 
     /**
-     * Update the state of the left and right scroll buttons
-     */
-    function updateScrollButtonsState() {
-        const { scrollLeft, scrollWidth, clientWidth } = categoriesListRef?.current || {};
-
-        // Disable or enable the scroll left button
-        if (scrollLeft === 0) {
-            setIsLeftButtonDisabled(true);
-        } else if (isLeftButtonDisabled) {
-            setIsLeftButtonDisabled(false);
-        }
-
-        // Disable or enable the scroll right button
-        if (scrollWidth - scrollLeft === clientWidth) {
-            setIsRightButtonDisabled(true);
-        } else if (scrollWidth - scrollLeft > clientWidth) {
-            setIsRightButtonDisabled(false);
-        }
-    }
-
-    /**
-     * Update the scroll position based on the value
-     *
-     * @param {number} value
-     */
-    function updateScrollPosition(value) {
-        categoriesListRef?.current.scroll({
-            left: categoriesListRef?.current.scrollLeft + value,
-            behavior: 'smooth'
-        });
-    }
-
-    /**
      * Handles cleanup when user clicks outside MapsIndoors data area.
      * This effect will:
      * 1. Clear the currently selected category
      * 2. Reset all search/filter related states to empty
      * 3. Collapse the view back to fit size
      * 4. Clear any existing search input
-     * 
+     *
      * Only triggers when:
      * - There is a currently selected category and user clicks outside MapsIndoors data
      */
@@ -154,7 +125,6 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
             setSelectedCategory(null);
             setSearchResults([]);
             setFilteredLocations([]);
-            setSize(snapPoints.FIT);
 
             // If search field has a value, clear the search field.
             if (searchFieldRef.current?.getValue()) {
@@ -162,33 +132,6 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
             }
         }
     }, [clickedOutsideMapsIndoorsData]);
-
-    /**
-     * Add event listener for scrolling in the categories list
-     */
-    useEffect(() => {
-        // When categoriesListRef.current element resizes, update scroll button states.
-        const handleResize = () => {
-            updateScrollButtonsState();
-        };
-
-        let resizeObserver;
-
-        if (categoriesListRef.current) {
-            // Because of timing issue, we need to listen to changes inside div element for categories.
-            // Based on that we can handle disabling/enabling scroll buttons.
-            // Read more: https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver
-            resizeObserver = new ResizeObserver(handleResize)
-            resizeObserver.observe(categoriesListRef.current);
-            categoriesListRef.current.addEventListener('scroll', updateScrollButtonsState);
-        }
-
-        return () => {
-            setActiveCategory();
-            resizeObserver?.disconnect();
-            categoriesListRef.current?.removeEventListener('scroll', updateScrollButtonsState);
-        };
-    }, []);
 
     /*
      * Get the active category element.
@@ -210,39 +153,73 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen })
         }
     }, [activeCategory, category, isBottomSheetLoaded]);
 
+    /*
+     * Filters and sets the categories to display based on whether top-level or sub-categories should be shown.
+     * If `topLevelCategory` is true, it excludes categories that appear as children.
+     * Otherwise, it includes only categories that are children.
+     * 
+     * Sets selected category display name, based on currently selected category.
+     */
+    useEffect(() => {
+        let categoriesToDisplay = [];
+
+        if (topLevelCategory) {
+            // Show only top-level categories
+            const allChildKeys = categories.flatMap(([, category]) => category.childKeys || []);
+            categoriesToDisplay = categories.filter(([key]) => !allChildKeys.includes(key));
+        } else if (selectedCategory) {
+            // Show only the children of the selected category
+            const selectedCategoryData = categories.find(([key]) => key === selectedCategory)?.[1];
+            const selectedCategoryChildKeys = selectedCategoryData?.childKeys || [];
+            categoriesToDisplay = categories.filter(([key]) => selectedCategoryChildKeys.includes(key));
+        }
+
+        setCategoriesToShow(categoriesToDisplay);
+
+        const categoryDisplayName = categories.find(([key]) => key === selectedCategory)?.[1]?.displayName;
+        setSelectedCategoryDisplayName(categoryDisplayName);
+    }, [categories])
+
     return (
         <div className="categories prevent-scroll" {...scrollableContentSwipePrevent}>
-            {categories.length > 0 &&
-                <>
-                    {isDesktop &&
-                        <button className={`categories__scroll-button`}
-                            onClick={() => updateScrollPosition(-300)}
-                            disabled={isLeftButtonDisabled}>
-                            <ChevronLeft />
-                        </button>
-                    }
-                    <div ref={categoriesListRef} className="categories__list">
-                        {categories?.map(([category, categoryInfo]) =>
-                            <mi-chip
-                                icon={categoryInfo.iconUrl}
-                                background-color={primaryColor}
-                                content={categoryInfo.displayName}
-                                active={selectedCategory === category}
-                                onClick={() => categoryClicked(category)}
-                                key={category}>
-                            </mi-chip>
-                        )}
-                    </div>
-                    {isDesktop &&
-                        <button className={`categories__scroll-button`}
-                            onClick={() => updateScrollPosition(300)}
-                            disabled={isRightButtonDisabled}>
-                            <ChevronRight />
-                        </button>
-                    }
-                </>}
+            {categories.length > 0 && (
+                <div className="categories__list">
+                    {!topLevelCategory && (
+                        <div className="categories__nav">
+                            <button
+                                aria-label={t('Back')}
+                                type="button"
+                                className="categories__nav-button"
+                                onClick={handleBack}>
+                                <ChevronLeft />
+                            </button>
+                            <div>{selectedCategoryDisplayName}</div>
+                        </div>
+                    )}
+    
+                    {categoriesToShow.map(([category, categoryInfo]) => {
+                        if (!topLevelCategory && selectedCategoriesArray.current.length !== 1) {
+                            return null;
+                        }
+    
+                        return (
+                            <div key={category} className="categories__category">
+                                <button
+                                    onClick={() =>
+                                        topLevelCategory
+                                            ? categoryClicked(category)
+                                            : getFilteredLocations(category)
+                                    }>
+                                    <img src={categoryInfo.iconUrl} alt="" />
+                                    {categoryInfo.displayName}
+                                </button>
+                            </div>
+                        );
+                    })}
+                </div>
+            )}
         </div>
-    )
+    );
 }
 
 export default Categories;

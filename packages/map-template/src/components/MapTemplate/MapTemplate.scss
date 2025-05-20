@@ -24,10 +24,6 @@
 
         .view-mode-switch {
             display: block;
-            margin-top: 68px;
-            @media (max-width: $desktop-breakpoint) {
-                margin-top: 62px;
-            }
         }
     }
 
