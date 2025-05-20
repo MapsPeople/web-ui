@@ -59,7 +59,7 @@ function ViewSelector() {
         observer.observe(observerTargetElement, config);
 
         return () => {
-            observer.disconnect(); // Cleanup observer on component unmount
+            observer?.disconnect(); // Cleanup with optional chaining
         };
     }, []); // Empty dependency array, so it runs once on mount to set up the finder/observer.
 
@@ -85,7 +85,7 @@ function ViewSelector() {
 
         // Clean up the observer on component unmount or when isDesktop changes
         return () => {
-            resizeObserver.disconnect();
+            resizeObserver?.disconnect(); // Cleanup with optional chaining
         };
     }, [isDesktop]); // Include isDesktop in the dependency array
 
