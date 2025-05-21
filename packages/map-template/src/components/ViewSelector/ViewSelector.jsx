@@ -101,6 +101,23 @@ function ViewSelector() {
         }
     }, [mapsIndoorsInstance, currentVenueName]);
 
+    // Effect to fetch venueId when currentVenueName changes
+    useEffect(() => {
+        if (mapsIndoorsInstance && currentVenueName) {
+            // Direct API call avoids stale data from mapsIndoorsInstance.getVenue() during venue transitions
+            window.mapsindoors.services.VenuesService.getVenues()
+                .then(venues => {
+                    // Find the venue with matching name
+                    const venue = venues.find(v =>
+                        v.name.toLowerCase() === currentVenueName.toLowerCase());
+
+                    if (venue?.id) {
+                        setVenueId(venue.id);
+                    }
+                });
+        }
+    }, [mapsIndoorsInstance, currentVenueName]);
+
     // Effect to fetch buildings when venueId is available
     useEffect(() => {
         if (venueId) {
@@ -149,9 +166,9 @@ function ViewSelector() {
     }, [isExpanded, isDesktop]);
 
     // Early return if the current venue has one building
-    // if (buildings.length <= 1) {
-    //     return null;
-    // }
+    if (buildings.length <= 1) {
+        return null;
+    }
 
     /**
      * Toggle button component that renders different content based on the isDesktop prop
