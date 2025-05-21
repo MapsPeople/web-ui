@@ -5,6 +5,7 @@ import { ReactComponent as ChevronUpIcon } from '../../assets/chevron-up.svg';
 import { ReactComponent as PanViewIcon } from '../../assets/pan-view-icon.svg';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
+import currentVenueNameState from '../../atoms/currentVenueNameState';
 import './ViewSelector.scss';
 import { useRecoilValue } from 'recoil';
 import { useTranslation } from 'react-i18next';
@@ -24,6 +25,7 @@ function ViewSelector() {
     const [venueId, setVenueId] = useState(null);
     const isDesktop = useIsDesktop();
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
+    const currentVenueName = useRecoilValue(currentVenueNameState);
     const viewSelectorMountPoint = '.view-selector-portal';
     const [portalContainer, setPortalContainer] = useState(null);
     const desktopDropdownRef = useRef(null);
@@ -88,15 +90,16 @@ function ViewSelector() {
         };
     }, [isDesktop]); // Include isDesktop in the dependency array
 
-    // Effect to fetch venueId from mapsIndoorsInstance
+    // Effect to fetch venueId from mapsIndoorsInstance when mapsIndoorsInstance and currentVenueName are available
+    // Prevents some edge cases where mapsIndoorsInstance is not ready yet
     useEffect(() => {
-        if (mapsIndoorsInstance) {
+        if (mapsIndoorsInstance && currentVenueName) {
             const venueId = mapsIndoorsInstance.getVenue()?.id;
             if (venueId) {
                 setVenueId(venueId);
             }
         }
-    }, [mapsIndoorsInstance]);
+    }, [mapsIndoorsInstance, currentVenueName]);
 
     // Effect to fetch buildings when venueId is available
     useEffect(() => {
@@ -146,9 +149,9 @@ function ViewSelector() {
     }, [isExpanded, isDesktop]);
 
     // Early return if the current venue has one building
-    if (buildings.length <= 1) {
-        return null;
-    }
+    // if (buildings.length <= 1) {
+    //     return null;
+    // }
 
     /**
      * Toggle button component that renders different content based on the isDesktop prop
