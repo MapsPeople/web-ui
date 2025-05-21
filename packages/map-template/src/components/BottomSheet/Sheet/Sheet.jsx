@@ -143,9 +143,14 @@ const Sheet = forwardRef(function SheetComponent({ children, isOpen, initialSnap
         }
 
         fitMutationObserver.current = new MutationObserver(() => {
-            // const height = contentRef.current.children.item(0).clientHeight;
             contentHeightRef.current = contentRef.current.children.item(0).clientHeight;
-            snapSheetHeightToSnapPoint(snapPoints.FIT);
+            // Set the snap point according to the content height
+            if (contentHeightRef.current < container.current.clientHeight) {
+                snapSheetHeightToSnapPoint(snapPoints.FIT);
+            } else {
+                snapSheetHeightToSnapPoint(snapPoints.MAX);
+            }
+
         });
 
         fitMutationObserver.current.observe(contentRef.current, {
