@@ -140,6 +140,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
             setSize(snapPoints.MAX);
         } else {
             collapseLocationDescription();
+            setSize(snapPoints.FIT);
         }
     }
 
