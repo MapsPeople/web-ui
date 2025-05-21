@@ -130,7 +130,7 @@ const Sheet = forwardRef(function SheetComponent({ children, isOpen, initialSnap
      * When the sheet is active, and the current snap point is set to FIT or MAX, we need to observe the content height of the sheet in
      * order to react on dynamic changes in the content height.
      */
-        useEffect(() => {
+    useEffect(() => {
         if (isOpen && snappedTo.current === snapPoints.FIT || snappedTo.current === snapPoints.MAX) {
             observeContentHeight();
         } else {
@@ -247,7 +247,7 @@ const Sheet = forwardRef(function SheetComponent({ children, isOpen, initialSnap
             style={style}
         >
             {/* We need to have a div in a div for it being able to scroll content separately and for the height to be measurable */}
-            <div ref={contentRef} className="sheet__content" style={style}>
+            <div ref={contentRef} className={`sheet__content ${snappedTo.current === snapPoints.MIN ? 'sheet__content--no-scroll' : ''}`} style={style}>
                 {clonedChildren}
             </div>
         </div>
