@@ -80,6 +80,7 @@ const es = {
     'Closed': 'Cerrado',
     // View Selector
     'Pan map to view': 'Mover el mapa para ver',
+    'Close view selector': 'Cerrar selector de vista',
 };
 
 export default es;

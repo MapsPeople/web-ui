@@ -80,6 +80,7 @@ const da = {
     'Closed': 'Lukket',
     // View Selector
     'Pan map to view': 'Panorer kortet for at se',
+    'Close view selector': 'Luk visningsvælger',
 };
 
 export default da;

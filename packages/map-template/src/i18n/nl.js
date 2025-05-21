@@ -80,6 +80,7 @@ const nl = {
     'Closed': 'Gesloten',
     // View Selector
     'Pan map to view': 'Kaart verschuiven naar weergave',
+    'Close view selector': 'Sluiten weergavekiezer',
 };
 
 export default nl;

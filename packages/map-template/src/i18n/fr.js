@@ -80,6 +80,7 @@ const fr = {
     'Closed': 'Fermé',
     // View Selector
     'Pan map to view': 'Déplacer la carte pour voir',
+    'Close view selector': 'Fermer le sélecteur de vue',
 };
 
 export default fr;

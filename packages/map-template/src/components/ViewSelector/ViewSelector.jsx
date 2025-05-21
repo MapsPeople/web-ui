@@ -236,7 +236,10 @@ function ViewSelector() {
                     {/* Modal container */}
                     <div className="view-selector__container view-selector__container--mobile">
                         <div className="mobile-overlay__header">
-                            <button className="mobile-overlay__exit-button" onClick={() => setIsExpanded(false)}>{<CloseIcon />}</button>
+                            <button className="mobile-overlay__exit-button" onClick={() => setIsExpanded(false)}
+                                aria-label={t('Close view selector')}>
+                                {<CloseIcon />
+                                }</button>
                             <span>{t('Pan map to view')}</span>
                         </div>
                         <BuildingList />
