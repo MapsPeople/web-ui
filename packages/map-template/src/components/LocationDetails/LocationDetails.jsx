@@ -151,6 +151,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
         requestAnimationFrame(() => { // Necessary to preserve transition
             setShowFullDescription(true);
             setScrollIndicators();
+            isInFullHeightRef.current = true;
         });
     }
 
@@ -160,6 +161,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
     function collapseLocationDescription() {
         setShowFullDescription(false);
         unsetScrollIndicators();
+        isInFullHeightRef.current = false;
     }
 
     /**
@@ -276,7 +278,6 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
         // If swiping to max height, expand location details.
         // If swiping to smaller height, collapse location details.
         setShowFullDescription(snapPointSwipedByUser === snapPoints.MAX);
-        isInFullHeightRef.current = snapPointSwipedByUser === snapPoints.MAX;
         if (snapPointSwipedByUser === snapPoints.MAX) {
             expandLocationDescription();
         } else {
