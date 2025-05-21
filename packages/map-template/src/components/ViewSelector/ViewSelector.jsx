@@ -21,13 +21,14 @@ function ViewSelector() {
     const { t } = useTranslation();
     const [isExpanded, setIsExpanded] = useState(false);
     const [buildingsData, setBuildingsData] = useState([]);
+    const [venueId, setVenueId] = useState(null);
     const isDesktop = useIsDesktop();
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const viewSelectorMountPoint = '.view-selector-portal';
     const [portalContainer, setPortalContainer] = useState(null);
     const desktopDropdownRef = useRef(null);
     const toggleButtonRef = useRef(null);
-    const MAX_BUILDINGS_DESKTOP = 600;
+    const MAX_BUILDINGS_DESKTOP = 6;
     const BUILDING_LIST_ITEM_HEIGHT = 60; // Height of each building list item in pixels
 
     // Effect to find the portal target DOM node.
@@ -87,20 +88,25 @@ function ViewSelector() {
         };
     }, [isDesktop]); // Include isDesktop in the dependency array
 
-    // Get all buildings of the current venue
+    // Effect to fetch venueId from mapsIndoorsInstance
     useEffect(() => {
         if (mapsIndoorsInstance) {
             const venueId = mapsIndoorsInstance.getVenue()?.id;
-
-            // Check if venueId is valid before fetching buildings
             if (venueId) {
-                window.mapsindoors.services.VenuesService.getBuildings(venueId)
-                    .then(buildingsData => {
-                        setBuildingsData(buildingsData);
-                    })
+                setVenueId(venueId);
             }
         }
     }, [mapsIndoorsInstance]);
+
+    // Effect to fetch buildings when venueId is available
+    useEffect(() => {
+        if (venueId) {
+            window.mapsindoors.services.VenuesService.getBuildings(venueId)
+                .then(buildingsData => {
+                    setBuildingsData(buildingsData);
+                });
+        }
+    }, [venueId]);
 
     // Extract only necessary building properties to create a simplified data structure, memoize the result
     const buildings = useMemo(() => {
@@ -170,7 +176,7 @@ function ViewSelector() {
 
     /**
      * Render a list of buildings for the current venue
-     * 
+     *
      */
     const BuildingList = () => {
         // Calculate height for desktop list (based on MAX_BUILDINGS_DESKTOP value)
