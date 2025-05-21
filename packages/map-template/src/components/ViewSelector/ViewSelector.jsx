@@ -192,7 +192,7 @@ function ViewSelector() {
                         key={building.id}
                         className="building-list-item"
                         onClick={() => handleBuildingClick(building.id)}>
-                        <p>{building.name}</p>
+                        <span>{building.name}</span>
                     </button>
                 ))}
             </div>
