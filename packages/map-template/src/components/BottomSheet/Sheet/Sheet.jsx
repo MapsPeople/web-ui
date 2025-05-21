@@ -124,18 +124,26 @@ const Sheet = forwardRef(function SheetComponent({ children, isOpen, initialSnap
 
         snappedTo.current = snapPoint;
 
-        // When fitting to content, setup a mutation observer to watch for changes in the content height
-        // and update the height of the sheet accordingly
-        if (snapPoint === snapPoints.FIT) {
+    }
+
+    /*
+     * When the sheet is active, and the current snap point is set to FIT or MAX, we need to observe the content height of the sheet in
+     * order to react on dynamic changes in the content height.
+     */
+        useEffect(() => {
+        if (isOpen && snappedTo.current === snapPoints.FIT || snappedTo.current === snapPoints.MAX) {
             observeContentHeight();
         } else {
             stopObserveContentHeight();
         }
-    }
+
+        return () => {
+            stopObserveContentHeight();
+        }
+    }, [isOpen, snappedTo.current])
 
     /**
      * Observe the content height of the sheet and update the height of the sheet accordingly.
-     * This should only be used when the sheet is set to FIT snap point.
      */
     function observeContentHeight() {
         if (fitMutationObserver.current) {
