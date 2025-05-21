@@ -178,7 +178,7 @@ function ViewSelector() {
         /* Render mobile list toggle button if isDesktop is false */
         if (!isDesktop) {
             return (
-                <button ref={toggleButtonRef} className="view-selector-toggle-button" onClick={() => setIsExpanded(!isExpanded)}>
+                <button ref={toggleButtonRef} className="view-selector__toggle-button" onClick={() => setIsExpanded(!isExpanded)}>
                     <PanViewIcon />
                 </button>
             );
@@ -186,7 +186,7 @@ function ViewSelector() {
 
         /* Render desktop list toggle button if isDesktop is true */
         return (
-            <button className="view-selector-toggle-button" onClick={() => setIsExpanded(!isExpanded)}>
+            <button className="view-selector__toggle-button" onClick={() => setIsExpanded(!isExpanded)}>
                 <PanViewIcon />
                 <span> {t('Pan map to view')}</span>
                 {isExpanded ? <ChevronDownIcon /> : <ChevronUpIcon />}
@@ -211,12 +211,12 @@ function ViewSelector() {
 
         return (
             <div
-                className={`building-list`}
+                className="building-list"
                 style={desktopListStyle}>
                 {buildings.map(building => (
                     <button
                         key={building.id}
-                        className="building-list-item"
+                        className="building-list__item"
                         onClick={() => handleBuildingClick(building.id)}>
                         <span>{building.name}</span>
                     </button>
@@ -226,17 +226,17 @@ function ViewSelector() {
     };
 
     const viewSelectorContent = (
-        <>
+        <div className="view-selector">
             {/* Mobile view with overlay and modal */}
             {!isDesktop && isExpanded && (
                 <div className="mobile-overlay">
                     {/* Backdrop with blur effect */}
-                    <div className="modal-backdrop" onClick={() => setIsExpanded(false)}></div>
+                    <div className="mobile-overlay__backdrop" onClick={() => setIsExpanded(false)}></div>
 
                     {/* Modal container */}
-                    <div className="view-selector-container mobile">
-                        <div className="mobile-header">
-                            <button className="mobile-exit-button" onClick={() => setIsExpanded(false)}>{<CloseIcon />}</button>
+                    <div className="view-selector__container view-selector__container--mobile">
+                        <div className="mobile-overlay__header">
+                            <button className="mobile-overlay__exit-button" onClick={() => setIsExpanded(false)}>{<CloseIcon />}</button>
                             <span>{t('Pan map to view')}</span>
                         </div>
                         <BuildingList />
@@ -246,16 +246,16 @@ function ViewSelector() {
 
             {/* Desktop expanded view with ref for click-outside detection */}
             {isDesktop && isExpanded && (
-                <div ref={desktopDropdownRef} className="view-selector-container desktop">
+                <div ref={desktopDropdownRef} className="view-selector__container view-selector__container--desktop">
                     <BuildingList />
                 </div>
             )}
 
             {/* Toggle button - always visible, positioned differently based on viewport */}
-            <div className={`view-selector-button-container ${isDesktop ? 'desktop' : 'mobile'}`}>
+            <div className={`view-selector__button-container ${isDesktop ? 'view-selector__button-container--desktop' : 'view-selector__button-container--mobile'}`}>
                 <ToggleButton />
             </div>
-        </>
+        </div>
     );
 
     // Only attempt to create portal if the portalContainer DOM node has been found
