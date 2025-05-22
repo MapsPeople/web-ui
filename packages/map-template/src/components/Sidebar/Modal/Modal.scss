@@ -5,7 +5,7 @@ $desktop-breakpoint: 992px;
     z-index: var(--z-index-overlay);
     width: 568px;
     left: var(--spacing-medium);
-    bottom: var(--spacing-x-large);
+    top: var(--spacing-medium);
     border-radius: var(--spacing-x-small);
     border: 1px solid var(--color-gray-30);
     background: var(--color-white-white);
@@ -40,14 +40,11 @@ $desktop-breakpoint: 992px;
         right: 0;
         margin-left: auto;
         margin-right: auto;
-        max-height: none;
-    }
-
-    top: var(--spacing-medium);
-    bottom: auto;
-    transform: translateX(-100%);
-
-    &--open {
-        transform: translateX(0);
+        top: auto; // Override the top positioning for kiosk modals
+        bottom: var(--spacing-x-large); // Keep bottom positioning for kiosk mode
+        
+        &--open {
+            transform: translateX(0);
+        }
     }
 }
