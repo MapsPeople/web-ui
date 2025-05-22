@@ -11,22 +11,29 @@
     }
 }
 
-// Desktop layout, one column aligned to the top right
-.map-controls-container {
+// Desktop layout - top right
+.map-controls-container.desktop.top-right {
     @extend %control-container;
     top: var(--spacing-medium);
     right: var(--spacing-medium);
+}
+
+// Desktop layout - bottom right
+.map-controls-container.desktop.bottom-right {
+    @extend %control-container;
+    bottom: calc(3 * var(--spacing-medium));
+    right: calc(5 * var(--spacing-medium));
 }
 
 // Mobile layout, two columns aligned to the top left and right
 .mobile-column {
     @extend %control-container;
     top: var(--spacing-medium);
-    
+
     &.map-controls-left-column {
         left: var(--spacing-medium);
     }
-    
+
     &.map-controls-right-column {
         right: var(--spacing-medium);
     }
