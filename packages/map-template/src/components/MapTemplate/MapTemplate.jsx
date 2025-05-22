@@ -695,7 +695,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     function onRouteFinish() {
         finishRoute();
         resetAppHistory();
-        setResetCount(curr => curr + 1);
+        setResetCount(curr => curr + 1); // will force a re-render of bottom sheet and sidebar.
         setSelectedCategory(null); // unselect category when route is finished
     }
 
