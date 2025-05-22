@@ -238,8 +238,8 @@ function ViewSelector() {
                         <div className="mobile-overlay__header">
                             <button className="mobile-overlay__exit-button" onClick={() => setIsExpanded(false)}
                                 aria-label={t('Close view selector')}>
-                                {<CloseIcon />
-                                }</button>
+                                <CloseIcon />
+                            </button>
                             <span>{t('Pan map to view')}</span>
                         </div>
                         <BuildingList />
