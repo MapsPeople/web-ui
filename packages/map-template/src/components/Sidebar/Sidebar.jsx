@@ -105,17 +105,17 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
     }
 
     const pages = [
-        <Modal isOpen={currentAppView === appViews.SEARCH} key="A">
+        <Modal isOpen={currentAppView === appViews.SEARCH} key="SEARCH">
             <Search isOpen={currentAppView === appViews.SEARCH} />
         </Modal>,
-        <Modal isOpen={currentAppView === appViews.EXTERNALIDS} key="B">
+        <Modal isOpen={currentAppView === appViews.EXTERNALIDS} key="EXTERNALIDS">
             <LocationsList
                 onBack={() => closeLocationsList()}
                 locations={filteredLocationsByExternalIDs}
                 onLocationClick={(location) => setCurrentLocation(location)}
             />
         </Modal>,
-        <Modal isOpen={currentAppView === appViews.LOCATION_DETAILS} key="C">
+        <Modal isOpen={currentAppView === appViews.LOCATION_DETAILS} key="LOCATION_DETAILS">
             <LocationDetails
                 onStartWayfinding={() => pushAppView(appViews.WAYFINDING)}
                 onBack={() => closeLocationDetails()}
@@ -123,7 +123,7 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
                 isOpen={currentAppView === appViews.LOCATION_DETAILS}
             />
         </Modal>,
-        <Modal isOpen={currentAppView === appViews.WAYFINDING} key="D">
+        <Modal isOpen={currentAppView === appViews.WAYFINDING} key="WAYFINDING">
             <Wayfinding
                 onStartDirections={() => pushAppView(appViews.DIRECTIONS)}
                 directionsToLocation={directionsToLocation}
@@ -132,7 +132,7 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
                 isActive={currentAppView === appViews.WAYFINDING}
             />
         </Modal>,
-        <Modal isOpen={currentAppView === appViews.DIRECTIONS} key="E">
+        <Modal isOpen={currentAppView === appViews.DIRECTIONS} key="DIRECTIONS">
             <Directions
                 isOpen={currentAppView === appViews.DIRECTIONS}
                 onBack={() => closeDirections()}
