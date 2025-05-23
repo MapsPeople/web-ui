@@ -27,7 +27,7 @@ BottomSheet.propTypes = {
  * The BottomSheet component is responsible for rendering other components (Search, Wayfinding etc.) in a bottom sheet.
  * It is used on smaller screens. On larger screens, the Sidebar component is used.
  *
- * All components are wrapped in a Sheet component, which handles user interactions to resizing.
+ * All components are wrapped in a Sheet component, which handles user interactions (swiping to control the sheet size etc.).
  *
  * @param {Object} props
  * @param {string} props.directionsFromLocation - Origin Location to be used to instantly show directions.
@@ -42,6 +42,7 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
 
     const bottomSheetRef = useRef();
 
+    // References to the Sheet components for each individual component.
     const searchSheetRef = useRef();
     const locationsListSheetRef = useRef();
     const locationDetailsSheetRef = useRef();
@@ -51,7 +52,6 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
 
     // Holds boolean depicting if the current Location contains more information than just the basic info that is shown in minimal height bottom sheet.
-    // If that is the case, we show a little more to indicate to the user that there is more information to be seen.
     const [currentLocationIsDetailed, setCurrentLocationIsDetailed] = useState(false);
 
     const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);

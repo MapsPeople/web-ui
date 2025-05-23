@@ -139,7 +139,7 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
                 onRouteFinished={() => onRouteFinished()}
             />
         </Modal>
-    ]
+    ];
 
     return (
         <div>
