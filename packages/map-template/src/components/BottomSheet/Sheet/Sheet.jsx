@@ -131,7 +131,7 @@ const Sheet = forwardRef(function SheetComponent({ children, isOpen, initialSnap
      * order to react on dynamic changes in the content height.
      */
     useEffect(() => {
-        if (isOpen && snappedTo.current === snapPoints.FIT || snappedTo.current === snapPoints.MAX) {
+        if (isOpen && snappedTo.current === snapPoints.FIT) {
             observeContentHeight();
         } else {
             stopObserveContentHeight();
@@ -152,13 +152,6 @@ const Sheet = forwardRef(function SheetComponent({ children, isOpen, initialSnap
 
         fitMutationObserver.current = new MutationObserver(() => {
             contentHeightRef.current = contentRef.current.children.item(0).clientHeight;
-            // Set the snap point according to the content height
-            if (contentHeightRef.current < container.current.clientHeight) {
-                snapSheetHeightToSnapPoint(snapPoints.FIT);
-            } else {
-                snapSheetHeightToSnapPoint(snapPoints.MAX);
-            }
-
         });
 
         fitMutationObserver.current.observe(contentRef.current, {
