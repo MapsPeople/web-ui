@@ -45,7 +45,6 @@ const Sheet = forwardRef(function SheetComponent({ children, isOpen, initialSnap
     const snappedTo = useRef();
 
     /** CSS styles for both div elements, containing a height */
-    // TODO: Should this just be a height state?
     const [style, setStyle] = useState({});
 
     /** True if the sheet is currently being dragged with pointer (mouse, finger) */
