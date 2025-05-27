@@ -1,6 +1,6 @@
 {
     "name": "@mapsindoors/components",
-    "version": "13.27.0",
+    "version": "13.27.1",
     "description": "Web components for MapsIndoors",
     "main": "dist/index.js",
     "module": "dist/index.mjs",

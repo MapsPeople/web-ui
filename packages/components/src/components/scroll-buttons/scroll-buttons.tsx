@@ -112,7 +112,7 @@ export class ScrollButtons {
     }
 
     /**
-     * Render scoll buttons.
+     * Render scroll buttons.
      *
      * @returns {JSX.Element}
      */
@@ -126,7 +126,10 @@ export class ScrollButtons {
                     ref={(el: HTMLButtonElement | null): void => {
                         this.upButtonElement = el as HTMLButtonElement | null;
                     }}
-                    onClick={(): void => this.updateScrollPosition(-this.scrollLength)}>
+                    onClick={(event): void => {
+                        event.stopPropagation();
+                        this.updateScrollPosition(-this.scrollLength);
+                    }}>
                     <mi-icon icon-name="chevron-up" />
                 </button>
                 <button part="button button-down" class="mi-button mi-button--base btn btn-down"
@@ -135,7 +138,10 @@ export class ScrollButtons {
                     ref={(el: HTMLButtonElement | null): void => {
                         this.downButtonElement = el as HTMLButtonElement | null;
                     }}
-                    onClick={(): void => this.updateScrollPosition(this.scrollLength)}>
+                    onClick={(event): void => {
+                        event.stopPropagation();
+                        this.updateScrollPosition(this.scrollLength);
+                    }}>
                     <mi-icon icon-name="chevron-down" />
                 </button>
             </div>
