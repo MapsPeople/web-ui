@@ -14,6 +14,16 @@ $desktop-breakpoint: 992px;
     display: none;
     max-height: 80%;
 
+    /* Hide scrollbar for all browsers */
+    /* For WebKit browsers (Chrome, Safari) */
+     &::-webkit-scrollbar {
+        display: none;
+    } 
+    /* For Firefox */
+    scrollbar-width: none;
+    /* Edge */
+    -ms-overflow-style: none;
+
     &--open {
         transform: translateY(0);
         display: block;
@@ -21,10 +31,6 @@ $desktop-breakpoint: 992px;
 
     &--full:not(.modal--kiosk) {
         height: 100%;
-
-        .modal__content {
-            height: 100%;
-        }
     }
 
     &--substeps {
