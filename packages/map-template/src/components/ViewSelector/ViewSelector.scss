@@ -52,7 +52,7 @@
             overflow: hidden;
             pointer-events: auto;
             z-index: var(--z-index-popup);
-            width: 40vh;
+            width: 20rem;
         }
     }
 }
@@ -66,7 +66,7 @@
     flex-direction: column;
     gap: 0;
     z-index: var(--z-index-sticky);
-    max-height: 40vh; // Limit height for long building lists
+    max-height: 20rem; // Limit height for long building lists
     scrollbar-width: "none"; // Firefox
     -ms-overflow-style: "none"; // IE/Edge
     
