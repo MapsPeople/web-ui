@@ -69,6 +69,7 @@ A table showing which alphabetical layouts and languages are supported and mappe
 | italianAlphabetic      | it, it-it        |
 | spanishAlphabetic      | es, es-es        |
 | dutchAlphabetic        | nl, nl-nl        |
+| chineseAlphabetic      | zh, zh-CN        |
 
 <!-- markdownlint-disable -->
 <!-- Auto Generated Below -->

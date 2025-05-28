@@ -7,6 +7,7 @@ import fr from './fr.js';
 import it from './it.js';
 import es from './es.js';
 import nl from './nl.js';
+import zh from './zh.js';
 
 export default function initI18n(language) {
     i18n
@@ -33,6 +34,9 @@ export default function initI18n(language) {
                 }, 
                 nl: {
                     translation: nl
+                },
+                zh: {
+                    translation: zh
                 }
             },
             lng: language,
