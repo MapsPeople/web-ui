@@ -56,6 +56,7 @@ function Search({ onSetSize, isOpen }) {
 
     const searchRef = useRef();
     const scrollButtonsRef = useRef();
+    const reqeustAnimationFrameId = useRef();
 
     /** Referencing the search field */
     const searchFieldRef = useRef();
@@ -407,7 +408,7 @@ function Search({ onSetSize, isOpen }) {
 
             if (clickedInsideSearchArea) {
                 setSize(snapPoints.FIT);
-                requestAnimationFrame(() => { // we use a requestAnimationFrame to ensure that the size change is applied before the focus (meaning that categories are rendered)
+                reqeustAnimationFrameId.current = requestAnimationFrame(() => { // we use a requestAnimationFrame to ensure that the size change is applied before the focus (meaning that categories are rendered)
                     setIsInputFieldInFocus(true);
                 });
             } else if (!clickedInsideResults) {
@@ -423,6 +424,7 @@ function Search({ onSetSize, isOpen }) {
         document.addEventListener('click', handleSearchFieldFocus);
         return () => {
             document.removeEventListener('click', handleSearchFieldFocus);
+            cancelAnimationFrame(reqeustAnimationFrameId.current);
         };
     }, []);
 
