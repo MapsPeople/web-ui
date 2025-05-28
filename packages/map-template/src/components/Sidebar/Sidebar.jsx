@@ -23,6 +23,11 @@ Sidebar.propTypes = {
 };
 
 /**
+ * The Sidebar component is responsible for rendering other components (Search, Wayfinding etc.) in a sidebar.
+ * It is used on larger screens. On smaller screens, the BottomSheet component is used.
+ *
+ * On kiosk screens, the sidebar is centered in the middle of the screen.
+ *
  * @param {Object} props
  * @param {string} props.directionsFromLocation - Origin Location to be used to instantly show directions.
  * @param {string} props.directionsToLocation - Destination Location to be used to instantly show directions.
@@ -53,7 +58,7 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
             pushAppView(appViews.LOCATION_DETAILS, currentLocation);
         } else if (filteredLocationsByExternalIDs?.length > 1) {
             pushAppView(appViews.EXTERNALIDS);
-            // If there is only one external ID, behave the same as having the location ID prop. 
+            // If there is only one external ID, behave the same as having the location ID prop.
         } else if (filteredLocationsByExternalIDs?.length === 1) {
             setCurrentLocation(filteredLocationsByExternalIDs[0])
             setLocationId(filteredLocationsByExternalIDs[0].id)
@@ -100,18 +105,17 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
     }
 
     const pages = [
-        <Modal isOpen={currentAppView === appViews.SEARCH} key="A">
+        <Modal isOpen={currentAppView === appViews.SEARCH} key="SEARCH">
             <Search isOpen={currentAppView === appViews.SEARCH} />
         </Modal>,
-        <Modal isOpen={currentAppView === appViews.EXTERNALIDS} key="B">
+        <Modal isOpen={currentAppView === appViews.EXTERNALIDS} key="EXTERNALIDS">
             <LocationsList
                 onBack={() => closeLocationsList()}
                 locations={filteredLocationsByExternalIDs}
                 onLocationClick={(location) => setCurrentLocation(location)}
-                onLocationsFiltered={(locations) => setFilteredLocationsByExternalID(locations)}
             />
         </Modal>,
-        <Modal isOpen={currentAppView === appViews.LOCATION_DETAILS} key="C">
+        <Modal isOpen={currentAppView === appViews.LOCATION_DETAILS} key="LOCATION_DETAILS">
             <LocationDetails
                 onStartWayfinding={() => pushAppView(appViews.WAYFINDING)}
                 onBack={() => closeLocationDetails()}
@@ -119,7 +123,7 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
                 isOpen={currentAppView === appViews.LOCATION_DETAILS}
             />
         </Modal>,
-        <Modal isOpen={currentAppView === appViews.WAYFINDING} key="D">
+        <Modal isOpen={currentAppView === appViews.WAYFINDING} key="WAYFINDING">
             <Wayfinding
                 onStartDirections={() => pushAppView(appViews.DIRECTIONS)}
                 directionsToLocation={directionsToLocation}
@@ -128,14 +132,14 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
                 isActive={currentAppView === appViews.WAYFINDING}
             />
         </Modal>,
-        <Modal isOpen={currentAppView === appViews.DIRECTIONS} key="E">
+        <Modal isOpen={currentAppView === appViews.DIRECTIONS} key="DIRECTIONS">
             <Directions
                 isOpen={currentAppView === appViews.DIRECTIONS}
                 onBack={() => closeDirections()}
                 onRouteFinished={() => onRouteFinished()}
             />
         </Modal>
-    ]
+    ];
 
     return (
         <div>
