@@ -1,4 +1,4 @@
-import React, { cloneElement, forwardRef, useContext, useEffect, useImperativeHandle } from 'react'; // eslint-disable-line
+import React, { cloneElement, forwardRef, useContext, useEffect, useImperativeHandle } from 'react';
 import { useRef, useState } from 'react';
 import { ContainerContext } from '../ContainerContext';
 import { useSwipeable } from 'react-swipeable';

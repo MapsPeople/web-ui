@@ -45,7 +45,7 @@ Directions.propTypes = {
  * @param {function} props.onBack - Callback that fires when the directions view is closed by the user.
  * @param {function} props.onSetSize - Callback that is fired when the component has loaded.
  * @param {function} props.onRouteFinished - Callback that fires when the route has finished.
- * @param {function} props.snapPointSwipedByUser - Changes value when user has swiped a Bottom sheet to a new snap point.
+ * @param {string} props.snapPointSwipedByUser - Changes value when user has swiped a Bottom sheet to a new snap point.
  *
  */
 function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipedByUser }) {
@@ -241,8 +241,8 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
 
     /**
      * Sets minZoom for a specific map provider.
-     * 
-     * @param {number} zoomLevel 
+     *
+     * @param {number} zoomLevel
      */
     function setMinZoom(zoomLevel) {
         if (mapType === 'mapbox') {
@@ -260,7 +260,7 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
         resetSubsteps();
         stopRendering();
         onBack();
-        
+
     }
 
     /**
