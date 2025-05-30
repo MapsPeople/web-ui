@@ -214,6 +214,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     const finishRoute = useOnRouteFinished();
 
+    const [location, setLocation] = useState();
+
     /**
      * Ensure that MapsIndoors Web SDK is available.
      *
@@ -526,14 +528,19 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         if (currentLocation && currentLocation.id !== kioskOriginLocationId) {
             if (mapsIndoorsInstance?.selectLocation) {
+                setLocation(currentLocation)
+                mapsIndoorsInstance.setLocationSettings([location?.id],  { selectable: false });
                 mapsIndoorsInstance.selectLocation(currentLocation);
             }
         } else {
+            
             if (mapsIndoorsInstance?.deselectLocation) {
+                mapsIndoorsInstance.setLocationSettings([location?.id],  { selectable: true });
+                setLocation(null)
                 mapsIndoorsInstance.deselectLocation();
             }
         }
-    }, [currentLocation]);
+    }, [currentLocation, location]);
 
     /*
      * React on changes to the kioskOriginLocationId prop.
@@ -697,6 +704,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         resetAppHistory();
         setResetCount(curr => curr + 1); // will force a re-render of bottom sheet and sidebar.
         setSelectedCategory(null); // unselect category when route is finished
+        mapsIndoorsInstance.setLocationSettings([currentLocation.id],  { selectable: true });
     }
 
     /*
