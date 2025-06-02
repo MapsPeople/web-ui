@@ -535,7 +535,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 mapsIndoorsInstance.setLocationSettings([selectableLocation?.id],  { selectable: false });
             }
         } else {
-            
             if (mapsIndoorsInstance?.deselectLocation) {
                 mapsIndoorsInstance.deselectLocation();
 
