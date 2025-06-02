@@ -63,6 +63,8 @@ import centerState from '../../atoms/centerState.js';
 import PropTypes from 'prop-types';
 import { ZoomLevelValues } from '../../constants/zoomLevelValues.js';
 import { useOnRouteFinished } from '../../hooks/useOnRouteFinished.js';
+import MissingTokensModal from '../NotificationModal/MissingTokensModal.jsx';
+import missingTokensModalState from '../../atoms/missingTokensModalState.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -213,6 +215,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [setCurrentVenueName, updateCategories] = useCurrentVenue();
 
     const finishRoute = useOnRouteFinished();
+
+    const [showMissingTokensNotification, setShowMissingTokensNotification] = useRecoilState(missingTokensModalState);
 
     /**
      * Ensure that MapsIndoors Web SDK is available.
@@ -520,6 +524,15 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [miTransitionLevel]);
 
     /*
+     * React on changes in the mapboxAccessToken or gmKey prop. If they are not present, show missing tokens modal.
+     */
+    useEffect(() => {
+        if (appConfig && (appConfig?.appSettings?.mapboxAccessToken || appConfig?.appSettings?.gmKey)) {
+            setShowMissingTokensNotification(false)
+        }
+    }, [appConfig])
+
+    /*
      * React on changes in the current location prop.
      * Apply location selection if the current location exists and is not the same as the kioskOriginLocationId.
      */
@@ -716,6 +729,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     ${(venuesInSolution.length > 1 && showVenueSelector) ? '' : 'mapsindoors-map--hide-venue-selector'}
     ${showPositionControl ? 'mapsindoors-map--show-my-position' : 'mapsindoors-map--hide-my-position'}`}>
         <Notification />
+        {showMissingTokensNotification && (
+            <MissingTokensModal />
+        )}
         {!isMapReady && <SplashScreen />}
         {venuesInSolution.length > 1 && showVenueSelector && <VenueSelector
             onOpen={() => pushAppView(appStates.VENUE_SELECTOR)}
