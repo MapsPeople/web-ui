@@ -1,0 +1,49 @@
+@import '@mapsindoors/midt/build/css/mapsindoors-map-variables';
+
+.notification-modal {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: var(--spacing-x-small);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: var(--z-index-toast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    line-height: 150%;
+    pointer-events: none;
+
+    &.desktop {
+        bottom: 20px;
+        width: 400px;
+    }
+
+    &.mobile {
+        top: 20px;
+        width: 270px;
+    }
+
+    &__content {
+        text-align: center;
+
+        p {
+            margin: var(--spacing-x-small);
+        }
+    }
+
+    &__headline {
+        display: flex;
+        justify-content: center;
+        column-gap: 12px;
+    }
+
+    &__icon {
+        width: var(--spacing-large);
+        height: var(--spacing-large);
+        margin-bottom: 8px;
+    }
+}
