@@ -67,12 +67,16 @@
     gap: 0;
     z-index: var(--z-index-sticky);
     max-height: 20rem; // Limit height for long building lists
-    scrollbar-width: "none"; // Firefox
-    -ms-overflow-style: "none"; // IE/Edge
     
-    &::-webkit-scrollbar {
-        display: none;
-    } 
+    // Hide scrollbar on mobile devices
+    @media (max-width: 768px) {
+        scrollbar-width: none;
+    }
+    
+    // Subtle scrollbar for desktop
+    @media (min-width: 769px) {
+        scrollbar-width: thin;
+    }
 
     &__item {
         background: none;
