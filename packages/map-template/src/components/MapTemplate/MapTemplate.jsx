@@ -282,7 +282,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
-            const languageToUse = language ? language : navigator.language;
+            // Sets language to use. Priority: Prop -> App Config -> browser's default language.
+            const languageToUse = language ?? appConfig?.appSettings?.language ?? navigator.language;
 
             // Set the language on the MapsIndoors SDK in order to get eg. Mapbox and Google directions in that language.
             // The MapsIndoors data only accepts the first part of the IETF language string, hence the split.
@@ -320,7 +321,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             setCurrentLanguage(languageToUse);
         }
-    }, [language, mapsindoorsSDKAvailable]);
+    }, [language, mapsindoorsSDKAvailable, appConfig]);
 
     /**
      * React on changes in the MapsIndoors API key by fetching the required data.
@@ -463,11 +464,11 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [currentAppView]);
 
     /*
-     * React on changes in the venue prop.
+     * React on changes in the venue prop. If not defined, check if it is defined in app config.
      */
     useEffect(() => {
-        setCurrentVenueName(venue);
-    }, [venue]);
+        setCurrentVenueName(venue ?? appConfig?.appSettings?.venue);
+    }, [venue, appConfig]);
 
     /*
      * React on changes in the tile style prop.
@@ -477,44 +478,53 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [tileStyle]);
 
     /*
-     * React on changes in the primary color prop.
+     * React on changes in the primary color prop. If not defined, check if it is defined in app config. Otherwise set to default color.
      */
     useEffect(() => {
-        setPrimaryColor(primaryColor);
-    }, [primaryColor]);
+        const defaultPrimaryColor = '#003C3B'; // --brand-colors-dark-pine-100 from MIDT
+        setPrimaryColor(primaryColor ?? appConfig?.appSettings?.primaryColor ?? defaultPrimaryColor);
+        setMapOptions({ brandingColor: primaryColor ?? appConfig?.appSettings?.primaryColor ?? defaultPrimaryColor })
+
+    }, [primaryColor, appConfig]);
 
     /*
-     * React on changes in the start zoom level prop.
+     * React on changes in the start zoom level prop. If not defined, check if it is defined in app config.
      */
     useEffect(() => {
-        setStartZoomLevel(startZoomLevel);
-    }, [startZoomLevel]);
+        setStartZoomLevel(startZoomLevel ?? appConfig?.appSettings?.startZoomLevel);
+    }, [startZoomLevel, appConfig]);
 
     /*
-     * React on changes in the pitch prop.
+     * React on changes in the pitch prop. If not defined, check if it is defined in app config.
      * If the pitch is not set, set it to 45 degrees if the view mode switch is visible.
      */
     useEffect(() => {
-        if (!isNullOrUndefined(pitch)) {
-            setPitch(pitch);
+        const desiredPitch = pitch ?? appConfig?.appSettings?.pitch ?? null;
+
+        if (!isNullOrUndefined(desiredPitch)) {
+            setPitch(desiredPitch);
         } else if (viewModeSwitchVisible) {
             setPitch(45);
         }
-    }, [pitch, viewModeSwitchVisible]);
+
+    }, [pitch, viewModeSwitchVisible, appConfig]);
 
     /*
-     * React on changes in the bearing prop.
+     * React on changes in the bearing prop. If not defined, check if it is defined in app config.
      */
     useEffect(() => {
-        setBearing(bearing);
-    }, [bearing]);
+        setBearing(bearing ?? appConfig?.appSettings?.bearing ?? null);
+    }, [bearing, appConfig]);
 
     /*
-     * React on changes in the logo prop.
+     * React on changes in the logo prop. If not defined, check if it is defined in app config. Otherwise set to default logo.
      */
     useEffect(() => {
-        setLogo(logo);
-    }, [logo]);
+        const defaultLogo = 'https://app.mapsindoors.com/mapsindoors/gfx/mapspeople-logo/mapspeople-pin.svg';
+        if (appConfig) {
+            setLogo(logo ?? appConfig?.appSettings?.logo ?? defaultLogo);
+        }
+    }, [logo, appConfig]);
 
     /*
      * React on changes in the miTransitionLevel prop.
@@ -574,7 +584,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [kioskOriginLocationId, mapsindoorsSDKAvailable]);
 
     /*
-     * React on changes to the timout prop
+     * React on changes to the timeout prop
      */
     useEffect(() => {
         setTimeoutValue(timeout);
@@ -646,8 +656,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes to the center prop.
      */
     useEffect(() => {
-        setCenter(center);
-    }, [center]);
+        setCenter(center ?? appConfig?.appSettings?.center);
+    }, [center, appConfig]);
 
     /*
      * Sets document title based on useAppTitle and appConfig values.
