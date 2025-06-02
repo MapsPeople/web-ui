@@ -214,7 +214,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     const finishRoute = useOnRouteFinished();
 
-    const [location, setLocation] = useState();
+    const [selectableLocation, setSelectableLocation] = useState();
 
     /**
      * Ensure that MapsIndoors Web SDK is available.
@@ -528,19 +528,23 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         if (currentLocation && currentLocation.id !== kioskOriginLocationId) {
             if (mapsIndoorsInstance?.selectLocation) {
-                setLocation(currentLocation)
-                mapsIndoorsInstance.setLocationSettings([location?.id],  { selectable: false });
                 mapsIndoorsInstance.selectLocation(currentLocation);
+
+                // Make the selected location non-selectable to prevent it from being used as origin and destination.
+                setSelectableLocation(currentLocation)
+                mapsIndoorsInstance.setLocationSettings([selectableLocation?.id],  { selectable: false });
             }
         } else {
             
             if (mapsIndoorsInstance?.deselectLocation) {
-                mapsIndoorsInstance.setLocationSettings([location?.id],  { selectable: true });
-                setLocation(null)
                 mapsIndoorsInstance.deselectLocation();
+
+                // On deselection, make location selectable again.
+                mapsIndoorsInstance.setLocationSettings([selectableLocation?.id],  { selectable: true });
+                setSelectableLocation(null)
             }
         }
-    }, [currentLocation, location]);
+    }, [currentLocation, selectableLocation]);
 
     /*
      * React on changes to the kioskOriginLocationId prop.
@@ -704,6 +708,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         resetAppHistory();
         setResetCount(curr => curr + 1); // will force a re-render of bottom sheet and sidebar.
         setSelectedCategory(null); // unselect category when route is finished
+
+        // Make non-selectable origin location, selectable again.
         mapsIndoorsInstance.setLocationSettings([currentLocation.id],  { selectable: true });
     }
 
