@@ -62,6 +62,7 @@ import isNullOrUndefined from '../../helpers/isNullOrUndefined.js';
 import centerState from '../../atoms/centerState.js';
 import PropTypes from 'prop-types';
 import { ZoomLevelValues } from '../../constants/zoomLevelValues.js';
+import { useOnRouteFinished } from '../../hooks/useOnRouteFinished.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -211,6 +212,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     const [setCurrentVenueName, updateCategories] = useCurrentVenue();
 
+    const finishRoute = useOnRouteFinished();
+
     /**
      * Ensure that MapsIndoors Web SDK is available.
      *
@@ -224,8 +227,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             const miSdkApiTag = document.createElement('script');
             miSdkApiTag.setAttribute('type', 'text/javascript');
-            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.39.1/mapsindoors-4.39.1.js.gz');
-            miSdkApiTag.setAttribute('integrity', 'sha384-GpJDp6n8LKQE3YZvZJa7pTRet98vRLs4GHxIIORQ06IESv4WZ5KkanelZ2EjCnts');
+            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.41.0/mapsindoors-4.41.0.js.gz');
+            miSdkApiTag.setAttribute('integrity', 'sha384-3lk3cwVPj5MpUyo5T605mB0PMHLLisIhNrSREQsQHjD9EXkHBjz9ETgopmTbfMDc');
             miSdkApiTag.setAttribute('crossorigin', 'anonymous');
             document.body.appendChild(miSdkApiTag);
             miSdkApiTag.onload = () => {
@@ -686,6 +689,16 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         setSelectedCategory(null); // unselect category when route is finished
     }
 
+    /**
+     * Function that handles the finishing of route.
+     */
+    function onRouteFinish() {
+        finishRoute();
+        resetAppHistory();
+        setResetCount(curr => curr + 1); // will force a re-render of bottom sheet and sidebar.
+        setSelectedCategory(null); // unselect category when route is finished
+    }
+
     /*
      * React on changes in the category prop.
      * Check if the category property matches with any of the existing categories.
@@ -720,7 +733,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                         pushAppView={pushAppView}
                         currentAppView={currentAppView}
                         appViews={appStates}
-                        onRouteFinished={() => resetStateAndUI()}
+                        onRouteFinished={() => onRouteFinish()}
                     />
                 }
                 {isMobile &&
@@ -730,7 +743,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                         pushAppView={pushAppView}
                         currentAppView={currentAppView}
                         appViews={appStates}
-                        onRouteFinished={() => resetStateAndUI()}
+                        onRouteFinished={() => onRouteFinish()}
                     />
                 }
             </Fragment>
@@ -744,6 +757,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             resetCount={resetCount}
             mapOptions={mapOptions}
             onMapOptionsChange={handleMapOptionsChange}
+            gmMapId={gmMapId}
         />
     </div>
 }

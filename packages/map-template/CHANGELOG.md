@@ -5,6 +5,60 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.76.8] - 2025-06-02
+
+### Fixed
+
+- Upgraded to SDK v4.41.0.
+
+## [1.76.7] - 2025-05-27
+
+### Fixed
+
+- Modal styling issue causing unnecessary scrollbar to appear
+
+## [1.76.6] - 2025-05-27
+
+### Fixed
+
+- Fixed an issue where clicking 'Finish Route' would unexpectedly switch the venue.
+
+## [1.76.5] - 2025-05-22
+
+### Fixed
+
+- Fixed sidebar position when in kiosk mode
+
+### [1.76.4] - 2025-05-15
+
+### Fixed
+
+- Fix bottom sheet not behaving correctly when exiting categories
+
+## [1.76.3] - 2025-05-15
+
+### Fixed
+
+- Upgraded to SDK v4.40.2.
+
+## [1.76.2] - 2025-05-15
+
+### Fixed
+
+- Fix missing gmMapId prop
+
+## [1.76.1] - 2025-05-14
+
+### Fixed
+
+- Improved German translations.
+
+## [1.76.0] - 2025-05-13
+
+### Added
+
+- Add support for displaying Nested Categories.
+
 ## [1.75.1] - 2025-05-08
 
 ### Fixed
