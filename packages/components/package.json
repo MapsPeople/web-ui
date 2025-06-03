@@ -58,7 +58,7 @@
         "jest-cli": "^29.7.0",
         "normalize-text": "^2.6.0",
         "postcss": "^8.4.19",
-        "puppeteer": "^19.6.3",
+        "puppeteer": "^24.10.0",
         "sass": "^1.77.2",
         "simple-keyboard": "^3.7.27",
         "ua-parser-js": "^1.0.35"
