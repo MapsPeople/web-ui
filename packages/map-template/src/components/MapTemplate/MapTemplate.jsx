@@ -214,7 +214,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     const finishRoute = useOnRouteFinished();
 
-    const [selectableLocation, setSelectableLocation] = useState();
+    const selectableLocationRef = useRef(null);
 
     /**
      * Ensure that MapsIndoors Web SDK is available.
@@ -528,22 +528,30 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         if (currentLocation && currentLocation.id !== kioskOriginLocationId) {
             if (mapsIndoorsInstance?.selectLocation) {
+                
+                // Make previously not-selectable location selectable again
+                if (selectableLocationRef.current && selectableLocationRef.current !== currentLocation.id) {
+                    mapsIndoorsInstance.setLocationSettings([selectableLocationRef.current], { selectable: true });
+                }
+                
+                // Select new location and make it not-selectable
                 mapsIndoorsInstance.selectLocation(currentLocation);
+                mapsIndoorsInstance.setLocationSettings([currentLocation.id], { selectable: false });
 
-                // Make the selected location non-selectable to prevent it from being used as origin and destination.
-                setSelectableLocation(currentLocation)
-                mapsIndoorsInstance.setLocationSettings([selectableLocation?.id],  { selectable: false });
+                // Update ref current
+                selectableLocationRef.current = currentLocation.id;
             }
         } else {
             if (mapsIndoorsInstance?.deselectLocation) {
                 mapsIndoorsInstance.deselectLocation();
 
-                // On deselection, make location selectable again.
-                mapsIndoorsInstance.setLocationSettings([selectableLocation?.id],  { selectable: true });
-                setSelectableLocation(null)
+                if (selectableLocationRef.current) {
+                    mapsIndoorsInstance.setLocationSettings([selectableLocationRef.current], { selectable: true });
+                    selectableLocationRef.current = null;
+                }
             }
         }
-    }, [currentLocation, selectableLocation]);
+    }, [currentLocation]);
 
     /*
      * React on changes to the kioskOriginLocationId prop.
@@ -709,7 +717,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         setSelectedCategory(null); // unselect category when route is finished
 
         // Make non-selectable origin location, selectable again.
-        mapsIndoorsInstance.setLocationSettings([currentLocation.id],  { selectable: true });
+        mapsIndoorsInstance.setLocationSettings([currentLocation.id], { selectable: true });
     }
 
     /*
