@@ -40,7 +40,7 @@
         "@mapsindoors/midt": "^18.1.1",
         "@mapsindoors/typescript-interfaces": "^2.1.2",
         "@stencil/core": "^2.20.0",
-        "@stencil/postcss": "^2.2.0",
+        "@stencil-community/postcss": "^2.2.0",
         "@stencil/sass": "^2.0.1",
         "@types/geojson": "^7946.0.10",
         "@types/google.maps": "^3.50.5",
