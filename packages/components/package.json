@@ -33,7 +33,7 @@
     "dependencies": {
         "@11ty/eleventy": "^2.0.1",
         "@csstools/normalize.css": "^12.0.0",
-        "@googlemaps/js-api-loader": "^1.15.1",
+        "@googlemaps/js-api-loader": "^1.16.8",
         "@mapsindoors/css": "^2.1.0",
         "@mapsindoors/eslint-config": "^1.5.0",
         "@mapsindoors/eslint-config-typescript": "^1.4.0",
