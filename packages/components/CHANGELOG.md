@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [13.26.5] - 2025-06-04
+
+### Changed
+
+- Update puppeteer and postcss to latest version
+
+## [13.26.4] - 2025-05-27
+
+### Changed
+
+- Fixed route instruction step toggle icons
+
+## [13.26.3] - 2025-05-22
+
+### Changed
+
+- Added stopPropagation() to scroll buttons click event to prevent parent element events from firing.
+
 ## [13.26.2] - 2025-05-08
 
 ### Changed

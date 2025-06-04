@@ -1,7 +1,7 @@
-import { useEffect } from "react";
+import { useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import MIMap from '@mapsindoors/react-components/src/components/MIMap/MIMap';
-import { mapTypes } from "../../constants/mapTypes";
+import { mapTypes } from '../../constants/mapTypes';
 import useLiveData from '../../hooks/useLivedata';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import userPositionState from '../../atoms/userPositionState';
@@ -19,10 +19,11 @@ import pitchState from '../../atoms/pitchState';
 import solutionState from '../../atoms/solutionState';
 import notificationMessageState from '../../atoms/notificationMessageState';
 import useMapBoundsDeterminer from '../../hooks/useMapBoundsDeterminer';
-import hideNonMatchesState from "../../atoms/hideNonMatchesState";
-import miTransitionLevelState from "../../atoms/miTransitionLevelState";
-import showRoadNamesState from "../../atoms/showRoadNamesState";
-import PropTypes from "prop-types";
+import hideNonMatchesState from '../../atoms/hideNonMatchesState';
+import miTransitionLevelState from '../../atoms/miTransitionLevelState';
+import showRoadNamesState from '../../atoms/showRoadNamesState';
+import PropTypes from 'prop-types';
+import ViewSelector from '../ViewSelector/ViewSelector';
 
 MapWrapper.propTypes = {
     onLocationClick: PropTypes.func,
@@ -320,6 +321,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
             mapOptions={mapOptions}
             gmMapId={gmMapId}
         />}
+        {apiKey && <ViewSelector />}
     </>)
 }
 

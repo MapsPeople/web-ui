@@ -5,6 +5,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.77.0] - 2025-06-04
+
+### Added
+
+- Added view selector component
+
+## [1.76.8] - 2025-06-02
+
+### Fixed
+
+- Upgraded to SDK v4.41.0.
+
+## [1.76.7] - 2025-05-27
+
+### Fixed
+
+- Modal styling issue causing unnecessary scrollbar to appear
+
+## [1.76.6] - 2025-05-27
+
+### Fixed
+
+- Fixed an issue where clicking 'Finish Route' would unexpectedly switch the venue.
+
+## [1.76.5] - 2025-05-22
+
+### Fixed
+
+- Fixed sidebar position when in kiosk mode
+
 ### [1.76.4] - 2025-05-15
 
 ### Fixed
