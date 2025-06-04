@@ -407,7 +407,7 @@ function Search({ onSetSize, isOpen }) {
             const clickedInsideResults = event.target.closest('.search__results');
 
             if (clickedInsideSearchArea) {
-                setSize(snapPoints.FIT);
+                setSize(snapPoints.MAX);
                 reqeustAnimationFrameId.current = requestAnimationFrame(() => { // we use a requestAnimationFrame to ensure that the size change is applied before the focus (meaning that categories are rendered)
                     setIsInputFieldInFocus(true);
                 });
