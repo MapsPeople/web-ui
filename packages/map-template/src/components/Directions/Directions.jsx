@@ -50,6 +50,7 @@ Directions.propTypes = {
  */
 function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipedByUser }) {
     const { t } = useTranslation();
+    const requestAnimationFrameId = useRef();
 
     // Holds the MapsIndoors DisplayRule for the destination
     const [destinationDisplayRule, setDestinationDisplayRule] = useState(null);
@@ -285,7 +286,15 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
      * Set the size of the bottom sheet depending on the substepsOpen state.
      */
     useEffect(() => {
-        substepsOpen ? setSize(snapPoints.MAX) : setSize(snapPoints.FIT);
+        requestAnimationFrameId.current = requestAnimationFrame(() => {// we use a requestAnimationFrame to ensure that the component has been re-rendered with the collapsed or expanded sub steps before we set the size
+            substepsOpen ? setSize(snapPoints.MAX) : setSize(snapPoints.FIT);
+        });
+
+        return () => {
+            if (requestAnimationFrameId.current) {
+                cancelAnimationFrame(requestAnimationFrameId.current);
+            }
+        }
     }, [substepsOpen]);
 
     /**
