@@ -143,6 +143,7 @@ const Sheet = forwardRef(function SheetComponent({ children, isOpen, initialSnap
 
     /**
      * Observe the content height of the sheet and update the height of the sheet accordingly.
+     * This is only done when the sheet's snap point is set to FIT.
      */
     function observeContentHeight() {
         if (fitMutationObserver.current) {
@@ -150,7 +151,7 @@ const Sheet = forwardRef(function SheetComponent({ children, isOpen, initialSnap
         }
 
         fitMutationObserver.current = new MutationObserver(() => {
-            contentHeightRef.current = contentRef.current.children.item(0).clientHeight;
+            snapSheetHeightToSnapPoint(snapPoints.FIT);
         });
 
         fitMutationObserver.current.observe(contentRef.current, {
