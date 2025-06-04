@@ -1,6 +1,6 @@
 {
   "name": "@mapsindoors/midt",
-  "version": "18.2.1",
+  "version": "18.2.2",
   "description": "Design Tokens for MapsIndoors",
   "author": "MapsPeople A/S",
   "license": "MIT",
@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "chokidar-cli": "^3.0.0",
-    "np": "^7.6.3",
+    "np": "^10.2.0",
     "style-dictionary": "^3.7.2"
   },
   "homepage": "https://github.com/MapsPeople/web-ui/tree/main/packages/midt"
