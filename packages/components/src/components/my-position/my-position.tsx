@@ -1,5 +1,5 @@
 import { Component, Host, JSX, Prop, Event, EventEmitter, State, h, Method } from '@stencil/core';
-import { UAParser } from 'ua-parser-js';
+import { UAParser, IDevice } from 'ua-parser-js';
 import merge from 'deepmerge';
 
 enum PositionStateTypes {
@@ -10,11 +10,6 @@ enum PositionStateTypes {
     POSITION_CENTERED = 'POSITION_CENTERED',
     POSITION_TRACKED = 'POSITION_TRACKED',
     POSITION_UNTRACKED = 'POSITION_UNTRACKED'
-}
-
-enum DeviceType {
-    Phone = 'mobile',
-    Tablet = 'tablet'
 }
 
 @Component({
@@ -353,10 +348,10 @@ export class MyPositionComponent {
             return;
         }
 
-        const deviceType: DeviceType = this.parser.getDevice().type;
+        const deviceType: IDevice['type'] = this.parser.getDevice().type;
         this.canBeTracked = (
             typeof window.DeviceOrientationEvent === 'function' &&
-            (deviceType === DeviceType.Phone || deviceType === DeviceType.Tablet) &&
+            (deviceType === 'mobile' || deviceType === 'tablet') &&
             this.mapView.rotatable &&
             this.mapView.tiltable)
             ? true : false;
