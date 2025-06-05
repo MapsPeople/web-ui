@@ -11,6 +11,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed an issue where the origin location could be selected as the destination.
 
+## [1.78.0] - 2025-06-05
+
+### Added
+
+- Add support for Chinese language.
+
+## [1.77.0] - 2025-06-04
+
+### Added
+
+- Added view selector component
+
 ## [1.76.8] - 2025-06-02
 
 ### Fixed
