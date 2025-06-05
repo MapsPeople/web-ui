@@ -78,6 +78,9 @@ const en = {
     // Opening Hours
     'Open': 'Open',
     'Closed': 'Closed',
+    // View Selector
+    'Pan map to view': 'Pan map to view',
+    'Close view selector': 'Close view selector',
 };
 
 export default en;
