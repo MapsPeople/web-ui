@@ -11,6 +11,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - If `language`, `primaryColor`, `logo`, `venue`, `startZoomLevel`, `pitch` and `bearing` props are not explicitly provided, their value will be determined by the App Config object.
 
+## [1.78.0] - 2025-06-05
+
+### Added
+
+- Add support for Chinese language.
+
+## [1.77.0] - 2025-06-04
+
+### Added
+
+- Added view selector component
+
 ## [1.76.8] - 2025-06-02
 
 ### Fixed
