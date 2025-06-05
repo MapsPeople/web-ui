@@ -68,16 +68,19 @@ const fr = {
     'Scan QR code': 'Scanne le code QR',
     'Scan the QR code to see the route on your phone': 'Scannez le code QR pour voir l\'itinéraire sur votre téléphone',
     'Done': 'Fini',
-     // Directions
-     'Cancel route': 'Annuler l\'itinéraire',
-     'Finish route': 'Terminer l\'itinéraire',
-     // Share location link
+    // Directions
+    'Cancel route': 'Annuler l\'itinéraire',
+    'Finish route': 'Terminer l\'itinéraire',
+    // Share location link
     'Share': 'Partager',
     'Copy link': 'Copier le lien',
     'QR Code': 'Code QR',
-     // Opening Hours
+    // Opening Hours
     'Open': 'Ouvert',
     'Closed': 'Fermé',
+    // View Selector
+    'Pan map to view': 'Déplacer la carte pour voir',
+    'Close view selector': 'Fermer le sélecteur de vue',
 };
 
 export default fr;
