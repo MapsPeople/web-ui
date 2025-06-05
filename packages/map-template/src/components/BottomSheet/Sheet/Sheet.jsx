@@ -139,7 +139,7 @@ const Sheet = forwardRef(function SheetComponent({ children, isOpen, initialSnap
         return () => {
             stopObserveContentHeight();
         }
-    }, [isOpen, snappedTo.current])
+    }, [isOpen, snappedTo.current]);
 
     /**
      * Observe the content height of the sheet and update the height of the sheet accordingly.

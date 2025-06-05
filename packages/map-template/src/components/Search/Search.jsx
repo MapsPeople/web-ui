@@ -421,14 +421,21 @@ function Search({ onSetSize, isOpen }) {
             }
         };
 
-        document.addEventListener('click', handleSearchFieldFocus);
+        if (isOpen) {
+            requestAnimationFrameId.current = requestAnimationFrame(() => { // we use a requestAnimationFrame to ensure that the click is not registered too early (while other sheets are still "active")
+                document.addEventListener('click', handleSearchFieldFocus);
+            });
+        } else {
+            document.removeEventListener('click', handleSearchFieldFocus);
+        }
+
         return () => {
             document.removeEventListener('click', handleSearchFieldFocus);
             if (requestAnimationFrameId.current) {
                 cancelAnimationFrame(requestAnimationFrameId.current);
             }
-        };
-    }, []);
+        }
+    }, [isOpen]);
 
     /*
      * Sets currently hovered location.

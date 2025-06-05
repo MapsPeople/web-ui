@@ -134,7 +134,8 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
             ref={searchSheetRef}
         >
             <Search
-                 onSetSize={size => searchSheetRef.current.setSnapPoint(size)}
+                isOpen={currentAppView === appViews.SEARCH}
+                onSetSize={size => searchSheetRef.current.setSnapPoint(size)}
             />
         </Sheet>,
         <Sheet
