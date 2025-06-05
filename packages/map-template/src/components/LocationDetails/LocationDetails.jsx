@@ -267,43 +267,45 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
 
     return <div className={`location-details ${descriptionHasContentAbove ? 'location-details--content-above' : ''} ${descriptionHasContentBelow ? 'location-details--content-below' : ''}`}>
         {location && <>
-            <div className="location-info">
-                <div className="location-info__icon">
-                    {locationDisplayRule && <img alt="" src={locationDisplayRule.icon.src ? locationDisplayRule.icon.src : locationDisplayRule.icon} />}
-                </div>
-                <div className="location-info__content">
-                    <div className='location-info__name'>
-                        {location.properties.name}
+            <div className="location-details__header">
+                <div className="location-info">
+                    <div className="location-info__icon">
+                        {locationDisplayRule && <img alt="" src={locationDisplayRule.icon.src ? locationDisplayRule.icon.src : locationDisplayRule.icon} />}
                     </div>
-                    <mi-location-info level={t('Level')} ref={locationInfoElement} show-external-id={showExternalIDs} />
+                    <div className="location-info__content">
+                        <div className='location-info__name'>
+                            {location.properties.name}
+                        </div>
+                        <mi-location-info level={t('Level')} ref={locationInfoElement} show-external-id={showExternalIDs} />
+                    </div>
+                    <div className="location-info__actions">
+                        <ShareLocationLink buttonClassName="location-info__button" location={location} />
+                        <button className="location-info__button" onClick={() => back()}>
+                            <CloseIcon />
+                        </button>
+                    </div>
                 </div>
-                <div className="location-info__actions">
-                    <ShareLocationLink buttonClassName="location-info__button" location={location} />
-                    <button className="location-info__button" onClick={() => back()}>
-                        <CloseIcon />
-                    </button>
-                </div>
-            </div>
 
-            {/* Wayfinding Button */}
-            {kioskLocation && isDesktop ? (
-                <button
-                    disabled={!hasFoundRoute}
-                    onClick={() => startDirections()}
-                    className={`location-details__wayfinding ${!hasFoundRoute ? 'location-details--no-route' : ''}`}
-                    style={{ background: primaryColor }}
-                >
-                    {!hasFoundRoute ? t('Directions not available') : t('Start directions')}
-                </button>
-            ) : (
-                <button
-                    onClick={() => startWayfinding()}
-                    style={{ background: primaryColor }}
-                    className="location-details__wayfinding"
-                >
-                    {t('Start wayfinding')}
-                </button>
-            )}
+                {/* Wayfinding Button */}
+                {kioskLocation && isDesktop ? (
+                    <button
+                        disabled={!hasFoundRoute}
+                        onClick={() => startDirections()}
+                        className={`location-details__wayfinding ${!hasFoundRoute ? 'location-details--no-route' : ''}`}
+                        style={{ background: primaryColor }}
+                    >
+                        {!hasFoundRoute ? t('Directions not available') : t('Start directions')}
+                    </button>
+                ) : (
+                    <button
+                        onClick={() => startWayfinding()}
+                        style={{ background: primaryColor }}
+                        className="location-details__wayfinding"
+                    >
+                        {t('Start wayfinding')}
+                    </button>
+                )}
+            </div>
 
             <div ref={locationDetailsContainer} onScroll={e => setScrollIndicators(e)} className="location-details__details prevent-scroll" {...scrollableContentSwipePrevent}>
                 {/* Location image */}
