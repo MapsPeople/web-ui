@@ -10,6 +10,11 @@ import './ViewSelector.scss';
 import { useRecoilValue } from 'recoil';
 import { useTranslation } from 'react-i18next';
 import { createPortal } from 'react-dom';
+import PropTypes from 'prop-types';
+
+ViewSelector.propTypes = {
+    isViewSelectorVisible: PropTypes.bool
+}
 
 /**
  * Component for selecting and viewing buildings in a venue.
@@ -17,8 +22,9 @@ import { createPortal } from 'react-dom';
  * On mobile, it shows a modal with a backdrop, while on desktop it shows a dropdown.
  * 
  * @returns {JSX.Element} ViewSelector component
+ * @param {boolean} isViewSelectorVisible - Determines if View Selector is visible or not.
  */
-function ViewSelector() {
+function ViewSelector({ isViewSelectorVisible }) {
     const { t } = useTranslation();
     const [isExpanded, setIsExpanded] = useState(false);
     const [buildingsData, setBuildingsData] = useState([]);
@@ -165,8 +171,8 @@ function ViewSelector() {
         };
     }, [isExpanded, isDesktop]);
 
-    // Early return if the current venue has one building
-    if (buildings.length <= 1) {
+    // Early return if the current venue has one building or visibility of View Selector is set to false
+    if (buildings.length <= 1 || isViewSelectorVisible === false) {
         return null;
     }
 
