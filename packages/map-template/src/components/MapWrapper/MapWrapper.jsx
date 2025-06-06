@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState  } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import MIMap from '@mapsindoors/react-components/src/components/MIMap/MIMap';
 import { mapTypes } from '../../constants/mapTypes';
@@ -24,6 +24,7 @@ import miTransitionLevelState from '../../atoms/miTransitionLevelState';
 import showRoadNamesState from '../../atoms/showRoadNamesState';
 import PropTypes from 'prop-types';
 import ViewSelector from '../ViewSelector/ViewSelector';
+import appConfigState from '../../atoms/appConfigState';
 
 MapWrapper.propTypes = {
     onLocationClick: PropTypes.func,
@@ -78,6 +79,8 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
     const hideNonMatches = useRecoilValue(hideNonMatchesState);
     const miTransitionLevel = useRecoilValue(miTransitionLevelState);
     const showRoadNames = useRecoilValue(showRoadNamesState);
+    const appConfig = useRecoilValue(appConfigState);
+    const [isViewSelectorVisible, setIsViewSelectorVisible] = useState(true);
 
     useLiveData(apiKey);
 
@@ -311,6 +314,15 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
         onMapOptionsChange({ showRoadNames: showRoadNames })
     }, [showRoadNames])
 
+    /**
+     * React on changes in appConfig and sets visibility of View Selector.
+     */
+    useEffect(() => {
+        if (appConfig) {
+            setIsViewSelectorVisible(appConfig?.appSettings?.buildingSelector === 'true' ? true : false)
+        }
+    }, [appConfig])
+
     return (<>
         {apiKey && <MIMap
             apiKey={apiKey}
@@ -321,7 +333,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
             mapOptions={mapOptions}
             gmMapId={gmMapId}
         />}
-        {apiKey && <ViewSelector />}
+        {apiKey && <ViewSelector isViewSelectorVisible={isViewSelectorVisible} />}
     </>)
 }
 
