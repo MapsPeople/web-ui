@@ -319,7 +319,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
      */
     useEffect(() => {
         if (appConfig) {
-            setIsViewSelectorVisible(appConfig?.appSettings?.buildingSelector === 'true' ? true : false)
+            setIsViewSelectorVisible(appConfig?.appSettings?.viewSelector === 'true' ? true : false)
         }
     }, [appConfig])
 
