@@ -48,6 +48,7 @@
   },
   "scripts": {
     "start": "vite",
+    "start:network": "vite --host",
     "build": "vite build",
     "build-for-npm": "node releaseTools/buildForNpm.mjs",
     "serve": "vite preview",

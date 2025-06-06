@@ -24,6 +24,11 @@ BottomSheet.propTypes = {
     onRouteFinished: PropTypes.func.isRequired
 };
 /**
+ * The BottomSheet component is responsible for rendering other components (Search, Wayfinding etc.) in a bottom sheet.
+ * It is used on smaller screens. On larger screens, the Sidebar component is used.
+ *
+ * All components are wrapped in a Sheet component, which handles user interactions (swiping to control the sheet size etc.).
+ *
  * @param {Object} props
  * @param {string} props.directionsFromLocation - Origin Location to be used to instantly show directions.
  * @param {string} props.directionsToLocation - Destination Location to be used to instantly show directions.
@@ -37,16 +42,18 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
 
     const bottomSheetRef = useRef();
 
-    const [locationDetailsSheetSize, setLocationDetailsSheetSize] = useState();
-    const [locationDetailsSheetSwiped, setLocationDetailsSheetSwiped] = useState();
+    // References to the Sheet components for each individual component.
+    const searchSheetRef = useRef();
+    const locationsListSheetRef = useRef();
+    const locationDetailsSheetRef = useRef();
+    const wayfindingSheetRef = useRef();
+    const directionsSheetRef = useRef();
 
-    const [directionsSheetSize, setDirectionsSheetSize] = useState();
-    const [directionsSheetSwiped, setDirectionsSheetSwiped] = useState();
-
-    const [wayfindingSheetSize, setWayfindingSheetSize] = useState();
-    const [searchSheetSize, setSearchSheetSize] = useState(snapPoints.MIN);
-    const [locationsListSheetSize, setLocationsListSheetSize] = useState();
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
+
+    // Holds boolean depicting if the current Location contains more information than just the basic info that is shown in minimal height bottom sheet.
+    const [currentLocationIsDetailed, setCurrentLocationIsDetailed] = useState(false);
+
     const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
 
     const [, setLocationId] = useRecoilState(locationIdState);
@@ -74,6 +81,21 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
         }
     }, [currentLocation, directionsFromLocation, directionsToLocation, filteredLocationsByExternalIDs]);
 
+    /*
+     * React on changes on the current location and check if it contains more information than just the basic info that is shown in minimal height bottom sheet.
+     * If that is the case, we show a little more to indicate to the user that there is more information to be seen.
+     */
+    useEffect(() => {
+        if (currentLocation) {
+            const isDetailed = currentLocation.properties.imageURL
+                || currentLocation.properties.description
+                || currentLocation.properties.additionalDetails
+                || Object.keys(currentLocation.properties.categories).length > 0;
+
+            setCurrentLocationIsDetailed(isDetailed);
+        }
+    }, [currentLocation]);
+
     /**
      * Close the location details page and navigate to either the Locations list page or the Search page.
      */
@@ -86,11 +108,11 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
             setCurrentLocation();
             setFilteredLocationsByExternalID([]);
             // Reset the search sheet height to its minimum size when closing location details
-            setSearchSheetSize(snapPoints.MIN);
+            searchSheetRef.current.setSnapPoint(snapPoints.MIN);
         } else {
             pushAppView(appViews.SEARCH);
             setCurrentLocation();
-            setSearchSheetSize(snapPoints.MIN);
+            searchSheetRef.current.setSnapPoint(snapPoints.MIN);
         }
     }
 
@@ -105,72 +127,77 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
 
     const bottomSheets = [
         <Sheet
-            minHeight={"80"}
-            preferredSizeSnapPoint={searchSheetSize}
+            minimizedHeight={80}
+            initialSnapPoint={snapPoints.MIN}
+            key="SEARCH"
             isOpen={currentAppView === appViews.SEARCH}
-            key="A">
+            ref={searchSheetRef}
+        >
             <Search
-                onSetSize={size => setSearchSheetSize(size)}
+                isOpen={currentAppView === appViews.SEARCH}
+                onSetSize={size => searchSheetRef.current.setSnapPoint(size)}
             />
         </Sheet>,
         <Sheet
-            minHeight="200"
+            minimizedHeight={200}
             isOpen={currentAppView === appViews.EXTERNALIDS}
-            preferredSizeSnapPoint={locationsListSheetSize}
-            key="B">
+            initialSnapPoint={snapPoints.MIN}
+            key="EXTERNALIDS"
+            ref={locationsListSheetRef}
+        >
             <LocationsList
-                onSetSize={size => setLocationsListSheetSize(size)}
+                onSetSize={size => locationsListSheetRef.current.setSnapPoint(size)}
                 onBack={() => closeLocationsList()}
                 locations={filteredLocationsByExternalIDs}
-                onLocationClick={(location) => setCurrentLocation(location)}
-                onLocationsFiltered={(locations) => setFilteredLocationsByExternalID(locations)}
+                onLocationClick={location => setCurrentLocation(location)}
             />
         </Sheet>,
         <Sheet
-            minHeight="128"
-            preferredSizeSnapPoint={locationDetailsSheetSize}
+            minimizedHeight={currentLocationIsDetailed ? 180 : 136}
+            key="LOCATION_DETAILS"
+            initialSnapPoint={snapPoints.MIN}
             isOpen={currentAppView === appViews.LOCATION_DETAILS}
-            key="C"
-            onSwipedToSnapPoint={snapPoint => setLocationDetailsSheetSwiped(snapPoint)}>
+            ref={locationDetailsSheetRef}
+        >
             <LocationDetails
-                onSetSize={size => setLocationDetailsSheetSize(size)}
+                onSetSize={size => locationDetailsSheetRef.current.setSnapPoint(size)}
                 onStartWayfinding={() => pushAppView(appViews.WAYFINDING)}
                 onBack={() => closeLocationDetails()}
-                snapPointSwiped={locationDetailsSheetSwiped}
                 onStartDirections={() => pushAppView(appViews.DIRECTIONS)}
                 isOpen={currentAppView === appViews.LOCATION_DETAILS}
             />
         </Sheet>,
         <Sheet
-            minHeight="190"
+            minimizedHeight={190}
+            key="WAYFINDING"
+            initialSnapPoint={snapPoints.FIT}
             isOpen={currentAppView === appViews.WAYFINDING}
-            preferredSizeSnapPoint={wayfindingSheetSize}
-            reFitWhenContentChanges={true}
-            key="D">
+            ref={wayfindingSheetRef}
+        >
             <Wayfinding
-                onSetSize={size => setWayfindingSheetSize(size)}
+                onSetSize={size => wayfindingSheetRef.current.setSnapPoint(size)}
                 onStartDirections={() => pushAppView(appViews.DIRECTIONS)}
                 directionsToLocation={directionsToLocation}
                 directionsFromLocation={directionsFromLocation}
                 onBack={() => pushAppView(currentLocation ? appViews.LOCATION_DETAILS : appViews.SEARCH)}
                 isActive={currentAppView === appViews.WAYFINDING}
-            />
+            ></Wayfinding>
         </Sheet>,
-        <Sheet
-            minHeight="273"
+       <Sheet
+            minimizedHeight={273}
             isOpen={currentAppView === appViews.DIRECTIONS}
-            preferredSizeSnapPoint={directionsSheetSize}
-            onSwipedToSnapPoint={snapPoint => setDirectionsSheetSwiped(snapPoint)}
-            key="E">
+            initialSnapPoint={snapPoints.FIT}
+            ref={directionsSheetRef}
+            key="DIRECTIONS"
+        >
             <Directions
-                onSetSize={size => setDirectionsSheetSize(size)}
+                onSetSize={size => directionsSheetRef.current.setSnapPoint(size)}
                 isOpen={currentAppView === appViews.DIRECTIONS}
                 onBack={() => pushAppView(appViews.WAYFINDING)}
-                snapPointSwiped={directionsSheetSwiped}
                 onRouteFinished={() => onRouteFinished()}
             />
         </Sheet>
-    ]
+    ];
 
     return <div ref={bottomSheetRef} className='bottom-sheets'>
         <ContainerContext.Provider value={bottomSheetRef}>

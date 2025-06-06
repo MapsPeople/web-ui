@@ -3,7 +3,6 @@
 .locations-list {
     display: grid;
     grid-template-rows: 50px 1fr;
-    height: 100%;
 
     &__header {
         padding: var(--spacing-medium);

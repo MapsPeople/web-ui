@@ -1,12 +1,15 @@
 @import '../../variables.scss';
 
 .location-details {
-    padding: var(--spacing-medium);
+    padding: 0 var(--spacing-medium);
     color: var(--color-black-base);
     display: grid;
-    height: 100%;
     overflow-y: hidden;
     grid-template-rows: auto auto 1fr auto;
+
+    &--max-height {
+        height: 100%;
+    }
 
     &--content-below {
         position: relative;
@@ -44,6 +47,7 @@
         margin-top: 0;
         height: auto;
         min-height: 0;
+        padding-bottom: var(--spacing-small);
 
         > *:first-child {
             margin-top: var(--spacing-medium);
@@ -96,7 +100,7 @@
     &__wayfinding {
         position: sticky;
         top: 0;
-        margin: var(--spacing-medium) 0;
+        margin-bottom: var(--spacing-medium);
         color: var(--color-white-white);
         border-radius: var(--rounding-large);
         border: none;
@@ -123,6 +127,7 @@
     font-size: var(--font-size-small);
     grid-template-columns: min-content 1fr min-content;
     gap: var(--spacing-x-small);
+    height: 72px; /* fixed height for layout consistency. Content can be two or three lines */
 
     &__icon {
         margin-right: var(--spacing-medium);

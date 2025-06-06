@@ -56,6 +56,7 @@ function Search({ onSetSize, isOpen }) {
 
     const searchRef = useRef();
     const scrollButtonsRef = useRef();
+    const requestAnimationFrameId = useRef();
 
     /** Referencing the search field */
     const searchFieldRef = useRef();
@@ -161,7 +162,7 @@ function Search({ onSetSize, isOpen }) {
             selectedCategoriesArray.current.push(category);
         }
 
-        // If child category is being selected, we need to clear parent categories results in order to load proper data that belongs to child category. 
+        // If child category is being selected, we need to clear parent categories results in order to load proper data that belongs to child category.
         if (selectedCategory) {
             setSelectedCategory([]);
             setSearchResults([]);
@@ -200,7 +201,7 @@ function Search({ onSetSize, isOpen }) {
 
         // Expand the sheet to occupy the entire screen
         setSize(snapPoints.MAX);
-        
+
         setSearchResults(displayResults);
         setFilteredLocations(displayResults);
         setShowNotFoundMessage(displayResults.length === 0);
@@ -406,8 +407,10 @@ function Search({ onSetSize, isOpen }) {
             const clickedInsideResults = event.target.closest('.search__results');
 
             if (clickedInsideSearchArea) {
-                setIsInputFieldInFocus(true);
-                setSize(snapPoints.FIT);
+                setSize(snapPoints.MAX);
+                requestAnimationFrameId.current = requestAnimationFrame(() => { // we use a requestAnimationFrame to ensure that the size change is applied before the focus (meaning that categories are rendered)
+                    setIsInputFieldInFocus(true);
+                });
             } else if (!clickedInsideResults) {
                 setIsInputFieldInFocus(false);
                 setSize(snapPoints.MIN);
@@ -418,11 +421,21 @@ function Search({ onSetSize, isOpen }) {
             }
         };
 
-        document.addEventListener('click', handleSearchFieldFocus);
+        if (isOpen) {
+            requestAnimationFrameId.current = requestAnimationFrame(() => { // we use a requestAnimationFrame to ensure that the click is not registered too early (while other sheets are still "active")
+                document.addEventListener('click', handleSearchFieldFocus);
+            });
+        } else {
+            document.removeEventListener('click', handleSearchFieldFocus);
+        }
+
         return () => {
             document.removeEventListener('click', handleSearchFieldFocus);
-        };
-    }, []);
+            if (requestAnimationFrameId.current) {
+                cancelAnimationFrame(requestAnimationFrameId.current);
+            }
+        }
+    }, [isOpen]);
 
     /*
      * Sets currently hovered location.
@@ -521,7 +534,7 @@ function Search({ onSetSize, isOpen }) {
     }, [kioskLocation]);
 
     /**
-     * 
+     *
      */
     useEffect(() => {
         const childKeys = categories.find(([key]) => key === selectedCategory)?.[1]?.childKeys || [];
