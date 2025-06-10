@@ -319,6 +319,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
      */
     useEffect(() => {
         if (appConfig) {
+            // Boolean from the App Config comes as a string. We need to return clean boolean value based on that.
             setIsViewSelectorVisible(appConfig?.appSettings?.viewSelector === 'true' ? true : false)
         }
     }, [appConfig])
