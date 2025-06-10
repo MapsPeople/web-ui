@@ -63,6 +63,8 @@ import centerState from '../../atoms/centerState.js';
 import PropTypes from 'prop-types';
 import { ZoomLevelValues } from '../../constants/zoomLevelValues.js';
 import { useOnRouteFinished } from '../../hooks/useOnRouteFinished.js';
+// Arrange the order of import 
+import LanguageSwitcher from '../LanguageSwitcher/LanguageSwitcher.jsx';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -87,7 +89,6 @@ MapTemplate.propTypes = {
     useMapProviderModule: PropTypes.bool,
     kioskOriginLocationId: PropTypes.string,
     timeout: PropTypes.number,
-    language: PropTypes.string,
     useKeyboard: PropTypes.bool,
     miTransitionLevel: PropTypes.number,
     category: PropTypes.string,
@@ -122,7 +123,6 @@ MapTemplate.propTypes = {
  * @param {string} [props.gmMapId] - The Google Maps Map ID associated with a specific map style or feature.
  * @param {boolean} [props.useMapProviderModule] - Set to true if the Map Template should take MapsIndoors solution modules into consideration when determining what map type to use.
  * @param {string} [props.kioskOriginLocationId] - If running the Map Template as a kiosk (upcoming feature), provide the Location ID that represents the location of the kiosk.
- * @param {string} [props.language] - The language to show textual content in. Supported values are "en" for English, "da" for Danish, "de" for German, "fr" for French, "it" for Italian, "es" for Spanish, "nl" for Dutch and "zh" for Chinese. If the prop is not set, the language of the browser will be used (if it is one of the supported languages - otherwise it will default to English).
  * @param {boolean} [props.supportsUrlParameters] - Set to true if you want to support URL Parameters to configure the Map Template.
  * @param {boolean} [props.useKeyboard] - If running the Map Template as a kiosk, set this prop to true and it will prompt a keyboard.
  * @param {number} [props.timeout] - If you want the Map Template to reset map position and UI elements to the initial state after some time of inactivity, use this to specify the number of seconds of inactivity before resetting.
@@ -135,7 +135,7 @@ MapTemplate.propTypes = {
  * @param {string} [props.center] - Specifies the coordinates where the map should load, represented as longitude and latitude values separated by a comma. If the specified coordinates intersect with a Venue, that Venue will be set as the current Venue.
  * @param {boolean} [props.useAppTitle] - Specifies if the Map Template should set the document title as defined in the App Config. The default value is set to false.
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations, center, useAppTitle }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations, center, useAppTitle }) {
 
     const [mapOptions, setMapOptions] = useState({ brandingColor: primaryColor });
     const [, setApiKey] = useRecoilState(apiKeyState);
@@ -273,12 +273,13 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, []);
 
     /*
-     * React on changes in the language prop.
+     * React on changes in the currentLanguage (from Recoil).
      * If it is undefined, try to use the browser language. It will fall back to English if the language is not supported.
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
-            const languageToUse = language ? language : navigator.language;
+            // Sets language to use. Priority: currentLanguage -> App Config -> browser's default language.
+            const languageToUse = currentLanguage ?? appConfig?.appSettings?.language ?? navigator.language;
 
             // Set the language on the MapsIndoors SDK in order to get eg. Mapbox and Google directions in that language.
             // The MapsIndoors data only accepts the first part of the IETF language string, hence the split.
@@ -305,18 +306,15 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 }
             });
 
-            if (!currentLanguage) {
-                // Initialize i18n instance that is used to assist translating in the React components.
-                initI18n(languageToUse);
-            } else {
-                // Change the already set language
-                i18n.changeLanguage(languageToUse);
+            if (!i18n.language || i18n.language !== languageToUse) {
+                if (!i18n.isInitialized) {
+                    initI18n(languageToUse);
+                } else {
+                    i18n.changeLanguage(languageToUse);
+                }
             }
-
-
-            setCurrentLanguage(languageToUse);
         }
-    }, [language, mapsindoorsSDKAvailable]);
+    }, [currentLanguage, mapsindoorsSDKAvailable, appConfig]);
 
     /**
      * React on changes in the MapsIndoors API key by fetching the required data.
@@ -760,6 +758,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             gmMapId={gmMapId}
             isWayfindingActive={currentAppView === appStates.WAYFINDING}
         />
+        <LanguageSwitcher currentLanguage={currentLanguage} setLanguage={setCurrentLanguage} />
     </div>
 }
 

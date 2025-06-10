@@ -1,0 +1,146 @@
+.language-switcher {
+    position: fixed; // Center the switcher on the screen for debugging
+    top: 50%; // Center vertically
+    left: 50%; // Center horizontally
+    transform: translate(-50%, -50%); // Center both axes
+    z-index: 1000;
+
+    &__button-container {
+        display: flex;
+    }
+
+    &__toggle-button {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #E6E6E6;
+        border-radius: var(--rounding-large, 16px);
+        width: 48px;
+        height: 48px;
+        background: var(--tailwind-colors-white, #fff);
+        transition: background-color 0.2s, border-color 0.2s;
+        color: inherit;
+        font: inherit;
+        font-size: 1.5rem;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        margin: 0 auto;
+        // Remove extra padding/gap for icon-only button
+        padding: 0;
+        &:hover {
+            background-color: var(--tailwind-colors-gray-50, #f9fafb);
+            border: 1px solid var(--tailwind-colors-gray-200, #e5e7eb);
+        }
+    }
+
+    &__dropdown {
+        position: absolute;
+        bottom: calc(100% + 8px);
+        left: 0;
+        background: var(--tailwind-colors-white, #fff);
+        border-radius: var(--rounding-large, 16px);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        min-width: 180px;
+        padding: 8px 0;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid #E6E6E6;
+    }
+
+    &__container.language-switcher__container--mobile {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: var(--tailwind-colors-white, #fff);
+        border-radius: var(--rounding-large, 16px);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        pointer-events: auto;
+        z-index: calc(var(--z-index-popup, 1200) + 1);
+        width: 20rem;
+        min-width: 220px;
+        max-width: 90vw;
+        box-shadow: 0 2px 16px rgba(0,0,0,0.10);
+    }
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+        padding: 0.5rem 0;
+        max-height: 20rem;
+        overflow-y: auto;
+    }
+
+    &__item {
+        background: none;
+        border: none;
+        width: 100%;
+        text-align: left;
+        font-size: 1rem;
+        padding: 12px 24px;
+        color: var(--color-gray-90, #222);
+        border-radius: var(--rounding-large, 16px);
+        transition: 0.15s;
+        cursor: pointer;
+        &:hover,
+        &--selected {
+            background: var(--tailwind-colors-gray-100, #f3f4f6);
+        }
+    }
+}
+
+// Overlay and modal header reuse from ViewSelector
+.language-switcher-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: var(--z-index-popup, 1200);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    // No platform-specific styling, always fills the viewport
+    &__backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(1px);
+        z-index: var(--z-index-overlay, 1100);
+    }
+    &__header {
+        display: flex;
+        align-items: center;
+        padding: var(--spacing-x-small, 0.5rem);
+        border-bottom: 1px solid var(--tailwind-colors-gray-100, #e5e7eb);
+        background: var(--tailwind-colors-white, #fff);
+        span {
+            text-align: left;
+            font-size: var(--font-size-medium, 1.1rem);
+            padding: var(--spacing-medium, 1rem);
+            font-weight: bold;
+        }
+    }
+    &__exit-button {
+        background-color: var(--tailwind-colors-white, #fff);
+        border-radius: var(--rounding-large, 16px);
+        border: 1px solid #E6E6E6;
+        width: 48px;
+        height: 48px;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        &:hover {
+            background-color: var(--tailwind-colors-gray-100, #f3f4f6);
+            border: 1px solid var(--tailwind-colors-gray-200, #e5e7eb);
+        }
+    }
+}
