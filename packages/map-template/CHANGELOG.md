@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- If `language`, `primaryColor`, `logo`, `venue`, `startZoomLevel`, `pitch` and `bearing` props are not explicitly provided, their value will be determined by the App Config object.
+- If `language`, `primaryColor`, `logo`, `venue`, `startZoomLevel`, `pitch`, `bearing` and `center` props are not explicitly provided, their value will be determined by the App Config object.
 - View Selector visibility is now configurable through the App Config object.
 
 ## [1.78.0] - 2025-06-05
