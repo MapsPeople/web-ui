@@ -25,6 +25,7 @@ import showRoadNamesState from '../../atoms/showRoadNamesState';
 import PropTypes from 'prop-types';
 import ViewSelector from '../ViewSelector/ViewSelector';
 import appConfigState from '../../atoms/appConfigState';
+import isNullOrUndefined from '../../helpers/isNullOrUndefined';
 
 MapWrapper.propTypes = {
     onLocationClick: PropTypes.func,
@@ -319,8 +320,12 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
      */
     useEffect(() => {
         if (appConfig) {
-            // Boolean from the App Config comes as a string. We need to return clean boolean value based on that.
-            setIsViewSelectorVisible(appConfig?.appSettings?.viewSelector === 'true' ? true : false)
+            if (isNullOrUndefined(appConfig?.appSettings?.viewSelector)){
+                setIsViewSelectorVisible(true);
+            } else {
+                // Boolean from the App Config comes as a string. We need to return clean boolean value based on that.
+                setIsViewSelectorVisible(appConfig?.appSettings?.viewSelector === 'true' ? true : false)
+            }       
         }
     }, [appConfig])
 
