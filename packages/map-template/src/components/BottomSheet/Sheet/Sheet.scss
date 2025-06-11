@@ -40,5 +40,9 @@
     &__content {
         height: 100%;
         overflow-y: auto;
+
+        &--no-scroll {
+            overflow-y: hidden;
+        }
     }
 }
