@@ -399,7 +399,9 @@ function Search({ onSetSize, isOpen }) {
      */
     useEffect(() => {
         const SEARCH_FOCUS_ELEMENTS = ['.search__info', '.search__back-button', '.categories', '.sheet__content'];
-        const IGNORE_CLOSE_ELEMENTS = ['.mi-floor-selector', '.view-mode-switch', '.mi-my-position'];
+
+        // We want to ignore: Floor Selector, View Mode Switch, My Position, Mapbox zoom controls and Google Maps zoom controls
+        const IGNORE_CLOSE_ELEMENTS = ['.mi-floor-selector', '.view-mode-switch', '.mi-my-position', '.mapboxgl-ctrl-bottom-right', '.gmnoprint'];
 
         const handleSearchFieldFocus = (event) => {
             const clickedInsideSearchArea = SEARCH_FOCUS_ELEMENTS.some(selector =>
