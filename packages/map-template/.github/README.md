@@ -18,7 +18,7 @@ The Map Template has a main `MapsIndoorsMap` React component. It wraps the whole
 
 ### Running the app on other devices
 
-Instead of running `npm start`, run `npm run start:network`. This will expose the Map Template on an IP on the local network. The console output will tell you which adress, which you can then open in a browser on a device connected to the same network. For example `http://10.0.2.3:3000/`.
+Instead of running `npm start`, run `npm run start:network`. This will expose the Map Template on an IP on the local network. The console output will tell you the address, which you can then open in a browser on a device connected to the same network. For example `http://10.0.2.3:3000/`.
 
 ### Adding Google Maps API Keys or Mapbox Access Tokens
 
