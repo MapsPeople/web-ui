@@ -1,14 +1,18 @@
 @import '../../variables.scss';
 
 .location-details {
-    padding: 0 var(--spacing-medium);
+    padding: var(--spacing-medium); // Keep this for overall content alignment
     color: var(--color-black-base);
     display: grid;
-    overflow-y: hidden;
-    grid-template-rows: auto auto 1fr auto;
+    height: 100%;
+    grid-template-rows: auto 1fr; // Header takes content size, details takes the rest
 
-    &--max-height {
-        height: 100%;
+    &__header {
+        position: sticky;
+        top: 0; // Stick to the top of the modal's scrollable area
+        background: var(--color-white-white);
+        padding: var(--spacing-medium);
+        margin: calc(var(--spacing-medium) * -1);
     }
 
     &--content-below {
