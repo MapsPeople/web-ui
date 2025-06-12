@@ -3,8 +3,13 @@
     &__button-container {
         display: flex;
 
+        &--desktop {
+            position: relative;
+            display: inline-block;
+            vertical-align: bottom;
+        }
+
         &--desktop .view-selector__toggle-button {
-            width: auto;
             padding: var(--spacing-x-small);
             gap: var(--spacing-x-small);
         }
@@ -38,8 +43,8 @@
 
         &--desktop {
             position: absolute;
-            bottom: calc(100% + var(--spacing-medium));
-            margin-top: var(--spacing-xx-small);
+            right: 100%; /* Place to the left of the button */
+            margin-right: var(--spacing-small);
             z-index: var(--z-index-sticky);
             min-width: 200px;
         }
@@ -67,12 +72,12 @@
     gap: 0;
     z-index: var(--z-index-sticky);
     max-height: 20rem; // Limit height for long building lists
-    
+
     // Hide scrollbar on mobile devices
     @media (max-width: 768px) {
         scrollbar-width: none;
     }
-    
+
     // Subtle scrollbar for desktop
     @media (min-width: 769px) {
         scrollbar-width: thin;
@@ -119,7 +124,7 @@
         backdrop-filter: blur(1px);
         z-index: var(--z-index-overlay); /* Below popup but above most content */
     }
-    
+
     &__header {
         display: flex;
         align-items: center;
@@ -133,7 +138,7 @@
             font-weight: bold;
         }
     }
-    
+
     &__exit-button {
         background-color: var(--tailwind-colors-white);
         border-radius: var(--rounding-large);

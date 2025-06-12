@@ -1,7 +1,5 @@
 import { useEffect, useState, useMemo, useCallback, useRef } from 'react';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
-import { ReactComponent as ChevronDownIcon } from '../../assets/chevron-down.svg';
-import { ReactComponent as ChevronUpIcon } from '../../assets/chevron-up.svg';
 import { ReactComponent as PanViewIcon } from '../../assets/pan-view-icon.svg';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
@@ -15,7 +13,7 @@ import { createPortal } from 'react-dom';
  * Component for selecting and viewing buildings in a venue.
  * It provides a toggle button to expand/collapse the building list.
  * On mobile, it shows a modal with a backdrop, while on desktop it shows a dropdown.
- * 
+ *
  * @returns {JSX.Element} ViewSelector component
  */
 function ViewSelector() {
@@ -171,28 +169,13 @@ function ViewSelector() {
     }
 
     /**
-     * Toggle button component that renders different content based on the isDesktop prop
-     * @param {boolean} props.isDesktop Whether the component is being rendered on desktop
+     * Toggle button component that expands or collapses the building list.
      */
-    const ToggleButton = () => {
-        /* Render mobile list toggle button if isDesktop is false */
-        if (!isDesktop) {
-            return (
-                <button ref={toggleButtonRef} className="view-selector__toggle-button" onClick={() => setIsExpanded(!isExpanded)}>
-                    <PanViewIcon />
-                </button>
-            );
-        }
-
-        /* Render desktop list toggle button if isDesktop is true */
-        return (
-            <button className="view-selector__toggle-button" onClick={() => setIsExpanded(!isExpanded)}>
-                <PanViewIcon />
-                <span> {t('Pan map to view')}</span>
-                {isExpanded ? <ChevronDownIcon /> : <ChevronUpIcon />}
-            </button>
-        );
-    };
+    const ToggleButton = () => (
+        <button ref={toggleButtonRef} className="view-selector__toggle-button" onClick={() => setIsExpanded(!isExpanded)}>
+            <PanViewIcon />
+        </button>
+    );
 
     /**
      * Render a list of buildings for the current venue
@@ -248,16 +231,26 @@ function ViewSelector() {
             )}
 
             {/* Desktop expanded view with ref for click-outside detection */}
-            {isDesktop && isExpanded && (
-                <div ref={desktopDropdownRef} className="view-selector__container view-selector__container--desktop">
-                    <BuildingList />
+            {isDesktop ? (
+                <div className="view-selector__button-container view-selector__button-container--desktop" style={{ position: 'relative', display: 'inline-block' }}>
+                    {isExpanded && (
+                        <div
+                            ref={desktopDropdownRef}
+                            className="view-selector__container view-selector__container--desktop"
+                        >
+                            <BuildingList />
+                        </div>
+                    )}
+                    <ToggleButton />
                 </div>
+            ) : (
+                <>
+                    {/* Toggle button - always visible, positioned differently based on viewport */}
+                    <div className="view-selector__button-container view-selector__button-container--mobile">
+                        <ToggleButton />
+                    </div>
+                </>
             )}
-
-            {/* Toggle button - always visible, positioned differently based on viewport */}
-            <div className={`view-selector__button-container ${isDesktop ? 'view-selector__button-container--desktop' : 'view-selector__button-container--mobile'}`}>
-                <ToggleButton />
-            </div>
         </div>
     );
 
