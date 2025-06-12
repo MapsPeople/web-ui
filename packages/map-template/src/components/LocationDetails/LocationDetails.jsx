@@ -28,22 +28,33 @@ LocationDetails.propTypes = {
     onSetSize: PropTypes.func,
     snapPointSwiped: PropTypes.number,
     onStartDirections: PropTypes.func,
-    isOpen: PropTypes.bool
+    isOpen: PropTypes.bool,
+    snapPointSwipedByUser: PropTypes.string
 }
 
 /**
- * Shows details for a MapsIndoors Location.
+ * This component is used to show the details of a MapsIndoors Location.
+ *
+ * It will always show the location name, icon and a info about floor, building and venue.
+ * and a button to start wayfinding.
+ *
+ * It will also show the location description, image, categories and additional details
+ * if they are available.
+ *
+ * In case the Location description is long, it will be truncated and a button to expand the description will be shown.
+ * On small screens, when the description is expanded, the bottom sheet will be expanded to full height. Also, if the user
+ * swipes to full height, the description will be expanded.
  *
  * @param {object} props
  * @param {function} props.onBack - Callback that fires when Location Details are closed by the user.
  * @param {function} props.onStartWayfinding - Callback that fires when user clicks the Start Wayfinding button.
  * @param {function} props.onSetSize - Callback that is fired when the toggle full description button is clicked and the Sheet size changes.
- * @param {number} props.snapPointSwiped - Changes value when user has swiped a Bottom sheet to a new snap point.
  * @param {function} props.onStartDirections - Callback that fires when user clicks the Start directions button.
  * @param {boolean} props.isOpen - Whether the Location Details are open or not.
+ * @param {function} props.snapPointSwipedByUser - Changes value when user has swiped a Bottom sheet to a new snap point.
  *
  */
-function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped, onStartDirections, isOpen }) {
+function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirections, isOpen, snapPointSwipedByUser }) {
     const { t } = useTranslation();
 
     const locationInfoElement = useRef(null);
@@ -53,6 +64,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
     const [showFullDescription, setShowFullDescription] = useState(false);
     const [descriptionHasContentAbove, setDescriptionHasContentAbove] = useState(false);
     const [descriptionHasContentBelow, setDescriptionHasContentBelow] = useState(false);
+    const isInFullHeightRef = useRef(false);
 
     // Holds the MapsIndoors DisplayRule for the location
     const [locationDisplayRule, setLocationDisplayRule] = useState(null);
@@ -125,8 +137,10 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
     function toggleDescription() {
         if (showFullDescription === false) {
             expandLocationDescription();
+            setSize(snapPoints.MAX);
         } else {
             collapseLocationDescription();
+            setSize(snapPoints.FIT);
         }
     }
 
@@ -137,6 +151,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
         requestAnimationFrame(() => { // Necessary to preserve transition
             setShowFullDescription(true);
             setScrollIndicators();
+            isInFullHeightRef.current = true;
         });
     }
 
@@ -146,6 +161,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
     function collapseLocationDescription() {
         setShowFullDescription(false);
         unsetScrollIndicators();
+        isInFullHeightRef.current = false;
     }
 
     /**
@@ -254,18 +270,22 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, snapPointSwiped
      * When user swipes the bottom sheet to a new snap point.
      */
     useEffect(() => {
-        if (snapPointSwiped === undefined) return;
+        if (!snapPointSwipedByUser) {
+            isInFullHeightRef.current = false;
+            return;
+        }
 
         // If swiping to max height, expand location details.
         // If swiping to smaller height, collapse location details.
-        if (showFullDescription) {
+        setShowFullDescription(snapPointSwipedByUser === snapPoints.MAX);
+        if (snapPointSwipedByUser === snapPoints.MAX) {
             expandLocationDescription();
         } else {
             collapseLocationDescription();
         }
-    }, [snapPointSwiped]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [snapPointSwipedByUser]);
 
-    return <div className={`location-details ${descriptionHasContentAbove ? 'location-details--content-above' : ''} ${descriptionHasContentBelow ? 'location-details--content-below' : ''}`}>
+    return <div className={`location-details ${isInFullHeightRef.current === true ? 'location-details--max-height' : ''} ${descriptionHasContentAbove ? 'location-details--content-above' : ''} ${descriptionHasContentBelow ? 'location-details--content-below' : ''}`}>
         {location && <>
             <div className="location-details__header">
                 <div className="location-info">

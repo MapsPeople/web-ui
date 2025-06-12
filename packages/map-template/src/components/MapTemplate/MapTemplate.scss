@@ -8,6 +8,10 @@
     height: 100%;
     overflow-y: hidden;
 
+    // Prevent scroll chaining to occur on neighbouring scroll areas.
+    // This in particular disables the vertical pull-to-refresh gesture, making it easier to eg. pull down the bottom sheet from the very top.
+    overscroll-behavior-y: contain;
+
     * {
         box-sizing: border-box;
         font-family: var(--font-family-system);
