@@ -17,6 +17,7 @@ const useDirectionsInfo = (originLocation, destinationLocation, directionsServic
 
     useEffect(() => {
         setAreDirectionReady(false);
+        let isActive = true; // This flag will help us ignore outdated responses
         if (originLocation?.geometry && destinationLocation?.geometry) {
             directionsService.getRoute({
                 origin: getLocationPoint(originLocation),
@@ -24,6 +25,8 @@ const useDirectionsInfo = (originLocation, destinationLocation, directionsServic
                 travelMode: travelMode,
                 avoidStairs: accessibilityOn
             }).then(directionsResult => {
+                if (!isActive) return;
+
                 if (directionsResult && directionsResult.legs) {
                     // Calculate total distance and time
                     const totalDistance = directionsResult.legs.reduce((accumulator, current) => accumulator + current.distance.value, 0);
@@ -45,8 +48,13 @@ const useDirectionsInfo = (originLocation, destinationLocation, directionsServic
                     setHasFoundRoute(false);
                 }
             }, () => {
+                if (!isActive) return;
                 setHasFoundRoute(false);
             });
+        }
+
+        return () => {
+            isActive = false;
         }
     }, [originLocation, destinationLocation, directionsService, accessibilityOn, travelMode]);
 
