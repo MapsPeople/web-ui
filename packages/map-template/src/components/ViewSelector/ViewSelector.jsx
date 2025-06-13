@@ -26,7 +26,7 @@ function ViewSelector() {
     const currentVenueName = useRecoilValue(currentVenueNameState);
     const viewSelectorMountPoint = '.view-selector-portal';
     const [portalContainer, setPortalContainer] = useState(null);
-    const desktopDropdownRef = useRef(null);
+    const buildingListRef = useRef(null);
     const toggleButtonRef = useRef(null);
     const MAX_BUILDINGS_DESKTOP = 6;
     const BUILDING_LIST_ITEM_HEIGHT = 60; // Height of each building list item in pixels
@@ -144,13 +144,16 @@ function ViewSelector() {
     // Add effect for handling outside clicks on desktop only
     useEffect(() => {
         // Only add listener when expanded and on desktop
-        if (!isExpanded || !isDesktop) return;
+        if (!(isExpanded && isDesktop)) return;
 
         function handleClickOutside(event) {
             // Check if click was outside the dropdown and not on the toggle button
-            if (desktopDropdownRef.current &&
-                !desktopDropdownRef.current.contains(event.target) &&
-                !event.target.closest(toggleButtonRef.current)) {
+            if (
+                buildingListRef.current &&
+                !buildingListRef.current.contains(event.target) &&
+                toggleButtonRef.current &&
+                !toggleButtonRef.current.contains(event.target)
+            ) {
                 setIsExpanded(false);
             }
         }
@@ -235,21 +238,18 @@ function ViewSelector() {
                 <div className="view-selector__button-container view-selector__button-container--desktop" style={{ position: 'relative', display: 'inline-block' }}>
                     {isExpanded && (
                         <div
-                            ref={desktopDropdownRef}
+                            ref={buildingListRef}
                             className="view-selector__container view-selector__container--desktop"
                         >
                             <BuildingList />
                         </div>
                     )}
+                    {/* Toggle button for desktop */}
                     <ToggleButton />
                 </div>
             ) : (
-                <>
-                    {/* Toggle button - always visible, positioned differently based on viewport */}
-                    <div className="view-selector__button-container view-selector__button-container--mobile">
-                        <ToggleButton />
-                    </div>
-                </>
+                // Mobile view toggle button, rendered outside the overlay                
+                <ToggleButton />
             )}
         </div>
     );
