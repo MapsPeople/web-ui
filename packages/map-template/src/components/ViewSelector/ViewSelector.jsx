@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo, useCallback, useRef } from 'react';
+import PropTypes from 'prop-types';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
 import { ReactComponent as PanViewIcon } from '../../assets/pan-view-icon.svg';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
@@ -9,14 +10,20 @@ import { useRecoilValue } from 'recoil';
 import { useTranslation } from 'react-i18next';
 import { createPortal } from 'react-dom';
 
+ViewSelector.propTypes = {
+    isViewSelectorDisabled: PropTypes.bool
+};
+
 /**
  * Component for selecting and viewing buildings in a venue.
  * It provides a toggle button to expand/collapse the building list.
  * On mobile, it shows a modal with a backdrop, while on desktop it shows a dropdown.
  *
  * @returns {JSX.Element} ViewSelector component
+ * @param {Object} props - Component properties
+ * @param {boolean} props.isViewSelectorDisabled - Whether the ViewSelector is currently active.
  */
-function ViewSelector() {
+function ViewSelector({ isViewSelectorDisabled }) {
     const { t } = useTranslation();
     const [isExpanded, setIsExpanded] = useState(false);
     const [buildingsData, setBuildingsData] = useState([]);
@@ -175,7 +182,7 @@ function ViewSelector() {
      * Toggle button component that expands or collapses the building list.
      */
     const ToggleButton = () => (
-        <button ref={toggleButtonRef} className="view-selector__toggle-button" onClick={() => setIsExpanded(!isExpanded)}>
+        <button ref={toggleButtonRef} className="view-selector__toggle-button" onClick={() => setIsExpanded(!isExpanded)} disabled={isViewSelectorDisabled}>
             <PanViewIcon />
         </button>
     );
