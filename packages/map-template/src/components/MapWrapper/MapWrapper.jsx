@@ -34,7 +34,8 @@ MapWrapper.propTypes = {
     resetCount: PropTypes.number.isRequired,
     mapOptions: PropTypes.object,
     onMapOptionsChange: PropTypes.func,
-    gmMapId: PropTypes.string
+    gmMapId: PropTypes.string,
+    isWayfindingActive: PropTypes.bool
 };
 
 /**
@@ -57,9 +58,10 @@ let _tileStyle;
  * @param {object} props.mapOptions - Options for instantiating and styling the map as well as UI elements.
  * @param {function} props.onMapOptionsChange - Function that is run when the map options are changed.
  * @param {string} props.gmMapId - Google Maps Map ID for custom styling.
+ * @param {boolean} props.isWayfindingActive - Whether wayfinding is active or not.
  * @returns
  */
-function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating, onViewModeSwitchKnown, resetCount, mapOptions, onMapOptionsChange, gmMapId }) {
+function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating, onViewModeSwitchKnown, resetCount, mapOptions, onMapOptionsChange, gmMapId, isWayfindingActive }) {
     const apiKey = useRecoilValue(apiKeyState);
     const gmApiKey = useRecoilValue(gmApiKeyState);
     const mapboxAccessToken = useRecoilValue(mapboxAccessTokenState);
@@ -321,7 +323,8 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
             mapOptions={mapOptions}
             gmMapId={gmMapId}
         />}
-        {apiKey && <ViewSelector />}
+        {/* Pass isWayfindingActive prop to ViewSelector to disable interactions while wayfinding is active*/}
+        {apiKey && < ViewSelector isViewSelectorDisabled={isWayfindingActive} />}
     </>)
 }
 
