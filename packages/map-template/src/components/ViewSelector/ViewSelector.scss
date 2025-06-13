@@ -81,6 +81,7 @@
     // Subtle scrollbar for desktop
     @media (min-width: 769px) {
         scrollbar-width: thin;
+        scrollbar-color: var(--tailwind-colors-gray-300) transparent;
     }
 
     &__item {
