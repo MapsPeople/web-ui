@@ -15,7 +15,23 @@ const supportedLanguages = [
     { code: 'zh', label: '中文' },
 ];
 
-function LanguageSelector({ currentLanguage, setLanguage }) {
+/**
+ * LanguageSelector component allows users to select a language from a list of supported languages.
+ * 
+ * Features:
+ * - Renders a language selection button and dropdown (desktop) or overlay (mobile).
+ * - Uses a portal to render the selector in a specific DOM node.
+ * - Supports both desktop and mobile layouts.
+ * 
+ * Props:
+ * @param {Object} props
+ * @param {string} props.currentLanguage - The currently selected language code.
+ * @param {function} props.setLanguage - Callback to set the selected language.
+ * @param {boolean} [props.isVisible] - Controls visibility of the language selector.
+ * 
+ * @returns {JSX.Element|null} The rendered LanguageSelector component or null if not visible.
+ */
+function LanguageSelector({ currentLanguage, setLanguage, isVisible }) {
     const [isExpanded, setIsExpanded] = useState(false);
     const dropdownRef = useRef(null);
     const toggleButtonRef = useRef(null);
@@ -57,6 +73,11 @@ function LanguageSelector({ currentLanguage, setLanguage }) {
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [isExpanded, isDesktop]);
+
+    // Early return if not visible
+    if (!isVisible) {
+        return null;
+    }
 
     // Toggle button
     const ToggleButton = () => (
@@ -126,6 +147,7 @@ function LanguageSelector({ currentLanguage, setLanguage }) {
 LanguageSelector.propTypes = {
     currentLanguage: PropTypes.string,
     setLanguage: PropTypes.func.isRequired,
+    isVisible: PropTypes.bool
 };
 
 export default LanguageSelector;
