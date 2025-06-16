@@ -37,6 +37,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
     const myPositionPortal = <div key="my-position" className="my-position-element-portal" />;
     const viewModeSwitchPortal = <div key="viewmode-switch" className="viewmode-switch-portal" />;
     const viewSelectorPortal = <div key="view-selector" className="view-selector-portal" />;
+    const languageSelectorPortal = <div key="language-selector" className="language-selector-portal" />;
 
     // Create and configure web components
     // This useEffect will run when the component mounts and when the mapsIndoorsInstance or mapInstance changes.
@@ -105,6 +106,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
                 <div className="map-controls-container desktop top-right">
                     {venueSelectorPortal}
                     {viewSelectorPortal}
+                    {languageSelectorPortal}
                     {viewModeSwitchPortal}
                     {myPositionPortal}
                     {floorSelectorPortal}
@@ -124,6 +126,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
                     {venueSelectorPortal}
                     {viewModeSwitchPortal}
                     {viewSelectorPortal}
+                    {languageSelectorPortal}
                 </div>
                 <div className="map-controls-right-column mobile-column">
                     {myPositionPortal}

@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { createPortal } from 'react-dom';
+import { useIsDesktop } from '../../hooks/useIsDesktop';
 import './LanguageSelector.scss';
 
 const supportedLanguages = [
@@ -17,56 +19,107 @@ function LanguageSelector({ currentLanguage, setLanguage }) {
     const [isExpanded, setIsExpanded] = useState(false);
     const dropdownRef = useRef(null);
     const toggleButtonRef = useRef(null);
+    const [portalContainer, setPortalContainer] = useState(null);
+    const isDesktop = useIsDesktop();
+    const languageSelectorMountPoint = '.language-selector-portal';
 
-    // Click outside to close (for modal)
+    // Find portal target
     useEffect(() => {
-        if (!isExpanded) return;
+        let target = document.querySelector(languageSelectorMountPoint);
+        if (target) {
+            setPortalContainer(target);
+            return;
+        }
+        const observer = new MutationObserver(() => {
+            target = document.querySelector(languageSelectorMountPoint);
+            if (target) {
+                setPortalContainer(target);
+                observer.disconnect();
+            }
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+        return () => observer.disconnect();
+    }, []);
+
+    // Click outside to close (desktop only)
+    useEffect(() => {
+        if (!(isExpanded && isDesktop)) return;
         function handleClickOutside(event) {
             if (
                 dropdownRef.current &&
                 !dropdownRef.current.contains(event.target) &&
-                !event.target.closest('.language-selector__toggle-button')
+                toggleButtonRef.current &&
+                !toggleButtonRef.current.contains(event.target)
             ) {
                 setIsExpanded(false);
             }
         }
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, [isExpanded]);
+    }, [isExpanded, isDesktop]);
 
-    return (
-        <div className="language-selector">
-            <button ref={toggleButtonRef} className="language-selector__toggle-button" onClick={() => setIsExpanded(!isExpanded)} aria-haspopup="listbox" aria-expanded={isExpanded} aria-label="Select language">
-                Select Language
-            </button>
+    // Toggle button
+    const ToggleButton = () => (
+        <button ref={toggleButtonRef} className="language-selector__toggle-button" onClick={() => setIsExpanded(!isExpanded)} aria-haspopup="listbox" aria-expanded={isExpanded} aria-label="Select language">
+            🌐
+        </button>
+    );
+
+    // Language list
+    const LanguageList = () => (
+        <div className="language-selector__list">
+            {supportedLanguages.map(lang => (
+                <button
+                    key={lang.code}
+                    className={`language-selector__item${currentLanguage === lang.code ? ' language-selector__item--selected' : ''}`}
+                    onClick={() => {
+                        setLanguage(lang.code);
+                        setIsExpanded(false);
+                    }}
+                >
+                    {lang.label}
+                </button>
+            ))}
+        </div>
+    );
+
+    // Desktop dropdown
+    const desktopDropdown = (
+        <div className="language-selector__button-container language-selector__button-container--desktop" style={{ position: 'relative', display: 'inline-block' }}>
             {isExpanded && (
-                <div className="language-selector-overlay">
-                    <div className="language-selector-overlay__backdrop" onClick={() => setIsExpanded(false)}></div>
-                    <div ref={dropdownRef} className="language-selector__container language-selector__container--mobile">
-                        <div className="language-selector-overlay__header">
-                            <button className="language-selector-overlay__exit-button" onClick={() => setIsExpanded(false)} aria-label="Close language selector">
-                                ×
-                            </button>
-                            <span>Select language</span>
-                        </div>
-                        <div className="language-selector__list">
-                            {supportedLanguages.map(lang => (
-                                <button
-                                    key={lang.code}
-                                    className={`language-selector__item${currentLanguage === lang.code ? ' language-selector__item--selected' : ''}`}
-                                    onClick={() => {
-                                        setLanguage(lang.code);
-                                        setIsExpanded(false);
-                                    }}
-                                >
-                                    {lang.label}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
+                <div
+                    ref={dropdownRef}
+                    className="language-selector__container language-selector__container--desktop"
+                >
+                    <LanguageList />
                 </div>
             )}
+            <ToggleButton />
         </div>
+    );
+
+    // Mobile overlay
+    const mobileOverlay = (
+        isExpanded && (
+            <div className="language-selector-overlay">
+                <div className="language-selector-overlay__backdrop" onClick={() => setIsExpanded(false)}></div>
+                <div className="language-selector__container language-selector__container--mobile">
+                    <div className="language-selector-overlay__header">
+                        <button className="language-selector-overlay__exit-button" onClick={() => setIsExpanded(false)} aria-label="Close language selector">
+                            ×
+                        </button>
+                        <span>Select language</span>
+                    </div>
+                    <LanguageList />
+                </div>
+            </div>
+        )
+    );
+
+    if (!portalContainer) return null;
+    return createPortal(
+        isDesktop ? desktopDropdown : <><ToggleButton />{mobileOverlay}</>,
+        portalContainer
     );
 }
 
