@@ -400,10 +400,18 @@ function Search({ onSetSize, isOpen }) {
     useEffect(() => {
         const SEARCH_FOCUS_ELEMENTS = ['.search__info', '.search__back-button', '.categories', '.sheet__content'];
 
+        // We want to ignore: Floor Selector, View Mode Switch, My Position, View Selector, Mapbox zoom controls and Google Maps zoom controls
+        const IGNORE_CLOSE_ELEMENTS = ['.mi-floor-selector', '.view-mode-switch', '.mi-my-position', '.view-selector__toggle-button', '.building-list', '.mapboxgl-ctrl-bottom-right', '.gmnoprint'];
+
         const handleSearchFieldFocus = (event) => {
             const clickedInsideSearchArea = SEARCH_FOCUS_ELEMENTS.some(selector =>
                 event.target.closest(selector)
             );
+
+            const clickedInsideIgnoreArea = IGNORE_CLOSE_ELEMENTS.some(selector =>
+                event.target.closest(selector)
+            );
+
             const clickedInsideResults = event.target.closest('.search__results');
 
             if (clickedInsideSearchArea) {
@@ -411,7 +419,7 @@ function Search({ onSetSize, isOpen }) {
                 requestAnimationFrameId.current = requestAnimationFrame(() => { // we use a requestAnimationFrame to ensure that the size change is applied before the focus (meaning that categories are rendered)
                     setIsInputFieldInFocus(true);
                 });
-            } else if (!clickedInsideResults) {
+            } else if (!clickedInsideResults && !clickedInsideIgnoreArea) {
                 setIsInputFieldInFocus(false);
                 setSize(snapPoints.MIN);
                 setSelectedCategory(null);
