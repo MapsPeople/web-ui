@@ -1,5 +1,5 @@
-.language-switcher {
-    position: fixed; // Center the switcher on the screen for debugging
+.language-selector {
+    position: fixed; // Center the selector on the screen for debugging
     top: 50%; // Center vertically
     left: 50%; // Center horizontally
     transform: translate(-50%, -50%); // Center both axes
@@ -48,7 +48,7 @@
         border: 1px solid #E6E6E6;
     }
 
-    &__container.language-switcher__container--mobile {
+    &__container.language-selector__container--mobile {
         position: fixed;
         top: 50%;
         left: 50%;
@@ -93,7 +93,7 @@
 }
 
 // Overlay and modal header reuse from ViewSelector
-.language-switcher-overlay {
+.language-selector-overlay {
     position: fixed;
     top: 0;
     left: 0;
