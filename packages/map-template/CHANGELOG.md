@@ -12,6 +12,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - If `language`, `primaryColor`, `mapboxAccessToken`, `gmApiKey`, `logo`, `venue`, `startZoomLevel`, `pitch`, `bearing` and `center` props are not explicitly provided, their value will be determined by the App Config object.
 - View Selector visibility is now configurable through the App Config object.
 
+## [1.78.4] - 2025-06-16
+
+### Fixed
+
+- Fixed an issue where the categories list would close when clicking on other UI elements, such as the zoom controls or floor selector.
+
+## [1.78.3] - 2025-06-12
+
+### Fixed
+
+- Fixed an issue where a slow route request would risk override a later, faster one, resulting in the shown route suddenly shifting to an unexpected one.
+
+## [1.78.2] - 2025-06-12
+
+### Fixed
+
+- Made the header in location details view sticky to improve navigation experience while scrolling
+
+## [1.78.1] - 2025-06-11
+
+### Fixed
+
+- Various layout issues with the Bottom Sheet and Sheet components by cleaning up the internal interface.
+
 ## [1.78.0] - 2025-06-05
 
 ### Added

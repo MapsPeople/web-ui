@@ -33,8 +33,8 @@ Directions.propTypes = {
     isOpen: PropTypes.bool,
     onBack: PropTypes.func,
     onSetSize: PropTypes.func,
-    snapPointSwiped: PropTypes.func,
-    onRouteFinished: PropTypes.func
+    onRouteFinished: PropTypes.func,
+    snapPointSwipedByUser: PropTypes.string
 };
 
 /**
@@ -44,12 +44,13 @@ Directions.propTypes = {
  * @param {boolean} props.isOpen - Indicates if the directions view is open.
  * @param {function} props.onBack - Callback that fires when the directions view is closed by the user.
  * @param {function} props.onSetSize - Callback that is fired when the component has loaded.
- * @param {function} props.snapPointSwiped - Changes value when user has swiped a Bottom sheet to a new snap point.
  * @param {function} props.onRouteFinished - Callback that fires when the route has finished.
+ * @param {string} props.snapPointSwipedByUser - Changes value when user has swiped a Bottom sheet to a new snap point.
  *
  */
-function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinished }) {
+function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipedByUser }) {
     const { t } = useTranslation();
+    const requestAnimationFrameId = useRef();
 
     // Holds the MapsIndoors DisplayRule for the destination
     const [destinationDisplayRule, setDestinationDisplayRule] = useState(null);
@@ -241,8 +242,8 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
 
     /**
      * Sets minZoom for a specific map provider.
-     * 
-     * @param {number} zoomLevel 
+     *
+     * @param {number} zoomLevel
      */
     function setMinZoom(zoomLevel) {
         if (mapType === 'mapbox') {
@@ -260,7 +261,7 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
         resetSubsteps();
         stopRendering();
         onBack();
-        
+
     }
 
     /**
@@ -285,17 +286,25 @@ function Directions({ isOpen, onBack, onSetSize, snapPointSwiped, onRouteFinishe
      * Set the size of the bottom sheet depending on the substepsOpen state.
      */
     useEffect(() => {
-        substepsOpen ? setSize(snapPoints.MAX) : setSize(snapPoints.FIT);
+        requestAnimationFrameId.current = requestAnimationFrame(() => {// we use a requestAnimationFrame to ensure that the component has been re-rendered with the collapsed or expanded sub steps before we set the size
+            substepsOpen ? setSize(snapPoints.MAX) : setSize(snapPoints.FIT);
+        });
+
+        return () => {
+            if (requestAnimationFrameId.current) {
+                cancelAnimationFrame(requestAnimationFrameId.current);
+            }
+        }
     }, [substepsOpen]);
 
     /**
      * When user swipes the bottom sheet to a new snap point.
      */
     useEffect(() => {
-        if (isOpen && snapPointSwiped) {
-            setSubstepsOpen(snapPointSwiped === snapPoints.MAX);
+        if (isOpen && snapPointSwipedByUser) {
+            setSubstepsOpen(snapPointSwipedByUser === snapPoints.MAX);
         }
-    }, [isOpen, snapPointSwiped]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [isOpen, snapPointSwipedByUser]);
 
     return (
         <div className="directions" style={{ display: !isKioskContext ? 'grid' : 'block' }}>
