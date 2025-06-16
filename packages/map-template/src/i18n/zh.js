@@ -77,7 +77,9 @@ const zh = {
     'QR Code': '二维码',
     // Opening Hours
     'Open': '营业中',
-    'Closed': '已关闭'
+    'Closed': '已关闭',
+    // View Selector
+    'Go to view': '定位到'
 };
 
 export default zh;

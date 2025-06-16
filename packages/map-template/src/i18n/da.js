@@ -79,7 +79,7 @@ const da = {
     'Open': 'Åben',
     'Closed': 'Lukket',
     // View Selector
-    'Pan map to view': 'Panorer kortet for at se',
+    'Go to view': 'Vis lokation',
     'Close view selector': 'Luk visningsvælger',
 };
 
