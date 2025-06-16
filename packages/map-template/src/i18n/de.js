@@ -79,7 +79,7 @@ const de = {
     'Open': 'Geöffnet',
     'Closed': 'Geschlossen',
     // View Selector
-    'Pan Map to View': 'Karte verschieben zur Ansicht',
+    'Go to view': 'Ansicht wechseln',
     'Close view selector': 'Ansichtsauswahl schließen',
 };
 
