@@ -25,7 +25,7 @@ function LanguageSelector({ currentLanguage, setLanguage }) {
             if (
                 dropdownRef.current &&
                 !dropdownRef.current.contains(event.target) &&
-                !event.target.closest('.language-switcher__toggle-button')
+                !event.target.closest('.language-selector__toggle-button')
             ) {
                 setIsExpanded(false);
             }
@@ -35,25 +35,25 @@ function LanguageSelector({ currentLanguage, setLanguage }) {
     }, [isExpanded]);
 
     return (
-        <div className="language-switcher">
-            <button ref={toggleButtonRef} className="language-switcher__toggle-button" onClick={() => setIsExpanded(!isExpanded)} aria-haspopup="listbox" aria-expanded={isExpanded} aria-label="Select language">
+        <div className="language-selector">
+            <button ref={toggleButtonRef} className="language-selector__toggle-button" onClick={() => setIsExpanded(!isExpanded)} aria-haspopup="listbox" aria-expanded={isExpanded} aria-label="Select language">
                 Select Language
             </button>
             {isExpanded && (
-                <div className="language-switcher-overlay">
-                    <div className="language-switcher-overlay__backdrop" onClick={() => setIsExpanded(false)}></div>
-                    <div ref={dropdownRef} className="language-switcher__container language-switcher__container--mobile">
-                        <div className="language-switcher-overlay__header">
-                            <button className="language-switcher-overlay__exit-button" onClick={() => setIsExpanded(false)} aria-label="Close language selector">
+                <div className="language-selector-overlay">
+                    <div className="language-selector-overlay__backdrop" onClick={() => setIsExpanded(false)}></div>
+                    <div ref={dropdownRef} className="language-selector__container language-selector__container--mobile">
+                        <div className="language-selector-overlay__header">
+                            <button className="language-selector-overlay__exit-button" onClick={() => setIsExpanded(false)} aria-label="Close language selector">
                                 ×
                             </button>
                             <span>Select language</span>
                         </div>
-                        <div className="language-switcher__list">
+                        <div className="language-selector__list">
                             {supportedLanguages.map(lang => (
                                 <button
                                     key={lang.code}
-                                    className={`language-switcher__item${currentLanguage === lang.code ? ' language-switcher__item--selected' : ''}`}
+                                    className={`language-selector__item${currentLanguage === lang.code ? ' language-selector__item--selected' : ''}`}
                                     onClick={() => {
                                         setLanguage(lang.code);
                                         setIsExpanded(false);
