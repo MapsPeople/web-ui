@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
-import { ReactComponent as PanViewIcon } from '../../assets/pan-view-icon.svg';
+import { ReactComponent as ViewSelectorIcon } from '../../assets/view-selector.svg';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
@@ -183,7 +183,7 @@ function ViewSelector({ isViewSelectorDisabled }) {
      */
     const ToggleButton = () => (
         <button ref={toggleButtonRef} className="view-selector__toggle-button" onClick={() => setIsExpanded(!isExpanded)} disabled={isViewSelectorDisabled}>
-            <PanViewIcon />
+            <ViewSelectorIcon />
         </button>
     );
 
@@ -233,7 +233,7 @@ function ViewSelector({ isViewSelectorDisabled }) {
                                 aria-label={t('Close view selector')}>
                                 <CloseIcon />
                             </button>
-                            <span>{t('Pan map to view')}</span>
+                            <span>{t('Go to view')}</span>
                         </div>
                         <BuildingList />
                     </div>
