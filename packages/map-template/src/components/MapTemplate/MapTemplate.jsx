@@ -64,7 +64,7 @@ import PropTypes from 'prop-types';
 import { ZoomLevelValues } from '../../constants/zoomLevelValues.js';
 import { useOnRouteFinished } from '../../hooks/useOnRouteFinished.js';
 // Arrange the order of import 
-import LanguageSwitcher from '../LanguageSwitcher/LanguageSwitcher.jsx';
+import LanguageSelector from '../LanguageSelector/LanguageSelector.jsx';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -758,7 +758,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             gmMapId={gmMapId}
             isWayfindingActive={currentAppView === appStates.WAYFINDING}
         />
-        <LanguageSwitcher currentLanguage={currentLanguage} setLanguage={setCurrentLanguage} />
+        <LanguageSelector currentLanguage={currentLanguage} setLanguage={setCurrentLanguage} />
     </div>
 }
 

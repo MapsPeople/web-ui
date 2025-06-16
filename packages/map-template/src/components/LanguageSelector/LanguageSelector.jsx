@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import './LanguageSwitcher.scss';
+import './LanguageSelector.scss';
 
 const supportedLanguages = [
     { code: 'en', label: 'English' },
@@ -13,7 +13,7 @@ const supportedLanguages = [
     { code: 'zh', label: '中文' },
 ];
 
-function LanguageSwitcher({ currentLanguage, setLanguage }) {
+function LanguageSelector({ currentLanguage, setLanguage }) {
     const [isExpanded, setIsExpanded] = useState(false);
     const dropdownRef = useRef(null);
     const toggleButtonRef = useRef(null);
@@ -70,9 +70,9 @@ function LanguageSwitcher({ currentLanguage, setLanguage }) {
     );
 }
 
-LanguageSwitcher.propTypes = {
+LanguageSelector.propTypes = {
     currentLanguage: PropTypes.string,
     setLanguage: PropTypes.func.isRequired,
 };
 
-export default LanguageSwitcher;
+export default LanguageSelector;
