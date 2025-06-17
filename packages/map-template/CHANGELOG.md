@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.78.4] - 2025-06-16
+
+### Fixed
+
+- Fixed an issue where the categories list would close when clicking on other UI elements, such as the zoom controls or floor selector.
+
+## [1.78.3] - 2025-06-12
+
+### Fixed
+
+- Fixed an issue where a slow route request would risk override a later, faster one, resulting in the shown route suddenly shifting to an unexpected one.
+
 ## [1.78.2] - 2025-06-12
 
 ### Fixed
