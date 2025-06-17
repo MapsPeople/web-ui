@@ -2,19 +2,9 @@ import { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { createPortal } from 'react-dom';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
+import { supportedLanguages } from '../../i18n/initialize.js';
 import { ReactComponent as LanguageSelectorIcon } from '../../assets/language-selector.svg';
 import './LanguageSelector.scss';
-
-const supportedLanguages = [
-    { code: 'en', label: 'English' },
-    { code: 'da', label: 'Dansk' },
-    { code: 'de', label: 'Deutsch' },
-    { code: 'fr', label: 'Français' },
-    { code: 'it', label: 'Italiano' },
-    { code: 'es', label: 'Español' },
-    { code: 'nl', label: 'Nederlands' },
-    { code: 'zh', label: '中文' },
-];
 
 /**
  * LanguageSelector component allows users to select a language from a list of supported languages.
