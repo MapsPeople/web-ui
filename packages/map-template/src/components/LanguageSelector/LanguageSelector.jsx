@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
@@ -8,21 +9,72 @@ import { ReactComponent as LanguageSelectorIcon } from '../../assets/language-se
 import './LanguageSelector.scss';
 
 /**
+ * ToggleButton component renders the button that toggles the language selector dropdown or overlay.
+ *
+ * @param {Object} props
+ * @param {React.RefObject} props.toggleButtonRef - Ref for the toggle button element.
+ * @param {boolean} props.isExpanded - Whether the language selector is currently expanded.
+ * @param {function} props.setIsExpanded - Function to toggle the expanded state.
+ * @returns {JSX.Element} The rendered toggle button.
+ */
+function ToggleButton({ toggleButtonRef, isExpanded, setIsExpanded }) {
+    return (
+        <button
+            ref={toggleButtonRef}
+            className="language-selector__toggle-button"
+            onClick={() => setIsExpanded((prev) => !prev)}
+            aria-haspopup="listbox"
+            aria-expanded={isExpanded}
+            aria-label="Select language"
+        >
+            <LanguageSelectorIcon />
+        </button>
+    );
+}
+
+/**
+ * LanguageList component renders the list of supported languages as selectable buttons.
+ *
+ * @param {Object} props
+ * @param {Array<{code: string, label: string}>} props.supportedLanguages - Array of supported language objects.
+ * @param {string} props.currentLanguage - The currently selected language code.
+ * @param {function} props.setLanguage - Callback to set the selected language.
+ * @param {function} props.setIsExpanded - Function to close the language selector after selection.
+ * @returns {JSX.Element} The rendered list of language options.
+ */
+function LanguageList({ supportedLanguages, currentLanguage, setLanguage, setIsExpanded }) {
+    return (
+        <div className="language-selector__list">
+            {supportedLanguages.map(language => (
+                <button
+                    key={language.code}
+                    className={`language-selector__item${currentLanguage === language.code ? ' language-selector__item--selected' : ''}`}
+                    onClick={() => { setLanguage(language.code); setIsExpanded(false); }}
+                >
+                    {language.label}
+                </button>
+            ))}
+        </div>
+    );
+}
+
+/**
  * LanguageSelector component allows users to select a language from a list of supported languages.
- * 
+ *
  * Features:
  * - Renders a language selection button and dropdown (desktop) or overlay (mobile).
  * - Uses a portal to render the selector in a specific DOM node.
  * - Supports both desktop and mobile layouts.
- * 
+ *
  * Props:
  * @param {Object} props
  * @param {string} props.currentLanguage - The currently selected language code.
  * @param {function} props.setLanguage - Callback to set the selected language.
  * @param {boolean} [props.isVisible] - Controls visibility of the language selector.
- * 
+ *
  * @returns {JSX.Element|null} The rendered LanguageSelector component or null if not visible.
  */
+
 function LanguageSelector({ currentLanguage, setLanguage, isVisible }) {
     const { t } = useTranslation();
     const [isExpanded, setIsExpanded] = useState(false);
@@ -72,49 +124,26 @@ function LanguageSelector({ currentLanguage, setLanguage, isVisible }) {
         return null;
     }
 
-    // Toggle button
-    const ToggleButton = () => (
-        <button ref={toggleButtonRef} className="language-selector__toggle-button" onClick={() => setIsExpanded(!isExpanded)} aria-haspopup="listbox" aria-expanded={isExpanded} aria-label="Select language">
-            <LanguageSelectorIcon />
-        </button>
-    );
-
-    // Language list
-    const LanguageList = () => (
-        <div className="language-selector__list">
-            {supportedLanguages.map(lang => (
-                <button
-                    key={lang.code}
-                    className={`language-selector__item${currentLanguage === lang.code ? ' language-selector__item--selected' : ''}`}
-                    onClick={() => {
-                        setLanguage(lang.code);
-                        setIsExpanded(false);
-                    }}
-                >
-                    {lang.label}
-                </button>
-            ))}
-        </div>
-    );
-
     if (!portalContainer) return null;
 
     return createPortal(
         isDesktop ? (
-            <div className="language-selector__button-container language-selector__button-container--desktop" style={{ position: 'relative', display: 'inline-block' }}>
+            <div className="language-selector__button-container language-selector__button-container--desktop">
                 {isExpanded && (
-                    <div
-                        ref={dropdownRef}
-                        className="language-selector__container language-selector__container--desktop"
-                    >
-                        <LanguageList />
+                    <div ref={dropdownRef} className="language-selector__container language-selector__container--desktop">
+                        <LanguageList
+                            supportedLanguages={supportedLanguages}
+                            currentLanguage={currentLanguage}
+                            setLanguage={setLanguage}
+                            setIsExpanded={setIsExpanded}
+                        />
                     </div>
                 )}
-                <ToggleButton />
+                <ToggleButton toggleButtonRef={toggleButtonRef} isExpanded={isExpanded} setIsExpanded={setIsExpanded} />
             </div>
         ) : (
             <>
-                <ToggleButton />
+                <ToggleButton toggleButtonRef={toggleButtonRef} isExpanded={isExpanded} setIsExpanded={setIsExpanded} />
                 {isExpanded && (
                     <div className="language-selector-overlay">
                         <div className="language-selector-overlay__backdrop" onClick={() => setIsExpanded(false)}></div>
@@ -125,7 +154,12 @@ function LanguageSelector({ currentLanguage, setLanguage, isVisible }) {
                                 </button>
                                 <span>{t('Select language')}</span>
                             </div>
-                            <LanguageList />
+                            <LanguageList
+                                supportedLanguages={supportedLanguages}
+                                currentLanguage={currentLanguage}
+                                setLanguage={setLanguage}
+                                setIsExpanded={setIsExpanded}
+                            />
                         </div>
                     </div>
                 )}
