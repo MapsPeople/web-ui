@@ -128,9 +128,9 @@ function LanguageSelector({ currentLanguage, setLanguage, isVisible }) {
 
     return createPortal(
         isDesktop ? (
-            <div className="language-selector__button-container language-selector__button-container--desktop">
+            <div className="language-selector__button-container">
                 {isExpanded && (
-                    <div ref={dropdownRef} className="language-selector__container language-selector__container--desktop">
+                    <div ref={dropdownRef} className="language-selector__container">
                         <LanguageList
                             supportedLanguages={supportedLanguages}
                             currentLanguage={currentLanguage}
@@ -147,7 +147,7 @@ function LanguageSelector({ currentLanguage, setLanguage, isVisible }) {
                 {isExpanded && (
                     <div className="language-selector-overlay">
                         <div className="language-selector-overlay__backdrop" onClick={() => setIsExpanded(false)}></div>
-                        <div className="language-selector__container language-selector__container--mobile">
+                        <div className="language-selector__container">
                             <div className="language-selector-overlay__header">
                                 <button className="language-selector-overlay__exit-button" onClick={() => setIsExpanded(false)} aria-label="Close language selector">
                                     ×
