@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { createPortal } from 'react-dom';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
+import { ReactComponent as LanguageSelectorIcon } from '../../assets/language-selector.svg';
 import './LanguageSelector.scss';
 
 const supportedLanguages = [
@@ -82,7 +83,7 @@ function LanguageSelector({ currentLanguage, setLanguage, isVisible }) {
     // Toggle button
     const ToggleButton = () => (
         <button ref={toggleButtonRef} className="language-selector__toggle-button" onClick={() => setIsExpanded(!isExpanded)} aria-haspopup="listbox" aria-expanded={isExpanded} aria-label="Select language">
-            🌐
+            <LanguageSelectorIcon />
         </button>
     );
 
