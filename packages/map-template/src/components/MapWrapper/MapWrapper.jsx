@@ -24,6 +24,7 @@ import miTransitionLevelState from '../../atoms/miTransitionLevelState';
 import showRoadNamesState from '../../atoms/showRoadNamesState';
 import PropTypes from 'prop-types';
 import ViewSelector from '../ViewSelector/ViewSelector';
+import LanguageSelector from '../LanguageSelector/LanguageSelector.jsx';
 
 MapWrapper.propTypes = {
     onLocationClick: PropTypes.func,
@@ -35,7 +36,9 @@ MapWrapper.propTypes = {
     mapOptions: PropTypes.object,
     onMapOptionsChange: PropTypes.func,
     gmMapId: PropTypes.string,
-    isWayfindingActive: PropTypes.bool
+    isWayfindingActive: PropTypes.bool,
+    currentLanguage: PropTypes.string,
+    setLanguage: PropTypes.func
 };
 
 /**
@@ -59,9 +62,11 @@ let _tileStyle;
  * @param {function} props.onMapOptionsChange - Function that is run when the map options are changed.
  * @param {string} props.gmMapId - Google Maps Map ID for custom styling.
  * @param {boolean} props.isWayfindingActive - Whether wayfinding is active or not.
+ * @param {string} props.currentLanguage - The currently selected language code.
+ * @param {function} props.setLanguage - Function to set the selected language.
  * @returns
  */
-function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating, onViewModeSwitchKnown, resetCount, mapOptions, onMapOptionsChange, gmMapId, isWayfindingActive }) {
+function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating, onViewModeSwitchKnown, resetCount, mapOptions, onMapOptionsChange, gmMapId, isWayfindingActive, currentLanguage, setLanguage }) {
     const apiKey = useRecoilValue(apiKeyState);
     const gmApiKey = useRecoilValue(gmApiKeyState);
     const mapboxAccessToken = useRecoilValue(mapboxAccessTokenState);
@@ -324,7 +329,10 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
             gmMapId={gmMapId}
         />}
         {/* Pass isWayfindingActive prop to ViewSelector to disable interactions while wayfinding is active*/}
-        {apiKey && < ViewSelector isViewSelectorDisabled={isWayfindingActive} />}
+        {apiKey && <>
+            < ViewSelector isViewSelectorDisabled={isWayfindingActive} />
+            <LanguageSelector currentLanguage={currentLanguage} setLanguage={setLanguage} isVisible={true} />
+        </>}
     </>)
 }
 

@@ -63,8 +63,6 @@ import centerState from '../../atoms/centerState.js';
 import PropTypes from 'prop-types';
 import { ZoomLevelValues } from '../../constants/zoomLevelValues.js';
 import { useOnRouteFinished } from '../../hooks/useOnRouteFinished.js';
-// Arrange the order of import 
-import LanguageSelector from '../LanguageSelector/LanguageSelector.jsx';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -773,8 +771,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             onMapOptionsChange={handleMapOptionsChange}
             gmMapId={gmMapId}
             isWayfindingActive={currentAppView === appStates.WAYFINDING}
+            currentLanguage={currentLanguage}
+            setLanguage={setCurrentLanguage}
         />
-        <LanguageSelector currentLanguage={currentLanguage} setLanguage={setCurrentLanguage} />
     </div>
 }
 
