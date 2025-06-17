@@ -79,7 +79,7 @@ const nl = {
     'Open': 'Open',
     'Closed': 'Gesloten',
     // View Selector
-    'Pan map to view': 'Kaart verschuiven naar weergave',
+    'Go to view': 'Toon locatie',
     'Close view selector': 'Sluiten weergavekiezer',
 };
 
