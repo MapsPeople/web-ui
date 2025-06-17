@@ -709,6 +709,22 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         }
     }, [category, categories, mapsindoorsSDKAvailable]);
 
+    // Initialize language from localStorage if available
+    useEffect(() => {
+        const storedLanguage = localStorage.getItem('language');
+        if (storedLanguage && storedLanguage !== currentLanguage) {
+            setCurrentLanguage(storedLanguage);
+        }
+    }, []);
+
+    // Persist language to localStorage on change
+    useEffect(() => {
+        if (currentLanguage) {
+            localStorage.setItem('language', currentLanguage);
+        }
+    }, [currentLanguage]);
+
+
     return <div className={`mapsindoors-map
     ${currentAppView === appStates.DIRECTIONS ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}
     ${(venuesInSolution.length > 1 && showVenueSelector) ? '' : 'mapsindoors-map--hide-venue-selector'}
