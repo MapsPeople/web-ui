@@ -81,6 +81,8 @@ const de = {
     // View Selector
     'Go to view': 'Ansicht wechseln',
     'Close view selector': 'Ansichtsauswahl schließen',
+    // Language Selector
+    'Select language': 'Sprache auswählen',
 };
 
 export default de;

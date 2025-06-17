@@ -81,6 +81,8 @@ const nl = {
     // View Selector
     'Pan map to view': 'Kaart verschuiven naar weergave',
     'Close view selector': 'Sluiten weergavekiezer',
+    // Language Selector
+    'Select language': 'Selecteer taal',
 };
 
 export default nl;

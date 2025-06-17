@@ -81,6 +81,8 @@ const it = {
     // View Selector
     'Pan map to view': 'Sposta la mappa per visualizzare',
     'Close view selector': 'Chiudi selettore vista',
+    // Language Selector
+    'Select language': 'Seleziona lingua',
 };
 
 export default it;
