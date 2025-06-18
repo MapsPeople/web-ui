@@ -82,6 +82,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
     const showRoadNames = useRecoilValue(showRoadNamesState);
     const appConfig = useRecoilValue(appConfigState);
     const [isViewSelectorVisible, setIsViewSelectorVisible] = useState(true);
+    const [isLanguageSelectorVisible, setIsLanguageSelectorVisible] = useState(true);
 
     useLiveData(apiKey);
 
@@ -326,6 +327,22 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
                 // Boolean from the App Config comes as a string. We need to return clean boolean value based on that.
                 setIsViewSelectorVisible(appConfig?.appSettings?.viewSelector === 'true' ? true : false)
             }       
+        }
+    }, [appConfig])
+
+    /**
+     * React on changes in appConfig and sets visibility of Language Selector.
+     */
+    useEffect(() => {
+        if (appConfig) {
+            if (isNullOrUndefined(appConfig?.appSettings?.languageSelector)){
+                setIsLanguageSelectorVisible(true);
+            } else {
+                // Boolean from the App Config comes as a string. We need to return clean boolean value based on that.
+                setIsLanguageSelectorVisible(appConfig?.appSettings?.languageSelector === 'true' ? true : false)
+            }    
+            // TODO: Remove this console.log and pass this boolean to LanguageSelector when it is ready. 
+            console.log(isLanguageSelectorVisible);
         }
     }, [appConfig])
 
