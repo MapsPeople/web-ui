@@ -768,7 +768,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             mapOptions={mapOptions}
             onMapOptionsChange={handleMapOptionsChange}
             gmMapId={gmMapId}
-            isWayfindingActive={currentAppView === appStates.WAYFINDING}
+            isWayfindingActive={currentAppView === appStates.WAYFINDING || currentAppView === appStates.DIRECTIONS}
         />
     </div>
 }
