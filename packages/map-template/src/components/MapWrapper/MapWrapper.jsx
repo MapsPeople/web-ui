@@ -37,7 +37,7 @@ MapWrapper.propTypes = {
     mapOptions: PropTypes.object,
     onMapOptionsChange: PropTypes.func,
     gmMapId: PropTypes.string,
-    isWayfindingActive: PropTypes.bool
+    isWayfindingOrDirections: PropTypes.bool
 };
 
 /**
@@ -60,10 +60,10 @@ let _tileStyle;
  * @param {object} props.mapOptions - Options for instantiating and styling the map as well as UI elements.
  * @param {function} props.onMapOptionsChange - Function that is run when the map options are changed.
  * @param {string} props.gmMapId - Google Maps Map ID for custom styling.
- * @param {boolean} props.isWayfindingActive - Whether wayfinding is active or not.
+ * @param {boolean} props.isWayfindingOrDirections - Whether wayfinding or directions is active or not.
  * @returns
  */
-function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating, onViewModeSwitchKnown, resetCount, mapOptions, onMapOptionsChange, gmMapId, isWayfindingActive }) {
+function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating, onViewModeSwitchKnown, resetCount, mapOptions, onMapOptionsChange, gmMapId, isWayfindingOrDirections }) {
     const apiKey = useRecoilValue(apiKeyState);
     const gmApiKey = useRecoilValue(gmApiKeyState);
     const mapboxAccessToken = useRecoilValue(mapboxAccessTokenState);
@@ -341,8 +341,8 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
             mapOptions={mapOptions}
             gmMapId={gmMapId}
         />}
-        {/* Pass isWayfindingActive prop to ViewSelector to disable interactions while wayfinding is active*/}
-        {apiKey && < ViewSelector isViewSelectorDisabled={isWayfindingActive} isViewSelectorVisible={isViewSelectorVisible} />}
+        {/* Pass isWayfindingOrDirections prop to ViewSelector to disable interactions while wayfinding or directions is active*/}
+        {apiKey && < ViewSelector isViewSelectorDisabled={isWayfindingOrDirections} isViewSelectorVisible={isViewSelectorVisible} />}
     </>)
 }
 
