@@ -11,7 +11,8 @@ import { useTranslation } from 'react-i18next';
 import { createPortal } from 'react-dom';
 
 ViewSelector.propTypes = {
-    isViewSelectorDisabled: PropTypes.bool
+    isViewSelectorDisabled: PropTypes.bool,
+    isViewSelectorVisible: PropTypes.bool
 };
 
 /**
@@ -22,8 +23,9 @@ ViewSelector.propTypes = {
  * @returns {JSX.Element} ViewSelector component
  * @param {Object} props - Component properties
  * @param {boolean} props.isViewSelectorDisabled - Whether the ViewSelector is currently active.
+ * @param {boolean} isViewSelectorVisible - Determines if View Selector is visible or not.
  */
-function ViewSelector({ isViewSelectorDisabled }) {
+function ViewSelector({ isViewSelectorDisabled, isViewSelectorVisible }) {
     const { t } = useTranslation();
     const [isExpanded, setIsExpanded] = useState(false);
     const [buildingsData, setBuildingsData] = useState([]);
@@ -173,8 +175,8 @@ function ViewSelector({ isViewSelectorDisabled }) {
         };
     }, [isExpanded, isDesktop]);
 
-    // Early return if the current venue has one building
-    if (buildings.length <= 1) {
+    // Early return if the current venue has one building or visibility of View Selector is set to false
+    if (buildings.length <= 1 || isViewSelectorVisible === false) {
         return null;
     }
 
