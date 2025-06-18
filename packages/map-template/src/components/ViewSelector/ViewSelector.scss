@@ -29,7 +29,7 @@
         color: inherit;
         font: inherit;
 
-        &:hover {
+        &:not(:disabled):hover {
             background-color: var(--tailwind-colors-gray-50);
             border: 1px solid var(--tailwind-colors-gray-200);
         }
