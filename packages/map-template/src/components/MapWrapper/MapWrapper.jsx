@@ -83,7 +83,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
     const miTransitionLevel = useRecoilValue(miTransitionLevelState);
     const showRoadNames = useRecoilValue(showRoadNamesState);
     const appConfig = useRecoilValue(appConfigState);
-    const [isViewSelectorVisible, setIsViewSelectorVisible] = useState(true);
+    const [isViewSelectorVisible, setIsViewSelectorVisible] = useState(false);
 
     useLiveData(apiKey);
 
@@ -323,10 +323,10 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
     useEffect(() => {
         if (appConfig) {
             if (isNullOrUndefined(appConfig?.appSettings?.viewSelector)) {
-                setIsViewSelectorVisible(true);
+                setIsViewSelectorVisible(false);
             } else {
                 // Boolean from the App Config comes as a string. We need to return clean boolean value based on that.
-                setIsViewSelectorVisible(appConfig?.appSettings?.viewSelector === 'true' ? true : false)
+                setIsViewSelectorVisible(appConfig?.appSettings?.viewSelector.trim().toLowerCase() === 'true');
             }
         }
     }, [appConfig])
