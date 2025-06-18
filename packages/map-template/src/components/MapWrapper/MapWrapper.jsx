@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import MIMap from '@mapsindoors/react-components/src/components/MIMap/MIMap';
 import { mapTypes } from '../../constants/mapTypes';
@@ -25,6 +25,8 @@ import showRoadNamesState from '../../atoms/showRoadNamesState';
 import PropTypes from 'prop-types';
 import ViewSelector from '../ViewSelector/ViewSelector';
 import LanguageSelector from '../LanguageSelector/LanguageSelector.jsx';
+import appConfigState from '../../atoms/appConfigState';
+import isNullOrUndefined from '../../helpers/isNullOrUndefined';
 
 MapWrapper.propTypes = {
     onLocationClick: PropTypes.func,
@@ -85,6 +87,8 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
     const hideNonMatches = useRecoilValue(hideNonMatchesState);
     const miTransitionLevel = useRecoilValue(miTransitionLevelState);
     const showRoadNames = useRecoilValue(showRoadNamesState);
+    const appConfig = useRecoilValue(appConfigState);
+    const [isViewSelectorVisible, setIsViewSelectorVisible] = useState(true);
 
     useLiveData(apiKey);
 
@@ -318,6 +322,20 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
         onMapOptionsChange({ showRoadNames: showRoadNames })
     }, [showRoadNames])
 
+    /**
+     * React on changes in appConfig and sets visibility of View Selector.
+     */
+    useEffect(() => {
+        if (appConfig) {
+            if (isNullOrUndefined(appConfig?.appSettings?.viewSelector)) {
+                setIsViewSelectorVisible(true);
+            } else {
+                // Boolean from the App Config comes as a string. We need to return clean boolean value based on that.
+                setIsViewSelectorVisible(appConfig?.appSettings?.viewSelector === 'true' ? true : false)
+            }
+        }
+    }, [appConfig])
+
     return (<>
         {apiKey && <MIMap
             apiKey={apiKey}
@@ -330,7 +348,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
         />}
         {/* Pass isWayfindingActive prop to ViewSelector to disable interactions while wayfinding is active*/}
         {apiKey && <>
-            < ViewSelector isViewSelectorDisabled={isWayfindingActive} />
+            < ViewSelector isViewSelectorVisible={isViewSelectorVisible} isViewSelectorDisabled={isWayfindingActive} />
             <LanguageSelector currentLanguage={currentLanguage} setLanguage={setLanguage} isVisible={true} />
         </>}
     </>)
