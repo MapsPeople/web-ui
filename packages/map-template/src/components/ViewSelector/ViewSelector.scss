@@ -33,6 +33,12 @@
             background-color: var(--tailwind-colors-gray-100);
             border: 1px solid var(--tailwind-colors-gray-200);
         }
+
+        &:disabled {
+            opacity: 0.6;
+            border: 1px solid var(--tailwind-colors-gray-200);
+            cursor: not-allowed;
+        }
     }
 
     &__container {
