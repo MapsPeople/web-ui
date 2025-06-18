@@ -17,6 +17,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed an issue where a slow route request would risk override a later, faster one, resulting in the shown route suddenly shifting to an unexpected one.
 
+## [1.78.3] - 2025-06-12
+
+### Fixed
+
+- Fixed an issue where a slow route request would risk override a later, faster one, resulting in the shown route suddenly shifting to an unexpected one.
+
 ## [1.78.2] - 2025-06-12
 
 ### Fixed
