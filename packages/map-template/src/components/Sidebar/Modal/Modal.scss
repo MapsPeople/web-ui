@@ -18,7 +18,7 @@ $desktop-breakpoint: 992px;
     /* For WebKit browsers (Chrome, Safari) */
      &::-webkit-scrollbar {
         display: none;
-    } 
+    }
     /* For Firefox */
     scrollbar-width: none;
     /* Edge */
@@ -33,14 +33,6 @@ $desktop-breakpoint: 992px;
         height: 100%;
     }
 
-    &--substeps {
-        height: 100%;
-
-        .modal__content {
-            height: 100%;
-        }
-    }
-
     &--kiosk {
         left: 0;
         right: 0;
@@ -48,7 +40,7 @@ $desktop-breakpoint: 992px;
         margin-right: auto;
         top: auto; // Override the top positioning for kiosk modals
         bottom: var(--spacing-x-large); // Keep bottom positioning for kiosk mode
-        
+
         &--open {
             transform: translateX(0);
         }
