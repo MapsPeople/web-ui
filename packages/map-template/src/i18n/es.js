@@ -79,7 +79,7 @@ const es = {
     'Open': 'Abierto',
     'Closed': 'Cerrado',
     // View Selector
-    'Pan map to view': 'Mover el mapa para ver',
+    'Go to view': 'Ver ubicación',
     'Close view selector': 'Cerrar selector de vista',
 };
 

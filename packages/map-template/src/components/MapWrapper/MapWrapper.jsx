@@ -1,4 +1,4 @@
-import { useEffect, useState  } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import MIMap from '@mapsindoors/react-components/src/components/MIMap/MIMap';
 import { mapTypes } from '../../constants/mapTypes';
@@ -36,7 +36,8 @@ MapWrapper.propTypes = {
     resetCount: PropTypes.number.isRequired,
     mapOptions: PropTypes.object,
     onMapOptionsChange: PropTypes.func,
-    gmMapId: PropTypes.string
+    gmMapId: PropTypes.string,
+    isWayfindingOrDirections: PropTypes.bool
 };
 
 /**
@@ -59,9 +60,10 @@ let _tileStyle;
  * @param {object} props.mapOptions - Options for instantiating and styling the map as well as UI elements.
  * @param {function} props.onMapOptionsChange - Function that is run when the map options are changed.
  * @param {string} props.gmMapId - Google Maps Map ID for custom styling.
+ * @param {boolean} props.isWayfindingOrDirections - Whether wayfinding or directions is active or not.
  * @returns
  */
-function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating, onViewModeSwitchKnown, resetCount, mapOptions, onMapOptionsChange, gmMapId }) {
+function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating, onViewModeSwitchKnown, resetCount, mapOptions, onMapOptionsChange, gmMapId, isWayfindingOrDirections }) {
     const apiKey = useRecoilValue(apiKeyState);
     const gmApiKey = useRecoilValue(gmApiKeyState);
     const mapboxAccessToken = useRecoilValue(mapboxAccessTokenState);
@@ -81,7 +83,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
     const miTransitionLevel = useRecoilValue(miTransitionLevelState);
     const showRoadNames = useRecoilValue(showRoadNamesState);
     const appConfig = useRecoilValue(appConfigState);
-    const [isViewSelectorVisible, setIsViewSelectorVisible] = useState(true);
+    const [isViewSelectorVisible, setIsViewSelectorVisible] = useState(false);
 
     useLiveData(apiKey);
 
@@ -320,12 +322,12 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
      */
     useEffect(() => {
         if (appConfig) {
-            if (isNullOrUndefined(appConfig?.appSettings?.viewSelector)){
-                setIsViewSelectorVisible(true);
+            if (isNullOrUndefined(appConfig?.appSettings?.viewSelector)) {
+                setIsViewSelectorVisible(false);
             } else {
                 // Boolean from the App Config comes as a string. We need to return clean boolean value based on that.
-                setIsViewSelectorVisible(appConfig?.appSettings?.viewSelector === 'true' ? true : false)
-            }       
+                setIsViewSelectorVisible(appConfig?.appSettings?.viewSelector.trim().toLowerCase() === 'true');
+            }
         }
     }, [appConfig])
 
@@ -339,7 +341,8 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
             mapOptions={mapOptions}
             gmMapId={gmMapId}
         />}
-        {apiKey && <ViewSelector isViewSelectorVisible={isViewSelectorVisible} />}
+        {/* Pass isWayfindingOrDirections prop to ViewSelector to disable interactions while wayfinding or directions is active*/}
+        {apiKey && < ViewSelector isViewSelectorDisabled={isWayfindingOrDirections} isViewSelectorVisible={isViewSelectorVisible} />}
     </>)
 }
 

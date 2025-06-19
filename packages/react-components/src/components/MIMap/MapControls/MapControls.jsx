@@ -104,6 +104,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
                 {/* Top right desktop controls */}
                 <div className="map-controls-container desktop top-right">
                     {venueSelectorPortal}
+                    {viewSelectorPortal}
                     {viewModeSwitchPortal}
                     {myPositionPortal}
                     {floorSelectorPortal}
@@ -111,7 +112,6 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
 
                 {/* Bottom right desktop controls */}
                 <div className="map-controls-container desktop bottom-right">
-                    {viewSelectorPortal}
                 </div>
             </>
         );
