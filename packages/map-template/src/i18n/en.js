@@ -79,7 +79,7 @@ const en = {
     'Open': 'Open',
     'Closed': 'Closed',
     // View Selector
-    'Pan map to view': 'Pan map to view',
+    'Go to view': 'Go to view',
     'Close view selector': 'Close view selector',
 };
 

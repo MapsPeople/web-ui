@@ -1,8 +1,7 @@
 import { useEffect, useState, useMemo, useCallback, useRef } from 'react';
+import PropTypes from 'prop-types';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
-import { ReactComponent as ChevronDownIcon } from '../../assets/chevron-down.svg';
-import { ReactComponent as ChevronUpIcon } from '../../assets/chevron-up.svg';
-import { ReactComponent as PanViewIcon } from '../../assets/pan-view-icon.svg';
+import { ReactComponent as ViewSelectorIcon } from '../../assets/view-selector.svg';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
@@ -10,21 +9,23 @@ import './ViewSelector.scss';
 import { useRecoilValue } from 'recoil';
 import { useTranslation } from 'react-i18next';
 import { createPortal } from 'react-dom';
-import PropTypes from 'prop-types';
 
 ViewSelector.propTypes = {
+    isViewSelectorDisabled: PropTypes.bool,
     isViewSelectorVisible: PropTypes.bool
-}
+};
 
 /**
  * Component for selecting and viewing buildings in a venue.
  * It provides a toggle button to expand/collapse the building list.
  * On mobile, it shows a modal with a backdrop, while on desktop it shows a dropdown.
- * 
+ *
  * @returns {JSX.Element} ViewSelector component
+ * @param {Object} props - Component properties
+ * @param {boolean} props.isViewSelectorDisabled - Whether the ViewSelector is currently active.
  * @param {boolean} isViewSelectorVisible - Determines if View Selector is visible or not.
  */
-function ViewSelector({ isViewSelectorVisible }) {
+function ViewSelector({ isViewSelectorDisabled, isViewSelectorVisible }) {
     const { t } = useTranslation();
     const [isExpanded, setIsExpanded] = useState(false);
     const [buildingsData, setBuildingsData] = useState([]);
@@ -34,7 +35,7 @@ function ViewSelector({ isViewSelectorVisible }) {
     const currentVenueName = useRecoilValue(currentVenueNameState);
     const viewSelectorMountPoint = '.view-selector-portal';
     const [portalContainer, setPortalContainer] = useState(null);
-    const desktopDropdownRef = useRef(null);
+    const buildingListRef = useRef(null);
     const toggleButtonRef = useRef(null);
     const MAX_BUILDINGS_DESKTOP = 6;
     const BUILDING_LIST_ITEM_HEIGHT = 60; // Height of each building list item in pixels
@@ -152,13 +153,16 @@ function ViewSelector({ isViewSelectorVisible }) {
     // Add effect for handling outside clicks on desktop only
     useEffect(() => {
         // Only add listener when expanded and on desktop
-        if (!isExpanded || !isDesktop) return;
+        if (!(isExpanded && isDesktop)) return;
 
         function handleClickOutside(event) {
             // Check if click was outside the dropdown and not on the toggle button
-            if (desktopDropdownRef.current &&
-                !desktopDropdownRef.current.contains(event.target) &&
-                !event.target.closest(toggleButtonRef.current)) {
+            if (
+                buildingListRef.current &&
+                !buildingListRef.current.contains(event.target) &&
+                toggleButtonRef.current &&
+                !toggleButtonRef.current.contains(event.target)
+            ) {
                 setIsExpanded(false);
             }
         }
@@ -177,28 +181,13 @@ function ViewSelector({ isViewSelectorVisible }) {
     }
 
     /**
-     * Toggle button component that renders different content based on the isDesktop prop
-     * @param {boolean} props.isDesktop Whether the component is being rendered on desktop
+     * Toggle button component that expands or collapses the building list.
      */
-    const ToggleButton = () => {
-        /* Render mobile list toggle button if isDesktop is false */
-        if (!isDesktop) {
-            return (
-                <button ref={toggleButtonRef} className="view-selector__toggle-button" onClick={() => setIsExpanded(!isExpanded)}>
-                    <PanViewIcon />
-                </button>
-            );
-        }
-
-        /* Render desktop list toggle button if isDesktop is true */
-        return (
-            <button className="view-selector__toggle-button" onClick={() => setIsExpanded(!isExpanded)}>
-                <PanViewIcon />
-                <span> {t('Pan map to view')}</span>
-                {isExpanded ? <ChevronDownIcon /> : <ChevronUpIcon />}
-            </button>
-        );
-    };
+    const ToggleButton = () => (
+        <button ref={toggleButtonRef} className="view-selector__toggle-button" onClick={() => setIsExpanded(!isExpanded)} disabled={isViewSelectorDisabled}>
+            <ViewSelectorIcon />
+        </button>
+    );
 
     /**
      * Render a list of buildings for the current venue
@@ -246,7 +235,7 @@ function ViewSelector({ isViewSelectorVisible }) {
                                 aria-label={t('Close view selector')}>
                                 <CloseIcon />
                             </button>
-                            <span>{t('Pan map to view')}</span>
+                            <span>{t('Go to view')}</span>
                         </div>
                         <BuildingList />
                     </div>
@@ -254,16 +243,23 @@ function ViewSelector({ isViewSelectorVisible }) {
             )}
 
             {/* Desktop expanded view with ref for click-outside detection */}
-            {isDesktop && isExpanded && (
-                <div ref={desktopDropdownRef} className="view-selector__container view-selector__container--desktop">
-                    <BuildingList />
+            {isDesktop ? (
+                <div className="view-selector__button-container view-selector__button-container--desktop">
+                    {isExpanded && (
+                        <div
+                            ref={buildingListRef}
+                            className="view-selector__container view-selector__container--desktop"
+                        >
+                            <BuildingList />
+                        </div>
+                    )}
+                    {/* Toggle button for desktop */}
+                    <ToggleButton />
                 </div>
-            )}
-
-            {/* Toggle button - always visible, positioned differently based on viewport */}
-            <div className={`view-selector__button-container ${isDesktop ? 'view-selector__button-container--desktop' : 'view-selector__button-container--mobile'}`}>
+            ) : (
+                // Mobile view toggle button, rendered outside the overlay
                 <ToggleButton />
-            </div>
+            )}
         </div>
     );
 
