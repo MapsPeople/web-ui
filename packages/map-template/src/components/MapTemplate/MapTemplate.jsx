@@ -63,6 +63,7 @@ import centerState from '../../atoms/centerState.js';
 import PropTypes from 'prop-types';
 import { ZoomLevelValues } from '../../constants/zoomLevelValues.js';
 import { useOnRouteFinished } from '../../hooks/useOnRouteFinished.js';
+import notificationMessageState from '../../atoms/notificationMessageState.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -214,6 +215,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     const finishRoute = useOnRouteFinished();
 
+    const [, setErrorMessage] = useRecoilState(notificationMessageState);
+
     /**
      * Ensure that MapsIndoors Web SDK is available.
      *
@@ -360,8 +363,17 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable && appConfig) {
-            setMapboxAccessToken(mapboxAccessToken || appConfig.appSettings?.mapboxAccessToken);
-            setGmApiKey(gmApiKey || appConfig.appSettings?.gmKey);
+            if (
+                isNullOrUndefined(mapboxAccessToken) &&
+                isNullOrUndefined(gmApiKey) &&
+                isNullOrUndefined(appConfig?.appSettings?.mapboxAccessToken) &&
+                isNullOrUndefined(appConfig?.appSettings?.gmKey)
+            ) {
+                setErrorMessage({ text: 'Please provide a Mapbox Access Token or Google Maps API key to show a map.', type: 'error' });
+            } else {
+                setMapboxAccessToken(mapboxAccessToken || appConfig.appSettings?.mapboxAccessToken);
+                setGmApiKey(gmApiKey || appConfig.appSettings?.gmKey);
+            }
         }
     }, [gmApiKey, mapboxAccessToken, mapsindoorsSDKAvailable, appConfig]);
 
