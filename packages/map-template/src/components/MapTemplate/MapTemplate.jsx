@@ -779,7 +779,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             mapOptions={mapOptions}
             onMapOptionsChange={handleMapOptionsChange}
             gmMapId={gmMapId}
-            isWayfindingActive={currentAppView === appStates.WAYFINDING}
+            isWayfindingOrDirections={currentAppView === appStates.WAYFINDING || currentAppView === appStates.DIRECTIONS}
             currentLanguage={currentLanguage}
             setLanguage={setCurrentLanguage}
         />

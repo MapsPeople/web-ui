@@ -244,7 +244,7 @@ function ViewSelector({ isViewSelectorDisabled, isViewSelectorVisible }) {
 
             {/* Desktop expanded view with ref for click-outside detection */}
             {isDesktop ? (
-                <div className="view-selector__button-container view-selector__button-container--desktop" style={{ position: 'relative', display: 'inline-block' }}>
+                <div className="view-selector__button-container view-selector__button-container--desktop">
                     {isExpanded && (
                         <div
                             ref={buildingListRef}
@@ -257,7 +257,7 @@ function ViewSelector({ isViewSelectorDisabled, isViewSelectorVisible }) {
                     <ToggleButton />
                 </div>
             ) : (
-                // Mobile view toggle button, rendered outside the overlay                
+                // Mobile view toggle button, rendered outside the overlay
                 <ToggleButton />
             )}
         </div>
