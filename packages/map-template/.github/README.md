@@ -16,6 +16,10 @@ Now open the app served on [http://localhost:3000/](http://localhost:3000/).
 
 The Map Template has a main `MapsIndoorsMap` React component. It wraps the whole app inside of it. It's used in a function in `App.jsx` which is imported into `index.jsx` where it's defined that an HTML element with `id="root"` will render the app. We show how that is done in `packages/map-template/index.html`.
 
+### Running the app on other devices
+
+Instead of running `npm start`, run `npm run start:network`. This will expose the Map Template on an IP on the local network. The console output will tell you the address, which you can then open in a browser on a device connected to the same network. For example `http://10.0.2.3:3000/`.
+
 ### Adding Google Maps API Keys or Mapbox Access Tokens
 
 Rename `.env.example`, to `.env` and add either of the keys (or both) to that file, and the maps will load properly.
