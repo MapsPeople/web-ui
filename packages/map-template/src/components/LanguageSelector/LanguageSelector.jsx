@@ -86,15 +86,15 @@ function LanguageSelector({ currentLanguage, setLanguage, isVisible }) {
 
     // Find portal target
     useEffect(() => {
-        let target = document.querySelector(languageSelectorMountPoint);
-        if (target) {
-            setPortalContainer(target);
+        let portalTargetMountPoint = document.querySelector(languageSelectorMountPoint);
+        if (portalTargetMountPoint) {
+            setPortalContainer(portalTargetMountPoint);
             return;
         }
         const observer = new MutationObserver(() => {
-            target = document.querySelector(languageSelectorMountPoint);
-            if (target) {
-                setPortalContainer(target);
+            portalTargetMountPoint = document.querySelector(languageSelectorMountPoint);
+            if (portalTargetMountPoint) {
+                setPortalContainer(portalTargetMountPoint);
                 observer.disconnect();
             }
         });
