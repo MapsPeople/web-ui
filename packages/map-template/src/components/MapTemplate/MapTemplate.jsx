@@ -304,6 +304,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 }
             });
 
+            // Ensure MapsIndoors uses the user's selected language if supported,
+            // so all map content and UI are localized accordingly.
             if (!i18n.language || i18n.language !== languageToUse) {
                 if (!i18n.isInitialized) {
                     initI18n(languageToUse);
