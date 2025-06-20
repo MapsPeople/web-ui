@@ -81,6 +81,8 @@ const it = {
     // View Selector
     'Go to view': 'Mostra posizione',
     'Close view selector': 'Chiudi selettore vista',
+    // Language Selector
+    'Select language': 'Seleziona lingua',
 };
 
 export default it;
