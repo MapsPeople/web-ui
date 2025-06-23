@@ -78,6 +78,9 @@ const da = {
     //Opening Hours
     'Open': 'Åben',
     'Closed': 'Lukket',
+    // View Selector
+    'Go to view': 'Vis lokation',
+    'Close view selector': 'Luk visningsvælger',
 };
 
 export default da;

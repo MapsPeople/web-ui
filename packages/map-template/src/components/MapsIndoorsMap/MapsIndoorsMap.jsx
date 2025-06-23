@@ -63,7 +63,7 @@ MapsIndoorsMap.propTypes = {
  * @param {boolean} [props.useMapProviderModule] - Set to true if the Map Template should take MapsIndoors solution modules into consideration when determining what map type to use.
  * @param {string} [props.kioskOriginLocationId] - If running the Map Template as a kiosk (upcoming feature), provide the Location ID that represents the location of the kiosk.
  * @param {number} [props.timeout] - If you want the Map Template to reset map position and UI elements to the initial state after some time of inactivity, use this to specify the number of seconds of inactivity before resetting.
- * @param {string} [props.language] - The language to show textual content in. Supported values are "en" for English, "da" for Danish, "de" for German, "fr" for French, "it" for Italian, "es" for Spanish and "nl" for Dutch. If the prop is not set, the language of the browser will be used (if it is one of the supported languages - otherwise it will default to English).
+ * @param {string} [props.language] - The language to show textual content in. Supported values are "en" for English, "da" for Danish, "de" for German, "fr" for French, "it" for Italian, "es" for Spanish, "nl" for Dutch and "zh" for Chinese. If the prop is not set, the language of the browser will be used (if it is one of the supported languages - otherwise it will default to English).
  * @param {boolean} [props.useKeyboard] - If running the Map Template as a kiosk, set this prop to true and it will prompt a keyboard.
  * @param {number} [props.miTransitionLevel] - The zoom level on which to transition from Mapbox to MapsIndoors data. Default value is 17. This feature is only available for Mapbox.
  * @param {string} [props.category] - If you want to indicate an active category on the map. The value should be the Key (Administrative ID).
@@ -90,8 +90,6 @@ function MapsIndoorsMap(props) {
 
         const defaultProps = {
             apiKey: 'mapspeople3d',
-            logo: 'https://app.mapsindoors.com/mapsindoors/gfx/mapspeople-logo/mapspeople-pin.svg',
-            primaryColor: '#005655', // --brand-colors-dark-pine-100 from MIDT
             useMapProviderModule: false,
             useKeyboard: false,
             searchAllVenues: false,
@@ -146,7 +144,7 @@ function MapsIndoorsMap(props) {
             apiKey,
             venue,
             locationId: props.supportsUrlParameters && locationIdQueryParameter ? locationIdQueryParameter : props.locationId,
-            logo: props.supportsUrlParameters && logoQueryParameter ? logoQueryParameter : (props.logo || defaultProps.logo),
+            logo: props.supportsUrlParameters && logoQueryParameter ? logoQueryParameter : props.logo,
             directionsFrom: props.supportsUrlParameters && directionsFromQueryParameter ? directionsFromQueryParameter : props.directionsFrom,
             directionsTo: props.supportsUrlParameters && directionsToQueryParameter ? directionsToQueryParameter : props.directionsTo,
             tileStyle: props.supportsUrlParameters && tileStyleQueryParameter ? tileStyleQueryParameter : props.tileStyle,
@@ -155,7 +153,7 @@ function MapsIndoorsMap(props) {
             bearing: props.supportsUrlParameters && bearingQueryParameter ? bearingQueryParameter : props.bearing,
             gmApiKey: props.supportsUrlParameters && gmApiKeyQueryParameter ? gmApiKeyQueryParameter : props.gmApiKey,
             mapboxAccessToken: props.supportsUrlParameters && mapboxAccessTokenQueryParameter ? mapboxAccessTokenQueryParameter : props.mapboxAccessToken,
-            primaryColor: props.supportsUrlParameters && primaryColorQueryParameter ? '#' + primaryColorQueryParameter : (props.primaryColor || defaultProps.primaryColor),
+            primaryColor: props.supportsUrlParameters && primaryColorQueryParameter ? '#' + primaryColorQueryParameter : props.primaryColor,
             appUserRoles: props.supportsUrlParameters && appUserRolesQueryParameter ? appUserRolesQueryParameter : props.appUserRoles,
             externalIDs: props.supportsUrlParameters && externalIDsQueryParameter ? externalIDsQueryParameter : props.externalIDs,
             gmMapId: props.supportsUrlParameters && gmMapIdQueryParameter ? gmMapIdQueryParameter : props.gmMapId,

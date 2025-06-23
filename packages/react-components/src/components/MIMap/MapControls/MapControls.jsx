@@ -15,14 +15,14 @@ MapControls.propTypes = {
  * MapControls component manages the positioning and rendering of map control elements.
  * It handles both desktop and mobile layouts, and manages creation of the web components for floor selection
  * and position control.
- * 
+ *
  * @param {Object} props - Component properties
  * @param {'google'|'mapbox'} props.mapType - The type of map being used
  * @param {Object} props.mapsIndoorsInstance - MapsIndoors SDK instance
  * @param {Object} props.mapInstance - Map instance (Google Maps or Mapbox)
  * @param {Function} [props.onPositionControl] - Callback function for position control events
  * @param {string} [props.brandingColor] - Custom branding color for controls
- * 
+ *
  * @returns {JSX.Element} Map controls container with venue selector, floor selector,
  * position button, and view mode switch, arranged differently for desktop and mobile layouts
  */
@@ -36,6 +36,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
     const floorSelectorPortal = <div key="floor-selector" className="floor-selector-portal" />;
     const myPositionPortal = <div key="my-position" className="my-position-element-portal" />;
     const viewModeSwitchPortal = <div key="viewmode-switch" className="viewmode-switch-portal" />;
+    const viewSelectorPortal = <div key="view-selector" className="view-selector-portal" />;
 
     // Create and configure web components
     // This useEffect will run when the component mounts and when the mapsIndoorsInstance or mapInstance changes.
@@ -71,7 +72,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
 
     }, [mapType, mapsIndoorsInstance, mapInstance, onPositionControl, brandingColor]);
 
-    /* 
+    /*
      * Handle layout changes and element movement, this handles moving the elements to the correct DOM location based on the layout
      * and ensures that the elements are not duplicated in the DOM.
      * This is important for performance and to avoid issues with the web components.
@@ -99,12 +100,20 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
     if (isDesktop) {
         {/* For desktop layout, we render all controls in a single container */ }
         return (
-            <div className="map-controls-container desktop">
-                {venueSelectorPortal}
-                {viewModeSwitchPortal}
-                {myPositionPortal}
-                {floorSelectorPortal}
-            </div>
+            <>
+                {/* Top right desktop controls */}
+                <div className="map-controls-container desktop top-right">
+                    {venueSelectorPortal}
+                    {viewSelectorPortal}
+                    {viewModeSwitchPortal}
+                    {myPositionPortal}
+                    {floorSelectorPortal}
+                </div>
+
+                {/* Bottom right desktop controls */}
+                <div className="map-controls-container desktop bottom-right">
+                </div>
+            </>
         );
     } else {
         {/* For mobile layout, we split controls into two columns */ }
@@ -113,6 +122,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
                 <div className="map-controls-left-column mobile-column">
                     {venueSelectorPortal}
                     {viewModeSwitchPortal}
+                    {viewSelectorPortal}
                 </div>
                 <div className="map-controls-right-column mobile-column">
                     {myPositionPortal}

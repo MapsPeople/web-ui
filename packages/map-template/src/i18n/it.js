@@ -78,6 +78,9 @@ const it = {
     //Opening Hours
     'Open': 'Aperto',
     'Closed': 'Chiuso',
+    // View Selector
+    'Go to view': 'Mostra posizione',
+    'Close view selector': 'Chiudi selettore vista',
 };
 
 export default it;
