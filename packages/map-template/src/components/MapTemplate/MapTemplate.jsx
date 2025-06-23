@@ -103,38 +103,43 @@ MapTemplate.propTypes = {
 };
 
 /**
+ * Renders a comprehensive MapsIndoors map interface with support for multiple map providers, localization, user roles, directions, filtering, kiosk mode, and extensive UI customization.
  *
- * @param {Object} props
+ * Integrates MapsIndoors SDK and manages map state, user interactions, and configuration through React hooks and Recoil state. Supports dynamic loading of map providers, venue and location selection, directions, inactivity timeout, and accessibility features such as keyboard support and localization.
+ *
+ * @param {Object} props - Configuration options for the map template.
  * @param {string} props.apiKey - MapsIndoors API key or solution alias.
- * @param {string} [props.gmApiKey] - Google Maps API key if you want to show a Google Maps map. Can also be set in the MapsIndoors App Config as "gmKey" under "appSettings".
- * @param {string} [props.mapboxAccessToken] - Mapbox Access Token if you want to show a Mapbox map. Can also be set in the MapsIndoors App Config "mapboxAccessToken" under "appSettings".
- * @param {string} [props.venue] - If you want the map to show a specific Venue, provide the Venue name here.
- * @param {string} [props.locationId] - If you want the map to show a specific Location, provide the Location ID here.
- * @param {string} [props.primaryColor] - If you want the splash screen to have a custom primary color, provide the value here.
- * @param {string} [props.logo] - If you want the splash screen to have a custom logo, provide the image path or address here.
- * @param {array} [props.appUserRoles] - If you want the map to behave differently for specific users, set one or more app user roles here.
- * @param {string} [props.directionsFrom] - If you want to show directions instantly, provide a MapsIndoors Location ID or the string "USER_POSITION" here to be used as the origin.
- * @param {string} [props.directionsTo] - If you want to show directions instantly, provide a MapsIndoors Location ID or the string "USER_POSITION" here to be used as the destination.
- * @param {array} [props.externalIDs] - Filter locations shown on the map based on the external IDs.
- * @param {string} [props.tileStyle] - Tile style name to change the interface of the map.
- * @param {number} [props.startZoomLevel] - The initial zoom level of the map.
- * @param {number} [props.bearing] - The bearing of the map as a number. Not recommended for Google Maps with 2D Models.
- * @param {number} [props.pitch] - The pitch of the map as a number. Not recommended for Google Maps with 2D Models.
- * @param {string} [props.gmMapId] - The Google Maps Map ID associated with a specific map style or feature.
- * @param {boolean} [props.useMapProviderModule] - Set to true if the Map Template should take MapsIndoors solution modules into consideration when determining what map type to use.
- * @param {string} [props.kioskOriginLocationId] - If running the Map Template as a kiosk (upcoming feature), provide the Location ID that represents the location of the kiosk.
- * @param {string} [props.language] - The language to show textual content in. Supported values are "en" for English, "da" for Danish, "de" for German, "fr" for French, "it" for Italian, "es" for Spanish, "nl" for Dutch and "zh" for Chinese. If the prop is not set, the language of the browser will be used (if it is one of the supported languages - otherwise it will default to English).
- * @param {boolean} [props.supportsUrlParameters] - Set to true if you want to support URL Parameters to configure the Map Template.
- * @param {boolean} [props.useKeyboard] - If running the Map Template as a kiosk, set this prop to true and it will prompt a keyboard.
- * @param {number} [props.timeout] - If you want the Map Template to reset map position and UI elements to the initial state after some time of inactivity, use this to specify the number of seconds of inactivity before resetting.
- * @param {number} [props.miTransitionLevel] - The zoom level on which to transition from Mapbox to MapsIndoors data. Default value is 17. This feature is only available for Mapbox.
- * @param {boolean} [props.searchAllVenues] - If you want to perform search across all venues in the solution.
- * @param {boolean} [props.hideNonMatches] - Determine whether the locations on the map should be filtered (only show the matched locations and hide the rest) or highlighted (show all locations and highlight the matched ones with a red dot by default). If set to true, the locations will be filtered.
- * @param {boolean} [props.showRoadNames] - A boolean parameter that dictates whether Mapbox road names should be shown. By default, Mapbox road names are hidden when MapsIndoors data is shown. It is dictated by `mi-transition-level` which default value is 17.
- * @param {boolean} [props.showExternalIDs] - Determine whether the location details on the map should have an external ID visible. The default value is set to false.
- * @param {boolean} [props.searchExternalLocations] - If you want to perform search for external locations in the Wayfinding mode. If set to true, Mapbox/Google places will be displayed depending on the Map Provider you are using. If set to false, the results returned will only be MapsIndoors results. The default is true.
- * @param {string} [props.center] - Specifies the coordinates where the map should load, represented as longitude and latitude values separated by a comma. If the specified coordinates intersect with a Venue, that Venue will be set as the current Venue.
- * @param {boolean} [props.useAppTitle] - Specifies if the Map Template should set the document title as defined in the App Config. The default value is set to false.
+ * @param {string} [props.gmApiKey] - Google Maps API key.
+ * @param {string} [props.mapboxAccessToken] - Mapbox Access Token.
+ * @param {string} [props.venue] - Name of the venue to display initially.
+ * @param {string} [props.locationId] - ID of the location to display initially.
+ * @param {string} [props.primaryColor] - Custom primary color for UI elements.
+ * @param {string} [props.logo] - Custom logo for the splash screen.
+ * @param {Array} [props.appUserRoles] - User roles for customizing map behavior.
+ * @param {string} [props.directionsFrom] - Location ID or "USER_POSITION" for directions origin.
+ * @param {string} [props.directionsTo] - Location ID or "USER_POSITION" for directions destination.
+ * @param {Array} [props.externalIDs] - External IDs to filter displayed locations.
+ * @param {string} [props.tileStyle] - Map tile style.
+ * @param {number} [props.startZoomLevel] - Initial zoom level.
+ * @param {number} [props.bearing] - Map bearing.
+ * @param {number} [props.pitch] - Map pitch.
+ * @param {string} [props.gmMapId] - Google Maps Map ID for custom styles.
+ * @param {boolean} [props.useMapProviderModule] - Whether to use solution modules to determine map provider.
+ * @param {string} [props.kioskOriginLocationId] - Location ID representing the kiosk origin.
+ * @param {string} [props.language] - Language code for localization.
+ * @param {boolean} [props.supportsUrlParameters] - Enable support for URL parameters.
+ * @param {boolean} [props.useKeyboard] - Enable on-screen keyboard (for kiosk mode).
+ * @param {number} [props.timeout] - Inactivity timeout in seconds before UI resets.
+ * @param {number} [props.miTransitionLevel] - Zoom level for transitioning from Mapbox to MapsIndoors data.
+ * @param {string} [props.category] - Category to select initially.
+ * @param {boolean} [props.searchAllVenues] - Enable search across all venues.
+ * @param {boolean} [props.hideNonMatches] - Hide non-matching locations on search.
+ * @param {boolean} [props.showRoadNames] - Show Mapbox road names.
+ * @param {boolean} [props.showExternalIDs] - Show external IDs in location details.
+ * @param {boolean} [props.searchExternalLocations] - Enable search for external locations in wayfinding mode.
+ * @param {string} [props.center] - Initial map center coordinates as "longitude,latitude".
+ * @param {boolean} [props.useAppTitle] - Set document title from app config.
+ * @returns {JSX.Element} The rendered map template component.
  */
 function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations, center, useAppTitle }) {
 

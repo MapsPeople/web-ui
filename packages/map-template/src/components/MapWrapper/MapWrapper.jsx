@@ -47,21 +47,21 @@ MapWrapper.propTypes = {
 let _tileStyle;
 
 /**
- * A wrapper component around the MIMap component.
- * Contains logic for determining map provider (Google, Mapbox), map options, device position handling and setting up a directions service to use for showing directions.
+ * React component that wraps the MIMap component, managing map provider selection, map options, user position, directions service, and related UI elements.
  *
- * @param {Object} props
- * @param {function} [props.onLocationClick] - Function that is run when a MapsIndoors Location is clicked. the Location will be sent along as first argument.
- * @param {function} props.onMapPositionKnown - Function that is run when the map bounds was changed due to fitting to a Venue or Location.
- * @param {boolean} props.useMapProviderModule - If you want to use the Map Provider set on your solution in the MapsIndoors CMS, set this to true.
- * @param {function} onMapPositionInvestigating - Function that is run when the map position is being determined.
- * @param {function} onViewModeSwitchKnown - Function that is run when the view mode switch is known (if it is to be shown of not).
- * @param {number} resetCount - A counter that is incremented when the map should be reset.
- * @param {object} props.mapOptions - Options for instantiating and styling the map as well as UI elements.
- * @param {function} props.onMapOptionsChange - Function that is run when the map options are changed.
- * @param {string} props.gmMapId - Google Maps Map ID for custom styling.
- * @param {boolean} props.isWayfindingOrDirections - Whether wayfinding or directions is active or not.
- * @returns
+ * Determines whether to use Google Maps or Mapbox as the map provider based on solution configuration and available API keys. Handles map initialization, filtering and highlighting of locations, tile style updates, user position updates, and the visibility of the view selector UI. Invokes provided callbacks for map position changes, location clicks, and view mode switch visibility.
+ *
+ * @param {function} [onLocationClick] - Called when a MapsIndoors Location is clicked, receiving the Location as the first argument.
+ * @param {function} onMapPositionKnown - Called when the map bounds change due to fitting to a Venue or Location.
+ * @param {boolean} useMapProviderModule - If true, uses the map provider set in the MapsIndoors CMS solution.
+ * @param {function} onMapPositionInvestigating - Called when the map position is being determined.
+ * @param {function} onViewModeSwitchKnown - Called with the visibility state of the view mode switch.
+ * @param {number} resetCount - Counter incremented to trigger a map reset.
+ * @param {object} mapOptions - Options for map instantiation, styling, and UI elements.
+ * @param {function} onMapOptionsChange - Called when map options are changed.
+ * @param {string} gmMapId - Google Maps Map ID for custom styling.
+ * @param {boolean} isWayfindingOrDirections - Indicates if wayfinding or directions is active.
+ * @returns {JSX.Element} The rendered map and view selector components.
  */
 function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating, onViewModeSwitchKnown, resetCount, mapOptions, onMapOptionsChange, gmMapId, isWayfindingOrDirections }) {
     const apiKey = useRecoilValue(apiKeyState);
