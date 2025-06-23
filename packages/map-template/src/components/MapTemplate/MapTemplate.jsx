@@ -331,7 +331,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 }
             }
         }
-    }, [currentLanguage, mapsindoorsSDKAvailable, appConfig]);
+    }, [currentLanguage, language, mapsindoorsSDKAvailable, appConfig]);
 
     /**
      * React on changes in the MapsIndoors API key by fetching the required data.
