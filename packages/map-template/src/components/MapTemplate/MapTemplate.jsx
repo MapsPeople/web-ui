@@ -86,6 +86,7 @@ MapTemplate.propTypes = {
     gmMapId: PropTypes.string,
     useMapProviderModule: PropTypes.bool,
     kioskOriginLocationId: PropTypes.string,
+    language: PropTypes.string,
     timeout: PropTypes.number,
     useKeyboard: PropTypes.bool,
     miTransitionLevel: PropTypes.number,
@@ -97,7 +98,7 @@ MapTemplate.propTypes = {
     searchExternalLocations: PropTypes.bool,
     supportsUrlParameters: PropTypes.bool,
     center: PropTypes.string,
-    useAppTitle: PropTypes.bool
+    useAppTitle: PropTypes.bool,
 };
 
 /**
@@ -133,8 +134,9 @@ MapTemplate.propTypes = {
  * @param {string} [props.center] - Specifies the coordinates where the map should load, represented as longitude and latitude values separated by a comma. If the specified coordinates intersect with a Venue, that Venue will be set as the current Venue.
  * @param {boolean} [props.useAppTitle] - Specifies if the Map Template should set the document title as defined in the App Config. The default value is set to false.
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations, center, useAppTitle }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations, center, useAppTitle }) {
 
+    const [userSelectedLanguage, setUserSelectedLanguage] = useState(false);
     const [mapOptions, setMapOptions] = useState({ brandingColor: primaryColor });
     const [, setApiKey] = useRecoilState(apiKeyState);
     const [, setGmApiKey] = useRecoilState(gmApiKeyState);
@@ -212,6 +214,19 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     const finishRoute = useOnRouteFinished();
 
+    // On initial load, set currentLanguage from URL prop or appConfig if not already set by user.
+    // This allows user selection to always take precedence after first interaction.
+    // Note: On reload, language will revert to URL or appConfig unless user selects again.
+    useEffect(() => {
+        if (!currentLanguage) {
+            if (language) {
+                setCurrentLanguage(language);
+            } else if (appConfig?.appSettings?.language) {
+                setCurrentLanguage(appConfig.appSettings.language);
+            }
+        }
+    }, [language, appConfig, currentLanguage, setCurrentLanguage]);
+
     /**
      * Ensure that MapsIndoors Web SDK is available.
      *
@@ -276,8 +291,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
-            // Sets language to use. Priority: currentLanguage -> App Config -> browser's default language.
-            const languageToUse = currentLanguage ?? appConfig?.appSettings?.language ?? navigator.language;
+            // Sets language to use. Priority: currentLanguage -> language prop -> App Config -> browser's default language.
+            const languageToUse = currentLanguage ??language ?? appConfig?.appSettings?.language ?? navigator.language;
 
             // Set the language on the MapsIndoors SDK in order to get eg. Mapbox and Google directions in that language.
             // The MapsIndoors data only accepts the first part of the IETF language string, hence the split.
@@ -723,8 +738,23 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         const storedLanguage = localStorage.getItem('language');
         if (storedLanguage && storedLanguage !== currentLanguage) {
             setCurrentLanguage(storedLanguage);
+            setUserSelectedLanguage(true); // If we have a stored language, treat it as user-selected
         }
     }, []);
+
+    // On initial load, if a language prop is provided and user hasn't explicitly selected a language,
+    // set the current language to the prop value. This allows the URL language to take effect
+    // until the user makes a selection. Note: If the page is reloaded, the language will
+    // revert to the URL-provided value unless the user selects a different language again.
+    useEffect(() => {
+        if (!userSelectedLanguage) {
+            if (language && currentLanguage !== language) {
+                setCurrentLanguage(language);
+            } else if (!language && appConfig?.appSettings?.language && currentLanguage !== appConfig.appSettings.language) {
+                setCurrentLanguage(appConfig.appSettings.language);
+            }
+        }
+    }, [language, appConfig, currentLanguage, setCurrentLanguage, userSelectedLanguage]);
 
     // Persist language to localStorage on change
     useEffect(() => {
@@ -783,7 +813,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             gmMapId={gmMapId}
             isWayfindingOrDirections={currentAppView === appStates.WAYFINDING || currentAppView === appStates.DIRECTIONS}
             currentLanguage={currentLanguage}
-            setLanguage={setCurrentLanguage}
+            setLanguage={(languageToSet) => {
+                setCurrentLanguage(languageToSet);
+                setUserSelectedLanguage(true);
+            }}
         />
     </div>
 }
