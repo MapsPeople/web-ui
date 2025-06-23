@@ -321,6 +321,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
      * React on changes in appConfig and sets visibility of View Selector.
      */
     useEffect(() => {
+        console.log('added log here as well');
         if (appConfig) {
             if (isNullOrUndefined(appConfig?.appSettings?.viewSelector)) {
                 setIsViewSelectorVisible(false);

@@ -281,6 +281,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
+            console.log('added log here');
+            
             // Sets language to use. Priority: Prop -> App Config -> browser's default language.
             const languageToUse = language ?? appConfig?.appSettings?.language ?? navigator.language;
 
