@@ -351,7 +351,7 @@ export class MyPositionComponent {
         const deviceType: IDevice['type'] = this.parser.getDevice().type;
         this.canBeTracked = (
             typeof window.DeviceOrientationEvent === 'function' &&
-            (deviceType === 'mobile' || deviceType === 'tablet') &&
+            (deviceType === UAParser.DEVICE.MOBILE || deviceType === UAParser.DEVICE.TABLET) &&
             this.mapView.rotatable &&
             this.mapView.tiltable)
             ? true : false;
