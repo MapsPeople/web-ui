@@ -745,15 +745,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         }
     }, [category, categories, mapsindoorsSDKAvailable]);
 
-    // Initialize language from localStorage if available
-    useEffect(() => {
-        const storedLanguage = localStorage.getItem('language');
-        if (storedLanguage && storedLanguage !== currentLanguage) {
-            setCurrentLanguage(storedLanguage);
-            setUserSelectedLanguage(true); // If we have a stored language, treat it as user-selected
-        }
-    }, []);
-
     // On initial load, if a language prop is provided and user hasn't explicitly selected a language,
     // set the current language to the prop value. This allows the URL language to take effect
     // until the user makes a selection. Note: If the page is reloaded, the language will
@@ -767,14 +758,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             }
         }
     }, [language, appConfig, currentLanguage, setCurrentLanguage, userSelectedLanguage]);
-
-    // Persist language to localStorage on change
-    useEffect(() => {
-        if (currentLanguage) {
-            localStorage.setItem('language', currentLanguage);
-        }
-    }, [currentLanguage]);
-
 
     return <div className={`mapsindoors-map
     ${currentAppView === appStates.DIRECTIONS ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}
