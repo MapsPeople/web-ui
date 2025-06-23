@@ -63,6 +63,7 @@ import centerState from '../../atoms/centerState.js';
 import PropTypes from 'prop-types';
 import { ZoomLevelValues } from '../../constants/zoomLevelValues.js';
 import { useOnRouteFinished } from '../../hooks/useOnRouteFinished.js';
+import notificationMessageState from '../../atoms/notificationMessageState.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -213,19 +214,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [setCurrentVenueName, updateCategories] = useCurrentVenue();
 
     const finishRoute = useOnRouteFinished();
-
-    // On initial load, set currentLanguage from URL prop or appConfig if not already set by user.
-    // This allows user selection to always take precedence after first interaction.
-    // Note: On reload, language will revert to URL or appConfig unless user selects again.
-    useEffect(() => {
-        if (!currentLanguage) {
-            if (language) {
-                setCurrentLanguage(language);
-            } else if (appConfig?.appSettings?.language) {
-                setCurrentLanguage(appConfig.appSettings.language);
-            }
-        }
-    }, [language, appConfig, currentLanguage, setCurrentLanguage]);
+    const [, setErrorMessage] = useRecoilState(notificationMessageState);
 
     /**
      * Ensure that MapsIndoors Web SDK is available.
@@ -249,6 +238,19 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             }
         });
     }
+
+    // On initial load, set currentLanguage from URL prop or appConfig if not already set by user.
+    // This allows user selection to always take precedence after first interaction.
+    // Note: On reload, language will revert to URL or appConfig unless user selects again.
+    useEffect(() => {
+        if (!currentLanguage) {
+            if (language) {
+                setCurrentLanguage(language);
+            } else if (appConfig?.appSettings?.language) {
+                setCurrentLanguage(appConfig.appSettings.language);
+            }
+        }
+    }, [language, appConfig, currentLanguage, setCurrentLanguage]);
 
     /**
      * Updates the map options state by merging new options with existing ones
@@ -292,7 +294,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
             // Sets language to use. Priority: currentLanguage -> language prop -> App Config -> browser's default language.
-            const languageToUse = currentLanguage ??language ?? appConfig?.appSettings?.language ?? navigator.language;
+            const languageToUse = currentLanguage ?? language ?? appConfig?.appSettings?.language ?? navigator.language;
 
             // Set the language on the MapsIndoors SDK in order to get eg. Mapbox and Google directions in that language.
             // The MapsIndoors data only accepts the first part of the IETF language string, hence the split.
@@ -372,8 +374,17 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable && appConfig) {
-            setMapboxAccessToken(mapboxAccessToken || appConfig.appSettings?.mapboxAccessToken);
-            setGmApiKey(gmApiKey || appConfig.appSettings?.gmKey);
+            if (
+                isNullOrUndefined(mapboxAccessToken) &&
+                isNullOrUndefined(gmApiKey) &&
+                isNullOrUndefined(appConfig?.appSettings?.mapboxAccessToken) &&
+                isNullOrUndefined(appConfig?.appSettings?.gmKey)
+            ) {
+                setErrorMessage({ text: 'Please provide a Mapbox Access Token or Google Maps API key to show a map.', type: 'error' });
+            } else {
+                setMapboxAccessToken(mapboxAccessToken || appConfig.appSettings?.mapboxAccessToken);
+                setGmApiKey(gmApiKey || appConfig.appSettings?.gmKey);
+            }
         }
     }, [gmApiKey, mapboxAccessToken, mapsindoorsSDKAvailable, appConfig]);
 
