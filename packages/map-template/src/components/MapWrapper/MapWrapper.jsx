@@ -89,6 +89,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
     const showRoadNames = useRecoilValue(showRoadNamesState);
     const appConfig = useRecoilValue(appConfigState);
     const [isViewSelectorVisible, setIsViewSelectorVisible] = useState(false);
+    const [isLanguageSelectorVisible, setIsLanguageSelectorVisible] = useState(false);
 
     useLiveData(apiKey);
 
@@ -336,6 +337,20 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
         }
     }, [appConfig])
 
+    /**
+     * React on changes in appConfig and sets visibility of Language Selector.
+     */
+    useEffect(() => {
+        if (appConfig) {
+            if (isNullOrUndefined(appConfig?.appSettings?.languageSelector)) {
+                setIsLanguageSelectorVisible(false);
+            } else {
+                // Boolean from the App Config comes as a string. We need to return clean boolean value based on that.
+                setIsLanguageSelectorVisible(appConfig?.appSettings?.languageSelector.trim().toLowerCase() === 'true');
+            }
+        }
+    }, [appConfig])
+
     return (<>
         {apiKey && <MIMap
             apiKey={apiKey}
@@ -349,7 +364,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
         {/* Pass isWayfindingOrDirections prop to ViewSelector to disable interactions while wayfinding or directions is active*/}
         {apiKey && <>
             <ViewSelector isViewSelectorVisible={isViewSelectorVisible} isViewSelectorDisabled={isWayfindingOrDirections} />
-            <LanguageSelector currentLanguage={currentLanguage} setLanguage={setLanguage} isVisible={true} />
+            <LanguageSelector currentLanguage={currentLanguage} setLanguage={setLanguage} isVisible={isLanguageSelectorVisible} />
         </>}
     </>)
 }
