@@ -5,6 +5,49 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.79.3] - 2025-06-23
+
+### Fixed
+
+- Fix modal height while in wayfinding and directions mode
+
+## [1.79.2] - 2025-06-19
+
+### Fixed
+
+- Show error message when `mapboxAccessToken` and `gmApiKey` are not present in the App Config object and in query parameter.
+
+## [1.79.1] - 2025-06-19
+
+### Fixed
+
+- Improved the view selector component with minor enhancements and added a disabled state when in Wayfinding and Directions modes.
+
+## [1.79.0] - 2025-06-18
+
+### Added
+
+- If `language`, `primaryColor`, `mapboxAccessToken`, `gmApiKey`, `logo`, `venue`, `startZoomLevel`, `pitch`, `bearing` and `center` props are not explicitly provided, their value will be determined by the App Config object.
+- View Selector visibility is now configurable through the App Config object.
+
+## [1.78.4] - 2025-06-16
+
+### Fixed
+
+- Fixed an issue where the categories list would close when clicking on other UI elements, such as the zoom controls or floor selector.
+
+## [1.78.3] - 2025-06-12
+
+### Fixed
+
+- Fixed an issue where a slow route request would risk override a later, faster one, resulting in the shown route suddenly shifting to an unexpected one.
+
+## [1.78.2] - 2025-06-12
+
+### Fixed
+
+- Made the header in location details view sticky to improve navigation experience while scrolling
+
 ## [1.78.1] - 2025-06-11
 
 ### Fixed
