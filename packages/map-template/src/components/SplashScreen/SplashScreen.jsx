@@ -15,9 +15,9 @@ function SplashScreen() {
     return (
         <div className="splash-screen">
             <div className="splash-screen__container">
-                <img className="splash-screen__logo"
+                <img className={'splash-screen__logo ' + (logo ? 'splash-screen__logo--visible' : '')}
                     src={logo}
-                    alt="logo"
+                    alt=""
                 />
                 {/* The border value is set based on the #rrggbbaa and includes an
                         opacity level of around 20%, which translates to the value of 33. */}

@@ -10,6 +10,12 @@
     &__logo {
         width: 100%;
         max-height: 100%;
+        visibility: hidden;
+
+        // This class is used to show the logo only when the logo is known. Otherwise we would risk a broken image placeholder.
+        &--visible {
+            visibility: visible;
+        }
     }
 
     &__loader {
