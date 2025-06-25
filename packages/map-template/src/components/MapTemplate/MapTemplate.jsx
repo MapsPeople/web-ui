@@ -240,19 +240,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         });
     }
 
-    /**
-     * Updates the map options state by merging new options with existing ones
-     * @param {Object} newMapOptions - The new map options to merge with existing options
-     * @returns {void}
-     */
-    const handleMapOptionsChange = (newMapOptions) => {
-        setMapOptions(previousMapOptions => ({
-            ...previousMapOptions,
-            ...newMapOptions,
-            minZoom: ZoomLevelValues.minZoom
-        }))
-    };
-
     /*
      * If the app is inactive, run code to reset UI and state.
      */
@@ -498,7 +485,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * This effect updates the mapOptions state accordingly.
      */
     useEffect(() => {
-        setMapOptions({ brandingColor: color, showRoadNames: showRoadNames, miTransitionLevel: miTransitionLevel })
+        setMapOptions({ brandingColor: color, showRoadNames: showRoadNames, miTransitionLevel: miTransitionLevel, minZoom: ZoomLevelValues.minZoom })
     }, [primaryColor, showRoadNames, miTransitionLevel, color]);
 
     /*
@@ -784,7 +771,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             onViewModeSwitchKnown={visible => setViewModeSwitchVisible(visible)}
             resetCount={resetCount}
             mapOptions={mapOptions}
-            onMapOptionsChange={handleMapOptionsChange}
             gmMapId={gmMapId}
             isWayfindingOrDirections={currentAppView === appStates.WAYFINDING || currentAppView === appStates.DIRECTIONS}
         />

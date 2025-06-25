@@ -20,8 +20,6 @@ import solutionState from '../../atoms/solutionState';
 import notificationMessageState from '../../atoms/notificationMessageState';
 import useMapBoundsDeterminer from '../../hooks/useMapBoundsDeterminer';
 import hideNonMatchesState from '../../atoms/hideNonMatchesState';
-import miTransitionLevelState from '../../atoms/miTransitionLevelState';
-import showRoadNamesState from '../../atoms/showRoadNamesState';
 import PropTypes from 'prop-types';
 import ViewSelector from '../ViewSelector/ViewSelector';
 import appConfigState from '../../atoms/appConfigState';
@@ -35,7 +33,6 @@ MapWrapper.propTypes = {
     onViewModeSwitchKnown: PropTypes.func.isRequired,
     resetCount: PropTypes.number.isRequired,
     mapOptions: PropTypes.object,
-    onMapOptionsChange: PropTypes.func,
     gmMapId: PropTypes.string,
     isWayfindingOrDirections: PropTypes.bool
 };
@@ -58,12 +55,11 @@ let _tileStyle;
  * @param {function} onViewModeSwitchKnown - Function that is run when the view mode switch is known (if it is to be shown of not).
  * @param {number} resetCount - A counter that is incremented when the map should be reset.
  * @param {object} props.mapOptions - Options for instantiating and styling the map as well as UI elements.
- * @param {function} props.onMapOptionsChange - Function that is run when the map options are changed.
  * @param {string} props.gmMapId - Google Maps Map ID for custom styling.
  * @param {boolean} props.isWayfindingOrDirections - Whether wayfinding or directions is active or not.
  * @returns
  */
-function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating, onViewModeSwitchKnown, resetCount, mapOptions, onMapOptionsChange, gmMapId, isWayfindingOrDirections }) {
+function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating, onViewModeSwitchKnown, resetCount, mapOptions, gmMapId, isWayfindingOrDirections }) {
     const apiKey = useRecoilValue(apiKeyState);
     const gmApiKey = useRecoilValue(gmApiKeyState);
     const mapboxAccessToken = useRecoilValue(mapboxAccessTokenState);
@@ -80,8 +76,6 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
     const solution = useRecoilValue(solutionState);
     const [, setErrorMessage] = useRecoilState(notificationMessageState);
     const hideNonMatches = useRecoilValue(hideNonMatchesState);
-    const miTransitionLevel = useRecoilValue(miTransitionLevelState);
-    const showRoadNames = useRecoilValue(showRoadNamesState);
     const appConfig = useRecoilValue(appConfigState);
     const [isViewSelectorVisible, setIsViewSelectorVisible] = useState(false);
 
@@ -300,22 +294,6 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
         _tileStyle = tileStyle || 'default';
         onTileStyleChanged(mapsIndoorsInstance);
     }, [tileStyle]);
-
-    /**
-     * React on changes in the miTransitionLevel prop.
-     */
-    useEffect(() => {
-        if (!isNaN(parseInt(miTransitionLevel))) {
-            onMapOptionsChange({ miTransitionLevel: miTransitionLevel })
-        }
-    }, [miTransitionLevel])
-
-    /**
-     * React on changes in the showRoadNames prop.
-     */
-    useEffect(() => {
-        onMapOptionsChange({ showRoadNames: showRoadNames })
-    }, [showRoadNames])
 
     /**
      * React on changes in appConfig and sets visibility of View Selector.
