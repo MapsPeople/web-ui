@@ -89,6 +89,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
     const showRoadNames = useRecoilValue(showRoadNamesState);
     const appConfig = useRecoilValue(appConfigState);
     const [isViewSelectorVisible, setIsViewSelectorVisible] = useState(false);
+    const [isLanguageSelectorVisible, setIsLanguageSelectorVisible] = useState(false);
 
     useLiveData(apiKey);
 
@@ -323,7 +324,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
     }, [showRoadNames])
 
     /**
-     * React on changes in appConfig and sets visibility of View Selector.
+     * React on changes in appConfig and sets visibility of View Selector and visibility of Language Selector.
      */
     useEffect(() => {
         if (appConfig) {
@@ -332,6 +333,14 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
             } else {
                 // Boolean from the App Config comes as a string. We need to return clean boolean value based on that.
                 setIsViewSelectorVisible(appConfig?.appSettings?.viewSelector.trim().toLowerCase() === 'true');
+            }
+
+
+            if (isNullOrUndefined(appConfig?.appSettings?.languageSelector)) {
+                setIsLanguageSelectorVisible(false);
+            } else {
+                // Boolean from the App Config comes as a string. We need to return clean boolean value based on that.
+                setIsLanguageSelectorVisible(appConfig?.appSettings?.languageSelector.trim().toLowerCase() === 'true');
             }
         }
     }, [appConfig])
@@ -349,7 +358,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
         {/* Pass isWayfindingOrDirections prop to ViewSelector to disable interactions while wayfinding or directions is active*/}
         {apiKey && <>
             <ViewSelector isViewSelectorVisible={isViewSelectorVisible} isViewSelectorDisabled={isWayfindingOrDirections} />
-            <LanguageSelector currentLanguage={currentLanguage} setLanguage={setLanguage} isVisible={true} />
+            <LanguageSelector currentLanguage={currentLanguage} setLanguage={setLanguage} isVisible={isLanguageSelectorVisible} />
         </>}
     </>)
 }
