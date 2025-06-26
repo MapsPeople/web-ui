@@ -31,6 +31,6 @@
     "lerna": "^6.4.0"
   },
   "dependencies": {
-    "mapbox-gl": "^3.3.0"
+    "mapbox-gl": "3.8.0"
   }
 }
