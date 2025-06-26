@@ -324,7 +324,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
     }, [showRoadNames])
 
     /**
-     * React on changes in appConfig and sets visibility of View Selector.
+     * React on changes in appConfig and sets visibility of View Selector and visibility of Language Selector.
      */
     useEffect(() => {
         if (appConfig) {
@@ -334,14 +334,8 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
                 // Boolean from the App Config comes as a string. We need to return clean boolean value based on that.
                 setIsViewSelectorVisible(appConfig?.appSettings?.viewSelector.trim().toLowerCase() === 'true');
             }
-        }
-    }, [appConfig])
 
-    /**
-     * React on changes in appConfig and sets visibility of Language Selector.
-     */
-    useEffect(() => {
-        if (appConfig) {
+
             if (isNullOrUndefined(appConfig?.appSettings?.languageSelector)) {
                 setIsLanguageSelectorVisible(false);
             } else {
