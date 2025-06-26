@@ -282,6 +282,6 @@ function goTo(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLev
         mapView.setCenter({ lat: centerOfGeometry.geometry.coordinates[1], lng: centerOfGeometry.geometry.coordinates[0] })
         mapsIndoorsInstance.getMapView().tilt(pitch || 0);
         mapsIndoorsInstance.getMapView().rotate(bearing || 0);
-        mapsIndoorsInstance.setZoom(zoomLevel);
+        mapsIndoorsInstance.setZoom(Number(zoomLevel));
     }
 }
