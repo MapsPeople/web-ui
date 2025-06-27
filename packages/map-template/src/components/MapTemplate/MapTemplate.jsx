@@ -485,7 +485,12 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * This effect updates the mapOptions state accordingly.
      */
     useEffect(() => {
-        setMapOptions({ brandingColor: color, showRoadNames: showRoadNames, miTransitionLevel: miTransitionLevel, minZoom: ZoomLevelValues.minZoom })
+        setMapOptions({
+            brandingColor: color, 
+            showRoadNames: showRoadNames, 
+            miTransitionLevel: miTransitionLevel, 
+            minZoom: ZoomLevelValues.minZoom
+        })
     }, [primaryColor, showRoadNames, miTransitionLevel, color]);
 
     /*
