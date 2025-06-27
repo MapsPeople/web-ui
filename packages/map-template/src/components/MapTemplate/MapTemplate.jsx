@@ -147,7 +147,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const categories = useRecoilValue(categoriesState);
     const [, setLocationId] = useRecoilState(locationIdState);
-    const [, setPrimaryColor] = useRecoilState(primaryColorState);
+    const [color, setPrimaryColor] = useRecoilState(primaryColorState);
     const [, setLogo] = useRecoilState(logoState);
     const [, setGmMapId] = useRecoilState(gmMapIdState);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
@@ -239,19 +239,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             }
         });
     }
-
-    /**
-     * Updates the map options state by merging new options with existing ones
-     * @param {Object} newMapOptions - The new map options to merge with existing options
-     * @returns {void}
-     */
-    const handleMapOptionsChange = (newMapOptions) => {
-        setMapOptions(previousMapOptions => ({
-            ...previousMapOptions,
-            ...newMapOptions,
-            minZoom: ZoomLevelValues.minZoom
-        }))
-    };
 
     /*
      * If the app is inactive, run code to reset UI and state.
@@ -491,9 +478,20 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         const defaultPrimaryColor = '#003C3B'; // --brand-colors-dark-pine-100 from MIDT
         setPrimaryColor(primaryColor ?? appConfig?.appSettings?.primaryColor ?? defaultPrimaryColor);
-        setMapOptions({ brandingColor: primaryColor ?? appConfig?.appSettings?.primaryColor ?? defaultPrimaryColor })
-
     }, [primaryColor, appConfig]);
+
+    /*
+     * React on changes in the map options props (primary color, showRoadNames, miTransitionLevel).
+     * This effect updates the mapOptions state accordingly.
+     */
+    useEffect(() => {
+        setMapOptions({
+            brandingColor: color, 
+            showRoadNames: showRoadNames, 
+            miTransitionLevel: miTransitionLevel, 
+            minZoom: ZoomLevelValues.minZoom
+        })
+    }, [primaryColor, showRoadNames, miTransitionLevel, color]);
 
     /*
      * React on changes in the start zoom level prop. If not defined, check if it is defined in app config.
@@ -778,7 +776,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             onViewModeSwitchKnown={visible => setViewModeSwitchVisible(visible)}
             resetCount={resetCount}
             mapOptions={mapOptions}
-            onMapOptionsChange={handleMapOptionsChange}
             gmMapId={gmMapId}
             isWayfindingOrDirections={currentAppView === appStates.WAYFINDING || currentAppView === appStates.DIRECTIONS}
         />
