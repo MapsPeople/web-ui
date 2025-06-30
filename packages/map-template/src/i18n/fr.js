@@ -82,7 +82,7 @@ const fr = {
     'Go to view': 'Afficher le plan',
     'Close view selector': 'Fermer le sélecteur de vue',
     // Language Selector
-    'Select language': ' Sélectionner langue',
+    'Select language': 'Sélectionner langue',
 };
 
 export default fr;
