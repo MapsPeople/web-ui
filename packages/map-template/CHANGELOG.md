@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.80.0] - 2025-06-30
+
+### Added
+
+- Implemented a Language Selector. 
+- Language Selector visibility is configurable through the App Config object.
+
 ## [1.79.6] - 2025-06-26
 
 ### Fixed
