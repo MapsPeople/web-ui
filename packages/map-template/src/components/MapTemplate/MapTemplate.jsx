@@ -87,8 +87,8 @@ MapTemplate.propTypes = {
     gmMapId: PropTypes.string,
     useMapProviderModule: PropTypes.bool,
     kioskOriginLocationId: PropTypes.string,
-    timeout: PropTypes.number,
     language: PropTypes.string,
+    timeout: PropTypes.number,
     useKeyboard: PropTypes.bool,
     miTransitionLevel: PropTypes.number,
     category: PropTypes.string,
@@ -99,7 +99,7 @@ MapTemplate.propTypes = {
     searchExternalLocations: PropTypes.bool,
     supportsUrlParameters: PropTypes.bool,
     center: PropTypes.string,
-    useAppTitle: PropTypes.bool
+    useAppTitle: PropTypes.bool,
 };
 
 /**
@@ -138,6 +138,7 @@ MapTemplate.propTypes = {
  */
 function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations, center, useAppTitle }) {
 
+    const [userSelectedLanguage, setUserSelectedLanguage] = useState(false);
     const [mapOptions, setMapOptions] = useState({ brandingColor: primaryColor });
     const [, setApiKey] = useRecoilState(apiKeyState);
     const [, setGmApiKey] = useRecoilState(gmApiKeyState);
@@ -214,7 +215,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [setCurrentVenueName, updateCategories] = useCurrentVenue();
 
     const finishRoute = useOnRouteFinished();
-
     const [, setErrorMessage] = useRecoilState(notificationMessageState);
 
     /**
@@ -239,6 +239,19 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             }
         });
     }
+
+    // On initial load, set currentLanguage from URL prop or appConfig if not already set by user.
+    // This allows user selection to always take precedence after first interaction.
+    // Note: On reload, language will revert to URL or appConfig unless user selects again.
+    useEffect(() => {
+        if (!currentLanguage) {
+            if (language) {
+                setCurrentLanguage(language);
+            } else if (appConfig?.appSettings?.language) {
+                setCurrentLanguage(appConfig.appSettings.language);
+            }
+        }
+    }, [language, appConfig, currentLanguage, setCurrentLanguage]);
 
     /**
      * Updates the map options state by merging new options with existing ones
@@ -276,13 +289,13 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, []);
 
     /*
-     * React on changes in the language prop.
+     * React on changes in the currentLanguage (from Recoil).
      * If it is undefined, try to use the browser language. It will fall back to English if the language is not supported.
      */
     useEffect(() => {
         if (mapsindoorsSDKAvailable) {
-            // Sets language to use. Priority: Prop -> App Config -> browser's default language.
-            const languageToUse = language ?? appConfig?.appSettings?.language ?? navigator.language;
+            // Sets language to use. Priority: currentLanguage -> language prop -> App Config -> browser's default language.
+            const languageToUse = currentLanguage ?? language ?? appConfig?.appSettings?.language ?? navigator.language;
 
             // Set the language on the MapsIndoors SDK in order to get eg. Mapbox and Google directions in that language.
             // The MapsIndoors data only accepts the first part of the IETF language string, hence the split.
@@ -309,18 +322,17 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 }
             });
 
-            if (!currentLanguage) {
-                // Initialize i18n instance that is used to assist translating in the React components.
-                initI18n(languageToUse);
-            } else {
-                // Change the already set language
-                i18n.changeLanguage(languageToUse);
+            // Ensure MapsIndoors uses the user's selected language if supported,
+            // so all map content and UI are localized accordingly.
+            if (!i18n.language || i18n.language !== languageToUse) {
+                if (!i18n.isInitialized) {
+                    initI18n(languageToUse);
+                } else {
+                    i18n.changeLanguage(languageToUse);
+                }
             }
-
-
-            setCurrentLanguage(languageToUse);
         }
-    }, [language, mapsindoorsSDKAvailable, appConfig]);
+    }, [currentLanguage, language, mapsindoorsSDKAvailable, appConfig]);
 
     /**
      * React on changes in the MapsIndoors API key by fetching the required data.
@@ -733,6 +745,20 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         }
     }, [category, categories, mapsindoorsSDKAvailable]);
 
+    // On initial load, if a language prop is provided and user hasn't explicitly selected a language,
+    // set the current language to the prop value. This allows the URL language to take effect
+    // until the user makes a selection. Note: If the page is reloaded, the language will
+    // revert to the URL-provided value unless the user selects a different language again.
+    useEffect(() => {
+        if (!userSelectedLanguage) {
+            if (language && currentLanguage !== language) {
+                setCurrentLanguage(language);
+            } else if (!language && appConfig?.appSettings?.language && currentLanguage !== appConfig.appSettings.language) {
+                setCurrentLanguage(appConfig.appSettings.language);
+            }
+        }
+    }, [language, appConfig, currentLanguage, setCurrentLanguage, userSelectedLanguage]);
+
     return <div className={`mapsindoors-map
     ${currentAppView === appStates.DIRECTIONS ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}
     ${(venuesInSolution.length > 1 && showVenueSelector) ? '' : 'mapsindoors-map--hide-venue-selector'}
@@ -781,6 +807,11 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             onMapOptionsChange={handleMapOptionsChange}
             gmMapId={gmMapId}
             isWayfindingOrDirections={currentAppView === appStates.WAYFINDING || currentAppView === appStates.DIRECTIONS}
+            currentLanguage={currentLanguage}
+            setLanguage={(languageToSet) => {
+                setCurrentLanguage(languageToSet);
+                setUserSelectedLanguage(true);
+            }}
         />
     </div>
 }

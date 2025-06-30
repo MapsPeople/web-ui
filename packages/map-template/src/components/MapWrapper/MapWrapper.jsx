@@ -24,6 +24,7 @@ import miTransitionLevelState from '../../atoms/miTransitionLevelState';
 import showRoadNamesState from '../../atoms/showRoadNamesState';
 import PropTypes from 'prop-types';
 import ViewSelector from '../ViewSelector/ViewSelector';
+import LanguageSelector from '../LanguageSelector/LanguageSelector.jsx';
 import appConfigState from '../../atoms/appConfigState';
 import isNullOrUndefined from '../../helpers/isNullOrUndefined';
 
@@ -37,7 +38,9 @@ MapWrapper.propTypes = {
     mapOptions: PropTypes.object,
     onMapOptionsChange: PropTypes.func,
     gmMapId: PropTypes.string,
-    isWayfindingOrDirections: PropTypes.bool
+    isWayfindingOrDirections: PropTypes.bool,
+    currentLanguage: PropTypes.string,
+    setLanguage: PropTypes.func
 };
 
 /**
@@ -61,9 +64,11 @@ let _tileStyle;
  * @param {function} props.onMapOptionsChange - Function that is run when the map options are changed.
  * @param {string} props.gmMapId - Google Maps Map ID for custom styling.
  * @param {boolean} props.isWayfindingOrDirections - Whether wayfinding or directions is active or not.
+ * @param {string} props.currentLanguage - The currently selected language code.
+ * @param {function} props.setLanguage - Function to set the selected language.
  * @returns
  */
-function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating, onViewModeSwitchKnown, resetCount, mapOptions, onMapOptionsChange, gmMapId, isWayfindingOrDirections }) {
+function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating, onViewModeSwitchKnown, resetCount, mapOptions, onMapOptionsChange, gmMapId, isWayfindingOrDirections, currentLanguage, setLanguage }) {
     const apiKey = useRecoilValue(apiKeyState);
     const gmApiKey = useRecoilValue(gmApiKeyState);
     const mapboxAccessToken = useRecoilValue(mapboxAccessTokenState);
@@ -84,6 +89,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
     const showRoadNames = useRecoilValue(showRoadNamesState);
     const appConfig = useRecoilValue(appConfigState);
     const [isViewSelectorVisible, setIsViewSelectorVisible] = useState(false);
+    const [isLanguageSelectorVisible, setIsLanguageSelectorVisible] = useState(false);
 
     useLiveData(apiKey);
 
@@ -318,7 +324,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
     }, [showRoadNames])
 
     /**
-     * React on changes in appConfig and sets visibility of View Selector.
+     * React on changes in appConfig and sets visibility of View Selector and visibility of Language Selector.
      */
     useEffect(() => {
         if (appConfig) {
@@ -327,6 +333,14 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
             } else {
                 // Boolean from the App Config comes as a string. We need to return clean boolean value based on that.
                 setIsViewSelectorVisible(appConfig?.appSettings?.viewSelector.trim().toLowerCase() === 'true');
+            }
+
+
+            if (isNullOrUndefined(appConfig?.appSettings?.languageSelector)) {
+                setIsLanguageSelectorVisible(false);
+            } else {
+                // Boolean from the App Config comes as a string. We need to return clean boolean value based on that.
+                setIsLanguageSelectorVisible(appConfig?.appSettings?.languageSelector.trim().toLowerCase() === 'true');
             }
         }
     }, [appConfig])
@@ -342,7 +356,10 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
             gmMapId={gmMapId}
         />}
         {/* Pass isWayfindingOrDirections prop to ViewSelector to disable interactions while wayfinding or directions is active*/}
-        {apiKey && < ViewSelector isViewSelectorDisabled={isWayfindingOrDirections} isViewSelectorVisible={isViewSelectorVisible} />}
+        {apiKey && <>
+            <ViewSelector isViewSelectorVisible={isViewSelectorVisible} isViewSelectorDisabled={isWayfindingOrDirections} />
+            <LanguageSelector currentLanguage={currentLanguage} setLanguage={setLanguage} isVisible={isLanguageSelectorVisible} />
+        </>}
     </>)
 }
 
