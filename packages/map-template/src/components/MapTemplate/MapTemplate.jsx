@@ -100,6 +100,7 @@ MapTemplate.propTypes = {
     supportsUrlParameters: PropTypes.bool,
     center: PropTypes.string,
     useAppTitle: PropTypes.bool,
+    showMapMarkers: PropTypes.bool
 };
 
 /**
@@ -135,8 +136,9 @@ MapTemplate.propTypes = {
  * @param {boolean} [props.searchExternalLocations] - If you want to perform search for external locations in the Wayfinding mode. If set to true, Mapbox/Google places will be displayed depending on the Map Provider you are using. If set to false, the results returned will only be MapsIndoors results. The default is true.
  * @param {string} [props.center] - Specifies the coordinates where the map should load, represented as longitude and latitude values separated by a comma. If the specified coordinates intersect with a Venue, that Venue will be set as the current Venue.
  * @param {boolean} [props.useAppTitle] - Specifies if the Map Template should set the document title as defined in the App Config. The default value is set to false.
+ * @param {boolean} [props.showMapMarkers] - Specifies if the Map Template should show the Map Markers. The default value is set to true.
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations, center, useAppTitle }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations, center, useAppTitle, showMapMarkers }) {
 
     const [userSelectedLanguage, setUserSelectedLanguage] = useState(false);
     const [mapOptions, setMapOptions] = useState({ brandingColor: primaryColor });
@@ -230,9 +232,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             const miSdkApiTag = document.createElement('script');
             miSdkApiTag.setAttribute('type', 'text/javascript');
-            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.41.1/mapsindoors-4.41.1.js.gz');
-            miSdkApiTag.setAttribute('integrity', 'sha384-MyVJoR6DbkW3ZM5QtEN7J6F9EpkBWSKjpMt4C0eK6UiHWHapyqQy1kPFrfTrjZaJ');
-            miSdkApiTag.setAttribute('crossorigin', 'anonymous');
+            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/CandidateReleases/4.41.2-rc.0/mapsindoors-4.41.2-rc.0.js.gz');
+            // miSdkApiTag.setAttribute('integrity', 'sha384-MyVJoR6DbkW3ZM5QtEN7J6F9EpkBWSKjpMt4C0eK6UiHWHapyqQy1kPFrfTrjZaJ');
+            // miSdkApiTag.setAttribute('crossorigin', 'anonymous');
             document.body.appendChild(miSdkApiTag);
             miSdkApiTag.onload = () => {
                 resolve();
@@ -501,9 +503,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             brandingColor: color, 
             showRoadNames: showRoadNames, 
             miTransitionLevel: miTransitionLevel, 
-            minZoom: ZoomLevelValues.minZoom
+            minZoom: ZoomLevelValues.minZoom,
+            showMapMarkers: showMapMarkers
         })
-    }, [primaryColor, showRoadNames, miTransitionLevel, color]);
+    }, [primaryColor, showRoadNames, miTransitionLevel, color, showMapMarkers]);
 
     /*
      * React on changes in the start zoom level prop. If not defined, check if it is defined in app config.

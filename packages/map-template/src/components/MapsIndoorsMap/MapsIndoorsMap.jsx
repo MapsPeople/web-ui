@@ -37,7 +37,8 @@ MapsIndoorsMap.propTypes = {
     showRoadNames: PropTypes.bool,
     searchExternalLocations: PropTypes.bool,
     center: PropTypes.string,
-    useAppTitle: PropTypes.bool
+    useAppTitle: PropTypes.bool,
+    showMapMarkers: PropTypes.bool
 };
 
 /**
@@ -74,6 +75,7 @@ MapsIndoorsMap.propTypes = {
  * @param {boolean} [props.searchExternalLocations] - If you want to perform search for external results in the Wayfinding mode. If set to true, Mapbox/Google places will be displayed depending on the Map Provider you are using. If set to false, the results returned will only be MapsIndoors results. The default is true.
  * @param {string} [props.center] - Specifies the coordinates where the map should load, represented as longitude and latitude values separated by a comma. If the specified coordinates intersect with a Venue, that Venue will be set as the current Venue.
  * @param {boolean} [props.useAppTitle] - Specifies if the Map Template should set the document title as defined in the App Config. The default value is set to false.
+ * @param {boolean} [props.showMapMarkers] - Specifies if the Map Template should show the Map Markers. The default value is set to true.
  */
 function MapsIndoorsMap(props) {
 
@@ -130,7 +132,7 @@ function MapsIndoorsMap(props) {
         const searchExternalLocationsQueryParameter = queryStringParams.get('searchExternalLocations');
         const centerQueryParameter = queryStringParams.get('center');
         const useAppTitleQueryParameter = queryStringParams.get('useAppTitle');
-
+        const showMapMarkersQueryParameter = queryStringParams.get('showMapMarkers');
         // Set the initial props on the Map Template component.
 
         // For the apiKey and venue, set the venue to "AUSTINOFFICE" if the apiKey is "mapspeople3d" and no venue is provided. We want this as the default venue for the "mapspeople3d" apiKey.
@@ -172,7 +174,8 @@ function MapsIndoorsMap(props) {
             showExternalIDs: getBooleanValue(props.supportsUrlParameters, defaultProps.showExternalIDs, props.showExternalIDs, showExternalIDsQueryParameter),
             searchExternalLocations: getBooleanValue(props.supportsUrlParameters, defaultProps.searchExternalLocations, props.searchExternalLocations, searchExternalLocationsQueryParameter),
             supportsUrlParameters: props.supportsUrlParameters,
-            useAppTitle: getBooleanValue(props.supportsUrlParameters, defaultProps.useAppTitle, props.useAppTitle, useAppTitleQueryParameter)
+            useAppTitle: getBooleanValue(props.supportsUrlParameters, defaultProps.useAppTitle, props.useAppTitle, useAppTitleQueryParameter),
+            showMapMarkers: getBooleanValue(props.supportsUrlParameters, defaultProps.showMapMarkers, props.showMapMarkers, showMapMarkersQueryParameter)
         });
 
     }, [props]);
