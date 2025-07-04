@@ -113,6 +113,11 @@ function MapboxMap({ accessToken, onInitialized, center, zoom, bounds, bearing, 
             mapViewOptions.showRoadNameLabels = mapOptions.showRoadNames;
         }
 
+        // If showMapMarkers is not null or undefined, set it as showMapMarkers in the mapViewOptions.
+        if (!isNullOrUndefined(mapOptions?.showMapMarkers)) {
+            mapViewOptions.showMapMarkers = mapOptions.showMapMarkers;
+        }
+
         const mapView = new window.mapsindoors.mapView.MapboxV3View(mapViewOptions);
 
         setMapViewInstance(mapView);
