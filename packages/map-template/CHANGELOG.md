@@ -5,6 +5,44 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.80.1] - 2025-07-03
+
+### Fixed
+
+- An issue where `miTransitionLevel` and `showRoadNames` values were not respected.
+
+## [1.80.0] - 2025-06-30
+
+### Added
+
+- Implemented a Language Selector. 
+- Language Selector visibility is configurable through the App Config object.
+
+## [1.79.6] - 2025-06-26
+
+### Fixed
+
+- Timing issue in Splash Screen component that could result in a brief appearance of a broken image placeholder.
+
+## [1.79.5] - 2025-06-25
+
+### Fixed
+
+- Fixed packages issues after upgrading to mapbox-gl v3.8.0.
+
+## [1.79.4] - 2025-06-25
+
+### Fixed
+
+- Upgraded to SDK v4.41.0.
+- Upgraded to mapbox-gl v3.8.0.
+
+## [1.79.3] - 2025-06-23
+
+### Fixed
+
+- Fix modal height while in wayfinding and directions mode
+
 ## [1.79.2] - 2025-06-19
 
 ### Fixed

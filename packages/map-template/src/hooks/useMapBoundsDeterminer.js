@@ -268,11 +268,15 @@ export default useMapBoundsDeterminer;
 function goTo(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLevel, pitch, bearing) {
     // If zoom level is undefined or default, use goTo() function that also fits bounds.
     // Otherwise, set center to be a center point of a given geometry with a specified zoom level.
-    if (zoomLevel === undefined) {
-        mapsIndoorsInstance.getMapView().tilt(pitch || 0);
-        mapsIndoorsInstance.getMapView().rotate(bearing || 0);
+    const numericPitch = Number(pitch);
+    const numericBearing = Number(bearing);
+    const numericZoomLevel = zoomLevel !== undefined ? Number(zoomLevel) : undefined;
+
+    if (numericZoomLevel === undefined) {
+        mapsIndoorsInstance.getMapView().tilt(numericPitch || 0);
+        mapsIndoorsInstance.getMapView().rotate(numericBearing || 0);
         mapsIndoorsInstance.goTo({ type: 'Feature', geometry, properties: {} }, {
-            maxZoom: zoomLevel ?? 22,
+            maxZoom: numericZoomLevel ?? 22,
             padding: { top: 0, right: 0, bottom: paddingBottom, left: paddingLeft },
         })
     } else {
@@ -280,8 +284,8 @@ function goTo(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLev
         const mapView = mapsIndoorsInstance.getMapView();
 
         mapView.setCenter({ lat: centerOfGeometry.geometry.coordinates[1], lng: centerOfGeometry.geometry.coordinates[0] })
-        mapsIndoorsInstance.getMapView().tilt(pitch || 0);
-        mapsIndoorsInstance.getMapView().rotate(bearing || 0);
-        mapsIndoorsInstance.setZoom(zoomLevel);
+        mapsIndoorsInstance.getMapView().tilt(numericPitch || 0);
+        mapsIndoorsInstance.getMapView().rotate(numericBearing || 0);
+        mapsIndoorsInstance.setZoom(numericZoomLevel);
     }
 }
