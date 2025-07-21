@@ -326,45 +326,52 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
                     </button>
                 )}
             </div>
+            <div
+                className="location-details__details prevent-scroll"
+                {...scrollableContentSwipePrevent}
+            >
+                <div
+                    ref={locationDetailsContainer}
+                    onScroll={e => setScrollIndicators(e)}
+                    className="location-details__details-content">
+                    {/* Location image */}
+                    {location.properties.imageURL && <img alt="" src={location.properties.imageURL} className="location-details__image" />}
 
-            <div ref={locationDetailsContainer} onScroll={e => setScrollIndicators(e)} className="location-details__details prevent-scroll" {...scrollableContentSwipePrevent}>
-                {/* Location image */}
-                {location.properties.imageURL && <img alt="" src={location.properties.imageURL} className="location-details__image" />}
+                    {/* Location categories */}
+                    {Object.keys(location.properties.categories).length > 0 && <p className="location-details__categories">
+                        {Object.values(location.properties.categories).map((category, index, array) => {
+                            return <React.Fragment key={category}>{category}{index < array.length - 1 && <>・</>}</React.Fragment>
+                        })}
+                    </p>}
+                    {/* Location description */}
+                    {location.properties.description && (
+                        <section className={`location-details__description ${showFullDescription ? 'location-details__description--full' : ''}`}>
+                            <div ref={locationDetailsElement}>
+                                {location.properties.description}
+                            </div>
+                            {(isOverflowing || initialOverflow || showFullDescription) && (
+                                <button onClick={() => toggleDescription()}>
+                                    {t(showFullDescription ? 'Close' : 'Read full description')}
+                                </button>
+                            )}
+                        </section>
+                    )}
 
-                {/* Location categories */}
-                {Object.keys(location.properties.categories).length > 0 && <p className="location-details__categories">
-                    {Object.values(location.properties.categories).map((category, index, array) => {
-                        return <React.Fragment key={category}>{category}{index < array.length - 1 && <>・</>}</React.Fragment>
-                    })}
-                </p>}
-                {/* Location description */}
-                {location.properties.description && (
-                    <section className={`location-details__description ${showFullDescription ? 'location-details__description--full' : ''}`}>
-                        <div ref={locationDetailsElement}>
-                            {location.properties.description}
-                        </div>
-                        {(isOverflowing || initialOverflow || showFullDescription) && (
-                            <button onClick={() => toggleDescription()}>
-                                {t(showFullDescription ? 'Close' : 'Read full description')}
-                            </button>
-                        )}
-                    </section>
-                )}
-
-                {/*Contact action / opening hours button container */}
-                {locationAdditionalDetails && <div className='contact-action-buttons-container'>
-                    {locationAdditionalDetails.map(button => (
-                        <ContactActionButton
-                            key={button.key}
-                            detailType={button.detailType}
-                            active={button.active}
-                            displayText={button.displayText}
-                            value={button.value}
-                            icon={button.icon}
-                        />
-                    ))}
-                    {openingHours && <OpeningHours openingHours={openingHours} />}
-                </div>}
+                    {/*Contact action / opening hours button container */}
+                    {locationAdditionalDetails && <div className='contact-action-buttons-container'>
+                        {locationAdditionalDetails.map(button => (
+                            <ContactActionButton
+                                key={button.key}
+                                detailType={button.detailType}
+                                active={button.active}
+                                displayText={button.displayText}
+                                value={button.value}
+                                icon={button.icon}
+                            />
+                        ))}
+                        {openingHours && <OpeningHours openingHours={openingHours} onExpand={() => setScrollIndicators()} />}
+                    </div>}
+                </div>
             </div>
         </>}
     </div>

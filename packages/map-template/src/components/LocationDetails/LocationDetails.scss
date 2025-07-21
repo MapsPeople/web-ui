@@ -1,7 +1,8 @@
 @import '../../variables.scss';
 
 .location-details {
-    padding: var(--spacing-medium); // Keep this for overall content alignment
+    /* Remove top padding, keep horizontal and bottom for alignment */
+    padding: 0 var(--spacing-medium) var(--spacing-medium);
     color: var(--color-black-base);
     display: grid;
     height: 100%;
@@ -11,8 +12,11 @@
         position: sticky;
         top: 0; // Stick to the top of the modal's scrollable area
         background: var(--color-white-white);
-        padding: var(--spacing-medium);
-        margin: calc(var(--spacing-medium) * -1);
+        z-index: 3;
+        /* Add padding to match the new layout */
+        padding: var(--spacing-medium) var(--spacing-medium) 0;
+        /* Compensate for parent's horizontal padding to be full-width */
+        margin: 0 calc(var(--spacing-medium) * -1);
     }
 
     &--content-below {
@@ -21,11 +25,12 @@
         &::before {
             content: '';
             position: absolute;
-            bottom: var(--spacing-medium);
+            bottom: var(--spacing-xxx-small);
             left: 0;
             right: 0;
             height: var(--spacing-xx-large);
-            background: linear-gradient(rgba(255, 255, 255, 0), white);
+            z-index: 3;
+            background: linear-gradient(rgba(255, 255, 255, 0), blue);
         }
     }
 
@@ -35,30 +40,43 @@
         &::after {
             content: '';
             position: absolute;
-            top: 120px;
+            top: calc(3.4 * var(--spacing-xx-large));
             left: 0;
             right: 0;
             height: var(--spacing-xx-large);
-            background: linear-gradient(white, rgba(255, 255, 255, 0));
+            z-index: 3;
+            background: linear-gradient(blue, rgba(255, 255, 255, 0));
         }
     }
 
     &__details {
         display: flex;
         flex-direction: column;
-        gap: var(--spacing-medium);
-        overflow-y: auto;
         margin-top: 0;
-        height: auto;
         min-height: 0;
+        padding-top: 0;
         padding-bottom: var(--spacing-small);
-
-        > *:first-child {
-            margin-top: var(--spacing-medium);
-        }
+        position: relative;
+        box-sizing: border-box;
 
         > *:last-child {
             margin-bottom: 0;
+        }
+    }
+
+    &__details-content {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-medium);
+        overflow-y: auto;
+        min-height: 0;
+        padding-bottom: var(--spacing-small);
+        position: relative;
+        z-index: 1;
+        /* Hide scrollbar */
+        scrollbar-width: none;
+        &::-webkit-scrollbar {
+            display: none;
         }
     }
 

@@ -45,4 +45,11 @@ $desktop-breakpoint: 992px;
             transform: translateX(0);
         }
     }
+
+    &__content {
+        height: 100%;
+        max-height: 100%;
+        min-height: 0;
+        box-sizing: border-box;
+    }
 }
