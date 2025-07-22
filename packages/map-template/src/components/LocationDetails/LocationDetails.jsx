@@ -290,6 +290,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
      * useLayoutEffect is used here to ensure that DOM measurements (heights) are accurate
      * before the browser paints. This prevents visual flicker and ensures the modal height
      * is set correctly based on the rendered content, especially when content or state changes.
+     * this is needed for the gradient scroll indicators to work correctly.
      */
     useLayoutEffect(() => {
         const modalOpenRef = document.querySelector('.modal.modal--open');
