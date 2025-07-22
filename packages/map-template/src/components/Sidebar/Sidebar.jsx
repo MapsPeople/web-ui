@@ -115,7 +115,7 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
                 onLocationClick={(location) => setCurrentLocation(location)}
             />
         </Modal>,
-        <Modal isOpen={currentAppView === appViews.LOCATION_DETAILS} key="LOCATION_DETAILS" style={{ height: '100%' }}>
+        <Modal isOpen={currentAppView === appViews.LOCATION_DETAILS} key="LOCATION_DETAILS">
             <LocationDetails
                 onStartWayfinding={() => pushAppView(appViews.WAYFINDING)}
                 onBack={() => closeLocationDetails()}

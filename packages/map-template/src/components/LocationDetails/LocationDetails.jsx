@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useLayoutEffect, useState, useRef, useCallback } from 'react';
 import './LocationDetails.scss';
 import { useTranslation } from 'react-i18next';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
@@ -60,6 +60,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
     const locationInfoElement = useRef(null);
     const locationDetailsContainer = useRef(null);
     const locationDetailsElement = useRef(null);
+    const locationDetailsDetailsRef = useRef(null);
 
     const [showFullDescription, setShowFullDescription] = useState(false);
     const [descriptionHasContentAbove, setDescriptionHasContentAbove] = useState(false);
@@ -285,6 +286,31 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
         }
     }, [snapPointSwipedByUser]);
 
+    /**
+     * useLayoutEffect is used here to ensure that DOM measurements (heights) are accurate
+     * before the browser paints. This prevents visual flicker and ensures the modal height
+     * is set correctly based on the rendered content, especially when content or state changes.
+     */
+    useLayoutEffect(() => {
+        const modalOpenRef = document.querySelector('.modal.modal--open');
+        if (!modalOpenRef || !locationDetailsDetailsRef?.current || !locationDetailsContainer?.current) return;
+        const detailsHeight = locationDetailsDetailsRef.current.offsetHeight;
+        const contentHeight = locationDetailsContainer.current.offsetHeight;
+        // Only set to 100% if contentHeight is at least a reasonable threshold (100px)
+        if (detailsHeight > 0 && contentHeight > 0) {
+            requestAnimationFrame(() => {
+                if (detailsHeight > contentHeight && contentHeight > 100) {
+                    modalOpenRef.classList.add('modal--full');
+                    modalOpenRef.style.height = '100%';
+                    setScrollIndicators();
+                } else {
+                    modalOpenRef.classList.remove('modal--full');
+                    modalOpenRef.style.height = 'auto';
+                }
+            });
+        }
+    }, [location, showFullDescription, isOpen, locationAdditionalDetails]);
+
     return <div className={`location-details ${isInFullHeightRef.current === true ? 'location-details--max-height' : ''} ${descriptionHasContentAbove ? 'location-details--content-above' : ''} ${descriptionHasContentBelow ? 'location-details--content-below' : ''}`}>
         {location && <>
             <div className="location-details__header">
@@ -329,6 +355,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
             <div
                 className="location-details__details prevent-scroll"
                 {...scrollableContentSwipePrevent}
+                ref={locationDetailsDetailsRef}
             >
                 <div
                     ref={locationDetailsContainer}
