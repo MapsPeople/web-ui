@@ -30,7 +30,7 @@
             right: 0;
             height: var(--spacing-xx-large);
             z-index: 3;
-            background: linear-gradient(rgba(255, 255, 255, 0), blue);
+            background: linear-gradient(rgba(255, 255, 255, 0), white);
         }
     }
 
@@ -45,7 +45,7 @@
             right: 0;
             height: var(--spacing-xx-large);
             z-index: 3;
-            background: linear-gradient(blue, rgba(255, 255, 255, 0));
+            background: linear-gradient(white, rgba(255, 255, 255, 0));
         }
     }
 
