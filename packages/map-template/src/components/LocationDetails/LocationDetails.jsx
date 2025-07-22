@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useRef, useCallback, useLayoutEffect } from 'react';
 import './LocationDetails.scss';
 import { useTranslation } from 'react-i18next';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
@@ -61,6 +61,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
     const locationDetailsContainer = useRef(null);
     const locationDetailsElement = useRef(null);
     const locationDetailsDetailsRef = useRef(null);
+    const locationImageRef = useRef(null);
 
     const [showFullDescription, setShowFullDescription] = useState(false);
     const [descriptionHasContentAbove, setDescriptionHasContentAbove] = useState(false);
@@ -290,31 +291,55 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
      * useLayoutEffect is used here to ensure that DOM measurements (heights) are accurate
      * before the browser paints. This prevents visual flicker and ensures the modal height
      * is set correctly based on the rendered content, especially when content or state changes.
-     * this is needed for the gradient scroll indicators to work correctly.
+     * This is needed for the gradient scroll indicators to work correctly.
      */
     useLayoutEffect(() => {
         const modalOpenRef = document.querySelector('.modal.modal--open');
         if (!modalOpenRef || !locationDetailsDetailsRef?.current || !locationDetailsContainer?.current) return;
         // Only proceed if modalOpenRef contains a child with class 'location-details'
         if (!modalOpenRef.querySelector('.location-details')) return;
-        const modalHeight = modalOpenRef.offsetHeight;
-        const contentHeight = locationDetailsContainer.current.offsetHeight;
-        // Only set to 100% if modalHeight and contentHeight are valid and their difference is less than 100
-        if (modalHeight > 0 && contentHeight > 0) {
-            requestAnimationFrame(() => {
-                if ((contentHeight > 100) && (modalHeight < contentHeight || (modalHeight - contentHeight) < 100)) {
+
+        // Simplified approach focusing on the location image only
+        const checkHeightAndSetup = () => {
+            const modalHeight = modalOpenRef.offsetHeight;
+            const contentHeight = locationDetailsContainer.current.offsetHeight;
+
+            if (modalHeight > 0 && contentHeight > 0) {
+                // Use a relative threshold: content should be at least 90% of modal height to trigger full height
+                const contentToModalRatio = contentHeight / modalHeight;
+                if ((contentHeight > 100) && (contentToModalRatio > 0.9)) {
                     modalOpenRef.style.height = '100%';
                     setScrollIndicators();
                 } else {
                     modalOpenRef.style.height = 'auto';
                 }
-            });
-
-            // Cleanup function to reset modal height when component unmounts or dependencies change
-            return () => {
-                modalOpenRef.style.height = '';
             }
+        };
+
+        // Check if we have a location image to wait for using the ref
+        if (locationImageRef.current) {
+            // If the image is already loaded, proceed immediately
+            if (locationImageRef.current.complete) {
+                checkHeightAndSetup();
+            } else {
+                // Otherwise, wait for the image to load
+                locationImageRef.current.onload = checkHeightAndSetup;
+                locationImageRef.current.onerror = checkHeightAndSetup; // Also handle load failures
+            }
+        } else {
+            // No image to wait for, proceed immediately
+            checkHeightAndSetup();
         }
+
+        // Cleanup function
+        return () => {
+            modalOpenRef.style.height = '';
+            // Clean up any potential event listeners
+            if (locationImageRef.current) {
+                locationImageRef.current.onload = null;
+                locationImageRef.current.onerror = null;
+            }
+        };
     }, [location, showFullDescription, isOpen, locationAdditionalDetails]);
 
     return <div className={`location-details ${isInFullHeightRef.current === true ? 'location-details--max-height' : ''} ${descriptionHasContentAbove ? 'location-details--content-above' : ''} ${descriptionHasContentBelow ? 'location-details--content-below' : ''}`}>
@@ -368,7 +393,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
                     onScroll={e => setScrollIndicators(e)}
                     className="location-details__details-content">
                     {/* Location image */}
-                    {location.properties.imageURL && <img alt="" src={location.properties.imageURL} className="location-details__image" />}
+                    {location.properties.imageURL && <img ref={locationImageRef} alt="" src={location.properties.imageURL} className="location-details__image" />}
 
                     {/* Location categories */}
                     {Object.keys(location.properties.categories).length > 0 && <p className="location-details__categories">
