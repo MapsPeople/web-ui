@@ -296,8 +296,6 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
     useLayoutEffect(() => {
         const modalOpenRef = document.querySelector('.modal.modal--open');
         if (!modalOpenRef || !locationDetailsDetailsRef?.current || !locationDetailsContainer?.current) return;
-        // Only proceed if modalOpenRef contains a child with class 'location-details'
-        if (!modalOpenRef.querySelector('.location-details')) return;
 
         // Simplified approach focusing on the location image only
         const checkHeightAndSetup = () => {
