@@ -294,13 +294,15 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
     useLayoutEffect(() => {
         const modalOpenRef = document.querySelector('.modal.modal--open');
         if (!modalOpenRef || !locationDetailsDetailsRef?.current || !locationDetailsContainer?.current) return;
-        const detailsHeight = locationDetailsDetailsRef.current.offsetHeight;
+        // Only proceed if modalOpenRef contains a child with class 'location-details'
+        if (!modalOpenRef.querySelector('.location-details')) return;
+        const modalHeight = modalOpenRef.offsetHeight;
         const contentHeight = locationDetailsContainer.current.offsetHeight;
-        // Only set to 100% if contentHeight is at least a reasonable threshold (100px)
-        if (detailsHeight > 0 && contentHeight > 0) {
+        // Only set to 100% if modalHeight and contentHeight are valid and their difference is less than 100
+        if (modalHeight > 0 && contentHeight > 0) {
             requestAnimationFrame(() => {
-                if (detailsHeight > contentHeight && contentHeight > 100) {
-                    modalOpenRef.classList.add('modal--full');
+                if ((contentHeight > 100) && (modalHeight < contentHeight || (modalHeight - contentHeight) < 100)) {
+                    modalOpenRef.classList.add('modal--open', 'modal--full');
                     modalOpenRef.style.height = '100%';
                     setScrollIndicators();
                 } else {
