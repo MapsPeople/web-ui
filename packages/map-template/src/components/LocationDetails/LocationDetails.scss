@@ -51,13 +51,8 @@
 
     &__details {
         display: flex;
-        flex-direction: column;
         margin-top: 0;
         min-height: 0;
-        padding-top: 0;
-        // padding-bottom: var(--spacing-small);
-        position: relative;
-        box-sizing: border-box;
 
         > *:last-child {
             margin-bottom: 0;

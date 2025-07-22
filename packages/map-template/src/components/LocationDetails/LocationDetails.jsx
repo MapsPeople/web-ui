@@ -303,14 +303,17 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
         if (modalHeight > 0 && contentHeight > 0) {
             requestAnimationFrame(() => {
                 if ((contentHeight > 100) && (modalHeight < contentHeight || (modalHeight - contentHeight) < 100)) {
-                    modalOpenRef.classList.add('modal--open', 'modal--full');
                     modalOpenRef.style.height = '100%';
                     setScrollIndicators();
                 } else {
-                    modalOpenRef.classList.remove('modal--full');
                     modalOpenRef.style.height = 'auto';
                 }
             });
+
+            // Cleanup function to reset modal height when component unmounts or dependencies change
+            return () => {
+                modalOpenRef.style.height = '';
+            }
         }
     }, [location, showFullDescription, isOpen, locationAdditionalDetails]);
 
