@@ -58,7 +58,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
     const { t } = useTranslation();
 
     const locationInfoElement = useRef(null);
-    const locationDetailsContainer = useRef(null);
+    const locationDetailsContainerRef = useRef(null);
     const locationDetailsElement = useRef(null);
     const locationDetailsDetailsRef = useRef(null);
     const locationImageRef = useRef(null);
@@ -172,12 +172,12 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
      */
     function setScrollIndicators() {
         const frameId = requestAnimationFrame(() => {
-            if (locationDetailsContainer.current) {
-                setDescriptionHasContentAbove(locationDetailsContainer.current.scrollTop > 0);
+            if (locationDetailsContainerRef.current) {
+                setDescriptionHasContentAbove(locationDetailsContainerRef.current.scrollTop > 0);
                 setDescriptionHasContentBelow(
-                    locationDetailsContainer.current.scrollTop <
-                    (locationDetailsContainer.current.scrollHeight -
-                        locationDetailsContainer.current.offsetHeight - 1)
+                    locationDetailsContainerRef.current.scrollTop <
+                    (locationDetailsContainerRef.current.scrollHeight -
+                        locationDetailsContainerRef.current.offsetHeight - 1)
                 );
             }
         });
@@ -295,12 +295,12 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
      */
     useLayoutEffect(() => {
         const modalOpenRef = document.querySelector('.modal.modal--open');
-        if (!modalOpenRef || !locationDetailsDetailsRef?.current || !locationDetailsContainer?.current) return;
+        if (!modalOpenRef || !locationDetailsDetailsRef?.current || !locationDetailsContainerRef?.current) return;
 
         // Simplified approach focusing on the location image only
         const checkHeightAndSetup = () => {
             const modalHeight = modalOpenRef.offsetHeight;
-            const contentHeight = locationDetailsContainer.current.offsetHeight;
+            const contentHeight = locationDetailsContainerRef.current.offsetHeight;
 
             if (modalHeight > 0 && contentHeight > 0) {
                 // Use a relative threshold: content should be at least 90% of modal height to trigger full height
@@ -387,7 +387,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
                 ref={locationDetailsDetailsRef}
             >
                 <div
-                    ref={locationDetailsContainer}
+                    ref={locationDetailsContainerRef}
                     onScroll={e => setScrollIndicators(e)}
                     className="location-details__details-content">
                     {/* Location image */}
