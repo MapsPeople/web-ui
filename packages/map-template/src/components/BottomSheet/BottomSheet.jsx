@@ -199,7 +199,7 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
         </Sheet>
     ];
 
-    return <div ref={bottomSheetRef} className='bottom-sheets'>
+    return <div ref={bottomSheetRef} className="bottom-sheets">
         <ContainerContext.Provider value={bottomSheetRef}>
             {bottomSheets}
         </ContainerContext.Provider>
