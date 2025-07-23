@@ -183,7 +183,7 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
                 isActive={currentAppView === appViews.WAYFINDING}
             ></Wayfinding>
         </Sheet>,
-       <Sheet
+        <Sheet
             minimizedHeight={273}
             isOpen={currentAppView === appViews.DIRECTIONS}
             initialSnapPoint={snapPoints.FIT}

@@ -3,7 +3,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import currentLocationState from '../../atoms/currentLocationState';
 import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
 import Modal from './Modal/Modal';
-import LocationDetails from "../LocationDetails/LocationDetails";
+import LocationDetails from '../LocationDetails/LocationDetails';
 import Wayfinding from '../Wayfinding/Wayfinding';
 import Directions from '../Directions/Directions';
 import Search from '../Search/Search';

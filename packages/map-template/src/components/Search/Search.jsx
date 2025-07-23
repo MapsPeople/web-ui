@@ -23,7 +23,7 @@ import searchInputState from '../../atoms/searchInputState';
 import searchResultsState from '../../atoms/searchResultsState';
 import selectedCategoryState from '../../atoms/selectedCategoryState';
 import Categories from './Categories/Categories';
-import { useIsKioskContext } from "../../hooks/useIsKioskContext";
+import { useIsKioskContext } from '../../hooks/useIsKioskContext';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
 import { ReactComponent as Legend } from '../../assets/legend.svg';
 import isLegendDialogVisibleState from '../../atoms/isLegendDialogVisibleState';
@@ -514,9 +514,9 @@ function Search({ onSetSize, isOpen }) {
                 }
             };
 
-            window.addEventListener("click", onClick, false);
+            window.addEventListener('click', onClick, false);
             return () => {
-                window.removeEventListener("click", onClick, false);
+                window.removeEventListener('click', onClick, false);
             };
         }
     }, [useKeyboard]);

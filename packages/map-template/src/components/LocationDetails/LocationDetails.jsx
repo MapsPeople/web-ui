@@ -10,7 +10,7 @@ import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import { snapPoints } from '../../constants/snapPoints';
 import primaryColorState from '../../atoms/primaryColorState';
 import directionsServiceState from '../../atoms/directionsServiceState';
-import useDirectionsInfo from "../../hooks/useDirectionsInfo";
+import useDirectionsInfo from '../../hooks/useDirectionsInfo';
 import travelModeState from '../../atoms/travelModeState';
 import kioskLocationState from '../../atoms/kioskLocationState';
 import accessibilityOnState from '../../atoms/accessibilityOnState';
