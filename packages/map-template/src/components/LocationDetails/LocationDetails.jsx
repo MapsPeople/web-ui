@@ -305,7 +305,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
             if (modalHeight > 0 && contentHeight > 0) {
                 // Use a relative threshold: content should be at least 90% of modal height to trigger full height
                 const contentToModalRatio = contentHeight / modalHeight;
-                if ((contentHeight > 100) && (contentToModalRatio > 0.9)) {
+                if (contentToModalRatio > 0.9) {
                     modalOpenRef.style.height = '100%';
                     setScrollIndicators();
                 } else {
