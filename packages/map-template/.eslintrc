@@ -31,7 +31,8 @@
         "no-irregular-whitespace": "error", // Disable irregular whitespace errors
         "no-extra-semi": "error", // Show error for extra semicolons
         "no-empty": "error", // Show error for empty blocks
-        "quotes": [ "warn", "single"] // Warn for single quotes
+        "quotes": [ "warn", "single"], // Warn for single quotes
+        "jsx-quotes": ["warn", "prefer-double"] // Warn for double quotes in JSX
     },
     "ignorePatterns": [
         "build/*", // Ignore build directory
