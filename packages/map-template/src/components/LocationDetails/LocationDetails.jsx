@@ -314,15 +314,17 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
             }
         };
 
-        // Check if we have a location image to wait for using the ref
+        // Check if the location has an image we need to wait for before calculating heights
+        // Images can significantly affect layout height, and measuring before they load would give incorrect results
+        // This ensures we get accurate contentHeight measurements for proper modal sizing and scroll indicators
         if (locationImageRef.current) {
-            // If the image is already loaded, proceed immediately
+            // If the image is already loaded (from cache), we can proceed immediately with calculations
             if (locationImageRef.current.complete) {
                 checkHeightAndSetup();
             } else {
-                // Otherwise, wait for the image to load
+                // Otherwise, we must wait for the image to load to get accurate height measurements
                 locationImageRef.current.onload = checkHeightAndSetup;
-                locationImageRef.current.onerror = checkHeightAndSetup; // Also handle load failures
+                locationImageRef.current.onerror = checkHeightAndSetup; // Also handle load failures to ensure we don't block the UI
             }
         } else {
             // No image to wait for, proceed immediately
