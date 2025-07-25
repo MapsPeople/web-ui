@@ -1,6 +1,7 @@
 import { Component, Host, JSX, Prop, Event, EventEmitter, State, h, Method } from '@stencil/core';
 import { UAParser } from 'ua-parser-js';
 import merge from 'deepmerge';
+import { GeoLocationProvider as PositionProvider } from './GeoLocationProvider';
 
 enum PositionStateTypes {
     POSITION_UNKNOWN = 'POSITION_UNKNOWN',
@@ -51,7 +52,8 @@ export class MyPositionComponent {
     private parser = new UAParser();
 
     /**
-     * The current position of the device if received ({@link https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition GeolocationPosition}).
+     * The current position of the device if received.
+     * We use the format for GeoLocationPosition ({@link https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition GeolocationPosition}).
      */
     private currentPosition: GeolocationPosition;
 
@@ -118,16 +120,6 @@ export class MyPositionComponent {
      */
     private hasValidPosition(): boolean {
         return [PositionStateTypes.POSITION_KNOWN, PositionStateTypes.POSITION_CENTERED, PositionStateTypes.POSITION_INACCURATE, PositionStateTypes.POSITION_TRACKED, PositionStateTypes.POSITION_UNTRACKED].includes(this.positionState);
-    }
-
-    /**
-     * Sets position to unknown and emits error about it.
-     *
-     * @param {object} error
-     */
-    private setPositionUnknown(error: object): void {
-        this.setPositionState(PositionStateTypes.POSITION_UNKNOWN);
-        this.position_error.emit(error);
     }
 
     /**
@@ -220,58 +212,46 @@ export class MyPositionComponent {
      */
     @Method()
     public watchPosition(selfInvoked = false): void {
-        if (!navigator.geolocation) {
-            return;
-        }
-
-        this.setPositionState(PositionStateTypes.POSITION_REQUESTING);
-
         this.setPositionProviderOnMapView();
 
-        const requestTime = Date.now();
+        PositionProvider.listenForPosition(
+            this.options.maxAccuracy,
 
-        navigator.geolocation.watchPosition(
+            // Position error callback
+            error => {
+                this.setPositionState(PositionStateTypes.POSITION_UNKNOWN);
+                this.position_error.emit(error);
+            },
+
+            // Position inaccurate callback
+            accuracy => {
+                this.setPositionState(PositionStateTypes.POSITION_INACCURATE);
+                this.position_error.emit({ code: 11, message: 'Inaccurate position: ' + accuracy });
+            },
+
+            // Position requesting callback
+            () => {
+                this.setPositionState(PositionStateTypes.POSITION_REQUESTING);
+            },
+
+            // Position received callback
             position => {
-                // If position is the same as before, don't set or emit
-                if (
-                    this.currentPosition
-                    && position.coords.accuracy === this.currentPosition.coords.accuracy
-                    && position.coords.latitude === this.currentPosition.coords.latitude
-                    && position.coords.longitude === this.currentPosition.coords.longitude
-                ) {
-                    return;
-                }
-
                 this.currentPosition = position;
-
                 this.positionIsAccurate = this.currentPosition.coords.accuracy <= this.options.maxAccuracy;
 
-                if (!this.positionIsAccurate) {
-                    this.setPositionState(PositionStateTypes.POSITION_INACCURATE);
-                    this.position_error.emit({ code: 11, message: 'Inaccurate position: ' + position.coords.accuracy });
-                } else {
-                    if (this.positionState === PositionStateTypes.POSITION_TRACKED) {
-                        this.setPositionState(PositionStateTypes.POSITION_UNTRACKED);
-                    } else if (this.positionState !== PositionStateTypes.POSITION_UNTRACKED) {
-                        this.setPositionState(PositionStateTypes.POSITION_KNOWN);
-                    }
-                    window.removeEventListener('deviceorientation', this.handleDeviceOrientationReference);
+                if (this.positionState === PositionStateTypes.POSITION_TRACKED) {
+                    this.setPositionState(PositionStateTypes.POSITION_UNTRACKED);
+                } else if (this.positionState !== PositionStateTypes.POSITION_UNTRACKED) {
+                    this.setPositionState(PositionStateTypes.POSITION_KNOWN);
                 }
+                window.removeEventListener('deviceorientation', this.handleDeviceOrientationReference);
 
                 this.position_received.emit({
                     position: this.currentPosition,
                     selfInvoked,
                     accurate: this.positionIsAccurate
                 });
-            },
-            error => {
-                // Firefox may throw both success and a timeout error (https://bugzilla.mozilla.org/show_bug.cgi?id=1283563).
-                // We mitigate this by not passing on error if a correct position has been given since asking for it.
-                if (error.code !== 3 || !this.currentPosition || this.currentPosition.timestamp <= requestTime) {
-                    this.setPositionUnknown(error);
-                }
-            },
-            this.options.positionOptions
+            }
         );
     }
     /**
@@ -348,8 +328,8 @@ export class MyPositionComponent {
         this.mapView = this.mapsindoors.getMapView();
         this.options = merge(this.defaultOptions, this.myPositionOptions ?? {});
 
-        if (!navigator.geolocation) {
-            this.position_error.emit({ code: 10, message: 'Geolocation not available' });
+        if (PositionProvider.isAvailable() === false) {
+            this.position_error.emit({ code: 10, message: 'Location not available' });
             return;
         }
 
@@ -364,17 +344,13 @@ export class MyPositionComponent {
         // Check if user has already granted permission to use the position.
         // In that case, show position right away.
         // Note that this feature only works in modern browsers due to using the Permissions API (https://caniuse.com/#feat=permissions-api),
-        if ('permissions' in navigator === false || 'query' in navigator.permissions === false) {
-            this.setPositionState(PositionStateTypes.POSITION_UNKNOWN);
-        } else {
-            navigator.permissions.query({ name: 'geolocation' }).then(result => {
-                if (result.state === 'granted') {
-                    this.watchPosition();
-                } else {
-                    this.setPositionState(PositionStateTypes.POSITION_UNKNOWN);
-                }
-            });
-        }
+        PositionProvider.isAlreadyGranted().then(granted => {
+            if (granted) {
+                this.watchPosition();
+            } else {
+                this.setPositionState(PositionStateTypes.POSITION_UNKNOWN);
+            }
+        });
 
         this.mapView.on('rotateend', () => {
             this.setCompassStyle(this.mapView.getBearing());
@@ -395,7 +371,7 @@ export class MyPositionComponent {
             <Host>
                 <div class='mi-my-position'>
                     <button
-                        class={`mi-my-position__position-button 
+                        class={`mi-my-position__position-button
                             ${this.positionState === PositionStateTypes.POSITION_UNKNOWN || this.positionState === PositionStateTypes.POSITION_INACCURATE ? 'mi-my-position__position-button--unknown' : ''}
                             ${this.positionState === PositionStateTypes.POSITION_REQUESTING ? 'mi-my-position__position-button--requesting' : ''}
                             ${this.positionState === PositionStateTypes.POSITION_KNOWN ? 'mi-my-position__position-button--known' : ''}
