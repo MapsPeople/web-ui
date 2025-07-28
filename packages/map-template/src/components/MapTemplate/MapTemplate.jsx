@@ -230,8 +230,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             const miSdkApiTag = document.createElement('script');
             miSdkApiTag.setAttribute('type', 'text/javascript');
-            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.41.1/mapsindoors-4.41.1.js.gz');
-            miSdkApiTag.setAttribute('integrity', 'sha384-MyVJoR6DbkW3ZM5QtEN7J6F9EpkBWSKjpMt4C0eK6UiHWHapyqQy1kPFrfTrjZaJ');
+            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.41.2/mapsindoors-4.41.2.js.gz');
+            miSdkApiTag.setAttribute('integrity', 'sha384-glYwQ/XqeUiszPIc+4jYefSr6CaWnzhvsahILo2GvmumEuqAJm/aUtGn3ekm3GOX');
             miSdkApiTag.setAttribute('crossorigin', 'anonymous');
             document.body.appendChild(miSdkApiTag);
             miSdkApiTag.onload = () => {
@@ -498,9 +498,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         setMapOptions({
-            brandingColor: color, 
-            showRoadNames: showRoadNames, 
-            miTransitionLevel: miTransitionLevel, 
+            brandingColor: color,
+            showRoadNames: showRoadNames,
+            miTransitionLevel: miTransitionLevel,
             minZoom: ZoomLevelValues.minZoom
         })
     }, [primaryColor, showRoadNames, miTransitionLevel, color]);
