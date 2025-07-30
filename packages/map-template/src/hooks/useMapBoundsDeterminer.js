@@ -57,6 +57,8 @@ const useMapBoundsDeterminer = () => {
     const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
     const isMapReady = useRecoilState(isMapReadyState);
     const [center,] = useRecoilState(centerState);
+    // Store kiosk location info for cleanup
+    const [kioskInfo, setKioskInfo] = useState({ id: null, originalRule: null });
 
     /**
      * If the app is inactive, run code to reset to initial map position.
@@ -81,10 +83,23 @@ const useMapBoundsDeterminer = () => {
     function determineMapBounds() {
         const currentVenue = venuesInSolution.find(venue => venue.name.toLowerCase() === currentVenueName.toLowerCase());
 
+        // If kioskOriginLocationId was set and is now removed, revert display rule
+        if (!kioskOriginLocationId && kioskInfo.id && mapsIndoorsInstance && kioskLocationDisplayRuleWasChanged) {
+            window.mapsindoors.services.LocationsService.getLocation(kioskInfo.id).then(kioskLocation => {
+                if (kioskLocation) {
+                    // Apply original display rule or remove custom rule
+                    mapsIndoorsInstance.setDisplayRule(kioskLocation.id, kioskInfo.originalRule || null);
+                    setKioskLocationDisplayRuleWasChanged(false);
+                }
+            });
+            setKioskInfo({ id: null, originalRule: null });
+        }
+
         if (mapsIndoorsInstance && currentVenue) {
             setMapPositionInvestigating(true);
 
             if (kioskOriginLocationId && isDesktop) {
+                setKioskInfo(previousKioskInfo => ({ ...previousKioskInfo, id: kioskOriginLocationId })); // Track current kiosk location
                 if (!isNullOrUndefined(center)) {
                     // When in Kiosk mode and center prop is defined, set centerPoint to be center prop.
                     getDesktopPaddingBottom().then(desktopPaddingBottom => {
@@ -99,6 +114,10 @@ const useMapBoundsDeterminer = () => {
                             // Set the floor to the one that the Location belongs to.
                             const locationFloor = kioskLocation.properties.floor;
                             mapsIndoorsInstance.setFloor(locationFloor);
+
+                            // Save original display rule before changing
+                            const displayRule = mapsIndoorsInstance.getDisplayRule(kioskLocation);
+                            setKioskInfo(previousKioskInfo => ({ ...previousKioskInfo, originalRule: { ...displayRule } }));
                             setKioskDisplayRule(kioskLocation);
 
                             getDesktopPaddingBottom().then(desktopPaddingBottom => {
@@ -212,7 +231,6 @@ const useMapBoundsDeterminer = () => {
         if (kioskLocationDisplayRuleWasChanged) return; // Don't set Display Rule more than once.
 
         const displayRule = mapsIndoorsInstance.getDisplayRule(kioskLocation);
-
         displayRule.visible = true;
         displayRule.iconSize = { width: displayRule.iconSize.width * 2, height: displayRule.iconSize.height * 2 };
         displayRule.iconVisible = true;
