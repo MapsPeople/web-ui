@@ -6,7 +6,7 @@ export class GeoLocationProvider {
     /**
      * The current position of the device if received.
      * @type {GeolocationPosition | null}
-     * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Geolocation
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition}
      */
     private static currentPosition: GeolocationPosition | null = null;
 
