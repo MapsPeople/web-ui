@@ -41,10 +41,10 @@ export class GeoLocationProvider {
      */
     public static listenForPosition(
         maxAccuracy: number,
-        positionError: Function,
-        positionInaccurate: Function,
-        positionRequesting: Function,
-        positionReceived: Function
+        positionError: (error?: GeolocationPositionError) => void,
+        positionInaccurate: (accuracy: number) => void,
+        positionRequesting: () => void,
+        positionReceived: (position: GeolocationPosition) => void
     ): void {
         if ('permissions' in navigator === false || 'query' in navigator.permissions === false) {
             positionError();
