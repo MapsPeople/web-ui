@@ -58,7 +58,7 @@ const useMapBoundsDeterminer = () => {
     const isMapReady = useRecoilState(isMapReadyState);
     const [center,] = useRecoilState(centerState);
     // Store kiosk location info for cleanup
-    const [kioskInfo, setKioskInfo] = useState({ id: null, originalRule: null });
+    const [kioskOriginLocationInfo, setKioskOriginLocationInfo] = useState({ id: null, originalRule: null });
 
     /**
      * If the app is inactive, run code to reset to initial map position.
@@ -84,22 +84,22 @@ const useMapBoundsDeterminer = () => {
         const currentVenue = venuesInSolution.find(venue => venue.name.toLowerCase() === currentVenueName.toLowerCase());
 
         // If kioskOriginLocationId was set and is now removed, revert display rule
-        if (!kioskOriginLocationId && kioskInfo.id && mapsIndoorsInstance && kioskLocationDisplayRuleWasChanged) {
-            window.mapsindoors.services.LocationsService.getLocation(kioskInfo.id).then(kioskLocation => {
+        if (!kioskOriginLocationId && kioskOriginLocationInfo.id && mapsIndoorsInstance && kioskLocationDisplayRuleWasChanged) {
+            window.mapsindoors.services.LocationsService.getLocation(kioskOriginLocationInfo.id).then(kioskLocation => {
                 if (kioskLocation) {
                     // Apply original display rule or remove custom rule
-                    mapsIndoorsInstance.setDisplayRule(kioskLocation.id, kioskInfo.originalRule || null);
+                    mapsIndoorsInstance.setDisplayRule(kioskLocation.id, kioskOriginLocationInfo.originalRule || null);
                     setKioskLocationDisplayRuleWasChanged(false);
                 }
             });
-            setKioskInfo({ id: null, originalRule: null });
+            setKioskOriginLocationInfo({ id: null, originalRule: null });
         }
 
         if (mapsIndoorsInstance && currentVenue) {
             setMapPositionInvestigating(true);
 
             if (kioskOriginLocationId && isDesktop) {
-                setKioskInfo(previousKioskInfo => ({ ...previousKioskInfo, id: kioskOriginLocationId })); // Track current kiosk location
+                setKioskOriginLocationInfo(previousLocationInfo => ({ ...previousLocationInfo, id: kioskOriginLocationId })); // Track current kiosk location
                 if (!isNullOrUndefined(center)) {
                     // When in Kiosk mode and center prop is defined, set centerPoint to be center prop.
                     getDesktopPaddingBottom().then(desktopPaddingBottom => {
@@ -117,7 +117,7 @@ const useMapBoundsDeterminer = () => {
 
                             // Save original display rule before changing
                             const displayRule = mapsIndoorsInstance.getDisplayRule(kioskLocation);
-                            setKioskInfo(previousKioskInfo => ({ ...previousKioskInfo, originalRule: { ...displayRule } }));
+                            setKioskOriginLocationInfo(previousLocationInfo => ({ ...previousLocationInfo, originalRule: { ...displayRule } }));
                             setKioskDisplayRule(kioskLocation);
 
                             getDesktopPaddingBottom().then(desktopPaddingBottom => {
