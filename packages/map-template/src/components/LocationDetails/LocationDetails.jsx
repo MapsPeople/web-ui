@@ -292,6 +292,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
      * before the browser paints. This prevents visual flicker and ensures the modal height
      * is set correctly based on the rendered content, especially when content or state changes.
      * This is needed for the gradient scroll indicators to work correctly.
+     * Note: This effect runs only on desktop screens and not on mobile screens.
      */
     useLayoutEffect(() => {
         const modalOpenRef = document.querySelector('.modal.modal--open');
