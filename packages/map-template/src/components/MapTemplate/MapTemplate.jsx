@@ -6,7 +6,7 @@ import i18n from 'i18next';
 import initI18n from '../../i18n/initialize.js';
 import './MapTemplate.scss';
 import { mapClickActions } from '../../constants/mapClickActions.js';
-import MapWrapper from "../MapWrapper/MapWrapper";
+import MapWrapper from '../MapWrapper/MapWrapper';
 import SplashScreen from '../SplashScreen/SplashScreen';
 import VenueSelector from '../VenueSelector/VenueSelector';
 import BottomSheet from '../BottomSheet/BottomSheet';
