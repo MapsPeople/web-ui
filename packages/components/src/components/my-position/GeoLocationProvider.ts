@@ -11,6 +11,12 @@ export class GeoLocationProvider {
     private static currentPosition: GeolocationPosition | null = null;
 
     /**
+     * The ID of the position watch set by the GeoLocation API.
+     * This is used to clear the watch when no longer needed.
+     */
+    private static positionWatchId: number | null = null;
+
+    /**
      * Check if it is possible to get the position of the device using the GeoLocation API.
      * @returns {boolean} True if the GeoLocation API is available in the browser, false otherwise.
      */
@@ -53,7 +59,7 @@ export class GeoLocationProvider {
 
         positionRequesting();
         const requestTime = Date.now();
-        navigator.geolocation.watchPosition(
+        this.positionWatchId = navigator.geolocation.watchPosition(
             position => {
                 // If position is the same as before, don't do anything.
                 if (
@@ -81,5 +87,19 @@ export class GeoLocationProvider {
                 }
             }
         );
+    }
+
+    /**
+     * Stop listening for position updates from the GeoLocation API.
+     * This will clear the watch set by `listenForPosition` and reset the current position.
+     *
+     * @returns {void}
+     */
+    public static stopListeningForPosition(): void {
+        if (this.positionWatchId !== null) {
+            navigator.geolocation.clearWatch(this.positionWatchId);
+            this.positionWatchId = null;
+        }
+        this.currentPosition = null;
     }
 }

@@ -362,6 +362,13 @@ export class MyPositionComponent {
     }
 
     /**
+     * Stops listening for position updates.
+     */
+    disconnectedCallback(): void {
+        PositionProvider.stopListeningForPosition();
+    }
+
+    /**
      * Renders the floor selector.
      *
      * @returns {JSX.Element}
