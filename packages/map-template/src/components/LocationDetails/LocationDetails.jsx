@@ -10,7 +10,7 @@ import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import { snapPoints } from '../../constants/snapPoints';
 import primaryColorState from '../../atoms/primaryColorState';
 import directionsServiceState from '../../atoms/directionsServiceState';
-import useDirectionsInfo from "../../hooks/useDirectionsInfo";
+import useDirectionsInfo from '../../hooks/useDirectionsInfo';
 import travelModeState from '../../atoms/travelModeState';
 import kioskLocationState from '../../atoms/kioskLocationState';
 import accessibilityOnState from '../../atoms/accessibilityOnState';
@@ -351,7 +351,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
                         {locationDisplayRule && <img alt="" src={locationDisplayRule.icon.src ? locationDisplayRule.icon.src : locationDisplayRule.icon} />}
                     </div>
                     <div className="location-info__content">
-                        <div className='location-info__name'>
+                        <div className="location-info__name">
                             {location.properties.name}
                         </div>
                         <mi-location-info level={t('Level')} ref={locationInfoElement} show-external-id={showExternalIDs} />
@@ -417,7 +417,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
                     )}
 
                     {/*Contact action / opening hours button container */}
-                    {locationAdditionalDetails && <div className='contact-action-buttons-container'>
+                    {locationAdditionalDetails && <div className="contact-action-buttons-container">
                         {locationAdditionalDetails.map(button => (
                             <ContactActionButton
                                 key={button.key}

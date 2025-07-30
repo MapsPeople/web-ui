@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from 'react';
 import './LegendDialog.scss';
-import { useRecoilState, useRecoilValue } from "recoil";
-import primaryColorState from "../../atoms/primaryColorState";
-import isLegendDialogVisibleState from "../../atoms/isLegendDialogVisibleState";
-import { useTranslation } from "react-i18next";
-import { useIsKioskContext } from "../../hooks/useIsKioskContext";
-import legendSortedFieldsSelector from "../../selectors/legendSortedFieldsSelector";
+import { useRecoilState, useRecoilValue } from 'recoil';
+import primaryColorState from '../../atoms/primaryColorState';
+import isLegendDialogVisibleState from '../../atoms/isLegendDialogVisibleState';
+import { useTranslation } from 'react-i18next';
+import { useIsKioskContext } from '../../hooks/useIsKioskContext';
+import legendSortedFieldsSelector from '../../selectors/legendSortedFieldsSelector';
 
 /**
  * Handle the Legend dialog.
