@@ -11,6 +11,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - New `showMapMarkers` prop that specifies if the base map-specific markers are shown or not.
 
+## [1.80.4] - 2025-07-31
+
+### Fixed
+
+- Fix gradients not showin in location details component
+
+## [1.80.3] - 2025-07-30
+
+### Fixed
+
+- Fix linting issues caused by the new lint rules
+
 ## [1.80.2] - 2025-07-30
 
 ### Fixed

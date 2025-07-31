@@ -1,10 +1,10 @@
-import * as Sentry from "@sentry/react";
+import * as Sentry from '@sentry/react';
 import React, { useEffect, useState } from 'react';
 import { createRoutesFromChildren, matchRoutes, useLocation, useNavigationType } from 'react-dom/client';
 import { RecoilRoot } from 'recoil';
 import MapTemplate from '../MapTemplate/MapTemplate.jsx';
-import getBooleanValue from "../../helpers/GetBooleanValue.js";
-import PropTypes from "prop-types";
+import getBooleanValue from '../../helpers/GetBooleanValue.js';
+import PropTypes from 'prop-types';
 
 MapsIndoorsMap.propTypes = {
     apiKey: PropTypes.string,
@@ -190,7 +190,7 @@ function MapsIndoorsMap(props) {
 }
 
 Sentry.init({
-    dsn: process.env.NODE_ENV === 'production' ? "https://0ee7fa162023d958c96db25e99c8ff6c@o351128.ingest.sentry.io/4506851619831808" : undefined,
+    dsn: process.env.NODE_ENV === 'production' ? 'https://0ee7fa162023d958c96db25e99c8ff6c@o351128.ingest.sentry.io/4506851619831808' : undefined,
     // Set environment to localhost if the url includes it. Otherwise, set to production.
     environment: window.location.hostname === 'localhost' ? 'localhost' : 'production',
     integrations: [
@@ -213,7 +213,7 @@ Sentry.init({
     tracesSampleRate: 1.0,
 
     // Set `tracePropagationTargets` to control for which URLs distributed tracing should be enabled
-    tracePropagationTargets: ["localhost", /^https:\/\/api\.mapsindoors\.com/],
+    tracePropagationTargets: ['localhost', /^https:\/\/api\.mapsindoors\.com/],
 
     // Disable capture Replay for sessions.
     // Set to 100% of sessions with an error
@@ -221,4 +221,4 @@ Sentry.init({
     replaysOnErrorSampleRate: 1.0,
 });
 
-export default Sentry.withProfiler(MapsIndoorsMap, { name: "MapsIndoorsMap" });
+export default Sentry.withProfiler(MapsIndoorsMap, { name: 'MapsIndoorsMap' });

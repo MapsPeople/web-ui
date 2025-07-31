@@ -1,10 +1,10 @@
 import './LocationsList.scss';
 import { useTranslation } from 'react-i18next';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
-import ListItemLocation from "../WebComponentWrappers/ListItemLocation/ListItemLocation";
-import { usePreventSwipe } from "../../hooks/usePreventSwipe";
-import { snapPoints } from "../../constants/snapPoints";
-import { useEffect } from "react";
+import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
+import { usePreventSwipe } from '../../hooks/usePreventSwipe';
+import { snapPoints } from '../../constants/snapPoints';
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 LocationsList.propTypes = {

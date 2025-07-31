@@ -183,7 +183,7 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
                 isActive={currentAppView === appViews.WAYFINDING}
             ></Wayfinding>
         </Sheet>,
-       <Sheet
+        <Sheet
             minimizedHeight={273}
             isOpen={currentAppView === appViews.DIRECTIONS}
             initialSnapPoint={snapPoints.FIT}
@@ -199,7 +199,7 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
         </Sheet>
     ];
 
-    return <div ref={bottomSheetRef} className='bottom-sheets'>
+    return <div ref={bottomSheetRef} className="bottom-sheets">
         <ContainerContext.Provider value={bottomSheetRef}>
             {bottomSheets}
         </ContainerContext.Provider>
