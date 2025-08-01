@@ -1,21 +1,21 @@
-import { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useEffect, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import './Categories.scss';
-import categoriesState from "../../../atoms/categoriesState";
-import { snapPoints } from "../../../constants/snapPoints";
-import searchResultsState from "../../../atoms/searchResultsState";
-import filteredLocationsState from "../../../atoms/filteredLocationsState";
-import selectedCategoryState from "../../../atoms/selectedCategoryState";
+import categoriesState from '../../../atoms/categoriesState';
+import { snapPoints } from '../../../constants/snapPoints';
+import searchResultsState from '../../../atoms/searchResultsState';
+import filteredLocationsState from '../../../atoms/filteredLocationsState';
+import selectedCategoryState from '../../../atoms/selectedCategoryState';
 import { usePreventSwipe } from '../../../hooks/usePreventSwipe';
-import { useIsDesktop } from "../../../hooks/useIsDesktop";
-import getActiveCategory from "../../../helpers/GetActiveCategory";
-import isBottomSheetLoadedState from "../../../atoms/isBottomSheetLoadedState";
-import categoryState from "../../../atoms/categoryState";
-import useOutsideMapsIndoorsDataClick from "../../../hooks/useOutsideMapsIndoorsDataClick";
-import mapsIndoorsInstanceState from "../../../atoms/mapsIndoorsInstanceState";
-import PropTypes from "prop-types";
+import { useIsDesktop } from '../../../hooks/useIsDesktop';
+import getActiveCategory from '../../../helpers/GetActiveCategory';
+import isBottomSheetLoadedState from '../../../atoms/isBottomSheetLoadedState';
+import categoryState from '../../../atoms/categoryState';
+import useOutsideMapsIndoorsDataClick from '../../../hooks/useOutsideMapsIndoorsDataClick';
+import mapsIndoorsInstanceState from '../../../atoms/mapsIndoorsInstanceState';
+import PropTypes from 'prop-types';
 import { ReactComponent as ChevronLeft } from '../../../assets/chevron-left.svg';
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
 
 Categories.propTypes = {
     onSetSize: PropTypes.func,
@@ -196,12 +196,12 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, t
                             <div>{selectedCategoryDisplayName}</div>
                         </div>
                     )}
-    
+
                     {categoriesToShow.map(([category, categoryInfo]) => {
                         if (!topLevelCategory && selectedCategoriesArray.current.length !== 1) {
                             return null;
                         }
-    
+
                         return (
                             <div key={category} className="categories__category">
                                 <button

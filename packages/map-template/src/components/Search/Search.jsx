@@ -23,7 +23,7 @@ import searchInputState from '../../atoms/searchInputState';
 import searchResultsState from '../../atoms/searchResultsState';
 import selectedCategoryState from '../../atoms/selectedCategoryState';
 import Categories from './Categories/Categories';
-import { useIsKioskContext } from "../../hooks/useIsKioskContext";
+import { useIsKioskContext } from '../../hooks/useIsKioskContext';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
 import { ReactComponent as Legend } from '../../assets/legend.svg';
 import isLegendDialogVisibleState from '../../atoms/isLegendDialogVisibleState';
@@ -514,9 +514,9 @@ function Search({ onSetSize, isOpen }) {
                 }
             };
 
-            window.addEventListener("click", onClick, false);
+            window.addEventListener('click', onClick, false);
             return () => {
-                window.removeEventListener("click", onClick, false);
+                window.removeEventListener('click', onClick, false);
             };
         }
     }, [useKeyboard]);
@@ -557,8 +557,8 @@ function Search({ onSetSize, isOpen }) {
 
             { /* Search info which includes legend button if in a Kiosk context. */}
 
-            <div className='search__info' style={{ gridTemplateColumns: isKioskContext && showLegendButton ? 'min-content 1fr' : 'auto' }}>
-                {isKioskContext && showLegendButton && <button className='search__legend' onClick={() => setShowLegendDialog(true)}><Legend /></button>}
+            <div className="search__info" style={{ gridTemplateColumns: isKioskContext && showLegendButton ? 'min-content 1fr' : 'auto' }}>
+                {isKioskContext && showLegendButton && <button className="search__legend" onClick={() => setShowLegendDialog(true)}><Legend /></button>}
 
                 { /* Search field that allows users to search for locations (MapsIndoors Locations and external) */}
                 <label className="search__label">
@@ -608,7 +608,7 @@ function Search({ onSetSize, isOpen }) {
                     )}
 
                     {/* Show locations when there are any searchResults */}
-                    <div className='search__results'>
+                    <div className="search__results">
                         {searchResults.map(location =>
                             <ListItemLocation
                                 key={location.id}
