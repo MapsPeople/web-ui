@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- New `showMapMarkers` prop that specifies if the base map-specific markers are shown or not.
+- New `showMapMarkers` prop that specifies if the base map providers specific markers are shown or not.
 
 ## [1.80.4] - 2025-07-31
 
