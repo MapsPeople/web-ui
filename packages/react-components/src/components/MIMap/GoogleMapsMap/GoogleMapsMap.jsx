@@ -106,6 +106,10 @@ function GoogleMapsMap({ apiKey, onInitialized, center, zoom, bounds, heading, t
                 ...mapOptions
             };
 
+            // If showMapMarkers is not null or undefined, set it as showMapMarkers in the mapViewOptions.
+            if (!isNullOrUndefined(mapOptions?.showMapMarkers)) {
+                mapViewOptions.showMapMarkers = mapOptions.showMapMarkers;
+            }
 
             const mapView = new window.mapsindoors.mapView.GoogleMapsView(mapViewOptions);
 
