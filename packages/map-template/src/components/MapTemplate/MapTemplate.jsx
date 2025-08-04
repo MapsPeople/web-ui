@@ -100,6 +100,7 @@ MapTemplate.propTypes = {
     supportsUrlParameters: PropTypes.bool,
     center: PropTypes.string,
     useAppTitle: PropTypes.bool,
+    showMapMarkers: PropTypes.bool
 };
 
 /**
@@ -135,8 +136,9 @@ MapTemplate.propTypes = {
  * @param {boolean} [props.searchExternalLocations] - If you want to perform search for external locations in the Wayfinding mode. If set to true, Mapbox/Google places will be displayed depending on the Map Provider you are using. If set to false, the results returned will only be MapsIndoors results. The default is true.
  * @param {string} [props.center] - Specifies the coordinates where the map should load, represented as longitude and latitude values separated by a comma. If the specified coordinates intersect with a Venue, that Venue will be set as the current Venue.
  * @param {boolean} [props.useAppTitle] - Specifies if the Map Template should set the document title as defined in the App Config. The default value is set to false.
+ * @param {boolean} [props.showMapMarkers] - Specifies if the Map Template should show the base map providers Map Markers. The default value is set to true.
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations, center, useAppTitle }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations, center, useAppTitle, showMapMarkers }) {
 
     const [userSelectedLanguage, setUserSelectedLanguage] = useState(false);
     const [mapOptions, setMapOptions] = useState({ brandingColor: primaryColor });
@@ -501,9 +503,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             brandingColor: color,
             showRoadNames: showRoadNames,
             miTransitionLevel: miTransitionLevel,
-            minZoom: ZoomLevelValues.minZoom
+            minZoom: ZoomLevelValues.minZoom,
+            showMapMarkers: showMapMarkers
         })
-    }, [primaryColor, showRoadNames, miTransitionLevel, color]);
+    }, [primaryColor, showRoadNames, miTransitionLevel, color, showMapMarkers]);
 
     /*
      * React on changes in the start zoom level prop. If not defined, check if it is defined in app config.
