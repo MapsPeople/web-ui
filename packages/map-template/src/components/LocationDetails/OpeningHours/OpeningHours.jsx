@@ -122,7 +122,7 @@ function OpeningHours({ openingHours, isMondayFirstDayOfTheWeek = true, onExpand
 
     // Determines if a location is currently open based on its operating hours
     const isLocationCurrentlyOpen = useCallback((dayData) => {
-        if (!dayData || dayData.closedAllDay) return false;
+        if (!dayData || dayData.closedAllDay || !dayData.startHours) return false;
 
         const now = new Date();
         const currentTime = now.getHours() * 60 + now.getMinutes();
