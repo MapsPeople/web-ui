@@ -501,12 +501,23 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         setMapOptions({
             brandingColor: color,
-            showRoadNames: showRoadNames,
+            // Ensure showRoadNames and showMapMarkers are booleans, even if appConfig.appSettings.showRoadNames/showMapMarkers is a string
+            showRoadNames:
+                showRoadNames !== undefined
+                    ? showRoadNames
+                    : (typeof appConfig?.appSettings?.showRoadNames === 'string'
+                        ? appConfig.appSettings.showRoadNames.toLowerCase() === 'true'
+                        : appConfig?.appSettings?.showRoadNames),
+            showMapMarkers:
+                showMapMarkers !== undefined
+                    ? showMapMarkers
+                    : (typeof appConfig?.appSettings?.showMapMarkers === 'string'
+                        ? appConfig.appSettings.showMapMarkers.toLowerCase() === 'true'
+                        : appConfig?.appSettings?.showMapMarkers),
             miTransitionLevel: miTransitionLevel,
             minZoom: ZoomLevelValues.minZoom,
-            showMapMarkers: showMapMarkers
         })
-    }, [primaryColor, showRoadNames, miTransitionLevel, color, showMapMarkers]);
+    }, [primaryColor, showRoadNames, miTransitionLevel, color, showMapMarkers, appConfig]);
 
     /*
      * React on changes in the start zoom level prop. If not defined, check if it is defined in app config.
