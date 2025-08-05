@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.81.2] - 2025-08-05
+
+### Fixed
+
+- `showRoadNames` is configurable through the App Config object.
+- `showMapMarkers` is configurable through the App Config object.
+
 ## [1.81.1] - 2025-08-05
 
 ### Fixed
@@ -15,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- New `showMapMarkers` prop that specifies if the base map providers specific markers are shown or not.
+- New `showMapMarkers` prop that specifies if the Google Maps/Mapbox specific map markers are shown or not.
 
 ## [1.80.4] - 2025-07-31
 
