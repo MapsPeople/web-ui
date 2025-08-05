@@ -7,15 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.81.2] - 2025-08-05
 
-### Added
+### Fixed
 
-- New `showMapMarkers` prop that specifies if the base map providers specific markers are shown or not.
+- `showRoadNames` is configurable through the App Config object.
+- `showMapMarkers` is configurable through the App Config object.
 
 ## [1.81.1] - 2025-08-05
 
 ### Fixed
 
 - Fix removing `kioskOriginlocationId` display rule not reverting at runtime
+
+## [1.81.0] - 2025-08-04
+
+### Added
+
+- New `showMapMarkers` prop that specifies if the Google Maps/Mapbox specific map markers are shown or not.
 
 ## [1.80.4] - 2025-07-31
 
