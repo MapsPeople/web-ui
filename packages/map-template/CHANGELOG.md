@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed rare crash in openingHours component when startHours contained null data by adding additional null check
+- Fixed a rare crash in the `OpeningHours` component when `startHours` was null by adding an additional null check
 
 ## [1.81.3] - 2025-08-12
 
