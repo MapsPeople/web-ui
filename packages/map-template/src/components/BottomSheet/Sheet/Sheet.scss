@@ -27,12 +27,6 @@
     &--max {
         // Add padding to push down content
         padding-top: var(--spacing-small);
-
-        &::before {
-            top: var(--spacing-x-small);
-            width: var(--spacing-xx-large);
-            height: var(--spacing-small);
-        }
     }
 
     &--active {
