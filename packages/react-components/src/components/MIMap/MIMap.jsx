@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense, lazy } from 'react';
 import PropTypes from 'prop-types';
-import MapboxMap from './MapboxMap/MapboxMap';
-import GoogleMapsMap from './GoogleMapsMap/GoogleMapsMap';
 import MapControls from './MapControls/MapControls';
 import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
 import './MIMap.scss';
+
+// Lazy load Mapbox and Google Maps components
+const MapboxMap = lazy(() => import('./MapboxMap/MapboxMap'));
+const GoogleMapsMap = lazy(() => import('./GoogleMapsMap/GoogleMapsMap'));
 
 const mapTypes = {
     Google: 'google',
@@ -149,34 +151,38 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bear
 
     return <>
         {mapType === mapTypes.Google && (
-            <GoogleMapsMap
-                mapsIndoorsInstance={mapsIndoorsInstance}
-                apiKey={gmApiKey}
-                onInitialized={onMapViewInitialized}
-                center={center}
-                zoom={zoom}
-                mapOptions={mapOptions}
-                heading={bearing}
-                tilt={pitch}
-                bounds={bounds}
-                gmMapId={gmMapId}
-            />
+            <Suspense>
+                <GoogleMapsMap
+                    mapsIndoorsInstance={mapsIndoorsInstance}
+                    apiKey={gmApiKey}
+                    onInitialized={onMapViewInitialized}
+                    center={center}
+                    zoom={zoom}
+                    mapOptions={mapOptions}
+                    heading={bearing}
+                    tilt={pitch}
+                    bounds={bounds}
+                    gmMapId={gmMapId}
+                />
+            </Suspense>
         )}
         {mapType === mapTypes.Mapbox && (
-            <MapboxMap
-                mapsIndoorsInstance={mapsIndoorsInstance}
-                accessToken={mapboxAccessToken}
-                onInitialized={onMapViewInitialized}
-                center={center}
-                zoom={zoom}
-                mapOptions={mapOptions}
-                bearing={bearing}
-                pitch={pitch}
-                bounds={bounds}
-                resetViewMode={resetUICounter}
-                viewModeSwitchVisible={viewModeSwitchVisible}
-                appConfig={appConfig}
-            />
+            <Suspense>
+                <MapboxMap
+                    mapsIndoorsInstance={mapsIndoorsInstance}
+                    accessToken={mapboxAccessToken}
+                    onInitialized={onMapViewInitialized}
+                    center={center}
+                    zoom={zoom}
+                    mapOptions={mapOptions}
+                    bearing={bearing}
+                    pitch={pitch}
+                    bounds={bounds}
+                    resetViewMode={resetUICounter}
+                    viewModeSwitchVisible={viewModeSwitchVisible}
+                    appConfig={appConfig}
+                />
+            </Suspense>
         )}
         {mapsIndoorsInstance && mapViewInstance && mapType && (
             <MapControls

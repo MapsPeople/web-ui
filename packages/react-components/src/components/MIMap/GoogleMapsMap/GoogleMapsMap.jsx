@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Loader as GoogleMapsApiLoader } from '@googlemaps/js-api-loader';
-import 'mapbox-gl/dist/mapbox-gl.css';
 import './GoogleMapsMap.scss';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import isNullOrUndefined from '../../../../../map-template/src/helpers/isNullOrUndefined';
