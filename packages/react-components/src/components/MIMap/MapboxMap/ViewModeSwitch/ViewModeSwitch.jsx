@@ -97,6 +97,11 @@ function ViewModeSwitch({ mapView, pitch, reset, activeColor = '#005655', show2D
         }
     }, [viewMode, mapView]);
 
+    // Don't render if the portal target doesn't exist
+    if (!portalTarget) {
+        return null;
+    }
+
     return createPortal(
         <div className="view-mode-switch">
             <button className="view-mode-switch__button"
