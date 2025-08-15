@@ -20,7 +20,6 @@ import venuesInSolutionState from '../../atoms/venuesInSolutionState';
 import solutionState from '../../atoms/solutionState.js';
 import { useAppHistory } from '../../hooks/useAppHistory';
 import { useReset } from '../../hooks/useReset.js';
-import useMediaQuery from '../../hooks/useMediaQuery';
 import Sidebar from '../Sidebar/Sidebar';
 import useLocationForWayfinding from '../../hooks/useLocationForWayfinding';
 import locationIdState from '../../atoms/locationIdState';
@@ -202,7 +201,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setPitch] = useRecoilState(pitchState);
 
     const isDesktop = useIsDesktop();
-    const isMobile = useMediaQuery('(max-width: 991px)');
     const resetState = useReset();
     const [pushAppView, goBack, currentAppView, currentAppViewPayload, appStates, resetAppHistory] = useAppHistory();
 
@@ -796,7 +794,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                         onRouteFinished={() => onRouteFinish()}
                     />
                 }
-                {isMobile &&
+                {!isDesktop &&
                     <BottomSheet
                         directionsFromLocation={directionsFromLocation}
                         directionsToLocation={directionsToLocation}
