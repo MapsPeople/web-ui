@@ -1,5 +1,5 @@
 {
-    "root": true,  // Stops ESLint from looking beyond this directory
+    "root": true, // Stops ESLint from looking beyond this directory
     "extends": [
         "eslint:recommended",
         "plugin:react/recommended",
@@ -23,19 +23,21 @@
     },
     "rules": {
         "react-hooks/rules-of-hooks": "error",
-        "react/prop-types": "error",           // Disable props validation
+        "react/prop-types": "error", // Disable props validation
         "react-hooks/exhaustive-deps": "off", // Disable hooks dependency warnings
-        "no-undef": "error",                   // Disable undefined variables errors (for global/require)
-        "no-unused-vars": "error",            // Show error for unused variables
-        "react/display-name": "error",         // Show error for missing displayName in components
-        "no-irregular-whitespace": "error",    // Disable irregular whitespace errors
-        "no-extra-semi":"error",              // Show error for extra semicolons
-        "no-empty": "error"                    // Show error for empty blocks
+        "no-undef": "error", // Disable undefined variables errors (for global/require)
+        "no-unused-vars": "error", // Show error for unused variables
+        "react/display-name": "error", // Show error for missing displayName in components
+        "no-irregular-whitespace": "error", // Disable irregular whitespace errors
+        "no-extra-semi": "error", // Show error for extra semicolons
+        "no-empty": "error", // Show error for empty blocks
+        "quotes": [ "warn", "single"], // Warn for single quotes
+        "jsx-quotes": ["warn", "prefer-double"] // Warn for double quotes in JSX
     },
     "ignorePatterns": [
-        "build/*",          // Ignore build directory
-        "node_modules/*",   // Ignore node_modules
-        "dist/*",          // Ignore dist directory
-        "../*"             // Ignore other packages
+        "build/*", // Ignore build directory
+        "node_modules/*", // Ignore node_modules
+        "dist/*", // Ignore dist directory
+        "../*" // Ignore other packages
     ]
 }

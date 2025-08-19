@@ -1,8 +1,7 @@
-import * as Sentry from "@sentry/react";
-import { useRecoilValue } from "recoil";
-import primaryColorState from "../../atoms/primaryColorState";
+import { useRecoilValue } from 'recoil';
+import primaryColorState from '../../atoms/primaryColorState';
 import './SplashScreen.scss';
-import logoState from "../../atoms/logoState";
+import logoState from '../../atoms/logoState';
 
 /**
  * Creates the splash screen loading initially in the app.
@@ -32,4 +31,4 @@ function SplashScreen() {
     )
 }
 
-export default Sentry.withProfiler(SplashScreen, { name: "SplashScreen" });
+export default SplashScreen;

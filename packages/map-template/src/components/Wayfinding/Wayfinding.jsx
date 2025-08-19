@@ -16,24 +16,24 @@ import SearchField from '../WebComponentWrappers/Search/Search';
 import { snapPoints } from '../../constants/snapPoints';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import generateMyPositionLocation from '../../helpers/MyPositionLocation';
-import addGooglePlaceGeometry from "./googlePlacesHandler";
+import addGooglePlaceGeometry from './googlePlacesHandler';
 import GooglePlaces from '../../assets/google-places.png';
-import { mapTypes } from "../../constants/mapTypes";
+import { mapTypes } from '../../constants/mapTypes';
 import { ReactComponent as WalkIcon } from '../../assets/walk.svg';
 import { ReactComponent as DriveIcon } from '../../assets/drive.svg';
 import { ReactComponent as BikeIcon } from '../../assets/bike.svg';
 import { ReactComponent as CompassArrow } from '../../assets/compass-arrow.svg';
-import { travelModes } from "../../constants/travelModes";
-import Dropdown from "../WebComponentWrappers/Dropdown/Dropdown";
-import primaryColorState from "../../atoms/primaryColorState";
-import addMapboxPlaceGeometry from "./mapboxPlacesHandler";
-import mapboxAccessTokenState from "../../atoms/mapboxAccessTokenState";
+import { travelModes } from '../../constants/travelModes';
+import Dropdown from '../WebComponentWrappers/Dropdown/Dropdown';
+import primaryColorState from '../../atoms/primaryColorState';
+import addMapboxPlaceGeometry from './mapboxPlacesHandler';
+import mapboxAccessTokenState from '../../atoms/mapboxAccessTokenState';
 import distanceUnitSystemSelector from '../../selectors/distanceUnitSystemSelector';
-import useDirectionsInfo from "../../hooks/useDirectionsInfo";
-import hasFoundRouteState from "../../atoms/hasFoundRouteState";
-import accessibilityOnState from "../../atoms/accessibilityOnState";
-import Accessibility from "../Accessibility/Accessibility";
-import searchExternalLocationsState from "../../atoms/searchExternalLocationsState";
+import useDirectionsInfo from '../../hooks/useDirectionsInfo';
+import hasFoundRouteState from '../../atoms/hasFoundRouteState';
+import accessibilityOnState from '../../atoms/accessibilityOnState';
+import Accessibility from '../Accessibility/Accessibility';
+import searchExternalLocationsState from '../../atoms/searchExternalLocationsState';
 import PropTypes from 'prop-types';
 import wayfindingLocationState from '../../atoms/wayfindingLocation';
 
@@ -42,7 +42,7 @@ const searchFieldIdentifiers = {
     FROM: 'FROM'
 };
 
-const externalLocationIcon = "data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 14 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 0C3.13 0 0 3.13 0 7C0 12.25 7 20 7 20C7 20 14 12.25 14 7C14 3.13 10.87 0 7 0ZM7 9.5C5.62 9.5 4.5 8.38 4.5 7C4.5 5.62 5.62 4.5 7 4.5C8.38 4.5 9.5 5.62 9.5 7C9.5 8.38 8.38 9.5 7 9.5Z' fill='black' fill-opacity='0.88'/%3E%3C/svg%3E%0A"
+const externalLocationIcon = 'data:image/svg+xml,%3Csvg width=\'10\' height=\'10\' viewBox=\'0 0 14 20\' fill=\'none\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M7 0C3.13 0 0 3.13 0 7C0 12.25 7 20 7 20C7 20 14 12.25 14 7C14 3.13 10.87 0 7 0ZM7 9.5C5.62 9.5 4.5 8.38 4.5 7C4.5 5.62 5.62 4.5 7 4.5C8.38 4.5 9.5 5.62 9.5 7C9.5 8.38 8.38 9.5 7 9.5Z\' fill=\'black\' fill-opacity=\'0.88\'/%3E%3C/svg%3E%0A'
 
 Wayfinding.propTypes = {
     onStartDirections: PropTypes.func.isRequired,
@@ -495,7 +495,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                         {hasGooglePlaces && <img className="wayfinding__google" alt="Powered by Google" src={GooglePlaces} />}
                     </div>
                 </div>}
-            {!searchTriggered && !showMyPositionOption && hasFoundRoute && !hasGooglePlaces && originLocation && destinationLocation && <div className={`wayfinding__details`} ref={detailsRef}>
+            {!searchTriggered && !showMyPositionOption && hasFoundRoute && !hasGooglePlaces && originLocation && destinationLocation && <div className={'wayfinding__details'} ref={detailsRef}>
                 <div className="wayfinding__settings">
                     <Accessibility />
                     <div className="wayfinding__travel">

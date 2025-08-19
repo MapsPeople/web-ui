@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Loader as GoogleMapsApiLoader } from '@googlemaps/js-api-loader';
-import 'mapbox-gl/dist/mapbox-gl.css';
 import './GoogleMapsMap.scss';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import isNullOrUndefined from '../../../../../map-template/src/helpers/isNullOrUndefined';
@@ -106,6 +105,10 @@ function GoogleMapsMap({ apiKey, onInitialized, center, zoom, bounds, heading, t
                 ...mapOptions
             };
 
+            // If showMapMarkers is not null or undefined, set it as showMapMarkers in the mapViewOptions.
+            if (!isNullOrUndefined(mapOptions?.showMapMarkers)) {
+                mapViewOptions.showMapMarkers = mapOptions.showMapMarkers;
+            }
 
             const mapView = new window.mapsindoors.mapView.GoogleMapsView(mapViewOptions);
 

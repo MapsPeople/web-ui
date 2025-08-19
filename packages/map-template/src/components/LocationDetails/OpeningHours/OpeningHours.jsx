@@ -1,4 +1,4 @@
-import { memo, useCallback, useState, useMemo } from 'react';
+import { memo, useCallback, useState, useMemo, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
@@ -10,7 +10,8 @@ import languageState from '../../../atoms/languageState';
 
 OpeningHours.propTypes = {
     openingHours: PropTypes.object,
-    isMondayFirstDayOfTheWeek: PropTypes.bool
+    isMondayFirstDayOfTheWeek: PropTypes.bool,
+    onExpand: PropTypes.func
 };
 
 /**
@@ -23,7 +24,7 @@ OpeningHours.propTypes = {
  * @param {boolean} [props.isMondayFirstDayOfTheWeek] // Whether Monday is the first day of the week
  * @returns 
  */
-function OpeningHours({ openingHours, isMondayFirstDayOfTheWeek = true }) {
+function OpeningHours({ openingHours, isMondayFirstDayOfTheWeek = true, onExpand }) {
     const { t } = useTranslation();
     const [isExpanded, setIsExpanded] = useState(false);
     const currentLanguage = useRecoilValue(languageState);
@@ -121,7 +122,7 @@ function OpeningHours({ openingHours, isMondayFirstDayOfTheWeek = true }) {
 
     // Determines if a location is currently open based on its operating hours
     const isLocationCurrentlyOpen = useCallback((dayData) => {
-        if (!dayData || dayData.closedAllDay) return false;
+        if (!dayData || dayData.closedAllDay || !dayData.startHours) return false;
 
         const now = new Date();
         const currentTime = now.getHours() * 60 + now.getMinutes();
@@ -158,11 +159,30 @@ function OpeningHours({ openingHours, isMondayFirstDayOfTheWeek = true }) {
      */
     const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
 
+    /**
+     * Toggles the expanded state of the opening hours list.
+     * When expanded, the full weekly schedule is shown.
+     */
+    const handleExpand = () => {
+        setIsExpanded((prev) => !prev);
+    };
+
+    /**
+     * Calls the onExpand callback prop (if provided) when the opening hours list is expanded.
+     * This is used to notify the parent component so it can update scroll indicators or perform other actions
+     * that depend on the expanded content being rendered in the DOM.
+     */
+    useEffect(() => {
+        if (isExpanded && typeof onExpand === 'function') {
+            onExpand();
+        }
+    }, [isExpanded, onExpand]);
+
     return (
         <div className="opening-hours">
             <button
                 className="contact-action-button contact-action-button--opening-hours"
-                onClick={() => setIsExpanded(!isExpanded)}>
+                onClick={handleExpand}>
                 <div className="contact-action-button__icon-wrapper">
                     <ClockIcon />
                 </div>

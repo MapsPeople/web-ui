@@ -1,10 +1,8 @@
-import * as Sentry from "@sentry/react";
-import React, { useEffect, useState } from 'react';
-import { createRoutesFromChildren, matchRoutes, useLocation, useNavigationType } from 'react-dom/client';
+import { useEffect, useState } from 'react';
 import { RecoilRoot } from 'recoil';
 import MapTemplate from '../MapTemplate/MapTemplate.jsx';
-import getBooleanValue from "../../helpers/GetBooleanValue.js";
-import PropTypes from "prop-types";
+import getBooleanValue from '../../helpers/GetBooleanValue.js';
+import PropTypes from 'prop-types';
 
 MapsIndoorsMap.propTypes = {
     apiKey: PropTypes.string,
@@ -37,7 +35,8 @@ MapsIndoorsMap.propTypes = {
     showRoadNames: PropTypes.bool,
     searchExternalLocations: PropTypes.bool,
     center: PropTypes.string,
-    useAppTitle: PropTypes.bool
+    useAppTitle: PropTypes.bool,
+    showMapMarkers: PropTypes.bool
 };
 
 /**
@@ -74,6 +73,7 @@ MapsIndoorsMap.propTypes = {
  * @param {boolean} [props.searchExternalLocations] - If you want to perform search for external results in the Wayfinding mode. If set to true, Mapbox/Google places will be displayed depending on the Map Provider you are using. If set to false, the results returned will only be MapsIndoors results. The default is true.
  * @param {string} [props.center] - Specifies the coordinates where the map should load, represented as longitude and latitude values separated by a comma. If the specified coordinates intersect with a Venue, that Venue will be set as the current Venue.
  * @param {boolean} [props.useAppTitle] - Specifies if the Map Template should set the document title as defined in the App Config. The default value is set to false.
+ * @param {boolean} [props.showMapMarkers] - Specifies if the Map Template should show the Map Markers. The default value is set to true.
  */
 function MapsIndoorsMap(props) {
 
@@ -130,7 +130,7 @@ function MapsIndoorsMap(props) {
         const searchExternalLocationsQueryParameter = queryStringParams.get('searchExternalLocations');
         const centerQueryParameter = queryStringParams.get('center');
         const useAppTitleQueryParameter = queryStringParams.get('useAppTitle');
-
+        const showMapMarkersQueryParameter = queryStringParams.get('showMapMarkers');
         // Set the initial props on the Map Template component.
 
         // For the apiKey and venue, set the venue to "AUSTINOFFICE" if the apiKey is "mapspeople3d" and no venue is provided. We want this as the default venue for the "mapspeople3d" apiKey.
@@ -172,50 +172,17 @@ function MapsIndoorsMap(props) {
             showExternalIDs: getBooleanValue(props.supportsUrlParameters, defaultProps.showExternalIDs, props.showExternalIDs, showExternalIDsQueryParameter),
             searchExternalLocations: getBooleanValue(props.supportsUrlParameters, defaultProps.searchExternalLocations, props.searchExternalLocations, searchExternalLocationsQueryParameter),
             supportsUrlParameters: props.supportsUrlParameters,
-            useAppTitle: getBooleanValue(props.supportsUrlParameters, defaultProps.useAppTitle, props.useAppTitle, useAppTitleQueryParameter)
+            useAppTitle: getBooleanValue(props.supportsUrlParameters, defaultProps.useAppTitle, props.useAppTitle, useAppTitleQueryParameter),
+            showMapMarkers: getBooleanValue(props.supportsUrlParameters, defaultProps.showMapMarkers, props.showMapMarkers, showMapMarkersQueryParameter)
         });
 
     }, [props]);
 
     return (
         <RecoilRoot>
-            <Sentry.ErrorBoundary>
-                {mapTemplateProps && <MapTemplate {...mapTemplateProps}></MapTemplate>}
-            </Sentry.ErrorBoundary>
+            {mapTemplateProps && <MapTemplate {...mapTemplateProps}></MapTemplate>}
         </RecoilRoot>
     )
 }
 
-Sentry.init({
-    dsn: process.env.NODE_ENV === 'production' ? "https://0ee7fa162023d958c96db25e99c8ff6c@o351128.ingest.sentry.io/4506851619831808" : undefined,
-    // Set environment to localhost if the url includes it. Otherwise, set to production.
-    environment: window.location.hostname === 'localhost' ? 'localhost' : 'production',
-    integrations: [
-        // See docs for support of different versions of variation of react router
-        // https://docs.sentry.io/platforms/javascript/guides/react/configuration/integrations/react-router/
-        // Note: While we don't use React Router in the Map Template project, this is needed to instrument
-        // the `/` route properly. Without this, Sentry will not log anything on the main page of this app.
-        Sentry.reactRouterV6BrowserTracingIntegration({
-            useEffect: React.useEffect,
-            useLocation,
-            useNavigationType,
-            createRoutesFromChildren,
-            matchRoutes
-        }),
-        Sentry.replayIntegration()
-    ],
-
-    // Set tracesSampleRate to 1.0 to capture 100%
-    // of transactions for performance monitoring.
-    tracesSampleRate: 1.0,
-
-    // Set `tracePropagationTargets` to control for which URLs distributed tracing should be enabled
-    tracePropagationTargets: ["localhost", /^https:\/\/api\.mapsindoors\.com/],
-
-    // Disable capture Replay for sessions.
-    // Set to 100% of sessions with an error
-    replaysSessionSampleRate: 0,
-    replaysOnErrorSampleRate: 1.0,
-});
-
-export default Sentry.withProfiler(MapsIndoorsMap, { name: "MapsIndoorsMap" });
+export default MapsIndoorsMap;

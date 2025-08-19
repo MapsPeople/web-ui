@@ -67,7 +67,7 @@ jobs:
       - uses: actions/setup-node@v3
         if: steps.changed-files-midt.outputs.any_changed == 'true'
         with:
-          node-version: 16
+          node-version: 22.x
           registry-url: https://registry.npmjs.org/
           # Despite the package name including this scope, it's also necessary to set here
           scope: "@mapsindoors"
@@ -136,7 +136,7 @@ jobs:
       - uses: actions/setup-node@v3
         if: steps.changed-files-components.outputs.any_changed == 'true'
         with:
-          node-version: 16
+          node-version: 22.x
           registry-url: https://registry.npmjs.org/
           # Despite the package name including this scope, it's also necessary to set here
           scope: "@mapsindoors"
@@ -183,7 +183,7 @@ jobs:
       # Set up a node environment in the container.
       - uses: actions/setup-node@v3
         with:
-          node-version: 16.x
+          node-version: 22.x
       - run: npm ci
 
       # It is absolutely essential to use "CI=" as the first part of the lerna command, or it won't build properly.
@@ -246,7 +246,7 @@ jobs:
       - uses: actions/setup-node@v3
         if: steps.changed-files-map-template.outputs.any_changed == 'true'
         with:
-          node-version: 16
+          node-version: 22.x
           registry-url: https://registry.npmjs.org/
           # Despite the package name including this scope, it's also necessary to set here
           scope: "@mapsindoors"
