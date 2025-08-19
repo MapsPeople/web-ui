@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.81.6] - 2025-08-18
+
+### Fixed
+
+- Fixed extra media query in the `MapTemplate` component by using the useIsDesktop Hook instead
+
+## [1.81.5] - 2025-08-13
+
+### Changed
+
+- Removed Sentry from the map-template package
+
+## [1.81.4] - 2025-08-13
+
+### Fixed
+
+- Fixed a rare crash in the `OpeningHours` component when `startHours` was null by adding an additional null check
+
 ## [1.81.3] - 2025-08-12
 
 ### Fixed
