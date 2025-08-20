@@ -236,7 +236,7 @@ const Sheet = forwardRef(function SheetComponent({ children, isOpen, initialSnap
         <div
             {...swipeHandler}
             ref={refPassthrough}
-            className={`sheet ${isOpen ? 'sheet--active' : ''} ${isDragging ? 'sheet--dragging' : ''}`}
+            className={`sheet ${isOpen ? 'sheet--active' : ''} ${isDragging ? 'sheet--dragging' : ''} ${snappedTo.current === snapPoints.MAX ? 'sheet--max' : ''}`}
             style={style}
         >
             {/* We need to have a div in a div for it being able to scroll content separately and for the height to be measurable */}
