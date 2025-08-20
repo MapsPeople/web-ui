@@ -2,6 +2,8 @@ import { Component, Host, JSX, Prop, Event, EventEmitter, State, h, Method } fro
 import { UAParser, IDevice } from 'ua-parser-js';
 import merge from 'deepmerge';
 import { GeoLocationProvider as PositionProvider } from './GeoLocationProvider';
+import { CustomPositionProvider } from './CustomPositionProvider';
+import { IPositionProvider } from '../../types/position-provider.interface';
 
 enum PositionStateTypes {
     POSITION_UNKNOWN = 'POSITION_UNKNOWN',
@@ -32,6 +34,9 @@ export class MyPositionComponent {
      */
     @Prop() myPositionOptions?;
 
+
+    @Prop() customPositionProvider?: {};
+
     /**
      * The current state of device positioning.
      */
@@ -53,12 +58,12 @@ export class MyPositionComponent {
     private currentPosition: GeolocationPosition;
 
     /**
-     * Wether the currently known position is accurate enough to show on the map.
+     * Whether the currently known position is accurate enough to show on the map.
      */
     private positionIsAccurate: boolean;
 
     /**
-     * Wether the currently used device's position can be tracked.
+     * Whether the currently used device's position can be tracked.
      */
     private canBeTracked: boolean;
 
@@ -71,6 +76,11 @@ export class MyPositionComponent {
      * Reference to the handleDeviceOrientation function.
      */
     private handleDeviceOrientationReference = this.handleDeviceOrientation.bind(this);
+
+    /**
+     * The position provider instance to use.
+     */
+    private positionProvider: IPositionProvider;
 
     /**
      * Default options.
@@ -94,6 +104,27 @@ export class MyPositionComponent {
             fillOpacity: 0.16
         }
     };
+
+    /**
+     * Sets a custom position. Only works when customPositionProvider prop is provided.
+     *
+     * @param position - Position object with latitude, longitude, accuracy, and timestamp.
+     */
+    @Method()
+    public async setPosition(position: {
+        coords: {
+            latitude: number;
+            longitude: number;
+            accuracy: number;
+        };
+        timestamp: number;
+    }): Promise<void> {
+        if (this.customPositionProvider) {
+            CustomPositionProvider.setPosition(position);
+        } else {
+            console.warn('Custom position provider is not set. Please provide a customPositionProvider prop.');
+        }
+    }
 
     /**
      * Removes the event listener for the device's orientation and resets the position button.
@@ -209,7 +240,7 @@ export class MyPositionComponent {
     public watchPosition(selfInvoked = false): void {
         this.setPositionProviderOnMapView();
 
-        PositionProvider.listenForPosition(
+        this.positionProvider.listenForPosition(
             this.options.maxAccuracy,
 
             // Position error callback
@@ -323,7 +354,14 @@ export class MyPositionComponent {
         this.mapView = this.mapsindoors.getMapView();
         this.options = merge(this.defaultOptions, this.myPositionOptions ?? {});
 
-        if (PositionProvider.isAvailable() === false) {
+        // Initialize the appropriate position provider based on the customPositionProvider prop
+        if (this.customPositionProvider !== undefined) {
+            this.positionProvider = new CustomPositionProvider();
+        } else {
+            this.positionProvider = new PositionProvider();
+        }
+
+        if (this.positionProvider.isAvailable() === false) {
             this.position_error.emit({ code: 10, message: 'Location not available' });
             return;
         }
@@ -339,7 +377,7 @@ export class MyPositionComponent {
         // Check if user has already granted permission to use the position.
         // In that case, show position right away.
         // Note that this feature only works in modern browsers due to using the Permissions API (https://caniuse.com/#feat=permissions-api),
-        PositionProvider.isAlreadyGranted().then(granted => {
+        this.positionProvider.isAlreadyGranted().then(granted => {
             if (granted) {
                 this.watchPosition();
             } else {
@@ -360,7 +398,7 @@ export class MyPositionComponent {
      * Stops listening for position updates.
      */
     disconnectedCallback(): void {
-        PositionProvider.stopListeningForPosition();
+        this.positionProvider.stopListeningForPosition();
     }
 
     /**
