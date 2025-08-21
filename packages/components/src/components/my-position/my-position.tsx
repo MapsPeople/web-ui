@@ -2,7 +2,7 @@ import { Component, Host, JSX, Prop, Event, EventEmitter, State, h, Method } fro
 import { UAParser, IDevice } from 'ua-parser-js';
 import merge from 'deepmerge';
 import { GeoLocationProvider as PositionProvider } from './GeoLocationProvider';
-import { CustomPositionProvider } from './CustomPositionProvider';
+import { BasePositionProvider } from './BasePositionProvider';
 import { IPositionProvider } from '../../types/position-provider.interface';
 
 enum PositionStateTypes {
@@ -35,7 +35,10 @@ export class MyPositionComponent {
     @Prop() myPositionOptions?;
 
 
-    @Prop() customPositionProvider?: {};
+    /**
+     * Accepts a custom position provider instance (must extend BasePositionProvider).
+     */
+    @Prop() customPositionProvider?: IPositionProvider;
 
     /**
      * The current state of device positioning.
@@ -106,23 +109,17 @@ export class MyPositionComponent {
     };
 
     /**
-     * Sets a custom position. Only works when customPositionProvider prop is provided.
-     *
-     * @param position - Position object with latitude, longitude, accuracy, and timestamp.
+     * Sets a custom position. Works with any provider that implements setPosition.
      */
     @Method()
     public async setPosition(position: {
-        coords: {
-            latitude: number;
-            longitude: number;
-            accuracy: number;
-        };
+        coords: { latitude: number; longitude: number; accuracy: number; };
         timestamp: number;
     }): Promise<void> {
-        if (this.customPositionProvider) {
-            CustomPositionProvider.setPosition(position);
+        if (this.positionProvider && typeof (this.positionProvider as any).setPosition === 'function') {
+            (this.positionProvider as any).setPosition(position);
         } else {
-            console.warn('Custom position provider is not set. Please provide a customPositionProvider prop.');
+            console.warn('Current position provider does not support manual position setting.');
         }
     }
 
@@ -354,9 +351,9 @@ export class MyPositionComponent {
         this.mapView = this.mapsindoors.getMapView();
         this.options = merge(this.defaultOptions, this.myPositionOptions ?? {});
 
-        // Initialize the appropriate position provider based on the customPositionProvider prop
-        if (this.customPositionProvider !== undefined) {
-            this.positionProvider = new CustomPositionProvider();
+        // Use the provided custom provider instance if available, otherwise fallback
+        if (this.customPositionProvider instanceof BasePositionProvider) {
+            this.positionProvider = this.customPositionProvider;
         } else {
             this.positionProvider = new PositionProvider();
         }
