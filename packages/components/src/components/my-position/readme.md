@@ -88,10 +88,11 @@ A `myPositionOptions` attribute is available on the `<mi-my-position>` element. 
 
 ## Properties
 
-| Property            | Attribute             | Description                                                                                        | Type  | Default     |
-| ------------------- | --------------------- | -------------------------------------------------------------------------------------------------- | ----- | ----------- |
-| `mapsindoors`       | `mapsindoors`         | MapsIndoors instance.                                                                              | `any` | `undefined` |
-| `myPositionOptions` | `my-position-options` | Reference: https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/PositionControlOptions.html. | `any` | `undefined` |
+| Property                 | Attribute             | Description                                                                                        | Type  | Default     |
+| ------------------------ | --------------------- | -------------------------------------------------------------------------------------------------- | ----- | ----------- |
+| `customPositionProvider` | --                    |                                                                                                    | `{}`  | `undefined` |
+| `mapsindoors`            | `mapsindoors`         | MapsIndoors instance.                                                                              | `any` | `undefined` |
+| `myPositionOptions`      | `my-position-options` | Reference: https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/PositionControlOptions.html. | `any` | `undefined` |
 
 
 ## Events
@@ -103,6 +104,16 @@ A `myPositionOptions` attribute is available on the `<mi-my-position>` element. 
 
 
 ## Methods
+
+### `setPosition(position: { coords: { latitude: number; longitude: number; accuracy: number; }; timestamp: number; }) => Promise<void>`
+
+Sets a custom position. Only works when customPositionProvider prop is provided.
+
+#### Returns
+
+Type: `Promise<void>`
+
+
 
 ### `watchPosition(selfInvoked?: boolean) => Promise<void>`
 

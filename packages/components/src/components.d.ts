@@ -623,6 +623,7 @@ export namespace Components {
         "value": string;
     }
     interface MiMyPosition {
+        "customPositionProvider"?: {};
         /**
           * MapsIndoors instance.
          */
@@ -631,6 +632,11 @@ export namespace Components {
           * Reference: https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/PositionControlOptions.html.
          */
         "myPositionOptions"?: any;
+        /**
+          * Sets a custom position. Only works when customPositionProvider prop is provided.
+          * @param position - Position object with latitude, longitude, accuracy, and timestamp.
+         */
+        "setPosition": (position: { coords: { latitude: number; longitude: number; accuracy: number; }; timestamp: number; }) => Promise<void>;
         /**
           * Method for requesting the current position, emitting events and showing position on map based on result.
           * @param selfInvoked - Used to track if call was invoked by clicking on position control or not.
@@ -2006,6 +2012,7 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     interface MiMyPosition {
+        "customPositionProvider"?: {};
         /**
           * MapsIndoors instance.
          */
