@@ -1,4 +1,4 @@
-import { IPositionProvider } from "../../types/position-provider.interface";
+import { IPositionProvider } from '../../types/position-provider.interface';
 
 /**
  * CustomPositionProvider allows manual position setting instead of using the GeoLocation API.
@@ -72,7 +72,7 @@ export class CustomPositionProvider implements IPositionProvider {
         timestamp: number;
     }): void {
         // Convert to GeolocationPosition format
-        const geolocationPosition: GeolocationPosition = {
+        const geolocationPosition = {
             coords: {
                 latitude: position.coords.latitude,
                 longitude: position.coords.longitude,
@@ -83,7 +83,7 @@ export class CustomPositionProvider implements IPositionProvider {
                 speed: null
             },
             timestamp: position.timestamp
-        };
+        } as GeolocationPosition;
 
         CustomPositionProvider.currentPosition = geolocationPosition;
 
