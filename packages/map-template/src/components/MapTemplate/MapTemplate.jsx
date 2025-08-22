@@ -520,8 +520,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                         : appConfig?.appSettings?.showMapMarkers),
             miTransitionLevel: miTransitionLevel,
             minZoom: ZoomLevelValues.minZoom,
-            mapboxMapStyle: mapboxMapStyle,
-            googleMapsMapStyle: googleMapsMapStyle
+            mapboxMapStyle: appConfig?.appSettings?.mapboxMapStyle || mapboxMapStyle,
+            googleMapsMapStyle: appConfig?.appSettings?.googleMapsMapStyle || googleMapsMapStyle
         })
     }, [primaryColor, showRoadNames, miTransitionLevel, color, showMapMarkers, appConfig]);
 
