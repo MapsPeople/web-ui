@@ -78,6 +78,8 @@ export class CustomPositionProvider extends BasePositionProvider {
         timestamp: number;
     }): void {
         // Convert to GeolocationPosition format
+        // Note: altitude, altitudeAccuracy, heading, and speed are set to null as they are not provided
+        // We are creating a plain object and casting it to GeolocationPosition to satisfy the type requirement
         const geolocationPosition: GeolocationPosition = {
             coords: {
                 latitude: position.coords.latitude,
