@@ -5,9 +5,9 @@ import { BasePositionProvider } from './BasePositionProvider';
  * This servers as an example implementation showing how to extend BasePositionProvider
  * This pattern can be used to create custom position providers for different use cases.
  */
-export class CustomPositionProviderExample extends BasePositionProvider {
+export class CustomPositionProvider extends BasePositionProvider {
     private static currentPosition: GeolocationPosition | null = null;
-    private static activeInstances: CustomPositionProviderExample[] = [];
+    private static activeInstances: CustomPositionProvider[] = [];
 
     /**
      * Check if the custom position provider is available (always true in this example).
@@ -33,17 +33,17 @@ export class CustomPositionProviderExample extends BasePositionProvider {
      */
     protected startListening(): void {
         // Track this instance so we can emit positions to it later
-        CustomPositionProviderExample.activeInstances.push(this);
+        CustomPositionProvider.activeInstances.push(this);
 
         // If we already have a position, emit it immediately
-        if (CustomPositionProviderExample.currentPosition) {
+        if (CustomPositionProvider.currentPosition) {
             this.emitPosition({
                 coords: {
-                    latitude: CustomPositionProviderExample.currentPosition.coords.latitude,
-                    longitude: CustomPositionProviderExample.currentPosition.coords.longitude,
-                    accuracy: CustomPositionProviderExample.currentPosition.coords.accuracy,
+                    latitude: CustomPositionProvider.currentPosition.coords.latitude,
+                    longitude: CustomPositionProvider.currentPosition.coords.longitude,
+                    accuracy: CustomPositionProvider.currentPosition.coords.accuracy,
                 },
-                timestamp: CustomPositionProviderExample.currentPosition.timestamp
+                timestamp: CustomPositionProvider.currentPosition.timestamp
             } as GeolocationPosition);
         }
     }
@@ -54,15 +54,15 @@ export class CustomPositionProviderExample extends BasePositionProvider {
      */
     protected stopListening(): void {
         // Remove this instance from the active instances
-        const index = CustomPositionProviderExample.activeInstances.indexOf(this);
+        const index = CustomPositionProvider.activeInstances.indexOf(this);
 
         if (index > -1) {
-            CustomPositionProviderExample.activeInstances.splice(index, 1);
+            CustomPositionProvider.activeInstances.splice(index, 1);
         }
 
         // Clear position if no more active instances
-        if (CustomPositionProviderExample.activeInstances.length === 0) {
-            CustomPositionProviderExample.currentPosition = null;
+        if (CustomPositionProvider.activeInstances.length === 0) {
+            CustomPositionProvider.currentPosition = null;
         }
     }
 
@@ -91,10 +91,10 @@ export class CustomPositionProviderExample extends BasePositionProvider {
             timestamp: position.timestamp
         } as GeolocationPosition;
 
-        CustomPositionProviderExample.currentPosition = geolocationPosition;
+        CustomPositionProvider.currentPosition = geolocationPosition;
 
         // Emit position to all active instances
-        CustomPositionProviderExample.activeInstances.forEach(instance => {
+        CustomPositionProvider.activeInstances.forEach(instance => {
             instance.emitPosition(position as GeolocationPosition);
         });
     }
@@ -106,10 +106,10 @@ export class CustomPositionProviderExample extends BasePositionProvider {
      */
     // Keep the static method for backward compatibility
     public static setPosition(position: GeolocationPosition): void {
-        CustomPositionProviderExample.currentPosition = position;
+        CustomPositionProvider.currentPosition = position;
 
         // Notify all active instances with the new position
-        CustomPositionProviderExample.activeInstances.forEach(instance => {
+        CustomPositionProvider.activeInstances.forEach(instance => {
             instance.emitPosition(position);
         });
     }

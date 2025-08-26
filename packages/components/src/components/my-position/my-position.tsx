@@ -4,6 +4,7 @@ import merge from 'deepmerge';
 import { GeoLocationProvider as PositionProvider } from './GeoLocationProvider';
 import { BasePositionProvider } from './BasePositionProvider';
 import { IPositionProvider } from '../../types/position-provider.interface';
+import { CustomPositionProvider } from './CustomPositionProvider';
 
 enum PositionStateTypes {
     POSITION_UNKNOWN = 'POSITION_UNKNOWN',
@@ -351,11 +352,17 @@ export class MyPositionComponent {
         this.mapView = this.mapsindoors.getMapView();
         this.options = merge(this.defaultOptions, this.myPositionOptions ?? {});
 
-        // Use the provided custom provider instance if available, otherwise fallback
+        // Use the provided custom provider instance if available, otherwise use the example provider for manual positioning
         if (this.customPositionProvider instanceof BasePositionProvider) {
             this.positionProvider = this.customPositionProvider;
         } else {
-            this.positionProvider = new PositionProvider();
+            // Try to use CustomPositionProviderExample, fallback to GeoLocationProvider if not available
+            try {
+                this.positionProvider = new CustomPositionProvider();
+            } catch (error) {
+                console.warn('CustomPositionProviderExample not available, falling back to GeoLocationProvider');
+                this.positionProvider = new PositionProvider();
+            }
         }
 
         if (this.positionProvider.isAvailable() === false) {
