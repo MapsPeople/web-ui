@@ -9,6 +9,7 @@ import { SortOrder } from "./enums/sort-order.enum";
 import { UnitSystem } from "./enums/unit-system.enum";
 import { Location } from "@mapsindoors/typescript-interfaces";
 import { LocationBookingDuration } from "./enums/location-booking-duration.enum";
+import { IPositionProvider } from "./types/position-provider.interface";
 import { NotificationPosition } from "./enums/notification-position.enum";
 import { NotificationMessage } from "./types/notification-message.interface";
 import { NotificationType } from "./enums/notification-type.enum";
@@ -623,7 +624,10 @@ export namespace Components {
         "value": string;
     }
     interface MiMyPosition {
-        "customPositionProvider"?: {};
+        /**
+          * Accepts a custom position provider instance (must extend BasePositionProvider).
+         */
+        "customPositionProvider"?: IPositionProvider;
         /**
           * MapsIndoors instance.
          */
@@ -633,8 +637,7 @@ export namespace Components {
          */
         "myPositionOptions"?: any;
         /**
-          * Sets a custom position. Only works when customPositionProvider prop is provided.
-          * @param position - Position object with latitude, longitude, accuracy, and timestamp.
+          * Sets a custom position. Works with any provider that implements setPosition.
          */
         "setPosition": (position: { coords: { latitude: number; longitude: number; accuracy: number; }; timestamp: number; }) => Promise<void>;
         /**
@@ -2012,7 +2015,10 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     interface MiMyPosition {
-        "customPositionProvider"?: {};
+        /**
+          * Accepts a custom position provider instance (must extend BasePositionProvider).
+         */
+        "customPositionProvider"?: IPositionProvider;
         /**
           * MapsIndoors instance.
          */
