@@ -1,85 +1,108 @@
-import { BasePositionProvider } from './BasePositionProvider';
+import { IPositionProvider, PositionProviderOptions } from '../../types/position-provider.interface';
 
 /**
- * CustomPositionProvider allows manual position setting instead of using the GeoLocation API.
- * This servers as an example implementation showing how to extend BasePositionProvider
- * This pattern can be used to create custom position providers for different use cases.
+ * Default options for the CustomPositionProvider, matching the documentation.
  */
-export class CustomPositionProvider extends BasePositionProvider {
-    private static currentPosition: GeolocationPosition | null = null;
-    private static activeInstances: CustomPositionProvider[] = [];
+const DEFAULT_OPTIONS: PositionProviderOptions = {
+    maxAccuracy: 20,
+    positionMarkerStyles: {
+        radius: '6px',
+        strokeWeight: '2px',
+        strokeColor: '#fff',
+        fillColor: '#4169E1',
+        fillOpacity: 1
+    },
+    accuracyCircleStyles: {
+        fillColor: '#4169E1',
+        fillOpacity: 0.16
+    }
+};
+
+/**
+ * CustomPositionProvider allows manual position setting and follows the documentation interface.
+ * This serves as an example implementation showing how to implement the modern event-based interface.
+ */
+export class CustomPositionProvider implements IPositionProvider {
+    private _currentPosition: GeolocationPosition | null = null;
+    private _options: PositionProviderOptions;
+    private _listeners = new Map<string, Function[]>();
 
     /**
-     * Check if the custom position provider is available (always true in this example).
+     * Creates an instance of the CustomPositionProvider.
      *
-     * @returns {boolean} Always returns true for this example provider.
+     * @param {PositionProviderOptions} options - The options for the position provider.
      */
-    public isAvailable(): boolean {
-        return true;
+    constructor(options?: PositionProviderOptions) {
+        this._options = { ...DEFAULT_OPTIONS, ...options };
     }
 
     /**
-     * Check if permission is already granted (always true for this example provider).
-     * 
-     * @returns {Promise<boolean>} Always resolves to true in this example.
+     * Gets the current position.
+     *
+     * @returns {object | null} The current position or null if no position is available.
      */
-    public async isAlreadyGranted(): Promise<boolean> {
-        return Promise.resolve(true);
+    get currentPosition(): GeolocationPosition | null {
+        return this._currentPosition;
     }
 
     /**
-     * Starrt listening for position updates from the custom provider.
-     * This implementation tracks active instances so the static setPosition method can notify all active providers when a new position is set.
+     * Gets the position provider options.
+     *
+     * @returns {object} The position provider configuration options.
      */
-    protected startListening(): void {
-        // Track this instance so we can emit positions to it later
-        CustomPositionProvider.activeInstances.push(this);
+    get options(): PositionProviderOptions {
+        return this._options;
+    }
 
-        // If we already have a position, emit it immediately
-        if (CustomPositionProvider.currentPosition) {
-            this.emitPosition({
-                coords: {
-                    latitude: CustomPositionProvider.currentPosition.coords.latitude,
-                    longitude: CustomPositionProvider.currentPosition.coords.longitude,
-                    accuracy: CustomPositionProvider.currentPosition.coords.accuracy,
-                },
-                timestamp: CustomPositionProvider.currentPosition.timestamp
-            } as GeolocationPosition);
+    /**
+     * Checks if the current position is valid based on accuracy requirements.
+     *
+     * @returns {boolean} True if the current position is valid and accurate enough.
+     */
+    hasValidPosition(): boolean {
+        const maxAccuracy = this._options?.maxAccuracy ?? DEFAULT_OPTIONS.maxAccuracy;
+        return this._currentPosition !== null &&
+            this._currentPosition.coords &&
+            this._currentPosition.coords.accuracy >= 0 &&
+            this._currentPosition.coords.accuracy <= maxAccuracy;
+    }
+
+    /**
+     * Adds an event listener for the specified event.
+     *
+     * @param {string} eventName - The event name to listen for.
+     * @param {Function} callback - The callback function to execute.
+     */
+    on(eventName: 'position_error' | 'position_received', callback: Function): void {
+        if (!this._listeners.has(eventName)) {
+            this._listeners.set(eventName, []);
+        }
+        this._listeners.get(eventName)!.push(callback);
+    }
+
+    /**
+     * Removes an event listener for the specified event.
+     *
+     * @param {string} eventName - The event name to stop listening for.
+     * @param {Function} callback - The callback function to remove.
+     */
+    off(eventName: 'position_error' | 'position_received', callback: Function): void {
+        const callbacks = this._listeners.get(eventName);
+        if (callbacks) {
+            this._listeners.set(eventName, callbacks.filter(cb => cb !== callback));
         }
     }
 
     /**
-     * Stop listening for position updates from the custom provider.
-     * Removes this instance from the active instances list.
+     * Sets a custom position and emits the position_received event.
+     *
+     * @param {object} position - The position data to set.
      */
-    protected stopListening(): void {
-        // Remove this instance from the active instances
-        const index = CustomPositionProvider.activeInstances.indexOf(this);
-
-        if (index > -1) {
-            CustomPositionProvider.activeInstances.splice(index, 1);
-        }
-
-        // Clear position if no more active instances
-        if (CustomPositionProvider.activeInstances.length === 0) {
-            CustomPositionProvider.currentPosition = null;
-        }
-    }
-
-    /**
-     * Instance method for setting position.
-     */
-    public setPosition(position: {
-        coords: {
-            latitude: number;
-            longitude: number;
-            accuracy: number;
-        };
+    setPosition(position: {
+        coords: { latitude: number; longitude: number; accuracy: number; };
         timestamp: number;
     }): void {
         // Convert to GeolocationPosition format
-        // Note: altitude, altitudeAccuracy, heading, and speed are set to null as they are not provided
-        // We are creating a plain object and casting it to GeolocationPosition to satisfy the type requirement
         const geolocationPosition: GeolocationPosition = {
             coords: {
                 latitude: position.coords.latitude,
@@ -93,26 +116,88 @@ export class CustomPositionProvider extends BasePositionProvider {
             timestamp: position.timestamp
         } as GeolocationPosition;
 
-        CustomPositionProvider.currentPosition = geolocationPosition;
+        this._currentPosition = geolocationPosition;
 
-        // Emit position to all active instances
-        CustomPositionProvider.activeInstances.forEach(instance => {
-            instance.emitPosition(position as GeolocationPosition);
+        // Emit position_received event
+        const callbacks = this._listeners.get('position_received') || [];
+        callbacks.forEach(callback => {
+            callback.call(null, { position: geolocationPosition });
         });
     }
 
     /**
-     * Static method for setting the current position and notifying all active instances.
+     * Emits a position error event.
      *
-     * @param {GeolocationPosition} position - The new position to set.
+     * @param {any} error - Optional error object.
      */
-    // Keep the static method for backward compatibility
-    public static setPosition(position: GeolocationPosition): void {
-        CustomPositionProvider.currentPosition = position;
-
-        // Notify all active instances with the new position
-        CustomPositionProvider.activeInstances.forEach(instance => {
-            instance.emitPosition(position);
+    emitError(error?: any): void {
+        this._currentPosition = null;
+        const callbacks = this._listeners.get('position_error') || [];
+        callbacks.forEach(callback => {
+            callback.call(null, error);
         });
+    }
+
+    // Legacy interface support for backward compatibility
+
+    /**
+     * Check if the position provider is available (legacy interface).
+     *
+     * @returns {boolean} Always returns true for this example provider.
+     */
+    isAvailable(): boolean {
+        return true;
+    }
+
+    /**
+     * Check if permission is already granted (legacy interface).
+     *
+     * @returns {Promise<boolean>} Always resolves to true for this example provider.
+     */
+    async isAlreadyGranted(): Promise<boolean> {
+        return true;
+    }
+
+    /**
+     * Listen for position updates using legacy callback interface.
+     *
+     * @param {number} maxAccuracy - The maximum accuracy to accept.
+     * @param {Function} positionError - Callback for position errors.
+     * @param {Function} positionInaccurate - Callback for inaccurate positions.
+     * @param {Function} positionRequesting - Callback when position is being requested.
+     * @param {Function} positionReceived - Callback when position is received.
+     */
+    listenForPosition(
+        maxAccuracy: number,
+        positionError: (error?: GeolocationPositionError) => void,
+        positionInaccurate: (accuracy: number) => void,
+        positionRequesting: () => void,
+        positionReceived: (position: GeolocationPosition) => void
+    ): void {
+        // Store the legacy callbacks and convert them to modern event listeners
+        this.on('position_error', positionError);
+        this.on('position_received', ({ position }) => {
+            if (position.coords.accuracy <= maxAccuracy) {
+                positionReceived(position);
+            } else {
+                positionInaccurate(position.coords.accuracy);
+            }
+        });
+
+        // If we already have a position, emit it
+        if (this._currentPosition) {
+            if (this._currentPosition.coords.accuracy <= maxAccuracy) {
+                positionReceived(this._currentPosition);
+            } else {
+                positionInaccurate(this._currentPosition.coords.accuracy);
+            }
+        }
+    }
+
+    /**
+     * Stop listening for position updates (legacy interface).
+     */
+    stopListeningForPosition(): void {
+        this._listeners.clear();
     }
 }
