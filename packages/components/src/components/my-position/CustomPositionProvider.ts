@@ -1,6 +1,34 @@
 import { IPositionProvider, PositionProviderOptions } from '../../types/position-provider.interface';
 
 /**
+ * CustomPositionProvider
+ *
+ * Example/reference implementation of the modern event-style position provider.
+ *
+ * IMPORTANT:
+ * - This file is provided as an example and reference only. It demonstrates the
+ *   modern documentation-style position provider interface and the legacy
+ *   callback compatibility shims.
+ * - The example is not required by the application at runtime; use it as a
+ *   template when implementing your own provider.
+ *
+ * Documentation:
+ * https://docs.mapsindoors.com/~/changes/452/sdks-and-frameworks/web/other-guides/user-positioning/custom-positionprovider#required-properties
+ *
+ * Usage example:
+ * const provider = new CustomPositionProvider({
+ *   positionMarkerStyles: { fillColor: '#6eec00', strokeColor: '#fff' },
+ *   accuracyCircleStyles: { fillColor: '#f30000' }
+ * });
+ * myMyPositionElement.customPositionProvider = provider;
+ *
+ * Notes:
+ * - The provider exposes `currentPosition`, `options`, `on`/`off` events and an
+ *   optional `setPosition(GeolocationPosition)` method. It also implements the
+ *   legacy callback interface for backward compatibility.
+ */
+
+/**
  * Default options for the CustomPositionProvider, matching the documentation.
  */
 const DEFAULT_OPTIONS: PositionProviderOptions = {
