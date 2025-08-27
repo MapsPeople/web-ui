@@ -100,8 +100,7 @@ MapTemplate.propTypes = {
     center: PropTypes.string,
     useAppTitle: PropTypes.bool,
     showMapMarkers: PropTypes.bool,
-    mapboxMapStyle: PropTypes.string,
-    googleMapsMapStyle: PropTypes.string,
+    mapboxMapStyle: PropTypes.string
 };
 
 /**
@@ -139,9 +138,8 @@ MapTemplate.propTypes = {
  * @param {boolean} [props.useAppTitle] - Specifies if the Map Template should set the document title as defined in the App Config. The default value is set to false.
  * @param {boolean} [props.showMapMarkers] - Specifies if the Map Template should show the base map providers Map Markers. The default value is set to true.
  * @param {string} [props.mapboxMapStyle] - Specifies the Mapbox Map Style to use. The default value is set to "mapbox://styles/mapbox/standard".
- * @param {string} [props.googleMapsMapStyle] - Specifies the Google Maps Map Style to use. The default value is set to "standard".
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations, center, useAppTitle, showMapMarkers, mapboxMapStyle, googleMapsMapStyle }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations, center, useAppTitle, showMapMarkers, mapboxMapStyle }) {
 
     const [userSelectedLanguage, setUserSelectedLanguage] = useState(false);
     const [mapOptions, setMapOptions] = useState({ brandingColor: primaryColor });
@@ -234,7 +232,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             const miSdkApiTag = document.createElement('script');
             miSdkApiTag.setAttribute('type', 'text/javascript');
-            miSdkApiTag.setAttribute('src', 'http://localhost:3001/build/index.js');
+            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/CandidateReleases/2025.8.27-rc0/mapsindoors-2025.8.27-rc0.js.gz');
             // miSdkApiTag.setAttribute('integrity', 'sha384-glYwQ/XqeUiszPIc+4jYefSr6CaWnzhvsahILo2GvmumEuqAJm/aUtGn3ekm3GOX');
             // miSdkApiTag.setAttribute('crossorigin', 'anonymous');
             document.body.appendChild(miSdkApiTag);
@@ -518,8 +516,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                         : appConfig?.appSettings?.showMapMarkers),
             miTransitionLevel: miTransitionLevel,
             minZoom: ZoomLevelValues.minZoom,
-            mapboxMapStyle: appConfig?.appSettings?.mapboxMapStyle || mapboxMapStyle,
-            googleMapsMapStyle: appConfig?.appSettings?.googleMapsMapStyle || googleMapsMapStyle
+            mapboxMapStyle: appConfig?.appSettings?.mapboxMapStyle || mapboxMapStyle
         })
     }, [primaryColor, showRoadNames, miTransitionLevel, color, showMapMarkers, appConfig]);
 

@@ -37,8 +37,7 @@ MapsIndoorsMap.propTypes = {
     center: PropTypes.string,
     useAppTitle: PropTypes.bool,
     showMapMarkers: PropTypes.bool,
-    mapboxMapStyle: PropTypes.string,
-    googleMapsMapStyle: PropTypes.string,
+    mapboxMapStyle: PropTypes.string
 };
 
 /**
@@ -77,7 +76,6 @@ MapsIndoorsMap.propTypes = {
  * @param {boolean} [props.useAppTitle] - Specifies if the Map Template should set the document title as defined in the App Config. The default value is set to false.
  * @param {boolean} [props.showMapMarkers] - Specifies if the Map Template should show the Map Markers. The default value is set to true.
  * @param {string} [props.mapboxMapStyle] - Specifies the Mapbox Map Style to use. The default value is set to "mapbox://styles/mapbox/standard".
- * @param {string} [props.googleMapsMapStyle] - Specifies the Google Maps Map Style to use. The default value is set to "standard".
  */
 function MapsIndoorsMap(props) {
 
@@ -136,7 +134,6 @@ function MapsIndoorsMap(props) {
         const useAppTitleQueryParameter = queryStringParams.get('useAppTitle');
         const showMapMarkersQueryParameter = queryStringParams.get('showMapMarkers');
         const mapboxMapStyleQueryParameter = queryStringParams.get('mapboxMapStyle');
-        const googleMapsMapStyleQueryParameter = queryStringParams.get('googleMapsMapStyle');
         // Set the initial props on the Map Template component.
 
         // For the apiKey and venue, set the venue to "AUSTINOFFICE" if the apiKey is "mapspeople3d" and no venue is provided. We want this as the default venue for the "mapspeople3d" apiKey.
@@ -181,7 +178,6 @@ function MapsIndoorsMap(props) {
             useAppTitle: getBooleanValue(props.supportsUrlParameters, defaultProps.useAppTitle, props.useAppTitle, useAppTitleQueryParameter),
             showMapMarkers: getBooleanValue(props.supportsUrlParameters, defaultProps.showMapMarkers, props.showMapMarkers, showMapMarkersQueryParameter),
             mapboxMapStyle: props.supportsUrlParameters && mapboxMapStyleQueryParameter ? mapboxMapStyleQueryParameter : props.mapboxMapStyle,
-            googleMapsMapStyle: props.supportsUrlParameters && googleMapsMapStyleQueryParameter ? googleMapsMapStyleQueryParameter : props.googleMapsMapStyle
         });
 
     }, [props]);
