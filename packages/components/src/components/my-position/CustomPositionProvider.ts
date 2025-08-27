@@ -124,13 +124,21 @@ export class CustomPositionProvider implements IPositionProvider {
     /**
      * Sets a custom position and emits the position_received event.
      *
-     * @param {object} position - The position data to set.
+     * @param {object} position - The GeolocationPosition object to set.
      */
-    setPosition(position: {
-        coords: { latitude: number; longitude: number; accuracy: number; };
-        timestamp: number;
-    }): void {
-        // Convert to GeolocationPosition format
+    setPosition(position: GeolocationPosition): void {
+        this._currentPosition = position;
+
+        // Emit position_received event
+        const callbacks = this._listeners.get('position_received') || [];
+        callbacks.forEach(callback => {
+            callback.call(null, { position });
+        });
+    }
+
+    /* Alternative implementation for handling simplified position objects:
+    setPosition(position: { coords: { latitude: number; longitude: number; accuracy: number; }; timestamp: number }): void {
+        // Convert simplified position object to GeolocationPosition format
         const geolocationPosition: GeolocationPosition = {
             coords: {
                 latitude: position.coords.latitude,
@@ -152,6 +160,7 @@ export class CustomPositionProvider implements IPositionProvider {
             callback.call(null, { position: geolocationPosition });
         });
     }
+    */
 
     /**
      * Emits a position error event.
