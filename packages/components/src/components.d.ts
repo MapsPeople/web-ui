@@ -625,7 +625,7 @@ export namespace Components {
     }
     interface MiMyPosition {
         /**
-          * Accepts a custom position provider instance (must extend BasePositionProvider).
+          * Accepts a custom position provider instance (supports both legacy and modern interfaces).
          */
         "customPositionProvider"?: IPositionProvider;
         /**
@@ -639,7 +639,7 @@ export namespace Components {
         /**
           * Sets a custom position. Works with any provider that implements setPosition.
          */
-        "setPosition": (position: { coords: { latitude: number; longitude: number; accuracy: number; }; timestamp: number; }) => Promise<void>;
+        "setPosition": (position: GeolocationPosition) => Promise<void>;
         /**
           * Method for requesting the current position, emitting events and showing position on map based on result.
           * @param selfInvoked - Used to track if call was invoked by clicking on position control or not.
@@ -2016,7 +2016,7 @@ declare namespace LocalJSX {
     }
     interface MiMyPosition {
         /**
-          * Accepts a custom position provider instance (must extend BasePositionProvider).
+          * Accepts a custom position provider instance (supports both legacy and modern interfaces).
          */
         "customPositionProvider"?: IPositionProvider;
         /**
