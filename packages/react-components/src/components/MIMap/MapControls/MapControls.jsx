@@ -2,13 +2,14 @@ import { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import './MapControls.scss';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
+import CustomLocationFields from '../CustomLocationFields/CustomLocationFields'
 
 MapControls.propTypes = {
     mapType: PropTypes.oneOf(['google', 'mapbox']).isRequired,
     mapsIndoorsInstance: PropTypes.object.isRequired,
     mapInstance: PropTypes.object.isRequired,
     onPositionControl: PropTypes.func,
-    brandingColor: PropTypes.string
+    brandingColor: PropTypes.string,
 };
 
 /**
@@ -114,6 +115,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
 
                 {/* Bottom right desktop controls */}
                 <div className="map-controls-container desktop bottom-right">
+                    <CustomLocationFields positionButton={positionButtonRef.current} />
                 </div>
             </>
         );
