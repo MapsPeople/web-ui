@@ -23,8 +23,28 @@ const DEFAULT_OPTIONS = {
 class CustomPositionProvider {
     constructor(options = {}) {
         this._currentPosition = null;
-        this._options = { ...DEFAULT_OPTIONS, ...options };
         this._listeners = new Map();
+
+        // Merge user options with default options
+        const {
+            positionMarkerStyles,
+            accuracyCircleStyles,
+            ...rest
+        } = options;
+
+        // Deep merge for nested style objects
+        this._options = {
+            ...DEFAULT_OPTIONS,
+            ...rest,
+            positionMarkerStyles: {
+                ...DEFAULT_OPTIONS.positionMarkerStyles,
+                ...(positionMarkerStyles ?? {})
+            },
+            accuracyCircleStyles: {
+                ...DEFAULT_OPTIONS.accuracyCircleStyles,
+                ...(accuracyCircleStyles ?? {})
+            }
+        };
     }
 
     /**
