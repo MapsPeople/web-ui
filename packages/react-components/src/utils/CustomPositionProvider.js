@@ -88,10 +88,10 @@ class CustomPositionProvider {
                     latitude: position.coords.latitude,
                     longitude: position.coords.longitude,
                     accuracy: position.coords.accuracy,
-                    altitude: position.coords.altitude || null,
-                    altitudeAccuracy: position.coords.altitudeAccuracy || null,
-                    heading: position.coords.heading || null,
-                    speed: position.coords.speed || null
+                    altitude: position.coords.altitude ?? null,
+                    altitudeAccuracy: position.coords.altitudeAccuracy ?? null,
+                    heading: position.coords.heading ?? null,
+                    speed: position.coords.speed ?? null
                 },
                 timestamp: position.timestamp
             };
