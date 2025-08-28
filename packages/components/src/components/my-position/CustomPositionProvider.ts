@@ -59,7 +59,26 @@ export class CustomPositionProvider implements IPositionProvider {
      * @param {PositionProviderOptions} options - The options for the position provider.
      */
     constructor(options?: PositionProviderOptions) {
-        this._options = { ...DEFAULT_OPTIONS, ...options };
+        // Merge user options with default options
+        const {
+            positionMarkerStyles,
+            accuracyCircleStyles,
+            ...rest
+        } = options ?? {};
+
+        // Deep merge for nested style objects
+        this._options = {
+            ...DEFAULT_OPTIONS,
+            ...rest,
+            positionMarkerStyles: {
+                ...DEFAULT_OPTIONS.positionMarkerStyles,
+                ...(positionMarkerStyles ?? {})
+            },
+            accuracyCircleStyles: {
+                ...DEFAULT_OPTIONS.accuracyCircleStyles,
+                ...(accuracyCircleStyles ?? {})
+            }
+        };
     }
 
     /**
