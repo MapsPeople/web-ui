@@ -17,7 +17,7 @@ const DEFAULT_OPTIONS = {
 };
 
 /**
- * CustomPositionProvider allows manual position setting and follows the documentation interface.
+ * CustomPositionProvider allows manual position setting and follows the modern documentation interface.
  * This serves as an example implementation for JavaScript projects.
  */
 class CustomPositionProvider {
@@ -117,40 +117,6 @@ class CustomPositionProvider {
         callbacks.forEach(callback => {
             callback.call(null, error);
         });
-    }
-
-    // Legacy interface support for backward compatibility
-    isAvailable() {
-        return true;
-    }
-
-    async isAlreadyGranted() {
-        return true;
-    }
-
-    listenForPosition(maxAccuracy, positionError, positionInaccurate, positionRequesting, positionReceived) {
-        // Store the legacy callbacks and convert them to modern event listeners
-        this.on('position_error', positionError);
-        this.on('position_received', ({ position }) => {
-            if (position.coords.accuracy <= maxAccuracy) {
-                positionReceived(position);
-            } else {
-                positionInaccurate(position.coords.accuracy);
-            }
-        });
-
-        // If we already have a position, emit it
-        if (this._currentPosition) {
-            if (this._currentPosition.coords.accuracy <= maxAccuracy) {
-                positionReceived(this._currentPosition);
-            } else {
-                positionInaccurate(this._currentPosition.coords.accuracy);
-            }
-        }
-    }
-
-    stopListeningForPosition() {
-        this._listeners.clear();
     }
 }
 
