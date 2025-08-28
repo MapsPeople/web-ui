@@ -7,8 +7,7 @@ import { IPositionProvider, PositionProviderOptions } from '../../types/position
  *
  * IMPORTANT:
  * - This file is provided as an example and reference only. It demonstrates the
- *   modern documentation-style position provider interface and the legacy
- *   callback compatibility shims.
+ *   modern documentation-style position provider interface.
  * - The example is not required by the application at runtime; use it as a
  *   template when implementing your own provider.
  *
@@ -24,8 +23,7 @@ import { IPositionProvider, PositionProviderOptions } from '../../types/position
  *
  * Notes:
  * - The provider exposes `currentPosition`, `options`, `on`/`off` events and an
- *   optional `setPosition(GeolocationPosition)` method. It also implements the
- *   legacy callback interface for backward compatibility.
+ *   optional `setPosition(GeolocationPosition)` method following the modern interface.
  */
 
 /**
@@ -47,7 +45,7 @@ const DEFAULT_OPTIONS: PositionProviderOptions = {
 };
 
 /**
- * CustomPositionProvider allows manual position setting and follows the documentation interface.
+ * CustomPositionProvider allows manual position setting and follows the modern documentation interface.
  * This serves as an example implementation showing how to implement the modern event-based interface.
  */
 export class CustomPositionProvider implements IPositionProvider {
@@ -111,7 +109,7 @@ export class CustomPositionProvider implements IPositionProvider {
     /**
      * Removes an event listener for the specified event.
      *
-     * @param {string} eventName - The event name to stop listening for.
+     * @param {string} eventName - The event name to remove the listener from.
      * @param {Function} callback - The callback function to remove.
      */
     off(eventName: 'position_error' | 'position_received', callback: Function): void {
@@ -173,68 +171,5 @@ export class CustomPositionProvider implements IPositionProvider {
         callbacks.forEach(callback => {
             callback.call(null, error);
         });
-    }
-
-    // Legacy interface support for backward compatibility
-
-    /**
-     * Check if the position provider is available (legacy interface).
-     *
-     * @returns {boolean} Always returns true for this example provider.
-     */
-    isAvailable(): boolean {
-        return true;
-    }
-
-    /**
-     * Check if permission is already granted (legacy interface).
-     *
-     * @returns {Promise<boolean>} Always resolves to true for this example provider.
-     */
-    async isAlreadyGranted(): Promise<boolean> {
-        return true;
-    }
-
-    /**
-     * Listen for position updates using legacy callback interface.
-     *
-     * @param {number} maxAccuracy - The maximum accuracy to accept.
-     * @param {Function} positionError - Callback for position errors.
-     * @param {Function} positionInaccurate - Callback for inaccurate positions.
-     * @param {Function} positionRequesting - Callback when position is being requested.
-     * @param {Function} positionReceived - Callback when position is received.
-     */
-    listenForPosition(
-        maxAccuracy: number,
-        positionError: (error?: GeolocationPositionError) => void,
-        positionInaccurate: (accuracy: number) => void,
-        positionRequesting: () => void,
-        positionReceived: (position: GeolocationPosition) => void
-    ): void {
-        // Store the legacy callbacks and convert them to modern event listeners
-        this.on('position_error', positionError);
-        this.on('position_received', ({ position }) => {
-            if (position.coords.accuracy <= maxAccuracy) {
-                positionReceived(position);
-            } else {
-                positionInaccurate(position.coords.accuracy);
-            }
-        });
-
-        // If we already have a position, emit it
-        if (this._currentPosition) {
-            if (this._currentPosition.coords.accuracy <= maxAccuracy) {
-                positionReceived(this._currentPosition);
-            } else {
-                positionInaccurate(this._currentPosition.coords.accuracy);
-            }
-        }
-    }
-
-    /**
-     * Stop listening for position updates (legacy interface).
-     */
-    stopListeningForPosition(): void {
-        this._listeners.clear();
     }
 }
