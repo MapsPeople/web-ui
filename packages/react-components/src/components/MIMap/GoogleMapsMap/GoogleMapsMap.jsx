@@ -111,7 +111,6 @@ function GoogleMapsMap({ apiKey, onInitialized, center, zoom, bounds, heading, t
             }
 
             const mapView = new window.mapsindoors.mapView.GoogleMapsView(mapViewOptions);
-
             setMapViewInstance(mapView);
 
             onInitialized(mapView);
