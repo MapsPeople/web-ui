@@ -41,7 +41,6 @@ const WebMapsIndoorsMap = r2wc(MapsIndoorsMap, {
         showMapMarkers: 'boolean',
         mapboxMapStyle: 'string'
     }
-
 })
 
 window.customElements.define('mapsindoors-map', WebMapsIndoorsMap);

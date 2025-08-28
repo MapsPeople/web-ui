@@ -232,7 +232,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             const miSdkApiTag = document.createElement('script');
             miSdkApiTag.setAttribute('type', 'text/javascript');
-            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/CandidateReleases/2025.8.27-rc0/mapsindoors-2025.8.27-rc0.js.gz');
+            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/CandidateReleases/2025.8.28-rc0/mapsindoors-2025.8.28-rc0.js.gz');
             // miSdkApiTag.setAttribute('integrity', 'sha384-glYwQ/XqeUiszPIc+4jYefSr6CaWnzhvsahILo2GvmumEuqAJm/aUtGn3ekm3GOX');
             // miSdkApiTag.setAttribute('crossorigin', 'anonymous');
             document.body.appendChild(miSdkApiTag);
