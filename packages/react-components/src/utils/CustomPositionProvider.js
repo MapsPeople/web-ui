@@ -29,13 +29,13 @@ class CustomPositionProvider {
         const {
             positionMarkerStyles,
             accuracyCircleStyles,
-            ...rest
+            ...baseOptions
         } = options;
 
         // Deep merge for nested style objects
         this._options = {
             ...DEFAULT_OPTIONS,
-            ...rest,
+            ...baseOptions,
             positionMarkerStyles: {
                 ...DEFAULT_OPTIONS.positionMarkerStyles,
                 ...(positionMarkerStyles ?? {})
