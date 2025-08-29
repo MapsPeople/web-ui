@@ -32,7 +32,7 @@ import { IPositionProvider, PositionProviderOptions } from '../../types/position
 const DEFAULT_OPTIONS: PositionProviderOptions = {
     maxAccuracy: 20,
     positionMarkerStyles: {
-        radius: '6px',
+        radius: '12px',
         strokeWeight: '2px',
         strokeColor: '#fff',
         fillColor: '#4169E1',
