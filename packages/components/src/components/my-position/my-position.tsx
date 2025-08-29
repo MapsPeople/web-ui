@@ -2,6 +2,7 @@ import { Component, Host, JSX, Prop, Event, EventEmitter, State, h, Method } fro
 import { UAParser, IDevice } from 'ua-parser-js';
 import merge from 'deepmerge';
 import { GeoLocationProvider as PositionProvider } from './GeoLocationProvider';
+import { IPositionProvider } from '../../types/position-provider.interface';
 
 enum PositionStateTypes {
     POSITION_UNKNOWN = 'POSITION_UNKNOWN',
@@ -32,10 +33,17 @@ export class MyPositionComponent {
      */
     @Prop() myPositionOptions?;
 
+
+    /**
+     * Accepts a custom position provider instance (supports both legacy and modern interfaces).
+     */
+    @Prop() customPositionProvider?: IPositionProvider;
+
     /**
      * The current state of device positioning.
+     * Default is 'POSITION_UNKNOWN'.
      */
-    @State() positionState: PositionStateTypes;
+    @State() positionState: PositionStateTypes = PositionStateTypes.POSITION_UNKNOWN;
 
     private mapView;
     private options;
@@ -53,12 +61,12 @@ export class MyPositionComponent {
     private currentPosition: GeolocationPosition;
 
     /**
-     * Wether the currently known position is accurate enough to show on the map.
+     * Whether the currently known position is accurate enough to show on the map.
      */
     private positionIsAccurate: boolean;
 
     /**
-     * Wether the currently used device's position can be tracked.
+     * Whether the currently used device's position can be tracked.
      */
     private canBeTracked: boolean;
 
@@ -71,6 +79,11 @@ export class MyPositionComponent {
      * Reference to the handleDeviceOrientation function.
      */
     private handleDeviceOrientationReference = this.handleDeviceOrientation.bind(this);
+
+    /**
+     * The position provider instance to use.
+     */
+    private positionProvider: IPositionProvider;
 
     /**
      * Default options.
@@ -94,6 +107,16 @@ export class MyPositionComponent {
             fillOpacity: 0.16
         }
     };
+
+    /**
+     * Sets a custom position. Works with any provider that implements setPosition.
+     */
+    @Method()
+    public async setPosition(position: GeolocationPosition): Promise<void> {
+        if (this.positionProvider?.setPosition) {
+            this.positionProvider.setPosition(position);
+        }
+    }
 
     /**
      * Removes the event listener for the device's orientation and resets the position button.
@@ -209,30 +232,55 @@ export class MyPositionComponent {
     public watchPosition(selfInvoked = false): void {
         this.setPositionProviderOnMapView();
 
-        PositionProvider.listenForPosition(
-            this.options.maxAccuracy,
+        if (this.isLegacyProvider(this.positionProvider)) {
+            // Use legacy callback-based interface
+            this.positionProvider.listenForPosition!(
+                this.options.maxAccuracy,
 
-            // Position error callback
-            error => {
-                this.setPositionState(PositionStateTypes.POSITION_UNKNOWN);
-                this.position_error.emit(error);
-            },
+                // Position error callback
+                error => {
+                    this.setPositionState(PositionStateTypes.POSITION_UNKNOWN);
+                    this.position_error.emit(error);
+                },
 
-            // Position inaccurate callback
-            accuracy => {
-                this.setPositionState(PositionStateTypes.POSITION_INACCURATE);
-                this.position_error.emit({ code: 11, message: 'Inaccurate position: ' + accuracy });
-            },
+                // Position inaccurate callback
+                accuracy => {
+                    this.setPositionState(PositionStateTypes.POSITION_INACCURATE);
+                    this.position_error.emit({ code: 11, message: 'Inaccurate position: ' + accuracy });
+                },
 
-            // Position requesting callback
-            () => {
-                this.setPositionState(PositionStateTypes.POSITION_REQUESTING);
-            },
+                // Position requesting callback
+                () => {
+                    this.setPositionState(PositionStateTypes.POSITION_REQUESTING);
+                },
 
-            // Position received callback
-            position => {
+                // Position received callback
+                position => {
+                    this.currentPosition = position;
+                    this.positionIsAccurate = this.currentPosition.coords.accuracy <= this.options.maxAccuracy;
+
+                    if (this.positionState === PositionStateTypes.POSITION_TRACKED) {
+                        this.setPositionState(PositionStateTypes.POSITION_UNTRACKED);
+                    } else if (this.positionState !== PositionStateTypes.POSITION_UNTRACKED) {
+                        this.setPositionState(PositionStateTypes.POSITION_KNOWN);
+                    }
+                    window.removeEventListener('deviceorientation', this.handleDeviceOrientationReference);
+
+                    this.position_received.emit({
+                        position: this.currentPosition,
+                        selfInvoked,
+                        accurate: this.positionIsAccurate
+                    });
+                }
+            );
+        } else {
+            // Use modern event-based interface
+            const modernProvider = this.positionProvider;
+
+            // Set up event listeners for modern provider
+            const onPositionReceived = ({ position }: { position: GeolocationPosition }): void => {
                 this.currentPosition = position;
-                this.positionIsAccurate = this.currentPosition.coords.accuracy <= this.options.maxAccuracy;
+                this.positionIsAccurate = position.coords.accuracy <= this.options.maxAccuracy;
 
                 if (this.positionState === PositionStateTypes.POSITION_TRACKED) {
                     this.setPositionState(PositionStateTypes.POSITION_UNTRACKED);
@@ -246,8 +294,23 @@ export class MyPositionComponent {
                     selfInvoked,
                     accurate: this.positionIsAccurate
                 });
+            };
+
+            const onPositionError = (error?: any): void => {
+                this.setPositionState(PositionStateTypes.POSITION_UNKNOWN);
+                this.position_error.emit(error);
+            };
+
+            modernProvider.on('position_received', onPositionReceived);
+            modernProvider.on('position_error', onPositionError);
+
+            // Check if provider already has a valid position
+            if (modernProvider.hasValidPosition && modernProvider.hasValidPosition()) {
+                onPositionReceived({ position: modernProvider.currentPosition });
+            } else {
+                this.setPositionState(PositionStateTypes.POSITION_REQUESTING);
             }
-        );
+        }
     }
     /**
      * Sets position button state.
@@ -323,7 +386,25 @@ export class MyPositionComponent {
         this.mapView = this.mapsindoors.getMapView();
         this.options = merge(this.defaultOptions, this.myPositionOptions ?? {});
 
-        if (PositionProvider.isAvailable() === false) {
+        // Use customPositionProvider first if valid, otherwise fallback to GeoLocationProvider
+        if (this.customPositionProvider && this.isValidPositionProvider(this.customPositionProvider)) {
+            this.positionProvider = this.customPositionProvider;
+
+            // If using a modern provider with options, merge them with the component's options
+            if (this.isModernProvider(this.positionProvider) && this.positionProvider.options) {
+                this.options = merge(this.options, this.positionProvider.options);
+            }
+        } else {
+            this.positionProvider = new PositionProvider();
+        }
+
+        // Check availability based on the interface type
+        const isAvailable = this.isLegacyProvider(this.positionProvider)
+            ? this.positionProvider.isAvailable()
+            : true; // Modern providers are always considered available
+
+        if (isAvailable === false) {
+            this.setPositionState(PositionStateTypes.POSITION_UNKNOWN);
             this.position_error.emit({ code: 10, message: 'Location not available' });
             return;
         }
@@ -337,21 +418,84 @@ export class MyPositionComponent {
             ? true : false;
 
         // Check if user has already granted permission to use the position.
-        // In that case, show position right away.
         // Note that this feature only works in modern browsers due to using the Permissions API (https://caniuse.com/#feat=permissions-api),
-        PositionProvider.isAlreadyGranted().then(granted => {
-            if (granted) {
-                this.watchPosition();
+        if (this.isLegacyProvider(this.positionProvider)) {
+            this.positionProvider.isAlreadyGranted().then(granted => {
+                if (granted) {
+                    this.watchPosition();
+                } else {
+                    this.setPositionState(PositionStateTypes.POSITION_UNKNOWN);
+                }
+            });
+        } else {
+            // Modern providers: check if they have a valid position immediately
+            if (this.positionProvider.hasValidPosition && this.positionProvider.hasValidPosition()) {
+                this.currentPosition = this.positionProvider.currentPosition!;
+                this.setPositionState(PositionStateTypes.POSITION_KNOWN);
+                this.position_received.emit({
+                    position: this.currentPosition,
+                    selfInvoked: false,
+                    accurate: true
+                });
             } else {
                 this.setPositionState(PositionStateTypes.POSITION_UNKNOWN);
             }
-        });
+        }
 
         this.mapView.on('rotateend', () => {
             this.setCompassStyle(this.mapView.getBearing());
         });
     }
 
+    /**
+     * Checks if the provider is a valid position provider (either legacy or modern).
+     *
+     * @param {any} provider - The provider to check.
+     * @returns {boolean} True if the provider is valid.
+     */
+    private isValidPositionProvider(provider: any): boolean {
+        // Check for legacy interface
+        if (typeof provider.isAvailable === 'function' &&
+            typeof provider.listenForPosition === 'function') {
+            return provider.isAvailable();
+        }
+
+        // Check for modern interface
+        if (typeof provider.hasValidPosition === 'function' &&
+            typeof provider.on === 'function' &&
+            typeof provider.off === 'function') {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks if the provider uses the legacy callback-based interface.
+     *
+     * @param {IPositionProvider} provider - The provider to check.
+     * @returns {boolean} True if the provider uses the legacy interface.
+     */
+    private isLegacyProvider(provider: IPositionProvider): boolean {
+        return typeof provider.isAvailable === 'function' &&
+               typeof provider.listenForPosition === 'function';
+    }
+
+    /**
+     * Checks if the provider uses the modern event-based interface.
+     *
+     * @param {IPositionProvider} provider - The provider to check.
+     * @returns {boolean} True if the provider uses the modern interface.
+     */
+    private isModernProvider(provider: IPositionProvider): boolean {
+        return typeof provider.hasValidPosition === 'function' &&
+               typeof provider.on === 'function' &&
+               typeof provider.off === 'function';
+    }
+
+    /**
+     * Component render callback.
+     */
     componentDidRender(): void {
         this.setCompassStyle(this.mapView.getBearing());
     }
@@ -360,7 +504,12 @@ export class MyPositionComponent {
      * Stops listening for position updates.
      */
     disconnectedCallback(): void {
-        PositionProvider.stopListeningForPosition();
+        if (this.isLegacyProvider(this.positionProvider)) {
+            this.positionProvider.stopListeningForPosition!();
+        } else {
+            // Modern providers clean up their own event listeners
+            // No explicit cleanup needed here
+        }
     }
 
     /**
