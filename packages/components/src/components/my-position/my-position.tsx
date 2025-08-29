@@ -115,8 +115,6 @@ export class MyPositionComponent {
     public async setPosition(position: GeolocationPosition): Promise<void> {
         if (this.positionProvider?.setPosition) {
             this.positionProvider.setPosition(position);
-        } else {
-            // Current position provider does not support manual position setting
         }
     }
 
