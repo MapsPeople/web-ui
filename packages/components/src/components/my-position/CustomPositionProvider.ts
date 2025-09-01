@@ -153,32 +153,6 @@ export class CustomPositionProvider implements IPositionProvider {
         });
     }
 
-    /* Alternative implementation for handling simplified position objects:
-    setPosition(position: { coords: { latitude: number; longitude: number; accuracy: number; }; timestamp: number }): void {
-        // Convert simplified position object to GeolocationPosition format
-        const geolocationPosition: GeolocationPosition = {
-            coords: {
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude,
-                accuracy: position.coords.accuracy,
-                altitude: null,
-                altitudeAccuracy: null,
-                heading: null,
-                speed: null
-            },
-            timestamp: position.timestamp
-        } as GeolocationPosition;
-
-        this._currentPosition = geolocationPosition;
-
-        // Emit position_received event
-        const callbacks = this._listeners.get('position_received') || [];
-        callbacks.forEach(callback => {
-            callback.call(null, { position: geolocationPosition });
-        });
-    }
-    */
-
     /**
      * Emits a position error event.
      *
