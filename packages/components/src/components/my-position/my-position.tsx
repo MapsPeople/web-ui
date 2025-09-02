@@ -83,6 +83,18 @@ export class MyPositionComponent {
     private handleDeviceOrientationReference = this.handleDeviceOrientation.bind(this);
 
     /**
+     * Reference to the modern provider's onPositionReceived event handler.
+     * Stored to enable proper cleanup when component disconnects or provider changes.
+     */
+    private onPositionReceivedHandler: ((event: { position: GeolocationPosition }) => void) | null = null;
+
+    /**
+     * Reference to the modern provider's onPositionError event handler.
+     * Stored to enable proper cleanup when component disconnects or provider changes.
+     */
+    private onPositionErrorHandler: ((error?: any) => void) | null = null;
+
+    /**
      * The position provider instance to use internally.
      * This is the resolved, validated provider that the component actually uses.
      * It's either the customPositionProvider (if valid) or the default GeoLocationProvider.
@@ -114,6 +126,29 @@ export class MyPositionComponent {
     };
 
     /**
+     * Cleans up modern position provider event listeners.
+     * Removes registered event handlers and nulls the stored references to prevent memory leaks.
+     */
+    private cleanupModernProviderListeners(): void {
+        if (!this.isModernProvider(this.positionProvider)) {
+            return;
+        }
+
+        const modernProvider = this.positionProvider;
+
+        // Remove event listeners if they exist
+        if (this.onPositionReceivedHandler) {
+            modernProvider.off('position_received', this.onPositionReceivedHandler);
+            this.onPositionReceivedHandler = null;
+        }
+
+        if (this.onPositionErrorHandler) {
+            modernProvider.off('position_error', this.onPositionErrorHandler);
+            this.onPositionErrorHandler = null;
+        }
+    }
+
+    /**
      * Sets up event listeners for modern position providers.
      * This ensures that position updates are handled immediately when setPosition() is called.
      *
@@ -121,17 +156,20 @@ export class MyPositionComponent {
      * - this.positionProvider is the resolved, validated provider
      * - It's guaranteed to exist and be valid
      * - It handles both custom and default providers consistently
-     * - All other methods in the component use this.positionProvider for consistency
+     * - All other methods in the component use this.positionProvider for consistency.
      */
     private setupModernProviderListeners(): void {
         if (!this.isModernProvider(this.positionProvider)) {
             return;
         }
 
+        // Clean up any existing listeners first
+        this.cleanupModernProviderListeners();
+
         const modernProvider = this.positionProvider;
 
-        // Set up event listeners for modern provider
-        const onPositionReceived = ({ position }: { position: GeolocationPosition }): void => {
+        // Create and store event handler references
+        this.onPositionReceivedHandler = ({ position }: { position: GeolocationPosition }): void => {
             this.currentPosition = position;
             this.positionIsAccurate = position.coords.accuracy <= this.options.maxAccuracy;
 
@@ -152,13 +190,14 @@ export class MyPositionComponent {
             });
         };
 
-        const onPositionError = (error?: any): void => {
+        this.onPositionErrorHandler = (error?: any): void => {
             this.setPositionState(PositionStateTypes.POSITION_UNKNOWN);
             this.position_error.emit(error);
         };
 
-        modernProvider.on('position_received', onPositionReceived);
-        modernProvider.on('position_error', onPositionError);
+        // Register the event listeners
+        modernProvider.on('position_received', this.onPositionReceivedHandler);
+        modernProvider.on('position_error', this.onPositionErrorHandler);
     }
 
     /**
@@ -430,6 +469,9 @@ export class MyPositionComponent {
         this.mapView = this.mapsindoors.getMapView();
         this.options = merge(this.defaultOptions, this.myPositionOptions ?? {});
 
+        // Clean up any existing position provider listeners before assigning a new one
+        this.cleanupModernProviderListeners();
+
         // Provider Resolution Logic:
         // 1. Check if user provided a customPositionProvider and it's valid
         // 2. If yes, use it as this.positionProvider (our internal resolved provider)
@@ -559,10 +601,13 @@ export class MyPositionComponent {
      */
     disconnectedCallback(): void {
         if (this.isLegacyProvider(this.positionProvider)) {
-            this.positionProvider.stopListeningForPosition!();
+            // Guard the legacy call with an existence check before invoking stopListeningForPosition
+            if (this.positionProvider.stopListeningForPosition) {
+                this.positionProvider.stopListeningForPosition();
+            }
         } else {
-            // Modern providers clean up their own event listeners
-            // No explicit cleanup needed here
+            // Clean up modern provider event listeners
+            this.cleanupModernProviderListeners();
         }
     }
 
