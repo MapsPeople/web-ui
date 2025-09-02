@@ -36,6 +36,8 @@ export class MyPositionComponent {
 
     /**
      * Accepts a custom position provider instance (supports both legacy and modern interfaces).
+     * This is the external API - what users pass to the component.
+     * It's optional and may be undefined or invalid.
      */
     @Prop() customPositionProvider?: IPositionProvider;
 
@@ -81,7 +83,10 @@ export class MyPositionComponent {
     private handleDeviceOrientationReference = this.handleDeviceOrientation.bind(this);
 
     /**
-     * The position provider instance to use.
+     * The position provider instance to use internally.
+     * This is the resolved, validated provider that the component actually uses.
+     * It's either the customPositionProvider (if valid) or the default GeoLocationProvider.
+     * All internal methods use this instead of customPositionProvider to ensure consistency.
      */
     private positionProvider: IPositionProvider;
 
@@ -111,6 +116,12 @@ export class MyPositionComponent {
     /**
      * Sets up event listeners for modern position providers.
      * This ensures that position updates are handled immediately when setPosition() is called.
+     *
+     * Note: We use this.positionProvider (not this.customPositionProvider) because:
+     * - this.positionProvider is the resolved, validated provider
+     * - It's guaranteed to exist and be valid
+     * - It handles both custom and default providers consistently
+     * - All other methods in the component use this.positionProvider for consistency
      */
     private setupModernProviderListeners(): void {
         if (!this.isModernProvider(this.positionProvider)) {
@@ -152,6 +163,8 @@ export class MyPositionComponent {
 
     /**
      * Sets a custom position. Works with any provider that implements setPosition.
+     * Uses this.positionProvider (the resolved provider) instead of this.customPositionProvider
+     * to ensure we're working with the validated, active provider.
      */
     @Method()
     public async setPosition(position: GeolocationPosition): Promise<void> {
@@ -417,8 +430,13 @@ export class MyPositionComponent {
         this.mapView = this.mapsindoors.getMapView();
         this.options = merge(this.defaultOptions, this.myPositionOptions ?? {});
 
-        // Use customPositionProvider first if valid, otherwise fallback to GeoLocationProvider
+        // Provider Resolution Logic:
+        // 1. Check if user provided a customPositionProvider and it's valid
+        // 2. If yes, use it as this.positionProvider (our internal resolved provider)
+        // 3. If no, fallback to default GeoLocationProvider
+        // This pattern ensures this.positionProvider is always valid and ready to use
         if (this.customPositionProvider && this.isValidPositionProvider(this.customPositionProvider)) {
+            // Use the custom provider - assign it to our internal resolved provider
             this.positionProvider = this.customPositionProvider;
 
             // If using a modern provider with options, merge them with the component's options
@@ -427,8 +445,10 @@ export class MyPositionComponent {
             }
 
             // Set up event listeners for modern providers immediately
+            // This ensures setPosition() calls are handled without requiring user clicks
             this.setupModernProviderListeners();
         } else {
+            // Fallback to default provider
             this.positionProvider = new PositionProvider();
         }
 
