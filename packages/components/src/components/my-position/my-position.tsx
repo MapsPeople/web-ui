@@ -573,7 +573,8 @@ export class MyPositionComponent {
      * @returns {boolean} True if the provider uses the legacy interface.
      */
     private isLegacyProvider(provider: IPositionProvider): boolean {
-        return typeof provider.isAvailable === 'function' &&
+        return provider &&
+            typeof provider.isAvailable === 'function' &&
             typeof provider.listenForPosition === 'function';
     }
 
@@ -584,7 +585,8 @@ export class MyPositionComponent {
      * @returns {boolean} True if the provider uses the modern interface.
      */
     private isModernProvider(provider: IPositionProvider): boolean {
-        return typeof provider.hasValidPosition === 'function' &&
+        return provider &&
+            typeof provider.hasValidPosition === 'function' &&
             typeof provider.on === 'function' &&
             typeof provider.off === 'function';
     }
