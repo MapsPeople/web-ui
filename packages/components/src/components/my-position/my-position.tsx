@@ -470,7 +470,10 @@ export class MyPositionComponent {
         this.options = merge(this.defaultOptions, this.myPositionOptions ?? {});
 
         // Clean up any existing position provider listeners before assigning a new one
-        this.cleanupModernProviderListeners();
+        // Only clean up if there's an existing position provider
+        if (this.positionProvider) {
+            this.cleanupModernProviderListeners();
+        }
 
         // Provider Resolution Logic:
         // 1. Check if user provided a customPositionProvider and it's valid
@@ -550,6 +553,10 @@ export class MyPositionComponent {
      * @returns {boolean} True if the provider is valid.
      */
     private isValidPositionProvider(provider: any): boolean {
+        if (!provider) {
+            return false;
+        }
+
         // Check for legacy interface
         if (typeof provider.isAvailable === 'function' &&
             typeof provider.listenForPosition === 'function') {
@@ -602,6 +609,10 @@ export class MyPositionComponent {
      * Stops listening for position updates.
      */
     disconnectedCallback(): void {
+        if (!this.positionProvider) {
+            return;
+        }
+
         if (this.isLegacyProvider(this.positionProvider)) {
             // Guard the legacy call with an existence check before invoking stopListeningForPosition
             if (this.positionProvider.stopListeningForPosition) {
