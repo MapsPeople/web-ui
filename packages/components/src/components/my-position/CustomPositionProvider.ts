@@ -14,35 +14,10 @@ import { IPositionProvider, PositionProviderOptions } from '../../types/position
  * Documentation:
  * https://docs.mapsindoors.com/~/changes/452/sdks-and-frameworks/web/other-guides/user-positioning/custom-positionprovider#required-properties
  *
- * Usage example:
- * const provider = new CustomPositionProvider({
- *   positionMarkerStyles: { fillColor: '#6eec00', strokeColor: '#fff' },
- *   accuracyCircleStyles: { fillColor: '#f30000' }
- * });
- * myMyPositionElement.customPositionProvider = provider;
- *
  * Notes:
- * - The provider exposes `currentPosition`, `options`, `on`/`off` events and an
+ * - The provider exposes `currentPosition`, `on`/`off` events and an
  *   optional `setPosition(GeolocationPosition)` method following the modern interface.
  */
-
-/**
- * Default options for the CustomPositionProvider, matching the documentation.
- */
-const DEFAULT_OPTIONS: PositionProviderOptions = {
-    maxAccuracy: 20,
-    positionMarkerStyles: {
-        radius: '6px',
-        strokeWeight: '2px',
-        strokeColor: '#fff',
-        fillColor: '#4169E1',
-        fillOpacity: 1
-    },
-    accuracyCircleStyles: {
-        fillColor: '#4169E1',
-        fillOpacity: 0.16
-    }
-};
 
 /**
  * CustomPositionProvider allows manual position setting and follows the modern documentation interface.
@@ -50,7 +25,7 @@ const DEFAULT_OPTIONS: PositionProviderOptions = {
  */
 export class CustomPositionProvider implements IPositionProvider {
     private _currentPosition: GeolocationPosition | null = null;
-    private _options: PositionProviderOptions;
+    private _maxAccuracy: number;
     private _listeners = new Map<string, Function[]>();
 
     /**
@@ -59,26 +34,9 @@ export class CustomPositionProvider implements IPositionProvider {
      * @param {PositionProviderOptions} options - The options for the position provider.
      */
     constructor(options?: PositionProviderOptions) {
-        // Merge user options with default options
-        const {
-            positionMarkerStyles,
-            accuracyCircleStyles,
-            ...rest
-        } = options ?? {};
-
-        // Deep merge for nested style objects
-        this._options = {
-            ...DEFAULT_OPTIONS,
-            ...rest,
-            positionMarkerStyles: {
-                ...DEFAULT_OPTIONS.positionMarkerStyles,
-                ...(positionMarkerStyles ?? {})
-            },
-            accuracyCircleStyles: {
-                ...DEFAULT_OPTIONS.accuracyCircleStyles,
-                ...(accuracyCircleStyles ?? {})
-            }
-        };
+        // Store only the maxAccuracy value we actually use
+        const { maxAccuracy = 20 } = options ?? {};
+        this._maxAccuracy = maxAccuracy;
     }
 
     /**
@@ -91,21 +49,12 @@ export class CustomPositionProvider implements IPositionProvider {
     }
 
     /**
-     * Gets the position provider options.
-     *
-     * @returns {object} The position provider configuration options.
-     */
-    get options(): PositionProviderOptions {
-        return this._options;
-    }
-
-    /**
      * Checks if the current position is valid based on accuracy requirements.
      *
      * @returns {boolean} True if the current position is valid and accurate enough.
      */
     hasValidPosition(): boolean {
-        const maxAccuracy = this._options?.maxAccuracy ?? DEFAULT_OPTIONS.maxAccuracy;
+        const maxAccuracy = this._maxAccuracy;
         return this._currentPosition !== null &&
             this._currentPosition.coords &&
             this._currentPosition.coords.accuracy >= 0 &&
@@ -152,32 +101,6 @@ export class CustomPositionProvider implements IPositionProvider {
             callback.call(null, { position });
         });
     }
-
-    /* Alternative implementation for handling simplified position objects:
-    setPosition(position: { coords: { latitude: number; longitude: number; accuracy: number; }; timestamp: number }): void {
-        // Convert simplified position object to GeolocationPosition format
-        const geolocationPosition: GeolocationPosition = {
-            coords: {
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude,
-                accuracy: position.coords.accuracy,
-                altitude: null,
-                altitudeAccuracy: null,
-                heading: null,
-                speed: null
-            },
-            timestamp: position.timestamp
-        } as GeolocationPosition;
-
-        this._currentPosition = geolocationPosition;
-
-        // Emit position_received event
-        const callbacks = this._listeners.get('position_received') || [];
-        callbacks.forEach(callback => {
-            callback.call(null, { position: geolocationPosition });
-        });
-    }
-    */
 
     /**
      * Emits a position error event.
