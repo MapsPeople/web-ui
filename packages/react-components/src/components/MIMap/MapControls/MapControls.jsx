@@ -2,13 +2,15 @@ import { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import './MapControls.scss';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
+import CustomPositionProvider from '../../../utils/CustomPositionProvider';
 
 MapControls.propTypes = {
     mapType: PropTypes.oneOf(['google', 'mapbox']).isRequired,
     mapsIndoorsInstance: PropTypes.object.isRequired,
     mapInstance: PropTypes.object.isRequired,
     onPositionControl: PropTypes.func,
-    brandingColor: PropTypes.string
+    brandingColor: PropTypes.string,
+    devicePosition: PropTypes.object
 };
 
 /**
@@ -22,11 +24,12 @@ MapControls.propTypes = {
  * @param {Object} props.mapInstance - Map instance (Google Maps or Mapbox)
  * @param {Function} [props.onPositionControl] - Callback function for position control events
  * @param {string} [props.brandingColor] - Custom branding color for controls
+ * @param {Object} [props.devicePosition] - Device position data (if available)
  *
  * @returns {JSX.Element} Map controls container with venue selector, floor selector,
  * position button, and view mode switch, arranged differently for desktop and mobile layouts
  */
-function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionControl, brandingColor }) {
+function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionControl, brandingColor, devicePosition }) {
     const isDesktop = useIsDesktop();
     const floorSelectorRef = useRef(null);
     const positionButtonRef = useRef(null);
@@ -71,7 +74,15 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
             onPositionControl(positionButtonRef.current);
         }
 
-    }, [mapType, mapsIndoorsInstance, mapInstance, onPositionControl, brandingColor]);
+        //Conditionally create and assign a custom position provider for the position button if we have devicePosition
+        if (devicePosition && typeof devicePosition === 'object') {
+            positionButtonRef.current.customPositionProvider = new CustomPositionProvider();
+            positionButtonRef.current.customPositionProvider.setPosition(devicePosition);
+            // Trigger watchPosition to start the positioning flow and display the blue dot
+            positionButtonRef.current.watchPosition();
+        }
+
+    }, [mapType, mapsIndoorsInstance, mapInstance, onPositionControl, brandingColor, devicePosition]);
 
     /*
      * Handle layout changes and element movement, this handles moving the elements to the correct DOM location based on the layout
