@@ -158,11 +158,11 @@ A `myPositionOptions` attribute is available on the `<mi-my-position>` element. 
 
 ## Properties
 
-| Property                 | Attribute             | Description                                                                                        | Type                | Default     |
-| ------------------------ | --------------------- | -------------------------------------------------------------------------------------------------- | ------------------- | ----------- |
-| `customPositionProvider` | --                    | Accepts a custom position provider instance (supports both legacy and modern interfaces).          | `IPositionProvider` | `undefined` |
-| `mapsindoors`            | `mapsindoors`         | MapsIndoors instance.                                                                              | `any`               | `undefined` |
-| `myPositionOptions`      | `my-position-options` | Reference: https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/PositionControlOptions.html. | `any`               | `undefined` |
+| Property                 | Attribute             | Description                                                                                                                                                                                           | Type                | Default     |
+| ------------------------ | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- | ----------- |
+| `customPositionProvider` | --                    | Accepts a custom position provider instance (supports both legacy and modern interfaces). This is the external API - what users pass to the component. It's optional and may be undefined or invalid. | `IPositionProvider` | `undefined` |
+| `mapsindoors`            | `mapsindoors`         | MapsIndoors instance.                                                                                                                                                                                 | `any`               | `undefined` |
+| `myPositionOptions`      | `my-position-options` | Reference: https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/PositionControlOptions.html.                                                                                                    | `any`               | `undefined` |
 
 
 ## Events
@@ -178,6 +178,8 @@ A `myPositionOptions` attribute is available on the `<mi-my-position>` element. 
 ### `setPosition(position: GeolocationPosition) => Promise<void>`
 
 Sets a custom position. Works with any provider that implements setPosition.
+Uses this.positionProvider (the resolved provider) instead of this.customPositionProvider
+to ensure we're working with the validated, active provider.
 
 #### Returns
 

@@ -625,7 +625,7 @@ export namespace Components {
     }
     interface MiMyPosition {
         /**
-          * Accepts a custom position provider instance (supports both legacy and modern interfaces).
+          * Accepts a custom position provider instance (supports both legacy and modern interfaces). This is the external API - what users pass to the component. It's optional and may be undefined or invalid.
          */
         "customPositionProvider"?: IPositionProvider;
         /**
@@ -637,7 +637,7 @@ export namespace Components {
          */
         "myPositionOptions"?: any;
         /**
-          * Sets a custom position. Works with any provider that implements setPosition.
+          * Sets a custom position. Works with any provider that implements setPosition. Uses this.positionProvider (the resolved provider) instead of this.customPositionProvider to ensure we're working with the validated, active provider.
          */
         "setPosition": (position: GeolocationPosition) => Promise<void>;
         /**
@@ -2016,7 +2016,7 @@ declare namespace LocalJSX {
     }
     interface MiMyPosition {
         /**
-          * Accepts a custom position provider instance (supports both legacy and modern interfaces).
+          * Accepts a custom position provider instance (supports both legacy and modern interfaces). This is the external API - what users pass to the component. It's optional and may be undefined or invalid.
          */
         "customPositionProvider"?: IPositionProvider;
         /**
