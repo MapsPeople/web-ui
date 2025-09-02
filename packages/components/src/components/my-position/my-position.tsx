@@ -109,6 +109,48 @@ export class MyPositionComponent {
     };
 
     /**
+     * Sets up event listeners for modern position providers.
+     * This ensures that position updates are handled immediately when setPosition() is called.
+     */
+    private setupModernProviderListeners(): void {
+        if (!this.isModernProvider(this.positionProvider)) {
+            return;
+        }
+
+        const modernProvider = this.positionProvider;
+
+        // Set up event listeners for modern provider
+        const onPositionReceived = ({ position }: { position: GeolocationPosition }): void => {
+            this.currentPosition = position;
+            this.positionIsAccurate = position.coords.accuracy <= this.options.maxAccuracy;
+
+            // Ensure the position provider is set on the MapView so the dot appears
+            this.setPositionProviderOnMapView();
+
+            if (this.positionState === PositionStateTypes.POSITION_TRACKED) {
+                this.setPositionState(PositionStateTypes.POSITION_UNTRACKED);
+            } else if (this.positionState !== PositionStateTypes.POSITION_UNTRACKED) {
+                this.setPositionState(PositionStateTypes.POSITION_KNOWN);
+            }
+            window.removeEventListener('deviceorientation', this.handleDeviceOrientationReference);
+
+            this.position_received.emit({
+                position: this.currentPosition,
+                selfInvoked: false,
+                accurate: this.positionIsAccurate
+            });
+        };
+
+        const onPositionError = (error?: any): void => {
+            this.setPositionState(PositionStateTypes.POSITION_UNKNOWN);
+            this.position_error.emit(error);
+        };
+
+        modernProvider.on('position_received', onPositionReceived);
+        modernProvider.on('position_error', onPositionError);
+    }
+
+    /**
      * Sets a custom position. Works with any provider that implements setPosition.
      */
     @Method()
@@ -277,10 +319,12 @@ export class MyPositionComponent {
             // Use modern event-based interface
             const modernProvider = this.positionProvider;
 
-            // Set up event listeners for modern provider
-            const onPositionReceived = ({ position }: { position: GeolocationPosition }): void => {
-                this.currentPosition = position;
-                this.positionIsAccurate = position.coords.accuracy <= this.options.maxAccuracy;
+            // Event listeners are already set up in setupModernProviderListeners()
+            // Just check if provider already has a valid position
+            if (modernProvider.hasValidPosition && modernProvider.hasValidPosition()) {
+                // Manually trigger the position received logic
+                this.currentPosition = modernProvider.currentPosition!;
+                this.positionIsAccurate = this.currentPosition.coords.accuracy <= this.options.maxAccuracy;
 
                 if (this.positionState === PositionStateTypes.POSITION_TRACKED) {
                     this.setPositionState(PositionStateTypes.POSITION_UNTRACKED);
@@ -294,19 +338,6 @@ export class MyPositionComponent {
                     selfInvoked,
                     accurate: this.positionIsAccurate
                 });
-            };
-
-            const onPositionError = (error?: any): void => {
-                this.setPositionState(PositionStateTypes.POSITION_UNKNOWN);
-                this.position_error.emit(error);
-            };
-
-            modernProvider.on('position_received', onPositionReceived);
-            modernProvider.on('position_error', onPositionError);
-
-            // Check if provider already has a valid position
-            if (modernProvider.hasValidPosition && modernProvider.hasValidPosition()) {
-                onPositionReceived({ position: modernProvider.currentPosition });
             } else {
                 this.setPositionState(PositionStateTypes.POSITION_REQUESTING);
             }
@@ -394,6 +425,9 @@ export class MyPositionComponent {
             if (this.isModernProvider(this.positionProvider) && this.positionProvider.options) {
                 this.options = merge(this.options, this.positionProvider.options);
             }
+
+            // Set up event listeners for modern providers immediately
+            this.setupModernProviderListeners();
         } else {
             this.positionProvider = new PositionProvider();
         }
@@ -478,7 +512,7 @@ export class MyPositionComponent {
      */
     private isLegacyProvider(provider: IPositionProvider): boolean {
         return typeof provider.isAvailable === 'function' &&
-               typeof provider.listenForPosition === 'function';
+            typeof provider.listenForPosition === 'function';
     }
 
     /**
@@ -489,8 +523,8 @@ export class MyPositionComponent {
      */
     private isModernProvider(provider: IPositionProvider): boolean {
         return typeof provider.hasValidPosition === 'function' &&
-               typeof provider.on === 'function' &&
-               typeof provider.off === 'function';
+            typeof provider.on === 'function' &&
+            typeof provider.off === 'function';
     }
 
     /**
