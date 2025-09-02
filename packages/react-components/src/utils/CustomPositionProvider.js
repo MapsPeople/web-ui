@@ -1,20 +1,4 @@
-/**
- * Default options for the CustomPositionProvider, matching the documentation.
- */
-const DEFAULT_OPTIONS = {
-    maxAccuracy: 20,
-    positionMarkerStyles: {
-        radius: '12px',
-        strokeWeight: '2px',
-        strokeColor: '#fff',
-        fillColor: '#4169E1',
-        fillOpacity: 1
-    },
-    accuracyCircleStyles: {
-        fillColor: '#4169E1',
-        fillOpacity: 0.16
-    }
-};
+
 
 /**
  * CustomPositionProvider allows manual position setting and follows the modern documentation interface.
@@ -25,26 +9,9 @@ class CustomPositionProvider {
         this._currentPosition = null;
         this._listeners = new Map();
 
-        // Merge user options with default options
-        const {
-            positionMarkerStyles,
-            accuracyCircleStyles,
-            ...baseOptions
-        } = options;
-
-        // Deep merge for nested style objects
-        this._options = {
-            ...DEFAULT_OPTIONS,
-            ...baseOptions,
-            positionMarkerStyles: {
-                ...DEFAULT_OPTIONS.positionMarkerStyles,
-                ...(positionMarkerStyles ?? {})
-            },
-            accuracyCircleStyles: {
-                ...DEFAULT_OPTIONS.accuracyCircleStyles,
-                ...(accuracyCircleStyles ?? {})
-            }
-        };
+        // Store only the maxAccuracy value we actually use
+        const { maxAccuracy = 20 } = options;
+        this._maxAccuracy = maxAccuracy;
     }
 
     /**
@@ -55,17 +22,10 @@ class CustomPositionProvider {
     }
 
     /**
-     * Gets the position provider options.
-     */
-    get options() {
-        return this._options;
-    }
-
-    /**
      * Checks if the current position is valid based on accuracy requirements.
      */
     hasValidPosition() {
-        const maxAccuracy = this._options?.maxAccuracy ?? DEFAULT_OPTIONS.maxAccuracy;
+        const maxAccuracy = this._maxAccuracy;
         return this._currentPosition !== null &&
             this._currentPosition.coords &&
             this._currentPosition.coords.accuracy >= 0 &&
