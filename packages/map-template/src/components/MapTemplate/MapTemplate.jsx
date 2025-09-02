@@ -99,7 +99,8 @@ MapTemplate.propTypes = {
     supportsUrlParameters: PropTypes.bool,
     center: PropTypes.string,
     useAppTitle: PropTypes.bool,
-    showMapMarkers: PropTypes.bool
+    showMapMarkers: PropTypes.bool,
+    devicePosition: PropTypes.object
 };
 
 /**
@@ -137,7 +138,7 @@ MapTemplate.propTypes = {
  * @param {boolean} [props.useAppTitle] - Specifies if the Map Template should set the document title as defined in the App Config. The default value is set to false.
  * @param {boolean} [props.showMapMarkers] - Specifies if the Map Template should show the base map providers Map Markers. The default value is set to true.
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations, center, useAppTitle, showMapMarkers }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations, center, useAppTitle, showMapMarkers, devicePosition }) {
 
     const [userSelectedLanguage, setUserSelectedLanguage] = useState(false);
     const [mapOptions, setMapOptions] = useState({ brandingColor: primaryColor });
@@ -821,6 +822,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 setCurrentLanguage(languageToSet);
                 setUserSelectedLanguage(true);
             }}
+            devicePosition={devicePosition}
         />
     </div>
 }

@@ -36,7 +36,8 @@ MapsIndoorsMap.propTypes = {
     searchExternalLocations: PropTypes.bool,
     center: PropTypes.string,
     useAppTitle: PropTypes.bool,
-    showMapMarkers: PropTypes.bool
+    showMapMarkers: PropTypes.bool,
+    devicePosition: PropTypes.object
 };
 
 /**
@@ -163,6 +164,7 @@ function MapsIndoorsMap(props) {
             miTransitionLevel: props.supportsUrlParameters && miTransitionLevelQueryParameter ? miTransitionLevelQueryParameter : props.miTransitionLevel,
             category: props.supportsUrlParameters && categoryQueryParameter ? categoryQueryParameter : props.category,
             center: props.supportsUrlParameters && centerQueryParameter ? centerQueryParameter : props.center,
+            devicePosition: props.devicePosition,
             // Handle boolean values
             useKeyboard: getBooleanValue(props.supportsUrlParameters, defaultProps.useKeyboard, props.useKeyboard, useKeyboardQueryParameter),
             useMapProviderModule: getBooleanValue(props.supportsUrlParameters, defaultProps.useMapProviderModule, props.useMapProviderModule, useMapProviderModuleQueryParameter),
