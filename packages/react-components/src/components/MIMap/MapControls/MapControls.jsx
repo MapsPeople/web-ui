@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import './MapControls.scss';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import CustomLocationFields from '../CustomLocationFields/CustomLocationFields'
+import CustomPositionProvider from '../../../utils/CustomPositionProvider';
 
 MapControls.propTypes = {
     mapType: PropTypes.oneOf(['google', 'mapbox']).isRequired,
@@ -10,6 +11,7 @@ MapControls.propTypes = {
     mapInstance: PropTypes.object.isRequired,
     onPositionControl: PropTypes.func,
     brandingColor: PropTypes.string,
+    devicePosition: PropTypes.object
 };
 
 /**
@@ -23,11 +25,12 @@ MapControls.propTypes = {
  * @param {Object} props.mapInstance - Map instance (Google Maps or Mapbox)
  * @param {Function} [props.onPositionControl] - Callback function for position control events
  * @param {string} [props.brandingColor] - Custom branding color for controls
+ * @param {Object} [props.devicePosition] - Device position data (if available)
  *
  * @returns {JSX.Element} Map controls container with venue selector, floor selector,
  * position button, and view mode switch, arranged differently for desktop and mobile layouts
  */
-function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionControl, brandingColor }) {
+function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionControl, brandingColor, devicePosition }) {
     const isDesktop = useIsDesktop();
     const floorSelectorRef = useRef(null);
     const positionButtonRef = useRef(null);
@@ -71,8 +74,32 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
         if (onPositionControl && positionButtonRef.current) {
             onPositionControl(positionButtonRef.current);
         }
-
     }, [mapType, mapsIndoorsInstance, mapInstance, onPositionControl, brandingColor]);
+
+    // Sync the custom position provider with the latest devicePosition prop.
+    // If devicePosition is provided, ensure the custom provider exists and update its position.
+    // This enables the position button to reflect the current device position.
+    useEffect(() => {
+        if (!positionButtonRef.current) return;
+        if (devicePosition && typeof devicePosition === 'object') {
+            // If the custom provider doesn't exist, create and assign it
+            if (!positionButtonRef.current.customPositionProvider) {
+                positionButtonRef.current.customPositionProvider = new CustomPositionProvider();
+
+                // Instruct my-position to watch position only if the position was set successfully
+                if (positionButtonRef.current.customPositionProvider.setPosition(devicePosition)) {
+                    positionButtonRef.current.watchPosition();
+                }
+
+            } else {
+                // If it exists, just update the position
+                // Instruct my-position to watch position only if the position was set successfully
+                if (positionButtonRef.current.customPositionProvider.setPosition(devicePosition)) {
+                    positionButtonRef.current.watchPosition();
+                }
+            }
+        }
+    }, [devicePosition]);
 
     /*
      * Handle layout changes and element movement, this handles moving the elements to the correct DOM location based on the layout

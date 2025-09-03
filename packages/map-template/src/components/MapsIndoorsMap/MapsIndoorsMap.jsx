@@ -36,7 +36,9 @@ MapsIndoorsMap.propTypes = {
     searchExternalLocations: PropTypes.bool,
     center: PropTypes.string,
     useAppTitle: PropTypes.bool,
-    showMapMarkers: PropTypes.bool
+    showMapMarkers: PropTypes.bool,
+    mapboxMapStyle: PropTypes.string,
+    devicePosition: PropTypes.object
 };
 
 /**
@@ -74,6 +76,7 @@ MapsIndoorsMap.propTypes = {
  * @param {string} [props.center] - Specifies the coordinates where the map should load, represented as longitude and latitude values separated by a comma. If the specified coordinates intersect with a Venue, that Venue will be set as the current Venue.
  * @param {boolean} [props.useAppTitle] - Specifies if the Map Template should set the document title as defined in the App Config. The default value is set to false.
  * @param {boolean} [props.showMapMarkers] - Specifies if the Map Template should show the Map Markers. The default value is set to true.
+ * @param {string} [props.mapboxMapStyle] - Specifies the Mapbox Map Style to use. The default value is set to "mapbox://styles/mapbox/standard".
  */
 function MapsIndoorsMap(props) {
 
@@ -131,6 +134,7 @@ function MapsIndoorsMap(props) {
         const centerQueryParameter = queryStringParams.get('center');
         const useAppTitleQueryParameter = queryStringParams.get('useAppTitle');
         const showMapMarkersQueryParameter = queryStringParams.get('showMapMarkers');
+        const mapboxMapStyleQueryParameter = queryStringParams.get('mapboxMapStyle');
         // Set the initial props on the Map Template component.
 
         // For the apiKey and venue, set the venue to "AUSTINOFFICE" if the apiKey is "mapspeople3d" and no venue is provided. We want this as the default venue for the "mapspeople3d" apiKey.
@@ -163,6 +167,7 @@ function MapsIndoorsMap(props) {
             miTransitionLevel: props.supportsUrlParameters && miTransitionLevelQueryParameter ? miTransitionLevelQueryParameter : props.miTransitionLevel,
             category: props.supportsUrlParameters && categoryQueryParameter ? categoryQueryParameter : props.category,
             center: props.supportsUrlParameters && centerQueryParameter ? centerQueryParameter : props.center,
+            devicePosition: props.devicePosition,
             // Handle boolean values
             useKeyboard: getBooleanValue(props.supportsUrlParameters, defaultProps.useKeyboard, props.useKeyboard, useKeyboardQueryParameter),
             useMapProviderModule: getBooleanValue(props.supportsUrlParameters, defaultProps.useMapProviderModule, props.useMapProviderModule, useMapProviderModuleQueryParameter),
@@ -173,7 +178,8 @@ function MapsIndoorsMap(props) {
             searchExternalLocations: getBooleanValue(props.supportsUrlParameters, defaultProps.searchExternalLocations, props.searchExternalLocations, searchExternalLocationsQueryParameter),
             supportsUrlParameters: props.supportsUrlParameters,
             useAppTitle: getBooleanValue(props.supportsUrlParameters, defaultProps.useAppTitle, props.useAppTitle, useAppTitleQueryParameter),
-            showMapMarkers: getBooleanValue(props.supportsUrlParameters, defaultProps.showMapMarkers, props.showMapMarkers, showMapMarkersQueryParameter)
+            showMapMarkers: getBooleanValue(props.supportsUrlParameters, defaultProps.showMapMarkers, props.showMapMarkers, showMapMarkersQueryParameter),
+            mapboxMapStyle: props.supportsUrlParameters && mapboxMapStyleQueryParameter ? mapboxMapStyleQueryParameter : props.mapboxMapStyle,
         });
 
     }, [props]);
