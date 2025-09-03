@@ -84,6 +84,18 @@ class CustomPositionProvider {
             return;
         }
 
+        // Validate accuracy requirements before setting the position
+        if (geolocationPosition.coords.accuracy < 0 || geolocationPosition.coords.accuracy > this._maxAccuracy) {
+            const error = {
+                message: `[CustomPositionProvider] Position accuracy (${geolocationPosition.coords.accuracy}m) does not meet requirements. Must be between 0 and ${this._maxAccuracy}m.`,
+                received: position,
+                accuracy: geolocationPosition.coords.accuracy,
+                maxAccuracy: this._maxAccuracy
+            };
+            this.emitError(error);
+            return;
+        }
+
         this._currentPosition = geolocationPosition;
 
         // Emit position_received event
