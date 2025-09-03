@@ -14,6 +14,14 @@ function CustomLocationFields({ positionButton }) {
     const latitudeRef = useRef(null);
     const longitudeRef = useRef(null);
 
+    // Quick test locations
+    const testLocations = {
+        Aalborg: { lat: 57.0488, lng: 9.9217 },
+        Aarhus: { lat: 56.1629, lng: 10.2039 },
+        China: { lat: 39.9042, lng: 116.4074 },
+        Ohio: { lat: 39.9042, lng: -79.7543387 },
+    };
+
     // Initialize and set custom position provider on the mi-my-position component
     useEffect(() => {
         if (positionButton) {
@@ -24,21 +32,29 @@ function CustomLocationFields({ positionButton }) {
         }
     }, [positionButton]);
 
-    const handleSetLocation = () => {
+    const handleSetLocation = (lat, lng) => {
         const myPositionComponent = positionButton;
         if (!myPositionComponent || !myPositionComponent.customPositionProvider) return;
 
-        const lat = parseFloat(latitudeRef.current.value);
-        const lng = parseFloat(longitudeRef.current.value);
-        if (isNaN(lat) || isNaN(lng)) return;
+        let latitude = lat;
+        let longitude = lng;
+        // If no lat/lng provided, use input fields
+        if (typeof latitude !== 'number' || typeof longitude !== 'number') {
+            latitude = parseFloat(latitudeRef.current.value);
+            longitude = parseFloat(longitudeRef.current.value);
+        }
+        if (isNaN(latitude) || isNaN(longitude)) return;
 
         const position = {
-            coords: { latitude: lat, longitude: lng, accuracy: 10 },
+            coords: { latitude, longitude, accuracy: 10 },
             timestamp: Date.now()
         };
 
-        // Use the modern interface method
         myPositionComponent.customPositionProvider.setPosition(position);
+    };
+
+    const handleQuickLocation = (lat, lng) => {
+        handleSetLocation(lat, lng);
     };
 
     return (
@@ -55,7 +71,16 @@ function CustomLocationFields({ positionButton }) {
                 placeholder="Longitude"
                 ref={longitudeRef}
             />
-            <button onClick={handleSetLocation}>Set Location</button>
+            <button className="location-btn" onClick={() => handleSetLocation()}>Set Location</button>
+            <div className="separator" />
+            <h4 className="quick-locations-header">Quick test locations</h4>
+            <div className="quick-locations-btns">
+                {Object.entries(testLocations).map(([name, coords]) => (
+                    <button className="location-btn" key={name} type="button" onClick={() => handleQuickLocation(coords.lat, coords.lng)}>
+                        {name}
+                    </button>
+                ))}
+            </div>
         </div>
     );
 }
