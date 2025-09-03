@@ -56,6 +56,7 @@ class CustomPositionProvider {
      * Sets a custom position and emits the position_received event.
      *
      * @param {GeolocationPosition} position - The GeolocationPosition object to set.
+     * @returns {boolean} True if the position was successfully set, false otherwise.
      */
     setPosition(position) {
         // Handle both GeolocationPosition and simplified position objects
@@ -81,7 +82,7 @@ class CustomPositionProvider {
                 received: position
             };
             this.emitError(error);
-            return;
+            return false;
         }
 
         // Validate accuracy requirements before setting the position
@@ -93,7 +94,7 @@ class CustomPositionProvider {
                 maxAccuracy: this._maxAccuracy
             };
             this.emitError(error);
-            return;
+            return false;
         }
 
         this._currentPosition = geolocationPosition;
@@ -103,6 +104,8 @@ class CustomPositionProvider {
         callbacks.forEach(callback => {
             callback.call(null, { position: geolocationPosition });
         });
+
+        return true;
     }
 
     /**

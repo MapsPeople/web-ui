@@ -84,12 +84,18 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
             // If the custom provider doesn't exist, create and assign it
             if (!positionButtonRef.current.customPositionProvider) {
                 positionButtonRef.current.customPositionProvider = new CustomPositionProvider();
-                positionButtonRef.current.customPositionProvider.setPosition(devicePosition);
-                positionButtonRef.current.watchPosition();
+
+                // Instruct my-position to watch position only if the position was set successfully
+                if (positionButtonRef.current.customPositionProvider.setPosition(devicePosition)) {
+                    positionButtonRef.current.watchPosition();
+                }
+
             } else {
                 // If it exists, just update the position
-                positionButtonRef.current.customPositionProvider.setPosition(devicePosition);
-                positionButtonRef.current.watchPosition();
+                // Instruct my-position to watch position only if the position was set successfully
+                if (positionButtonRef.current.customPositionProvider.setPosition(devicePosition)) {
+                    positionButtonRef.current.watchPosition();
+                }
             }
         }
     }, [devicePosition]);
