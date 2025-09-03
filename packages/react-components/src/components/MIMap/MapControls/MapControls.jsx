@@ -73,16 +73,26 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
         if (onPositionControl && positionButtonRef.current) {
             onPositionControl(positionButtonRef.current);
         }
+    }, [mapType, mapsIndoorsInstance, mapInstance, onPositionControl, brandingColor]);
 
-        //Conditionally create and assign a custom position provider for the position button if we have devicePosition
+    // Sync the custom position provider with the latest devicePosition prop.
+    // If devicePosition is provided, ensure the custom provider exists and update its position.
+    // This enables the position button to reflect the current device position.
+    useEffect(() => {
+        if (!positionButtonRef.current) return;
         if (devicePosition && typeof devicePosition === 'object') {
-            positionButtonRef.current.customPositionProvider = new CustomPositionProvider();
-            positionButtonRef.current.customPositionProvider.setPosition(devicePosition);
-            // Trigger watchPosition to start the positioning flow and display the blue dot
-            positionButtonRef.current.watchPosition();
+            // If the custom provider doesn't exist, create and assign it
+            if (!positionButtonRef.current.customPositionProvider) {
+                positionButtonRef.current.customPositionProvider = new CustomPositionProvider();
+                positionButtonRef.current.customPositionProvider.setPosition(devicePosition);
+                positionButtonRef.current.watchPosition();
+            } else {
+                // If it exists, just update the position
+                positionButtonRef.current.customPositionProvider.setPosition(devicePosition);
+                positionButtonRef.current.watchPosition();
+            }
         }
-
-    }, [mapType, mapsIndoorsInstance, mapInstance, onPositionControl, brandingColor, devicePosition]);
+    }, [devicePosition]);
 
     /*
      * Handle layout changes and element movement, this handles moving the elements to the correct DOM location based on the layout
