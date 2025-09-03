@@ -80,6 +80,12 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
     // This enables the position button to reflect the current device position.
     useEffect(() => {
         if (!positionButtonRef.current) return;
+
+        // Stop any existing position listeners before setting up new ones
+        if (positionButtonRef.current.stopListeningForPosition && typeof positionButtonRef.current.stopListeningForPosition === 'function') {
+            positionButtonRef.current.stopListeningForPosition();
+        }
+
         if (devicePosition && typeof devicePosition === 'object') {
             // If the custom provider doesn't exist, create and assign it
             if (!positionButtonRef.current.customPositionProvider) {
@@ -98,6 +104,15 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
                 }
             }
         }
+
+        // Cleanup function to stop position listeners when devicePosition changes or component unmounts
+        return () => {
+            if (positionButtonRef.current &&
+                positionButtonRef.current.stopListeningForPosition &&
+                typeof positionButtonRef.current.stopListeningForPosition === 'function') {
+                positionButtonRef.current.stopListeningForPosition();
+            }
+        };
     }, [devicePosition]);
 
     /*
