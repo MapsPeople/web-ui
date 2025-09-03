@@ -9,6 +9,7 @@ import { SortOrder } from "./enums/sort-order.enum";
 import { UnitSystem } from "./enums/unit-system.enum";
 import { Location } from "@mapsindoors/typescript-interfaces";
 import { LocationBookingDuration } from "./enums/location-booking-duration.enum";
+import { IPositionProvider } from "./types/position-provider.interface";
 import { NotificationPosition } from "./enums/notification-position.enum";
 import { NotificationMessage } from "./types/notification-message.interface";
 import { NotificationType } from "./enums/notification-type.enum";
@@ -624,6 +625,10 @@ export namespace Components {
     }
     interface MiMyPosition {
         /**
+          * Accepts a custom position provider instance (supports both legacy and modern interfaces). This is the external API - what users pass to the component. It's optional and may be undefined or invalid.
+         */
+        "customPositionProvider"?: IPositionProvider;
+        /**
           * MapsIndoors instance.
          */
         "mapsindoors": any;
@@ -631,6 +636,10 @@ export namespace Components {
           * Reference: https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/PositionControlOptions.html.
          */
         "myPositionOptions"?: any;
+        /**
+          * Sets a custom position. Works with any provider that implements setPosition. Uses this.positionProvider (the resolved provider) instead of this.customPositionProvider to ensure we're working with the validated, active provider.
+         */
+        "setPosition": (position: GeolocationPosition) => Promise<void>;
         /**
           * Method for requesting the current position, emitting events and showing position on map based on result.
           * @param selfInvoked - Used to track if call was invoked by clicking on position control or not.
@@ -2006,6 +2015,10 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     interface MiMyPosition {
+        /**
+          * Accepts a custom position provider instance (supports both legacy and modern interfaces). This is the external API - what users pass to the component. It's optional and may be undefined or invalid.
+         */
+        "customPositionProvider"?: IPositionProvider;
         /**
           * MapsIndoors instance.
          */
