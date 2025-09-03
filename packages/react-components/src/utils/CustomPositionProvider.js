@@ -23,6 +23,8 @@ class CustomPositionProvider {
 
     /**
      * Checks if the current position is valid based on accuracy requirements.
+     * This method is called by the mi-my-position web component to determine
+     * whether to show the blue dot and if the position data is reliable.
      */
     hasValidPosition() {
         const maxAccuracy = this._maxAccuracy;
