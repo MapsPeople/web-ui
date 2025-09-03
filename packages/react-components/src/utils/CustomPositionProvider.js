@@ -23,6 +23,8 @@ class CustomPositionProvider {
 
     /**
      * Checks if the current position is valid based on accuracy requirements.
+     * This method is called by the mi-my-position web component to determine
+     * whether to show the blue dot and if the position data is reliable.
      */
     hasValidPosition() {
         const maxAccuracy = this._maxAccuracy;
@@ -56,6 +58,7 @@ class CustomPositionProvider {
      * Sets a custom position and emits the position_received event.
      *
      * @param {GeolocationPosition} position - The GeolocationPosition object to set.
+     * @returns {boolean} True if the position was successfully set, false otherwise.
      */
     setPosition(position) {
         // Handle both GeolocationPosition and simplified position objects
@@ -76,7 +79,24 @@ class CustomPositionProvider {
                 timestamp: position.timestamp
             };
         } else {
-            throw new Error('Invalid position object: must have coords and timestamp properties');
+            const error = {
+                message: '[CustomPositionProvider] Invalid position object received. The object must be at minimum: { coords: { latitude: number, longitude: number, accuracy: number }, timestamp: number }.',
+                received: position
+            };
+            this.emitError(error);
+            return false;
+        }
+
+        // Validate accuracy requirements before setting the position
+        if (geolocationPosition.coords.accuracy < 0 || geolocationPosition.coords.accuracy > this._maxAccuracy) {
+            const error = {
+                message: `[CustomPositionProvider] Position accuracy (${geolocationPosition.coords.accuracy}m) does not meet requirements. Must be between 0 and ${this._maxAccuracy}m.`,
+                received: position,
+                accuracy: geolocationPosition.coords.accuracy,
+                maxAccuracy: this._maxAccuracy
+            };
+            this.emitError(error);
+            return false;
         }
 
         this._currentPosition = geolocationPosition;
@@ -86,6 +106,8 @@ class CustomPositionProvider {
         callbacks.forEach(callback => {
             callback.call(null, { position: geolocationPosition });
         });
+
+        return true;
     }
 
     /**
@@ -93,6 +115,8 @@ class CustomPositionProvider {
      */
     emitError(error) {
         this._currentPosition = null;
+        // Always log the error for debugging
+        console.warn('[CustomPositionProvider] position_error:', error);
         const callbacks = this._listeners.get('position_error') || [];
         callbacks.forEach(callback => {
             callback.call(null, error);
