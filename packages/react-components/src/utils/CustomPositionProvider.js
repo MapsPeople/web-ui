@@ -76,7 +76,12 @@ class CustomPositionProvider {
                 timestamp: position.timestamp
             };
         } else {
-            throw new Error('Invalid position object: must have coords and timestamp properties');
+            const error = {
+                message: '[CustomPositionProvider] Invalid position object received. The object must be at minimum: { coords: { latitude: number, longitude: number, accuracy: number }, timestamp: number }.',
+                received: position
+            };
+            this.emitError(error);
+            return;
         }
 
         this._currentPosition = geolocationPosition;
@@ -93,6 +98,8 @@ class CustomPositionProvider {
      */
     emitError(error) {
         this._currentPosition = null;
+        // Always log the error for debugging
+        console.warn('[CustomPositionProvider] position_error:', error);
         const callbacks = this._listeners.get('position_error') || [];
         callbacks.forEach(callback => {
             callback.call(null, error);
