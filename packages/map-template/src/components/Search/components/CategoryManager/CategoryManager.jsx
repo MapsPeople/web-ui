@@ -33,6 +33,7 @@ const CategoryManager = forwardRef(({ onResults, onSetSize, searchFieldRef, setS
     const currentLanguage = useRecoilValue(languageState);
 
     const selectedCategoriesArray = useRef([]);
+    const latestRequestId = useRef(0);
     const [childKeys, setChildKeys] = useState([]);
 
     /**
@@ -83,13 +84,28 @@ const CategoryManager = forwardRef(({ onResults, onSetSize, searchFieldRef, setS
         }
         setSelectedCategory(category);
 
-        // Regarding the venue name: The venue parameter in the SDK's getLocations method is case sensitive.
-        // So when the currentVenueName is set based on a Locations venue property, the casing may differ.
-        // Thus we need to find the venue name from the list of venues.
+        // Safety check: ensure MapsIndoors service is available
+        if (!window?.mapsindoors?.services?.LocationsService?.getLocations) return;
+
+        // Compute safe venue name
+        const venueName = (searchAllVenues || !currentVenueName) ? undefined : venuesInSolution?.find(v => v?.name?.toLowerCase() === currentVenueName?.toLowerCase())?.name;
+
+        // Ignore stale responses
+        latestRequestId.current += 1;
+        const requestId = latestRequestId.current;
+
         window.mapsindoors.services.LocationsService.getLocations({
             categories: category,
-            venue: searchAllVenues ? undefined : venuesInSolution.find(venue => venue.name.toLowerCase() === currentVenueName.toLowerCase())?.name,
-        }).then(results => onResults(results, true));
+            venue: venueName,
+        }).then(results => {
+            if (requestId === latestRequestId.current) onResults(results || [], true);
+        }).catch(error => {
+            console.error('Failed to get filtered locations:', error);
+            // Only update UI if this is still the latest request
+            if (requestId === latestRequestId.current) {
+                onResults([], true);
+            }
+        });
     };
 
     /**
