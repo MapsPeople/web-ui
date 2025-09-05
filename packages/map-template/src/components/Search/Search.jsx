@@ -12,9 +12,6 @@ import languageState from '../../atoms/languageState';
 import { useTranslation } from 'react-i18next';
 import kioskLocationState from '../../atoms/kioskLocationState';
 import { createPortal } from 'react-dom';
-import useKeyboardState from '../../atoms/useKeyboardState';
-import Keyboard from '../WebComponentWrappers/Keyboard/Keyboard';
-import searchInputState from '../../atoms/searchInputState';
 import searchResultsState from '../../atoms/searchResultsState';
 import selectedCategoryState from '../../atoms/selectedCategoryState';
 import Categories from './Categories/Categories';
@@ -24,10 +21,10 @@ import { ReactComponent as Legend } from '../../assets/legend.svg';
 import isLegendDialogVisibleState from '../../atoms/isLegendDialogVisibleState';
 import legendSortedFieldsSelector from '../../selectors/legendSortedFieldsSelector';
 import searchAllVenuesState from '../../atoms/searchAllVenues';
-import isNullOrUndefined from '../../helpers/isNullOrUndefined';
 import venuesInSolutionState from '../../atoms/venuesInSolutionState';
 import initialVenueNameState from '../../atoms/initialVenueNameState';
 import LocationHandler from './components/LocationHandler/LocationHandler';
+import KioskKeyboard from './components/Kiosk/KioskKeyboard';
 import PropTypes from 'prop-types';
 
 Search.propTypes = {
@@ -58,8 +55,8 @@ function Search({ onSetSize, isOpen }) {
     /** Referencing the search field */
     const searchFieldRef = useRef();
 
-    /** Referencing the keyboard element */
-    const keyboardRef = useRef();
+    /** Referencing the KioskKeyboard component */
+    const kioskKeyboardRef = useRef();
 
     /** Maximum number of search results to show */
     const MAX_RESULTS = 100;
@@ -67,7 +64,6 @@ function Search({ onSetSize, isOpen }) {
     const [searchDisabled, setSearchDisabled] = useState(true);
     const [searchResults, setSearchResults] = useRecoilState(searchResultsState);
     const categories = useRecoilValue(categoriesState);
-    const useKeyboard = useRecoilValue(useKeyboardState);
 
     /** Indicate if search results have been found */
     const [showNotFoundMessage, setShowNotFoundMessage] = useState(false);
@@ -87,10 +83,6 @@ function Search({ onSetSize, isOpen }) {
     const isDesktop = useIsDesktop();
 
     const kioskLocation = useRecoilValue(kioskLocationState);
-
-    const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
-
-    const searchInput = useRecoilValue(searchInputState);
 
     const isKioskContext = useIsKioskContext();
 
@@ -231,16 +223,13 @@ function Search({ onSetSize, isOpen }) {
 
         setFilteredLocations([]);
 
-        // If keyboard is not null or undefined, clear the input field
-        if (!isNullOrUndefined(keyboardRef.current)) {
-            keyboardRef.current.clearInputField();
-        }
+        // Clear the keyboard input field through KioskKeyboard component
+        kioskKeyboardRef.current?.clearInputField();
     }
 
     /**
-     * When search field is clicked, maximize the sheet size and set focus on the from field,
-     * and if the useKeyboard prop is present, show the onscreen keyboard.
-     * But wait for any bottom sheet transition to end before doing that to avoid content jumping when virtual keyboard appears.
+     * When search field is clicked, maximize the sheet size and set focus on the input field.
+     * Wait for any bottom sheet transition to end before focusing to avoid content jumping.
      */
     function searchFieldClicked() {
         setSearchDisabled(false);
@@ -360,31 +349,6 @@ function Search({ onSetSize, isOpen }) {
     }, [searchResults, isOpen]);
 
     /*
-     * When useKeyboard parameter is present, add click event listener which determines when the keyboard should be shown or not.
-     */
-    useEffect(() => {
-        if (useKeyboard) {
-            const onClick = (event) => {
-                // Use the closest() method to check if the element that has been clicked traverses the element and its parents
-                // until it finds a node that matches the 'mi-keyboard' selector.
-                // If the user clicks on the keyboard or the search fields, the keyboard should stay visible.
-                if (event.target.closest('mi-keyboard') ||
-                    event.target.tagName.toUpperCase() === 'MI-SEARCH' ||
-                    event.target.tagName.toUpperCase() === 'INPUT') {
-                    setIsKeyboardVisible(true)
-                } else {
-                    setIsKeyboardVisible(false);
-                }
-            };
-
-            window.addEventListener('click', onClick, false);
-            return () => {
-                window.removeEventListener('click', onClick, false);
-            };
-        }
-    }, [useKeyboard]);
-
-    /*
      * React on changes in the selected category state.
      * If the selected category is present, get the filtered locations based on the selected category.
      */
@@ -490,9 +454,9 @@ function Search({ onSetSize, isOpen }) {
                 </div>
             )}
 
-            { /* Keyboard */}
+            { /* KioskKeyboard component for kiosk mode */}
 
-            {isKeyboardVisible && isDesktop && <Keyboard ref={keyboardRef} searchInputElement={searchInput}></Keyboard>}
+            <KioskKeyboard ref={kioskKeyboardRef} />
 
             { /* Buttons to scroll in the list of search results if in kiosk context */}
 
