@@ -7,22 +7,18 @@ import primaryColorState from '../../atoms/primaryColorState';
 import { snapPoints } from '../../constants/snapPoints';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import filteredLocationsState from '../../atoms/filteredLocationsState';
-import languageState from '../../atoms/languageState';
 import kioskLocationState from '../../atoms/kioskLocationState';
 import searchResultsState from '../../atoms/searchResultsState';
-import selectedCategoryState from '../../atoms/selectedCategoryState';
-import Categories from './Categories/Categories';
 import { useIsKioskContext } from '../../hooks/useIsKioskContext';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
 import legendSortedFieldsSelector from '../../selectors/legendSortedFieldsSelector';
-import searchAllVenuesState from '../../atoms/searchAllVenues';
-import venuesInSolutionState from '../../atoms/venuesInSolutionState';
 import initialVenueNameState from '../../atoms/initialVenueNameState';
 import LocationHandler from './components/LocationHandler/LocationHandler';
 import KioskKeyboard from './components/Kiosk/KioskKeyboard';
 import KioskScrollButtons from './components/Kiosk/KioskScrollButtons';
 import SearchResults from './components/SearchResults/SearchResults';
 import SearchField from './components/SearchField/SearchField';
+import CategoryManager from './components/CategoryManager/CategoryManager';
 import PropTypes from 'prop-types';
 
 Search.propTypes = {
@@ -56,6 +52,9 @@ function Search({ onSetSize, isOpen }) {
     /** Referencing the KioskScrollButtons component */
     const kioskScrollButtonsRef = useRef();
 
+    /** Referencing the CategoryManager component */
+    const categoryManagerRef = useRef();
+
     /** Maximum number of search results to show */
     const MAX_RESULTS = 100;
 
@@ -66,8 +65,6 @@ function Search({ onSetSize, isOpen }) {
     /** Indicate if search results have been found */
     const [showNotFoundMessage, setShowNotFoundMessage] = useState(false);
 
-    const [selectedCategory, setSelectedCategory] = useRecoilState(selectedCategoryState);
-
     const scrollableContentSwipePrevent = usePreventSwipe();
 
     const [hoveredLocation, setHoveredLocation] = useState();
@@ -75,8 +72,6 @@ function Search({ onSetSize, isOpen }) {
     const [, setFilteredLocations] = useRecoilState(filteredLocationsState);
 
     const currentVenueName = useRecoilValue(currentVenueNameState);
-
-    const currentLanguage = useRecoilValue(languageState);
 
     const isDesktop = useIsDesktop();
 
@@ -88,77 +83,12 @@ function Search({ onSetSize, isOpen }) {
 
     const legendSections = useRecoilValue(legendSortedFieldsSelector);
 
-    const searchAllVenues = useRecoilValue(searchAllVenuesState);
-
-    const venuesInSolution = useRecoilValue(venuesInSolutionState);
-
     const initialVenueName = useRecoilValue(initialVenueNameState);
-
-    const selectedCategoriesArray = useRef([]);
-
-    const [childKeys, setChildKeys] = useState([]);
 
     // Memoize the hover callback to prevent unnecessary re-renders
     const handleHoverLocation = useCallback((location) => {
         setHoveredLocation(location);
     }, []);
-
-    /**
-     * Handles go back function.
-     */
-    function handleBack() {
-        // If selected categories tree has only parent category, then on back, we need to perform those clear functions.
-        // Else, remove child category from selected categories tree array.
-        if (selectedCategoriesArray.current.length === 1) {
-            setSelectedCategory(null);
-            setSearchResults([]);
-            setFilteredLocations([]);
-            setSize(snapPoints.FIT);
-
-            // If there's a search term and it's not just whitespace, re-trigger the search without category filter
-            const searchValue = searchFieldRef.current?.getValue()?.trim();
-            if (searchValue) {
-                searchFieldRef.current?.triggerSearch();
-            } else {
-                // If it's empty or just whitespace, clear the search field
-                searchFieldRef.current?.clear();
-            }
-            selectedCategoriesArray.current.pop();
-        } else {
-            selectedCategoriesArray.current.pop()
-            setSelectedCategory(selectedCategoriesArray.current[0])
-        }
-    }
-
-    /**
-     *
-     * Get the locations and filter through them based on categories selected.
-     *
-     * @param {string} category
-     */
-    function getFilteredLocations(category) {
-        // Creates a selected categoriers tree, where first category in the array is parent and second one is child
-        // Ensure category is unique before pushing to selectedCategories.current
-        if (!selectedCategoriesArray.current.includes(category)) {
-            selectedCategoriesArray.current.push(category);
-        }
-
-        // If child category is being selected, we need to clear parent categories results in order to load proper data that belongs to child category.
-        if (selectedCategory) {
-            setSelectedCategory([]);
-            setSearchResults([]);
-            setFilteredLocations([]);
-        }
-        setSelectedCategory(category)
-
-        // Regarding the venue name: The venue parameter in the SDK's getLocations method is case sensitive.
-        // So when the currentVenueName is set based on a Locations venue property, the casing may differ.
-        // Thus we need to find the venue name from the list of venues.
-        window.mapsindoors.services.LocationsService.getLocations({
-            categories: category,
-            venue: searchAllVenues ? undefined : venuesInSolution.find(venue => venue.name.toLowerCase() === currentVenueName.toLowerCase())?.name,
-        }).then(results => onResults(results, true));
-    }
 
     /**
      * Communicate size change to parent component.
@@ -169,6 +99,24 @@ function Search({ onSetSize, isOpen }) {
         if (typeof onSetSize === 'function') {
             onSetSize(size);
         }
+    }
+
+    /**
+     * Pure function to determine if categories should be shown.
+     * Categories are shown when:
+     * - Search field is in focus
+     * - No "not found" message is displayed
+     * - Categories are available
+     * - No search results are displayed
+     *
+     * @param {boolean} isInputFieldInFocus - Whether the search field is in focus
+     * @param {boolean} showNotFoundMessage - Whether "not found" message is shown
+     * @param {Array} categories - Available categories
+     * @param {Array} searchResults - Current search results
+     * @returns {boolean} Whether categories should be displayed
+     */
+    function shouldShowCategories(isInputFieldInFocus, showNotFoundMessage, categories, searchResults) {
+        return isInputFieldInFocus && !showNotFoundMessage && categories.length > 0 && searchResults.length === 0;
     }
 
     /**
@@ -207,8 +155,9 @@ function Search({ onSetSize, isOpen }) {
     function cleared() {
         setSearchResults([]);
         setShowNotFoundMessage(false);
+        const selectedCategory = categoryManagerRef.current?.selectedCategory;
         if (selectedCategory) {
-            getFilteredLocations(selectedCategory);
+            categoryManagerRef.current?.getFilteredLocations(selectedCategory);
         }
 
         setFilteredLocations([]);
@@ -260,10 +209,9 @@ function Search({ onSetSize, isOpen }) {
             } else if (!clickedInsideResults && !clickedInsideIgnoreArea) {
                 searchFieldRef.current?.setIsInputFieldInFocus(false);
                 setSize(snapPoints.MIN);
-                setSelectedCategory(null);
+                categoryManagerRef.current?.clearCategorySelection();
                 setSearchResults([]);
                 setFilteredLocations([]);
-                selectedCategoriesArray.current = [];
             }
         };
 
@@ -288,32 +236,12 @@ function Search({ onSetSize, isOpen }) {
      * Deselect category and clear results list.
      */
     useEffect(() => {
+        const selectedCategory = categoryManagerRef.current?.selectedCategory;
         if (selectedCategory && currentVenueName !== initialVenueName) {
             setSearchResults([]);
-            setSelectedCategory(null);
+            categoryManagerRef.current?.clearCategorySelection();
         }
     }, [currentVenueName]);
-
-    /*
-     * React on changes in the app language. Any existing category search needs to update with translated Locations.
-     */
-    useEffect(() => {
-        if (selectedCategory) {
-            window.mapsindoors.services.LocationsService.once('update_completed', () => {
-                searchFieldRef.current?.triggerSearch();
-            });
-        }
-    }, [currentLanguage]);
-
-    /*
-     * React on changes in the selected category state.
-     * If the selected category is present, get the filtered locations based on the selected category.
-     */
-    useEffect(() => {
-        if (selectedCategory) {
-            getFilteredLocations(selectedCategory);
-        }
-    }, [selectedCategory]);
 
     /*
      * Get the legend sections and determine
@@ -324,14 +252,6 @@ function Search({ onSetSize, isOpen }) {
             setShowLegendButton(legendSections.length > 0);
         }
     }, [kioskLocation]);
-
-    /**
-     *
-     */
-    useEffect(() => {
-        const childKeys = categories.find(([key]) => key === selectedCategory)?.[1]?.childKeys || [];
-        setChildKeys(childKeys)
-    }, [categories, selectedCategory])
 
 
     return (
@@ -348,7 +268,7 @@ function Search({ onSetSize, isOpen }) {
             {/* SearchField component handles search input and related UI */}
             <SearchField
                 ref={searchFieldRef}
-                selectedCategory={selectedCategory}
+                selectedCategory={categoryManagerRef.current?.selectedCategory}
                 showLegendButton={showLegendButton}
                 onResults={onResults}
                 onSetSize={setSize}
@@ -356,29 +276,35 @@ function Search({ onSetSize, isOpen }) {
                 kioskKeyboardRef={kioskKeyboardRef}
             />
 
-            {/* Vertical list of Categories */}
-            {/* Show full category list only when searchResults are empty */}
-            {searchFieldRef.current?.isInputFieldInFocus && !showNotFoundMessage && categories.length > 0 && searchResults.length === 0 && (
-                <Categories
-                    onSetSize={onSetSize}
-                    searchFieldRef={searchFieldRef}
-                    getFilteredLocations={(category) => getFilteredLocations(category)}
-                    isOpen={!!selectedCategory}
-                    topLevelCategory={true}
-                />
-            )}
+            {/* CategoryManager component to handle category logic and UI */}
+            <CategoryManager
+                ref={categoryManagerRef}
+                onResults={onResults}
+                onSetSize={setSize}
+                searchFieldRef={searchFieldRef}
+                setSearchResults={setSearchResults}
+                setFilteredLocations={setFilteredLocations}
+                showCategories={shouldShowCategories(
+                    searchFieldRef.current?.isInputFieldInFocus,
+                    showNotFoundMessage,
+                    categories,
+                    searchResults
+                )}
+                showNotFoundMessage={showNotFoundMessage}
+                searchResults={searchResults}
+            />
 
             {/* SearchResults component handles error messages and search results display */}
             <SearchResults
                 searchResults={searchResults}
                 showNotFoundMessage={showNotFoundMessage}
-                selectedCategory={selectedCategory}
-                childKeys={childKeys}
-                handleBack={handleBack}
-                getFilteredLocations={getFilteredLocations}
+                selectedCategory={categoryManagerRef.current?.selectedCategory}
+                childKeys={categoryManagerRef.current?.childKeys || []}
+                handleBack={() => categoryManagerRef.current?.handleBack()}
+                getFilteredLocations={(category) => categoryManagerRef.current?.getFilteredLocations(category)}
                 locationHandlerRef={locationHandlerRef}
                 hoveredLocation={hoveredLocation}
-                selectedCategoriesArray={selectedCategoriesArray}
+                selectedCategoriesArray={categoryManagerRef.current?.selectedCategoriesArray || { current: [] }}
                 scrollableContentSwipePrevent={scrollableContentSwipePrevent}
             />
 
