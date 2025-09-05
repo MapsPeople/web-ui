@@ -1,5 +1,5 @@
 import './Search.scss';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import categoriesState from '../../atoms/categoriesState';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
@@ -8,14 +8,9 @@ import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
 import SearchField from '../WebComponentWrappers/Search/Search';
 import filteredLocationsState from '../../atoms/filteredLocationsState';
-import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
-import currentLocationState from '../../atoms/currentLocationState';
-import isLocationClickedState from '../../atoms/isLocationClickedState';
-import getDesktopPaddingLeft from '../../helpers/GetDesktopPaddingLeft';
 import languageState from '../../atoms/languageState';
 import { useTranslation } from 'react-i18next';
 import kioskLocationState from '../../atoms/kioskLocationState';
-import getDesktopPaddingBottom from '../../helpers/GetDesktopPaddingBottom';
 import { createPortal } from 'react-dom';
 import useKeyboardState from '../../atoms/useKeyboardState';
 import Keyboard from '../WebComponentWrappers/Keyboard/Keyboard';
@@ -32,6 +27,7 @@ import searchAllVenuesState from '../../atoms/searchAllVenues';
 import isNullOrUndefined from '../../helpers/isNullOrUndefined';
 import venuesInSolutionState from '../../atoms/venuesInSolutionState';
 import initialVenueNameState from '../../atoms/initialVenueNameState';
+import LocationHandler from './components/LocationHandler/LocationHandler';
 import PropTypes from 'prop-types';
 
 Search.propTypes = {
@@ -55,7 +51,8 @@ function Search({ onSetSize, isOpen }) {
     const { t } = useTranslation();
 
     const searchRef = useRef();
-    const scrollButtonsRef = useRef();
+    const scrollButtonsRef = useRef(null);
+    const locationHandlerRef = useRef(null);
     const requestAnimationFrameId = useRef();
 
     /** Referencing the search field */
@@ -81,15 +78,9 @@ function Search({ onSetSize, isOpen }) {
 
     const [hoveredLocation, setHoveredLocation] = useState();
 
-    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
-
     const [, setFilteredLocations] = useRecoilState(filteredLocationsState);
 
-    const [, setCurrentLocation] = useRecoilState(currentLocationState);
-
-    const [, setIsLocationClicked] = useRecoilState(isLocationClickedState);
-
-    const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
+    const currentVenueName = useRecoilValue(currentVenueNameState);
 
     const currentLanguage = useRecoilValue(languageState);
 
@@ -120,6 +111,11 @@ function Search({ onSetSize, isOpen }) {
     const selectedCategoriesArray = useRef([]);
 
     const [childKeys, setChildKeys] = useState([]);
+
+    // Memoize the hover callback to prevent unnecessary re-renders
+    const handleHoverLocation = useCallback((location) => {
+        setHoveredLocation(location);
+    }, []);
 
     /**
      * Handles go back function.
@@ -207,7 +203,7 @@ function Search({ onSetSize, isOpen }) {
         setShowNotFoundMessage(displayResults.length === 0);
 
         if (locations && fitMapBounds) {
-            fitMapBoundsToLocations(locations);
+            locationHandlerRef.current?.fitMapBoundsToLocations(locations);
         }
 
         // Handles updates to scroll buttons when the category changes.
@@ -222,45 +218,6 @@ function Search({ onSetSize, isOpen }) {
         }
     }
 
-
-    /**
-     * Adjusts the map view to fit the bounds of the provided locations.
-     * It will filter out Locations that are not on the current floor or not part of the current venue.
-     *
-     * @param {Array} locations - An array of Location objects to fit within the map bounds.
-     */
-    function fitMapBoundsToLocations(locations) {
-        if (!mapsIndoorsInstance.goTo) return; // Early exit to prevent crashes if using an older version of the MapsIndoors JS SDK. The goTo method was introduced in version 4.38.0.
-
-        const currentFloorIndex = mapsIndoorsInstance.getFloor();
-
-        // Create a GeoJSON FeatureCollection from the locations that can be used as input to the goTo method.
-        const featureCollection = {
-            type: 'FeatureCollection',
-            features: locations
-                // Filter out locations that are not on the current floor. If those were included, it could result in a wrong fit since they are not visible on the map anyway.
-                .filter(location => parseInt(location.properties.floor, 10) === parseInt(currentFloorIndex, 10))
-
-                // Filter out locations that are not part of the current venue. Including those when fitting to bounds could cause the map to zoom out too much.
-                .filter(location => location.properties.venueId.toLowerCase() === currentVenueName.toLowerCase())
-
-                // Map the locations to GeoJSON features.
-                .map(location => ({
-                    type: 'Feature',
-                    geometry: location.geometry,
-                    properties: location.properties
-                }))
-        };
-
-        if (featureCollection.features.length > 0) {
-            Promise.all([getBottomPadding(), getLeftPadding()]).then(([bottomPadding, leftPadding]) => {
-                mapsIndoorsInstance.goTo(featureCollection, {
-                    maxZoom: 22,
-                    padding: { bottom: bottomPadding, left: leftPadding, top: 0, right: 0 }
-                });
-            });
-        }
-    }
 
     /**
      * Clear results list when search field is cleared.
@@ -299,81 +256,6 @@ function Search({ onSetSize, isOpen }) {
             searchFieldRef.current.focusInput();
             setIsInputFieldInFocus(true);
         }
-    }
-
-    /**
-     * Handle hovering over location.
-     *
-     * @param {object} location
-     */
-    function onMouseEnter(location) {
-        setHoveredLocation(location);
-    }
-
-    /**
-     * Handle locations clicked on the map.
-     *
-     * @param {object} location
-     */
-    function onLocationClicked(location) {
-        setCurrentLocation(location);
-
-        // Set the current venue to be the selected location venue.
-        if (location.properties.venueId.toLowerCase() !== currentVenueName.toLowerCase()) {
-            setCurrentVenueName(location.properties.venueId);
-            setIsLocationClicked(true);
-        }
-
-        const currentFloor = mapsIndoorsInstance.getFloor();
-        const locationFloor = location.properties.floor;
-
-        // Set the floor to the one that the location belongs to.
-        if (locationFloor !== currentFloor) {
-            mapsIndoorsInstance.setFloor(locationFloor);
-        }
-
-        Promise.all([getBottomPadding(), getLeftPadding()]).then(([bottomPadding, leftPadding]) => {
-            mapsIndoorsInstance.goTo(location, {
-                maxZoom: 22,
-                padding: { bottom: bottomPadding, left: leftPadding, top: 0, right: 0 }
-            });
-        });
-    }
-
-    /**
-     * Get bottom padding when selecting a location.
-     * Calculate all cases depending on the kioskLocation id prop as well.
-     */
-    function getBottomPadding() {
-        return new Promise((resolve) => {
-            if (isDesktop) {
-                if (kioskLocation) {
-                    getDesktopPaddingBottom().then(padding => resolve(padding));
-                } else {
-                    resolve(0);
-                }
-            } else {
-                resolve(200);
-            }
-        });
-    }
-
-    /**
-     * Get left padding when selecting a location.
-     * Calculate all cases depending on the kioskLocation id prop as well.
-     */
-    function getLeftPadding() {
-        return new Promise((resolve) => {
-            if (isDesktop) {
-                if (kioskLocation) {
-                    resolve(0);
-                } else {
-                    getDesktopPaddingLeft().then(padding => resolve(padding));
-                }
-            } else {
-                resolve(0);
-            }
-        });
     }
 
     /**
@@ -446,15 +328,6 @@ function Search({ onSetSize, isOpen }) {
     }, [isOpen]);
 
     /*
-     * Sets currently hovered location.
-     */
-    useEffect(() => {
-        return () => {
-            setHoveredLocation();
-        }
-    }, []);
-
-    /*
      * React on changes in the venue prop.
      * Deselect category and clear results list.
      */
@@ -475,16 +348,6 @@ function Search({ onSetSize, isOpen }) {
             });
         }
     }, [currentLanguage]);
-
-    /*
-     * Handle location hover.
-     */
-    useEffect(() => {
-        mapsIndoorsInstance?.on('mouseenter', onMouseEnter);
-        return () => {
-            mapsIndoorsInstance?.off('mouseenter', onMouseEnter);
-        }
-    }, [mapsIndoorsInstance]);
 
     /*
      * Setup scroll buttons to scroll in search results list when in kiosk mode.
@@ -555,6 +418,12 @@ function Search({ onSetSize, isOpen }) {
             ref={searchRef}
             style={calculateContainerStyle()}>
 
+            {/* LocationHandler component to handle location interactions */}
+            <LocationHandler
+                ref={locationHandlerRef}
+                onHoverLocation={handleHoverLocation}
+            />
+
             { /* Search info which includes legend button if in a Kiosk context. */}
 
             <div className="search__info" style={{ gridTemplateColumns: isKioskContext && showLegendButton ? 'min-content 1fr' : 'auto' }}>
@@ -600,7 +469,7 @@ function Search({ onSetSize, isOpen }) {
                         <Categories
                             handleBack={handleBack}
                             getFilteredLocations={(category) => getFilteredLocations(category)}
-                            onLocationClicked={onLocationClicked}
+                            onLocationClicked={locationHandlerRef.current?.onLocationClicked}
                             childKeys={childKeys}
                             topLevelCategory={false}
                             selectedCategoriesArray={selectedCategoriesArray}
@@ -613,7 +482,7 @@ function Search({ onSetSize, isOpen }) {
                             <ListItemLocation
                                 key={location.id}
                                 location={location}
-                                locationClicked={() => onLocationClicked(location)}
+                                locationClicked={() => locationHandlerRef.current?.onLocationClicked(location)}
                                 isHovered={location?.id === hoveredLocation?.id}
                             />
                         )}
