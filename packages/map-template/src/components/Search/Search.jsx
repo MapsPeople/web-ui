@@ -3,6 +3,7 @@ import { useRef, useState, useEffect, useCallback } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import categoriesState from '../../atoms/categoriesState';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
+import primaryColorState from '../../atoms/primaryColorState';
 import { snapPoints } from '../../constants/snapPoints';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
@@ -11,7 +12,6 @@ import filteredLocationsState from '../../atoms/filteredLocationsState';
 import languageState from '../../atoms/languageState';
 import { useTranslation } from 'react-i18next';
 import kioskLocationState from '../../atoms/kioskLocationState';
-import { createPortal } from 'react-dom';
 import searchResultsState from '../../atoms/searchResultsState';
 import selectedCategoryState from '../../atoms/selectedCategoryState';
 import Categories from './Categories/Categories';
@@ -25,6 +25,7 @@ import venuesInSolutionState from '../../atoms/venuesInSolutionState';
 import initialVenueNameState from '../../atoms/initialVenueNameState';
 import LocationHandler from './components/LocationHandler/LocationHandler';
 import KioskKeyboard from './components/Kiosk/KioskKeyboard';
+import KioskScrollButtons from './components/Kiosk/KioskScrollButtons';
 import PropTypes from 'prop-types';
 
 Search.propTypes = {
@@ -48,7 +49,6 @@ function Search({ onSetSize, isOpen }) {
     const { t } = useTranslation();
 
     const searchRef = useRef();
-    const scrollButtonsRef = useRef(null);
     const locationHandlerRef = useRef(null);
     const requestAnimationFrameId = useRef();
 
@@ -58,12 +58,16 @@ function Search({ onSetSize, isOpen }) {
     /** Referencing the KioskKeyboard component */
     const kioskKeyboardRef = useRef();
 
+    /** Referencing the KioskScrollButtons component */
+    const kioskScrollButtonsRef = useRef();
+
     /** Maximum number of search results to show */
     const MAX_RESULTS = 100;
 
     const [searchDisabled, setSearchDisabled] = useState(true);
     const [searchResults, setSearchResults] = useRecoilState(searchResultsState);
     const categories = useRecoilValue(categoriesState);
+    const primaryColor = useRecoilValue(primaryColorState);
 
     /** Indicate if search results have been found */
     const [showNotFoundMessage, setShowNotFoundMessage] = useState(false);
@@ -198,14 +202,11 @@ function Search({ onSetSize, isOpen }) {
             locationHandlerRef.current?.fitMapBoundsToLocations(locations);
         }
 
-        // Handles updates to scroll buttons when the category changes.
-        // When a category changes, the scroll buttons need to have their enabled/disabled states updated.
-        // Since some categories might load before the DOM element is fully rendered, we listen for the 'transitionend' event.
-        // The 'transitionend' event is triggered when the DOM element changes its size, which can occur as a result of new categories being fetched.
-        // Upon completion of the size transition, the 'updateScrollButtons' function is triggered to handle the updated state.
+        // Trigger scroll buttons update through KioskScrollButtons component
+        // when category changes and DOM transitions complete
         if (isKioskContext) {
             searchRef.current?.addEventListener('transitionend', () => {
-                scrollButtonsRef?.current?.updateScrollButtons();
+                kioskScrollButtonsRef.current?.updateScrollButtons();
             }, { once: true });
         }
     }
@@ -339,16 +340,6 @@ function Search({ onSetSize, isOpen }) {
     }, [currentLanguage]);
 
     /*
-     * Setup scroll buttons to scroll in search results list when in kiosk mode.
-     */
-    useEffect(() => {
-        if (isOpen && isKioskContext && searchResults.length > 0) {
-            const searchResultsElement = document.querySelector('.mapsindoors-map .search__results');
-            scrollButtonsRef.current.scrollContainerElementRef = searchResultsElement;
-        }
-    }, [searchResults, isOpen]);
-
-    /*
      * React on changes in the selected category state.
      * If the selected category is present, get the filtered locations based on the selected category.
      */
@@ -458,14 +449,15 @@ function Search({ onSetSize, isOpen }) {
 
             <KioskKeyboard ref={kioskKeyboardRef} />
 
-            { /* Buttons to scroll in the list of search results if in kiosk context */}
+            { /* KioskScrollButtons component for scroll functionality in kiosk context */}
 
-            {isOpen && isKioskContext && searchResults.length > 0 && createPortal(
-                <div className="search__scroll-buttons">
-                    <mi-scroll-buttons ref={scrollButtonsRef}></mi-scroll-buttons>
-                </div>,
-                document.querySelector('.mapsindoors-map')
-            )}
+            <KioskScrollButtons
+                ref={kioskScrollButtonsRef}
+                isOpen={isOpen}
+                searchResults={searchResults}
+                searchResultsSelector=".mapsindoors-map .search__results"
+                primaryColor={primaryColor}
+            />
         </div>
     )
 }
