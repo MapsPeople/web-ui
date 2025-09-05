@@ -117,9 +117,10 @@ const CategoryManager = forwardRef(({ onResults, onSetSize, searchFieldRef, setS
     };
 
     // React on changes in the selected category state.
-    // If the selected category is present, get the filtered locations based on the selected category.
+    // This handles external category selection (URL parameters, props, etc.)
+    // but guards against duplicate calls from our own getFilteredLocations
     useEffect(() => {
-        if (selectedCategory) {
+        if (selectedCategory && !selectedCategoriesArray.current.includes(selectedCategory)) {
             getFilteredLocations(selectedCategory);
         }
     }, [selectedCategory]);
