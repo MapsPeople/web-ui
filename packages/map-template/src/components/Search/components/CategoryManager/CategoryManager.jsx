@@ -58,7 +58,9 @@ const CategoryManager = forwardRef(({ onResults, onSetSize, searchFieldRef, setS
             selectedCategoriesArray.current.pop();
         } else {
             selectedCategoriesArray.current.pop();
-            setSelectedCategory(selectedCategoriesArray.current[0]);
+            const parent = selectedCategoriesArray.current[selectedCategoriesArray.current.length - 1];
+            setSelectedCategory(parent);
+            getFilteredLocations(parent);
         }
     };
 
