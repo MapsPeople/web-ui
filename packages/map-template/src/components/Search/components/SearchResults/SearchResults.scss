@@ -1,0 +1,31 @@
+@import '../../../../variables.scss';
+
+.search-results {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+
+    &__error {
+        text-align: center;
+    }
+
+    &__container {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        overflow: hidden;
+        gap: var(--spacing-x-small);
+
+        > * {
+            height: fit-content; /* fixing issue on mobile Safari causing them to bee too large in case of just one search result */
+        }
+    }
+
+    &__locations {
+        display: grid;
+        gap: var(--spacing-x-small);
+        overflow: auto;
+        flex: 1;
+    }
+}

@@ -6,7 +6,6 @@ import currentVenueNameState from '../../atoms/currentVenueNameState';
 import primaryColorState from '../../atoms/primaryColorState';
 import { snapPoints } from '../../constants/snapPoints';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
-import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
 import SearchField from '../WebComponentWrappers/Search/Search';
 import filteredLocationsState from '../../atoms/filteredLocationsState';
 import languageState from '../../atoms/languageState';
@@ -26,6 +25,7 @@ import initialVenueNameState from '../../atoms/initialVenueNameState';
 import LocationHandler from './components/LocationHandler/LocationHandler';
 import KioskKeyboard from './components/Kiosk/KioskKeyboard';
 import KioskScrollButtons from './components/Kiosk/KioskScrollButtons';
+import SearchResults from './components/SearchResults/SearchResults';
 import PropTypes from 'prop-types';
 
 Search.propTypes = {
@@ -284,7 +284,7 @@ function Search({ onSetSize, isOpen }) {
                 event.target.closest(selector)
             );
 
-            const clickedInsideResults = event.target.closest('.search__results');
+            const clickedInsideResults = event.target.closest('.search-results');
 
             if (clickedInsideSearchArea) {
                 setSize(snapPoints.MAX);
@@ -412,38 +412,19 @@ function Search({ onSetSize, isOpen }) {
                 />
             )}
 
-            {/* Message shown if no search results were found */}
-            {showNotFoundMessage && <p className="search__error"> {t('Nothing was found')}</p>}
-
-            {/* When search results are found (category is selected or search term is used) */}
-            {searchResults.length > 0 && (
-                <div className="search__results prevent-scroll" {...scrollableContentSwipePrevent}>
-
-                    {/* Subcategories should only show if a top level category is selected and if that top level category has any childKeys */}
-                    {selectedCategory && (
-                        <Categories
-                            handleBack={handleBack}
-                            getFilteredLocations={(category) => getFilteredLocations(category)}
-                            onLocationClicked={locationHandlerRef.current?.onLocationClicked}
-                            childKeys={childKeys}
-                            topLevelCategory={false}
-                            selectedCategoriesArray={selectedCategoriesArray}
-                        />
-                    )}
-
-                    {/* Show locations when there are any searchResults */}
-                    <div className="search__results">
-                        {searchResults.map(location =>
-                            <ListItemLocation
-                                key={location.id}
-                                location={location}
-                                locationClicked={() => locationHandlerRef.current?.onLocationClicked(location)}
-                                isHovered={location?.id === hoveredLocation?.id}
-                            />
-                        )}
-                    </div>
-                </div>
-            )}
+            {/* SearchResults component handles error messages and search results display */}
+            <SearchResults
+                searchResults={searchResults}
+                showNotFoundMessage={showNotFoundMessage}
+                selectedCategory={selectedCategory}
+                childKeys={childKeys}
+                handleBack={handleBack}
+                getFilteredLocations={getFilteredLocations}
+                locationHandlerRef={locationHandlerRef}
+                hoveredLocation={hoveredLocation}
+                selectedCategoriesArray={selectedCategoriesArray}
+                scrollableContentSwipePrevent={scrollableContentSwipePrevent}
+            />
 
             { /* KioskKeyboard component for kiosk mode */}
 
@@ -455,7 +436,7 @@ function Search({ onSetSize, isOpen }) {
                 ref={kioskScrollButtonsRef}
                 isOpen={isOpen}
                 searchResults={searchResults}
-                searchResultsSelector=".mapsindoors-map .search__results"
+                searchResultsSelector=".mapsindoors-map .search-results__locations"
                 primaryColor={primaryColor}
             />
         </div>

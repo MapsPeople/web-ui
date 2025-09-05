@@ -7,20 +7,6 @@
         padding: var(--spacing-medium) var(--spacing-x-small) var(--spacing-medium) var(--spacing-x-small);
     }
 
-    &__error {
-        text-align: center;
-    }
-
-    &__results {
-        display: grid;
-        gap: var(--spacing-x-small);
-        overflow: auto;
-
-        > * {
-            height: fit-content; /* fixing issue on mobile Safari causing them to bee too large in case of just one search result */
-        }
-    }
-
     &__scroll-buttons {
         position: fixed;
         left: calc(50% + 284px + 20px); /* Half viewport width + half modal width + gap */
