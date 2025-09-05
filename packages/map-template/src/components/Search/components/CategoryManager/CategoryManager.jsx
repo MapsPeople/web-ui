@@ -78,7 +78,6 @@ const CategoryManager = forwardRef(({ onResults, onSetSize, searchFieldRef, setS
 
         // If child category is being selected, we need to clear parent categories results in order to load proper data that belongs to child category.
         if (selectedCategory) {
-            setSelectedCategory([]);
             setSearchResults([]);
             setFilteredLocations([]);
         }
