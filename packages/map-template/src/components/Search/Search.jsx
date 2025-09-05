@@ -85,6 +85,9 @@ function Search({ onSetSize, isOpen }) {
 
     const initialVenueName = useRecoilValue(initialVenueNameState);
 
+    // Track if the search input field is in focus to show categories
+    const [isInputFieldInFocus, setIsInputFieldInFocus] = useState(false);
+
     // Memoize the hover callback to prevent unnecessary re-renders
     const handleHoverLocation = useCallback((location) => {
         setHoveredLocation(location);
@@ -204,10 +207,10 @@ function Search({ onSetSize, isOpen }) {
             if (clickedInsideSearchArea) {
                 setSize(snapPoints.MAX);
                 requestAnimationFrameId.current = requestAnimationFrame(() => { // we use a requestAnimationFrame to ensure that the size change is applied before the focus (meaning that categories are rendered)
-                    searchFieldRef.current?.setIsInputFieldInFocus(true);
+                    setIsInputFieldInFocus(true);
                 });
             } else if (!clickedInsideResults && !clickedInsideIgnoreArea) {
-                searchFieldRef.current?.setIsInputFieldInFocus(false);
+                setIsInputFieldInFocus(false);
                 setSize(snapPoints.MIN);
                 categoryManagerRef.current?.clearCategorySelection();
                 setSearchResults([]);
@@ -274,6 +277,8 @@ function Search({ onSetSize, isOpen }) {
                 onSetSize={setSize}
                 onClearResults={cleared}
                 kioskKeyboardRef={kioskKeyboardRef}
+                isInputFieldInFocus={isInputFieldInFocus}
+                setIsInputFieldInFocus={setIsInputFieldInFocus}
             />
 
             {/* CategoryManager component to handle category logic and UI */}
@@ -285,7 +290,7 @@ function Search({ onSetSize, isOpen }) {
                 setSearchResults={setSearchResults}
                 setFilteredLocations={setFilteredLocations}
                 showCategories={shouldShowCategories(
-                    searchFieldRef.current?.isInputFieldInFocus,
+                    isInputFieldInFocus,
                     showNotFoundMessage,
                     categories,
                     searchResults

@@ -19,15 +19,16 @@ import PropTypes from 'prop-types';
  * @param {function} props.onSetSize - Callback to communicate size changes to parent
  * @param {function} props.onClearResults - Callback fired when search is cleared
  * @param {object} props.kioskKeyboardRef - Reference to kiosk keyboard component
+ * @param {boolean} props.isInputFieldInFocus - Whether the search field is in focus
+ * @param {function} props.setIsInputFieldInFocus - Function to set input field focus state
  */
-const SearchField = forwardRef(({ selectedCategory, showLegendButton, onResults, onSetSize, onClearResults, kioskKeyboardRef }, ref) => {
+const SearchField = forwardRef(({ selectedCategory, showLegendButton, onResults, onSetSize, onClearResults, kioskKeyboardRef, isInputFieldInFocus, setIsInputFieldInFocus }, ref) => {
     const { t } = useTranslation();
 
     /** Referencing the search field */
     const searchFieldRef = useRef();
 
     const [searchDisabled, setSearchDisabled] = useState(true);
-    const [isInputFieldInFocus, setIsInputFieldInFocus] = useState(false);
 
     const isKioskContext = useIsKioskContext();
     const [, setShowLegendDialog] = useRecoilState(isLegendDialogVisibleState);
@@ -80,7 +81,6 @@ const SearchField = forwardRef(({ selectedCategory, showLegendButton, onResults,
         clear: () => searchFieldRef.current?.clear(),
         focusInput: () => searchFieldRef.current?.focusInput(),
         getInputField: () => searchFieldRef.current?.getInputField(),
-        setIsInputFieldInFocus,
         isInputFieldInFocus
     }), [isInputFieldInFocus]);
 
@@ -118,7 +118,9 @@ SearchField.propTypes = {
     onResults: PropTypes.func.isRequired,
     onSetSize: PropTypes.func.isRequired,
     onClearResults: PropTypes.func.isRequired,
-    kioskKeyboardRef: PropTypes.object
+    kioskKeyboardRef: PropTypes.object,
+    isInputFieldInFocus: PropTypes.bool.isRequired,
+    setIsInputFieldInFocus: PropTypes.func.isRequired
 };
 
 export default SearchField;
