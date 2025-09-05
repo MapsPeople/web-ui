@@ -127,12 +127,12 @@ const CategoryManager = forwardRef(({ onResults, onSetSize, searchFieldRef, setS
 
     // React on changes in the app language. Any existing category search needs to update with translated Locations.
     useEffect(() => {
-        if (selectedCategory) {
+        if (selectedCategory && window?.mapsindoors?.services?.LocationsService?.once) {
             window.mapsindoors.services.LocationsService.once('update_completed', () => {
                 searchFieldRef.current?.triggerSearch();
             });
         }
-    }, [currentLanguage]);
+    }, [currentLanguage, selectedCategory]);
 
     // Calculate child keys for the current selected category
     useEffect(() => {
