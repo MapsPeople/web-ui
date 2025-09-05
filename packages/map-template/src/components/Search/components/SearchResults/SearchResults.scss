@@ -20,12 +20,19 @@
         > * {
             height: fit-content; /* fixing issue on mobile Safari causing them to bee too large in case of just one search result */
         }
+
+        // Ensure subcategories (Categories component) don't take too much space
+        .categories {
+            flex-shrink: 0; /* Prevent shrinking */
+            max-height: 20%; /* Limit subcategories to 30% of container height */
+        }
     }
 
     &__locations {
         display: grid;
         gap: var(--spacing-x-small);
         overflow: auto;
-        flex: 1;
+        flex: 1; /* Take remaining space */
+        min-height: 0; /* Important for flex children with overflow */
     }
 }
