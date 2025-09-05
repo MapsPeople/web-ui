@@ -17,14 +17,11 @@
         overflow: hidden;
         gap: var(--spacing-x-small);
 
-        > * {
-            height: fit-content; /* fixing issue on mobile Safari causing them to bee too large in case of just one search result */
-        }
 
         // Ensure subcategories (Categories component) don't take too much space
         .categories {
             flex-shrink: 0; /* Prevent shrinking */
-            max-height: 20%; /* Limit subcategories to 30% of container height */
+            max-height: 20%; /* Limit subcategories to 20% of container height */
         }
     }
 
@@ -34,5 +31,8 @@
         overflow: auto;
         flex: 1; /* Take remaining space */
         min-height: 0; /* Important for flex children with overflow */
+        > * {
+            height: fit-content; /* fixes mobile Safari issue making a single result too large */
+        }
     }
 }
