@@ -6,18 +6,14 @@ import currentVenueNameState from '../../atoms/currentVenueNameState';
 import primaryColorState from '../../atoms/primaryColorState';
 import { snapPoints } from '../../constants/snapPoints';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
-import SearchField from '../WebComponentWrappers/Search/Search';
 import filteredLocationsState from '../../atoms/filteredLocationsState';
 import languageState from '../../atoms/languageState';
-import { useTranslation } from 'react-i18next';
 import kioskLocationState from '../../atoms/kioskLocationState';
 import searchResultsState from '../../atoms/searchResultsState';
 import selectedCategoryState from '../../atoms/selectedCategoryState';
 import Categories from './Categories/Categories';
 import { useIsKioskContext } from '../../hooks/useIsKioskContext';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
-import { ReactComponent as Legend } from '../../assets/legend.svg';
-import isLegendDialogVisibleState from '../../atoms/isLegendDialogVisibleState';
 import legendSortedFieldsSelector from '../../selectors/legendSortedFieldsSelector';
 import searchAllVenuesState from '../../atoms/searchAllVenues';
 import venuesInSolutionState from '../../atoms/venuesInSolutionState';
@@ -26,6 +22,7 @@ import LocationHandler from './components/LocationHandler/LocationHandler';
 import KioskKeyboard from './components/Kiosk/KioskKeyboard';
 import KioskScrollButtons from './components/Kiosk/KioskScrollButtons';
 import SearchResults from './components/SearchResults/SearchResults';
+import SearchField from './components/SearchField/SearchField';
 import PropTypes from 'prop-types';
 
 Search.propTypes = {
@@ -46,8 +43,6 @@ Search.propTypes = {
  */
 function Search({ onSetSize, isOpen }) {
 
-    const { t } = useTranslation();
-
     const searchRef = useRef();
     const locationHandlerRef = useRef(null);
     const requestAnimationFrameId = useRef();
@@ -64,7 +59,6 @@ function Search({ onSetSize, isOpen }) {
     /** Maximum number of search results to show */
     const MAX_RESULTS = 100;
 
-    const [searchDisabled, setSearchDisabled] = useState(true);
     const [searchResults, setSearchResults] = useRecoilState(searchResultsState);
     const categories = useRecoilValue(categoriesState);
     const primaryColor = useRecoilValue(primaryColorState);
@@ -90,8 +84,6 @@ function Search({ onSetSize, isOpen }) {
 
     const isKioskContext = useIsKioskContext();
 
-    const [, setShowLegendDialog] = useRecoilState(isLegendDialogVisibleState);
-
     const [showLegendButton, setShowLegendButton] = useState(false);
 
     const legendSections = useRecoilValue(legendSortedFieldsSelector);
@@ -101,8 +93,6 @@ function Search({ onSetSize, isOpen }) {
     const venuesInSolution = useRecoilValue(venuesInSolutionState);
 
     const initialVenueName = useRecoilValue(initialVenueNameState);
-
-    const [isInputFieldInFocus, setIsInputFieldInFocus] = useState(false);
 
     const selectedCategoriesArray = useRef([]);
 
@@ -124,12 +114,11 @@ function Search({ onSetSize, isOpen }) {
             setSearchResults([]);
             setFilteredLocations([]);
             setSize(snapPoints.FIT);
-            setIsInputFieldInFocus(true);
 
             // If there's a search term and it's not just whitespace, re-trigger the search without category filter
             const searchValue = searchFieldRef.current?.getValue()?.trim();
             if (searchValue) {
-                searchFieldRef.current.triggerSearch();
+                searchFieldRef.current?.triggerSearch();
             } else {
                 // If it's empty or just whitespace, clear the search field
                 searchFieldRef.current?.clear();
@@ -223,29 +212,6 @@ function Search({ onSetSize, isOpen }) {
         }
 
         setFilteredLocations([]);
-
-        // Clear the keyboard input field through KioskKeyboard component
-        kioskKeyboardRef.current?.clearInputField();
-    }
-
-    /**
-     * When search field is clicked, maximize the sheet size and set focus on the input field.
-     * Wait for any bottom sheet transition to end before focusing to avoid content jumping.
-     */
-    function searchFieldClicked() {
-        setSearchDisabled(false);
-        searchFieldRef.current.getInputField();
-
-        const sheet = searchRef.current.closest('.sheet');
-        if (sheet) {
-            sheet.addEventListener('transitionend', () => {
-                searchFieldRef.current.focusInput();
-                setIsInputFieldInFocus(true);
-            }, { once: true });
-        } else {
-            searchFieldRef.current.focusInput();
-            setIsInputFieldInFocus(true);
-        }
     }
 
     /**
@@ -289,10 +255,10 @@ function Search({ onSetSize, isOpen }) {
             if (clickedInsideSearchArea) {
                 setSize(snapPoints.MAX);
                 requestAnimationFrameId.current = requestAnimationFrame(() => { // we use a requestAnimationFrame to ensure that the size change is applied before the focus (meaning that categories are rendered)
-                    setIsInputFieldInFocus(true);
+                    searchFieldRef.current?.setIsInputFieldInFocus(true);
                 });
             } else if (!clickedInsideResults && !clickedInsideIgnoreArea) {
-                setIsInputFieldInFocus(false);
+                searchFieldRef.current?.setIsInputFieldInFocus(false);
                 setSize(snapPoints.MIN);
                 setSelectedCategory(null);
                 setSearchResults([]);
@@ -334,7 +300,7 @@ function Search({ onSetSize, isOpen }) {
     useEffect(() => {
         if (selectedCategory) {
             window.mapsindoors.services.LocationsService.once('update_completed', () => {
-                searchFieldRef.current.triggerSearch();
+                searchFieldRef.current?.triggerSearch();
             });
         }
     }, [currentLanguage]);
@@ -379,30 +345,20 @@ function Search({ onSetSize, isOpen }) {
                 onHoverLocation={handleHoverLocation}
             />
 
-            { /* Search info which includes legend button if in a Kiosk context. */}
-
-            <div className="search__info" style={{ gridTemplateColumns: isKioskContext && showLegendButton ? 'min-content 1fr' : 'auto' }}>
-                {isKioskContext && showLegendButton && <button className="search__legend" onClick={() => setShowLegendDialog(true)}><Legend /></button>}
-
-                { /* Search field that allows users to search for locations (MapsIndoors Locations and external) */}
-                <label className="search__label">
-                    <span>{t('Search by name, category, building...')}</span>
-                    <SearchField
-                        ref={searchFieldRef}
-                        mapsindoors={true}
-                        placeholder={t('Search by name, category, building...')}
-                        results={locations => onResults(locations)}
-                        clicked={() => searchFieldClicked()}
-                        cleared={() => cleared()}
-                        category={selectedCategory}
-                        disabled={searchDisabled} // Disabled initially to prevent content jumping when clicking and changing sheet size.
-                    />
-                </label>
-            </div>
+            {/* SearchField component handles search input and related UI */}
+            <SearchField
+                ref={searchFieldRef}
+                selectedCategory={selectedCategory}
+                showLegendButton={showLegendButton}
+                onResults={onResults}
+                onSetSize={setSize}
+                onClearResults={cleared}
+                kioskKeyboardRef={kioskKeyboardRef}
+            />
 
             {/* Vertical list of Categories */}
             {/* Show full category list only when searchResults are empty */}
-            {isInputFieldInFocus && !showNotFoundMessage && categories.length > 0 && searchResults.length === 0 && (
+            {searchFieldRef.current?.isInputFieldInFocus && !showNotFoundMessage && categories.length > 0 && searchResults.length === 0 && (
                 <Categories
                     onSetSize={onSetSize}
                     searchFieldRef={searchFieldRef}
