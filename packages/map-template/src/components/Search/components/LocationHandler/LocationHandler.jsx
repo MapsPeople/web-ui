@@ -39,6 +39,8 @@ const LocationHandler = forwardRef(({ onHoverLocation }, ref) => {
      * @param {object} location
      */
     function onLocationClicked(location) {
+        // Prevent getFloor/setFloor/goTo calls if mapsIndoorsInstance is not available
+        if (!mapsIndoorsInstance) return;
         setCurrentLocation(location);
 
         // Set the current venue to be the selected location venue.
