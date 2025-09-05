@@ -49,6 +49,14 @@ const KioskScrollButtons = forwardRef(({ isOpen, searchResults, searchResultsSel
         return null;
     }
 
+    // Get the portal target element
+    const portalTarget = document.querySelector('.mapsindoors-map');
+
+    // Only render portal if target element exists
+    if (!portalTarget) {
+        return null;
+    }
+
     return createPortal(
         <div className="search__scroll-buttons">
             <mi-scroll-buttons
@@ -56,7 +64,7 @@ const KioskScrollButtons = forwardRef(({ isOpen, searchResults, searchResultsSel
                 style={{ '--primary-color': primaryColor }}
             ></mi-scroll-buttons>
         </div>,
-        document.querySelector('.mapsindoors-map')
+        portalTarget
     );
 });
 
