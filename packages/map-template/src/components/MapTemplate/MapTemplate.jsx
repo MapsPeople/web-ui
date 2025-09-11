@@ -272,6 +272,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         initializeMapsIndoorsSDK().then(() => {
             // Initialize the authentication handler after SDK is loaded
             authHandler.initializeAuthHandler();
+            // Set a callback to set the map as ready after auth completes
+            authHandler.setOnAuthComplete(() => setMapReady(true));
             setMapsindoorsSDKAvailable(true);
         });
 

@@ -18,6 +18,7 @@ export class MapsIndoorsAuthHandler {
         this.requestor = new FetchRequestor();
         this.authorizationNotifier = new AuthorizationNotifier();
         this.authorizationHandler = new RedirectRequestHandler();
+        this.onAuthComplete = null; // New: Callback for when auth completes
     }
 
     /**
@@ -81,6 +82,9 @@ export class MapsIndoorsAuthHandler {
 
                         const tokenResponse = await tokenHandler.performTokenRequest(config, tokenRequest);
                         window.mapsindoors.MapsIndoors.setAuthToken(tokenResponse.accessToken);
+                        if (this.onAuthComplete) {
+                            this.onAuthComplete(); // Trigger the callback after setting the token
+                        }
                         resolve(tokenResponse);
                     } catch (tokenError) {
                         reject(tokenError);
@@ -137,6 +141,11 @@ export class MapsIndoorsAuthHandler {
                 `${window.location.origin}${window.location.pathname}${window.location.search}`
             );
         }
+    }
+
+    // New method: Set a callback to run after auth
+    setOnAuthComplete(callback) {
+        this.onAuthComplete = callback;
     }
 }
 
