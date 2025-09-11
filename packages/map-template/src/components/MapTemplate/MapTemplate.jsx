@@ -4,6 +4,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
 import i18n from 'i18next';
 import initI18n from '../../i18n/initialize.js';
+import { authHandler } from '../../utils/authHandler';
 import './MapTemplate.scss';
 import { mapClickActions } from '../../constants/mapClickActions.js';
 import MapWrapper from '../MapWrapper/MapWrapper';
@@ -269,6 +270,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         initializeMapsIndoorsSDK().then(() => {
+            // Initialize the authentication handler after SDK is loaded
+            authHandler.initializeAuthHandler();
             setMapsindoorsSDKAvailable(true);
         });
 
