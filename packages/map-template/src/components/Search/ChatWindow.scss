@@ -20,8 +20,8 @@
 
 .chat-window__message--user {
   align-self: flex-end;
-  background-color: var(--brand-colors-white-100, #e6f7ff);
-  color: var(--color-gray-90);
+  background-color: var(--chat-window-primary-color, #e6f7ff);
+  color: var(--color-white-white);
 }
 
 .chat-window__message--server {

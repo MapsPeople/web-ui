@@ -283,7 +283,7 @@ function Search({ onSetSize, isOpen }) {
             />
 
             <ChatWindow
-                userMessage={''} />
+                userMessage={'Hi'} />
 
             {/* CategoryManager component to handle category logic and UI */}
             <CategoryManager
