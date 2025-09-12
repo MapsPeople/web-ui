@@ -20,6 +20,7 @@ import SearchResults from './components/SearchResults/SearchResults';
 import SearchField from './components/SearchField/SearchField';
 import CategoryManager from './components/CategoryManager/CategoryManager';
 import PropTypes from 'prop-types';
+import ChatWindow from './ChatWindow';
 
 Search.propTypes = {
     categories: PropTypes.array,
@@ -280,6 +281,9 @@ function Search({ onSetSize, isOpen }) {
                 isInputFieldInFocus={isInputFieldInFocus}
                 setIsInputFieldInFocus={setIsInputFieldInFocus}
             />
+
+            <ChatWindow
+                userMessage={''} />
 
             {/* CategoryManager component to handle category logic and UI */}
             <CategoryManager
