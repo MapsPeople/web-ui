@@ -89,9 +89,27 @@ function Search({ onSetSize, isOpen }) {
     // Track if the search input field is in focus to show categories
     const [isInputFieldInFocus, setIsInputFieldInFocus] = useState(false);
 
+    // Current message to send to chat window
+    const [currentChatMessage, setCurrentChatMessage] = useState('');
+
     // Memoize the hover callback to prevent unnecessary re-renders
     const handleHoverLocation = useCallback((location) => {
         setHoveredLocation(location);
+    }, []);
+
+    /**
+     * Callback passed to SearchField as onKeyDown.
+     * Invoked on every keydown event in the search input.
+     * If Enter is pressed and input is not empty, sends the message to ChatWindow.
+     */
+    const handleSearchKeyDown = useCallback((event, currentValue) => {
+        if (event.key === 'Enter' && currentValue?.trim()) {
+            event.preventDefault();
+            setCurrentChatMessage(currentValue.trim());
+
+            // Clear the search field after sending message
+            searchFieldRef.current?.clear();
+        }
     }, []);
 
     /**
@@ -277,13 +295,13 @@ function Search({ onSetSize, isOpen }) {
                 onResults={onResults}
                 onSetSize={setSize}
                 onClearResults={cleared}
+                onKeyDown={handleSearchKeyDown}
                 kioskKeyboardRef={kioskKeyboardRef}
                 isInputFieldInFocus={isInputFieldInFocus}
                 setIsInputFieldInFocus={setIsInputFieldInFocus}
             />
 
-            <ChatWindow
-                userMessage={'Hi'} />
+            <ChatWindow message={currentChatMessage} />
 
             {/* CategoryManager component to handle category logic and UI */}
             <CategoryManager

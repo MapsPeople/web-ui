@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback, forwardRef, useImperativeHandle } from 'react';
+import { useRef, useState, useCallback, forwardRef, useImperativeHandle, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useRecoilState } from 'recoil';
 import SearchFieldComponent from '../../../WebComponentWrappers/Search/Search';
@@ -18,11 +18,12 @@ import PropTypes from 'prop-types';
  * @param {function} props.onResults - Callback fired when search results are received
  * @param {function} props.onSetSize - Callback to communicate size changes to parent
  * @param {function} props.onClearResults - Callback fired when search is cleared
+ * @param {function} props.onKeyDown - Callback fired when keydown events occur on the input field
  * @param {object} props.kioskKeyboardRef - Reference to kiosk keyboard component
  * @param {boolean} props.isInputFieldInFocus - Whether the search field is in focus
  * @param {function} props.setIsInputFieldInFocus - Function to set input field focus state
  */
-const SearchField = forwardRef(({ selectedCategory, showLegendButton, onResults, onSetSize, onClearResults, kioskKeyboardRef, isInputFieldInFocus, setIsInputFieldInFocus }, ref) => {
+const SearchField = forwardRef(({ selectedCategory, showLegendButton, onResults, onSetSize, onClearResults, onKeyDown, kioskKeyboardRef, isInputFieldInFocus, setIsInputFieldInFocus }, ref) => {
     const { t } = useTranslation();
 
     /** Referencing the search field */
@@ -84,6 +85,28 @@ const SearchField = forwardRef(({ selectedCategory, showLegendButton, onResults,
         isInputFieldInFocus
     }), [isInputFieldInFocus]);
 
+    // Set up keydown event listener on the native input element
+    // Since we are using a web component, we need to manually add the event listener
+    useEffect(() => {
+        if (!onKeyDown || !searchFieldRef.current) return;
+
+        searchFieldRef.current.getInputField().then(inputElement => {
+            // Early return if component is unmounted before promise resolves
+            if (!inputElement) return;
+
+            const handleKeyDown = (event) => {
+                onKeyDown(event, searchFieldRef.current?.getValue());
+            };
+
+            inputElement.addEventListener('keydown', handleKeyDown);
+
+            // Remove event listener on cleanup
+            return () => {
+                inputElement.removeEventListener('keydown', handleKeyDown);
+            };
+        });
+    }, [onKeyDown]);
+
     return (
         <div className="search__info" style={{ gridTemplateColumns: isKioskContext && showLegendButton ? 'min-content 1fr' : 'auto' }}>
             {isKioskContext && showLegendButton && (
@@ -118,6 +141,7 @@ SearchField.propTypes = {
     onResults: PropTypes.func.isRequired,
     onSetSize: PropTypes.func.isRequired,
     onClearResults: PropTypes.func.isRequired,
+    onKeyDown: PropTypes.func,
     kioskKeyboardRef: PropTypes.object,
     isInputFieldInFocus: PropTypes.bool.isRequired,
     setIsInputFieldInFocus: PropTypes.func.isRequired
