@@ -15,6 +15,7 @@ import useOutsideMapsIndoorsDataClick from '../../../hooks/useOutsideMapsIndoors
 import mapsIndoorsInstanceState from '../../../atoms/mapsIndoorsInstanceState';
 import PropTypes from 'prop-types';
 import { ReactComponent as ChevronLeft } from '../../../assets/chevron-left.svg';
+import { useIsKioskContext } from '../../../hooks/useIsKioskContext';
 import { useTranslation } from 'react-i18next';
 
 Categories.propTypes = {
@@ -68,6 +69,11 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, t
     const [selectedCategoryDisplayName, setSelectedCategoryDisplayName] = useState([])
 
     const { t } = useTranslation();
+
+    const isKiosk = useIsKioskContext();
+
+    // Determines the main container class for Categories, dictating the look for kiosk mode or desktop mode
+    const categoriesContainerClassName = `categories prevent-scroll${isKiosk ? ' categories--kiosk' : ''}`;
 
     /**
     * Communicate size change to parent component.
@@ -181,9 +187,10 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, t
     }, [categories])
 
     return (
-        <div className="categories prevent-scroll" {...scrollableContentSwipePrevent}>
+        <div className={categoriesContainerClassName} {...scrollableContentSwipePrevent}>
             {categories.length > 0 && (
-                <div className="categories__list">
+                <>
+                    {/* Show nav above subcategories row if not topLevelCategory */}
                     {!topLevelCategory && (
                         <div className="categories__nav">
                             <button
@@ -196,27 +203,27 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, t
                             <div>{selectedCategoryDisplayName}</div>
                         </div>
                     )}
+                    <div className="categories__list">
+                        {categoriesToShow.map(([category, categoryInfo]) => {
+                            if (!topLevelCategory && selectedCategoriesArray.current.length !== 1) {
+                                return null;
+                            }
 
-                    {categoriesToShow.map(([category, categoryInfo]) => {
-                        if (!topLevelCategory && selectedCategoriesArray.current.length !== 1) {
-                            return null;
-                        }
-
-                        return (
-                            <div key={category} className="categories__category">
-                                <button
-                                    onClick={() =>
-                                        topLevelCategory
+                            return (
+                                <div key={category} className="categories__category">
+                                    <button
+                                        onClick={() => topLevelCategory
                                             ? categoryClicked(category)
                                             : getFilteredLocations(category)
-                                    }>
-                                    <img src={categoryInfo.iconUrl} alt="" />
-                                    {categoryInfo.displayName}
-                                </button>
-                            </div>
-                        );
-                    })}
-                </div>
+                                        }>
+                                        <img src={categoryInfo.iconUrl} alt="" />
+                                        {categoryInfo.displayName}
+                                    </button>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </>
             )}
         </div>
     );

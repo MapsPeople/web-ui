@@ -7,6 +7,25 @@
     gap: var(--spacing-x-small);
     margin-top: var(--spacing-x-small);
 
+    // Kiosk mode styles
+    &--kiosk {
+        .categories__list {
+            flex-direction: row;
+            gap: var(--spacing-large);
+            overflow-x: auto;
+            overflow-y: hidden;
+            scrollbar-width: auto;
+            justify-content: center;
+        }
+
+        .categories__list:not(:empty) {
+            padding: 0 var(--spacing-small) var(--spacing-small) var(--spacing-small);
+        }
+        .categories__category {
+            width: auto;
+        }
+    }
+
     &__list {
         display: flex;
         flex-direction: column;
