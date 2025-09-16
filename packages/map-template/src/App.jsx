@@ -1,7 +1,14 @@
 import './App.css';
 import MapsIndoorsMap from './components/MapsIndoorsMap/MapsIndoorsMap';
+import { trackPageView } from './analytics';
+import { useEffect } from 'react';
 
 function App() {
+    // Track page view when app loads
+    useEffect(() => {
+        trackPageView('MapsIndoors Map Template');
+    }, []);
+
     return (
         <div className="app">
             {/* This is the Map Template component */}

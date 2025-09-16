@@ -3,6 +3,7 @@ import { RecoilRoot } from 'recoil';
 import MapTemplate from '../MapTemplate/MapTemplate.jsx';
 import getBooleanValue from '../../helpers/GetBooleanValue.js';
 import PropTypes from 'prop-types';
+import { trackMapInteraction, setCustomerApiKey } from '../../analytics';
 
 MapsIndoorsMap.propTypes = {
     apiKey: PropTypes.string,
@@ -142,6 +143,18 @@ function MapsIndoorsMap(props) {
         if (apiKey === 'mapspeople3d' && !venue) {
             venue = 'AUSTINOFFICE';
         }
+
+        // Set customer API key for analytics
+        const customerApiKey = apiKey || 'mapspeople3d';
+        console.log(customerApiKey);
+        setCustomerApiKey(customerApiKey);
+        
+        // Track map initialization
+        trackMapInteraction('map_initialized', {
+            api_key: customerApiKey,
+            venue: props.venue,
+            supports_url_parameters: props.supportsUrlParameters
+        });
 
         setMapTemplateProps({
             apiKey,
