@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import './Categories.scss';
 import categoriesState from '../../../atoms/categoriesState';
@@ -15,6 +15,7 @@ import useOutsideMapsIndoorsDataClick from '../../../hooks/useOutsideMapsIndoors
 import mapsIndoorsInstanceState from '../../../atoms/mapsIndoorsInstanceState';
 import PropTypes from 'prop-types';
 import { ReactComponent as ChevronLeft } from '../../../assets/chevron-left.svg';
+import { ReactComponent as ChevronRight } from '../../../assets/chevron-right.svg';
 import { useIsKioskContext } from '../../../hooks/useIsKioskContext';
 import { useTranslation } from 'react-i18next';
 
@@ -71,6 +72,20 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, t
     const { t } = useTranslation();
 
     const isKiosk = useIsKioskContext();
+
+    // Ref for horizontal scrolling in kiosk mode
+    const categoriesListRef = useRef(null);
+
+    // Scroll handler for chevrons
+    const scrollCategories = (direction) => {
+        if (categoriesListRef.current) {
+            const scrollAmount = 200; // px to scroll per click
+            categoriesListRef.current.scrollBy({
+                left: direction === 'left' ? -scrollAmount : scrollAmount,
+                behavior: 'smooth',
+            });
+        }
+    };
 
     // Determines the main container class for Categories, dictating the look for kiosk mode or desktop mode
     const categoriesContainerClassName = `categories prevent-scroll${isKiosk ? ' categories--kiosk' : ''}`;
@@ -186,6 +201,10 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, t
         setSelectedCategoryDisplayName(categoryDisplayName);
     }, [categories])
 
+    // Determine if we are at the end of the subcategory chain (no more subcategories to show)
+    // We don't show chevrons if we are at the end of the subcategory chain
+    const atEndOfSubcategories = !topLevelCategory && categoriesToShow.length === 0;
+
     return (
         <div className={categoriesContainerClassName} {...scrollableContentSwipePrevent}>
             {categories.length > 0 && (
@@ -203,25 +222,47 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, t
                             <div>{selectedCategoryDisplayName}</div>
                         </div>
                     )}
-                    <div className="categories__list">
-                        {categoriesToShow.map(([category, categoryInfo]) => {
-                            if (!topLevelCategory && selectedCategoriesArray.current.length !== 1) {
-                                return null;
-                            }
+                    <div className="categories__row">
+                        {isKiosk && !atEndOfSubcategories && (
+                            <div className="categories__chevron categories__chevron--left">
+                                <button
+                                    aria-label={t('Previous categories')}
+                                    type="button"
+                                    onClick={() => scrollCategories('left')}>
+                                    <ChevronLeft />
+                                </button>
+                            </div>
+                        )}
+                        <div className="categories__list" ref={isKiosk ? categoriesListRef : undefined}>
+                            {categoriesToShow.map(([category, categoryInfo]) => {
+                                if (!topLevelCategory && selectedCategoriesArray.current.length !== 1) {
+                                    return null;
+                                }
 
-                            return (
-                                <div key={category} className="categories__category">
-                                    <button
-                                        onClick={() => topLevelCategory
-                                            ? categoryClicked(category)
-                                            : getFilteredLocations(category)
-                                        }>
-                                        <img src={categoryInfo.iconUrl} alt="" />
-                                        {categoryInfo.displayName}
-                                    </button>
-                                </div>
-                            );
-                        })}
+                                return (
+                                    <div key={category} className="categories__category">
+                                        <button
+                                            onClick={() => topLevelCategory
+                                                ? categoryClicked(category)
+                                                : getFilteredLocations(category)
+                                            }>
+                                            <img src={categoryInfo.iconUrl} alt="" />
+                                            {categoryInfo.displayName}
+                                        </button>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                        {isKiosk && !atEndOfSubcategories && (
+                            <div className="categories__chevron categories__chevron--right">
+                                <button
+                                    aria-label={t('Next categories')}
+                                    type="button"
+                                    onClick={() => scrollCategories('right')}>
+                                    <ChevronRight />
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </>
             )}

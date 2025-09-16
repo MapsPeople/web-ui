@@ -9,20 +9,60 @@
 
     // Kiosk mode styles
     &--kiosk {
-        .categories__list {
+        .categories__row {
+            display: flex;
             flex-direction: row;
-            gap: var(--spacing-large);
-            overflow-x: auto;
-            overflow-y: hidden;
-            scrollbar-width: auto;
-            justify-content: center;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--spacing-x-small);
         }
 
-        .categories__list:not(:empty) {
-            padding: 0 var(--spacing-small) var(--spacing-small) var(--spacing-small);
+        .categories__chevron {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            flex: 0 0 auto;
+
+            &--left {
+                margin-right: auto;
+            }
+            &--right {
+                margin-left: auto;
+            }
+
+            button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 1px solid var(--color-gray-30);
+                border-radius: var(--spacing-x-small);
+                background: none;
+                cursor: pointer;
+                color: var(--color-gray-90);
+                padding: var(--spacing-medium);
+
+                &:hover {
+                    background-color: var(--tailwind-colors-gray-50);
+                    border-color: var(--tailwind-colors-gray-200);
+                }
+
+                svg {
+                    width: var(--spacing-medium);
+                    height: var(--spacing-medium);
+                }
+            }
         }
+
+        .categories__list {
+            flex-direction: row;
+            gap: var(--spacing-xx-small);
+            scrollbar-width: hidden;
+        }
+
         .categories__category {
             width: auto;
+            flex: 0 0 auto;
         }
     }
 
