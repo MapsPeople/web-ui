@@ -6,7 +6,8 @@ import PropTypes from 'prop-types';
 
 Modal.propTypes = {
     children: PropTypes.node,
-    isOpen: PropTypes.bool
+    isOpen: PropTypes.bool,
+    modalLocation: PropTypes.string
 };
 
 /**
@@ -19,7 +20,7 @@ Modal.propTypes = {
  * @param {React.ReactNode} props.children - The content to be displayed inside the modal.
  * @param {boolean} props.isOpen - If the modal is open (visible) or not.
  */
-function Modal({ children, isOpen }) {
+function Modal({ children, isOpen, modalLocation }) {
 
     /** Boolean for controlling the "full" CSS class modifier */
     const [fullHeight, setFullHeight] = useState(false);
@@ -48,7 +49,7 @@ function Modal({ children, isOpen }) {
     }, [contentRef]);
 
     return <div ref={modalRef}
-        className={`modal ${isOpen ? 'modal--open' : ''} ${fullHeight ? 'modal--full' : ''} ${kioskLocation ? 'modal--kiosk' : ''}`}
+        className={`modal ${modalLocation} ${isOpen ? 'modal--open' : ''} ${fullHeight ? 'modal--full' : ''} ${kioskLocation ? 'modal--kiosk' : ''}`}
     >
         <div ref={contentRef} className="modal__content">
             {children}

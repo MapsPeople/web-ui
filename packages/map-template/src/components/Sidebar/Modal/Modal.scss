@@ -4,8 +4,6 @@ $desktop-breakpoint: 992px;
     position: absolute;
     z-index: var(--z-index-overlay);
     width: 568px;
-    left: var(--spacing-medium);
-    top: var(--spacing-medium);
     border-radius: var(--spacing-x-small);
     border: 1px solid var(--color-gray-30);
     background: var(--color-white-white);
@@ -51,5 +49,34 @@ $desktop-breakpoint: 992px;
         max-height: 100%;
         min-height: 0;
         box-sizing: border-box;
+    }
+
+    &.topleft {
+        top: 10px;
+        left: 10px;
+        right: auto;
+        bottom: auto;
+        z-index: var(--z-index-dropdown);
+    }
+    &.topright {
+        top: 10px;
+        right: 100px;
+        left: auto;
+        bottom: auto;
+        z-index: var(--z-index-dropdown);
+    }
+    &.bottomleft {
+        bottom: 10px;
+        left: 100px;
+        top: auto;
+        right: auto;
+        z-index: var(--z-index-dropdown);
+    }
+    &.bottomright {
+        bottom: 10px;
+        right: 10px;
+        left: auto;
+        top: auto;
+        z-index: var(--z-index-dropdown);
     }
 }
