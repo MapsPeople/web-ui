@@ -37,7 +37,8 @@ MapsIndoorsMap.propTypes = {
     center: PropTypes.string,
     useAppTitle: PropTypes.bool,
     showMapMarkers: PropTypes.bool,
-    mapboxMapStyle: PropTypes.string
+    mapboxMapStyle: PropTypes.string,
+    modalLocation: PropTypes.string,
 };
 
 /**
@@ -76,6 +77,7 @@ MapsIndoorsMap.propTypes = {
  * @param {boolean} [props.useAppTitle] - Specifies if the Map Template should set the document title as defined in the App Config. The default value is set to false.
  * @param {boolean} [props.showMapMarkers] - Specifies if the Map Template should show the Map Markers. The default value is set to true.
  * @param {string} [props.mapboxMapStyle] - Specifies the Mapbox Map Style to use. The default value is set to "mapbox://styles/mapbox/standard".
+ * @param {string} [props.modalLocation] - Specifies where the modal renders - default to top left. other options include topright, bottomleft, or bottomright.
  */
 function MapsIndoorsMap(props) {
 
@@ -98,7 +100,8 @@ function MapsIndoorsMap(props) {
             searchExternalLocations: true,
             showExternalIDs: false,
             hideNonMatches: false,
-            useAppTitle: false
+            useAppTitle: false,
+            modalLocation: 'topleft',
         };
 
         const apiKeyQueryParameter = queryStringParams.get('apiKey');
@@ -134,6 +137,7 @@ function MapsIndoorsMap(props) {
         const useAppTitleQueryParameter = queryStringParams.get('useAppTitle');
         const showMapMarkersQueryParameter = queryStringParams.get('showMapMarkers');
         const mapboxMapStyleQueryParameter = queryStringParams.get('mapboxMapStyle');
+        const modalLocationQueryParameter = queryStringParams.get('modalLocation');
         // Set the initial props on the Map Template component.
 
         // For the apiKey and venue, set the venue to "AUSTINOFFICE" if the apiKey is "mapspeople3d" and no venue is provided. We want this as the default venue for the "mapspeople3d" apiKey.
@@ -178,6 +182,7 @@ function MapsIndoorsMap(props) {
             useAppTitle: getBooleanValue(props.supportsUrlParameters, defaultProps.useAppTitle, props.useAppTitle, useAppTitleQueryParameter),
             showMapMarkers: getBooleanValue(props.supportsUrlParameters, defaultProps.showMapMarkers, props.showMapMarkers, showMapMarkersQueryParameter),
             mapboxMapStyle: props.supportsUrlParameters && mapboxMapStyleQueryParameter ? mapboxMapStyleQueryParameter : props.mapboxMapStyle,
+            modalLocation: props.supportsUrlParameters && modalLocationQueryParameter ? modalLocationQueryParameter : props.modalLocation,
         });
 
     }, [props]);
