@@ -123,7 +123,7 @@ function Search({ onSetSize, isOpen }) {
 
     const [childKeys, setChildKeys] = useState([]);
 
-    const [showCategoriesUnderSearch, setShowCategoriesUnderSearch] = useState(false);
+    const [areHorizontalCategoriesEnabled, setAreHorizontalCategoriesEnabled] = useState(false);
 
     /**
      * Handles go back function.
@@ -404,7 +404,9 @@ function Search({ onSetSize, isOpen }) {
      * @returns {boolean} True if in kiosk context and showCategoriesUnderSearch is enabled, otherwise false.
      */
     function shouldShowCategoriesUnderSearch() {
-        return isKioskContext && showCategoriesUnderSearch;
+        // We determine wether to show categories horizontally or vertically based on the areHorizontalCategoriesEnabled setting.
+        // Each layout has different styling and thus needs to be treated as separate options.
+        return isKioskContext && areHorizontalCategoriesEnabled;
     }
 
     /*
@@ -566,7 +568,7 @@ function Search({ onSetSize, isOpen }) {
      * Get app config and determine if categories should be shown under the search field in kiosk mode.
      */
     useEffect(() => {
-        setShowCategoriesUnderSearch(appConfig?.appSettings?.showCategoriesUnderSearch === true || appConfig?.appSettings?.showCategoriesUnderSearch === 'true');
+        setAreHorizontalCategoriesEnabled(appConfig?.appSettings?.areHorizontalCategoriesEnabled === true || appConfig?.appSettings?.areHorizontalCategoriesEnabled === 'true');
     }, [appConfig]);
 
 
@@ -605,6 +607,7 @@ function Search({ onSetSize, isOpen }) {
                     getFilteredLocations={(category) => getFilteredLocations(category)}
                     isOpen={!!selectedCategory}
                     topLevelCategory={true}
+                    kioskOrientation={areHorizontalCategoriesEnabled ? 'horizontal' : 'vertical'}
                 />
             )}
 
@@ -624,6 +627,7 @@ function Search({ onSetSize, isOpen }) {
                             childKeys={childKeys}
                             topLevelCategory={false}
                             selectedCategoriesArray={selectedCategoriesArray}
+                            kioskOrientation={areHorizontalCategoriesEnabled ? 'horizontal' : 'vertical'}
                         />
                     )}
 

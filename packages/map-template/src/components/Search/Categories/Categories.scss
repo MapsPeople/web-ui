@@ -8,7 +8,7 @@
     margin-top: var(--spacing-x-small);
 
     // Kiosk mode styles
-    &--kiosk {
+    &--kiosk-horizontal {
         .categories__row {
             display: flex;
             flex-direction: row;
@@ -65,6 +65,8 @@
             flex: 0 0 auto;
         }
     }
+
+    // Note: &--kiosk-vertical uses the default vertical styles defined in &__list and &__category
 
     &__list {
         display: flex;

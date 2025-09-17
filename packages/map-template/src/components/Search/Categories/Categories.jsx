@@ -26,7 +26,8 @@ Categories.propTypes = {
     isOpen: PropTypes.bool,
     topLevelCategory: PropTypes.bool,
     handleBack: PropTypes.func,
-    selectedCategoriesArray: PropTypes.object
+    selectedCategoriesArray: PropTypes.object,
+    kioskOrientation: PropTypes.oneOf(['horizontal', 'vertical'])
 };
 
 /**
@@ -40,8 +41,9 @@ Categories.propTypes = {
  * @param {boolean} props.topLevelCategory - If true, renders top-level categories; otherwise, renders sub-categories.
  * @param {function} props.handleBack - Callback function to handle back navigation between categories.
  * @param {Array<string>} props.selectedCategoriesArray - Array containing selected categories (e.g., top-level and sub-category).
+ * @param {string} props.kioskOrientation - Orientation for kiosk mode: 'horizontal' or 'vertical'.
  */
-function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, topLevelCategory, handleBack, selectedCategoriesArray }) {
+function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, topLevelCategory, handleBack, selectedCategoriesArray, kioskOrientation }) {
 
     const categories = useRecoilValue(categoriesState);
 
@@ -88,7 +90,9 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, t
     };
 
     // Determines the main container class for Categories, dictating the look for kiosk mode or desktop mode
-    const categoriesContainerClassName = `categories prevent-scroll${isKiosk ? ' categories--kiosk' : ''}`;
+    // Based on the kioskOrientation prop, it will apply different styles for horizontal or vertical layouts
+    // Default to horizontal if no orientation is provided
+    const categoriesContainerClassName = `categories prevent-scroll${isKiosk ? ` categories--kiosk-${kioskOrientation || 'vertical'}` : ''}`;
 
     /**
     * Communicate size change to parent component.
@@ -205,6 +209,11 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, t
     // We don't show chevrons if we are at the end of the subcategory chain
     const atEndOfSubcategories = !topLevelCategory && categoriesToShow.length === 0;
 
+    // Determine if we should show chevrons (only in horizontal kiosk mode)
+    // Only visible in horizontal layout
+    // They do not render if we are at the end of the subcategory chain
+    const shouldShowChevrons = isKiosk && kioskOrientation === 'horizontal' && !atEndOfSubcategories;
+
     return (
         <div className={categoriesContainerClassName} {...scrollableContentSwipePrevent}>
             {categories.length > 0 && (
@@ -223,7 +232,7 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, t
                         </div>
                     )}
                     <div className="categories__row">
-                        {isKiosk && !atEndOfSubcategories && (
+                        {shouldShowChevrons && (
                             <div className="categories__chevron categories__chevron--left">
                                 <button
                                     aria-label={t('Previous categories')}
@@ -253,7 +262,7 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, t
                                 );
                             })}
                         </div>
-                        {isKiosk && !atEndOfSubcategories && (
+                        {shouldShowChevrons && (
                             <div className="categories__chevron categories__chevron--right">
                                 <button
                                     aria-label={t('Next categories')}
