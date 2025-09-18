@@ -23,7 +23,7 @@ import PropTypes from 'prop-types';
  * @param {boolean} props.mapbox - Set to true to include results from Mapbox Places autocomplete service.
  */
 const SearchField = forwardRef(function SearchFieldComponent(props, ref) {
-    const { placeholder, mapsindoors, results, clicked, cleared, changed, category, google, mapbox, disabled = false } = props;
+    const { placeholder, mapsindoors, results, clicked, cleared, changed, category, google, mapbox, disabled = false, onKeyDown } = props;
     const elementRef = useRef();
 
     const userPosition = useRecoilValue(userPositionState);
@@ -101,6 +101,33 @@ const SearchField = forwardRef(function SearchFieldComponent(props, ref) {
 
     }, [placeholder, mapsindoors, results, clicked, cleared, google, mapbox, changed]);
 
+
+    // Attach native input 'keydown' listener coming from the parent via onKeyDown.
+    // We need to resolve the web-component's internal input (Promise) and add the listener.
+    useEffect(() => {
+        if (!onKeyDown || !elementRef.current) return;
+
+        let cancelled = false;
+        let handler = null;
+
+        elementRef.current.getInputField().then(inputElement => {
+            if (cancelled || !inputElement) return;
+            handler = (event) => onKeyDown(event, elementRef.current?.value);
+            inputElement.addEventListener('keydown', handler);
+        }).catch(() => {
+            // swallow - just don't attach the listener if getInputField fails
+        });
+
+        return () => {
+            cancelled = true;
+            if (!handler) return;
+            // try remove the handler if the input resolves later as well
+            elementRef.current.getInputField().then(inputElement => {
+                if (inputElement && handler) inputElement.removeEventListener('keydown', handler);
+            }).catch(() => { });
+        };
+    }, [onKeyDown]);
+
     return <mi-search ref={elementRef}
         id-attribute="search"
         placeholder={placeholder}
@@ -126,7 +153,8 @@ SearchField.propTypes = {
     preventFocus: PropTypes.bool,
     google: PropTypes.bool,
     mapbox: PropTypes.bool,
-    disabled: PropTypes.bool
+    disabled: PropTypes.bool,
+    onKeyDown: PropTypes.func
 };
 
 export default SearchField;

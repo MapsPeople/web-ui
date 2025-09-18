@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback, forwardRef, useImperativeHandle, useEffect } from 'react';
+import { useRef, useState, useCallback, forwardRef, useImperativeHandle } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useRecoilState } from 'recoil';
 import SearchFieldComponent from '../../../WebComponentWrappers/Search/Search';
@@ -85,28 +85,6 @@ const SearchField = forwardRef(({ selectedCategory, showLegendButton, onResults,
         isInputFieldInFocus
     }), [isInputFieldInFocus]);
 
-    // Set up keydown event listener on the native input element
-    // Since we are using a web component, we need to manually add the event listener
-    useEffect(() => {
-        if (!onKeyDown || !searchFieldRef.current) return;
-
-        searchFieldRef.current.getInputField().then(inputElement => {
-            // Early return if component is unmounted before promise resolves
-            if (!inputElement) return;
-
-            const handleKeyDown = (event) => {
-                onKeyDown(event, searchFieldRef.current?.getValue());
-            };
-
-            inputElement.addEventListener('keydown', handleKeyDown);
-
-            // Remove event listener on cleanup
-            return () => {
-                inputElement.removeEventListener('keydown', handleKeyDown);
-            };
-        });
-    }, [onKeyDown]);
-
     return (
         <div className="search__info" style={{ gridTemplateColumns: isKioskContext && showLegendButton ? 'min-content 1fr' : 'auto' }}>
             {isKioskContext && showLegendButton && (
@@ -126,6 +104,7 @@ const SearchField = forwardRef(({ selectedCategory, showLegendButton, onResults,
                     clicked={searchFieldClicked}
                     cleared={cleared}
                     category={selectedCategory}
+                    onKeyDown={onKeyDown}
                     disabled={searchDisabled} // Disabled initially to prevent content jumping when clicking and changing sheet size.
                 />
             </label>
