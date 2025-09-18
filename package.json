@@ -31,6 +31,10 @@
     "lerna": "^6.4.0"
   },
   "dependencies": {
-    "mapbox-gl": "3.8.0"
+    "@google/genai": "^1.20.0",
+    "@modelcontextprotocol/sdk": "^1.18.0",
+    "mapbox-gl": "3.8.0",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1"
   }
 }

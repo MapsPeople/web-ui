@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { RecoilRoot } from 'recoil';
+import GeminiProvider from '../../providers/GeminiProvider.jsx';
 import MapTemplate from '../MapTemplate/MapTemplate.jsx';
 import getBooleanValue from '../../helpers/GetBooleanValue.js';
 import PropTypes from 'prop-types';
@@ -184,7 +185,11 @@ function MapsIndoorsMap(props) {
 
     return (
         <RecoilRoot>
-            {mapTemplateProps && <MapTemplate {...mapTemplateProps}></MapTemplate>}
+            {mapTemplateProps && (
+                <GeminiProvider>
+                    <MapTemplate {...mapTemplateProps} />
+                </GeminiProvider>
+            )}
         </RecoilRoot>
     )
 }
