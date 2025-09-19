@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useGemini } from '../../providers/GeminiProvider';
 import { useRecoilValue } from 'recoil';
 import PropTypes from 'prop-types';
@@ -12,6 +12,7 @@ function ChatWindow({ message, isEnabled }) {
     const primaryColor = useRecoilValue(primaryColorState);
     const [messages, setMessages] = useState([]);
     const apiKey = useRecoilValue(apiKeyState);
+    const chatWindowRef = useRef(null);
 
     // Use Gemini provider
     const { generateResponse, getAvailableMCPTools, isLoading, tools } = useGemini();
@@ -28,6 +29,13 @@ function ChatWindow({ message, isEnabled }) {
     useEffect(() => {
         getAvailableMCPTools().catch(console.error);
     }, [getAvailableMCPTools]);
+
+    // Auto-scroll to bottom when messages change
+    useEffect(() => {
+        if (chatWindowRef.current) {
+            chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
+        }
+    }, [messages, isLoading]);
 
     // Maybe expose a function to add messages, like onUserMessage, then pass it from the Search to the ChatWindow
 
@@ -71,7 +79,7 @@ function ChatWindow({ message, isEnabled }) {
     if (!isEnabled && messages.length === 0) return null;
 
     return (
-        <div className="chat-window" style={{ '--chat-window-primary-color': primaryColor }}>
+        <div ref={chatWindowRef} className="chat-window" style={{ '--chat-window-primary-color': primaryColor }}>
             {messages.map((message) => (
                 <div key={message.id} className={`chat-window__message chat-window__message--${message.type}`}>
                     {message.type === 'server' ? (
