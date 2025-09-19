@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import './Categories.scss';
 import categoriesState from '../../../atoms/categoriesState';
@@ -15,6 +15,8 @@ import useOutsideMapsIndoorsDataClick from '../../../hooks/useOutsideMapsIndoors
 import mapsIndoorsInstanceState from '../../../atoms/mapsIndoorsInstanceState';
 import PropTypes from 'prop-types';
 import { ReactComponent as ChevronLeft } from '../../../assets/chevron-left.svg';
+import { ReactComponent as ChevronRight } from '../../../assets/chevron-right.svg';
+import { useIsKioskContext } from '../../../hooks/useIsKioskContext';
 import { useTranslation } from 'react-i18next';
 
 Categories.propTypes = {
@@ -24,7 +26,8 @@ Categories.propTypes = {
     isOpen: PropTypes.bool,
     topLevelCategory: PropTypes.bool,
     handleBack: PropTypes.func,
-    selectedCategoriesArray: PropTypes.object
+    selectedCategoriesArray: PropTypes.object,
+    categoryOrientation: PropTypes.oneOf(['horizontal', 'vertical'])
 };
 
 /**
@@ -38,8 +41,9 @@ Categories.propTypes = {
  * @param {boolean} props.topLevelCategory - If true, renders top-level categories; otherwise, renders sub-categories.
  * @param {function} props.handleBack - Callback function to handle back navigation between categories.
  * @param {Array<string>} props.selectedCategoriesArray - Array containing selected categories (e.g., top-level and sub-category).
+ * @param {string} props.categoryOrientation - Orientation for kiosk mode: 'horizontal' or 'vertical'.
  */
-function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, topLevelCategory, handleBack, selectedCategoriesArray }) {
+function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, topLevelCategory, handleBack, selectedCategoriesArray, categoryOrientation }) {
 
     const categories = useRecoilValue(categoriesState);
 
@@ -68,6 +72,80 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, t
     const [selectedCategoryDisplayName, setSelectedCategoryDisplayName] = useState([])
 
     const { t } = useTranslation();
+
+    const isKiosk = useIsKioskContext();
+
+    // Ref for horizontal scrolling in kiosk mode
+    const categoriesListRef = useRef(null);
+
+    // Add new state for tracking scroll position
+    const [canScrollLeft, setCanScrollLeft] = useState(false);
+    const [canScrollRight, setCanScrollRight] = useState(false);
+
+    // Scroll handler for kiosk horizontal mode
+    const scrollHorizontalCategories = (direction) => {
+        // Early exit if category buttons should not be shown
+        if (!shouldShowKioskHorizontalNavButtons) {
+            return;
+        }
+        
+        if (categoriesListRef.current) {
+            const scrollAmount = 200; // px to scroll per click
+            categoriesListRef.current.scrollBy({
+                left: direction === 'left' ? -scrollAmount : scrollAmount,
+                behavior: 'smooth',
+            });
+        }
+    };
+
+    // Function to check scroll position and update chevron states
+    const updateKioskHorizontalNavButtonStates = () => {
+        if (categoriesListRef.current) {
+            
+            const { scrollLeft, scrollWidth, clientWidth } = categoriesListRef.current;
+            const isAtStart = scrollLeft <= 0;
+            const isAtEnd = scrollLeft >= scrollWidth - clientWidth - 1; // -1 for rounding errors
+            
+            setCanScrollLeft(!isAtStart);
+            setCanScrollRight(!isAtEnd);
+        }
+    };
+
+    // Determine if we are at the end of the subcategory chain (no more subcategories to show)
+    // We don't show chevrons if we are at the end of the subcategory chain
+    const atEndOfSubcategories = !topLevelCategory && categoriesToShow.length === 0;
+
+    // Determine if we should show chevrons (only in horizontal kiosk mode)
+    // Only visible in kiosk horizontal layout
+    // They do not render if we are at the end of the subcategory chain
+    const shouldShowKioskHorizontalNavButtons = isKiosk && categoryOrientation === 'horizontal' && !atEndOfSubcategories;
+
+    // Add scroll event listener to track position changes
+    useEffect(() => {
+        // Early exit if category buttons should not be shown
+        if (!shouldShowKioskHorizontalNavButtons) {
+            return;
+        }
+        
+        const categoriesList = categoriesListRef.current;
+        if (categoriesList) {
+            // Initial check
+            updateKioskHorizontalNavButtonStates();
+            
+            // Add scroll event listener
+            categoriesList.addEventListener('scroll', updateKioskHorizontalNavButtonStates);
+            
+            // Cleanup
+            return () => {
+                categoriesList.removeEventListener('scroll', updateKioskHorizontalNavButtonStates);
+            };
+        }
+    }, [shouldShowKioskHorizontalNavButtons, categoriesToShow.length]);
+
+    // Determines the main container class for Categories, dictating the look for kiosk mode or desktop mode
+    // Based on the kioskOrientation prop, it will apply different styles for horizontal or vertical layouts
+    // Default to horizontal if no orientation is provided
+    const categoriesContainerClassName = `categories prevent-scroll${isKiosk ? ` categories--kiosk-${categoryOrientation || 'vertical'}` : ''}`;
 
     /**
     * Communicate size change to parent component.
@@ -181,9 +259,10 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, t
     }, [categories])
 
     return (
-        <div className="categories prevent-scroll" {...scrollableContentSwipePrevent}>
+        <div className={categoriesContainerClassName} {...scrollableContentSwipePrevent}>
             {categories.length > 0 && (
-                <div className="categories__list">
+                <>
+                    {/* Show nav above subcategories row if not topLevelCategory */}
                     {!topLevelCategory && (
                         <div className="categories__nav">
                             <button
@@ -196,27 +275,51 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, t
                             <div>{selectedCategoryDisplayName}</div>
                         </div>
                     )}
-
-                    {categoriesToShow.map(([category, categoryInfo]) => {
-                        if (!topLevelCategory && selectedCategoriesArray.current.length !== 1) {
-                            return null;
-                        }
-
-                        return (
-                            <div key={category} className="categories__category">
+                    <div className="categories__row">
+                        {shouldShowKioskHorizontalNavButtons && (
+                            <div className="categories__chevron categories__chevron--left">
                                 <button
-                                    onClick={() =>
-                                        topLevelCategory
-                                            ? categoryClicked(category)
-                                            : getFilteredLocations(category)
-                                    }>
-                                    <img src={categoryInfo.iconUrl} alt="" />
-                                    {categoryInfo.displayName}
+                                    aria-label={t('Previous categories')}
+                                    type="button"
+                                    disabled={!canScrollLeft}
+                                    onClick={() => scrollHorizontalCategories('left')}>
+                                    <ChevronLeft />
                                 </button>
                             </div>
-                        );
-                    })}
-                </div>
+                        )}
+                        <div className="categories__list" ref={isKiosk ? categoriesListRef : undefined}>
+                            {categoriesToShow.map(([category, categoryInfo]) => {
+                                if (!topLevelCategory && selectedCategoriesArray.current.length !== 1) {
+                                    return null;
+                                }
+
+                                return (
+                                    <div key={category} className="categories__category">
+                                        <button
+                                            onClick={() => topLevelCategory
+                                                ? categoryClicked(category)
+                                                : getFilteredLocations(category)
+                                            }>
+                                            <img src={categoryInfo.iconUrl} alt="" />
+                                            {categoryInfo.displayName}
+                                        </button>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                        {shouldShowKioskHorizontalNavButtons && (
+                            <div className="categories__chevron categories__chevron--right">
+                                <button
+                                    aria-label={t('Next categories')}
+                                    type="button"
+                                    disabled={!canScrollRight}
+                                    onClick={() => scrollHorizontalCategories('right')}>
+                                    <ChevronRight />
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                </>
             )}
         </div>
     );
