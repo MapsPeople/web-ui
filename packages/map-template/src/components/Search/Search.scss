@@ -36,4 +36,31 @@
     @media (max-width: $desktop-breakpoint) {
         padding: var(--spacing-medium) var(--spacing-x-small) var(--spacing-medium) var(--spacing-x-small);
     }
+
+    &__ask-ai-button {
+        margin-top: var(--spacing-small);
+        padding: var(--spacing-small) var(--spacing-medium);
+        width: 100%;
+        background-color: green;
+        color: white;
+        border: none;
+        border-radius: var(--rounding-large);
+        font-size: var(--font-size-medium);
+        font-weight: var(--font-weight-medium);
+        cursor: pointer;
+        transition: background-color 0.2s ease-in-out;
+
+        &:hover {
+            filter: brightness(0.9);
+        }
+
+        &:active {
+            transform: scale(0.98);
+        }
+
+        &:disabled {
+            background-color: var(--color-gray-30);
+            cursor: not-allowed;
+        }
+    }
 }

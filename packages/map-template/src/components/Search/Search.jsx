@@ -1,6 +1,7 @@
 import './Search.scss';
 import { useRef, useState, useEffect, useCallback } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import { useTranslation } from 'react-i18next';
 import categoriesState from '../../atoms/categoriesState';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
 import primaryColorState from '../../atoms/primaryColorState';
@@ -39,6 +40,7 @@ Search.propTypes = {
  * @returns
  */
 function Search({ onSetSize, isOpen }) {
+    const { t } = useTranslation();
 
     const searchRef = useRef();
     const locationHandlerRef = useRef(null);
@@ -92,6 +94,9 @@ function Search({ onSetSize, isOpen }) {
     // Current message to send to chat window
     const [currentChatMessage, setCurrentChatMessage] = useState('');
 
+    // Track if chat mode is enabled
+    const [isChatModeEnabled, setIsChatModeEnabled] = useState(false);
+
     // Memoize the hover callback to prevent unnecessary re-renders
     const handleHoverLocation = useCallback((location) => {
         setHoveredLocation(location);
@@ -101,14 +106,34 @@ function Search({ onSetSize, isOpen }) {
      * Callback passed to SearchField as onKeyDown.
      * Invoked on every keydown event in the search input.
      * If Enter is pressed and input is not empty, sends the message to ChatWindow.
+     * Only works after chat mode has been enabled by clicking "Ask with AI" button.
      */
     const handleSearchKeyDown = useCallback((event, currentValue) => {
-        if (event.key === 'Enter' && currentValue?.trim()) {
+        if (event.key === 'Enter' && currentValue?.trim() && isChatModeEnabled) {
             event.preventDefault();
             setCurrentChatMessage(currentValue.trim());
 
             // Clear the search field after sending message
             searchFieldRef.current?.clear();
+        }
+    }, [isChatModeEnabled]);
+
+    /**
+     * Handle Ask with AI button click from SearchField
+     * @param {string} message - The search input value to send to chat
+     */
+    const  handleOpenChatWindow  = useCallback((message) => {
+        if (message?.trim()) {
+            setCurrentChatMessage(message.trim());
+            setIsChatModeEnabled(true);
+            
+            // Clear search results to show chat window
+            // setSearchResults([]);
+            // setShowNotFoundMessage(false);
+
+            
+            // Expand the sheet to show chat window
+            // setSize(snapPoints.MAX);
         }
     }, []);
 
@@ -183,6 +208,13 @@ function Search({ onSetSize, isOpen }) {
         }
 
         setFilteredLocations([]);
+        
+        // Only exit chat mode when clearing search if we're not already in chat mode
+        // This prevents exiting chat mode when clearing the field after sending a message
+        if (!isChatModeEnabled) {
+            setIsChatModeEnabled(false);
+            setCurrentChatMessage('');
+        }
     }
 
     /**
@@ -234,6 +266,10 @@ function Search({ onSetSize, isOpen }) {
                 categoryManagerRef.current?.clearCategorySelection();
                 setSearchResults([]);
                 setFilteredLocations([]);
+                
+                // Exit chat mode when clicking outside
+                setIsChatModeEnabled(false);
+                setCurrentChatMessage('');
             }
         };
 
@@ -301,7 +337,26 @@ function Search({ onSetSize, isOpen }) {
                 setIsInputFieldInFocus={setIsInputFieldInFocus}
             />
 
-            <ChatWindow message={currentChatMessage} />
+            {/* Ask with AI button - only show when not in chat mode */}
+            {!isChatModeEnabled && isInputFieldInFocus && (
+                <button 
+                    className="search__ask-ai-button" 
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        const currentValue = searchFieldRef.current?.getValue();
+                        if (currentValue?.trim()) {
+                            handleOpenChatWindow (currentValue.trim());
+                            // Clear the search field after sending message to chat
+                            searchFieldRef.current?.clear();
+                        }
+                    }}
+                    type="button"
+                >
+                    {t('Ask with AI')}
+                </button>
+            )}
+
+            <ChatWindow message={currentChatMessage} isEnabled={isChatModeEnabled} />
 
             {/* CategoryManager component to handle category logic and UI */}
             <CategoryManager
