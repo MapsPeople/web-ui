@@ -8,9 +8,8 @@ import './ChatWindow.scss';
 import primaryColorState from '../../atoms/primaryColorState';
 import apiKeyState from '../../atoms/apiKeyState';
 
-function ChatWindow({ message, isEnabled }) {
+function ChatWindow({ message, isEnabled, messages, setMessages }) {
     const primaryColor = useRecoilValue(primaryColorState);
-    const [messages, setMessages] = useState([]);
     const apiKey = useRecoilValue(apiKeyState);
     const chatWindowRef = useRef(null);
 
@@ -101,7 +100,9 @@ function ChatWindow({ message, isEnabled }) {
 
 ChatWindow.propTypes = {
     message: PropTypes.string,
-    isEnabled: PropTypes.bool
+    isEnabled: PropTypes.bool,
+    messages: PropTypes.array.isRequired,
+    setMessages: PropTypes.func.isRequired
 };
 
 export default ChatWindow;

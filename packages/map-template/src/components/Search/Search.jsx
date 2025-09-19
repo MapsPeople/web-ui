@@ -97,6 +97,9 @@ function Search({ onSetSize, isOpen }) {
     // Track if chat mode is enabled
     const [isChatModeEnabled, setIsChatModeEnabled] = useState(false);
 
+    // Chat messages state
+    const [chatMessages, setChatMessages] = useState([]);
+
     // Memoize the hover callback to prevent unnecessary re-renders
     const handleHoverLocation = useCallback((location) => {
         setHoveredLocation(location);
@@ -160,10 +163,11 @@ function Search({ onSetSize, isOpen }) {
      * @param {boolean} showNotFoundMessage - Whether "not found" message is shown
      * @param {Array} categories - Available categories
      * @param {Array} searchResults - Current search results
+     * @param {boolean} isChatModeEnabled - Whether chat mode is enabled
      * @returns {boolean} Whether categories should be displayed
      */
-    function shouldShowCategories(isInputFieldInFocus, showNotFoundMessage, categories, searchResults) {
-        return isInputFieldInFocus && !showNotFoundMessage && categories.length > 0 && searchResults.length === 0;
+    function shouldShowCategories(isInputFieldInFocus, showNotFoundMessage, categories, searchResults, isChatModeEnabled) {
+        return isInputFieldInFocus && !showNotFoundMessage && categories.length > 0 && searchResults.length === 0 && !isChatModeEnabled;
     }
 
     /**
@@ -214,6 +218,8 @@ function Search({ onSetSize, isOpen }) {
         if (!isChatModeEnabled) {
             setIsChatModeEnabled(false);
             setCurrentChatMessage('');
+            // Clear chat messages when exiting chat mode
+            // setChatMessages([]);
         }
     }
 
@@ -239,7 +245,7 @@ function Search({ onSetSize, isOpen }) {
      * Monitors clicks to manage sheet size and input focus state
      */
     useEffect(() => {
-        const SEARCH_FOCUS_ELEMENTS = ['.search__info', '.search__back-button', '.categories', '.sheet__content'];
+        const SEARCH_FOCUS_ELEMENTS = ['.search__info', '.search__back-button', '.categories', '.sheet__content' , '.search'];
 
         // We want to ignore: Floor Selector, View Mode Switch, My Position, View Selector, Mapbox zoom controls and Google Maps zoom controls
         const IGNORE_CLOSE_ELEMENTS = ['.mi-floor-selector', '.view-mode-switch', '.mi-my-position', '.view-selector__toggle-button', '.building-list', '.mapboxgl-ctrl-bottom-right', '.gmnoprint', '.language-selector-portal'];
@@ -270,6 +276,8 @@ function Search({ onSetSize, isOpen }) {
                 // Exit chat mode when clicking outside
                 setIsChatModeEnabled(false);
                 setCurrentChatMessage('');
+                // Clear chat messages when exiting chat mode
+                // setChatMessages([]);
             }
         };
 
@@ -337,8 +345,8 @@ function Search({ onSetSize, isOpen }) {
                 setIsInputFieldInFocus={setIsInputFieldInFocus}
             />
 
-            {/* Ask with AI button - only show when not in chat mode */}
-            {!isChatModeEnabled && isInputFieldInFocus && (
+            {/* Ask with AI button - only show when not in chat mode and no existing messages */}
+            {!isChatModeEnabled && isInputFieldInFocus && chatMessages.length === 0 && (
                 <button 
                     className="search__ask-ai-button" 
                     onClick={(e) => {
@@ -356,7 +364,12 @@ function Search({ onSetSize, isOpen }) {
                 </button>
             )}
 
-            <ChatWindow message={currentChatMessage} isEnabled={isChatModeEnabled} />
+            <ChatWindow 
+                message={currentChatMessage} 
+                isEnabled={isChatModeEnabled}
+                messages={chatMessages}
+                setMessages={setChatMessages}
+            />
 
             {/* CategoryManager component to handle category logic and UI */}
             <CategoryManager
@@ -370,7 +383,8 @@ function Search({ onSetSize, isOpen }) {
                     isInputFieldInFocus,
                     showNotFoundMessage,
                     categories,
-                    searchResults
+                    searchResults,
+                    isChatModeEnabled
                 )}
                 showNotFoundMessage={showNotFoundMessage}
                 searchResults={searchResults}
