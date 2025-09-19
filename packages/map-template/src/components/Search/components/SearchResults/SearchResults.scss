@@ -1,0 +1,38 @@
+@import '../../../../variables.scss';
+
+.search-results {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+
+    &__error {
+        text-align: center;
+    }
+
+    &__container {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        overflow: hidden;
+        gap: var(--spacing-x-small);
+
+
+        // Ensure subcategories (Categories component) don't take too much space
+        .categories {
+            flex-shrink: 0; /* Prevent shrinking */
+            max-height: 20%; /* Limit subcategories to 20% of container height */
+        }
+    }
+
+    &__locations {
+        display: grid;
+        gap: var(--spacing-x-small);
+        overflow: auto;
+        flex: 1; /* Take remaining space */
+        min-height: 0; /* Important for flex children with overflow */
+        > * {
+            height: fit-content; /* fixes mobile Safari issue making a single result too large */
+        }
+    }
+}
