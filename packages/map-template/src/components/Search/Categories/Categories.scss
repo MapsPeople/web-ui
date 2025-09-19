@@ -47,6 +47,11 @@
                     border-color: var(--tailwind-colors-gray-200);
                 }
 
+                &:disabled {
+                    opacity: 0.5;
+                    cursor: not-allowed;
+                }
+
                 svg {
                     width: var(--spacing-medium);
                     height: var(--spacing-medium);

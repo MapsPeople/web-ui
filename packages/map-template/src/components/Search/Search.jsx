@@ -607,7 +607,7 @@ function Search({ onSetSize, isOpen }) {
                     getFilteredLocations={(category) => getFilteredLocations(category)}
                     isOpen={!!selectedCategory}
                     topLevelCategory={true}
-                    kioskOrientation={areHorizontalCategoriesEnabled ? 'horizontal' : 'vertical'}
+                    categoryOrientation={areHorizontalCategoriesEnabled ? 'horizontal' : 'vertical'}
                 />
             )}
 
@@ -627,7 +627,7 @@ function Search({ onSetSize, isOpen }) {
                             childKeys={childKeys}
                             topLevelCategory={false}
                             selectedCategoriesArray={selectedCategoriesArray}
-                            kioskOrientation={areHorizontalCategoriesEnabled ? 'horizontal' : 'vertical'}
+                            categoryOrientation={areHorizontalCategoriesEnabled ? 'horizontal' : 'vertical'}
                         />
                     )}
 

@@ -27,7 +27,7 @@ Categories.propTypes = {
     topLevelCategory: PropTypes.bool,
     handleBack: PropTypes.func,
     selectedCategoriesArray: PropTypes.object,
-    kioskOrientation: PropTypes.oneOf(['horizontal', 'vertical'])
+    categoryOrientation: PropTypes.oneOf(['horizontal', 'vertical'])
 };
 
 /**
@@ -41,9 +41,9 @@ Categories.propTypes = {
  * @param {boolean} props.topLevelCategory - If true, renders top-level categories; otherwise, renders sub-categories.
  * @param {function} props.handleBack - Callback function to handle back navigation between categories.
  * @param {Array<string>} props.selectedCategoriesArray - Array containing selected categories (e.g., top-level and sub-category).
- * @param {string} props.kioskOrientation - Orientation for kiosk mode: 'horizontal' or 'vertical'.
+ * @param {string} props.categoryOrientation - Orientation for kiosk mode: 'horizontal' or 'vertical'.
  */
-function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, topLevelCategory, handleBack, selectedCategoriesArray, kioskOrientation }) {
+function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, topLevelCategory, handleBack, selectedCategoriesArray, categoryOrientation }) {
 
     const categories = useRecoilValue(categoriesState);
 
@@ -78,8 +78,17 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, t
     // Ref for horizontal scrolling in kiosk mode
     const categoriesListRef = useRef(null);
 
-    // Scroll handler for chevrons
-    const scrollCategories = (direction) => {
+    // Add new state for tracking scroll position
+    const [canScrollLeft, setCanScrollLeft] = useState(false);
+    const [canScrollRight, setCanScrollRight] = useState(false);
+
+    // Scroll handler for kiosk horizontal mode
+    const scrollHorizontalCategories = (direction) => {
+        // Early exit if category buttons should not be shown
+        if (!shouldShowKioskHorizontalNavButtons) {
+            return;
+        }
+        
         if (categoriesListRef.current) {
             const scrollAmount = 200; // px to scroll per click
             categoriesListRef.current.scrollBy({
@@ -89,10 +98,54 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, t
         }
     };
 
+    // Function to check scroll position and update chevron states
+    const updateKioskHorizontalNavButtonStates = () => {
+        if (categoriesListRef.current) {
+            
+            const { scrollLeft, scrollWidth, clientWidth } = categoriesListRef.current;
+            const isAtStart = scrollLeft <= 0;
+            const isAtEnd = scrollLeft >= scrollWidth - clientWidth - 1; // -1 for rounding errors
+            
+            setCanScrollLeft(!isAtStart);
+            setCanScrollRight(!isAtEnd);
+        }
+    };
+
+    // Determine if we are at the end of the subcategory chain (no more subcategories to show)
+    // We don't show chevrons if we are at the end of the subcategory chain
+    const atEndOfSubcategories = !topLevelCategory && categoriesToShow.length === 0;
+
+    // Determine if we should show chevrons (only in horizontal kiosk mode)
+    // Only visible in kiosk horizontal layout
+    // They do not render if we are at the end of the subcategory chain
+    const shouldShowKioskHorizontalNavButtons = isKiosk && categoryOrientation === 'horizontal' && !atEndOfSubcategories;
+
+    // Add scroll event listener to track position changes
+    useEffect(() => {
+        // Early exit if category buttons should not be shown
+        if (!shouldShowKioskHorizontalNavButtons) {
+            return;
+        }
+        
+        const categoriesList = categoriesListRef.current;
+        if (categoriesList) {
+            // Initial check
+            updateKioskHorizontalNavButtonStates();
+            
+            // Add scroll event listener
+            categoriesList.addEventListener('scroll', updateKioskHorizontalNavButtonStates);
+            
+            // Cleanup
+            return () => {
+                categoriesList.removeEventListener('scroll', updateKioskHorizontalNavButtonStates);
+            };
+        }
+    }, [shouldShowKioskHorizontalNavButtons, categoriesToShow.length]);
+
     // Determines the main container class for Categories, dictating the look for kiosk mode or desktop mode
     // Based on the kioskOrientation prop, it will apply different styles for horizontal or vertical layouts
     // Default to horizontal if no orientation is provided
-    const categoriesContainerClassName = `categories prevent-scroll${isKiosk ? ` categories--kiosk-${kioskOrientation || 'vertical'}` : ''}`;
+    const categoriesContainerClassName = `categories prevent-scroll${isKiosk ? ` categories--kiosk-${categoryOrientation || 'vertical'}` : ''}`;
 
     /**
     * Communicate size change to parent component.
@@ -205,15 +258,6 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, t
         setSelectedCategoryDisplayName(categoryDisplayName);
     }, [categories])
 
-    // Determine if we are at the end of the subcategory chain (no more subcategories to show)
-    // We don't show chevrons if we are at the end of the subcategory chain
-    const atEndOfSubcategories = !topLevelCategory && categoriesToShow.length === 0;
-
-    // Determine if we should show chevrons (only in horizontal kiosk mode)
-    // Only visible in horizontal layout
-    // They do not render if we are at the end of the subcategory chain
-    const shouldShowChevrons = isKiosk && kioskOrientation === 'horizontal' && !atEndOfSubcategories;
-
     return (
         <div className={categoriesContainerClassName} {...scrollableContentSwipePrevent}>
             {categories.length > 0 && (
@@ -232,12 +276,13 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, t
                         </div>
                     )}
                     <div className="categories__row">
-                        {shouldShowChevrons && (
+                        {shouldShowKioskHorizontalNavButtons && (
                             <div className="categories__chevron categories__chevron--left">
                                 <button
                                     aria-label={t('Previous categories')}
                                     type="button"
-                                    onClick={() => scrollCategories('left')}>
+                                    disabled={!canScrollLeft}
+                                    onClick={() => scrollHorizontalCategories('left')}>
                                     <ChevronLeft />
                                 </button>
                             </div>
@@ -262,12 +307,13 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, t
                                 );
                             })}
                         </div>
-                        {shouldShowChevrons && (
+                        {shouldShowKioskHorizontalNavButtons && (
                             <div className="categories__chevron categories__chevron--right">
                                 <button
                                     aria-label={t('Next categories')}
                                     type="button"
-                                    onClick={() => scrollCategories('right')}>
+                                    disabled={!canScrollRight}
+                                    onClick={() => scrollHorizontalCategories('right')}>
                                     <ChevronRight />
                                 </button>
                             </div>
