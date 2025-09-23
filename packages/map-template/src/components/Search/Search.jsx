@@ -100,6 +100,9 @@ function Search({ onSetSize, isOpen }) {
     // Chat messages state
     const [chatMessages, setChatMessages] = useState([]);
 
+    // State for AI search results location IDs
+    const [aiSearchLocationIds, setAiSearchLocationIds] = useState([]);
+
     // Memoize the hover callback to prevent unnecessary re-renders
     const handleHoverLocation = useCallback((location) => {
         setHoveredLocation(location);
@@ -125,16 +128,16 @@ function Search({ onSetSize, isOpen }) {
      * Handle Ask with AI button click from SearchField
      * @param {string} message - The search input value to send to chat
      */
-    const  handleOpenChatWindow  = useCallback((message) => {
+    const handleOpenChatWindow = useCallback((message) => {
         if (message?.trim()) {
             setCurrentChatMessage(message.trim());
             setIsChatModeEnabled(true);
-            
+
             // Clear search results to show chat window
             // setSearchResults([]);
             // setShowNotFoundMessage(false);
 
-            
+
             // Expand the sheet to show chat window
             // setSize(snapPoints.MAX);
         }
@@ -212,7 +215,7 @@ function Search({ onSetSize, isOpen }) {
         }
 
         setFilteredLocations([]);
-        
+
         // Only exit chat mode when clearing search if we're not already in chat mode
         // This prevents exiting chat mode when clearing the field after sending a message
         if (!isChatModeEnabled) {
@@ -221,6 +224,9 @@ function Search({ onSetSize, isOpen }) {
             // Clear chat messages when exiting chat mode
             // setChatMessages([]);
         }
+
+        // Clear AI search results highlighting
+        setAiSearchLocationIds([]);
     }
 
     /**
@@ -241,11 +247,66 @@ function Search({ onSetSize, isOpen }) {
         }
     }
 
+    const handleMinimizeChat = useCallback(() => {
+        setIsChatModeEnabled(false);
+
+        // Disabled for now to preserve the conversation history
+        // setCurrentChatMessage('');
+        // Clear AI search results highlighting when minimizing chat
+        setAiSearchLocationIds([]);
+        // Don't clear chat messages to preserve conversation history
+    }, []);
+
+    /**
+     * Fetch full location objects by their IDs
+     * @param {Array} locationIds - Array of location IDs
+     * @returns {Promise<Array>} Array of full location objects
+     */
+    const fetchLocationsByIds = useCallback(async (locationIds) => {
+        if (!locationIds || locationIds.length === 0) return [];
+        
+        try {
+            console.log('Search: Fetching full location objects for IDs:', locationIds);
+            const promises = locationIds.map(id => 
+                window.mapsindoors.services.LocationsService.getLocation(id)
+            );
+            const locations = await Promise.all(promises);
+            const validLocations = locations.filter(location => location !== null);
+            console.log('Search: Successfully fetched locations:', validLocations);
+            return validLocations;
+        } catch (error) {
+            console.error('Search: Error fetching locations by IDs:', error);
+            return [];
+        }
+    }, []);
+
+    /**
+     * Handle AI search results from ChatWindow
+     * @param {Array} locationIds - Array of location IDs to highlight
+     */
+    const handleAiSearchResults = useCallback(async (locationIds) => {
+        console.log('Search: Received AI search results with location IDs:', locationIds);
+        setAiSearchLocationIds(locationIds);
+        
+        // Clear regular search results when AI search results come in
+        setSearchResults([]);
+        setShowNotFoundMessage(false);
+        
+        // Fetch full location objects and fit map to show all locations
+        if (locationIds && locationIds.length > 0) {
+            const fullLocations = await fetchLocationsByIds(locationIds);
+            if (fullLocations.length > 0) {
+                console.log('Search: Fitting map to AI search results:', fullLocations);
+                locationHandlerRef.current?.fitMapBoundsToLocations(fullLocations);
+            }
+        }
+    }, [fetchLocationsByIds]);
+
     /*
      * Monitors clicks to manage sheet size and input focus state
      */
     useEffect(() => {
-        const SEARCH_FOCUS_ELEMENTS = ['.search__info', '.search__back-button', '.categories', '.sheet__content' , '.search'];
+        const SEARCH_FOCUS_ELEMENTS = ['.search__info', '.search__back-button', '.categories', '.sheet__content', '.search'];
 
         // We want to ignore: Floor Selector, View Mode Switch, My Position, View Selector, Mapbox zoom controls and Google Maps zoom controls
         const IGNORE_CLOSE_ELEMENTS = ['.mi-floor-selector', '.view-mode-switch', '.mi-my-position', '.view-selector__toggle-button', '.building-list', '.mapboxgl-ctrl-bottom-right', '.gmnoprint', '.language-selector-portal'];
@@ -272,10 +333,12 @@ function Search({ onSetSize, isOpen }) {
                 categoryManagerRef.current?.clearCategorySelection();
                 setSearchResults([]);
                 setFilteredLocations([]);
-                
+
                 // Exit chat mode when clicking outside
                 setIsChatModeEnabled(false);
                 setCurrentChatMessage('');
+                // Clear AI search results highlighting
+                setAiSearchLocationIds([]);
                 // Clear chat messages when exiting chat mode
                 // setChatMessages([]);
             }
@@ -319,6 +382,26 @@ function Search({ onSetSize, isOpen }) {
         }
     }, [kioskLocation]);
 
+    /*
+     * Handle AI search results highlighting on the map
+     */
+    useEffect(() => {
+        if (aiSearchLocationIds.length > 0 && locationHandlerRef.current) {
+            // Use the MapsIndoors instance to highlight the locations
+            const mapsIndoorsInstance = window.mapsIndoorsInstance;
+            if (mapsIndoorsInstance && mapsIndoorsInstance.highlight) {
+                console.log('Search: Highlighting AI search results on map:', aiSearchLocationIds);
+                mapsIndoorsInstance.highlight(aiSearchLocationIds, false);
+            }
+        } else if (aiSearchLocationIds.length === 0) {
+            // Clear highlighting when no AI search results
+            const mapsIndoorsInstance = window.mapsIndoorsInstance;
+            if (mapsIndoorsInstance && mapsIndoorsInstance.highlight) {
+                mapsIndoorsInstance.highlight([], false);
+            }
+        }
+    }, [aiSearchLocationIds]);
+
 
     return (
         <div className="search"
@@ -346,16 +429,19 @@ function Search({ onSetSize, isOpen }) {
             />
 
             {/* Ask with AI button - only show when not in chat mode and no existing messages */}
-            {!isChatModeEnabled && isInputFieldInFocus && chatMessages.length === 0 && (
-                <button 
-                    className="search__ask-ai-button" 
+            {!isChatModeEnabled && isInputFieldInFocus && (
+                <button
+                    className="search__ask-ai-button"
                     onClick={(e) => {
                         e.stopPropagation();
                         const currentValue = searchFieldRef.current?.getValue();
                         if (currentValue?.trim()) {
-                            handleOpenChatWindow (currentValue.trim());
+                            handleOpenChatWindow(currentValue.trim());
                             // Clear the search field after sending message to chat
                             searchFieldRef.current?.clear();
+                        } else if (chatMessages.length > 0) {
+                            // If no current value but there are existing messages, just open the chat window
+                            setIsChatModeEnabled(true);
                         }
                     }}
                     type="button"
@@ -364,11 +450,13 @@ function Search({ onSetSize, isOpen }) {
                 </button>
             )}
 
-            <ChatWindow 
-                message={currentChatMessage} 
+            <ChatWindow
+                message={currentChatMessage}
                 isEnabled={isChatModeEnabled}
                 messages={chatMessages}
                 setMessages={setChatMessages}
+                onMinimize={handleMinimizeChat}
+                onSearchResults={handleAiSearchResults}
             />
 
             {/* CategoryManager component to handle category logic and UI */}
@@ -391,7 +479,7 @@ function Search({ onSetSize, isOpen }) {
             />
 
             {/* SearchResults component handles error messages and search results display */}
-            <SearchResults
+            {isChatModeEnabled && <SearchResults
                 searchResults={searchResults}
                 showNotFoundMessage={showNotFoundMessage}
                 selectedCategory={categoryManagerRef.current?.selectedCategory}
@@ -402,7 +490,7 @@ function Search({ onSetSize, isOpen }) {
                 hoveredLocation={hoveredLocation}
                 selectedCategoriesArray={categoryManagerRef.current?.selectedCategoriesArray || { current: [] }}
                 scrollableContentSwipePrevent={scrollableContentSwipePrevent}
-            />
+            />}
 
             { /* KioskKeyboard component for kiosk mode */}
 
