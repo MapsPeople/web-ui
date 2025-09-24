@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { useGemini } from '../../providers/GeminiProvider';
 import { useRecoilValue } from 'recoil';
 import PropTypes from 'prop-types';
@@ -12,6 +12,7 @@ function ChatWindow({ message, isEnabled, messages, setMessages, onMinimize, onS
     const primaryColor = useRecoilValue(primaryColorState);
     const apiKey = useRecoilValue(apiKeyState);
     const chatWindowRef = useRef(null);
+    const chatMessagesRef = useRef(null);
 
     // Use Gemini provider
     const { generateResponse, getAvailableMCPTools, isLoading, tools, searchResults } = useGemini();
@@ -210,10 +211,10 @@ function ChatWindow({ message, isEnabled, messages, setMessages, onMinimize, onS
         }
     }, [searchResults, onSearchResults]);
 
-    // Auto-scroll to bottom when messages change
-    useEffect(() => {
-        if (chatWindowRef.current) {
-            chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
+    // Auto-scroll to bottom when messages change or loading state changes
+    useLayoutEffect(() => {
+        if (chatMessagesRef.current) {
+            chatMessagesRef.current.scrollTop = chatMessagesRef.current.scrollHeight;
         }
     }, [messages, isLoading]);
 
@@ -271,7 +272,7 @@ function ChatWindow({ message, isEnabled, messages, setMessages, onMinimize, onS
                     −
                 </button>
             </div>
-            <div className="chat-window__messages">
+            <div ref={chatMessagesRef} className="chat-window__messages">
                 {messages.map((message) => (
                     <div key={message.id} className={`chat-window__message chat-window__message--${message.type}`}>
                         {message.type === 'server' ? (
