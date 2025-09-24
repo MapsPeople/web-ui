@@ -14,6 +14,9 @@ function ChatWindow({ message, isEnabled, messages, setMessages, onMinimize, onS
     const chatWindowRef = useRef(null);
     const chatMessagesRef = useRef(null);
 
+    // TODO: Hide header for now, redesign later
+    const isHeaderVisible = false;
+
     // Use Gemini provider
     const { generateResponse, getAvailableMCPTools, isLoading, tools, searchResults } = useGemini();
 
@@ -261,7 +264,7 @@ function ChatWindow({ message, isEnabled, messages, setMessages, onMinimize, onS
 
     return (
         <div ref={chatWindowRef} className="chat-window" style={{ '--chat-window-primary-color': primaryColor }}>
-            <div className="chat-window__header">
+            {isHeaderVisible && <div className="chat-window__header">
                 <span className="chat-window__title">Maps Indoors AI Assistant</span>
                 <button
                     className="chat-window__minimize-button"
@@ -271,7 +274,7 @@ function ChatWindow({ message, isEnabled, messages, setMessages, onMinimize, onS
                 >
                     −
                 </button>
-            </div>
+            </div>}
             <div ref={chatMessagesRef} className="chat-window__messages">
                 {messages.map((message) => (
                     <div key={message.id} className={`chat-window__message chat-window__message--${message.type}`}>
