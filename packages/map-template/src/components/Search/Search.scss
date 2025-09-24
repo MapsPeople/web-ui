@@ -46,21 +46,18 @@
         border: none;
         border-radius: var(--rounding-large);
         font-size: var(--font-size-medium);
-        font-weight: var(--font-weight-medium);
+        font-weight: var(--font-weight-large);
         cursor: pointer;
-        transition: background-color 0.2s ease-in-out;
+        transition: all 0.2s ease-in-out;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--spacing-x-small);
 
-        &:hover {
-            filter: brightness(0.9);
-        }
-
-        &:active {
-            transform: scale(0.98);
-        }
-
-        &:disabled {
-            background-color: var(--color-gray-30);
-            cursor: not-allowed;
+        svg {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
         }
     }
 }

@@ -12,6 +12,7 @@ import kioskLocationState from '../../atoms/kioskLocationState';
 import searchResultsState from '../../atoms/searchResultsState';
 import { useIsKioskContext } from '../../hooks/useIsKioskContext';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
+import {ReactComponent as AskWithAiIcon} from '../../assets/ask-with-ai-icon.svg';
 import legendSortedFieldsSelector from '../../selectors/legendSortedFieldsSelector';
 import initialVenueNameState from '../../atoms/initialVenueNameState';
 import LocationHandler from './components/LocationHandler/LocationHandler';
@@ -510,6 +511,7 @@ function Search({ onSetSize, isOpen }) {
                     }}
                     type="button"
                 >
+                    <AskWithAiIcon />
                     {t('Ask with AI')}
                 </button>
             )}
