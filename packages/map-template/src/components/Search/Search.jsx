@@ -103,6 +103,9 @@ function Search({ onSetSize, isOpen }) {
     // State for AI search results location IDs
     const [aiSearchLocationIds, setAiSearchLocationIds] = useState([]);
 
+    // Track whether current search results are from AI chat
+    const [isAiSearchResults, setIsAiSearchResults] = useState(false);
+
     // Memoize the hover callback to prevent unnecessary re-renders
     const handleHoverLocation = useCallback((location) => {
         setHoveredLocation(location);
@@ -170,7 +173,9 @@ function Search({ onSetSize, isOpen }) {
      * @returns {boolean} Whether categories should be displayed
      */
     function shouldShowCategories(isInputFieldInFocus, showNotFoundMessage, categories, searchResults, isChatModeEnabled) {
-        return isInputFieldInFocus && !showNotFoundMessage && categories.length > 0 && searchResults.length === 0 && !isChatModeEnabled;
+        // Don't show categories in chat mode unless we have AI search results
+        const shouldShowInChatMode = !isChatModeEnabled || (isChatModeEnabled && isAiSearchResults);
+        return isInputFieldInFocus && !showNotFoundMessage && categories.length > 0 && searchResults.length === 0 && shouldShowInChatMode;
     }
 
     /**
@@ -188,6 +193,7 @@ function Search({ onSetSize, isOpen }) {
         setSearchResults(displayResults);
         setFilteredLocations(displayResults);
         setShowNotFoundMessage(displayResults.length === 0);
+        setIsAiSearchResults(false); // Mark as regular search results
 
         if (locations && fitMapBounds) {
             locationHandlerRef.current?.fitMapBoundsToLocations(locations);
@@ -209,6 +215,7 @@ function Search({ onSetSize, isOpen }) {
     function cleared() {
         setSearchResults([]);
         setShowNotFoundMessage(false);
+        setIsAiSearchResults(false); // Reset AI search results flag
         const selectedCategory = categoryManagerRef.current?.selectedCategory;
         if (selectedCategory) {
             categoryManagerRef.current?.getFilteredLocations(selectedCategory);
@@ -221,6 +228,7 @@ function Search({ onSetSize, isOpen }) {
         if (!isChatModeEnabled) {
             setIsChatModeEnabled(false);
             setCurrentChatMessage('');
+            setIsAiSearchResults(false); // Reset AI search results flag
             // Clear chat messages when exiting chat mode
             // setChatMessages([]);
         }
@@ -249,6 +257,7 @@ function Search({ onSetSize, isOpen }) {
 
     const handleMinimizeChat = useCallback(() => {
         setIsChatModeEnabled(false);
+        setIsAiSearchResults(false); // Reset AI search results flag
 
         // Disabled for now to preserve the conversation history
         // setCurrentChatMessage('');
@@ -264,10 +273,12 @@ function Search({ onSetSize, isOpen }) {
      */
     const fetchLocationsByIds = useCallback(async (locationIds) => {
         if (!locationIds || locationIds.length === 0) return [];
-        
+
+        console.log('Search: Fetching locations by IDs:', locationIds);
+
         try {
             console.log('Search: Fetching full location objects for IDs:', locationIds);
-            const promises = locationIds.map(id => 
+            const promises = locationIds.map(id =>
                 window.mapsindoors.services.LocationsService.getLocation(id)
             );
             const locations = await Promise.all(promises);
@@ -287,18 +298,25 @@ function Search({ onSetSize, isOpen }) {
     const handleAiSearchResults = useCallback(async (locationIds) => {
         console.log('Search: Received AI search results with location IDs:', locationIds);
         setAiSearchLocationIds(locationIds);
-        
-        // Clear regular search results when AI search results come in
-        setSearchResults([]);
-        setShowNotFoundMessage(false);
-        
-        // Fetch full location objects and fit map to show all locations
+
+        // Fetch full location objects and display them in search results
         if (locationIds && locationIds.length > 0) {
             const fullLocations = await fetchLocationsByIds(locationIds);
             if (fullLocations.length > 0) {
-                console.log('Search: Fitting map to AI search results:', fullLocations);
+                console.log('Search: Displaying AI search results:', fullLocations);
+                setSearchResults(fullLocations);
+                setShowNotFoundMessage(false);
+                setIsAiSearchResults(true); // Mark as AI search results
                 locationHandlerRef.current?.fitMapBoundsToLocations(fullLocations);
+            } else {
+                setSearchResults([]);
+                setShowNotFoundMessage(true);
+                setIsAiSearchResults(false);
             }
+        } else {
+            setSearchResults([]);
+            setShowNotFoundMessage(false);
+            setIsAiSearchResults(false);
         }
     }, [fetchLocationsByIds]);
 
@@ -337,6 +355,7 @@ function Search({ onSetSize, isOpen }) {
                 // Exit chat mode when clicking outside
                 setIsChatModeEnabled(false);
                 setCurrentChatMessage('');
+                setIsAiSearchResults(false); // Reset AI search results flag
                 // Clear AI search results highlighting
                 setAiSearchLocationIds([]);
                 // Clear chat messages when exiting chat mode
@@ -479,7 +498,8 @@ function Search({ onSetSize, isOpen }) {
             />
 
             {/* SearchResults component handles error messages and search results display */}
-            {isChatModeEnabled && <SearchResults
+            {/* Show SearchResults when: not in chat mode OR when in chat mode but showing AI search results */}
+            {(!isChatModeEnabled || (isChatModeEnabled && isAiSearchResults)) && <SearchResults
                 searchResults={searchResults}
                 showNotFoundMessage={showNotFoundMessage}
                 selectedCategory={categoryManagerRef.current?.selectedCategory}
