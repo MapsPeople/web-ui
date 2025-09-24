@@ -1,6 +1,7 @@
 import './Search.scss';
 import { useRef, useState, useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import appConfigState from '../../atoms/appConfigState';
 import categoriesState from '../../atoms/categoriesState';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
 import { snapPoints } from '../../constants/snapPoints';
@@ -51,6 +52,7 @@ Search.propTypes = {
  * @returns
  */
 function Search({ onSetSize, isOpen }) {
+    const appConfig = useRecoilValue(appConfigState);
 
     const { t } = useTranslation();
 
@@ -120,6 +122,8 @@ function Search({ onSetSize, isOpen }) {
     const selectedCategoriesArray = useRef([]);
 
     const [childKeys, setChildKeys] = useState([]);
+
+    const [areHorizontalCategoriesEnabled, setAreHorizontalCategoriesEnabled] = useState(false);
 
     /**
      * Handles go back function.
@@ -394,6 +398,17 @@ function Search({ onSetSize, isOpen }) {
         }
     }
 
+    /**
+     * Determines if categories should be shown under the search field in kiosk mode.
+     *
+     * @returns {boolean} True if in kiosk context and showCategoriesUnderSearch is enabled, otherwise false.
+     */
+    function shouldShowCategoriesUnderSearch() {
+        // We determine wether to show categories horizontally or vertically based on the areHorizontalCategoriesEnabled setting.
+        // Each layout has different styling and thus needs to be treated as separate options.
+        return isKioskContext && areHorizontalCategoriesEnabled;
+    }
+
     /*
      * Monitors clicks to manage sheet size and input focus state
      */
@@ -547,7 +562,14 @@ function Search({ onSetSize, isOpen }) {
     useEffect(() => {
         const childKeys = categories.find(([key]) => key === selectedCategory)?.[1]?.childKeys || [];
         setChildKeys(childKeys)
-    }, [categories, selectedCategory])
+    }, [categories, selectedCategory]);
+
+    /*
+     * Get app config and determine if categories should be shown under the search field in kiosk mode.
+     */
+    useEffect(() => {
+        setAreHorizontalCategoriesEnabled(appConfig?.appSettings?.areHorizontalCategoriesEnabled === true || appConfig?.appSettings?.areHorizontalCategoriesEnabled === 'true');
+    }, [appConfig]);
 
 
     return (
@@ -577,14 +599,15 @@ function Search({ onSetSize, isOpen }) {
             </div>
 
             {/* Vertical list of Categories */}
-            {/* Show full category list only when searchResults are empty */}
-            {isInputFieldInFocus && !showNotFoundMessage && categories.length > 0 && searchResults.length === 0 && (
+            {/* Show full category list if (kiosk mode and showCategoriesUnderSearch is true) OR input is in focus, and only when searchResults are empty */}
+            {(shouldShowCategoriesUnderSearch() || isInputFieldInFocus) && !showNotFoundMessage && categories.length > 0 && searchResults.length === 0 && (
                 <Categories
                     onSetSize={onSetSize}
                     searchFieldRef={searchFieldRef}
                     getFilteredLocations={(category) => getFilteredLocations(category)}
                     isOpen={!!selectedCategory}
                     topLevelCategory={true}
+                    categoryOrientation={areHorizontalCategoriesEnabled ? 'horizontal' : 'vertical'}
                 />
             )}
 
@@ -604,6 +627,7 @@ function Search({ onSetSize, isOpen }) {
                             childKeys={childKeys}
                             topLevelCategory={false}
                             selectedCategoriesArray={selectedCategoriesArray}
+                            categoryOrientation={areHorizontalCategoriesEnabled ? 'horizontal' : 'vertical'}
                         />
                     )}
 
