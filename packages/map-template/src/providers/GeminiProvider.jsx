@@ -1,18 +1,17 @@
 import { createContext, useContext, useCallback, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { generateResponse, getAvailableMCPTools, getLastSearchResultIds, systemPrompt } from 'mcp-demo-client';
+import { generateResponse, getAvailableMCPTools, systemPrompt, getFinalFunctionResponse } from 'mcp-demo-client';
 
 // Create the context
 const GeminiContext = createContext();
 
 export function GeminiProvider({ children }) {
-    // State
     const [isLoading, setIsLoading] = useState(false);
     const [tools, setTools] = useState({ functionDeclarations: [] });
     const [searchResults, setSearchResults] = useState([]);
     const defaultPrompt = systemPrompt;
 
-    // Get available MCP tools using the TypeScript service
+    // Get available MCP tools and set them in state
     const getAvailableMCPToolsWrapper = useCallback(async () => {
         // Log the system prompt
         try {
@@ -32,8 +31,23 @@ export function GeminiProvider({ children }) {
             console.log('Generating response for prompt:', prompt);
             const response = await generateResponse(apiKey, prompt, promptFields, toolsParam);
 
-            // Check for search results after the response is generated
-            const searchResultIds = getLastSearchResultIds();
+            const finalFunctionResponse = getFinalFunctionResponse();
+
+            // Extract search result IDs based on the final function response
+            let searchResultIds = [];
+            switch (finalFunctionResponse?.key) {
+                case 'single_location':
+                    searchResultIds = [finalFunctionResponse.value.locationId];
+                    break;
+
+                case 'multiple_locations':
+                    searchResultIds = (finalFunctionResponse.value.map(location => location?.locationId).filter(Boolean));
+                    break;
+                default:
+                    break;
+            }
+
+            // Check for search results after the response is generated;
             console.log('Search result IDs:', searchResultIds);
 
             if (searchResultIds.length > 0) {
@@ -41,7 +55,6 @@ export function GeminiProvider({ children }) {
                 setSearchResults(searchResultIds);
             }
 
-            console.log('Final answer:', response);
             return response;
         } catch (error) {
             console.error('Error generating response:', error);
