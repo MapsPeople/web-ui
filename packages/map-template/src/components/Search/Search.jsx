@@ -106,6 +106,9 @@ function Search({ onSetSize, isOpen }) {
     // Track whether current search results are from AI chat
     const [isAiSearchResults, setIsAiSearchResults] = useState(false);
 
+    // Track whether to show the "Ask with AI" button based on character count
+    const [showAskWithAiButton, setShowAskWithAiButton] = useState(false);
+
     // Memoize the hover callback to prevent unnecessary re-renders
     const handleHoverLocation = useCallback((location) => {
         setHoveredLocation(location);
@@ -421,6 +424,48 @@ function Search({ onSetSize, isOpen }) {
         }
     }, [aiSearchLocationIds]);
 
+    /*
+     * Track searchFieldRef character count, log it, and manage "Ask with AI" button visibility
+     * Shows the "Ask with AI" button when character count is greater than 5
+     * Only tracks character count when NOT in chat mode
+     * TODO: This is probably not the best way to do this, but it works for now
+     */
+    useEffect(() => {
+        // Don't track character count when chat mode is enabled
+        if (isChatModeEnabled ) {
+            setShowAskWithAiButton(false);
+            return;
+        }
+        // Don't track character count when input field is not in focus
+        if(!isInputFieldInFocus) return;
+        
+        // Track character count when input field is in focus to determine if "Ask with AI" button should be shown
+        const trackCharacterCount = () => {
+            if (searchFieldRef.current) {
+                const currentValue = searchFieldRef.current.getValue();
+                const characterCount = currentValue ? currentValue.length : 0;
+                
+                // Set showAskWithAiButton based on character count, arbitrary number for now
+                setShowAskWithAiButton(characterCount > 5);
+                
+                return characterCount;
+            }
+            setShowAskWithAiButton(false);
+            return 0;
+        };
+
+        // Track character count when component mounts and when search field value changes
+        trackCharacterCount();
+
+        // Set up an interval to periodically check character count
+        // This ensures we catch changes that might not trigger other effects
+        const intervalId = setInterval(trackCharacterCount, 500);
+
+        return () => {
+            clearInterval(intervalId);
+        };
+    }, [isChatModeEnabled, isInputFieldInFocus]);
+
 
     return (
         <div className="search"
@@ -448,7 +493,7 @@ function Search({ onSetSize, isOpen }) {
             />
 
             {/* Ask with AI button - only show when not in chat mode and no existing messages */}
-            {!isChatModeEnabled && isInputFieldInFocus && (
+            {!isChatModeEnabled && isInputFieldInFocus && showAskWithAiButton && (
                 <button
                     className="search__ask-ai-button"
                     onClick={(e) => {
@@ -499,9 +544,10 @@ function Search({ onSetSize, isOpen }) {
 
             {/* SearchResults component handles error messages and search results display */}
             {/* Show SearchResults when: not in chat mode OR when in chat mode but showing AI search results */}
+            {/* Don't show not found message when "Ask with AI" button is shown */}
             {(!isChatModeEnabled || (isChatModeEnabled && isAiSearchResults)) && <SearchResults
                 searchResults={searchResults}
-                showNotFoundMessage={showNotFoundMessage}
+                showNotFoundMessage={showNotFoundMessage && !showAskWithAiButton}
                 selectedCategory={categoryManagerRef.current?.selectedCategory}
                 childKeys={categoryManagerRef.current?.childKeys || []}
                 handleBack={() => categoryManagerRef.current?.handleBack()}
