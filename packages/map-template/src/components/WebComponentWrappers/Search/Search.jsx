@@ -122,7 +122,7 @@ const SearchField = forwardRef(function SearchFieldComponent(props, ref) {
             cancelled = true;
             if (!handler) return;
             // try remove the handler if the input resolves later as well
-            elementRef.current.getInputField().then(inputElement => {
+            elementRef.current?.getInputField().then(inputElement => {
                 if (inputElement && handler) inputElement.removeEventListener('keydown', handler);
             }).catch(() => { });
         };
