@@ -18,7 +18,7 @@ function ChatWindow({ message, isEnabled, messages, setMessages, onMinimize, onS
     const isHeaderVisible = false;
 
     // Use Gemini provider
-    const { generateResponse, getAvailableMCPTools, isLoading, tools, searchResults } = useGemini();
+    const { generateResponse, isLoading, tools, searchResults } = useGemini();
 
     // Default prompt fields (can be made props or settings later)
     const [promptFields] = useState({
@@ -196,10 +196,6 @@ function ChatWindow({ message, isEnabled, messages, setMessages, onMinimize, onS
 
     });
 
-    // Fetch tools on mount
-    useEffect(() => {
-        getAvailableMCPTools().catch(console.error);
-    }, [getAvailableMCPTools]);
 
     // Listen for search results from Gemini provider
     // React to search results from Gemini provider

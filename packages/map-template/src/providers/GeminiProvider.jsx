@@ -1,4 +1,4 @@
-import { createContext, useContext, useCallback, useState } from 'react';
+import { createContext, useContext, useCallback, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { generateResponse, getAvailableMCPTools, getLastSearchResultIds, systemPrompt } from 'mcp-demo-client';
 
@@ -31,16 +31,16 @@ export function GeminiProvider({ children }) {
         try {
             console.log('Generating response for prompt:', prompt);
             const response = await generateResponse(apiKey, prompt, promptFields, toolsParam);
-            
+
             // Check for search results after the response is generated
             const searchResultIds = getLastSearchResultIds();
             console.log('Search result IDs:', searchResultIds);
-            
+
             if (searchResultIds.length > 0) {
                 console.log('Search results found:', searchResultIds);
                 setSearchResults(searchResultIds);
             }
-            
+
             console.log('Final answer:', response);
             return response;
         } catch (error) {
@@ -55,12 +55,16 @@ export function GeminiProvider({ children }) {
         }
     }, []);
 
+    // Initialize tools on provider mount
+    useEffect(() => {
+        getAvailableMCPToolsWrapper().catch(console.error);
+    }, [getAvailableMCPToolsWrapper]);
+
     // Provider value
-    const geminiContextValue = { 
-        generateResponse: generateResponseWrapper, 
-        getAvailableMCPTools: getAvailableMCPToolsWrapper, 
-        isLoading, 
-        tools, 
+    const geminiContextValue = {
+        generateResponse: generateResponseWrapper,
+        isLoading,
+        tools,
         searchResults,
         defaultPrompt
     };
