@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.85.0] - 2025-09-24
+
+### Added
+
+- Added horizontal category style for kiosk
+- Added functionality to switch between horizontal and vertical style categories for kiosks
+
+## [1.84.1] - 2025-09-16
+
+### Fixed
+
+- Upgraded to Mapbox GL JS version 3.15.0.
+- Upgraded to Web SDK version 4.42.2.
+
+## [1.84.0] - 2025-09-16
+
+### Added
+
+- New `devicePosition` prop to `MapTemplate`, `MapWrapper`, and `MapsIndoorsMap` components. This allows passing a custom device position object (with coordinates and timestamp) for custom positioning logic.
+
 ## [1.83.0] - 2025-09-02
 
 ### Added

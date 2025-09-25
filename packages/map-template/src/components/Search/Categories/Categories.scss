@@ -7,6 +7,72 @@
     gap: var(--spacing-x-small);
     margin-top: var(--spacing-x-small);
 
+    // Kiosk mode styles
+    &--kiosk-horizontal {
+        .categories__row {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--spacing-x-small);
+        }
+
+        .categories__chevron {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            flex: 0 0 auto;
+
+            &--left {
+                margin-right: auto;
+            }
+            &--right {
+                margin-left: auto;
+            }
+
+            button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 1px solid var(--color-gray-30);
+                border-radius: var(--spacing-x-small);
+                background: none;
+                cursor: pointer;
+                color: var(--color-gray-90);
+                padding: var(--spacing-medium);
+
+                &:hover {
+                    background-color: var(--tailwind-colors-gray-50);
+                    border-color: var(--tailwind-colors-gray-200);
+                }
+
+                &:disabled {
+                    opacity: 0.5;
+                    cursor: not-allowed;
+                }
+
+                svg {
+                    width: var(--spacing-medium);
+                    height: var(--spacing-medium);
+                }
+            }
+        }
+
+        .categories__list {
+            flex-direction: row;
+            gap: var(--spacing-xx-small);
+            scrollbar-width: hidden;
+        }
+
+        .categories__category {
+            width: auto;
+            flex: 0 0 auto;
+        }
+    }
+
+    // Note: &--kiosk-vertical uses the default vertical styles defined in &__list and &__category
+
     &__list {
         display: flex;
         flex-direction: column;

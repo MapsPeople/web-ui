@@ -102,6 +102,7 @@ MapTemplate.propTypes = {
     showMapMarkers: PropTypes.bool,
     mapboxMapStyle: PropTypes.string,
     modalLocation: PropTypes.string,
+    devicePosition: PropTypes.object
 };
 
 /**
@@ -141,7 +142,7 @@ MapTemplate.propTypes = {
  * @param {string} [props.mapboxMapStyle] - Specifies the Mapbox Map Style to use. The default value is set to "mapbox://styles/mapbox/standard".
  * @param {string} [props.modalLocation] - Specifies where the modal renders - default to top left. other options include topright, bottomleft, or bottomright.
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations, center, useAppTitle, showMapMarkers, mapboxMapStyle, modalLocation }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations, center, useAppTitle, showMapMarkers, mapboxMapStyle, devicePosition, modalLocation }) {
 
     const [userSelectedLanguage, setUserSelectedLanguage] = useState(false);
     const [mapOptions, setMapOptions] = useState({ brandingColor: primaryColor });
@@ -234,8 +235,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             const miSdkApiTag = document.createElement('script');
             miSdkApiTag.setAttribute('type', 'text/javascript');
-            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.42.0/mapsindoors-4.42.0.js.gz');
-            miSdkApiTag.setAttribute('integrity', 'sha384-K7OSiO1zZZKdjCQCKlzzLLcu3hz/532y8aKaQv44US4K7SZkKmXHrQSP+fqc9Lj0');
+            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.42.2/mapsindoors-4.42.2.js.gz');
+            miSdkApiTag.setAttribute('integrity', 'sha384-gYbnh5YkNO6cKVUSbfz3M7DlHCe7rr2/MJHS5ltfrP+B4kU16uTko8NN697JCrsZ');
             miSdkApiTag.setAttribute('crossorigin', 'anonymous');
             document.body.appendChild(miSdkApiTag);
             miSdkApiTag.onload = () => {
@@ -827,6 +828,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 setCurrentLanguage(languageToSet);
                 setUserSelectedLanguage(true);
             }}
+            devicePosition={devicePosition}
         />
     </div>
 }
