@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import categoriesState from '../../atoms/categoriesState';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
 import primaryColorState from '../../atoms/primaryColorState';
+import isChatModeEnabledState from '../../atoms/isChatModeEnabledState';
 import { snapPoints } from '../../constants/snapPoints';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import filteredLocationsState from '../../atoms/filteredLocationsState';
@@ -96,7 +97,7 @@ function Search({ onSetSize, isOpen }) {
     const [currentChatMessage, setCurrentChatMessage] = useState('');
 
     // Track if chat mode is enabled
-    const [isChatModeEnabled, setIsChatModeEnabled] = useState(false);
+    const [isChatModeEnabled, setIsChatModeEnabled] = useRecoilState(isChatModeEnabledState);
 
     // Chat messages state
     const [chatMessages, setChatMessages] = useState([]);

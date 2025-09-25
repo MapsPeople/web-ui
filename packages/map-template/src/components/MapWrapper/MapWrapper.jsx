@@ -20,6 +20,7 @@ import solutionState from '../../atoms/solutionState';
 import notificationMessageState from '../../atoms/notificationMessageState';
 import useMapBoundsDeterminer from '../../hooks/useMapBoundsDeterminer';
 import hideNonMatchesState from '../../atoms/hideNonMatchesState';
+import isChatModeEnabledState from '../../atoms/isChatModeEnabledState';
 import PropTypes from 'prop-types';
 import ViewSelector from '../ViewSelector/ViewSelector';
 import LanguageSelector from '../LanguageSelector/LanguageSelector.jsx';
@@ -81,6 +82,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
     const solution = useRecoilValue(solutionState);
     const [, setErrorMessage] = useRecoilState(notificationMessageState);
     const hideNonMatches = useRecoilValue(hideNonMatchesState);
+    const isChatModeEnabled = useRecoilValue(isChatModeEnabledState);
     const appConfig = useRecoilValue(appConfigState);
     const [isViewSelectorVisible, setIsViewSelectorVisible] = useState(false);
     const [isLanguageSelectorVisible, setIsLanguageSelectorVisible] = useState(false);
@@ -169,9 +171,13 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
 
     /*
      * Dynamically filter or highlight location based on the "filteredLocations", "filteredLocationsByExternalIDs" and "hideNonMatches" property.
+     * To avoid double highlighting when in chat mode, we skip highlighting if isChatModeEnabled is true.
      */
     useEffect(() => {
         if (!mapsIndoorsInstance) return;
+
+        // Skip highlighting if disabled (e.g., when in chat mode)
+        if (isChatModeEnabled) return;
 
         // Determine which set of locations to work with
         // If none of the locations are available, return the function
@@ -186,7 +192,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
         } else {
             mapsIndoorsInstance.highlight(locationIds);
         }
-    }, [filteredLocations, filteredLocationsByExternalIDs, mapsIndoorsInstance, hideNonMatches]);
+    }, [filteredLocations, filteredLocationsByExternalIDs, mapsIndoorsInstance, hideNonMatches, isChatModeEnabled]);
 
     /*
      * React to changes in bearing and pitch props and set them on the map if mapsIndoorsInstance exists.
