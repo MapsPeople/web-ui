@@ -40,7 +40,7 @@ export function GeminiProvider({ children }) {
                     break;
 
                 case 'multiple_locations':
-                    searchResultIds = (finalFunctionResponse.value.map(location => location).filter(Boolean));
+                    searchResultIds = finalFunctionResponse.value.filter(Boolean);
                     break;
                 default:
                     break;
