@@ -22,8 +22,9 @@ import PropTypes from 'prop-types';
  * @param {object} props.kioskKeyboardRef - Reference to kiosk keyboard component
  * @param {boolean} props.isInputFieldInFocus - Whether the search field is in focus
  * @param {function} props.setIsInputFieldInFocus - Function to set input field focus state
+ * @param {boolean} props.isChatModeEnabled - Whether chat mode is currently enabled
  */
-const SearchField = forwardRef(({ selectedCategory, showLegendButton, onResults, onSetSize, onClearResults, onKeyDown, kioskKeyboardRef, isInputFieldInFocus, setIsInputFieldInFocus }, ref) => {
+const SearchField = forwardRef(({ selectedCategory, showLegendButton, onResults, onSetSize, onClearResults, onKeyDown, kioskKeyboardRef, isInputFieldInFocus, setIsInputFieldInFocus, isChatModeEnabled }, ref) => {
     const { t } = useTranslation();
 
     /** Referencing the search field */
@@ -33,6 +34,11 @@ const SearchField = forwardRef(({ selectedCategory, showLegendButton, onResults,
 
     const isKioskContext = useIsKioskContext();
     const [, setShowLegendDialog] = useRecoilState(isLegendDialogVisibleState);
+
+    // Determine placeholder text based on chat mode
+    const placeholderText = isChatModeEnabled 
+        ? t('Ask follow up...') 
+        : t('Search by name, category, building...');
 
     /**
      * Clear results list when search field is cleared.
@@ -95,11 +101,11 @@ const SearchField = forwardRef(({ selectedCategory, showLegendButton, onResults,
 
             {/* Search field that allows users to search for locations (MapsIndoors Locations and external) */}
             <label className="search__label">
-                <span>{t('Search by name, category, building...')}</span>
+                <span>{placeholderText}</span>
                 <SearchFieldComponent
                     ref={searchFieldRef}
                     mapsindoors={true}
-                    placeholder={t('Search by name, category, building...')}
+                    placeholder={placeholderText}
                     results={handleResults}
                     clicked={searchFieldClicked}
                     cleared={cleared}
@@ -123,7 +129,8 @@ SearchField.propTypes = {
     onKeyDown: PropTypes.func,
     kioskKeyboardRef: PropTypes.object,
     isInputFieldInFocus: PropTypes.bool.isRequired,
-    setIsInputFieldInFocus: PropTypes.func.isRequired
+    setIsInputFieldInFocus: PropTypes.func.isRequired,
+    isChatModeEnabled: PropTypes.bool
 };
 
 export default SearchField;

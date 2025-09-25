@@ -491,6 +491,7 @@ function Search({ onSetSize, isOpen }) {
                 kioskKeyboardRef={kioskKeyboardRef}
                 isInputFieldInFocus={isInputFieldInFocus}
                 setIsInputFieldInFocus={setIsInputFieldInFocus}
+                isChatModeEnabled={isChatModeEnabled}
             />
 
             {/* Ask with AI button - only show when not in chat mode and no existing messages */}
