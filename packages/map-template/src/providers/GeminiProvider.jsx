@@ -32,16 +32,15 @@ export function GeminiProvider({ children }) {
             const response = await generateResponse(apiKey, prompt, promptFields, toolsParam);
 
             const finalFunctionResponse = getFinalFunctionResponse();
-
             // Extract search result IDs based on the final function response
             let searchResultIds = [];
             switch (finalFunctionResponse?.key) {
                 case 'single_location':
-                    searchResultIds = [finalFunctionResponse.value.locationId];
+                    searchResultIds = [finalFunctionResponse.value];
                     break;
 
                 case 'multiple_locations':
-                    searchResultIds = (finalFunctionResponse.value.map(location => location?.locationId).filter(Boolean));
+                    searchResultIds = (finalFunctionResponse.value.map(location => location).filter(Boolean));
                     break;
                 default:
                     break;
