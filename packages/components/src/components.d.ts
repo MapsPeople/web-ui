@@ -964,9 +964,18 @@ export namespace Components {
          */
         "sessionToken": string;
         /**
+          * Set the visibility of the clear button.
+          * @param visible - Whether the clear button should be visible
+         */
+        "setClearButtonVisibility": (visible: boolean) => Promise<void>;
+        /**
           * Sets text to be shown in the search field. Setting it will not perform a search.
          */
         "setDisplayText": (displayText: string) => Promise<void>;
+        /**
+          * Whether to show the clear button. Defaults to true.
+         */
+        "showClearButton": boolean;
         /**
           * Programmatically trigger the search.
          */
@@ -2347,6 +2356,10 @@ declare namespace LocalJSX {
           * The Mapbox Session Token used for getting Mapbox autocomplete suggestions.
          */
         "sessionToken"?: string;
+        /**
+          * Whether to show the clear button. Defaults to true.
+         */
+        "showClearButton"?: boolean;
         /**
           * The user position which can determine the proximity for the Mapbox places results.
          */
