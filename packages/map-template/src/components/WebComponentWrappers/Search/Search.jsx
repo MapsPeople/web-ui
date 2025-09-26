@@ -130,14 +130,17 @@ const SearchField = forwardRef(function SearchFieldComponent(props, ref) {
         };
     }, [onKeyDown]);
 
-        // Effect to find and manipulate the background-image based on chat mode
+        // Effect to handle chat mode changes
         // TODO: This is a hack to get the chat mode icon to work. We should find a better way to do this.
         useEffect(() => {
             if (!elementRef.current) return;
 
-            const findAndUpdateBackgroundImage = async () => {
+            const handleChatModeChange = async () => {
                 try {
-                    // Get the input element from the web component
+                    // Use the web component's method to control clear button visibility
+                    elementRef.current.setClearButtonVisibility(!isChatModeEnabled);
+                    
+                    // Get the input element for background image manipulation
                     const inputElement = await elementRef.current.getInputField();
                     
                     if (inputElement) {
@@ -187,23 +190,12 @@ const SearchField = forwardRef(function SearchFieldComponent(props, ref) {
                         }
                     }
                 } catch (error) {
-                    // Fallback: try to find input element directly
-                    const searchElement = elementRef.current;
-                    const inputElement = searchElement.shadowRoot?.querySelector('input') || 
-                                        searchElement.querySelector('input');
-                    
-                    if (inputElement) {
-                        if (isChatModeEnabled) {
-                            inputElement.style.backgroundImage = 'none';
-                        } else {
-                            inputElement.style.backgroundImage = '';
-                        }
-                    }
+                    console.warn('Failed to update chat mode state:', error);
                 }
             };
 
-            // Try to update immediately
-            findAndUpdateBackgroundImage();
+            // Update immediately
+            handleChatModeChange();
         }, [isChatModeEnabled]);
 
     return <mi-search ref={elementRef}

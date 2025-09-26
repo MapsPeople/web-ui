@@ -263,6 +263,7 @@ function Search({ onSetSize, isOpen }) {
     const handleMinimizeChat = useCallback(() => {
         setIsChatModeEnabled(false);
         setIsAiSearchResults(false); // Reset AI search results flag
+        setSearchResults([]);
 
         // Disabled for now to preserve the conversation history
         // setCurrentChatMessage('');
@@ -493,6 +494,7 @@ function Search({ onSetSize, isOpen }) {
                 isInputFieldInFocus={isInputFieldInFocus}
                 setIsInputFieldInFocus={setIsInputFieldInFocus}
                 isChatModeEnabled={isChatModeEnabled}
+                onCloseChat={handleMinimizeChat}
             />
 
             {/* Ask with AI button - only show when not in chat mode and no existing messages */}

@@ -24,7 +24,7 @@ import PropTypes from 'prop-types';
  * @param {function} props.setIsInputFieldInFocus - Function to set input field focus state
  * @param {boolean} props.isChatModeEnabled - Whether chat mode is currently enabled
  */
-const SearchField = forwardRef(({ selectedCategory, showLegendButton, onResults, onSetSize, onClearResults, onKeyDown, kioskKeyboardRef, isInputFieldInFocus, setIsInputFieldInFocus, isChatModeEnabled }, ref) => {
+const SearchField = forwardRef(({ selectedCategory, showLegendButton, onResults, onSetSize, onClearResults, onKeyDown, kioskKeyboardRef, isInputFieldInFocus, setIsInputFieldInFocus, isChatModeEnabled, onCloseChat }, ref) => {
     const { t } = useTranslation();
 
     /** Referencing the search field */
@@ -49,6 +49,22 @@ const SearchField = forwardRef(({ selectedCategory, showLegendButton, onResults,
         // Clear the keyboard input field through KioskKeyboard component
         kioskKeyboardRef?.current?.clearInputField();
     }, [onClearResults, kioskKeyboardRef]);
+
+    /**
+     * Handle clear button click - different behavior for chat mode vs search mode
+     */
+    const handleClearClick = useCallback((e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        if (isChatModeEnabled && onCloseChat) {
+            // In chat mode, close the chat window
+            onCloseChat();
+        } else {
+            // In search mode, clear the input field
+            searchFieldRef.current?.clear();
+        }
+    }, [isChatModeEnabled, onCloseChat]);
 
     /**
      * When search field is clicked, maximize the sheet size and set focus on the input field.
@@ -102,17 +118,48 @@ const SearchField = forwardRef(({ selectedCategory, showLegendButton, onResults,
             {/* Search field that allows users to search for locations (MapsIndoors Locations and external) */}
             <label className="search__label">
                 <span>{placeholderText}</span>
-                <SearchFieldComponent
-                    ref={searchFieldRef}
-                    mapsindoors={true}
-                    placeholder={placeholderText}
-                    results={handleResults}
-                    clicked={searchFieldClicked}
-                    cleared={cleared}
-                    category={selectedCategory}
-                    onKeyDown={onKeyDown}
-                    disabled={searchDisabled} // Disabled initially to prevent content jumping when clicking and changing sheet size.
-                />
+                <div style={{ position: 'relative' }}>
+                    <SearchFieldComponent
+                        ref={searchFieldRef}
+                        mapsindoors={true}
+                        placeholder={placeholderText}
+                        results={handleResults}
+                        clicked={searchFieldClicked}
+                        cleared={cleared}
+                        category={selectedCategory}
+                        onKeyDown={onKeyDown}
+                        disabled={searchDisabled} // Disabled initially to prevent content jumping when clicking and changing sheet size.
+                    />
+                    
+                    {/* Custom clear button for chat mode - always visible */}
+                    {/* TODO: This is a hack to get the chat mode icon to work. We should find a better way to do this. */}
+                    {isChatModeEnabled && (
+                        <button 
+                            type="button" 
+                            onClick={handleClearClick}
+                            aria-label={isChatModeEnabled ? "Close chat" : "Clear"}
+                            style={{
+                                position: 'absolute',
+                                right: '14px',
+                                top: '50%',
+                                transform: 'translateY(-50%)',
+                                width: '20px',
+                                height: '20px',
+                                backgroundColor: 'transparent',
+                                border: 'none',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                cursor: 'pointer',
+                                zIndex: 10
+                            }}
+                        >
+                            <svg width="10" height="10" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M14 1.41L12.59 0L7 5.59L1.41 0L0 1.41L5.59 7L0 12.59L1.41 14L7 8.41L12.59 14L14 12.59L8.41 7L14 1.41Z" fill="black" />
+                            </svg>
+                        </button>
+                    )}
+                </div>
             </label>
         </div>
     );
@@ -130,7 +177,8 @@ SearchField.propTypes = {
     kioskKeyboardRef: PropTypes.object,
     isInputFieldInFocus: PropTypes.bool.isRequired,
     setIsInputFieldInFocus: PropTypes.func.isRequired,
-    isChatModeEnabled: PropTypes.bool
+    isChatModeEnabled: PropTypes.bool,
+    onCloseChat: PropTypes.func
 };
 
 export default SearchField;

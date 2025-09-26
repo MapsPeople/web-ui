@@ -141,6 +141,11 @@ export class Search implements ComponentInterface {
     @Prop() userPosition: string;
 
     /**
+     * Whether to show the clear button. Defaults to true.
+     */
+    @Prop() showClearButton: boolean = true;
+
+    /**
      * Sets the prevention of the search.
      */
     private preventSearch: boolean = false;
@@ -209,6 +214,15 @@ export class Search implements ComponentInterface {
     @Method()
     public async getInputField(): Promise<HTMLInputElement> {
         return this.inputElement;
+    }
+
+    /**
+     * Set the visibility of the clear button.
+     * @param visible - Whether the clear button should be visible
+     */
+    @Method()
+    public setClearButtonVisibility(visible: boolean): void {
+        this.showClearButton = visible;
     }
 
     /**
@@ -430,7 +444,7 @@ export class Search implements ComponentInterface {
                     placeholder={this.placeholder}
                     autocomplete="off"
                 />
-                {this.inputElement?.value &&
+                {this.showClearButton && this.inputElement?.value &&
                     <button type="button" onClick={() => this.clear()} aria-label="Clear">
                         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M14 1.41L12.59 0L7 5.59L1.41 0L0 1.41L5.59 7L0 12.59L1.41 14L7 8.41L12.59 14L14 12.59L8.41 7L14 1.41Z" />
