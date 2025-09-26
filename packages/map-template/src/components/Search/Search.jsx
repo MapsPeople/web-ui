@@ -462,7 +462,7 @@ function Search({ onSetSize, isOpen }) {
 
         // Set up an interval to periodically check character count
         // This ensures we catch changes that might not trigger other effects
-        const intervalId = setInterval(trackCharacterCount, 500);
+        const intervalId = setInterval(trackCharacterCount, 300);
 
         return () => {
             clearInterval(intervalId);
