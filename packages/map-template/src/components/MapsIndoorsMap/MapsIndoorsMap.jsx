@@ -38,7 +38,8 @@ MapsIndoorsMap.propTypes = {
     useAppTitle: PropTypes.bool,
     showMapMarkers: PropTypes.bool,
     mapboxMapStyle: PropTypes.string,
-    devicePosition: PropTypes.object
+    devicePosition: PropTypes.object,
+    modalLocation: PropTypes.string,
 };
 
 /**
