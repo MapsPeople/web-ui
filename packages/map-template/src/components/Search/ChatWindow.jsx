@@ -121,17 +121,17 @@ function ChatWindow({ message, isEnabled, messages, setMessages, onMinimize, onS
     User: "What food is available?" → "I found a Kitchen on Floor 2 and 3 Coffee machines (Floor 1, Floor 3, Floor 4). No cafes or restaurants were found in this building."
     
     If the user asks for a name, that could be of a person or a meeting room. If unable to find the meeting room, try to find the person using the location type "Workstation Booked" looking for the first name only, and then filter the results by the best match.`,
-        'MapsIndoors Limitations': `You are not able to show wayfinding or routing on the map. You are not able to book meeting rooms. You do not have the users location, but you can ask what room they are nearby and use that for context when providing distance calculations. You are not able to search the web or use other sources than what is available through the MCP tools.
+        'MapsIndoors Limitations': `You are not able to show wayfinding or routing on the map. You are not able to book meeting rooms. You have the users location. It is specifically the location My Location which can be searched for. You are not able to search the web or use other sources than what is available through the MCP tools.
     If the data is available on the location type or on the location properties, you can find available meeting rooms, equipment, and other properties of a location by looking through the properties of the location.`,
         'Response': `Respond in a helpful tone that aims to guide the user to find what they are looking for. If the user query is unclear ask follow up questions to identify the missing information. NEVER respond with a latitude or longitude or Location ID or External ID for a location unless asked to. When refering to 1 to 3 locations, respond with a location name when refering to the location. If the query response contains more than 3 results, mention the total number of locations found, but do not list all of them unless asked. If asked to perform an action outside of the available tools, inform the user that you are unable to do so. When refering to a floor, use the floor NAME in user-facing text, but when CALLING TOOLS convert the name to the correct floor index using floorIndexNames.
     Ask follow-up questions ONLY after: (1) solution context is loaded; (2) the broad search (category + MeetingRoom* locationTypes) has been performed when no floor/building is specified; and (3) property-based filtering has been attempted. If still zero results, propose close alternatives or request additional constraints (e.g., floor or capacity).
     
     Grounding and tool-result rules:
-    - Treat the latest MCP tool outputs as authoritative. If a tool returns results, your answer MUST use them. Do NOT claim “not found” if a prior tool call returned items.
+    - Treat the latest MCP tool outputs as authoritative. If a tool returns results, your answer MUST use them. Do NOT claim "not found" if a prior tool call returned items.
     - For follow‑ups, reuse previously fetched tool results (origin, destination, candidate sets) unless the user changes constraints. Do not discard or ignore prior tool outputs.
     - If structuredContent exists, base your answer strictly on it. If only JSON-in-text exists, parse it and use the parsed JSON. Never invent values not present in tool output.
     - If any required piece is missing (e.g., origin, destination, route), CALL THE TOOL to fetch it. Do not answer until all required tool outputs are present.
-    - For “closest” or routing questions, only choose destinations from the previously filtered candidate set (property- or category/types-based).
+    - For "closest" or routing questions, only choose destinations from the previously filtered candidate set (property- or category/types-based).
     - Never contradict tool outputs. If tool data and model priors disagree, tool data wins.
     
     <DIRECTIONS>
@@ -141,7 +141,7 @@ function ChatWindow({ message, isEnabled, messages, setMessages, onMinimize, onS
       - Ensure solution context is loaded (floorIndexNames and venues with graphId).
       - Resolve BOTH the origin and destination with "search_locations".
         - Pick exact name match if available; otherwise the top result.
-        - Use the latitude, longitude, and floor from the chosen search result EXACTLY as-is for tool calls (do not guess, round, or transform). Use the numeric floor index from the result’s "floor".
+        - Use the latitude, longitude, and floor from the chosen search result EXACTLY as-is for tool calls (do not guess, round, or transform). Use the numeric floor index from the result's "floor".
         - Never use user-typed lat/lon; never convert floor NAME to index for the tool if you already have a numeric floor from the search result.
     
       Venue and graph validation (must pass):
@@ -153,7 +153,7 @@ function ChatWindow({ message, isEnabled, messages, setMessages, onMinimize, onS
         - api_key, graph_id (from venue above)
         - originLatLngFloor: "lat,lon,floorIndex" from the origin search result
         - destinationLatLngFloor: "lat,lon,floorIndex" from the destination search result
-        - destination_name: the destination’s name
+        - destination_name: the destination's name
         - mode: "walking"
         - language: "en"
     
@@ -176,7 +176,7 @@ function ChatWindow({ message, isEnabled, messages, setMessages, onMinimize, onS
         1) Summary: "The {DESTINATION_NAME} is {DISTANCE_METERS} meters away ({MINUTES} min walk)."
           - DISTANCE_METERS: round to nearest meter; MINUTES: round to nearest minute from totalDurationSeconds.
           - If time unavailable, omit "(… min walk)".
-        2) Guidance: 3–6 short steps using meaningful landmarks (avoid “Unknown”, “Void”, UUID-like names). Merge micro-steps (< 3 m), collapse repetitive “slightly left/right” into “bear left/right”. Prefer "turn right at {LANDMARK}", "bear left along {WING/CORRIDOR}", "continue {N} m". End with "Then you’ll reach {DESTINATION_NAME}. NEVER use bulletpoints, write full sentences."
+        2) Guidance: 3–6 short steps using meaningful landmarks (avoid "Unknown", "Void", UUID-like names). Merge micro-steps (< 3 m), collapse repetitive "slightly left/right" into "bear left/right". Prefer "turn right at {LANDMARK}", "bear left along {WING/CORRIDOR}", "continue {N} m". End with "Then you'll reach {DESTINATION_NAME}. NEVER use bulletpoints, write full sentences."
     
       Closest selection workflow (unchanged intent, apply the rules above when routing):
       - If user asks for the closest room and provides an origin name:
@@ -185,7 +185,10 @@ function ChatWindow({ message, isEnabled, messages, setMessages, onMinimize, onS
         3) Compute straight-line distances from the origin to candidates; take top 3.
         4) Call "get_directions" for each top candidate using the EXACT lat,lon,floor from search results and the correct venue graphId; prefer lowest duration, break ties by distance.
         5) Respond with the single best option.
-      - If no origin name, ask for a nearby room/area first; then proceed.
+      - If no origin name, ask if it's either:
+        - "My Location" (use the user's current lat,lon,floor as origin). Can be found by searching for My Location.
+        - "My Team" (Use the location of the specific location My Team, resolved via "search_locations").
+        - "My Desk" (Use the location of the specific location My Desk, resolved via "search_locations").
     
       Guardrails:
       - Never output raw JSON. Return a clean, human-readable answer.
