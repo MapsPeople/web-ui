@@ -359,11 +359,11 @@ function Search({ onSetSize, isOpen }) {
                 setFilteredLocations([]);
 
                 // Exit chat mode when clicking outside
-                setIsChatModeEnabled(false);
-                setCurrentChatMessage('');
-                setIsAiSearchResults(false); // Reset AI search results flag
+                // setIsChatModeEnabled(false);
+                // setCurrentChatMessage('');
+                // setIsAiSearchResults(false); // Reset AI search results flag
                 // Clear AI search results highlighting
-                setAiSearchLocationIds([]);
+                // setAiSearchLocationIds([]);
                 // Clear chat messages when exiting chat mode
                 // setChatMessages([]);
             }
