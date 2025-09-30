@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import { useEffect, useRef, useLayoutEffect, useMemo, useCallback } from 'react';
 import { useGemini } from '../../providers/GeminiProvider';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import chatHistoryState from '../../atoms/chatHistoryState';
@@ -10,25 +10,10 @@ import primaryColorState from '../../atoms/primaryColorState';
 import apiKeyState from '../../atoms/apiKeyState';
 import ChatSearchResults from './components/ChatSearchResults/ChatSearchResults';
 
-function ChatWindow({ message, isEnabled, onMinimize, onSearchResults, locationHandlerRef, hoveredLocation, onShowRoute }) {
-    const primaryColor = useRecoilValue(primaryColorState);
-    const apiKey = useRecoilValue(apiKeyState);
-    const chatWindowRef = useRef(null);
-    const chatMessagesRef = useRef(null);
-
-    // TODO: Hide header for now, redesign later
-    const isHeaderVisible = false;
-
-    // Use Gemini provider
-    const { generateResponse, isLoading, tools, searchResults, directionsLocationIds } = useGemini();
-    
-    // Use Recoil for chat history
-    const [chatHistory, setChatHistory] = useRecoilState(chatHistoryState);
-
-    // Default prompt fields (can be made props or settings later)
-    const [promptFields] = useState({
-        'System context': 'You are a indoor location assistant with MapsIndoors developed by MapsPeople. You can answer questions about georeferenced indoor locations within the data that is available to you through the MCP tools.',
-        'MapsIndoors Context': `The available data includes locations (POI, areas and rooms). Each location can have a name, location type, categories, alias, description, floor, latitude and longitude and custom properties (Key/Value pairs).
+// Move prompt fields outside component to prevent recreation on every render
+const PROMPT_FIELDS = {
+    'System context': 'You are a indoor location assistant with MapsIndoors developed by MapsPeople. You can answer questions about georeferenced indoor locations within the data that is available to you through the MCP tools.',
+    'MapsIndoors Context': `The available data includes locations (POI, areas and rooms). Each location can have a name, location type, categories, alias, description, floor, latitude and longitude and custom properties (Key/Value pairs).
     
     ALWAYS start a new session by loading the solution context and use its floorIndexNames mapping to convert user floor names to floor indexes required by tools (e.g., floor name "2" -> index "20"). When searching for rooms like meeting rooms, try BOTH: categories (e.g., "Meetingroom") AND relevant locationTypes (all variants of "MeetingRoom"). If a first search returns zero, retry with the other dimension before concluding none exist.
     
@@ -126,9 +111,9 @@ function ChatWindow({ message, isEnabled, onMinimize, onSearchResults, locationH
     User: "What food is available?" → "I found a Kitchen on Floor 2 and 3 Coffee machines (Floor 1, Floor 3, Floor 4). No cafes or restaurants were found in this building."
     
     If the user asks for a name, that could be of a person or a meeting room. If unable to find the meeting room, try to find the person using the location type "Workstation Booked" looking for the first name only, and then filter the results by the best match.`,
-        'MapsIndoors Limitations': `You are not able to show wayfinding or routing on the map. You are not able to book meeting rooms. You have the users location. It is specifically the location My Location which can be searched for. You are not able to search the web or use other sources than what is available through the MCP tools.
+    'MapsIndoors Limitations': `You are not able to show wayfinding or routing on the map. You are not able to book meeting rooms. You have the users location. It is specifically the location My Location which can be searched for. You are not able to search the web or use other sources than what is available through the MCP tools.
     If the data is available on the location type or on the location properties, you can find available meeting rooms, equipment, and other properties of a location by looking through the properties of the location.`,
-        'Response': `Respond in a helpful tone that aims to guide the user to find what they are looking for. If the user query is unclear ask follow up questions to identify the missing information. NEVER respond with a latitude or longitude or Location ID or External ID for a location unless asked to. When refering to 1 to 3 locations, respond with a location name when refering to the location. If the query response contains more than 3 results, mention the total number of locations found, but do not list all of them unless asked. If asked to perform an action outside of the available tools, inform the user that you are unable to do so. When refering to a floor, use the floor NAME in user-facing text, but when CALLING TOOLS convert the name to the correct floor index using floorIndexNames.
+    'Response': `Respond in a helpful tone that aims to guide the user to find what they are looking for. If the user query is unclear ask follow up questions to identify the missing information. NEVER respond with a latitude or longitude or Location ID or External ID for a location unless asked to. When refering to 1 to 3 locations, respond with a location name when refering to the location. If the query response contains more than 3 results, mention the total number of locations found, but do not list all of them unless asked. If asked to perform an action outside of the available tools, inform the user that you are unable to do so. When refering to a floor, use the floor NAME in user-facing text, but when CALLING TOOLS convert the name to the correct floor index using floorIndexNames.
     Ask follow-up questions ONLY after: (1) solution context is loaded; (2) the broad search (category + MeetingRoom* locationTypes) has been performed when no floor/building is specified; and (3) property-based filtering has been attempted. If still zero results, propose close alternatives or request additional constraints (e.g., floor or capacity).
     
     Grounding and tool-result rules:
@@ -201,12 +186,55 @@ function ChatWindow({ message, isEnabled, onMinimize, onSearchResults, locationH
       - When mentioning floors to the user, use floor NAME; when calling tools, use floor INDEX.
       - Exclude landmarks named "Unknown", "Void" or similar; keep meaningful names.
     </DIRECTIONS>`,
+};
 
-    });
+function ChatWindow({ message, isEnabled, onMinimize, onSearchResults, locationHandlerRef, hoveredLocation, onShowRoute }) {
+    const primaryColor = useRecoilValue(primaryColorState);
+    const apiKey = useRecoilValue(apiKeyState);
+    const chatWindowRef = useRef(null);
+    const chatMessagesRef = useRef(null);
 
+    // TODO: Hide header for now, redesign later
+    const isHeaderVisible = false;
+
+    // Use Gemini provider
+    const { generateResponse, isLoading, tools, searchResults, directionsLocationIds } = useGemini();
+    
+    // Use Recoil for chat history
+    const [chatHistory, setChatHistory] = useRecoilState(chatHistoryState);
+
+    // Memoize the fetch locations function to prevent recreation on every render
+    const fetchLocationsAndUpdateMessage = useCallback(async (searchResultIds) => {
+        try {
+            console.log('ChatWindow: Fetching full location objects for IDs:', searchResultIds);
+            const promises = searchResultIds.map(id =>
+                window.mapsindoors.services.LocationsService.getLocation(id)
+            );
+            const locations = await Promise.all(promises);
+            const validLocations = locations.filter(location => location !== null);
+            console.log('ChatWindow: Successfully fetched locations:', validLocations);
+
+            // Update the latest server message with location data
+            setChatHistory(prev => {
+                const updatedMessages = [...prev];
+                // Find the last server message and update it with locations
+                for (let i = updatedMessages.length - 1; i >= 0; i--) {
+                    if (updatedMessages[i].type === 'server') {
+                        updatedMessages[i] = {
+                            ...updatedMessages[i],
+                            locations: validLocations
+                        };
+                        break;
+                    }
+                }
+                return updatedMessages;
+            });
+        } catch (error) {
+            console.error('ChatWindow: Error fetching locations by IDs:', error);
+        }
+    }, []);
 
     // Listen for search results from Gemini provider
-    // React to search results from Gemini provider
     useEffect(() => {
         if (searchResults && searchResults.length > 0) {
             console.log('ChatWindow: Received search results from provider:', searchResults);
@@ -216,41 +244,32 @@ function ChatWindow({ message, isEnabled, onMinimize, onSearchResults, locationH
                 onSearchResults(searchResults);
             }
 
-            // Fetch full location objects and update the latest server message
-            const fetchLocationsAndUpdateMessage = async () => {
-                try {
-                    console.log('ChatWindow: Fetching full location objects for IDs:', searchResults);
-                    const promises = searchResults.map(id =>
-                        window.mapsindoors.services.LocationsService.getLocation(id)
-                    );
-                    const locations = await Promise.all(promises);
-                    const validLocations = locations.filter(location => location !== null);
-                    console.log('ChatWindow: Successfully fetched locations:', validLocations);
-
-                    // Update the latest server message with location data
-                    setChatHistory(prev => {
-                        const updatedMessages = [...prev];
-                        // Find the last server message and update it with locations
-                        for (let i = updatedMessages.length - 1; i >= 0; i--) {
-                            if (updatedMessages[i].type === 'server') {
-                                updatedMessages[i] = {
-                                    ...updatedMessages[i],
-                                    locations: validLocations
-                                };
-                                break;
-                            }
-                        }
-                        return updatedMessages;
-                    });
-                } catch (error) {
-                    console.error('ChatWindow: Error fetching locations by IDs:', error);
-                }
-            };
-
-            fetchLocationsAndUpdateMessage();
+            fetchLocationsAndUpdateMessage(searchResults);
         }
-    }, [searchResults, onSearchResults]);
+    }, [searchResults, onSearchResults, fetchLocationsAndUpdateMessage]);
 
+    // Listen for directions location IDs from Gemini provider
+    useEffect(() => {
+        if (directionsLocationIds && directionsLocationIds.originLocationId && directionsLocationIds.destinationLocationId) {
+            console.log('ChatWindow: Received directions location IDs from provider:', directionsLocationIds);
+
+            // Update the latest server message with directions location IDs
+            setChatHistory(prev => {
+                const updatedMessages = [...prev];
+                // Find the last server message and update it with directions location IDs
+                for (let i = updatedMessages.length - 1; i >= 0; i--) {
+                    if (updatedMessages[i].type === 'server') {
+                        updatedMessages[i] = {
+                            ...updatedMessages[i],
+                            directionsLocationIds: directionsLocationIds
+                        };
+                        break;
+                    }
+                }
+                return updatedMessages;
+            });
+        }
+    }, [directionsLocationIds]);
 
     // Auto-scroll to bottom when messages change or loading state changes
     useLayoutEffect(() => {
@@ -261,42 +280,87 @@ function ChatWindow({ message, isEnabled, onMinimize, onSearchResults, locationH
 
     // Maybe expose a function to add messages, like onUserMessage, then pass it from the Search to the ChatWindow
 
-    // Handle new message from parent component
-    useEffect(() => {
-        if (!message?.trim()) return;
-
+    // Memoize message processing to prevent unnecessary re-renders
+    const processMessage = useCallback(async (messageText) => {
         const userMessage = {
             id: Date.now(),
-            text: message.trim(),
+            text: messageText,
             type: 'user'
         };
         setChatHistory(prev => [...prev, userMessage]);
 
         // Call Gemini service for response (provider API expects an object)
-        generateResponse(apiKey, message.trim(), promptFields, tools)
-            .then((response) => {
-                setChatHistory(prev => [
-                    ...prev,
-                    {
-                        id: Date.now() + 1,
-                        text: response,
-                        type: 'server',
-                        locations: [] // Will be populated by search results effect
-                    }
-                ]);
-            })
-            .catch(() => {
-                setChatHistory(prev => [
-                    ...prev,
-                    {
-                        id: Date.now() + 2,
-                        text: 'Sorry, I encountered an error processing your request.',
-                        type: 'server',
-                        locations: []
-                    }
-                ]);
-            });
-    }, [message, generateResponse, apiKey, promptFields]);
+        try {
+            const response = await generateResponse(apiKey, messageText, PROMPT_FIELDS, tools);
+            setChatHistory(prev => [
+                ...prev,
+                {
+                    id: Date.now() + 1,
+                    text: response,
+                    type: 'server',
+                    locations: [], // Will be populated by search results effect
+                    directionsLocationIds: null // Will be populated by directions effect
+                }
+            ]);
+        } catch (error) {
+            setChatHistory(prev => [
+                ...prev,
+                {
+                    id: Date.now() + 2,
+                    text: 'Sorry, I encountered an error processing your request.',
+                    type: 'server',
+                    locations: []
+                }
+            ]);
+        }
+    }, [generateResponse, apiKey]);
+
+    // Handle new message from parent component
+    useEffect(() => {
+        if (!message?.trim()) return;
+        processMessage(message.trim());
+    }, [message, processMessage]);
+
+    /**
+     * Memoized chat messages to prevent unnecessary re-renders.
+     * Only recalculates when chatHistory, directionsLocationIds, or related props change.
+     */
+    const chatMessages = useMemo(() => {
+        return chatHistory.map((message, index) => (
+            <div key={message.id} className={`chat-window__message chat-window__message--${message.type}`}>
+                {message.type === 'server' ? (
+                    <>
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                            {message.text}
+                        </ReactMarkdown>
+                        {message.locations && message.locations.length > 0 && (
+                            <ChatSearchResults
+                                locations={message.locations}
+                                locationHandlerRef={locationHandlerRef}
+                                hoveredLocation={hoveredLocation}
+                            />
+                        )}
+                        {(message.directionsLocationIds || (directionsLocationIds && index === chatHistory.length - 1)) && 
+                         (message.directionsLocationIds?.originLocationId && message.directionsLocationIds?.destinationLocationId ||
+                          directionsLocationIds?.originLocationId && directionsLocationIds?.destinationLocationId) && (
+                            <div className="chat-window__directions-button">
+                                <button
+                                    type="button"
+                                    className="chat-window__show-route-button"
+                                    style={{ backgroundColor: primaryColor }}
+                                    onClick={() => onShowRoute && onShowRoute(message.directionsLocationIds || directionsLocationIds)}
+                                >
+                                    Show Route
+                                </button>
+                            </div>
+                        )}
+                    </>
+                ) : (
+                    <span>{message.text}</span>
+                )}
+            </div>
+        ));
+    }, [chatHistory, directionsLocationIds, locationHandlerRef, hoveredLocation, primaryColor, onShowRoute]);
 
     // Keep chat visible if there are messages, even when parent disables visibility
     // Only show the chat window if there are messages
@@ -317,41 +381,7 @@ function ChatWindow({ message, isEnabled, onMinimize, onSearchResults, locationH
                 </button>
             </div>}
             <div ref={chatMessagesRef} className="chat-window__messages">
-                {chatHistory.map((message, index) => (
-                    <div key={message.id} className={`chat-window__message chat-window__message--${message.type}`}>
-                        {message.type === 'server' ? (
-                            <>
-                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                    {message.text}
-                                </ReactMarkdown>
-                                {message.locations && message.locations.length > 0 && (
-                                    <ChatSearchResults
-                                        locations={message.locations}
-                                        locationHandlerRef={locationHandlerRef}
-                                        hoveredLocation={hoveredLocation}
-                                    />
-                                )}
-                                {directionsLocationIds && 
-                                 directionsLocationIds.originLocationId && 
-                                 directionsLocationIds.destinationLocationId &&
-                                 index === chatHistory.length - 1 && (
-                                    <div className="chat-window__directions-button">
-                                        <button
-                                            type="button"
-                                            className="chat-window__show-route-button"
-                                            style={{ backgroundColor: primaryColor }}
-                                            onClick={() => onShowRoute && onShowRoute(directionsLocationIds)}
-                                        >
-                                            Show Route
-                                        </button>
-                                    </div>
-                                )}
-                            </>
-                        ) : (
-                            <span>{message.text}</span>
-                        )}
-                    </div>
-                ))}
+                {chatMessages}
                 {isLoading && (
                     <p className="chat-window__message chat-window__message--server chat-window__message--loading">
                         <span className="loading-dot"></span>
