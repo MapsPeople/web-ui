@@ -7,28 +7,6 @@
         display: grid;
         gap: var(--spacing-x-small);
         
-        // Limit the height to prevent chat messages from becoming too large
-        max-height: 300px;
-        overflow-y: auto;
-        
-        // Style the scrollbar to match chat theme
-        &::-webkit-scrollbar {
-            width: 4px;
-        }
-        
-        &::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        
-        &::-webkit-scrollbar-thumb {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 2px;
-        }
-        
-        &::-webkit-scrollbar-thumb:hover {
-            background: rgba(0, 0, 0, 0.3);
-        }
-        
         > * {
             height: fit-content; /* fixes mobile Safari issue making a single result too large */
         }
