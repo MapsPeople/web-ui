@@ -50,6 +50,8 @@ export function GeminiProvider({ children }) {
                     // Extract only the location IDs we need
                     const { originLocationId, destinationLocationId } = finalFunctionResponse.value;
                     setDirectionsLocationIds({ originLocationId, destinationLocationId });
+                    // Clear search results since this is a directions request, not a search
+                    setSearchResults([]);
                     break;
                 }
                 default:

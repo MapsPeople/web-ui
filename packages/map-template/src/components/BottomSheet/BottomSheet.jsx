@@ -147,17 +147,22 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
 
     /**
      * Handle "Show Route" button click from chat window.
-     * Resolves location IDs to full location objects and navigates to wayfinding.
+     * Navigates immediately to directions view and resolves locations in the background.
      *
      * @param {Object} locationIds - Object containing originLocationId and destinationLocationId
      */
     async function handleShowRoute(locationIds) {
         try {
-            console.log('Resolving locations for wayfinding:', locationIds);
+            console.log('Starting route resolution for:', locationIds);
+            
+            // Resolve locations in the background (non-blocking)
             const resolvedLocations = await resolveDirectionsFromChat(locationIds);
+
+            // Navigate to the directions view
+            pushAppView(appViews.DIRECTIONS);
             
             if (resolvedLocations && (resolvedLocations.originLocation || resolvedLocations.destinationLocation)) {
-                console.log('Navigating to wayfinding with resolved locations:', resolvedLocations);
+                console.log('Successfully resolved locations in background:', resolvedLocations);
                 
                 // Set the resolved locations in the chat directions state
                 setChatDirections({
@@ -175,9 +180,6 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
                         directionsResult: resolvedLocations.directionsResult
                     });
                 }
-                
-                // Navigate directly to directions to show the route
-                pushAppView(appViews.DIRECTIONS);
             } else {
                 console.error('Failed to resolve locations for wayfinding');
             }
