@@ -6,7 +6,7 @@
   border-radius: var(--rounding-large);
   // box-shadow: 0 2px 8px rgba(0,0,0,0.04);
   // height: 200px;
-  min-height: 100px;
+  // min-height: 100px;
   max-height: 565px;
   margin-top: var(--spacing-small);
   margin-bottom: var(--spacing-small);
@@ -140,5 +140,30 @@
   }
   30% {
     transform: translateY(-8px);
+  }
+}
+
+.chat-window__directions-button {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.chat-window__show-route-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  &:active {
+    opacity: 0.8;
   }
 }

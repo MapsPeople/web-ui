@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { useGemini } from '../../providers/GeminiProvider';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useRecoilState } from 'recoil';
+import chatHistoryState from '../../atoms/chatHistoryState';
 import PropTypes from 'prop-types';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -9,7 +10,7 @@ import primaryColorState from '../../atoms/primaryColorState';
 import apiKeyState from '../../atoms/apiKeyState';
 import ChatSearchResults from './components/ChatSearchResults/ChatSearchResults';
 
-function ChatWindow({ message, isEnabled, messages, setMessages, onMinimize, onSearchResults, locationHandlerRef, hoveredLocation }) {
+function ChatWindow({ message, isEnabled, onMinimize, onSearchResults, locationHandlerRef, hoveredLocation, onShowRoute }) {
     const primaryColor = useRecoilValue(primaryColorState);
     const apiKey = useRecoilValue(apiKeyState);
     const chatWindowRef = useRef(null);
@@ -19,7 +20,10 @@ function ChatWindow({ message, isEnabled, messages, setMessages, onMinimize, onS
     const isHeaderVisible = false;
 
     // Use Gemini provider
-    const { generateResponse, isLoading, tools, searchResults } = useGemini();
+    const { generateResponse, isLoading, tools, searchResults, directionsLocationIds } = useGemini();
+    
+    // Use Recoil for chat history
+    const [chatHistory, setChatHistory] = useRecoilState(chatHistoryState);
 
     // Default prompt fields (can be made props or settings later)
     const [promptFields] = useState({
@@ -224,7 +228,7 @@ function ChatWindow({ message, isEnabled, messages, setMessages, onMinimize, onS
                     console.log('ChatWindow: Successfully fetched locations:', validLocations);
 
                     // Update the latest server message with location data
-                    setMessages(prev => {
+                    setChatHistory(prev => {
                         const updatedMessages = [...prev];
                         // Find the last server message and update it with locations
                         for (let i = updatedMessages.length - 1; i >= 0; i--) {
@@ -247,12 +251,13 @@ function ChatWindow({ message, isEnabled, messages, setMessages, onMinimize, onS
         }
     }, [searchResults, onSearchResults]);
 
+
     // Auto-scroll to bottom when messages change or loading state changes
     useLayoutEffect(() => {
         if (chatMessagesRef.current) {
             chatMessagesRef.current.scrollTop = chatMessagesRef.current.scrollHeight;
         }
-    }, [messages, isLoading]);
+    }, [chatHistory, isLoading]);
 
     // Maybe expose a function to add messages, like onUserMessage, then pass it from the Search to the ChatWindow
 
@@ -265,12 +270,12 @@ function ChatWindow({ message, isEnabled, messages, setMessages, onMinimize, onS
             text: message.trim(),
             type: 'user'
         };
-        setMessages(prev => [...prev, userMessage]);
+        setChatHistory(prev => [...prev, userMessage]);
 
         // Call Gemini service for response (provider API expects an object)
         generateResponse(apiKey, message.trim(), promptFields, tools)
             .then((response) => {
-                setMessages(prev => [
+                setChatHistory(prev => [
                     ...prev,
                     {
                         id: Date.now() + 1,
@@ -281,7 +286,7 @@ function ChatWindow({ message, isEnabled, messages, setMessages, onMinimize, onS
                 ]);
             })
             .catch(() => {
-                setMessages(prev => [
+                setChatHistory(prev => [
                     ...prev,
                     {
                         id: Date.now() + 2,
@@ -294,8 +299,9 @@ function ChatWindow({ message, isEnabled, messages, setMessages, onMinimize, onS
     }, [message, generateResponse, apiKey, promptFields]);
 
     // Keep chat visible if there are messages, even when parent disables visibility
+    // Only show the chat window if there are messages
     // This might need to be a bit tweaked
-    if (!isEnabled) return null;
+    if (!isEnabled || chatHistory.length === 0) return null;
 
     return (
         <div ref={chatWindowRef} className="chat-window" style={{ '--chat-window-primary-color': primaryColor }}>
@@ -311,7 +317,7 @@ function ChatWindow({ message, isEnabled, messages, setMessages, onMinimize, onS
                 </button>
             </div>}
             <div ref={chatMessagesRef} className="chat-window__messages">
-                {messages.map((message) => (
+                {chatHistory.map((message, index) => (
                     <div key={message.id} className={`chat-window__message chat-window__message--${message.type}`}>
                         {message.type === 'server' ? (
                             <>
@@ -324,6 +330,21 @@ function ChatWindow({ message, isEnabled, messages, setMessages, onMinimize, onS
                                         locationHandlerRef={locationHandlerRef}
                                         hoveredLocation={hoveredLocation}
                                     />
+                                )}
+                                {directionsLocationIds && 
+                                 directionsLocationIds.originLocationId && 
+                                 directionsLocationIds.destinationLocationId &&
+                                 index === chatHistory.length - 1 && (
+                                    <div className="chat-window__directions-button">
+                                        <button
+                                            type="button"
+                                            className="chat-window__show-route-button"
+                                            style={{ backgroundColor: primaryColor }}
+                                            onClick={() => onShowRoute && onShowRoute(directionsLocationIds)}
+                                        >
+                                            Show Route
+                                        </button>
+                                    </div>
                                 )}
                             </>
                         ) : (
@@ -346,12 +367,11 @@ function ChatWindow({ message, isEnabled, messages, setMessages, onMinimize, onS
 ChatWindow.propTypes = {
     message: PropTypes.string,
     isEnabled: PropTypes.bool,
-    messages: PropTypes.array.isRequired,
-    setMessages: PropTypes.func.isRequired,
     onMinimize: PropTypes.func,
     onSearchResults: PropTypes.func,
     locationHandlerRef: PropTypes.object,
-    hoveredLocation: PropTypes.object
+    hoveredLocation: PropTypes.object,
+    onShowRoute: PropTypes.func
 };
 
 export default ChatWindow;
