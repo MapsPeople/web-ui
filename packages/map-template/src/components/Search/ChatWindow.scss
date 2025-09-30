@@ -58,6 +58,14 @@
   padding: var(--spacing-medium);
   overflow-y: auto;
   flex: 1;
+  
+  // Hide scrollbar while keeping scroll functionality
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  
+  &::-webkit-scrollbar {
+    display: none; /* WebKit browsers (Chrome, Safari, Edge) */
+  }
 }
 
 .chat-window__message {
@@ -79,4 +87,14 @@
   // background-color: var(--color-gray-30, #f5f5f5);
   color: var(--color-black-black);
   width: 100%;
+  
+  // Prevent text shifting when ChatSearchResults expand/collapse
+  // by ensuring consistent layout flow
+  display: flex;
+  flex-direction: column;
+  
+  // Ensure the text content doesn't shift when search results appear
+  > *:first-child {
+    flex-shrink: 0;
+  }
 }
