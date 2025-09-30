@@ -3,6 +3,10 @@
 .chat-search-results {
     margin-top: var(--spacing-small);
     
+    // Smooth transition when expanding/collapsing
+    transition: all 0.2s ease-in-out;
+    overflow: hidden;
+    
     &__locations {
         display: grid;
         gap: var(--spacing-x-small);
