@@ -9,6 +9,7 @@ export function GeminiProvider({ children }) {
     const [isLoading, setIsLoading] = useState(false);
     const [tools, setTools] = useState({ functionDeclarations: [] });
     const [searchResults, setSearchResults] = useState([]);
+    const [directionsLocationIds, setDirectionsLocationIds] = useState(null);
     const defaultPrompt = systemPrompt;
 
     // Get available MCP tools and set them in state
@@ -27,6 +28,8 @@ export function GeminiProvider({ children }) {
     // Wrapper function to generate a response using the Gemini service
     const generateResponseWrapper = useCallback(async (apiKey, prompt, promptFields, toolsParam) => {
         setIsLoading(true);
+        // Clear previous directions data when starting a new request
+        setDirectionsLocationIds(null);
         try {
             console.log('Generating response for prompt:', prompt);
             const response = await generateResponse(apiKey, prompt, promptFields, toolsParam);
@@ -42,6 +45,13 @@ export function GeminiProvider({ children }) {
                 case 'multiple_locations':
                     searchResultIds = finalFunctionResponse.value.filter(Boolean);
                     break;
+
+                case 'directions': {
+                    // Extract only the location IDs we need
+                    const { originLocationId, destinationLocationId } = finalFunctionResponse.value;
+                    setDirectionsLocationIds({originLocationId,destinationLocationId});
+                    break;
+                }
                 default:
                     break;
             }
@@ -67,6 +77,11 @@ export function GeminiProvider({ children }) {
         }
     }, []);
 
+    // Function to clear directions data
+    const clearDirectionsLocationIds = useCallback(() => {
+        setDirectionsLocationIds(null);
+    }, []);
+
     // Initialize tools on provider mount
     useEffect(() => {
         getAvailableMCPToolsWrapper().catch(console.error);
@@ -78,6 +93,8 @@ export function GeminiProvider({ children }) {
         isLoading,
         tools,
         searchResults,
+        directionsLocationIds,
+        clearDirectionsLocationIds,
         defaultPrompt
     };
 
