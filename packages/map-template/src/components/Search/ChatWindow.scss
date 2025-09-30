@@ -101,6 +101,7 @@
 }
 
 .chat-window__message--loading {
+  padding-top: var(--spacing-small);
   display: flex;
   flex-direction: row;
   align-items: center;
