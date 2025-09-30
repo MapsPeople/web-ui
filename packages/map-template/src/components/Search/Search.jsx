@@ -13,7 +13,7 @@ import kioskLocationState from '../../atoms/kioskLocationState';
 import searchResultsState from '../../atoms/searchResultsState';
 import { useIsKioskContext } from '../../hooks/useIsKioskContext';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
-import {ReactComponent as AskWithAiIcon} from '../../assets/ask-with-ai-icon.svg';
+import { ReactComponent as AskWithAiIcon } from '../../assets/ask-with-ai-icon.svg';
 import legendSortedFieldsSelector from '../../selectors/legendSortedFieldsSelector';
 import initialVenueNameState from '../../atoms/initialVenueNameState';
 import LocationHandler from './components/LocationHandler/LocationHandler';
@@ -354,10 +354,13 @@ function Search({ onSetSize, isOpen }) {
             } else if (!clickedInsideResults && !clickedInsideIgnoreArea) {
                 setIsInputFieldInFocus(false);
                 setSize(snapPoints.MIN);
-                categoryManagerRef.current?.clearCategorySelection();
-                setSearchResults([]);
-                setFilteredLocations([]);
 
+                // No need to clear category selection when in chat mode
+                if (!isChatModeEnabled) {
+                    categoryManagerRef.current?.clearCategorySelection();
+                    setSearchResults([]);
+                    setFilteredLocations([]);
+                }
                 // Exit chat mode when clicking outside
                 // setIsChatModeEnabled(false);
                 // setCurrentChatMessage('');
@@ -383,7 +386,7 @@ function Search({ onSetSize, isOpen }) {
                 cancelAnimationFrame(requestAnimationFrameId.current);
             }
         }
-    }, [isOpen]);
+    }, [isOpen, isChatModeEnabled]);
 
     /*
      * React on changes in the venue prop.
@@ -435,22 +438,20 @@ function Search({ onSetSize, isOpen }) {
      */
     useEffect(() => {
         // Don't track character count when chat mode is enabled
-        if (isChatModeEnabled ) {
+        if (isChatModeEnabled) {
             setShowAskWithAiButton(false);
             return;
         }
         // Don't track character count when input field is not in focus
-        if(!isInputFieldInFocus) return;
-        
+        if (!isInputFieldInFocus) return;
+
         // Track character count when input field is in focus to determine if "Ask with AI" button should be shown
         const trackCharacterCount = () => {
             if (searchFieldRef.current) {
                 const currentValue = searchFieldRef.current.getValue();
                 const characterCount = currentValue ? currentValue.length : 0;
-                
                 // Set showAskWithAiButton based on character count, arbitrary number for now
                 setShowAskWithAiButton(characterCount > 5);
-                
                 return characterCount;
             }
             setShowAskWithAiButton(false);
