@@ -10,6 +10,9 @@ import Search from '../Search/Search';
 import LocationsList from '../LocationsList/LocationsList';
 import locationIdState from '../../atoms/locationIdState';
 import kioskLocationState from '../../atoms/kioskLocationState';
+import chatDirectionsState from '../../atoms/chatDirectionsState';
+import directionsResponseState from '../../atoms/directionsResponseState';
+import useDirectionsFromChat from '../../hooks/useDirectionsFromChat';
 import PropTypes from 'prop-types';
 
 Sidebar.propTypes = {
@@ -42,7 +45,12 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
     const [, setLocationId] = useRecoilState(locationIdState);
-    const kioskLocation = useRecoilValue(kioskLocationState)
+    const kioskLocation = useRecoilValue(kioskLocationState);
+    const [chatDirections, setChatDirections] = useRecoilState(chatDirectionsState);
+    const [, setDirectionsResponse] = useRecoilState(directionsResponseState);
+
+    // Hook for handling directions from chat
+    const { resolveDirectionsFromChat } = useDirectionsFromChat();
 
     /*
      * React on changes on the current location and directions locations and set relevant bottom sheet.
@@ -66,6 +74,18 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
             pushAppView(appViews.SEARCH);
         }
     }, [currentLocation, directionsFromLocation, directionsToLocation, filteredLocationsByExternalIDs]);
+
+    /*
+     * Clear chat directions when navigating away from wayfinding.
+     */
+    useEffect(() => {
+        if (currentAppView !== appViews.WAYFINDING && currentAppView !== appViews.DIRECTIONS) {
+            // Clear chat directions when not in wayfinding or directions mode
+            if (chatDirections.originLocation || chatDirections.destinationLocation) {
+                setChatDirections({ originLocation: null, destinationLocation: null });
+            }
+        }
+    }, [currentAppView, chatDirections, setChatDirections]);
 
     /**
      * Close the location details page and navigate to either the Locations list page or the Search page.
@@ -104,9 +124,50 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
         }
     }
 
+    /**
+     * Handle "Show Route" button click from chat window.
+     * Resolves location IDs to full location objects and navigates to wayfinding.
+     *
+     * @param {Object} locationIds - Object containing originLocationId and destinationLocationId
+     */
+    async function handleShowRoute(locationIds) {
+        try {
+            console.log('Resolving locations for wayfinding:', locationIds);
+            const resolvedLocations = await resolveDirectionsFromChat(locationIds);
+            
+            if (resolvedLocations && (resolvedLocations.originLocation || resolvedLocations.destinationLocation)) {
+                console.log('Navigating to wayfinding with resolved locations:', resolvedLocations);
+                
+                // Set the resolved locations in the chat directions state
+                setChatDirections({
+                    originLocation: resolvedLocations.originLocation,
+                    destinationLocation: resolvedLocations.destinationLocation
+                });
+                
+                // If we have directions data, set it in the directions response state
+                if (resolvedLocations.directionsResult && resolvedLocations.totalDistance && resolvedLocations.totalTime) {
+                    setDirectionsResponse({
+                        originLocation: resolvedLocations.originLocation,
+                        destinationLocation: resolvedLocations.destinationLocation,
+                        totalDistance: resolvedLocations.totalDistance,
+                        totalTime: resolvedLocations.totalTime,
+                        directionsResult: resolvedLocations.directionsResult
+                    });
+                }
+                
+                // Navigate directly to directions to show the route
+                pushAppView(appViews.DIRECTIONS);
+            } else {
+                console.error('Failed to resolve locations for wayfinding');
+            }
+        } catch (error) {
+            console.error('Error handling show route:', error);
+        }
+    }
+
     const pages = [
         <Modal isOpen={currentAppView === appViews.SEARCH} key="SEARCH">
-            <Search isOpen={currentAppView === appViews.SEARCH} />
+            <Search isOpen={currentAppView === appViews.SEARCH} onShowRoute={handleShowRoute} />
         </Modal>,
         <Modal isOpen={currentAppView === appViews.EXTERNALIDS} key="EXTERNALIDS">
             <LocationsList
@@ -126,8 +187,8 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
         <Modal isOpen={currentAppView === appViews.WAYFINDING} key="WAYFINDING">
             <Wayfinding
                 onStartDirections={() => pushAppView(appViews.DIRECTIONS)}
-                directionsToLocation={directionsToLocation}
-                directionsFromLocation={directionsFromLocation}
+                directionsToLocation={chatDirections.destinationLocation || directionsToLocation}
+                directionsFromLocation={chatDirections.originLocation || directionsFromLocation}
                 onBack={() => pushAppView(currentLocation ? appViews.LOCATION_DETAILS : appViews.SEARCH)}
                 isActive={currentAppView === appViews.WAYFINDING}
             />
