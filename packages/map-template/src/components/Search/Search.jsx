@@ -28,7 +28,8 @@ import ChatWindow from './ChatWindow';
 Search.propTypes = {
     categories: PropTypes.array,
     onSetSize: PropTypes.func,
-    isOpen: PropTypes.bool
+    isOpen: PropTypes.bool,
+    onShowRoute: PropTypes.func
 };
 
 /**
@@ -41,7 +42,7 @@ Search.propTypes = {
  *
  * @returns
  */
-function Search({ onSetSize, isOpen }) {
+function Search({ onSetSize, isOpen, onShowRoute }) {
     const { t } = useTranslation();
 
     const searchRef = useRef();
@@ -99,9 +100,6 @@ function Search({ onSetSize, isOpen }) {
     // Track if chat mode is enabled
     const [isChatModeEnabled, setIsChatModeEnabled] = useRecoilState(isChatModeEnabledState);
 
-    // Chat messages state
-    const [chatMessages, setChatMessages] = useState([]);
-
     // State for AI search results location IDs
     const [aiSearchLocationIds, setAiSearchLocationIds] = useState([]);
 
@@ -158,6 +156,7 @@ function Search({ onSetSize, isOpen }) {
             onSetSize(size);
         }
     }
+
 
     /**
      * Pure function to determine if categories should be shown.
@@ -492,8 +491,8 @@ function Search({ onSetSize, isOpen }) {
                             handleOpenChatWindow(currentValue.trim());
                             // Clear the search field after sending message to chat
                             searchFieldRef.current?.clear();
-                        } else if (chatMessages.length > 0) {
-                            // If no current value but there are existing messages, just open the chat window
+                        } else {
+                            // If no current value, just open the chat window
                             setIsChatModeEnabled(true);
                         }
                     }}
@@ -507,12 +506,11 @@ function Search({ onSetSize, isOpen }) {
             <ChatWindow
                 message={currentChatMessage}
                 isEnabled={isChatModeEnabled}
-                messages={chatMessages}
-                setMessages={setChatMessages}
                 onMinimize={handleMinimizeChat}
                 onSearchResults={handleAiSearchResults}
                 locationHandlerRef={locationHandlerRef}
                 hoveredLocation={hoveredLocation}
+                onShowRoute={onShowRoute}
             />
 
             {/* CategoryManager component to handle category logic and UI */}
