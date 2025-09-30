@@ -105,9 +105,6 @@ function Search({ onSetSize, isOpen }) {
     // State for AI search results location IDs
     const [aiSearchLocationIds, setAiSearchLocationIds] = useState([]);
 
-    // Track whether current search results are from AI chat
-    const [isAiSearchResults, setIsAiSearchResults] = useState(false);
-
     // Track whether to show the "Ask with AI" button based on character count
     const [showAskWithAiButton, setShowAskWithAiButton] = useState(false);
 
@@ -169,6 +166,7 @@ function Search({ onSetSize, isOpen }) {
      * - No "not found" message is displayed
      * - Categories are available
      * - No search results are displayed
+     * - Not in chat mode (chat mode has its own search results handling)
      *
      * @param {boolean} isInputFieldInFocus - Whether the search field is in focus
      * @param {boolean} showNotFoundMessage - Whether "not found" message is shown
@@ -178,9 +176,8 @@ function Search({ onSetSize, isOpen }) {
      * @returns {boolean} Whether categories should be displayed
      */
     function shouldShowCategories(isInputFieldInFocus, showNotFoundMessage, categories, searchResults, isChatModeEnabled) {
-        // Don't show categories in chat mode unless we have AI search results
-        const shouldShowInChatMode = !isChatModeEnabled || (isChatModeEnabled && isAiSearchResults);
-        return isInputFieldInFocus && !showNotFoundMessage && categories.length > 0 && searchResults.length === 0 && shouldShowInChatMode;
+        // Don't show categories in chat mode - chat has its own search results handling
+        return isInputFieldInFocus && !showNotFoundMessage && categories.length > 0 && searchResults.length === 0 && !isChatModeEnabled;
     }
 
     /**
@@ -198,7 +195,6 @@ function Search({ onSetSize, isOpen }) {
         setSearchResults(displayResults);
         setFilteredLocations(displayResults);
         setShowNotFoundMessage(displayResults.length === 0);
-        setIsAiSearchResults(false); // Mark as regular search results
 
         if (locations && fitMapBounds) {
             locationHandlerRef.current?.fitMapBoundsToLocations(locations);
@@ -220,7 +216,6 @@ function Search({ onSetSize, isOpen }) {
     function cleared() {
         setSearchResults([]);
         setShowNotFoundMessage(false);
-        setIsAiSearchResults(false); // Reset AI search results flag
         const selectedCategory = categoryManagerRef.current?.selectedCategory;
         if (selectedCategory) {
             categoryManagerRef.current?.getFilteredLocations(selectedCategory);
@@ -233,7 +228,6 @@ function Search({ onSetSize, isOpen }) {
         if (!isChatModeEnabled) {
             setIsChatModeEnabled(false);
             setCurrentChatMessage('');
-            setIsAiSearchResults(false); // Reset AI search results flag
             // Clear chat messages when exiting chat mode
             // setChatMessages([]);
         }
@@ -262,7 +256,6 @@ function Search({ onSetSize, isOpen }) {
 
     const handleMinimizeChat = useCallback(() => {
         setIsChatModeEnabled(false);
-        setIsAiSearchResults(false); // Reset AI search results flag
         setSearchResults([]);
 
         // Disabled for now to preserve the conversation history
@@ -298,31 +291,21 @@ function Search({ onSetSize, isOpen }) {
     }, []);
 
     /**
-     * Handle AI search results from ChatWindow
+     * Handle AI search results from ChatWindow - for map highlighting and actions
      * @param {Array} locationIds - Array of location IDs to highlight
      */
     const handleAiSearchResults = useCallback(async (locationIds) => {
         console.log('Search: Received AI search results with location IDs:', locationIds);
         setAiSearchLocationIds(locationIds);
 
-        // Fetch full location objects and display them in search results
+        // Fetch full location objects for map actions (fit bounds, etc.)
         if (locationIds && locationIds.length > 0) {
             const fullLocations = await fetchLocationsByIds(locationIds);
             if (fullLocations.length > 0) {
-                console.log('Search: Displaying AI search results:', fullLocations);
-                setSearchResults(fullLocations);
-                setShowNotFoundMessage(false);
-                setIsAiSearchResults(true); // Mark as AI search results
+                console.log('Search: Performing map actions for AI search results:', fullLocations);
+                // Fit map bounds to show all AI search result locations
                 locationHandlerRef.current?.fitMapBoundsToLocations(fullLocations);
-            } else {
-                setSearchResults([]);
-                setShowNotFoundMessage(true);
-                setIsAiSearchResults(false);
             }
-        } else {
-            setSearchResults([]);
-            setShowNotFoundMessage(false);
-            setIsAiSearchResults(false);
         }
     }, [fetchLocationsByIds]);
 
@@ -528,6 +511,8 @@ function Search({ onSetSize, isOpen }) {
                 setMessages={setChatMessages}
                 onMinimize={handleMinimizeChat}
                 onSearchResults={handleAiSearchResults}
+                locationHandlerRef={locationHandlerRef}
+                hoveredLocation={hoveredLocation}
             />
 
             {/* CategoryManager component to handle category logic and UI */}
@@ -550,9 +535,8 @@ function Search({ onSetSize, isOpen }) {
             />
 
             {/* SearchResults component handles error messages and search results display */}
-            {/* Show SearchResults when: not in chat mode OR when in chat mode but showing AI search results */}
-            {/* Don't show not found message when "Ask with AI" button is shown */}
-            {(!isChatModeEnabled || (isChatModeEnabled && isAiSearchResults)) && <SearchResults
+            {/* Only show SearchResults when not in chat mode - ChatSearchResults handles AI results */}
+            {!isChatModeEnabled && <SearchResults
                 searchResults={searchResults}
                 showNotFoundMessage={showNotFoundMessage && !showAskWithAiButton}
                 selectedCategory={categoryManagerRef.current?.selectedCategory}

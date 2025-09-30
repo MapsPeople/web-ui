@@ -7,8 +7,9 @@ import remarkGfm from 'remark-gfm';
 import './ChatWindow.scss';
 import primaryColorState from '../../atoms/primaryColorState';
 import apiKeyState from '../../atoms/apiKeyState';
+import ChatSearchResults from './components/ChatSearchResults/ChatSearchResults';
 
-function ChatWindow({ message, isEnabled, messages, setMessages, onMinimize, onSearchResults }) {
+function ChatWindow({ message, isEnabled, messages, setMessages, onMinimize, onSearchResults, locationHandlerRef, hoveredLocation }) {
     const primaryColor = useRecoilValue(primaryColorState);
     const apiKey = useRecoilValue(apiKeyState);
     const chatWindowRef = useRef(null);
@@ -22,7 +23,7 @@ function ChatWindow({ message, isEnabled, messages, setMessages, onMinimize, onS
 
     // Default prompt fields (can be made props or settings later)
     const [promptFields] = useState({
-        'System context': `You are a indoor location assistant with MapsIndoors developed by MapsPeople. You can answer questions about georeferenced indoor locations within the data that is available to you through the MCP tools.`,
+        'System context': 'You are a indoor location assistant with MapsIndoors developed by MapsPeople. You can answer questions about georeferenced indoor locations within the data that is available to you through the MCP tools.',
         'MapsIndoors Context': `The available data includes locations (POI, areas and rooms). Each location can have a name, location type, categories, alias, description, floor, latitude and longitude and custom properties (Key/Value pairs).
     
     ALWAYS start a new session by loading the solution context and use its floorIndexNames mapping to convert user floor names to floor indexes required by tools (e.g., floor name "2" -> index "20"). When searching for rooms like meeting rooms, try BOTH: categories (e.g., "Meetingroom") AND relevant locationTypes (all variants of "MeetingRoom"). If a first search returns zero, retry with the other dimension before concluding none exist.
@@ -210,6 +211,39 @@ function ChatWindow({ message, isEnabled, messages, setMessages, onMinimize, onS
             if (onSearchResults) {
                 onSearchResults(searchResults);
             }
+
+            // Fetch full location objects and update the latest server message
+            const fetchLocationsAndUpdateMessage = async () => {
+                try {
+                    console.log('ChatWindow: Fetching full location objects for IDs:', searchResults);
+                    const promises = searchResults.map(id =>
+                        window.mapsindoors.services.LocationsService.getLocation(id)
+                    );
+                    const locations = await Promise.all(promises);
+                    const validLocations = locations.filter(location => location !== null);
+                    console.log('ChatWindow: Successfully fetched locations:', validLocations);
+
+                    // Update the latest server message with location data
+                    setMessages(prev => {
+                        const updatedMessages = [...prev];
+                        // Find the last server message and update it with locations
+                        for (let i = updatedMessages.length - 1; i >= 0; i--) {
+                            if (updatedMessages[i].type === 'server') {
+                                updatedMessages[i] = {
+                                    ...updatedMessages[i],
+                                    locations: validLocations
+                                };
+                                break;
+                            }
+                        }
+                        return updatedMessages;
+                    });
+                } catch (error) {
+                    console.error('ChatWindow: Error fetching locations by IDs:', error);
+                }
+            };
+
+            fetchLocationsAndUpdateMessage();
         }
     }, [searchResults, onSearchResults]);
 
@@ -241,7 +275,8 @@ function ChatWindow({ message, isEnabled, messages, setMessages, onMinimize, onS
                     {
                         id: Date.now() + 1,
                         text: response,
-                        type: 'server'
+                        type: 'server',
+                        locations: [] // Will be populated by search results effect
                     }
                 ]);
             })
@@ -251,7 +286,8 @@ function ChatWindow({ message, isEnabled, messages, setMessages, onMinimize, onS
                     {
                         id: Date.now() + 2,
                         text: 'Sorry, I encountered an error processing your request.',
-                        type: 'server'
+                        type: 'server',
+                        locations: []
                     }
                 ]);
             });
@@ -278,9 +314,18 @@ function ChatWindow({ message, isEnabled, messages, setMessages, onMinimize, onS
                 {messages.map((message) => (
                     <div key={message.id} className={`chat-window__message chat-window__message--${message.type}`}>
                         {message.type === 'server' ? (
-                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                {message.text}
-                            </ReactMarkdown>
+                            <>
+                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                    {message.text}
+                                </ReactMarkdown>
+                                {message.locations && message.locations.length > 0 && (
+                                    <ChatSearchResults
+                                        locations={message.locations}
+                                        locationHandlerRef={locationHandlerRef}
+                                        hoveredLocation={hoveredLocation}
+                                    />
+                                )}
+                            </>
                         ) : (
                             <span>{message.text}</span>
                         )}
@@ -301,7 +346,9 @@ ChatWindow.propTypes = {
     messages: PropTypes.array.isRequired,
     setMessages: PropTypes.func.isRequired,
     onMinimize: PropTypes.func,
-    onSearchResults: PropTypes.func
+    onSearchResults: PropTypes.func,
+    locationHandlerRef: PropTypes.object,
+    hoveredLocation: PropTypes.object
 };
 
 export default ChatWindow;
