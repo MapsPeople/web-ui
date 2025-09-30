@@ -49,7 +49,7 @@ export function GeminiProvider({ children }) {
                 case 'directions': {
                     // Extract only the location IDs we need
                     const { originLocationId, destinationLocationId } = finalFunctionResponse.value;
-                    setDirectionsLocationIds({originLocationId,destinationLocationId});
+                    setDirectionsLocationIds({ originLocationId, destinationLocationId });
                     break;
                 }
                 default:
@@ -81,6 +81,7 @@ export function GeminiProvider({ children }) {
     const clearDirectionsLocationIds = useCallback(() => {
         setDirectionsLocationIds(null);
     }, []);
+
 
     // Initialize tools on provider mount
     useEffect(() => {
