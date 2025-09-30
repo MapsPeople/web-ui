@@ -332,7 +332,10 @@ function ChatWindow({ message, isEnabled, messages, setMessages, onMinimize, onS
                     </div>
                 ))}
                 {isLoading && (
-                    <p className="chat-window__message chat-window__message--server chat-window__message--loading">...
+                    <p className="chat-window__message chat-window__message--server chat-window__message--loading">
+                        <span className="loading-dot"></span>
+                        <span className="loading-dot"></span>
+                        <span className="loading-dot"></span>
                     </p>
                 )}
             </div>
