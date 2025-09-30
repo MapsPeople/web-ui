@@ -47,7 +47,7 @@ function ListItemLocation({ location, locationClicked, icon, isHovered }) {
 
         // Add a "non-selectable" class to the non-selectable locations.
         if (location.properties.locationSettings?.selectable === false) {
-            elementRef.current.classList.add("non-selectable");
+            elementRef.current.classList.add('non-selectable');
         }
 
         const { current } = elementRef;
@@ -66,10 +66,16 @@ function ListItemLocation({ location, locationClicked, icon, isHovered }) {
             elementRef.current.classList.remove('hovered')
         }
 
+        // Mark as loaded after a short delay
+        const loadTimer = setTimeout(() => {
+            current.classList.add('loaded');
+        }, 100);
+
         return () => {
             current.removeEventListener('locationClicked', clickHandler);
             current.removeEventListener('mouseover', hoverHandler);
-            current.removeEventListener('mouseout', unhoverHandler)
+            current.removeEventListener('mouseout', unhoverHandler);
+            clearTimeout(loadTimer);
         }
     }, [location, locationClicked, isHovered]);
 

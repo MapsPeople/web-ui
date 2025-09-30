@@ -1,3 +1,24 @@
+// Prevent flash of unstyled content while web component loads
+mi-list-item-location {
+    // Set minimum dimensions to prevent layout shift
+    min-height: 60px;
+    min-width: 100%;
+    
+    // Hide content until web component is ready
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    
+    // Show content once web component is loaded
+    &:defined {
+        opacity: 1;
+    }
+    
+    // Fallback: show content after a short delay even if :defined doesn't work
+    &.loaded {
+        opacity: 1;
+    }
+}
+
 .non-selectable {
     pointer-events: none;
     opacity: .5;
