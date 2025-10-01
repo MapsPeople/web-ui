@@ -39,7 +39,8 @@ const WebMapsIndoorsMap = r2wc(MapsIndoorsMap, {
         center: 'string',
         useAppTitle: 'boolean',
         showMapMarkers: 'boolean',
-        mapboxMapStyle: 'string'
+        mapboxMapStyle: 'string',
+        devicePosition: 'object'
     }
 })
 
