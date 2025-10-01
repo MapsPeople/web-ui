@@ -114,12 +114,18 @@ function Search({ onSetSize, isOpen, onShowRoute }) {
     /**
      * Callback passed to SearchField as onKeyDown.
      * Invoked on every keydown event in the search input.
-     * If Enter is pressed and input is not empty, sends the message to ChatWindow.
-     * Only works after chat mode has been enabled by clicking "Ask with AI" button.
+     * If Enter is pressed and input is not empty, enables chat mode and sends the message to ChatWindow.
+     * Automatically enables chat mode if not already enabled.
      */
     const handleSearchKeyDown = useCallback((event, currentValue) => {
-        if (event.key === 'Enter' && currentValue?.trim() && isChatModeEnabled) {
+        if (event.key === 'Enter' && currentValue?.trim()) {
             event.preventDefault();
+            
+            // Enable chat mode if not already enabled
+            if (!isChatModeEnabled) {
+                setIsChatModeEnabled(true);
+            }
+            
             setCurrentChatMessage(currentValue.trim());
 
             // Clear the search field after sending message
