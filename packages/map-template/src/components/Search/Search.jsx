@@ -194,8 +194,11 @@ function Search({ onSetSize, isOpen, onShowRoute }) {
     function onResults(locations, fitMapBounds = false) {
         const displayResults = locations.slice(0, MAX_RESULTS);
 
-        // Expand the sheet to occupy the entire screen
-        setSize(snapPoints.MAX);
+        // Only expand the sheet to occupy the entire screen if not in chat mode
+        // Chat mode has its own height management
+        if (!isChatModeEnabled) {
+            setSize(snapPoints.MAX);
+        }
 
         setSearchResults(displayResults);
         setFilteredLocations(displayResults);
@@ -335,7 +338,11 @@ function Search({ onSetSize, isOpen, onShowRoute }) {
             const clickedInsideResults = event.target.closest('.search-results');
 
             if (clickedInsideSearchArea) {
-                setSize(snapPoints.MAX);
+                // Only expand to MAX height if not in chat mode
+                // Chat mode has its own height management
+                if (!isChatModeEnabled) {
+                    setSize(snapPoints.MAX);
+                }
                 requestAnimationFrameId.current = requestAnimationFrame(() => { // we use a requestAnimationFrame to ensure that the size change is applied before the focus (meaning that categories are rendered)
                     setIsInputFieldInFocus(true);
                 });
