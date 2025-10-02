@@ -154,10 +154,16 @@ function Search({ onSetSize, isOpen, onShowRoute }) {
 
     /**
      * Communicate size change to parent component.
+     * Ignores size changes when chat mode is enabled to prevent layout jumping.
      *
      * @param {number} size
      */
     function setSize(size) {
+        // Don't change size when chat mode is enabled to prevent layout jumping
+        if (isChatModeEnabled) {
+            return;
+        }
+        
         if (typeof onSetSize === 'function') {
             onSetSize(size);
         }
