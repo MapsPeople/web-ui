@@ -497,6 +497,7 @@ function Search({ onSetSize, isOpen, onShowRoute }) {
             {!isChatModeEnabled && isInputFieldInFocus && showAskWithAiButton && (
                 <button
                     className="search__ask-ai-button"
+                    style={{ '--ask-ai-button-primary-color': primaryColor }}
                     onClick={(e) => {
                         e.stopPropagation();
                         const currentValue = searchFieldRef.current?.getValue();
