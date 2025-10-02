@@ -146,6 +146,11 @@ export class Search implements ComponentInterface {
     @Prop() showClearButton: boolean = true;
 
     /**
+     * Whether chat mode is enabled. When true, disables debounce for immediate input handling.
+     */
+    @Prop() isChatModeEnabled: boolean = false;
+
+    /**
      * Sets the prevention of the search.
      */
     private preventSearch: boolean = false;
@@ -266,9 +271,24 @@ export class Search implements ComponentInterface {
     /**
      * Handles incoming input change event, eg. input field value has changed.
      * The function is debounced 500ms to avoid firing too many requests while typing.
+     * When chat mode is enabled, debounce is disabled for immediate input handling.
      */
     @Debounce(500)
-    private inputChanged(): void {
+    private inputChangedDebounced(): void {
+        this.handleInputChange();
+    }
+
+    /**
+     * Non-debounced version for immediate input handling in chat mode.
+     */
+    private inputChangedImmediate(): void {
+        this.handleInputChange();
+    }
+
+    /**
+     * Common input change logic used by both debounced and immediate handlers.
+     */
+    private handleInputChange(): void {
         const inputValue = this.inputElement.value;
         this.value = inputValue; // reflect on value attribute
 
@@ -289,6 +309,18 @@ export class Search implements ComponentInterface {
                 this.search(inputValue);
             }
             this.changed.emit();
+        }
+    }
+
+    /**
+     * Handles incoming input change event, eg. input field value has changed.
+     * Uses debounced or immediate handling based on chat mode.
+     */
+    private inputChanged(): void {
+        if (this.isChatModeEnabled) {
+            this.inputChangedImmediate();
+        } else {
+            this.inputChangedDebounced();
         }
     }
 

@@ -210,6 +210,7 @@ const SearchField = forwardRef(function SearchFieldComponent(props, ref) {
         google={google}
         mi-venue={searchAllVenues ? undefined : currentVenueName}
         language={language}
+        is-chat-mode-enabled={isChatModeEnabled}
     />
 });
 

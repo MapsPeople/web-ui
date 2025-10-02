@@ -916,6 +916,10 @@ export namespace Components {
          */
         "idAttribute": string;
         /**
+          * Whether chat mode is enabled. When true, disables debounce for immediate input handling.
+         */
+        "isChatModeEnabled": boolean;
+        /**
           * The language used when retrieving Google Places or Mapbox autocomplete suggestions.
          */
         "language": string;
@@ -2288,6 +2292,10 @@ declare namespace LocalJSX {
           * Id for the input field.
          */
         "idAttribute"?: string;
+        /**
+          * Whether chat mode is enabled. When true, disables debounce for immediate input handling.
+         */
+        "isChatModeEnabled"?: boolean;
         /**
           * The language used when retrieving Google Places or Mapbox autocomplete suggestions.
          */
