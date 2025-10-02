@@ -383,11 +383,12 @@ function ChatWindow({ message, isEnabled, onMinimize, onSearchResults, locationH
             <div ref={chatMessagesRef} className="chat-window__messages">
                 {chatMessages}
                 {isLoading && (
-                    <p className="chat-window__message chat-window__message--server chat-window__message--loading">
+                    <div className="chat-window__message chat-window__message--loading">
+                        <span>Thinking </span>
                         <span className="loading-dot"></span>
                         <span className="loading-dot"></span>
                         <span className="loading-dot"></span>
-                    </p>
+                    </div>
                 )}
             </div>
         </div>
