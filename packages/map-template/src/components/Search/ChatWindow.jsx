@@ -274,19 +274,14 @@ function ChatWindow({ message, isEnabled, onMinimize, onSearchResults, locationH
     // Auto-scroll to bottom when messages change or loading state changes
     useLayoutEffect(() => {
         if (chatMessagesRef.current) {
-            const scrollToBottom = () => {
-                chatMessagesRef.current.scrollTop = chatMessagesRef.current.scrollHeight;
-            };
-            
-            // Immediate scroll for immediate updates
-            scrollToBottom();
-            
-            // Use requestAnimationFrame for better performance and to ensure DOM is fully rendered
-            const frameId = requestAnimationFrame(() => {
-                requestAnimationFrame(scrollToBottom); // Double RAF to ensure all content is rendered
+            const container = chatMessagesRef.current;
+            // Use requestAnimationFrame to ensure DOM is fully rendered
+            requestAnimationFrame(() => {
+                container.scrollTo({
+                    top: container.scrollHeight,
+                    behavior: 'smooth'
+                });
             });
-            
-            return () => cancelAnimationFrame(frameId);
         }
     }, [chatHistory, isLoading]);
 
