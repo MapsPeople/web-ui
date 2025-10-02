@@ -335,44 +335,48 @@ function ChatWindow({ message, isEnabled, onMinimize, onSearchResults, locationH
 
     /**
      * Memoized chat messages to prevent unnecessary re-renders.
-     * Only recalculates when chatHistory, directionsLocationIds, or related props change.
+     * Only recalculates when chatHistory changes.
      */
     const chatMessages = useMemo(() => {
-        return chatHistory.map((message, index) => (
-            <div key={message.id} className={`chat-window__message chat-window__message--${message.type}`}>
-                {message.type === 'server' ? (
-                    <>
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                            {message.text}
-                        </ReactMarkdown>
-                        {message.locations && message.locations.length > 0 && (
-                            <ChatSearchResults
-                                locations={message.locations}
-                                locationHandlerRef={locationHandlerRef}
-                                hoveredLocation={hoveredLocation}
-                            />
-                        )}
-                        {(message.directionsLocationIds || (directionsLocationIds && index === chatHistory.length - 1)) && 
-                         (message.directionsLocationIds?.originLocationId && message.directionsLocationIds?.destinationLocationId ||
-                          directionsLocationIds?.originLocationId && directionsLocationIds?.destinationLocationId) && (
-                            <div className="chat-window__directions-button">
-                                <button
-                                    type="button"
-                                    className="chat-window__show-route-button"
-                                    style={{ backgroundColor: primaryColor }}
-                                    onClick={() => onShowRoute && onShowRoute(message.directionsLocationIds || directionsLocationIds)}
-                                >
-                                    Show Route
-                                </button>
-                            </div>
-                        )}
-                    </>
-                ) : (
-                    <span>{message.text}</span>
-                )}
-            </div>
-        ));
-    }, [chatHistory, directionsLocationIds, locationHandlerRef, hoveredLocation, primaryColor, onShowRoute]);
+        return chatHistory.map((message, index) => {
+            const isLastMessage = index === chatHistory.length - 1;
+            const messageDirections = message.directionsLocationIds || (isLastMessage ? directionsLocationIds : null);
+            const canShowRoute = messageDirections?.originLocationId && messageDirections?.destinationLocationId;
+
+            return (
+                <div key={message.id} className={`chat-window__message chat-window__message--${message.type}`}>
+                    {message.type === 'server' ? (
+                        <>
+                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                {message.text}
+                            </ReactMarkdown>
+                            {message.locations && message.locations.length > 0 && (
+                                <ChatSearchResults
+                                    locations={message.locations}
+                                    locationHandlerRef={locationHandlerRef}
+                                    hoveredLocation={hoveredLocation}
+                                />
+                            )}
+                            {canShowRoute && (
+                                <div className="chat-window__directions-button">
+                                    <button
+                                        type="button"
+                                        className="chat-window__show-route-button"
+                                        style={{ backgroundColor: primaryColor }}
+                                        onClick={() => onShowRoute && onShowRoute(messageDirections)}
+                                    >
+                                        Show Route
+                                    </button>
+                                </div>
+                            )}
+                        </>
+                    ) : (
+                        <span>{message.text}</span>
+                    )}
+                </div>
+            );
+        });
+    }, [chatHistory]);
 
     // Keep chat visible if there are messages, even when parent disables visibility
     // Only show the chat window if there are messages
