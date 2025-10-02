@@ -81,6 +81,8 @@
   background-color: var(--chat-window-primary-color, #e6f7ff);
   color: var(--color-white-white);
   max-width: 80%;
+  // 150% line height
+  line-height: 1.5;
 }
 
 .chat-window__message--server {
@@ -88,6 +90,8 @@
   align-self: flex-start;
   background-color: var(--color-gray-20);
   color: var(--color-black-black);
+  // 150% line height
+  line-height: 1.5;
   // max-width: 95%;
   
   // Prevent text shifting when ChatSearchResults expand/collapse
