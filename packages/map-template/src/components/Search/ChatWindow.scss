@@ -70,7 +70,7 @@
 }
 
 .chat-window__message {
-  border-radius: var(--rounding-medium);
+  border-radius: var(--rounding-large);
   font-size: var(--font-size-medium);
   word-break: break-word;
 }
@@ -88,7 +88,7 @@
   align-self: flex-start;
   background-color: var(--color-gray-20);
   color: var(--color-black-black);
-  width: 100%;
+  // max-width: 95%;
   
   // Prevent text shifting when ChatSearchResults expand/collapse
   // by ensuring consistent layout flow
@@ -106,10 +106,16 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   gap: 4px;
   align-self: flex-start;
   max-width: 80%;
+}
+
+.thinking-text {
+  color: var(--color-gray-60);
+  font-size: var(--font-size-medium);
+  padding-right: var(--spacing-x-small);
 }
 
 .loading-dot {
@@ -118,9 +124,9 @@
   height: 6px;
   border-radius: 50%;
   background-color: var(--color-gray-60);
-  animation: jumpDot 1.2s infinite ease-in-out;
+  animation: fadeDot 1.2s infinite ease-in-out;
   
-  // Sequential delays for each dot
+  // Sequential delays for each dot (accounting for the "Thinking " text as first child)
   &:nth-child(1) {
     animation-delay: 0s;
   }
@@ -134,13 +140,16 @@
   }
 }
 
-// Keyframe animation for jumping dots
-@keyframes jumpDot {
-  0%, 60%, 100% {
-    transform: translateY(0);
+// Keyframe animation for fading dots
+@keyframes fadeDot {
+  0%, 100% {
+    opacity: 0.3;
   }
   30% {
-    transform: translateY(-8px);
+    opacity: 1;
+  }
+  60% {
+    opacity: 0.6;
   }
 }
 
