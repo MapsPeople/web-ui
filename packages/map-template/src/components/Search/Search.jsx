@@ -254,6 +254,11 @@ function Search({ onSetSize, isOpen, onShowRoute }) {
      * Calculate the CSS for the container based on context.
      */
     function calculateContainerStyle() {
+        // Don't apply container styles when chat mode is enabled - chat has its own layout management
+        if (isChatModeEnabled) {
+            return {};
+        }
+        
         if (searchResults.length > 0) {
             let maxHeight;
             if (isDesktop) {
