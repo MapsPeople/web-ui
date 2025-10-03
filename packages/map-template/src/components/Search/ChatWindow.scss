@@ -91,6 +91,10 @@
 
 .chat-window__message--server {
   padding: var(--spacing-x-small) var(--spacing-small);
+  // padding-top: var(--spacing-x-small);
+  // padding-right: var(--spacing-small);
+  // padding-bottom: 0;
+  // padding-left: var(--spacing-small);
   align-self: flex-start;
   background-color: var(--color-gray-20);
   color: var(--color-black-black);

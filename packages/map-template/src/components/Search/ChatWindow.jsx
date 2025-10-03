@@ -272,16 +272,40 @@ function ChatWindow({ message, isEnabled, onMinimize, onSearchResults, locationH
     }, [directionsLocationIds]);
 
     // Auto-scroll to bottom when messages change or loading state changes
+    // Uses immediate scroll + 300ms delay for server messages + ResizeObserver for async content
     useLayoutEffect(() => {
         if (chatMessagesRef.current) {
             const container = chatMessagesRef.current;
-            // Use requestAnimationFrame to ensure DOM is fully rendered
-            requestAnimationFrame(() => {
-                container.scrollTo({
-                    top: container.scrollHeight,
-                    behavior: 'smooth'
+            
+            const scrollToBottom = () => {
+                requestAnimationFrame(() => {
+                    container.scrollTo({
+                        top: container.scrollHeight,
+                        behavior: 'smooth'
+                    });
                 });
+            };
+            
+            // Check if the last message is a server message (which might have async content)
+            const isLastMessageServer = chatHistory.length > 0 && 
+                chatHistory[chatHistory.length - 1]?.type === 'server';
+            
+            // Initial scroll
+            scrollToBottom();
+            
+            // For server messages, add a delayed scroll to catch async content
+            if (isLastMessageServer) {
+                setTimeout(scrollToBottom, 300);
+            }
+            
+            // Watch for content size changes (e.g., when ChatSearchResults renders)
+            const resizeObserver = new ResizeObserver(() => {
+                scrollToBottom();
             });
+            
+            resizeObserver.observe(container);
+            
+            return () => resizeObserver.disconnect();
         }
     }, [chatHistory, isLoading]);
 
