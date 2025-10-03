@@ -7,7 +7,8 @@
   // box-shadow: 0 2px 8px rgba(0,0,0,0.04);
   // height: 200px;
   // min-height: 100px;
-  max-height: 90%;
+  // Fixed height to allow the scroll bottom to work
+  max-height: 900px;
   margin-top: var(--spacing-small);
   margin-bottom: var(--spacing-small);
 }
