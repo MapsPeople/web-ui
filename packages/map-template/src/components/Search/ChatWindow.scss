@@ -56,7 +56,11 @@
   flex-direction: column;
   border-radius: var(--rounding-large);
   gap: var(--spacing-small);
-  padding: var(--spacing-medium) var(--spacing-small);
+  // padding: var(--spacing-medium) var(--spacing-small);
+  padding-top: var(--spacing-medium);
+  padding-right: 0;
+  padding-bottom: 0;
+  padding-left: 0;
   overflow-y: auto;
   flex: 1;
   
@@ -92,7 +96,7 @@
   color: var(--color-black-black);
   // 150% line height
   line-height: 1.5;
-  // max-width: 95%;
+  max-width: 97%;
   
   // Prevent text shifting when ChatSearchResults expand/collapse
   // by ensuring consistent layout flow
