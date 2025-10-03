@@ -1,10 +1,23 @@
 @import '../../variables.scss';
 
 .search {
+    // Default padding when chat mode is NOT enabled
     padding: var(--spacing-medium);
 
     @media (max-width: $desktop-breakpoint) {
         padding: var(--spacing-medium) var(--spacing-x-small) var(--spacing-medium) var(--spacing-x-small);
+    }
+
+    // Custom padding when chat mode IS enabled
+    &.chat-mode-enabled {
+        padding-top: var(--spacing-medium);
+        padding-right: var(--spacing-medium);
+        padding-bottom: var(--spacing-xx-small);
+        padding-left: var(--spacing-medium);
+
+        @media (max-width: $desktop-breakpoint) {
+            padding: var(--spacing-medium) var(--spacing-x-small) var(--spacing-xx-small) var(--spacing-x-small);
+        }
     }
 
     &__scroll-buttons {

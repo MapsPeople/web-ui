@@ -473,7 +473,7 @@ function Search({ onSetSize, isOpen, onShowRoute }) {
 
 
     return (
-        <div className="search"
+        <div className={`search ${isChatModeEnabled ? 'chat-mode-enabled' : ''}`}
             ref={searchRef}
             style={calculateContainerStyle()}>
 
