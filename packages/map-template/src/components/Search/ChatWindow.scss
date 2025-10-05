@@ -11,6 +11,17 @@
   max-height: 900px;
   margin-top: var(--spacing-small);
   margin-bottom: var(--spacing-small);
+  
+  // In chat mode, constrain to second grid row and prevent overflow
+  .search.chat-mode-enabled & {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    grid-row: 2;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
 }
 
 .chat-window__header {
@@ -21,6 +32,13 @@
   border-bottom: 1px solid var(--color-gray-30);
   background-color: var(--color-gray-10);
   border-radius: var(--rounding-large) var(--rounding-large) 0 0;
+  
+  // In chat mode, make header positioned to work with absolute messages
+  .search.chat-mode-enabled & {
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+  }
 }
 
 .chat-window__title {
@@ -71,6 +89,21 @@
   
   &::-webkit-scrollbar {
     display: none; /* WebKit browsers (Chrome, Safari, Edge) */
+  }
+  
+  // In chat mode, force messages to only scroll within their allocated space
+  .search.chat-mode-enabled & {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-top: var(--spacing-medium);
+    padding-right: 0;
+    padding-bottom: var(--spacing-medium);
+    padding-left: 0;
   }
 }
 

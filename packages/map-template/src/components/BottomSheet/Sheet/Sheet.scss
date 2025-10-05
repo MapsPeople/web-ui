@@ -49,5 +49,11 @@
         &--no-scroll {
             overflow-y: hidden;
         }
+        
+        // Disable sheet scrolling when search is in chat mode
+        // .search.chat-mode-enabled & {
+        //     overflow: hidden !important;
+        //     overscroll-behavior: none !important;
+        // }
     }
 }

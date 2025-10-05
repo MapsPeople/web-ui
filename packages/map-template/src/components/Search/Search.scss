@@ -14,6 +14,11 @@
         padding-right: var(--spacing-medium);
         padding-bottom: var(--spacing-xx-small);
         padding-left: var(--spacing-medium);
+        
+        // Create a grid layout to prevent search__info from being pushed up
+        display: grid;
+        grid-template-rows: 50px 150px; // search__info: 50px, chat-window: starts at 150px (JS will grow it to 600px max)
+        overflow: hidden;
 
         @media (max-width: $desktop-breakpoint) {
             padding: var(--spacing-medium) var(--spacing-x-small) var(--spacing-xx-small) var(--spacing-x-small);
@@ -30,6 +35,15 @@
         display: grid;
         grid-auto-flow: column;
         gap: var(--spacing-x-small);
+        
+        // In chat mode, search__info is sticky in the first grid row
+        .search.chat-mode-enabled & {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: var(--color-white-white);
+            grid-row: 1;
+        }
     }
 
     &__legend {

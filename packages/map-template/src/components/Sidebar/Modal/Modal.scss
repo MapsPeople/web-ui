@@ -51,5 +51,11 @@ $desktop-breakpoint: 992px;
         max-height: 100%;
         min-height: 0;
         box-sizing: border-box;
+        
+        // Disable modal scrolling when search is in chat mode
+        // .search.chat-mode-enabled & {
+        //     overflow: hidden !important;
+        //     overscroll-behavior: none !important;
+        // }
     }
 }

@@ -271,6 +271,68 @@ function ChatWindow({ message, isEnabled, onMinimize, onSearchResults, locationH
         }
     }, [directionsLocationIds]);
 
+    // Dynamically adjust chat-window height based on content (150px to 600px max)
+    useLayoutEffect(() => {
+        if (chatWindowRef.current && chatMessagesRef.current) {
+            const chatWindow = chatWindowRef.current;
+            const messagesContainer = chatMessagesRef.current;
+            
+            // Find the search container to update grid row
+            const searchContainer = chatWindow.closest('.search.chat-mode-enabled');
+            
+            const adjustHeight = () => {
+                requestAnimationFrame(() => {
+                    // Calculate total height of all message elements
+                    const messageElements = messagesContainer.querySelectorAll('.chat-window__message, .chat-window__message--loading');
+                    let totalMessagesHeight = 0;
+                    
+                    messageElements.forEach(element => {
+                        totalMessagesHeight += element.offsetHeight;
+                    });
+                    
+                    // Add gap between messages (from SCSS: gap: var(--spacing-small))
+                    const gapCount = Math.max(0, messageElements.length - 1);
+                    const gapSize = 8; // Approximate spacing-small
+                    const totalGaps = gapCount * gapSize;
+                    
+                    // Get header height if it exists
+                    const header = chatWindow.querySelector('.chat-window__header');
+                    const headerHeight = header ? header.offsetHeight : 0;
+                    
+                    // Calculate desired height (messages + gaps + header + padding)
+                    const messagePadding = 16; // padding-top on messages container
+                    const desiredHeight = totalMessagesHeight + totalGaps + headerHeight + messagePadding;
+                    
+                    // Constrain between min and max
+                    const minHeight = 150;
+                    // Changing this max height will affect the max height of the search container, pushing up the search__info
+                    const maxHeight = 600;
+                    const finalHeight = Math.min(Math.max(desiredHeight, minHeight), maxHeight);
+                    
+                    // Update both the chat-window height AND the grid row
+                    chatWindow.style.height = `${finalHeight}px`;
+                    
+                    // Update the grid template rows (search__info: 50px, chat-window: dynamic)
+                    if (searchContainer) {
+                        searchContainer.style.gridTemplateRows = `50px ${finalHeight}px`;
+                    }
+                });
+            };
+            
+            // Adjust height on mount and when content changes
+            adjustHeight();
+            
+            // Watch for content size changes
+            const resizeObserver = new ResizeObserver(() => {
+                adjustHeight();
+            });
+            
+            resizeObserver.observe(messagesContainer);
+            
+            return () => resizeObserver.disconnect();
+        }
+    }, [chatHistory, isLoading]);
+
     // Auto-scroll to bottom when messages change or loading state changes
     // Uses immediate scroll + 300ms delay for server messages + ResizeObserver for async content
     useLayoutEffect(() => {
