@@ -305,7 +305,7 @@ function ChatWindow({ message, isEnabled, onMinimize, onSearchResults, locationH
                     
                     // Constrain between min and max
                     const minHeight = 150;
-                    // Changing this max height will affect the max height of the search container, pushing up the search__info
+                    // Changing this max height will affect the max height of the search container, pushing up the search__info out of view
                     const maxHeight = 600;
                     const finalHeight = Math.min(Math.max(desiredHeight, minHeight), maxHeight);
                     
