@@ -87,6 +87,15 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
         }
 
         if (devicePosition && typeof devicePosition === 'object') {
+            // Handle empty object case - just initialize the provider
+            if (Object.keys(devicePosition).length === 0) {
+                if (!positionButtonRef.current.customPositionProvider) {
+                    positionButtonRef.current.customPositionProvider = new CustomPositionProvider();
+                }
+                // Don't call watchPosition() for empty objects - this keeps the icon in POSITION_UNKNOWN state
+                return;
+            }
+            
             // If the custom provider doesn't exist, create and assign it
             if (!positionButtonRef.current.customPositionProvider) {
                 positionButtonRef.current.customPositionProvider = new CustomPositionProvider();
