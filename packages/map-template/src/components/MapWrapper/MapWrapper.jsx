@@ -23,6 +23,7 @@ import hideNonMatchesState from '../../atoms/hideNonMatchesState';
 import PropTypes from 'prop-types';
 import ViewSelector from '../ViewSelector/ViewSelector';
 import LanguageSelector from '../LanguageSelector/LanguageSelector.jsx';
+import ResetViewButton from '../ResetViewButton/ResetViewButton';
 import appConfigState from '../../atoms/appConfigState';
 import isNullOrUndefined from '../../helpers/isNullOrUndefined';
 
@@ -38,7 +39,9 @@ MapWrapper.propTypes = {
     isWayfindingOrDirections: PropTypes.bool,
     currentLanguage: PropTypes.string,
     setLanguage: PropTypes.func,
-    devicePosition: PropTypes.object
+    devicePosition: PropTypes.object,
+    onResetView: PropTypes.func,
+    showResetButton: PropTypes.bool
 };
 
 /**
@@ -66,7 +69,7 @@ let _tileStyle;
  * @param {object} [props.devicePosition] - Device position object with coords and timestamp for custom positioning.
  * @returns
  */
-function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating, onViewModeSwitchKnown, resetCount, mapOptions, gmMapId, isWayfindingOrDirections, currentLanguage, setLanguage, devicePosition }) {
+function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating, onViewModeSwitchKnown, resetCount, mapOptions, gmMapId, isWayfindingOrDirections, currentLanguage, setLanguage, devicePosition, onResetView, showResetButton }) {
     const apiKey = useRecoilValue(apiKeyState);
     const gmApiKey = useRecoilValue(gmApiKeyState);
     const mapboxAccessToken = useRecoilValue(mapboxAccessTokenState);
@@ -340,6 +343,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
         {apiKey && <>
             <ViewSelector isViewSelectorVisible={isViewSelectorVisible} isViewSelectorDisabled={isWayfindingOrDirections} />
             <LanguageSelector currentLanguage={currentLanguage} setLanguage={setLanguage} isVisible={isLanguageSelectorVisible} />
+            <ResetViewButton onReset={onResetView} isVisible={showResetButton} />
         </>}
     </>)
 }

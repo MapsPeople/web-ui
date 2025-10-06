@@ -29,6 +29,10 @@
         .view-mode-switch {
             display: block;
         }
+
+        .reset-view-button {
+            display: block;
+        }
     }
 
     &--hide-elements {
@@ -41,6 +45,10 @@
         }
 
         .view-mode-switch {
+            display: none;
+        }
+
+        .reset-view-button {
             display: none;
         }
     }
@@ -65,6 +73,17 @@
 
     .mi-floor-selector__list {
         box-sizing: unset;
+    }
+
+    // Reset view button positioning
+    .reset-view-button {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        z-index: var(--z-index-sticky);
+        
+        // Position it above the floor selector
+        margin-bottom: 80px; // Adjust this value based on floor selector height
     }
 }
 
