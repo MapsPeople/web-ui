@@ -105,18 +105,15 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
         }
 
         if (devicePosition && typeof devicePosition === 'object') {
-            // Handle empty object case - just initialize the provider
-            if (Object.keys(devicePosition).length === 0) {
-                if (!positionButtonRef.current.customPositionProvider) {
-                    positionButtonRef.current.customPositionProvider = new CustomPositionProvider();
-                }
-                // Don't call watchPosition() for empty objects - this keeps the icon in POSITION_UNKNOWN state
-                return;
-            }
-            
-            // If the custom provider doesn't exist, create and assign it
+            // Initialize the provider if it doesn't exist (for both empty objects and valid positions)
             if (!positionButtonRef.current.customPositionProvider) {
                 positionButtonRef.current.customPositionProvider = new CustomPositionProvider();
+            }
+            
+            // Handle empty object case - just initialize the provider as starting point
+            if (Object.keys(devicePosition).length === 0) {
+                // Don't call watchPosition() for empty objects - this keeps the icon in POSITION_UNKNOWN state
+                return;
             }
 
             // Set position and handle floor changes (works for both new and existing providers)
