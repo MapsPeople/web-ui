@@ -783,7 +783,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 .filter(location => parseInt(location.properties.floor, 10) === parseInt(currentFloorIndex, 10))
 
                 // Filter out locations that are not part of the current venue. Including those when fitting to bounds could cause the map to zoom out too much.
-                .filter(location => location.properties.venueId.toLowerCase() === currentVenueName.toLowerCase())
+                .filter(location => currentVenueName && location.properties.venueId.toLowerCase() === currentVenueName.toLowerCase())
 
                 // Map the locations to GeoJSON features.
                 .map(location => ({
