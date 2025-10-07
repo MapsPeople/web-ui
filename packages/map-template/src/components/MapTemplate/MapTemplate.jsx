@@ -63,9 +63,6 @@ import PropTypes from 'prop-types';
 import { ZoomLevelValues } from '../../constants/zoomLevelValues.js';
 import { useOnRouteFinished } from '../../hooks/useOnRouteFinished.js';
 import notificationMessageState from '../../atoms/notificationMessageState.js';
-import currentVenueNameState from '../../atoms/currentVenueNameState.js';
-import getDesktopPaddingBottom from '../../helpers/GetDesktopPaddingBottom.js';
-import getDesktopPaddingLeft from '../../helpers/GetDesktopPaddingLeft.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -222,8 +219,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     const finishRoute = useOnRouteFinished();
     const [, setErrorMessage] = useRecoilState(notificationMessageState);
-    const currentVenueName = useRecoilValue(currentVenueNameState);
-    const kioskLocation = useRecoilValue(kioskLocationState);
 
     /**
      * Ensure that MapsIndoors Web SDK is available.
@@ -752,91 +747,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         setSelectedCategory(null); // unselect category when route is finished
     }
 
-    function resetMapPosition() {
-        window.mapsindoors.services.LocationsService.getLocation(kioskOriginLocationId)
-            .then(kioskLocation => {
-                fitMapBoundsToLocations([kioskLocation]);
-            })
-            .catch(error => {
-                console.error('Error resetting map position:', error);
-        });
-    }
-
-    /**
-     * Adjusts the map view to fit the bounds of the provided locations.
-     * It will filter out Locations that are not on the current floor or not part of the current venue.
-     *
-     * @param {Array} locations - An array of Location objects to fit within the map bounds.
-     */
-    function fitMapBoundsToLocations(locations) {
-        if (!mapsIndoorsInstance.goTo) return; // Early exit to prevent crashes if using an older version of the MapsIndoors JS SDK. The goTo method was introduced in version 4.38.0.
-
-        const currentFloorIndex = mapsIndoorsInstance.getFloor();
-
-        // Create a GeoJSON FeatureCollection from the locations that can be used as input to the goTo method.
-        const featureCollection = {
-            type: 'FeatureCollection',
-            features: locations
-                // Filter out locations that are not on the current floor. If those were included, it could result in a wrong fit since they are not visible on the map anyway.
-                .filter(location => parseInt(location.properties.floor, 10) === parseInt(currentFloorIndex, 10))
-
-                // Filter out locations that are not part of the current venue. Including those when fitting to bounds could cause the map to zoom out too much.
-                .filter(location => currentVenueName && location.properties.venueId.toLowerCase() === currentVenueName.toLowerCase())
-
-                // Map the locations to GeoJSON features.
-                .map(location => ({
-                    type: 'Feature',
-                    geometry: location.geometry,
-                    properties: location.properties
-                }))
-        };
-
-        if (featureCollection.features.length > 0) {
-            Promise.all([getBottomPadding(), getLeftPadding()]).then(([bottomPadding, leftPadding]) => {
-                mapsIndoorsInstance.goTo(featureCollection, {
-                    maxZoom: 22,
-                    padding: { bottom: bottomPadding, left: leftPadding, top: 0, right: 0 }
-                });
-            });
-        }
-    }
-
-    /**
-     * Get bottom padding when selecting a location.
-     * Calculate all cases depending on the kioskLocation id prop as well.
-     */
-    function getBottomPadding() {
-        return new Promise((resolve) => {
-            if (isDesktop) {
-                if (kioskLocation) {
-                    getDesktopPaddingBottom().then(padding => resolve(padding));
-                } else {
-                    resolve(0);
-                }
-            } else {
-                resolve(200);
-            }
-        });
-    }
-
-    /**
-     * Get left padding when selecting a location.
-     * Calculate all cases depending on the kioskLocation id prop as well.
-     */
-    function getLeftPadding() {
-        return new Promise((resolve) => {
-            if (isDesktop) {
-                if (kioskLocation) {
-                    resolve(0);
-                } else {
-                    getDesktopPaddingLeft().then(padding => resolve(padding));
-                }
-            } else {
-                resolve(0);
-            }
-        });
-    }
-
     /*
      * React on changes in the category prop.
      * Check if the category property matches with any of the existing categories.
@@ -916,7 +826,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 setUserSelectedLanguage(true);
             }}
             devicePosition={devicePosition}
-            onResetView={resetMapPosition}
         />
     </div>
 }
