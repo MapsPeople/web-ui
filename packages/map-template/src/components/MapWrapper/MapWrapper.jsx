@@ -67,6 +67,8 @@ let _tileStyle;
  * @param {string} props.currentLanguage - The currently selected language code.
  * @param {function} props.setLanguage - Function to set the selected language.
  * @param {object} [props.devicePosition] - Device position object with coords and timestamp for custom positioning.
+ * @param {function} [props.onResetView] - Function to reset the view.
+ * @param {boolean} [props.showResetButton] - Whether to show the reset button.
  * @returns
  */
 function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating, onViewModeSwitchKnown, resetCount, mapOptions, gmMapId, isWayfindingOrDirections, currentLanguage, setLanguage, devicePosition, onResetView, showResetButton }) {
