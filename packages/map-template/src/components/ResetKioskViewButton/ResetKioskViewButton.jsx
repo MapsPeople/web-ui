@@ -3,14 +3,16 @@ import PropTypes from 'prop-types';
 import { createPortal } from 'react-dom';
 import { ReactComponent as ResetKioskViewIcon } from '../../assets/reset-kiosk-view.svg';
 import './ResetKioskViewButton.scss';
+import { useIsKioskContext } from '../../hooks/useIsKioskContext';
 
 /**
  * ResetKioskViewButton component - A button that resets the map to initial view
  * Positioned above zoom controls using portal system
  */
-function ResetKioskViewButton({ onReset, isVisible }) {
+function ResetKioskViewButton({ onReset }) {
     const [portalContainer, setPortalContainer] = useState(null);
     const resetButtonMountPoint = '.reset-view-portal';
+    const isKiosk = useIsKioskContext();
 
     // Find portal target
     useEffect(() => {
@@ -39,7 +41,7 @@ function ResetKioskViewButton({ onReset, isVisible }) {
     };
 
     // Early return if not visible
-    if (!isVisible) {
+    if (!isKiosk) {
         return null;
     }
 

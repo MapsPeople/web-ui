@@ -64,7 +64,6 @@ import { ZoomLevelValues } from '../../constants/zoomLevelValues.js';
 import { useOnRouteFinished } from '../../hooks/useOnRouteFinished.js';
 import notificationMessageState from '../../atoms/notificationMessageState.js';
 import currentVenueNameState from '../../atoms/currentVenueNameState.js';
-import { useIsKioskContext } from '../../hooks/useIsKioskContext.js';
 import getDesktopPaddingBottom from '../../helpers/GetDesktopPaddingBottom.js';
 import getDesktopPaddingLeft from '../../helpers/GetDesktopPaddingLeft.js';
 
@@ -225,7 +224,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [, setErrorMessage] = useRecoilState(notificationMessageState);
     const currentVenueName = useRecoilValue(currentVenueNameState);
     const kioskLocation = useRecoilValue(kioskLocationState);
-    const isKiosk = useIsKioskContext();
 
     /**
      * Ensure that MapsIndoors Web SDK is available.
@@ -792,7 +790,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                     properties: location.properties
                 }))
         };
-        console.log(appConfig?.appSettings?.startZoomlevel);
 
         if (featureCollection.features.length > 0) {
             Promise.all([getBottomPadding(), getLeftPadding()]).then(([bottomPadding, leftPadding]) => {
@@ -920,7 +917,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             }}
             devicePosition={devicePosition}
             onResetView={resetMapPosition}
-            showResetButton={isKiosk}
         />
     </div>
 }
