@@ -174,7 +174,6 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
                 <div className="map-controls-right-column mobile-column">
                     {myPositionPortal}
                     {floorSelectorPortal}
-                    {resetViewPortal}
                 </div>
             </>
         );
