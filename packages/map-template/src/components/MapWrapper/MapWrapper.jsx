@@ -39,9 +39,7 @@ MapWrapper.propTypes = {
     isWayfindingOrDirections: PropTypes.bool,
     currentLanguage: PropTypes.string,
     setLanguage: PropTypes.func,
-    devicePosition: PropTypes.object,
-    onResetView: PropTypes.func,
-    showResetButton: PropTypes.bool
+    devicePosition: PropTypes.object
 };
 
 /**
@@ -67,11 +65,9 @@ let _tileStyle;
  * @param {string} props.currentLanguage - The currently selected language code.
  * @param {function} props.setLanguage - Function to set the selected language.
  * @param {object} [props.devicePosition] - Device position object with coords and timestamp for custom positioning.
- * @param {function} [props.onResetView] - Function to reset the view.
- * @param {boolean} [props.showResetButton] - Whether to show the reset button.
  * @returns
  */
-function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating, onViewModeSwitchKnown, resetCount, mapOptions, gmMapId, isWayfindingOrDirections, currentLanguage, setLanguage, devicePosition, onResetView, showResetButton }) {
+function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating, onViewModeSwitchKnown, resetCount, mapOptions, gmMapId, isWayfindingOrDirections, currentLanguage, setLanguage, devicePosition }) {
     const apiKey = useRecoilValue(apiKeyState);
     const gmApiKey = useRecoilValue(gmApiKeyState);
     const mapboxAccessToken = useRecoilValue(mapboxAccessTokenState);
@@ -345,7 +341,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
         {apiKey && <>
             <ViewSelector isViewSelectorVisible={isViewSelectorVisible} isViewSelectorDisabled={isWayfindingOrDirections} />
             <LanguageSelector currentLanguage={currentLanguage} setLanguage={setLanguage} isVisible={isLanguageSelectorVisible} />
-            <ResetKioskViewButton onReset={onResetView} isVisible={showResetButton} />
+            <ResetKioskViewButton />
         </>}
     </>)
 }
