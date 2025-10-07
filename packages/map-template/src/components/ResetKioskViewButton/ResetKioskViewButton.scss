@@ -1,7 +1,7 @@
 .reset-kiosk-view-button {
     position: absolute;
     left: 20px;
-    bottom: 30px !important;
+    bottom: 110px;
     z-index: var(--z-index-sticky);
     display: flex;
     align-items: center;
@@ -28,8 +28,8 @@
     }
 
     svg {
-        width: 20px;
-        height: 20px;
+        width: 24px;
+        height: 24px;
         pointer-events: none;
     }
 }
