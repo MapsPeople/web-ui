@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { createPortal } from 'react-dom';
-import { ReactComponent as GetBackIcon } from '../../assets/get-back-icon.svg';
+import { ReactComponent as ResetKioskViewIcon } from '../../assets/reset-kiosk-view.svg';
 import './ResetKioskViewButton.scss';
 
 /**
@@ -52,7 +52,7 @@ function ResetKioskViewButton({ onReset, isVisible }) {
             title="Reset to initial kiosk view"
             aria-label="Reset to initial kiosk view"
         >
-            <GetBackIcon />
+            <ResetKioskViewIcon />
         </button>,
         portalContainer
     );
