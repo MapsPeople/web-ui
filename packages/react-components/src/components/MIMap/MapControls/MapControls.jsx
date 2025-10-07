@@ -41,6 +41,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
     const viewModeSwitchPortal = <div key="viewmode-switch" className="viewmode-switch-portal" />;
     const viewSelectorPortal = <div key="view-selector" className="view-selector-portal" />;
     const languageSelectorPortal = <div key="language-selector" className="language-selector-portal" />;
+    const resetViewPortal = <div key="reset-view" className="reset-view-portal" />;
 
     // Create and configure web components
     // This useEffect will run when the component mounts and when the mapsIndoorsInstance or mapInstance changes.
@@ -156,6 +157,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
 
                 {/* Bottom right desktop controls */}
                 <div className="map-controls-container desktop bottom-right">
+                    {resetViewPortal}
                 </div>
             </>
         );
