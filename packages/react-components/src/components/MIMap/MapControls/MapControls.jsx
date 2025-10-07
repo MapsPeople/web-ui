@@ -42,6 +42,24 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
     const viewSelectorPortal = <div key="view-selector" className="view-selector-portal" />;
     const languageSelectorPortal = <div key="language-selector" className="language-selector-portal" />;
 
+    // Set position and handle floor changes.
+    // These are combined because floor should only change if position is successfully set.
+    const setPositionAndHandleFloor = (devicePosition) => {
+        // Set the position and start watching if successful
+        if (positionButtonRef.current.customPositionProvider.setPosition(devicePosition)) {
+            positionButtonRef.current.watchPosition();
+            
+            // If floor information is provided, set the floor on the map
+            if (devicePosition.floorIndex && mapsIndoorsInstance) {
+                const currentFloor = mapsIndoorsInstance.getFloor();
+                const floorNumber = parseInt(devicePosition.floorIndex, 10);
+                if (floorNumber !== currentFloor) {
+                    mapsIndoorsInstance.setFloor(floorNumber);
+                }
+            }
+        }
+    };
+
     // Create and configure web components
     // This useEffect will run when the component mounts and when the mapsIndoorsInstance or mapInstance changes.
     // It will create the web components and set their properties.
@@ -99,19 +117,10 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
             // If the custom provider doesn't exist, create and assign it
             if (!positionButtonRef.current.customPositionProvider) {
                 positionButtonRef.current.customPositionProvider = new CustomPositionProvider();
-
-                // Instruct my-position to watch position only if the position was set successfully
-                if (positionButtonRef.current.customPositionProvider.setPosition(devicePosition)) {
-                    positionButtonRef.current.watchPosition();
-                }
-
-            } else {
-                // If it exists, just update the position
-                // Instruct my-position to watch position only if the position was set successfully
-                if (positionButtonRef.current.customPositionProvider.setPosition(devicePosition)) {
-                    positionButtonRef.current.watchPosition();
-                }
             }
+
+            // Set position and handle floor changes (works for both new and existing providers)
+            setPositionAndHandleFloor(devicePosition);
         }
 
         // Cleanup function to stop position listeners when devicePosition changes or component unmounts

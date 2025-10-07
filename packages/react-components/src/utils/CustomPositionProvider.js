@@ -76,7 +76,8 @@ class CustomPositionProvider {
                     heading: position.coords.heading ?? null,
                     speed: position.coords.speed ?? null
                 },
-                timestamp: position.timestamp
+                timestamp: position.timestamp,
+                floorIndex: position.floorIndex ?? null
             };
         } else {
             const error = {
