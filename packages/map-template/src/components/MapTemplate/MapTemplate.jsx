@@ -755,8 +755,12 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }
 
     function resetMapPosition() {
-        window.mapsindoors.services.LocationsService.getLocation(kioskOriginLocationId).then(kioskLocation => {
-            fitMapBoundsToLocations([kioskLocation]);
+        window.mapsindoors.services.LocationsService.getLocation(kioskOriginLocationId)
+            .then(kioskLocation => {
+                fitMapBoundsToLocations([kioskLocation]);
+            })
+            .catch(error => {
+                console.error('Error resetting map position:', error);
         });
     }
 
