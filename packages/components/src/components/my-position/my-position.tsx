@@ -391,7 +391,16 @@ export class MyPositionComponent {
                     accurate: this.positionIsAccurate
                 });
             } else {
-                this.setPositionState(PositionStateTypes.POSITION_REQUESTING);
+                // Check if this is an empty object case vs a provider that lost position
+                // If currentPosition is null, it's likely an empty object case - stay unknown
+                // If currentPosition exists but is invalid, it's a provider that lost position - request position
+                if (modernProvider.currentPosition === null) {
+                    // Provider was never given position data (empty object case) - stay unknown
+                    this.setPositionState(PositionStateTypes.POSITION_UNKNOWN);
+                } else {
+                    // Provider had position data but it's now invalid - request position
+                    this.setPositionState(PositionStateTypes.POSITION_REQUESTING);
+                }
             }
         }
     }
