@@ -25,6 +25,7 @@ import ViewSelector from '../ViewSelector/ViewSelector';
 import LanguageSelector from '../LanguageSelector/LanguageSelector.jsx';
 import appConfigState from '../../atoms/appConfigState';
 import isNullOrUndefined from '../../helpers/isNullOrUndefined';
+import ResetKioskViewButton from '../ResetKioskViewButton/ResetKioskViewButton.jsx';
 
 MapWrapper.propTypes = {
     onLocationClick: PropTypes.func,
@@ -340,6 +341,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
         {apiKey && <>
             <ViewSelector isViewSelectorVisible={isViewSelectorVisible} isViewSelectorDisabled={isWayfindingOrDirections} />
             <LanguageSelector currentLanguage={currentLanguage} setLanguage={setLanguage} isVisible={isLanguageSelectorVisible} />
+            <ResetKioskViewButton />
         </>}
     </>)
 }

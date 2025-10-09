@@ -41,6 +41,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
     const viewModeSwitchPortal = <div key="viewmode-switch" className="viewmode-switch-portal" />;
     const viewSelectorPortal = <div key="view-selector" className="view-selector-portal" />;
     const languageSelectorPortal = <div key="language-selector" className="language-selector-portal" />;
+    const resetViewPortal = <div key="reset-view" className="reset-view-portal" />;
 
     // Set position and handle floor changes.
     // These are combined because floor should only change if position is successfully set.
@@ -171,6 +172,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
 
                 {/* Bottom right desktop controls */}
                 <div className="map-controls-container desktop bottom-right">
+                    {resetViewPortal}
                 </div>
             </>
         );

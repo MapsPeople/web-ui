@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.85.0] - 2025-10-07
+
+### Added
+
+- Added a new reset view button for kiosk modes. It will reset the map view to the initial view.
+
 ## [1.84.4] - 2025-10-01
 
 ### Fixed
