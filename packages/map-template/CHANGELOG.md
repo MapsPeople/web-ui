@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Added support for floor index in the custom position provider
-- Fixed logic to change map floor based on incoming floor index
+- Added support for `floorIndex` in the `CustomPositionProvider`
+- Fixed logic to change map floor based on incoming `floorIndex`
 - Fixed positions dropping if incoming accuracy was too high
 
 ## [1.85.0] - 2025-10-07
