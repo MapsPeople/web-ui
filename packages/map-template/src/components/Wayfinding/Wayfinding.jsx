@@ -33,9 +33,12 @@ import useDirectionsInfo from '../../hooks/useDirectionsInfo';
 import hasFoundRouteState from '../../atoms/hasFoundRouteState';
 import accessibilityOnState from '../../atoms/accessibilityOnState';
 import Accessibility from '../Accessibility/Accessibility';
+import ShuttleBus from '../ShuttleBus/ShuttleBus';
 import searchExternalLocationsState from '../../atoms/searchExternalLocationsState';
 import PropTypes from 'prop-types';
 import wayfindingLocationState from '../../atoms/wayfindingLocation';
+import shuttleBusOnState from '../../atoms/shuttleBusOnState';
+import appConfigState from '../../atoms/appConfigState';
 
 const searchFieldIdentifiers = {
     TO: 'TO',
@@ -102,7 +105,9 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     const [destinationLocation, setDestinationLocation] = useState();
     const [originLocation, setOriginLocation] = useState();
 
-    const accessibilityOn = useRecoilValue(accessibilityOnState)
+    const accessibilityOn = useRecoilValue(accessibilityOnState);
+
+    const shuttleBusOn = useRecoilValue(shuttleBusOnState);
 
     const scrollableContentSwipePrevent = usePreventSwipe();
 
@@ -117,9 +122,11 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
 
     const distanceUnitSystem = useRecoilValue(distanceUnitSystemSelector);
 
-    const [totalDistance, totalTime, hasFoundRoute, areDirectionsReady] = useDirectionsInfo(originLocation, destinationLocation, directionsService, travelMode, accessibilityOn)
+    const [totalDistance, totalTime, hasFoundRoute, areDirectionsReady] = useDirectionsInfo(originLocation, destinationLocation, directionsService, travelMode, accessibilityOn, shuttleBusOn)
 
     const searchExternalLocations = useRecoilValue(searchExternalLocationsState);
+
+    const appConfig = useRecoilValue(appConfigState);
 
     /**
      * Decorates location with data that is required for wayfinding to work.
@@ -497,9 +504,12 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                 </div>}
             {!searchTriggered && !showMyPositionOption && hasFoundRoute && !hasGooglePlaces && originLocation && destinationLocation && <div className={'wayfinding__details'} ref={detailsRef}>
                 <div className="wayfinding__settings">
-                    <Accessibility />
+                    <div className="wayfinding__toggles">
+                        <Accessibility />
+                        {appConfig?.appSettings?.includeTransitSelection === 'true' && <ShuttleBus />}
+                    </div>
                     <div className="wayfinding__travel">
-                        <Dropdown selectionChanged={travelMode => setTravelMode(travelMode[0].value)}>
+                        {appConfig?.appSettings?.includeTravelModeSelection && <Dropdown selectionChanged={travelMode => setTravelMode(travelMode[0].value)}>
                             <mi-dropdown-item selected value={travelModes.WALKING}>
                                 <WalkIcon></WalkIcon>
                                 {t('Walk')}
@@ -512,7 +522,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                                 <BikeIcon></BikeIcon>
                                 {t('Bike')}
                             </mi-dropdown-item>
-                        </Dropdown>
+                        </Dropdown>}
                     </div>
                 </div>
                 <hr></hr>
