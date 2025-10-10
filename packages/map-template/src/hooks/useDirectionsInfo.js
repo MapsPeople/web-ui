@@ -8,7 +8,7 @@ import hasFoundRouteState from '../atoms/hasFoundRouteState';
  * Hook to handle when both origin location and destination location are selected,
  * and have geometry, call the MapsIndoors SDK to get information about the route.
  */
-const useDirectionsInfo = (originLocation, destinationLocation, directionsService, travelMode, accessibilityOn) => {
+const useDirectionsInfo = (originLocation, destinationLocation, directionsService, travelMode, accessibilityOn, shuttleBusOn) => {
     const [totalDistance, setTotalDistance] = useState()
     const [totalTime, setTotalTime] = useState();
     const [hasFoundRoute, setHasFoundRoute] = useRecoilState(hasFoundRouteState);
@@ -23,7 +23,8 @@ const useDirectionsInfo = (originLocation, destinationLocation, directionsServic
                 origin: getLocationPoint(originLocation),
                 destination: getLocationPoint(destinationLocation),
                 travelMode: travelMode,
-                avoidStairs: accessibilityOn
+                avoidStairs: accessibilityOn,
+                excludeHighwayTypes: shuttleBusOn ? [] : ['busway']
             }).then(directionsResult => {
                 if (!isActive) return;
 
@@ -56,7 +57,7 @@ const useDirectionsInfo = (originLocation, destinationLocation, directionsServic
         return () => {
             isActive = false;
         }
-    }, [originLocation, destinationLocation, directionsService, accessibilityOn, travelMode]);
+    }, [originLocation, destinationLocation, directionsService, accessibilityOn, travelMode, shuttleBusOn]);
 
     return [totalDistance, totalTime, hasFoundRoute, areDirectionsReady];
 }
