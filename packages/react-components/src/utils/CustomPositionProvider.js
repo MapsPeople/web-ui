@@ -10,7 +10,7 @@ class CustomPositionProvider {
         this._listeners = new Map();
 
         // Store only the maxAccuracy value we actually use
-        const { maxAccuracy = 20 } = options;
+        const { maxAccuracy = 100 } = options;
         this._maxAccuracy = maxAccuracy;
     }
 
