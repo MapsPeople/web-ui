@@ -12,9 +12,20 @@
     }
 
     &__results {
-        display: grid;
+        display: flex;
+        flex-direction: column;
         gap: var(--spacing-x-small);
         overflow: auto;
+
+        > * {
+            height: fit-content; /* fixing issue on mobile Safari causing them to bee too large in case of just one search result */
+        }
+    }
+
+    &__results-list {
+        display: grid;
+        gap: var(--spacing-x-small);
+        /* Remove overflow: auto to prevent nested scrolling */
 
         > * {
             height: fit-content; /* fixing issue on mobile Safari causing them to bee too large in case of just one search result */

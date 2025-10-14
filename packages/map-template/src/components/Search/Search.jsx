@@ -632,7 +632,7 @@ function Search({ onSetSize, isOpen }) {
                     )}
 
                     {/* Show locations when there are any searchResults */}
-                    <div className="search__results">
+                    <div className="search__results-list">
                         {searchResults.map(location =>
                             <ListItemLocation
                                 key={location.id}
