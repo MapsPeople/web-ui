@@ -647,16 +647,14 @@ function Search({ onSetSize, isOpen }) {
                     )}
 
                     {/* Show locations when there are any searchResults */}
-                    <div className="search__results">
-                        {getSortedSearchResults(searchResults).map(location =>
-                            <ListItemLocation
-                                key={location.id}
-                                location={location}
-                                locationClicked={() => onLocationClicked(location)}
-                                isHovered={location?.id === hoveredLocation?.id}
-                            />
-                        )}
-                    </div>
+                    {getSortedSearchResults(searchResults).map(location =>
+                        <ListItemLocation
+                            key={location.id}
+                            location={location}
+                            locationClicked={() => onLocationClicked(location)}
+                            isHovered={location?.id === hoveredLocation?.id}
+                        />
+                    )}
                 </div>
             )}
 
