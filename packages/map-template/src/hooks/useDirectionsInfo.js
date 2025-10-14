@@ -1,19 +1,21 @@
 import { useEffect, useState } from 'react';
 import getLocationPoint from '../helpers/GetLocationPoint';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import directionsResponseState from '../atoms/directionsResponseState';
 import hasFoundRouteState from '../atoms/hasFoundRouteState';
+import shuttleBusOnState from '../atoms/shuttleBusOnState';
 
 /*
  * Hook to handle when both origin location and destination location are selected,
  * and have geometry, call the MapsIndoors SDK to get information about the route.
  */
-const useDirectionsInfo = (originLocation, destinationLocation, directionsService, travelMode, accessibilityOn, shuttleBusOn) => {
+const useDirectionsInfo = (originLocation, destinationLocation, directionsService, travelMode, accessibilityOn) => {
     const [totalDistance, setTotalDistance] = useState()
     const [totalTime, setTotalTime] = useState();
     const [hasFoundRoute, setHasFoundRoute] = useRecoilState(hasFoundRouteState);
     const [, setDirectionsResponse] = useRecoilState(directionsResponseState);
     const [areDirectionsReady, setAreDirectionReady] = useState();
+    const shuttleBusOn = useRecoilValue(shuttleBusOnState);
 
     useEffect(() => {
         setAreDirectionReady(false);

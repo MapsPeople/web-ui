@@ -37,7 +37,6 @@ import ShuttleBus from '../ShuttleBus/ShuttleBus';
 import searchExternalLocationsState from '../../atoms/searchExternalLocationsState';
 import PropTypes from 'prop-types';
 import wayfindingLocationState from '../../atoms/wayfindingLocation';
-import shuttleBusOnState from '../../atoms/shuttleBusOnState';
 import appConfigState from '../../atoms/appConfigState';
 
 const searchFieldIdentifiers = {
@@ -107,8 +106,6 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
 
     const accessibilityOn = useRecoilValue(accessibilityOnState);
 
-    const shuttleBusOn = useRecoilValue(shuttleBusOnState);
-
     const scrollableContentSwipePrevent = usePreventSwipe();
 
     const [hasGooglePlaces, setHasGooglePlaces] = useState(false);
@@ -122,7 +119,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
 
     const distanceUnitSystem = useRecoilValue(distanceUnitSystemSelector);
 
-    const [totalDistance, totalTime, hasFoundRoute, areDirectionsReady] = useDirectionsInfo(originLocation, destinationLocation, directionsService, travelMode, accessibilityOn, shuttleBusOn)
+    const [totalDistance, totalTime, hasFoundRoute, areDirectionsReady] = useDirectionsInfo(originLocation, destinationLocation, directionsService, travelMode, accessibilityOn)
 
     const searchExternalLocations = useRecoilValue(searchExternalLocationsState);
 
