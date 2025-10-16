@@ -178,11 +178,17 @@
 
     &__settings {
         display: grid;
-        grid-auto-flow: column;
-        justify-content: space-between;
+        grid-template-columns: 1fr auto;
+        gap: var(--spacing-medium);
         width: 100%;
-        height: 40px;
-        align-items: center;
+        align-items: start;
+    }
+
+    &__toggles {
+        display: grid;
+        grid-auto-flow: row;
+        gap: var(--spacing-small);
+        align-items: start;
     }
 
     &__label {
