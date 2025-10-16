@@ -194,6 +194,7 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bear
                 onPositionControl={setPositionControl}
                 brandingColor={mapOptions?.brandingColor}
                 devicePosition={devicePosition}
+                excludedElements={appConfig?.appSettings?.excludeFromUI}
             />
         )}
     </>

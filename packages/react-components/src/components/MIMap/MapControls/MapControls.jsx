@@ -1,8 +1,18 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import './MapControls.scss';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import CustomPositionProvider from '../../../utils/CustomPositionProvider';
+
+// Define all UI elements available in this component
+const UI_ELEMENTS = {
+    'venueSelector': 'venue-selector-portal',
+    'viewSelector': 'view-selector-portal',
+    'languageSelector': 'language-selector-portal',
+    'viewModeSwitch': 'viewmode-switch-portal',
+    'myPosition': 'my-position-element-portal',
+    'floorSelector': 'floor-selector-portal'
+};
 
 MapControls.propTypes = {
     mapType: PropTypes.oneOf(['google', 'mapbox']).isRequired,
@@ -10,7 +20,8 @@ MapControls.propTypes = {
     mapInstance: PropTypes.object.isRequired,
     onPositionControl: PropTypes.func,
     brandingColor: PropTypes.string,
-    devicePosition: PropTypes.object
+    devicePosition: PropTypes.object,
+    excludedElements: PropTypes.string
 };
 
 /**
@@ -25,14 +36,26 @@ MapControls.propTypes = {
  * @param {Function} [props.onPositionControl] - Callback function for position control events
  * @param {string} [props.brandingColor] - Custom branding color for controls
  * @param {Object} [props.devicePosition] - Device position data (if available)
+ * @param {string} [props.excludedElements] - Comma-separated string of element names to exclude from rendering, defaults to empty string -> renders all elements
  *
  * @returns {JSX.Element} Map controls container with venue selector, floor selector,
  * position button, and view mode switch, arranged differently for desktop and mobile layouts
  */
-function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionControl, brandingColor, devicePosition }) {
+function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionControl, brandingColor, devicePosition, excludedElements = '' }) {
     const isDesktop = useIsDesktop();
     const floorSelectorRef = useRef(null);
     const positionButtonRef = useRef(null);
+
+    // Helper function to check if an element should be rendered
+    const shouldRenderElement = useCallback((elementName) => {
+        // Check if the element is in the excluded list
+        if (!excludedElements || typeof excludedElements !== 'string') {
+            return true;
+        }
+        // Split by comma and check for exact matches
+        const excludedList = excludedElements.split(',').map(item => item.trim());
+        return !excludedList.includes(elementName);
+    }, [excludedElements]);
 
     // Define portal elements as constants
     const venueSelectorPortal = <div key="venue-selector" className="venue-selector-portal" />;
@@ -155,6 +178,22 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
         moveElementToTarget(positionButtonRef.current, 'my-position-element-portal');
 
     }, [isDesktop]); // Only re-run when layout changes
+
+    // Handle visibility of portal elements based on excludedElements
+    useEffect(() => {
+        Object.entries(UI_ELEMENTS).forEach(([elementName, className]) => {
+            const portal = document.querySelector(`.${className}`);
+            if (portal) {
+                const shouldShow = shouldRenderElement(elementName);
+                if (shouldShow) {
+                    portal.style.display = '';
+                    portal.style.visibility = '';
+                } else {
+                    portal.style.display = 'none';
+                }
+            }
+        });
+    }, [excludedElements, shouldRenderElement]);
 
     if (isDesktop) {
         {/* For desktop layout, we render all controls in a single container */ }
