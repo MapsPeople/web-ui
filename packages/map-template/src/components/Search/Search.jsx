@@ -195,6 +195,21 @@ function Search({ onSetSize, isOpen }) {
     }
 
     /**
+     * Sort search results alphabetically if configured to do so and a category is selected.
+     *
+     * @param {Array} results - Array of search results
+     * @returns {Array} Sorted or original array based on configuration
+     */
+    function getSortedSearchResults(results) {
+        if (appConfig?.appSettings?.sortSearchResultsAlphabetically && selectedCategory) {
+            return [...results].sort((a, b) => 
+                (a.properties?.name || '').localeCompare(b.properties?.name || '')
+            );
+        }
+        return results;
+    }
+
+    /**
      * Handle search results from the search field.
      *
      * @param {array} locations - An array of MapsIndoors Location objects.
@@ -632,7 +647,7 @@ function Search({ onSetSize, isOpen }) {
                     )}
 
                     {/* Show locations when there are any searchResults */}
-                    {searchResults.map(location =>
+                    {getSortedSearchResults(searchResults).map(location =>
                         <ListItemLocation
                             key={location.id}
                             location={location}

@@ -506,7 +506,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                         {appConfig?.appSettings?.includeTransitSelection === 'true' && <ShuttleBus />}
                     </div>
                     <div className="wayfinding__travel">
-                        {appConfig?.appSettings?.includeTravelModeSelection && <Dropdown selectionChanged={travelMode => setTravelMode(travelMode[0].value)}>
+                        {appConfig?.appSettings?.includeTravelModeSelection !== 'false' && <Dropdown selectionChanged={travelMode => setTravelMode(travelMode[0].value)}>
                             <mi-dropdown-item selected value={travelModes.WALKING}>
                                 <WalkIcon></WalkIcon>
                                 {t('Walk')}
