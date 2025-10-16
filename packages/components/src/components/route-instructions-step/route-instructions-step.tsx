@@ -344,8 +344,7 @@ export class RouteInstructionsStep implements ComponentInterface {
      */
     renderWalkingStep(): JSX.Element {
         let heading: string;
-        console.log('this.stepData', this.stepData);
-        
+
         /*
          * Determine action heading:
          */
