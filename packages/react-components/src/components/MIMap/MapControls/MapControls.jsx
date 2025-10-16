@@ -201,7 +201,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
     }, [excludedElements, shouldRenderElement]);
 
     if (isDesktop) {
-        {/* For desktop layout, we render all controls in a single container */ }
+        {/* For desktop layout, render the controls in the correct container based on the layout */ }
         return (
             <>
                 {/* Top right desktop controls */}
