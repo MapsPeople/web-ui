@@ -1,17 +1,18 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import './MapControls.scss';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import CustomPositionProvider from '../../../utils/CustomPositionProvider';
 
-// Define all UI elements available in this component
+// Define UI element configuration - single source of truth
 const UI_ELEMENTS = {
-    venueSelector: <div key="venue-selector" className="venue-selector-portal" />,
-    viewSelector: <div key="view-selector" className="view-selector-portal" />,
-    languageSelector: <div key="language-selector" className="language-selector-portal" />,
-    viewModeSwitch: <div key="viewmode-switch" className="viewmode-switch-portal" />,
-    myPosition: <div key="my-position" className="my-position-element-portal" />,
-    floorSelector: <div key="floor-selector" className="floor-selector-portal" />
+    venueSelector: { key: 'venue-selector', className: 'venue-selector-portal' },
+    viewSelector: { key: 'view-selector', className: 'view-selector-portal' },
+    languageSelector: { key: 'language-selector', className: 'language-selector-portal' },
+    viewModeSwitch: { key: 'viewmode-switch', className: 'viewmode-switch-portal' },
+    myPosition: { key: 'my-position', className: 'my-position-element-portal' },
+    floorSelector: { key: 'floor-selector', className: 'floor-selector-portal' },
+    resetView: { key: 'reset-view', className: 'reset-view-portal' }
 };
 
 MapControls.propTypes = {
@@ -57,8 +58,14 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
         return !excludedList.includes(elementName);
     }, [excludedElements]);
 
-    // Reset view portal (not in UI_ELEMENTS since it's always shown)
-    const resetViewPortal = <div key="reset-view" className="reset-view-portal" />;
+    // Create UI elements inside component using single configuration
+    const uiElements = useMemo(() => {
+        const elements = {};
+        for (const [elementName, config] of Object.entries(UI_ELEMENTS)) {
+            elements[elementName] = <div key={config.key} className={config.className} />;
+        }
+        return elements;
+    }, []);
 
     // Set position and handle floor changes.
     // These are combined because floor should only change if position is successfully set.
@@ -171,14 +178,12 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
         moveElementToTarget(floorSelectorRef.current, 'floor-selector-portal');
         moveElementToTarget(positionButtonRef.current, 'my-position-element-portal');
 
-    }, [isDesktop]); // Only re-run when layout changes
+    }, [isDesktop, excludedElements]); // Re-run when layout changes or excluded elements change
 
     // Handle visibility of portal elements based on excludedElements
     useEffect(() => {
-        Object.entries(UI_ELEMENTS).forEach(([elementName, jsxElement]) => {
-            // Extract className from the JSX element's props
-            const className = jsxElement.props.className;
-            const portal = document.querySelector(`.${className}`);
+        Object.entries(UI_ELEMENTS).forEach(([elementName, config]) => {
+            const portal = document.querySelector(`.${config.className}`);
             if (portal) {
                 const shouldShow = shouldRenderElement(elementName);
                 if (shouldShow) {
@@ -196,17 +201,17 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
             <>
                 {/* Top right desktop controls */}
                 <div className="map-controls-container desktop top-right">
-                    {UI_ELEMENTS.venueSelector}
-                    {UI_ELEMENTS.viewSelector}
-                    {UI_ELEMENTS.languageSelector}
-                    {UI_ELEMENTS.viewModeSwitch}
-                    {UI_ELEMENTS.myPosition}
-                    {UI_ELEMENTS.floorSelector}
+                    {uiElements.venueSelector}
+                    {uiElements.viewSelector}
+                    {uiElements.languageSelector}
+                    {uiElements.viewModeSwitch}
+                    {uiElements.myPosition}
+                    {uiElements.floorSelector}
                 </div>
 
                 {/* Bottom right desktop controls */}
                 <div className="map-controls-container desktop bottom-right">
-                    {resetViewPortal}
+                    {uiElements.resetView}
                 </div>
             </>
         );
@@ -215,14 +220,14 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
         return (
             <>
                 <div className="map-controls-left-column mobile-column">
-                    {UI_ELEMENTS.venueSelector}
-                    {UI_ELEMENTS.viewModeSwitch}
-                    {UI_ELEMENTS.viewSelector}
-                    {UI_ELEMENTS.languageSelector}
+                    {uiElements.venueSelector}
+                    {uiElements.viewModeSwitch}
+                    {uiElements.viewSelector}
+                    {uiElements.languageSelector}
                 </div>
                 <div className="map-controls-right-column mobile-column">
-                    {UI_ELEMENTS.myPosition}
-                    {UI_ELEMENTS.floorSelector}
+                    {uiElements.myPosition}
+                    {uiElements.floorSelector}
                 </div>
             </>
         );
