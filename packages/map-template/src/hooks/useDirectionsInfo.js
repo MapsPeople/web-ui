@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import getLocationPoint from '../helpers/GetLocationPoint';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import directionsResponseState from '../atoms/directionsResponseState';
 import hasFoundRouteState from '../atoms/hasFoundRouteState';
+import shuttleBusOnState from '../atoms/shuttleBusOnState';
 
 /*
  * Hook to handle when both origin location and destination location are selected,
@@ -14,6 +15,7 @@ const useDirectionsInfo = (originLocation, destinationLocation, directionsServic
     const [hasFoundRoute, setHasFoundRoute] = useRecoilState(hasFoundRouteState);
     const [, setDirectionsResponse] = useRecoilState(directionsResponseState);
     const [areDirectionsReady, setAreDirectionReady] = useState();
+    const shuttleBusOn = useRecoilValue(shuttleBusOnState);
 
     useEffect(() => {
         setAreDirectionReady(false);
@@ -23,7 +25,8 @@ const useDirectionsInfo = (originLocation, destinationLocation, directionsServic
                 origin: getLocationPoint(originLocation),
                 destination: getLocationPoint(destinationLocation),
                 travelMode: travelMode,
-                avoidStairs: accessibilityOn
+                avoidStairs: accessibilityOn,
+                excludeHighwayTypes: shuttleBusOn ? [] : ['busway']
             }).then(directionsResult => {
                 if (!isActive) return;
 
@@ -56,7 +59,7 @@ const useDirectionsInfo = (originLocation, destinationLocation, directionsServic
         return () => {
             isActive = false;
         }
-    }, [originLocation, destinationLocation, directionsService, accessibilityOn, travelMode]);
+    }, [originLocation, destinationLocation, directionsService, accessibilityOn, travelMode, shuttleBusOn]);
 
     return [totalDistance, totalTime, hasFoundRoute, areDirectionsReady];
 }
