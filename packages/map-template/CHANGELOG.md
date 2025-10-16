@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Support for busway transportation mode within venue bounds.
 
+## [1.85.3] - 2025-10-14
+
+### Fixed
+
+- Fix search results overlapping with categories
 
 ## [1.85.2] - 2025-10-14
 

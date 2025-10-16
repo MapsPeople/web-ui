@@ -1,7 +1,7 @@
 @import '../../../variables.scss';
 
 .categories {
-    overflow: auto;
+    /* Remove overflow: auto to prevent nested scrolling - let parent container handle scrolling */
     display: flex;
     flex-direction: column;
     gap: var(--spacing-x-small);
@@ -77,7 +77,7 @@
         display: flex;
         flex-direction: column;
         gap: var(--spacing-x-small);
-        overflow: auto;
+        /* Remove overflow: auto to prevent nested scrolling - let parent container handle scrolling */
         scrollbar-width: none;
     }
 
