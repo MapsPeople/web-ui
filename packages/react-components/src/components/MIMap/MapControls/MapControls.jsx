@@ -6,12 +6,12 @@ import CustomPositionProvider from '../../../utils/CustomPositionProvider';
 
 // Define all UI elements available in this component
 const UI_ELEMENTS = {
-    'venueSelector': 'venue-selector-portal',
-    'viewSelector': 'view-selector-portal',
-    'languageSelector': 'language-selector-portal',
-    'viewModeSwitch': 'viewmode-switch-portal',
-    'myPosition': 'my-position-element-portal',
-    'floorSelector': 'floor-selector-portal'
+    venueSelector: <div key="venue-selector" className="venue-selector-portal" />,
+    viewSelector: <div key="view-selector" className="view-selector-portal" />,
+    languageSelector: <div key="language-selector" className="language-selector-portal" />,
+    viewModeSwitch: <div key="viewmode-switch" className="viewmode-switch-portal" />,
+    myPosition: <div key="my-position" className="my-position-element-portal" />,
+    floorSelector: <div key="floor-selector" className="floor-selector-portal" />
 };
 
 MapControls.propTypes = {
@@ -57,13 +57,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
         return !excludedList.includes(elementName);
     }, [excludedElements]);
 
-    // Define portal elements as constants
-    const venueSelectorPortal = <div key="venue-selector" className="venue-selector-portal" />;
-    const floorSelectorPortal = <div key="floor-selector" className="floor-selector-portal" />;
-    const myPositionPortal = <div key="my-position" className="my-position-element-portal" />;
-    const viewModeSwitchPortal = <div key="viewmode-switch" className="viewmode-switch-portal" />;
-    const viewSelectorPortal = <div key="view-selector" className="view-selector-portal" />;
-    const languageSelectorPortal = <div key="language-selector" className="language-selector-portal" />;
+    // Reset view portal (not in UI_ELEMENTS since it's always shown)
     const resetViewPortal = <div key="reset-view" className="reset-view-portal" />;
 
     // Set position and handle floor changes.
@@ -72,7 +66,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
         // Set the position and start watching if successful
         if (positionButtonRef.current.customPositionProvider.setPosition(devicePosition)) {
             positionButtonRef.current.watchPosition();
-            
+
             // If floor information is provided, set the floor on the map
             if (devicePosition.floorIndex && mapsIndoorsInstance) {
                 const currentFloor = mapsIndoorsInstance.getFloor();
@@ -133,7 +127,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
             if (!positionButtonRef.current.customPositionProvider) {
                 positionButtonRef.current.customPositionProvider = new CustomPositionProvider();
             }
-            
+
             // Handle empty object case - just initialize the provider as starting point
             if (Object.keys(devicePosition).length === 0) {
                 // Don't call watchPosition() for empty objects - this keeps the icon in POSITION_UNKNOWN state
@@ -181,13 +175,14 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
 
     // Handle visibility of portal elements based on excludedElements
     useEffect(() => {
-        Object.entries(UI_ELEMENTS).forEach(([elementName, className]) => {
+        Object.entries(UI_ELEMENTS).forEach(([elementName, jsxElement]) => {
+            // Extract className from the JSX element's props
+            const className = jsxElement.props.className;
             const portal = document.querySelector(`.${className}`);
             if (portal) {
                 const shouldShow = shouldRenderElement(elementName);
                 if (shouldShow) {
                     portal.style.display = '';
-                    portal.style.visibility = '';
                 } else {
                     portal.style.display = 'none';
                 }
@@ -201,12 +196,12 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
             <>
                 {/* Top right desktop controls */}
                 <div className="map-controls-container desktop top-right">
-                    {venueSelectorPortal}
-                    {viewSelectorPortal}
-                    {languageSelectorPortal}
-                    {viewModeSwitchPortal}
-                    {myPositionPortal}
-                    {floorSelectorPortal}
+                    {UI_ELEMENTS.venueSelector}
+                    {UI_ELEMENTS.viewSelector}
+                    {UI_ELEMENTS.languageSelector}
+                    {UI_ELEMENTS.viewModeSwitch}
+                    {UI_ELEMENTS.myPosition}
+                    {UI_ELEMENTS.floorSelector}
                 </div>
 
                 {/* Bottom right desktop controls */}
@@ -220,14 +215,14 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
         return (
             <>
                 <div className="map-controls-left-column mobile-column">
-                    {venueSelectorPortal}
-                    {viewModeSwitchPortal}
-                    {viewSelectorPortal}
-                    {languageSelectorPortal}
+                    {UI_ELEMENTS.venueSelector}
+                    {UI_ELEMENTS.viewModeSwitch}
+                    {UI_ELEMENTS.viewSelector}
+                    {UI_ELEMENTS.languageSelector}
                 </div>
                 <div className="map-controls-right-column mobile-column">
-                    {myPositionPortal}
-                    {floorSelectorPortal}
+                    {UI_ELEMENTS.myPosition}
+                    {UI_ELEMENTS.floorSelector}
                 </div>
             </>
         );
