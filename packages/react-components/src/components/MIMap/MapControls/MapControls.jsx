@@ -59,11 +59,11 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
         return !excludedList.includes(elementName);
     }, [excludedElements]);
 
-    // Create UI elements inside component using single configuration
+    // Create UI elements inside component based on the UI_ELEMENTS configuration object.
     const uiElements = useMemo(() => {
         const elements = {};
-        for (const [elementName, config] of Object.entries(UI_ELEMENTS)) {
-            elements[elementName] = <div key={config.key} className={config.className} />;
+        for (const [elementName, elementDetails] of Object.entries(UI_ELEMENTS)) {
+            elements[elementName] = <div key={elementDetails.key} className={elementDetails.className} />;
         }
         return elements;
     }, []);
@@ -175,11 +175,15 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
             }
         };
 
-        // Move elements to appropriate targets based on current layout
-        moveElementToTarget(floorSelectorRef.current, UI_ELEMENTS.floorSelector.className);
-        moveElementToTarget(positionButtonRef.current, UI_ELEMENTS.myPosition.className);
+        // Only move elements if their portals are visible
+        if (shouldRenderElement('floorSelector')) {
+            moveElementToTarget(floorSelectorRef.current, UI_ELEMENTS.floorSelector.className);
+        }
+        if (shouldRenderElement('myPosition')) {
+            moveElementToTarget(positionButtonRef.current, UI_ELEMENTS.myPosition.className);
+        }
 
-    }, [isDesktop, excludedElements]); // Re-run when layout changes or excluded elements change
+    }, [isDesktop, shouldRenderElement]); // Re-run when layout changes or visibility logic changes
 
     // Handle visibility of portal elements based on excludedElements
     useEffect(() => {
