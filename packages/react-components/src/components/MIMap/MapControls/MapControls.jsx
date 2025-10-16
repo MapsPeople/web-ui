@@ -4,7 +4,8 @@ import './MapControls.scss';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import CustomPositionProvider from '../../../utils/CustomPositionProvider';
 
-// Define UI element configuration - single source of truth
+// Define UI element configuration objects with class names
+// This is a single source of truth for the UI elements and their class names
 const UI_ELEMENTS = {
     venueSelector: { key: 'venue-selector', className: 'venue-selector-portal' },
     viewSelector: { key: 'view-selector', className: 'view-selector-portal' },
@@ -175,8 +176,8 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
         };
 
         // Move elements to appropriate targets based on current layout
-        moveElementToTarget(floorSelectorRef.current, 'floor-selector-portal');
-        moveElementToTarget(positionButtonRef.current, 'my-position-element-portal');
+        moveElementToTarget(floorSelectorRef.current, UI_ELEMENTS.floorSelector.className);
+        moveElementToTarget(positionButtonRef.current, UI_ELEMENTS.myPosition.className);
 
     }, [isDesktop, excludedElements]); // Re-run when layout changes or excluded elements change
 
