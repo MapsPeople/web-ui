@@ -1,0 +1,7 @@
+.shuttle-bus {
+    display: grid;
+    grid-auto-flow: column;
+    gap: var(--spacing-x-small);
+    align-items: center;
+    width: fit-content;
+}
