@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback, useMemo } from 'react';
+import { useEffect, useRef, useCallback, useMemo, memo } from 'react';
 import PropTypes from 'prop-types';
 import './MapControls.scss';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
@@ -239,4 +239,5 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
     }
 }
 
-export default MapControls;
+// Memoize the component to prevent unnecessary re-renders when props haven't changed
+export default memo(MapControls);

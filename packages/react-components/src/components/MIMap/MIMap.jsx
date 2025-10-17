@@ -1,4 +1,4 @@
-import { useEffect, useState, Suspense, lazy } from 'react';
+import { useEffect, useState, Suspense, lazy, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import MapControls from './MapControls/MapControls';
 import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
@@ -57,6 +57,11 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bear
     const [solution, setSolution] = useState();
     const [appConfig, setAppConfig] = useState();
     const [mapViewInstance, setMapViewInstance] = useState();
+
+    // Memoize excludedElements to prevent unnecessary re-renders of MapControls
+    const excludedElements = useMemo(() => {
+        return appConfig?.appSettings?.excludeFromUI || '';
+    }, [appConfig?.appSettings?.excludeFromUI]);
 
     useEffect(() => {
         // Make sure to define the MI Components custom elements if they are not already defined.
@@ -194,7 +199,7 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bear
                 onPositionControl={setPositionControl}
                 brandingColor={mapOptions?.brandingColor}
                 devicePosition={devicePosition}
-                excludedElements={appConfig?.appSettings?.excludeFromUI}
+                excludedElements={excludedElements}
             />
         )}
     </>
