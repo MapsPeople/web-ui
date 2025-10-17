@@ -63,6 +63,7 @@
             flex-direction: row;
             gap: var(--spacing-xx-small);
             scrollbar-width: hidden;
+            overflow-x: auto;
         }
 
         .categories__category {
