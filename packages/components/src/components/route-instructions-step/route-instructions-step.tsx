@@ -384,7 +384,7 @@ export class RouteInstructionsStep implements ComponentInterface {
             heading = this.addStepContextNameToHeading(this.translationsData.enter, this.stepData.end_context);
         } else {
             // Origin Location name or empty
-            heading = this.fromRouteContext;
+            heading = this.fromRouteContext === 'InsideBuilding' ? 'Inside Building' : this.fromRouteContext;
         }
 
         return <div class="step" onClick={(e): void => this.stepClickHandler(e)}>
