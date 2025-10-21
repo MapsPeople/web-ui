@@ -198,7 +198,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
                 }
             }
         });
-    }, [excludedElements, shouldRenderElement]);
+    }, [excludedElements, shouldRenderElement, isDesktop]);
 
     if (isDesktop) {
         {/* For desktop layout, render the controls in the correct container based on the layout */ }
