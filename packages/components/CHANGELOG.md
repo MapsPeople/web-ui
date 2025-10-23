@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [13.26.9] - 2025-10-21
+
+### Fixed
+
+- Fixed `InsideBuilding` string that was missing a space.
+
+## [13.26.8] - 2025-10-09
+
+### Fixed
+
+- Fixed position state types being set to requesting when sent position was invalid
+
+## [13.26.7] - 2025-09-16
+
+### Added
+
+- Added a custom position provider example and created a new position provider interface for improved extensibility.
+- Refactored the geolocation provider to use the new position provider interface.
+- Updated the `mi-my-position` component to support both the legacy geolocation provider and the new position provider interface.
+
 ## [13.26.6] - 2025-08-20
 
 ### Changed

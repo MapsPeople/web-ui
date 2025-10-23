@@ -5,6 +5,83 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.87.1] - 2025-10-21
+
+### Fixed
+
+- Resolved a rare issue in kiosk mode (horizontal layout) where the right chevron could be hidden behind the categories.
+
+## [1.87.0] - 2025-10-16
+
+### Added
+
+- Added support for alphabetical sorting of search results, configurable via App Config.
+- Travel Mode selection is now hidden when explicitly set to false.
+
+## [1.86.0] - 2025-10-16
+
+### Added
+
+- Support for busway transportation mode within venue bounds.
+
+## [1.85.3] - 2025-10-14
+
+### Fixed
+
+- Fix search results overlapping with categories
+
+## [1.85.2] - 2025-10-14
+
+### Fixed
+
+- Increased the default `maxAccuracy` in `CustomPositionProvider` to 100
+
+## [1.85.1] - 2025-10-09
+
+### Fixed
+
+- Added support for `floorIndex` in the `CustomPositionProvider`
+- Fixed logic to change map floor based on incoming `floorIndex`
+- Fixed positions dropping if incoming accuracy was too high
+
+## [1.85.0] - 2025-10-07
+
+### Added
+
+- Added a new reset view button for kiosk modes. It will reset the map view to the initial view.
+
+## [1.84.4] - 2025-10-01
+
+### Fixed
+
+- Fixed missing device position in web component build.
+
+## [1.84.3] - 2025-09-29
+
+### Fixed
+
+- Fixed changelog version.
+
+## [1.84.2] - 2025-09-24
+
+### Fixed
+
+- Fixed horizontal category style for kiosk
+- Added functionality to switch between horizontal and vertical style categories for kiosks
+
+## [1.84.1] - 2025-09-16
+
+### Fixed
+
+- Upgraded to Mapbox GL JS version 3.15.0.
+- Upgraded to Web SDK version 4.42.2.
+
+## [1.84.0] - 2025-09-16
+
+### Added
+
+- New `devicePosition` prop to `MapTemplate`, `MapWrapper`, and `MapsIndoorsMap` components. This allows passing a custom device position object (with coordinates and timestamp) for custom positioning logic.
+
 ## [1.83.0] - 2025-09-02
 
 ### Added

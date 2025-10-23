@@ -25,6 +25,7 @@ import ViewSelector from '../ViewSelector/ViewSelector';
 import LanguageSelector from '../LanguageSelector/LanguageSelector.jsx';
 import appConfigState from '../../atoms/appConfigState';
 import isNullOrUndefined from '../../helpers/isNullOrUndefined';
+import ResetKioskViewButton from '../ResetKioskViewButton/ResetKioskViewButton.jsx';
 
 MapWrapper.propTypes = {
     onLocationClick: PropTypes.func,
@@ -37,7 +38,8 @@ MapWrapper.propTypes = {
     gmMapId: PropTypes.string,
     isWayfindingOrDirections: PropTypes.bool,
     currentLanguage: PropTypes.string,
-    setLanguage: PropTypes.func
+    setLanguage: PropTypes.func,
+    devicePosition: PropTypes.object
 };
 
 /**
@@ -62,9 +64,10 @@ let _tileStyle;
  * @param {boolean} props.isWayfindingOrDirections - Whether wayfinding or directions is active or not.
  * @param {string} props.currentLanguage - The currently selected language code.
  * @param {function} props.setLanguage - Function to set the selected language.
+ * @param {object} [props.devicePosition] - Device position object with coords and timestamp for custom positioning.
  * @returns
  */
-function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating, onViewModeSwitchKnown, resetCount, mapOptions, gmMapId, isWayfindingOrDirections, currentLanguage, setLanguage }) {
+function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule, onMapPositionInvestigating, onViewModeSwitchKnown, resetCount, mapOptions, gmMapId, isWayfindingOrDirections, currentLanguage, setLanguage, devicePosition }) {
     const apiKey = useRecoilValue(apiKeyState);
     const gmApiKey = useRecoilValue(gmApiKeyState);
     const mapboxAccessToken = useRecoilValue(mapboxAccessTokenState);
@@ -332,11 +335,13 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
             resetUICounter={resetCount}
             mapOptions={mapOptions}
             gmMapId={gmMapId}
+            devicePosition={devicePosition}
         />}
         {/* Pass isWayfindingOrDirections prop to ViewSelector to disable interactions while wayfinding or directions is active*/}
         {apiKey && <>
             <ViewSelector isViewSelectorVisible={isViewSelectorVisible} isViewSelectorDisabled={isWayfindingOrDirections} />
             <LanguageSelector currentLanguage={currentLanguage} setLanguage={setLanguage} isVisible={isLanguageSelectorVisible} />
+            <ResetKioskViewButton />
         </>}
     </>)
 }

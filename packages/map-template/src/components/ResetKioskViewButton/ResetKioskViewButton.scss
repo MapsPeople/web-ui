@@ -1,0 +1,35 @@
+.reset-kiosk-view-button {
+    position: absolute;
+    left: 20px;
+    bottom: 110px;
+    z-index: var(--z-index-sticky);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #e6e6e6;
+    border-radius: var(--rounding-large);
+    width: var(--spacing-xxx-large);
+    height: var(--spacing-xxx-large);
+    background: var(--tailwind-colors-white);
+    transition: background-color 0.2s, border-color 0.2s;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    user-select: none;
+    pointer-events: auto;
+
+    &:hover {
+        background-color: var(--tailwind-colors-gray-50);
+        border: 1px solid var(--tailwind-colors-gray-200);
+    }
+
+    &:active {
+        transform: scale(0.98);
+    }
+
+    svg {
+        width: 24px;
+        height: 24px;
+        pointer-events: none;
+    }
+}

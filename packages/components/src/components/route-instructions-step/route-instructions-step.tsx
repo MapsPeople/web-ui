@@ -384,7 +384,7 @@ export class RouteInstructionsStep implements ComponentInterface {
             heading = this.addStepContextNameToHeading(this.translationsData.enter, this.stepData.end_context);
         } else {
             // Origin Location name or empty
-            heading = this.fromRouteContext;
+            heading = this.fromRouteContext === 'InsideBuilding' ? 'Inside Building' : this.fromRouteContext;
         }
 
         return <div class="step" onClick={(e): void => this.stepClickHandler(e)}>
@@ -437,28 +437,28 @@ export class RouteInstructionsStep implements ComponentInterface {
     renderTransitStep(): JSX.Element {
         return <div class="step" onClick={(e): void => this.stepClickHandler(e)}>
             <div class="step__info">
-                <h3 part="step-heading" class="step__heading">{this.stepData.instructions}</h3>
+                <h3 part="step-heading" class="step__heading">{this.stepData?.instructions}</h3>
                 {this.renderToggleButton()}
             </div>
             {this.renderTravelMode()}
             <div part="step-description" class="step__description">
-                {this.stepData.transit_information.line.short_name ?
+                {this.stepData?.transit_information?.line?.short_name ?
                     <span class="step__short-name" style={{
-                        backgroundColor: this.stepData.transit_information.line?.color ? this.stepData.transit_information.line.color : null,
-                        color: this.stepData.transit_information.line?.text_color ? this.stepData.transit_information.line.text_color : null
+                        backgroundColor: this.stepData?.transit_information?.line?.color ? this.stepData?.transit_information?.line?.color : null,
+                        color: this.stepData?.transit_information?.line?.text_color ? this.stepData?.transit_information?.line?.text_color : null
                     }}>
-                        {this.stepData.transit_information.line.short_name}
+                        {this.stepData?.transit_information?.line?.short_name}
                     </span> :
                     null
                 }
-                {this.stepData.transit_information.headsign ? this.stepData.transit_information.headsign : null}<br />
+                {this.stepData?.transit_information?.headsign ? this.stepData?.transit_information?.headsign : null}<br />
                 <span part="step-info" class="step__distance-duration">
                     <mi-time
-                        seconds={this.stepData.duration.value}
+                        seconds={this.stepData?.duration?.value}
                         translations={`{"days":"${this.translationsData.days}","hours":"${this.translationsData.hours}","minutes":"${this.translationsData.minutes}"}`}>
                     </mi-time>
                     &nbsp;&middot;&nbsp;
-                    {this.stepData.transit_information.num_stops ? this.stepData.transit_information.num_stops : null} {this.translationsData.stops ? this.translationsData.stops : null}
+                    {this.stepData?.transit_information?.num_stops ? this.stepData?.transit_information?.num_stops : null} {this.translationsData.stops ? this.translationsData.stops : null}
                 </span>
             </div>
             {this.showSubsteps()}

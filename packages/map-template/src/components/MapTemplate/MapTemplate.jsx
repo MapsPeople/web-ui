@@ -101,7 +101,8 @@ MapTemplate.propTypes = {
     center: PropTypes.string,
     useAppTitle: PropTypes.bool,
     showMapMarkers: PropTypes.bool,
-    mapboxMapStyle: PropTypes.string
+    mapboxMapStyle: PropTypes.string,
+    devicePosition: PropTypes.object
 };
 
 /**
@@ -140,7 +141,7 @@ MapTemplate.propTypes = {
  * @param {boolean} [props.showMapMarkers] - Specifies if the Map Template should show the base map providers Map Markers. The default value is set to true.
  * @param {string} [props.mapboxMapStyle] - Specifies the Mapbox Map Style to use. The default value is set to "mapbox://styles/mapbox/standard".
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations, center, useAppTitle, showMapMarkers, mapboxMapStyle }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations, center, useAppTitle, showMapMarkers, mapboxMapStyle, devicePosition }) {
 
     const [userSelectedLanguage, setUserSelectedLanguage] = useState(false);
     const [mapOptions, setMapOptions] = useState({ brandingColor: primaryColor });
@@ -233,8 +234,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             const miSdkApiTag = document.createElement('script');
             miSdkApiTag.setAttribute('type', 'text/javascript');
-            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.42.0/mapsindoors-4.42.0.js.gz');
-            miSdkApiTag.setAttribute('integrity', 'sha384-K7OSiO1zZZKdjCQCKlzzLLcu3hz/532y8aKaQv44US4K7SZkKmXHrQSP+fqc9Lj0');
+            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.43.0/mapsindoors-4.43.0.js.gz');
+            miSdkApiTag.setAttribute('integrity', 'sha384-oYV8UaRtMuQS64N5HKKvnD3TgtXhBwcftD8H7FbZbkRrYeY1TRMJoSkdmBfDCXts');
             miSdkApiTag.setAttribute('crossorigin', 'anonymous');
             document.body.appendChild(miSdkApiTag);
             miSdkApiTag.onload = () => {
@@ -829,6 +830,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 setCurrentLanguage(languageToSet);
                 setUserSelectedLanguage(true);
             }}
+            devicePosition={devicePosition}
         />
     </div>
 }
