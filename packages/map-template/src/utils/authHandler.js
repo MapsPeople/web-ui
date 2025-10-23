@@ -18,7 +18,8 @@ export class MapsIndoorsAuthHandler {
         this.requestor = new FetchRequestor();
         this.authorizationNotifier = new AuthorizationNotifier();
         this.authorizationHandler = new RedirectRequestHandler();
-        this.onAuthComplete = null; // New: Callback for when auth completes
+        this.onAuthComplete = null; // Callback for when auth completes
+        this.storedState = null;
     }
 
     /**
@@ -119,12 +120,16 @@ export class MapsIndoorsAuthHandler {
             timestamp: Date.now()
         };
 
+        // Generate and store the state
+        const stateString = btoa(JSON.stringify(stateData));
+        this.storedState = stateString;
+
         const request = new AuthorizationRequest({
             client_id: authClient.clientId,
             redirect_uri: this.getRedirectUri(),
             scope: 'openid profile account client-apis',
             response_type: AuthorizationRequest.RESPONSE_TYPE_CODE,
-            state: btoa(JSON.stringify(stateData)), // Encode state data as base64
+            state: stateString,
             extras: {
                 'acr_values': `idp:${preferredIDP}`,
                 'response_mode': 'fragment'
@@ -151,11 +156,16 @@ export class MapsIndoorsAuthHandler {
     /**
      * Restore the URL from the state parameter after authentication
      */
-    restoreUrlFromState(state) {
-        if (!state) return;
+    restoreUrlFromState(receivedState) {
+        if (!receivedState) return;
 
         try {
-            const stateData = JSON.parse(atob(state));
+            if (receivedState !== this.storedState) {
+                return;
+            }
+
+            // Decode the state and restore the URL
+            const stateData = JSON.parse(atob(receivedState));
             if (stateData.url) {
                 // Restore the original URL
                 window.history.replaceState(
@@ -164,6 +174,9 @@ export class MapsIndoorsAuthHandler {
                     `${window.location.origin}${stateData.url}`
                 );
             }
+
+            // Clear the stored state after successful validation
+            this.storedState = null;
         } catch (error) {
             console.warn('Failed to restore URL from state parameter:', error);
         }
