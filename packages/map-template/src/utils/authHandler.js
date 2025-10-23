@@ -71,6 +71,9 @@ export class MapsIndoorsAuthHandler {
 
                 if (response) {
                     try {
+                        // Extract and restore the stored URL from state parameter
+                        this.restoreUrlFromState(response.state);
+
                         const tokenHandler = new BaseTokenRequestHandler(this.requestor);
                         const tokenRequest = new TokenRequest({
                             client_id: request.clientId,
@@ -109,11 +112,19 @@ export class MapsIndoorsAuthHandler {
             ? authClient.preferredIDPs[0]
             : '';
 
+        // Store the current URL in the state parameter
+        const currentUrl = this.getCurrentUrl();
+        const stateData = {
+            url: currentUrl,
+            timestamp: Date.now()
+        };
+
         const request = new AuthorizationRequest({
             client_id: authClient.clientId,
             redirect_uri: this.getRedirectUri(),
             scope: 'openid profile account client-apis',
             response_type: AuthorizationRequest.RESPONSE_TYPE_CODE,
+            state: btoa(JSON.stringify(stateData)), // Encode state data as base64
             extras: {
                 'acr_values': `idp:${preferredIDP}`,
                 'response_mode': 'fragment'
@@ -128,6 +139,34 @@ export class MapsIndoorsAuthHandler {
      */
     getRedirectUri() {
         return `${window.location.origin}${window.location.pathname}${window.location.search}`;
+    }
+
+    /**
+     * Get the current URL including path and search parameters
+     */
+    getCurrentUrl() {
+        return `${window.location.pathname}${window.location.search}`;
+    }
+
+    /**
+     * Restore the URL from the state parameter after authentication
+     */
+    restoreUrlFromState(state) {
+        if (!state) return;
+
+        try {
+            const stateData = JSON.parse(atob(state));
+            if (stateData.url) {
+                // Restore the original URL
+                window.history.replaceState(
+                    null,
+                    '',
+                    `${window.location.origin}${stateData.url}`
+                );
+            }
+        } catch (error) {
+            console.warn('Failed to restore URL from state parameter:', error);
+        }
     }
 
     /**
