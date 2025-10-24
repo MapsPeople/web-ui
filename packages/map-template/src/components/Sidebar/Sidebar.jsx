@@ -19,7 +19,8 @@ Sidebar.propTypes = {
     currentAppView: PropTypes.string,
     appViews: PropTypes.object,
     filteredLocationsByExternalIDs: PropTypes.array,
-    onRouteFinished: PropTypes.func
+    onRouteFinished: PropTypes.func,
+    modalLocation: PropTypes.string
 };
 
 /**
@@ -36,9 +37,9 @@ Sidebar.propTypes = {
  * @param {array} props.appViews - Array of all possible views.
  * @param {array} props.filteredLocationsByExternalIDs - Array of locations filtered based on the external ID.
  * @param {function} props.onRouteFinished - Callback that fires when the route has finished.
- *
+ * @param {string} props.modalLocation - The location of the modal in the sidebar. Can be "bottomright", "bottomleft", "centered".
  */
-function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews, onRouteFinished }) {
+function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews, onRouteFinished, modalLocation }) {
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
     const [, setLocationId] = useRecoilState(locationIdState);
@@ -105,7 +106,7 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
     }
 
     const pages = [
-        <Modal isOpen={currentAppView === appViews.SEARCH} key="SEARCH">
+        <Modal isOpen={currentAppView === appViews.SEARCH} key="SEARCH" modalLocation={modalLocation}>
             <Search isOpen={currentAppView === appViews.SEARCH} />
         </Modal>,
         <Modal isOpen={currentAppView === appViews.EXTERNALIDS} key="EXTERNALIDS">
@@ -115,7 +116,7 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
                 onLocationClick={(location) => setCurrentLocation(location)}
             />
         </Modal>,
-        <Modal isOpen={currentAppView === appViews.LOCATION_DETAILS} key="LOCATION_DETAILS">
+        <Modal isOpen={currentAppView === appViews.LOCATION_DETAILS} key="LOCATION_DETAILS" modalLocation={modalLocation}>
             <LocationDetails
                 onStartWayfinding={() => pushAppView(appViews.WAYFINDING)}
                 onBack={() => closeLocationDetails()}
@@ -123,7 +124,7 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
                 isOpen={currentAppView === appViews.LOCATION_DETAILS}
             />
         </Modal>,
-        <Modal isOpen={currentAppView === appViews.WAYFINDING} key="WAYFINDING">
+        <Modal isOpen={currentAppView === appViews.WAYFINDING} key="WAYFINDING" modalLocation={modalLocation}>
             <Wayfinding
                 onStartDirections={() => pushAppView(appViews.DIRECTIONS)}
                 directionsToLocation={directionsToLocation}
@@ -132,7 +133,7 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
                 isActive={currentAppView === appViews.WAYFINDING}
             />
         </Modal>,
-        <Modal isOpen={currentAppView === appViews.DIRECTIONS} key="DIRECTIONS">
+        <Modal isOpen={currentAppView === appViews.DIRECTIONS} key="DIRECTIONS" modalLocation={modalLocation}>
             <Directions
                 isOpen={currentAppView === appViews.DIRECTIONS}
                 onBack={() => closeDirections()}
