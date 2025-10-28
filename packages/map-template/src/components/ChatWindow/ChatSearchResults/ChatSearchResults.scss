@@ -1,0 +1,45 @@
+@import '../../../../variables.scss';
+
+.chat-search-results {
+    margin-top: var(--spacing-small);
+    
+    // Smooth transition when expanding/collapsing
+    transition: all 0.2s ease-in-out;
+    overflow: hidden;
+    
+    &__locations {
+        display: grid;
+        gap: var(--spacing-x-small);
+        
+        > * {
+            height: fit-content; /* fixes mobile Safari issue making a single result too large */
+        }
+    }
+
+    &__toggle-button {
+        background: var(--tailwind-colors-white);
+        border: 1px solid #E6E6E6;
+        border-radius: var(--rounding-large);
+        color: var(--color-gray-70);
+        cursor: pointer;
+        font-size: var(--font-size-small);
+        font-weight: var(--font-weight-medium);
+        margin-top: var(--spacing-small);
+        padding: var(--spacing-small) var(--spacing-medium);
+        transition: background-color 0.2s, border-color 0.2s;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+            background-color: var(--tailwind-colors-gray-50);
+            border-color: var(--tailwind-colors-gray-200);
+            color: var(--color-black-black);
+        }
+
+        &:active {
+            background-color: var(--tailwind-colors-gray-100);
+        }
+    }
+}
