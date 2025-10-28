@@ -38,7 +38,8 @@ import PropTypes from 'prop-types';
 Search.propTypes = {
     categories: PropTypes.array,
     onSetSize: PropTypes.func,
-    isOpen: PropTypes.bool
+    isOpen: PropTypes.bool,
+    onOpenChat: PropTypes.func
 };
 
 /**
@@ -51,7 +52,7 @@ Search.propTypes = {
  *
  * @returns
  */
-function Search({ onSetSize, isOpen }) {
+function Search({ onSetSize, isOpen, onOpenChat }) {
     const appConfig = useRecoilValue(appConfigState);
 
     const { t } = useTranslation();
@@ -594,7 +595,7 @@ function Search({ onSetSize, isOpen }) {
 
             { /* Search info which includes legend button if in a Kiosk context. */}
 
-            <div className="search__info" style={{ gridTemplateColumns: isKioskContext && showLegendButton ? 'min-content 1fr' : 'auto' }}>
+            <div className="search__info" style={{ gridTemplateColumns: isKioskContext && showLegendButton ? 'min-content 1fr min-content' : '1fr min-content' }}>
                 {isKioskContext && showLegendButton && <button className="search__legend" onClick={() => setShowLegendDialog(true)}><Legend /></button>}
 
                 { /* Search field that allows users to search for locations (MapsIndoors Locations and external) */}
@@ -611,6 +612,17 @@ function Search({ onSetSize, isOpen }) {
                         disabled={searchDisabled} // Disabled initially to prevent content jumping when clicking and changing sheet size.
                     />
                 </label>
+
+                {/* Chat button */}
+                <button
+                    className="search__chat-button"
+                    onClick={() => onOpenChat && onOpenChat()}
+                    type="button"
+                    aria-label="Open AI chat"
+                    title="Ask with AI"
+                >
+                    💬
+                </button>
             </div>
 
             {/* Vertical list of Categories */}

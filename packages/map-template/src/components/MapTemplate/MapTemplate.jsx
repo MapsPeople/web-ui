@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Fragment, useEffect, useRef } from 'react';
 import { useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -64,7 +65,6 @@ import { ZoomLevelValues } from '../../constants/zoomLevelValues.js';
 import { useOnRouteFinished } from '../../hooks/useOnRouteFinished.js';
 import notificationMessageState from '../../atoms/notificationMessageState.js';
 import { GeminiProvider } from '../../providers/GeminiProvider';
-import ChatWindow from '../ChatWindow/ChatWindow';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -848,25 +848,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                     }}
                     devicePosition={devicePosition}
                 />
-                
-                {/* Chat Window - Floating overlay */}
-                <ChatWindow
-                    isVisible={isChatVisible}
-                    onClose={() => setIsChatVisible(false)}
-                    onSearchResults={handleChatSearchResults}
-                    onShowRoute={handleChatDirections}
-                />
-                
-                {/* Chat Toggle Button - Floating button */}
-                <button
-                    className="chat-toggle-button"
-                    onClick={() => setIsChatVisible(!isChatVisible)}
-                    type="button"
-                    aria-label={isChatVisible ? 'Close chat' : 'Open chat'}
-                    style={{ backgroundColor: primaryColor }}
-                >
-                    {isChatVisible ? '×' : '💬'}
-                </button>
             </div>
         </GeminiProvider>
     );

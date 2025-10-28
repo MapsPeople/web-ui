@@ -1,16 +1,9 @@
 .chat-window {
-  position: fixed;
-  bottom: 80px;
-  right: 20px;
-  width: 400px;
-  height: 600px;
-  display: flex;
-  flex-direction: column;
-  background-color: var(--color-white-white);
-  border: 1px solid var(--color-gray-30);
-  border-radius: var(--rounding-large);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 500px;
+    background-color: var(--color-white-white);
   
   // In chat mode, constrain to second grid row and prevent overflow
   .search.chat-mode-enabled & {
@@ -75,11 +68,7 @@
   flex-direction: column;
   border-radius: var(--rounding-large);
   gap: var(--spacing-small);
-  // padding: var(--spacing-medium) var(--spacing-small);
-  padding-top: var(--spacing-medium);
-  padding-right: 0;
-  padding-bottom: var(--spacing-small);
-  padding-left: 0;
+  padding: var(--spacing-medium) var(--spacing-small);
   overflow-y: auto;
   flex: 1;
   min-height: 0; // Allow flex item to shrink below content size
@@ -290,35 +279,5 @@
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
-  }
-}
-
-// Chat toggle button styles
-.chat-toggle-button {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 60px;
-  height: 60px;
-  border: none;
-  border-radius: 50%;
-  color: white;
-  font-size: 24px;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  transition: all 0.2s ease;
-  z-index: 1001;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  
-  &:hover {
-    transform: scale(1.05);
-    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
-  }
-  
-  &:active {
-    transform: scale(0.95);
   }
 }

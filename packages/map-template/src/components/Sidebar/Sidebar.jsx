@@ -8,6 +8,7 @@ import Wayfinding from '../Wayfinding/Wayfinding';
 import Directions from '../Directions/Directions';
 import Search from '../Search/Search';
 import LocationsList from '../LocationsList/LocationsList';
+import ChatWindow from '../ChatWindow/ChatWindow';
 import locationIdState from '../../atoms/locationIdState';
 import kioskLocationState from '../../atoms/kioskLocationState';
 import PropTypes from 'prop-types';
@@ -106,7 +107,10 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
 
     const pages = [
         <Modal isOpen={currentAppView === appViews.SEARCH} key="SEARCH">
-            <Search isOpen={currentAppView === appViews.SEARCH} />
+            <Search 
+                isOpen={currentAppView === appViews.SEARCH} 
+                onOpenChat={() => pushAppView(appViews.CHAT)}
+            />
         </Modal>,
         <Modal isOpen={currentAppView === appViews.EXTERNALIDS} key="EXTERNALIDS">
             <LocationsList
@@ -137,6 +141,20 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
                 isOpen={currentAppView === appViews.DIRECTIONS}
                 onBack={() => closeDirections()}
                 onRouteFinished={() => onRouteFinished()}
+            />
+        </Modal>,
+        <Modal isOpen={currentAppView === appViews.CHAT} key="CHAT">
+            <ChatWindow
+                isVisible={currentAppView === appViews.CHAT}
+                onClose={() => pushAppView(appViews.SEARCH)}
+                onSearchResults={(locationIds) => {
+                    console.log('Sidebar: Received chat search results:', locationIds);
+                    // TODO: Implement location highlighting on map
+                }}
+                onShowRoute={(directionIds) => {
+                    console.log('Sidebar: Received chat directions:', directionIds);
+                    // TODO: Implement wayfinding with origin/destination location IDs
+                }}
             />
         </Modal>
     ];
