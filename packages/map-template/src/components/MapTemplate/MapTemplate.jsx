@@ -63,6 +63,8 @@ import PropTypes from 'prop-types';
 import { ZoomLevelValues } from '../../constants/zoomLevelValues.js';
 import { useOnRouteFinished } from '../../hooks/useOnRouteFinished.js';
 import notificationMessageState from '../../atoms/notificationMessageState.js';
+import { GeminiProvider } from '../../providers/GeminiProvider';
+import ChatWindow from '../ChatWindow/ChatWindow';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -184,6 +186,23 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const directionsToLocation = useLocationForWayfinding(directionsTo);
 
     const [isMapPositionInvestigating, setIsMapPositionInvestigating] = useState(false);
+
+    // Chat window visibility state
+    const [isChatVisible, setIsChatVisible] = useState(false);
+
+    // Handle chat search results - highlight locations on map
+    const handleChatSearchResults = (locationIds) => {
+        console.log('MapTemplate: Received chat search results:', locationIds);
+        // TODO: Implement location highlighting on map
+        // This could use setFilteredLocations or map highlighting APIs
+    };
+
+    // Handle chat directions - trigger wayfinding
+    const handleChatDirections = (directionIds) => {
+        console.log('MapTemplate: Received chat directions:', directionIds);
+        // TODO: Implement wayfinding with origin/destination location IDs
+        // This could use setWayfindingLocation or similar state
+    };
 
     // The filtered locations by external id, if present.
     const [, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
@@ -773,61 +792,84 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         }
     }, [language, appConfig, currentLanguage, setCurrentLanguage, userSelectedLanguage]);
 
-    return <div className={`mapsindoors-map
-    ${currentAppView === appStates.DIRECTIONS ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}
-    ${(venuesInSolution.length > 1 && showVenueSelector) ? '' : 'mapsindoors-map--hide-venue-selector'}
-    ${showPositionControl ? 'mapsindoors-map--show-my-position' : 'mapsindoors-map--hide-my-position'}`}>
-        <Notification />
-        {!isMapReady && <SplashScreen />}
-        {venuesInSolution.length > 1 && showVenueSelector && <VenueSelector
-            onOpen={() => pushAppView(appStates.VENUE_SELECTOR)}
-            onClose={() => goBack()}
-            active={currentAppView === appStates.VENUE_SELECTOR}
-        />}
-        {qrCodeLink && <QRCodeDialog />}
-        {showLegendDialog && <LegendDialog />}
-        {isMapPositionInvestigating &&
-            <Fragment key={resetCount}>
-                {isDesktop &&
-                    <Sidebar
-                        directionsFromLocation={directionsFromLocation}
-                        directionsToLocation={directionsToLocation}
-                        pushAppView={pushAppView}
-                        currentAppView={currentAppView}
-                        appViews={appStates}
-                        onRouteFinished={() => onRouteFinish()}
-                    />
+    return (
+        <GeminiProvider>
+            <div className={`mapsindoors-map
+            ${currentAppView === appStates.DIRECTIONS ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}
+            ${(venuesInSolution.length > 1 && showVenueSelector) ? '' : 'mapsindoors-map--hide-venue-selector'}
+            ${showPositionControl ? 'mapsindoors-map--show-my-position' : 'mapsindoors-map--hide-my-position'}`}>
+                <Notification />
+                {!isMapReady && <SplashScreen />}
+                {venuesInSolution.length > 1 && showVenueSelector && <VenueSelector
+                    onOpen={() => pushAppView(appStates.VENUE_SELECTOR)}
+                    onClose={() => goBack()}
+                    active={currentAppView === appStates.VENUE_SELECTOR}
+                />}
+                {qrCodeLink && <QRCodeDialog />}
+                {showLegendDialog && <LegendDialog />}
+                {isMapPositionInvestigating &&
+                    <Fragment key={resetCount}>
+                        {isDesktop &&
+                            <Sidebar
+                                directionsFromLocation={directionsFromLocation}
+                                directionsToLocation={directionsToLocation}
+                                pushAppView={pushAppView}
+                                currentAppView={currentAppView}
+                                appViews={appStates}
+                                onRouteFinished={() => onRouteFinish()}
+                            />
+                        }
+                        {!isDesktop &&
+                            <BottomSheet
+                                directionsFromLocation={directionsFromLocation}
+                                directionsToLocation={directionsToLocation}
+                                pushAppView={pushAppView}
+                                currentAppView={currentAppView}
+                                appViews={appStates}
+                                onRouteFinished={() => onRouteFinish()}
+                            />
+                        }
+                    </Fragment>
                 }
-                {!isDesktop &&
-                    <BottomSheet
-                        directionsFromLocation={directionsFromLocation}
-                        directionsToLocation={directionsToLocation}
-                        pushAppView={pushAppView}
-                        currentAppView={currentAppView}
-                        appViews={appStates}
-                        onRouteFinished={() => onRouteFinish()}
-                    />
-                }
-            </Fragment>
-        }
-        <MapWrapper
-            useMapProviderModule={useMapProviderModule}
-            onMapPositionKnown={() => mapPositionKnown()}
-            onMapPositionInvestigating={() => setIsMapPositionInvestigating(true)}
-            onLocationClick={(location) => locationClicked(location)}
-            onViewModeSwitchKnown={visible => setViewModeSwitchVisible(visible)}
-            resetCount={resetCount}
-            mapOptions={mapOptions}
-            gmMapId={gmMapId}
-            isWayfindingOrDirections={currentAppView === appStates.WAYFINDING || currentAppView === appStates.DIRECTIONS}
-            currentLanguage={currentLanguage}
-            setLanguage={(languageToSet) => {
-                setCurrentLanguage(languageToSet);
-                setUserSelectedLanguage(true);
-            }}
-            devicePosition={devicePosition}
-        />
-    </div>
+                <MapWrapper
+                    useMapProviderModule={useMapProviderModule}
+                    onMapPositionKnown={() => mapPositionKnown()}
+                    onMapPositionInvestigating={() => setIsMapPositionInvestigating(true)}
+                    onLocationClick={(location) => locationClicked(location)}
+                    onViewModeSwitchKnown={visible => setViewModeSwitchVisible(visible)}
+                    resetCount={resetCount}
+                    mapOptions={mapOptions}
+                    gmMapId={gmMapId}
+                    isWayfindingOrDirections={currentAppView === appStates.WAYFINDING || currentAppView === appStates.DIRECTIONS}
+                    currentLanguage={currentLanguage}
+                    setLanguage={(languageToSet) => {
+                        setCurrentLanguage(languageToSet);
+                        setUserSelectedLanguage(true);
+                    }}
+                    devicePosition={devicePosition}
+                />
+                
+                {/* Chat Window - Floating overlay */}
+                <ChatWindow
+                    isVisible={isChatVisible}
+                    onClose={() => setIsChatVisible(false)}
+                    onSearchResults={handleChatSearchResults}
+                    onShowRoute={handleChatDirections}
+                />
+                
+                {/* Chat Toggle Button - Floating button */}
+                <button
+                    className="chat-toggle-button"
+                    onClick={() => setIsChatVisible(!isChatVisible)}
+                    type="button"
+                    aria-label={isChatVisible ? 'Close chat' : 'Open chat'}
+                    style={{ backgroundColor: primaryColor }}
+                >
+                    {isChatVisible ? '×' : '💬'}
+                </button>
+            </div>
+        </GeminiProvider>
+    );
 }
 
 export default MapTemplate;

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useLayoutEffect, useMemo, useCallback } from 'react';
+import { useEffect, useRef, useLayoutEffect, useMemo, useCallback, useState } from 'react';
 import { useGemini } from '../../providers/GeminiProvider';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import chatHistoryState from '../../atoms/chatHistoryState';
@@ -8,7 +8,7 @@ import remarkGfm from 'remark-gfm';
 import './ChatWindow.scss';
 import primaryColorState from '../../atoms/primaryColorState';
 import apiKeyState from '../../atoms/apiKeyState';
-import ChatSearchResults from './components/ChatSearchResults/ChatSearchResults';
+import ChatSearchResults from './ChatSearchResults/ChatSearchResults';
 
 // Move prompt fields outside component to prevent recreation on every render
 const PROMPT_FIELDS = {
@@ -188,11 +188,15 @@ const PROMPT_FIELDS = {
     </DIRECTIONS>`,
 };
 
-function ChatWindow({ message, isEnabled, onMinimize, onSearchResults, locationHandlerRef, hoveredLocation, onShowRoute }) {
+function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     const primaryColor = useRecoilValue(primaryColorState);
     const apiKey = useRecoilValue(apiKeyState);
     const chatWindowRef = useRef(null);
     const chatMessagesRef = useRef(null);
+    const inputRef = useRef(null);
+    
+    // Local state for input field
+    const [inputValue, setInputValue] = useState('');
 
     // TODO: Hide header for now, redesign later
     const isHeaderVisible = false;
@@ -373,8 +377,13 @@ function ChatWindow({ message, isEnabled, onMinimize, onSearchResults, locationH
 
     // Maybe expose a function to add messages, like onUserMessage, then pass it from the Search to the ChatWindow
 
-    // Memoize message processing to prevent unnecessary re-renders
-    const processMessage = useCallback(async (messageText) => {
+    // Handle sending messages from input field
+    const handleSendMessage = useCallback(async () => {
+        if (!inputValue.trim() || isLoading) return;
+
+        const messageText = inputValue.trim();
+        setInputValue(''); // Clear input immediately
+
         const userMessage = {
             id: Date.now(),
             text: messageText,
@@ -406,13 +415,16 @@ function ChatWindow({ message, isEnabled, onMinimize, onSearchResults, locationH
                 }
             ]);
         }
-    }, [generateResponse, apiKey]);
+    }, [inputValue, isLoading, generateResponse, apiKey]);
 
-    // Handle new message from parent component
-    useEffect(() => {
-        if (!message?.trim()) return;
-        processMessage(message.trim());
-    }, [message, processMessage]);
+    // Handle Enter key in input field
+    const handleKeyDown = useCallback((event) => {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            handleSendMessage();
+        }
+    }, [handleSendMessage]);
+
 
     /**
      * Memoized chat messages to prevent unnecessary re-renders.
@@ -434,8 +446,6 @@ function ChatWindow({ message, isEnabled, onMinimize, onSearchResults, locationH
                             {message.locations && message.locations.length > 0 && (
                                 <ChatSearchResults
                                     locations={message.locations}
-                                    locationHandlerRef={locationHandlerRef}
-                                    hoveredLocation={hoveredLocation}
                                 />
                             )}
                             {canShowRoute && (
@@ -459,10 +469,8 @@ function ChatWindow({ message, isEnabled, onMinimize, onSearchResults, locationH
         });
     }, [chatHistory]);
 
-    // Keep chat visible if there are messages, even when parent disables visibility
-    // Only show the chat window if there are messages
-    // This might need to be a bit tweaked
-    if (!isEnabled || chatHistory.length === 0) return null;
+    // Only show the chat window if it's visible
+    if (!isVisible) return null;
 
     return (
         <div ref={chatWindowRef} className="chat-window" style={{ '--chat-window-primary-color': primaryColor }}>
@@ -470,11 +478,11 @@ function ChatWindow({ message, isEnabled, onMinimize, onSearchResults, locationH
                 <span className="chat-window__title">Maps Indoors AI Assistant</span>
                 <button
                     className="chat-window__minimize-button"
-                    onClick={onMinimize}
+                    onClick={onClose}
                     type="button"
-                    aria-label="Minimize chat"
+                    aria-label="Close chat"
                 >
-                    −
+                    ×
                 </button>
             </div>}
             <div ref={chatMessagesRef} className="chat-window__messages">
@@ -488,17 +496,36 @@ function ChatWindow({ message, isEnabled, onMinimize, onSearchResults, locationH
                     </div>
                 )}
             </div>
+            <div className="chat-window__input-container">
+                <textarea
+                    ref={inputRef}
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    placeholder="Ask about locations, directions, or anything else..."
+                    className="chat-window__input"
+                    disabled={isLoading}
+                    rows={1}
+                />
+                <button
+                    type="button"
+                    onClick={handleSendMessage}
+                    disabled={!inputValue.trim() || isLoading}
+                    className="chat-window__send-button"
+                    style={{ backgroundColor: primaryColor }}
+                    aria-label="Send message"
+                >
+                    Send
+                </button>
+            </div>
         </div>
     );
 }
 
 ChatWindow.propTypes = {
-    message: PropTypes.string,
-    isEnabled: PropTypes.bool,
-    onMinimize: PropTypes.func,
+    isVisible: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
     onSearchResults: PropTypes.func,
-    locationHandlerRef: PropTypes.object,
-    hoveredLocation: PropTypes.object,
     onShowRoute: PropTypes.func
 };
 

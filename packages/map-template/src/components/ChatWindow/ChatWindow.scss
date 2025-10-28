@@ -1,16 +1,16 @@
 .chat-window {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 400px;
+  height: 600px;
   display: flex;
   flex-direction: column;
   background-color: var(--color-white-white);
-  // border: 1px solid var(--color-gray-30);
+  border: 1px solid var(--color-gray-30);
   border-radius: var(--rounding-large);
-  // box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  // height: 200px;
-  // min-height: 100px;
-  // Fixed height to allow the scroll bottom to work
-  max-height: 900px;
-  margin-top: var(--spacing-small);
-  margin-bottom: var(--spacing-small);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
   
   // In chat mode, constrain to second grid row and prevent overflow
   .search.chat-mode-enabled & {
@@ -78,10 +78,11 @@
   // padding: var(--spacing-medium) var(--spacing-small);
   padding-top: var(--spacing-medium);
   padding-right: 0;
-  padding-bottom: 0;
+  padding-bottom: var(--spacing-small);
   padding-left: 0;
   overflow-y: auto;
   flex: 1;
+  min-height: 0; // Allow flex item to shrink below content size
   
   // Hide scrollbar while keeping scroll functionality
   scrollbar-width: none; /* Firefox */
@@ -221,5 +222,103 @@
 
   &:active {
     opacity: 0.8;
+  }
+}
+
+.chat-window__input-container {
+  display: flex;
+  gap: var(--spacing-small);
+  padding: var(--spacing-small);
+  border-top: 1px solid var(--color-gray-30);
+  background-color: var(--color-white-white);
+  border-radius: 0 0 var(--rounding-large) var(--rounding-large);
+  flex-shrink: 0;
+}
+
+.chat-window__input {
+  flex: 1;
+  border: 1px solid var(--color-gray-30);
+  border-radius: var(--rounding-medium);
+  padding: var(--spacing-x-small) var(--spacing-small);
+  font-size: var(--font-size-medium);
+  font-family: inherit;
+  resize: none;
+  min-height: 40px;
+  max-height: 120px;
+  line-height: 1.4;
+  
+  &:focus {
+    outline: none;
+    border-color: var(--chat-window-primary-color, #1890ff);
+    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1);
+  }
+  
+  &:disabled {
+    background-color: var(--color-gray-10);
+    color: var(--color-gray-60);
+    cursor: not-allowed;
+  }
+  
+  &::placeholder {
+    color: var(--color-gray-60);
+  }
+}
+
+.chat-window__send-button {
+  padding: var(--spacing-x-small) var(--spacing-medium);
+  border: none;
+  border-radius: var(--rounding-medium);
+  color: white;
+  font-size: var(--font-size-medium);
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  min-width: 60px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  &:hover:not(:disabled) {
+    opacity: 0.9;
+  }
+  
+  &:active:not(:disabled) {
+    opacity: 0.8;
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+// Chat toggle button styles
+.chat-toggle-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  border: none;
+  border-radius: 50%;
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+  }
+  
+  &:active {
+    transform: scale(0.95);
   }
 }
