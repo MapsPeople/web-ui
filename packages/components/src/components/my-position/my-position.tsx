@@ -340,8 +340,7 @@ export class MyPositionComponent {
         }
 
         try {
-            // Get the current building directly from MapsIndoors
-            // This is a cached operation, not an API call, so it's very fast
+            // Get the current building directly from MapsIndoors SDK
             const currentBuilding = this.mapsindoors.getBuilding();
             if (!currentBuilding || !currentBuilding.floors) {
                 // Clear cache if building is invalid
