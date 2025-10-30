@@ -317,7 +317,7 @@ export class MyPositionComponent {
         // Check for floor changes if floorIndex is provided
         if (position.floorIndex !== undefined && position.floorIndex !== null && this.mapsindoors) {
             const currentFloor = this.mapsindoors.getFloor();
-            const newFloor = parseInt(position.floorIndex.toString(), 10);
+            const newFloor = position.floorIndex.toString();
 
             // Only change floor if it's different and valid for the current building
             if (newFloor !== currentFloor && this.isValidFloorForCurrentBuilding(newFloor)) {
@@ -331,10 +331,10 @@ export class MyPositionComponent {
      * Checks the current building's floors to ensure the floor index is valid.
      * Uses caching to avoid repeated lookups on every position update.
      *
-     * @param {number} floorIndex - The floor index to validate.
+     * @param {string} floorIndex - The floor index to validate.
      * @returns {boolean} - True if the floor exists in the current building.
      */
-    private isValidFloorForCurrentBuilding(floorIndex: number): boolean {
+    private isValidFloorForCurrentBuilding(floorIndex: string): boolean {
         if (!this.mapsindoors) {
             return false;
         }
@@ -357,9 +357,8 @@ export class MyPositionComponent {
 
             // Check if the floor index exists in the building's floors
             // Floors object has keys like "0", "10", "20", "30", etc. representing floorIndexes
-            const floorKey = floorIndex.toString();
             // Use 'in' operator which is slightly faster than hasOwnProperty for this use case
-            const floorExists = floorKey in this.cachedBuilding.floors;
+            const floorExists = floorIndex in this.cachedBuilding.floors;
 
             return floorExists;
         } catch (error) {
