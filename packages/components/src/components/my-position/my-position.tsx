@@ -3,6 +3,7 @@ import { UAParser, IDevice } from 'ua-parser-js';
 import merge from 'deepmerge';
 import { GeoLocationProvider as PositionProvider } from './GeoLocationProvider';
 import { IPositionProvider } from '../../types/position-provider.interface';
+import { VenueBuilding } from '../../types/venue-building.interface';
 
 enum PositionStateTypes {
     POSITION_UNKNOWN = 'POSITION_UNKNOWN',
@@ -11,7 +12,8 @@ enum PositionStateTypes {
     POSITION_KNOWN = 'POSITION_KNOWN',
     POSITION_CENTERED = 'POSITION_CENTERED',
     POSITION_TRACKED = 'POSITION_TRACKED',
-    POSITION_UNTRACKED = 'POSITION_UNTRACKED'
+    POSITION_UNTRACKED = 'POSITION_UNTRACKED',
+    POSITION_FOLLOW = 'POSITION_FOLLOW'
 }
 
 @Component({
@@ -81,6 +83,12 @@ export class MyPositionComponent {
      * Reference to the handleDeviceOrientation function.
      */
     private handleDeviceOrientationReference = this.handleDeviceOrientation.bind(this);
+
+    /**
+     * Cached current building for validation.
+     * Cached to avoid repeated lookups on every position update.
+     */
+    private cachedBuilding: VenueBuilding | null = null;
 
     /**
      * Reference to the modern provider's onPositionReceived event handler.
@@ -176,7 +184,11 @@ export class MyPositionComponent {
             // Ensure the position provider is set on the MapView so the dot appears
             this.setPositionProviderOnMapView();
 
-            if (this.positionState === PositionStateTypes.POSITION_TRACKED) {
+            // Handle FOLLOW mode - automatically pan and change floors
+            if (this.positionState === PositionStateTypes.POSITION_FOLLOW) {
+                this.handleFollowModePosition(position);
+                // Stay in FOLLOW state, don't transition
+            } else if (this.positionState === PositionStateTypes.POSITION_TRACKED) {
                 this.setPositionState(PositionStateTypes.POSITION_UNTRACKED);
             } else if (this.positionState !== PositionStateTypes.POSITION_UNTRACKED) {
                 this.setPositionState(PositionStateTypes.POSITION_KNOWN);
@@ -223,6 +235,7 @@ export class MyPositionComponent {
             this.setPositionState(PositionStateTypes.POSITION_KNOWN);
             this.mapView.tilt(0);
         }
+        // Don't reset FOLLOW state - it should persist until user clicks to exit
     }
 
     /**
@@ -231,7 +244,7 @@ export class MyPositionComponent {
      * @returns {boolean}
      */
     private hasValidPosition(): boolean {
-        return [PositionStateTypes.POSITION_KNOWN, PositionStateTypes.POSITION_CENTERED, PositionStateTypes.POSITION_INACCURATE, PositionStateTypes.POSITION_TRACKED, PositionStateTypes.POSITION_UNTRACKED].includes(this.positionState);
+        return [PositionStateTypes.POSITION_KNOWN, PositionStateTypes.POSITION_CENTERED, PositionStateTypes.POSITION_INACCURATE, PositionStateTypes.POSITION_TRACKED, PositionStateTypes.POSITION_UNTRACKED, PositionStateTypes.POSITION_FOLLOW].includes(this.positionState);
     }
 
     /**
@@ -264,7 +277,7 @@ export class MyPositionComponent {
 
         this.mapView.panTo({ lat: this.currentPosition.coords.latitude, lng: this.currentPosition.coords.longitude });
 
-        if (this.positionState !== PositionStateTypes.POSITION_TRACKED) {
+        if (this.positionState !== PositionStateTypes.POSITION_TRACKED && this.positionState !== PositionStateTypes.POSITION_FOLLOW) {
             this.setPositionState(PositionStateTypes.POSITION_CENTERED);
         }
 
@@ -286,6 +299,85 @@ export class MyPositionComponent {
                 window.removeEventListener('deviceorientation', this.handleDeviceOrientationReference);
             }
         }
+    }
+
+    /**
+     * Handles position updates in FOLLOW mode.
+     * Automatically pans the map and changes floors without user interaction listeners.
+     * Device orientation is handled by the existing handleDeviceOrientation method.
+     */
+    private handleFollowModePosition(position: GeolocationPosition): void {
+        if (!this.hasValidPosition()) {
+            return;
+        }
+
+        // Pan to new position - device orientation will be handled by handleDeviceOrientation
+        this.mapView.panTo({ lat: position.coords.latitude, lng: position.coords.longitude });
+
+        // Check for floor changes if floorIndex is provided
+        if ((position as any).floorIndex !== undefined && this.mapsindoors) {
+            const currentFloor = this.mapsindoors.getFloor();
+            const newFloor = parseInt((position as any).floorIndex.toString(), 10);
+
+            // Only change floor if it's different and valid for the current building
+            if (newFloor !== currentFloor && this.isValidFloorForCurrentBuilding(newFloor)) {
+                this.mapsindoors.setFloor(newFloor);
+            }
+        }
+    }
+
+    /**
+     * Validates if a floor index exists in the current building.
+     * Checks the current building's floors to ensure the floor index is valid.
+     * Uses caching to avoid repeated lookups on every position update.
+     *
+     * @param {number} floorIndex - The floor index to validate.
+     * @returns {boolean} - True if the floor exists in the current building.
+     */
+    private isValidFloorForCurrentBuilding(floorIndex: number): boolean {
+        if (!this.mapsindoors) {
+            return false;
+        }
+
+        try {
+            // Get the current building directly from MapsIndoors
+            // This is a cached operation, not an API call, so it's very fast
+            const currentBuilding = this.mapsindoors.getBuilding();
+            if (!currentBuilding || !currentBuilding.floors) {
+                // Clear cache if building is invalid
+                this.clearBuildingFloorsCache();
+                return false;
+            }
+
+            // Verify cache is still valid by checking building ID
+            // If building changed or cache is empty, refresh cache
+            // This avoids repeated property access on every position update
+            if (!this.cachedBuilding || this.cachedBuilding.id !== currentBuilding.id) {
+                this.cachedBuilding = currentBuilding;
+            }
+
+            // Check if the floor index exists in the building's floors
+            // Floors object has keys like "0", "10", "20", "30", etc. representing floorIndexes
+            const floorKey = floorIndex.toString();
+            // Use 'in' operator which is slightly faster than hasOwnProperty for this use case
+            const floorExists = floorKey in this.cachedBuilding.floors;
+
+            return floorExists;
+        } catch (error) {
+            // If there's an error getting building data, allow the floor change
+            // This prevents blocking floor changes due to API issues
+            // Clear cache on error
+            this.clearBuildingFloorsCache();
+            return true;
+        }
+    }
+
+    /**
+     * Clears the cached building.
+     * Should be called when the building changes to ensure fresh validation.
+     */
+    private clearBuildingFloorsCache(): void {
+        this.cachedBuilding = null;
     }
 
     /**
@@ -345,7 +437,10 @@ export class MyPositionComponent {
 
                 // Position requesting callback
                 () => {
-                    this.setPositionState(PositionStateTypes.POSITION_REQUESTING);
+                    // Don't override FOLLOW state
+                    if (this.positionState !== PositionStateTypes.POSITION_FOLLOW) {
+                        this.setPositionState(PositionStateTypes.POSITION_REQUESTING);
+                    }
                 },
 
                 // Position received callback
@@ -353,9 +448,10 @@ export class MyPositionComponent {
                     this.currentPosition = position;
                     this.positionIsAccurate = this.currentPosition.coords.accuracy <= this.options.maxAccuracy;
 
+                    // Don't override FOLLOW state - let the event handler manage it
                     if (this.positionState === PositionStateTypes.POSITION_TRACKED) {
                         this.setPositionState(PositionStateTypes.POSITION_UNTRACKED);
-                    } else if (this.positionState !== PositionStateTypes.POSITION_UNTRACKED) {
+                    } else if (this.positionState !== PositionStateTypes.POSITION_UNTRACKED && this.positionState !== PositionStateTypes.POSITION_FOLLOW) {
                         this.setPositionState(PositionStateTypes.POSITION_KNOWN);
                     }
                     window.removeEventListener('deviceorientation', this.handleDeviceOrientationReference);
@@ -378,9 +474,10 @@ export class MyPositionComponent {
                 this.currentPosition = modernProvider.currentPosition!;
                 this.positionIsAccurate = this.currentPosition.coords.accuracy <= this.options.maxAccuracy;
 
+                // Don't override FOLLOW state - let the event handler manage it
                 if (this.positionState === PositionStateTypes.POSITION_TRACKED) {
                     this.setPositionState(PositionStateTypes.POSITION_UNTRACKED);
-                } else if (this.positionState !== PositionStateTypes.POSITION_UNTRACKED) {
+                } else if (this.positionState !== PositionStateTypes.POSITION_UNTRACKED && this.positionState !== PositionStateTypes.POSITION_FOLLOW) {
                     this.setPositionState(PositionStateTypes.POSITION_KNOWN);
                 }
                 window.removeEventListener('deviceorientation', this.handleDeviceOrientationReference);
@@ -394,12 +491,15 @@ export class MyPositionComponent {
                 // Check if this is an empty object case vs a provider that lost position
                 // If currentPosition is null, it's likely an empty object case - stay unknown
                 // If currentPosition exists but is invalid, it's a provider that lost position - request position
-                if (modernProvider.currentPosition === null) {
-                    // Provider was never given position data (empty object case) - stay unknown
-                    this.setPositionState(PositionStateTypes.POSITION_UNKNOWN);
-                } else {
-                    // Provider had position data but it's now invalid - request position
-                    this.setPositionState(PositionStateTypes.POSITION_REQUESTING);
+                // Don't override FOLLOW state
+                if (this.positionState !== PositionStateTypes.POSITION_FOLLOW) {
+                    if (modernProvider.currentPosition === null) {
+                        // Provider was never given position data (empty object case) - stay unknown
+                        this.setPositionState(PositionStateTypes.POSITION_UNKNOWN);
+                    } else {
+                        // Provider had position data but it's now invalid - request position
+                        this.setPositionState(PositionStateTypes.POSITION_REQUESTING);
+                    }
                 }
             }
         }
@@ -447,10 +547,17 @@ export class MyPositionComponent {
                 this.panToCurrentPosition();
                 break;
             case PositionStateTypes.POSITION_CENTERED:
-                if (this.canBeTracked) {
+                // Check if we have a customPositionProvider to enable FOLLOW mode
+                if (this.customPositionProvider && this.isValidPositionProvider(this.customPositionProvider)) {
+                    this.setPositionState(PositionStateTypes.POSITION_FOLLOW);
+                } else if (this.canBeTracked) {
                     this.setPositionState(PositionStateTypes.POSITION_TRACKED);
                 }
                 this.panToCurrentPosition();
+                break;
+            case PositionStateTypes.POSITION_FOLLOW:
+                // Exit FOLLOW mode and return to KNOWN state
+                this.setPositionState(PositionStateTypes.POSITION_KNOWN);
                 break;
             case PositionStateTypes.POSITION_TRACKED:
                 this.mapView.tilt(0);
@@ -649,7 +756,8 @@ export class MyPositionComponent {
                             ${this.positionState === PositionStateTypes.POSITION_KNOWN ? 'mi-my-position__position-button--known' : ''}
                             ${this.positionState === PositionStateTypes.POSITION_CENTERED ? 'mi-my-position__position-button--centered' : ''}
                             ${this.positionState === PositionStateTypes.POSITION_TRACKED ? 'mi-my-position__position-button--tracked' : ''}
-                            ${this.positionState === PositionStateTypes.POSITION_UNTRACKED ? 'mi-my-position__position-button--untracked' : ''}`}
+                            ${this.positionState === PositionStateTypes.POSITION_UNTRACKED ? 'mi-my-position__position-button--untracked' : ''}
+                            ${this.positionState === PositionStateTypes.POSITION_FOLLOW ? 'mi-my-position__position-button--follow' : ''}`}
                         onClick={(event): void => this.onPositionButtonClicked(event)}></button>
                     <button
                         ref={(el): HTMLButtonElement => this.compassButton = el as HTMLButtonElement}
