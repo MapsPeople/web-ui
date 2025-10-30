@@ -593,6 +593,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 window.mapsindoors.services.LocationsService.getLocation(kioskOriginLocationId).then(kioskLocation => {
                     setCurrentVenueName(kioskLocation.properties.venueId);
                     setKioskLocation(kioskLocation);
+                    mapsIndoorsInstance?.setNonCollidingLocation(kioskLocation)
                 })
             } else {
                 setKioskLocation();
@@ -606,7 +607,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 setShowPositionControl(true);
             }
         }
-    }, [kioskOriginLocationId, mapsindoorsSDKAvailable]);
+    }, [kioskOriginLocationId, mapsindoorsSDKAvailable, mapsIndoorsInstance]);
 
     /*
      * React on changes to the timeout prop
