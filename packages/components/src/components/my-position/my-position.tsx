@@ -2,7 +2,7 @@ import { Component, Host, JSX, Prop, Event, EventEmitter, State, h, Method } fro
 import { UAParser, IDevice } from 'ua-parser-js';
 import merge from 'deepmerge';
 import { GeoLocationProvider as PositionProvider } from './GeoLocationProvider';
-import { IPositionProvider } from '../../types/position-provider.interface';
+import { IPositionProvider, MapsIndoorsPosition } from '../../types/position-provider.interface';
 import { VenueBuilding } from '../../types/venue-building.interface';
 
 enum PositionStateTypes {
@@ -60,9 +60,9 @@ export class MyPositionComponent {
 
     /**
      * The current position of the device if received.
-     * We use the format for GeoLocationPosition ({@link https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition GeolocationPosition}).
+     * We use the format for MapsIndoorsPosition which extends GeolocationPosition with floorIndex support.
      */
-    private currentPosition: GeolocationPosition;
+    private currentPosition: MapsIndoorsPosition;
 
     /**
      * Whether the currently known position is accurate enough to show on the map.
@@ -94,7 +94,7 @@ export class MyPositionComponent {
      * Reference to the modern provider's onPositionReceived event handler.
      * Stored to enable proper cleanup when component disconnects or provider changes.
      */
-    private onPositionReceivedHandler: ((event: { position: GeolocationPosition }) => void) | null = null;
+    private onPositionReceivedHandler: ((event: { position: MapsIndoorsPosition }) => void) | null = null;
 
     /**
      * Reference to the modern provider's onPositionError event handler.
@@ -177,7 +177,7 @@ export class MyPositionComponent {
         const modernProvider = this.positionProvider;
 
         // Create and store event handler references
-        this.onPositionReceivedHandler = ({ position }: { position: GeolocationPosition }): void => {
+        this.onPositionReceivedHandler = ({ position }: { position: MapsIndoorsPosition }): void => {
             this.currentPosition = position;
             this.positionIsAccurate = position.coords.accuracy <= this.options.maxAccuracy;
 
@@ -218,7 +218,7 @@ export class MyPositionComponent {
      * to ensure we're working with the validated, active provider.
      */
     @Method()
-    public async setPosition(position: GeolocationPosition): Promise<void> {
+    public async setPosition(position: MapsIndoorsPosition): Promise<void> {
         if (this.positionProvider?.setPosition) {
             this.positionProvider.setPosition(position);
         }
@@ -306,7 +306,7 @@ export class MyPositionComponent {
      * Automatically pans the map and changes floors without user interaction listeners.
      * Device orientation is handled by the existing handleDeviceOrientation method.
      */
-    private handleFollowModePosition(position: GeolocationPosition): void {
+    private handleFollowModePosition(position: MapsIndoorsPosition): void {
         if (!this.hasValidPosition()) {
             return;
         }
@@ -315,9 +315,9 @@ export class MyPositionComponent {
         this.mapView.panTo({ lat: position.coords.latitude, lng: position.coords.longitude });
 
         // Check for floor changes if floorIndex is provided
-        if ((position as any).floorIndex !== undefined && this.mapsindoors) {
+        if (position.floorIndex !== undefined && position.floorIndex !== null && this.mapsindoors) {
             const currentFloor = this.mapsindoors.getFloor();
-            const newFloor = parseInt((position as any).floorIndex.toString(), 10);
+            const newFloor = parseInt(position.floorIndex.toString(), 10);
 
             // Only change floor if it's different and valid for the current building
             if (newFloor !== currentFloor && this.isValidFloorForCurrentBuilding(newFloor)) {
