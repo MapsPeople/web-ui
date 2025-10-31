@@ -233,8 +233,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             const miSdkApiTag = document.createElement('script');
             miSdkApiTag.setAttribute('type', 'text/javascript');
-            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.43.0/mapsindoors-4.43.0.js.gz');
-            miSdkApiTag.setAttribute('integrity', 'sha384-oYV8UaRtMuQS64N5HKKvnD3TgtXhBwcftD8H7FbZbkRrYeY1TRMJoSkdmBfDCXts');
+            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.44.0/mapsindoors-4.44.0.js.gz');
+            miSdkApiTag.setAttribute('integrity', 'sha384-/ZRxx7LCIh/fvYh6TqzmouebDz6otFhor2eNIBrL1mZllzOKuQ5TKwuvupJm8UEa');
             miSdkApiTag.setAttribute('crossorigin', 'anonymous');
             document.body.appendChild(miSdkApiTag);
             miSdkApiTag.onload = () => {
@@ -593,6 +593,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 window.mapsindoors.services.LocationsService.getLocation(kioskOriginLocationId).then(kioskLocation => {
                     setCurrentVenueName(kioskLocation.properties.venueId);
                     setKioskLocation(kioskLocation);
+                    mapsIndoorsInstance?.setNonCollidingLocation(kioskLocation)
                 })
             } else {
                 setKioskLocation();
@@ -606,7 +607,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 setShowPositionControl(true);
             }
         }
-    }, [kioskOriginLocationId, mapsindoorsSDKAvailable]);
+    }, [kioskOriginLocationId, mapsindoorsSDKAvailable, mapsIndoorsInstance]);
 
     /*
      * React on changes to the timeout prop
