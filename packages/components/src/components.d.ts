@@ -9,7 +9,7 @@ import { SortOrder } from "./enums/sort-order.enum";
 import { UnitSystem } from "./enums/unit-system.enum";
 import { Location } from "@mapsindoors/typescript-interfaces";
 import { LocationBookingDuration } from "./enums/location-booking-duration.enum";
-import { IPositionProvider } from "./types/position-provider.interface";
+import { IPositionProvider, MapsIndoorsPosition } from "./types/position-provider.interface";
 import { NotificationPosition } from "./enums/notification-position.enum";
 import { NotificationMessage } from "./types/notification-message.interface";
 import { NotificationType } from "./enums/notification-type.enum";
@@ -639,7 +639,7 @@ export namespace Components {
         /**
           * Sets a custom position. Works with any provider that implements setPosition. Uses this.positionProvider (the resolved provider) instead of this.customPositionProvider to ensure we're working with the validated, active provider.
          */
-        "setPosition": (position: GeolocationPosition) => Promise<void>;
+        "setPosition": (position: MapsIndoorsPosition) => Promise<void>;
         /**
           * Method for requesting the current position, emitting events and showing position on map based on result.
           * @param selfInvoked - Used to track if call was invoked by clicking on position control or not.

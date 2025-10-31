@@ -1,4 +1,15 @@
 /**
+ * Extended GeolocationPosition interface that includes MapsIndoors-specific floor index property.
+ */
+export interface MapsIndoorsPosition extends GeolocationPosition {
+    /**
+     * Floor index for MapsIndoors buildings.
+     * This property is added by custom position providers to support floor change tracking.
+     */
+    floorIndex?: number | string | null;
+}
+
+/**
  * Position provider options interface matching the documentation.
  */
 export interface PositionProviderOptions {
@@ -34,12 +45,12 @@ export interface IPositionProvider {
     stopListeningForPosition?(): void;
 
     // Modern event-style interface (matches documentation)
-    currentPosition?: GeolocationPosition | null;
+    currentPosition?: MapsIndoorsPosition | null;
     options?: PositionProviderOptions;
     hasValidPosition?(): boolean;
     on?(eventName: 'position_error' | 'position_received', callback: Function): void;
     off?(eventName: 'position_error' | 'position_received', callback: Function): void;
 
     // Helper method for manual position setting (optional)
-    setPosition?(position: GeolocationPosition): void;
+    setPosition?(position: MapsIndoorsPosition): void;
 }
