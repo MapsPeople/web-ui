@@ -1,7 +1,8 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import currentLocationState from '../../atoms/currentLocationState';
 import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
+import filteredLocationsState from '../../atoms/filteredLocationsState';
 import Modal from './Modal/Modal';
 import LocationDetails from '../LocationDetails/LocationDetails';
 import Wayfinding from '../Wayfinding/Wayfinding';
@@ -42,6 +43,7 @@ Sidebar.propTypes = {
 function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews, onRouteFinished }) {
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
+    const [, setFilteredLocations] = useRecoilState(filteredLocationsState);
     const [, setLocationId] = useRecoilState(locationIdState);
     const kioskLocation = useRecoilValue(kioskLocationState)
 
@@ -105,6 +107,33 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
         }
     }
 
+    /**
+     * Handle chat search results by fetching Location objects from IDs and setting them in filteredLocations state.
+     * This will trigger the MapWrapper to highlight these locations on the map.
+     *
+     * @param {Array<string>} locationIds - Array of MapsIndoors location IDs
+     */
+    const handleChatSearchResults = useCallback(async (locationIds) => {
+        if (!locationIds || locationIds.length === 0) {
+            setFilteredLocations([]);
+            return;
+        }
+
+        try {
+            const promises = locationIds.map(id =>
+                window.mapsindoors.services.LocationsService.getLocation(id)
+            );
+            const locations = await Promise.all(promises);
+            const validLocations = locations.filter(location => location !== null);
+
+            // Set the locations in filteredLocations state
+            // MapWrapper will automatically watch this state and highlight the locations on the map
+            setFilteredLocations(validLocations);
+        } catch (error) {
+            setFilteredLocations([]);
+        }
+    }, [setFilteredLocations]);
+
     const pages = [
         <Modal isOpen={currentAppView === appViews.SEARCH} key="SEARCH">
             <Search 
@@ -147,10 +176,7 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
             <ChatWindow
                 isVisible={currentAppView === appViews.CHAT}
                 onClose={() => pushAppView(appViews.SEARCH)}
-                onSearchResults={(locationIds) => {
-                    console.log('Sidebar: Received chat search results:', locationIds);
-                    // TODO: Implement location highlighting on map
-                }}
+                onSearchResults={handleChatSearchResults}
                 onShowRoute={(directionIds) => {
                     console.log('Sidebar: Received chat directions:', directionIds);
                     // TODO: Implement wayfinding with origin/destination location IDs
