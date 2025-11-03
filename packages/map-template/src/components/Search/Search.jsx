@@ -614,6 +614,24 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
     }, [appConfig]);
 
     /**
+     * Reset component state when search view is opened (returns from other views).
+     * Since the component is never unmounted, we need to manually reset state.
+     */
+    useEffect(() => {
+        if (isOpen) {
+            // Reset local state to initial values
+            setShowNotFoundMessage(false);
+            setIsInputFieldInFocus(false);
+            setShowAskWithAiButton(false);
+            setSearchDisabled(true);
+            // Clear search results to show fresh state
+            setSearchResults([]);
+            // Clear search field if needed
+            searchFieldRef.current?.clear();
+        }
+    }, [isOpen, setSearchResults]);
+
+    /**
      * Handle Enter key press on search input field to open chat when "Ask with AI" button is visible.
      */
     useEffect(() => {
