@@ -43,26 +43,35 @@
         background-color: white;
     }
 
-    &__chat-button {
-        width: var(--spacing-xxx-large);
-        height: var(--spacing-xxx-large);
-        border: 1px solid var(--color-gray-30);
+    &__ask-ai-button {
+        margin-top: var(--spacing-small);
+        padding: var(--spacing-small) var(--spacing-medium);
+        width: 100%;
+        background-color: var(--ask-ai-button-primary-color);
+        color: white;
+        border: none;
         border-radius: var(--rounding-large);
-        background-color: white;
+        font-size: var(--font-size-medium);
+        font-weight: var(--font-weight-large);
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: var(--font-size-large);
-        cursor: pointer;
-        transition: all 0.2s ease;
+        gap: var(--spacing-x-small);
+
+        svg {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
 
         &:hover {
-            background-color: var(--color-gray-10);
-            border-color: var(--color-gray-40);
+            opacity: 0.9;
         }
 
         &:active {
-            transform: scale(0.95);
+            opacity: 0.8;
         }
     }
 

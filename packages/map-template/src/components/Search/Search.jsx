@@ -28,12 +28,14 @@ import Categories from './Categories/Categories';
 import { useIsKioskContext } from '../../hooks/useIsKioskContext';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
 import { ReactComponent as Legend } from '../../assets/legend.svg';
+import { ReactComponent as AskWithAiIcon } from '../../assets/ask-with-ai-icon.svg';
 import isLegendDialogVisibleState from '../../atoms/isLegendDialogVisibleState';
 import legendSortedFieldsSelector from '../../selectors/legendSortedFieldsSelector';
 import searchAllVenuesState from '../../atoms/searchAllVenues';
 import isNullOrUndefined from '../../helpers/isNullOrUndefined';
 import venuesInSolutionState from '../../atoms/venuesInSolutionState';
 import initialVenueNameState from '../../atoms/initialVenueNameState';
+import primaryColorState from '../../atoms/primaryColorState';
 import PropTypes from 'prop-types';
 
 Search.propTypes = {
@@ -74,6 +76,7 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
     const [searchDisabled, setSearchDisabled] = useState(true);
     const [searchResults, setSearchResults] = useRecoilState(searchResultsState);
     const categories = useRecoilValue(categoriesState);
+    const primaryColor = useRecoilValue(primaryColorState);
     const useKeyboard = useRecoilValue(useKeyboardState);
 
     /** Indicate if search results have been found */
@@ -121,6 +124,8 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
     const initialVenueName = useRecoilValue(initialVenueNameState);
 
     const [isInputFieldInFocus, setIsInputFieldInFocus] = useState(false);
+
+    const [showAskWithAiButton, setShowAskWithAiButton] = useState(false);
 
     const selectedCategoriesArray = useRef([]);
 
@@ -285,11 +290,26 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
     }
 
     /**
+     * Handle search field value changes to control "Ask with AI" button visibility.
+     */
+    function handleSearchChanged() {
+        if (searchFieldRef.current && isInputFieldInFocus) {
+            const currentValue = searchFieldRef.current.getValue();
+            const characterCount = currentValue ? currentValue.length : 0;
+            // Show button when character count is greater than 5
+            setShowAskWithAiButton(characterCount > 5);
+        } else {
+            setShowAskWithAiButton(false);
+        }
+    }
+
+    /**
      * Clear results list when search field is cleared.
      */
     function cleared() {
         setSearchResults([]);
         setShowNotFoundMessage(false);
+        setShowAskWithAiButton(false);
         if (selectedCategory) {
             getFilteredLocations(selectedCategory);
         }
@@ -316,10 +336,12 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
             sheet.addEventListener('transitionend', () => {
                 searchFieldRef.current.focusInput();
                 setIsInputFieldInFocus(true);
+                handleSearchChanged();
             }, { once: true });
         } else {
             searchFieldRef.current.focusInput();
             setIsInputFieldInFocus(true);
+            handleSearchChanged();
         }
     }
 
@@ -451,9 +473,11 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
                 setSize(snapPoints.MAX);
                 requestAnimationFrameId.current = requestAnimationFrame(() => { // we use a requestAnimationFrame to ensure that the size change is applied before the focus (meaning that categories are rendered)
                     setIsInputFieldInFocus(true);
+                    handleSearchChanged();
                 });
             } else if (!clickedInsideResults && !clickedInsideIgnoreArea) {
                 setIsInputFieldInFocus(false);
+                setShowAskWithAiButton(false);
                 setSize(snapPoints.MIN);
                 setSelectedCategory(null);
                 setSearchResults([]);
@@ -589,6 +613,35 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
         setAreHorizontalCategoriesEnabled(appConfig?.appSettings?.areHorizontalCategoriesEnabled === true || appConfig?.appSettings?.areHorizontalCategoriesEnabled === 'true');
     }, [appConfig]);
 
+    /**
+     * Handle Enter key press on search input field to open chat when "Ask with AI" button is visible.
+     */
+    useEffect(() => {
+        if (!searchInput || !isInputFieldInFocus || !showAskWithAiButton) {
+            return;
+        }
+
+        const handleKeyDown = (event) => {
+            if (event.key === 'Enter' && onOpenChat) {
+                event.preventDefault();
+                const searchValue = (event.target?.value || searchInput?.value || '').trim();
+                if (searchValue) {
+                    setInitialMessage(searchValue);
+                    searchFieldRef.current?.clear();
+                    onOpenChat();
+                }
+            }
+        };
+
+        searchInput.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            if (searchInput) {
+                searchInput.removeEventListener('keydown', handleKeyDown);
+            }
+        };
+    }, [searchInput, isInputFieldInFocus, showAskWithAiButton, onOpenChat, setInitialMessage]);
+
 
     return (
         <div className="search"
@@ -610,29 +663,33 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
                         results={locations => onResults(locations)}
                         clicked={() => searchFieldClicked()}
                         cleared={() => cleared()}
+                        changed={() => handleSearchChanged()}
                         category={selectedCategory}
                         disabled={searchDisabled} // Disabled initially to prevent content jumping when clicking and changing sheet size.
                     />
                 </label>
-
-                {/* Chat button */}
-                <button
-                    className="search__chat-button"
-                    onClick={() => {
-                        if (onOpenChat) {
-                            const searchValue = searchFieldRef.current?.getValue()?.trim() || '';
-                            setInitialMessage(searchValue);
-                            searchFieldRef.current?.clear();
-                            onOpenChat();
-                        }
-                    }}
-                    type="button"
-                    aria-label="Open AI chat"
-                    title="Ask with AI"
-                >
-                    💬
-                </button>
             </div>
+
+            {/* Only show when input is in focus and has more than 5 characters */}
+            {isInputFieldInFocus && showAskWithAiButton && (
+                <button
+                    className="search__ask-ai-button"
+                    style={{ '--ask-ai-button-primary-color': primaryColor }}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        if (onOpenChat) {
+                            const searchValue = (searchInput?.value || searchFieldRef.current?.getValue() || '').trim();
+                            if (searchValue) {
+                                setInitialMessage(searchValue);
+                                searchFieldRef.current?.clear();
+                                onOpenChat();
+                            }
+                        }
+                    }}type="button" aria-label={t('Ask with AI')} title={t('Ask with AI')}>
+                    <AskWithAiIcon />
+                    {t('Ask with AI')}
+                </button>
+            )}
 
             {/* Vertical list of Categories */}
             {/* Show full category list if (kiosk mode and showCategoriesUnderSearch is true) OR input is in focus, and only when searchResults are empty */}
@@ -647,8 +704,8 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
                 />
             )}
 
-            {/* Message shown if no search results were found */}
-            {showNotFoundMessage && <p className="search__error"> {t('Nothing was found')}</p>}
+            {/* Message shown if no search results were found or if the ask with AI button is shown */}
+            {!showAskWithAiButton && showNotFoundMessage && <p className="search__error"> {t('Nothing was found')}</p>}
 
             {/* When search results are found (category is selected or search term is used) */}
             {searchResults.length > 0 && (
