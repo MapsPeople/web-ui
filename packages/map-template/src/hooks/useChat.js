@@ -110,10 +110,10 @@ function changeFloorIfNeeded(validLocations, mapsIndoorsInstance) {
         
         // Find which floor has the most locations
         let mostCommonFloor = null;
-        let highestCount = 0;
+        let maxLocationsPerFloor = 0;
         for (const [floor, count] of Object.entries(floorCounts)) {
-            if (count > highestCount) {
-                highestCount = count;
+            if (count > maxLocationsPerFloor) {
+                maxLocationsPerFloor = count;
                 mostCommonFloor = floor;
             }
         }
