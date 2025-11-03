@@ -7,16 +7,58 @@ import hasFoundRouteState from '../atoms/hasFoundRouteState';
 import travelModeState from '../atoms/travelModeState';
 import accessibilityOnState from '../atoms/accessibilityOnState';
 import shuttleBusOnState from '../atoms/shuttleBusOnState';
+import mapsIndoorsInstanceState from '../atoms/mapsIndoorsInstanceState';
+import currentVenueNameState from '../atoms/currentVenueNameState';
+import kioskLocationState from '../atoms/kioskLocationState';
 import getLocationPoint from '../helpers/GetLocationPoint';
+import getDesktopPaddingLeft from '../helpers/GetDesktopPaddingLeft';
+import getDesktopPaddingBottom from '../helpers/GetDesktopPaddingBottom';
+import fitMapBoundsToLocations from '../helpers/FitMapBoundsToLocations';
+import { useIsDesktop } from './useIsDesktop';
 
 /**
  * Hook to handle chat search results by fetching Location objects from IDs
  * and setting them in filteredLocations state for highlighting on the map.
+ * Also pans the map to fit the bounds of the locations.
  *
  * @returns {function} handleChatSearchResults - Callback function to handle search results
  */
 export const useChatLocations = () => {
     const [, setFilteredLocations] = useRecoilState(filteredLocationsState);
+    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
+    const currentVenueName = useRecoilValue(currentVenueNameState);
+    const kioskLocation = useRecoilValue(kioskLocationState);
+    const isDesktop = useIsDesktop();
+
+    /**
+     * Calculate padding for map bounds based on context (desktop/mobile, kiosk mode).
+     * Returns promises that resolve to padding values.
+     *
+     * @returns {Promise<[number, number]>} - Promise that resolves to [bottomPadding, leftPadding]
+     */
+    const calculatePadding = useCallback(async () => {
+        const getBottomPadding = async () => {
+            if (isDesktop) {
+                if (kioskLocation) {
+                    return await getDesktopPaddingBottom();
+                }
+                return 0;
+            }
+            return 200;
+        };
+
+        const getLeftPadding = async () => {
+            if (isDesktop) {
+                if (kioskLocation) {
+                    return 0;
+                }
+                return await getDesktopPaddingLeft();
+            }
+            return 0;
+        };
+
+        return Promise.all([getBottomPadding(), getLeftPadding()]);
+    }, [isDesktop, kioskLocation]);
 
     const handleChatSearchResults = useCallback(async (locationIds) => {
         if (!locationIds || locationIds.length === 0) {
@@ -34,11 +76,17 @@ export const useChatLocations = () => {
             // Set the locations in filteredLocations state
             // MapWrapper will automatically watch this state and highlight the locations on the map
             setFilteredLocations(validLocations);
+
+            // Pan the map to fit the bounds of the locations
+            if (validLocations.length > 0 && mapsIndoorsInstance) {
+                const [bottomPadding, leftPadding] = await calculatePadding();
+                await fitMapBoundsToLocations(validLocations, mapsIndoorsInstance, currentVenueName, bottomPadding, leftPadding);
+            }
         } catch (error) {
             console.error('useChatLocations: Error fetching locations:', error);
             setFilteredLocations([]);
         }
-    }, [setFilteredLocations]);
+    }, [setFilteredLocations, mapsIndoorsInstance, currentVenueName, calculatePadding]);
 
     return handleChatSearchResults;
 };
