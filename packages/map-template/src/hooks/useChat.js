@@ -30,36 +30,6 @@ export const useChatLocations = () => {
     const kioskLocation = useRecoilValue(kioskLocationState);
     const isDesktop = useIsDesktop();
 
-    /**
-     * Calculate padding for map bounds based on context (desktop/mobile, kiosk mode).
-     * Returns promises that resolve to padding values.
-     *
-     * @returns {Promise<[number, number]>} - Promise that resolves to [bottomPadding, leftPadding]
-     */
-    const calculatePadding = useCallback(async () => {
-        const getBottomPadding = async () => {
-            if (isDesktop) {
-                if (kioskLocation) {
-                    return await getDesktopPaddingBottom();
-                }
-                return 0;
-            }
-            return 200;
-        };
-
-        const getLeftPadding = async () => {
-            if (isDesktop) {
-                if (kioskLocation) {
-                    return 0;
-                }
-                return await getDesktopPaddingLeft();
-            }
-            return 0;
-        };
-
-        return Promise.all([getBottomPadding(), getLeftPadding()]);
-    }, [isDesktop, kioskLocation]);
-
     const handleChatSearchResults = useCallback(async (locationIds) => {
         if (!locationIds || locationIds.length === 0) {
             setFilteredLocations([]);
@@ -67,29 +37,92 @@ export const useChatLocations = () => {
         }
 
         try {
-            const promises = locationIds.map(id =>
+            const locationPromises = locationIds.map(id =>
                 window.mapsindoors.services.LocationsService.getLocation(id)
             );
-            const locations = await Promise.all(promises);
+            const locations = await Promise.all(locationPromises);
             const validLocations = locations.filter(location => location !== null);
 
             // Set the locations in filteredLocations state
             // MapWrapper will automatically watch this state and highlight the locations on the map
             setFilteredLocations(validLocations);
 
-            // Pan the map to fit the bounds of the locations
-            if (validLocations.length > 0 && mapsIndoorsInstance) {
-                const [bottomPadding, leftPadding] = await calculatePadding();
+            // Pan the map to fit the bounds of the locations only if we have valid locations
+            if (validLocations.length > 0 && mapsIndoorsInstance) {                
+                // Calculate padding for map bounds based on context (desktop/mobile, kiosk mode)
+                const getBottomPadding = async () => {
+                    if (isDesktop) {
+                        if (kioskLocation) {
+                            return await getDesktopPaddingBottom();
+                        }
+                        return 0;
+                    }
+                    return 200;
+                };
+
+                const getLeftPadding = async () => {
+                    if (isDesktop) {
+                        if (kioskLocation) {
+                            return 0;
+                        }
+                        return await getDesktopPaddingLeft();
+                    }
+                    return 0;
+                };
+
+                // Determine if we require to change the floor
+                changeFloorIfNeeded(validLocations, mapsIndoorsInstance);
+
+                const [bottomPadding, leftPadding] = await Promise.all([getBottomPadding(), getLeftPadding()]);
                 await fitMapBoundsToLocations(validLocations, mapsIndoorsInstance, currentVenueName, bottomPadding, leftPadding);
             }
         } catch (error) {
             console.error('useChatLocations: Error fetching locations:', error);
             setFilteredLocations([]);
         }
-    }, [setFilteredLocations, mapsIndoorsInstance, currentVenueName, calculatePadding]);
+    }, [setFilteredLocations, mapsIndoorsInstance, currentVenueName, isDesktop, kioskLocation]);
 
     return handleChatSearchResults;
 };
+
+/**
+ * Changes the map floor if no locations are on the current floor.
+ * If the current floor doesn't match any location's floor, changes to the floor that has the most locations.
+ * 
+ * @param {Array<Object>} validLocations - Array of Location objects
+ * @param {object} mapsIndoorsInstance - MapsIndoors instance
+ */
+function changeFloorIfNeeded(validLocations, mapsIndoorsInstance) {
+    const currentFloorIndex = mapsIndoorsInstance.getFloor();
+    const locationFloorIndices = validLocations.map(location => location.properties.floor);
+    
+    // Check if any location is on the current floor
+    const hasCurrentFloor = locationFloorIndices.some(floor => String(floor) === String(currentFloorIndex));
+    
+    // If no locations are on the current floor, change to the most common floor
+    if (!hasCurrentFloor && locationFloorIndices.length > 0) {
+        // Count how many locations are on each floor
+        const floorCounts = {};
+        for (const floor of locationFloorIndices) {
+            const floorString = String(floor);
+            floorCounts[floorString] = (floorCounts[floorString] || 0) + 1;
+        }
+        
+        // Find which floor has the most locations
+        let mostCommonFloor = null;
+        let highestCount = 0;
+        for (const [floor, count] of Object.entries(floorCounts)) {
+            if (count > highestCount) {
+                highestCount = count;
+                mostCommonFloor = floor;
+            }
+        }
+        
+        if (mostCommonFloor !== null) {
+            mapsIndoorsInstance.setFloor(mostCommonFloor);
+        }
+    }
+}
 
 /**
  * Hook to handle chat directions by fetching Location objects from IDs,
