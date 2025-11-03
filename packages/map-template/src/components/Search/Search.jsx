@@ -4,6 +4,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import appConfigState from '../../atoms/appConfigState';
 import categoriesState from '../../atoms/categoriesState';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
+import { useInitialChatMessage } from '../../hooks/useInitialChatMessage';
 import { snapPoints } from '../../constants/snapPoints';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
@@ -103,6 +104,7 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
     const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
 
     const searchInput = useRecoilValue(searchInputState);
+    const { setInitialMessage, } = useInitialChatMessage();
 
     const isKioskContext = useIsKioskContext();
 
@@ -616,7 +618,14 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
                 {/* Chat button */}
                 <button
                     className="search__chat-button"
-                    onClick={() => onOpenChat && onOpenChat()}
+                    onClick={() => {
+                        if (onOpenChat) {
+                            const searchValue = searchFieldRef.current?.getValue()?.trim() || '';
+                            setInitialMessage(searchValue);
+                            searchFieldRef.current?.clear();
+                            onOpenChat();
+                        }
+                    }}
                     type="button"
                     aria-label="Open AI chat"
                     title="Ask with AI"

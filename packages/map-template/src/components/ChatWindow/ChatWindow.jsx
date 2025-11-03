@@ -2,6 +2,7 @@ import { useEffect, useRef, useLayoutEffect, useMemo, useCallback, useState } fr
 import { useGemini } from '../../providers/GeminiProvider';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import chatHistoryState from '../../atoms/chatHistoryState';
+import { useInitialChatMessage } from '../../hooks/useInitialChatMessage';
 import PropTypes from 'prop-types';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -194,7 +195,8 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     const chatWindowRef = useRef(null);
     const chatMessagesRef = useRef(null);
     const inputRef = useRef(null);
-    
+    const { getInitialMessage, clearInitialMessage } = useInitialChatMessage();
+
     // Local state for input field
     const [inputValue, setInputValue] = useState('');
 
@@ -203,7 +205,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
 
     // Use Gemini provider
     const { generateResponse, isLoading, tools, searchResults, directionsLocationIds } = useGemini();
-    
+
     // Use Recoil for chat history
     const [chatHistory, setChatHistory] = useRecoilState(chatHistoryState);
 
@@ -280,59 +282,59 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
         if (chatWindowRef.current && chatMessagesRef.current) {
             const chatWindow = chatWindowRef.current;
             const messagesContainer = chatMessagesRef.current;
-            
+
             // Find the search container to update grid row
             const searchContainer = chatWindow.closest('.search.chat-mode-enabled');
-            
+
             const adjustHeight = () => {
                 requestAnimationFrame(() => {
                     // Calculate total height of all message elements
                     const messageElements = messagesContainer.querySelectorAll('.chat-window__message, .chat-window__message--loading');
                     let totalMessagesHeight = 0;
-                    
+
                     messageElements.forEach(element => {
                         totalMessagesHeight += element.offsetHeight;
                     });
-                    
+
                     // Add gap between messages (from SCSS: gap: var(--spacing-small))
                     const gapCount = Math.max(0, messageElements.length - 1);
                     const gapSize = 8; // Approximate spacing-small
                     const totalGaps = gapCount * gapSize;
-                    
+
                     // Get header height if it exists
                     const header = chatWindow.querySelector('.chat-window__header');
                     const headerHeight = header ? header.offsetHeight : 0;
-                    
+
                     // Calculate desired height (messages + gaps + header + padding)
                     const messagePadding = 16; // padding-top on messages container
                     const desiredHeight = totalMessagesHeight + totalGaps + headerHeight + messagePadding;
-                    
+
                     // Constrain between min and max
                     const minHeight = 150;
                     // Changing this max height will affect the max height of the search container, pushing up the search__info out of view
                     const maxHeight = 600;
                     const finalHeight = Math.min(Math.max(desiredHeight, minHeight), maxHeight);
-                    
+
                     // Update both the chat-window height AND the grid row
                     chatWindow.style.height = `${finalHeight}px`;
-                    
+
                     // Update the grid template rows (search__info: 50px, chat-window: dynamic)
                     if (searchContainer) {
                         searchContainer.style.gridTemplateRows = `50px ${finalHeight}px`;
                     }
                 });
             };
-            
+
             // Adjust height on mount and when content changes
             adjustHeight();
-            
+
             // Watch for content size changes
             const resizeObserver = new ResizeObserver(() => {
                 adjustHeight();
             });
-            
+
             resizeObserver.observe(messagesContainer);
-            
+
             return () => resizeObserver.disconnect();
         }
     }, [chatHistory, isLoading]);
@@ -342,7 +344,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     useLayoutEffect(() => {
         if (chatMessagesRef.current) {
             const container = chatMessagesRef.current;
-            
+
             const scrollToBottom = () => {
                 requestAnimationFrame(() => {
                     container.scrollTo({
@@ -351,38 +353,39 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                     });
                 });
             };
-            
+
             // Check if the last message is a server message (which might have async content)
-            const isLastMessageServer = chatHistory.length > 0 && 
+            const isLastMessageServer = chatHistory.length > 0 &&
                 chatHistory[chatHistory.length - 1]?.type === 'server';
-            
+
             // Initial scroll
             scrollToBottom();
-            
+
             // For server messages, add a delayed scroll to catch async content
             if (isLastMessageServer) {
                 setTimeout(scrollToBottom, 300);
             }
-            
+
             // Watch for content size changes (e.g., when ChatSearchResults renders)
             const resizeObserver = new ResizeObserver(() => {
                 scrollToBottom();
             });
-            
+
             resizeObserver.observe(container);
-            
+
             return () => resizeObserver.disconnect();
         }
     }, [chatHistory, isLoading]);
 
-    // Maybe expose a function to add messages, like onUserMessage, then pass it from the Search to the ChatWindow
-
     // Handle sending messages from input field
-    const handleSendMessage = useCallback(async () => {
-        if (!inputValue.trim() || isLoading) return;
+    // messageFromSearch is optional and can be used to send a message from the search field
+    // if it is not provided, the message from the input field is used
+    const handleSendMessage = useCallback(async (messageFromSearch) => {
+        const messageText = (messageFromSearch || inputValue).trim();
 
-        const messageText = inputValue.trim();
-        setInputValue(''); // Clear input immediately
+        if (!messageText || isLoading) return;
+
+        setInputValue('');
 
         const userMessage = {
             id: Date.now(),
@@ -415,7 +418,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                 }
             ]);
         }
-    }, [inputValue, isLoading, generateResponse, apiKey]);
+    }, [inputValue, isLoading, generateResponse, apiKey, tools]);
 
     // Handle Enter key in input field
     const handleKeyDown = useCallback((event) => {
@@ -424,6 +427,20 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
             handleSendMessage();
         }
     }, [handleSendMessage]);
+
+    // Automatically send initial message when chat opens with a message from search
+    // This is used to send the initial message from the search field when the chat window opens
+    useEffect(() => {
+        if (isVisible && !isLoading) {
+            const initialMessage = getInitialMessage();
+
+            if (initialMessage && initialMessage.trim()) {
+                const messageText = initialMessage.trim();
+                clearInitialMessage();
+                handleSendMessage(messageText);
+            }
+        }
+    }, [isVisible, isLoading, getInitialMessage, clearInitialMessage, handleSendMessage]);
 
 
     /**
