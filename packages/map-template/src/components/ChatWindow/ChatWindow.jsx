@@ -513,7 +513,6 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                         onKeyDown={handleKeyDown}
                         placeholder="Ask about locations, directions, or anything else..."
                         className="chat-window__input"
-                        disabled={isLoading}
                         rows={1}
                     />
                 </div>
