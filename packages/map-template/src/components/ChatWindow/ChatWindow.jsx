@@ -10,6 +10,7 @@ import './ChatWindow.scss';
 import primaryColorState from '../../atoms/primaryColorState';
 import apiKeyState from '../../atoms/apiKeyState';
 import ChatSearchResults from './ChatSearchResults/ChatSearchResults';
+import { ReactComponent as ChatModeIcon } from '../../assets/chat-mode-icon.svg';
 
 // Move prompt fields outside component to prevent recreation on every render
 const PROMPT_FIELDS = {
@@ -502,28 +503,20 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                     ×
                 </button>
             </div>}
-            <div ref={chatMessagesRef} className="chat-window__messages">
-                {chatMessages}
-                {isLoading && (
-                    <div className="chat-window__message chat-window__message--loading">
-                        <span className="loading-dot"></span>
-                        <span className="loading-dot"></span>
-                        <span className="loading-dot"></span>
-                        <span className="thinking-text">Thinking</span>
-                    </div>
-                )}
-            </div>
             <div className="chat-window__input-container">
-                <textarea
-                    ref={inputRef}
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    placeholder="Ask about locations, directions, or anything else..."
-                    className="chat-window__input"
-                    disabled={isLoading}
-                    rows={1}
-                />
+                <div className="chat-window__input-wrapper">
+                    <ChatModeIcon className="chat-window__input-icon" />
+                    <textarea
+                        ref={inputRef}
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        placeholder="Ask about locations, directions, or anything else..."
+                        className="chat-window__input"
+                        disabled={isLoading}
+                        rows={1}
+                    />
+                </div>
                 <button
                     type="button"
                     onClick={handleSendMessage}
@@ -534,6 +527,17 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                 >
                     Send
                 </button>
+            </div>
+            <div ref={chatMessagesRef} className="chat-window__messages">
+                {chatMessages}
+                {isLoading && (
+                    <div className="chat-window__message chat-window__message--loading">
+                        <span className="loading-dot"></span>
+                        <span className="loading-dot"></span>
+                        <span className="loading-dot"></span>
+                        <span className="thinking-text">Thinking</span>
+                    </div>
+                )}
             </div>
         </div>
     );
