@@ -210,6 +210,15 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     // Use Recoil for chat history
     const [chatHistory, setChatHistory] = useRecoilState(chatHistoryState);
 
+    // Focus input field
+    function focusInput() {
+        if (inputRef.current) {
+            requestAnimationFrame(() => {
+                inputRef.current?.focus();
+            });
+        }
+    }
+
     // Memoize the fetch locations function to prevent recreation on every render
     const fetchLocationsAndUpdateMessage = useCallback(async (searchResultIds) => {
         try {
@@ -378,6 +387,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                 const messageText = initialMessage.trim();
                 clearInitialMessage();
                 handleSendMessage(messageText);
+                focusInput();
             }
         }
     }, [isVisible, isLoading, getInitialMessage, clearInitialMessage, handleSendMessage]);
