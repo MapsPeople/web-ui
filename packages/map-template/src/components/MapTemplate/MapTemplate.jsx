@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { Fragment, useEffect, useRef } from 'react';
 import { useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -186,23 +185,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const directionsToLocation = useLocationForWayfinding(directionsTo);
 
     const [isMapPositionInvestigating, setIsMapPositionInvestigating] = useState(false);
-
-    // Chat window visibility state
-    const [isChatVisible, setIsChatVisible] = useState(false);
-
-    // Handle chat search results - highlight locations on map
-    const handleChatSearchResults = (locationIds) => {
-        console.log('MapTemplate: Received chat search results:', locationIds);
-        // TODO: Implement location highlighting on map
-        // This could use setFilteredLocations or map highlighting APIs
-    };
-
-    // Handle chat directions - trigger wayfinding
-    const handleChatDirections = (directionIds) => {
-        console.log('MapTemplate: Received chat directions:', directionIds);
-        // TODO: Implement wayfinding with origin/destination location IDs
-        // This could use setWayfindingLocation or similar state
-    };
 
     // The filtered locations by external id, if present.
     const [, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
