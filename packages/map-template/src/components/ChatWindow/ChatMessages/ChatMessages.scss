@@ -1,0 +1,136 @@
+.chat-messages {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-small);
+    padding: var(--spacing-medium) var(--spacing-small);
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 0;
+
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.chat-messages__message {
+    border-radius: var(--rounding-large);
+    font-size: var(--font-size-medium);
+    word-break: break-word;
+}
+
+.chat-messages__message--user {
+    padding: var(--spacing-x-small) var(--spacing-medium);
+    align-self: flex-end;
+    background-color: var(--chat-window-primary-color, #e6f7ff);
+    color: var(--color-white-white);
+    line-height: 1.5;
+}
+
+.chat-messages__message--server {
+    padding: var(--spacing-x-small) var(--spacing-small);
+    align-self: flex-start;
+    background-color: var(--color-gray-20);
+    color: var(--color-black-black);
+    line-height: 1.5;
+    display: flex;
+    flex-direction: column;
+
+    > *:first-child {
+        flex-shrink: 0;
+    }
+}
+
+.chat-messages__message--loading {
+    padding: var(--spacing-x-small) var(--spacing-small);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    align-self: flex-start;
+}
+
+.chat-messages__thinking-text {
+    color: var(--color-gray-60);
+    font-size: var(--font-size-medium);
+    padding-right: var(--spacing-x-small);
+}
+
+.chat-messages__loading-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--color-gray-60);
+    animation: chatMessagesFadeDot 1.2s infinite ease-in-out;
+
+    &:nth-child(1) {
+        animation-delay: 0s;
+    }
+
+    &:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+
+    &:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+}
+
+@keyframes chatMessagesFadeDot {
+    0%, 100% {
+        opacity: 0.3;
+    }
+    30% {
+        opacity: 1;
+    }
+    60% {
+        opacity: 0.6;
+    }
+}
+
+.chat-messages__directions-button {
+    margin-top: 12px;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.chat-messages__show-route-button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+
+    &:hover {
+        opacity: 0.9;
+    }
+
+    &:active {
+        opacity: 0.8;
+    }
+}
+
+// Desktop styles - applied when parent has .chat-window.desktop
+.chat-window.desktop .chat-messages {
+    max-height: calc(80vh - 200px);
+}
+
+.chat-window.desktop .chat-messages__message--user {
+    max-width: 80%;
+}
+
+.chat-window.desktop .chat-messages__message--server {
+    max-width: 97%;
+}
+
+.chat-window.desktop .chat-messages__message--loading {
+    max-width: 80%;
+}
+

@@ -1,16 +1,14 @@
-import { useEffect, useRef, useLayoutEffect, useMemo, useCallback } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { useGemini } from '../../providers/GeminiProvider';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import chatHistoryState from '../../atoms/chatHistoryState';
 import { useInitialChatMessage } from '../../hooks/useInitialChatMessage';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
 import PropTypes from 'prop-types';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
 import './ChatWindow.scss';
 import primaryColorState from '../../atoms/primaryColorState';
 import apiKeyState from '../../atoms/apiKeyState';
-import ChatSearchResults from './ChatSearchResults/ChatSearchResults';
+import ChatMessages from './ChatMessages/ChatMessages';
 import ChatInput from './ChatInput/ChatInput';
 
 // Move prompt fields outside component to prevent recreation on every render
@@ -196,7 +194,6 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     const apiKey = useRecoilValue(apiKeyState);
     const isDesktop = useIsDesktop();
     const chatWindowRef = useRef(null);
-    const chatMessagesRef = useRef(null);
     const { getInitialMessage, clearInitialMessage } = useInitialChatMessage();
 
 
@@ -259,7 +256,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
         if (directionsLocationIds && directionsLocationIds.originLocationId && directionsLocationIds.destinationLocationId) {
             console.log('ChatWindow: Received directions location IDs from provider:', directionsLocationIds);
 
-            // Update the latest server message with directions location IDs
+            // Update the latest server message with directions location IDs and route info
             setChatHistory(prev => {
                 const updatedMessages = [...prev];
                 // Find the last server message and update it with directions location IDs
@@ -267,7 +264,9 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                     if (updatedMessages[i].type === 'server') {
                         updatedMessages[i] = {
                             ...updatedMessages[i],
-                            directionsLocationIds: directionsLocationIds
+                            directionsLocationIds: directionsLocationIds,
+                            canShowRoute: true,
+                            routeDirections: directionsLocationIds
                         };
                         break;
                     }
@@ -278,43 +277,6 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     }, [directionsLocationIds]);
 
 
-    // Auto-scroll to bottom when messages change or loading state changes
-    // Uses immediate scroll + 300ms delay for server messages + ResizeObserver for async content
-    useLayoutEffect(() => {
-        if (chatMessagesRef.current) {
-            const container = chatMessagesRef.current;
-
-            const scrollToBottom = () => {
-                requestAnimationFrame(() => {
-                    container.scrollTo({
-                        top: container.scrollHeight,
-                        behavior: 'smooth'
-                    });
-                });
-            };
-
-            // Check if the last message is a server message (which might have async content)
-            const isLastMessageServer = chatHistory.length > 0 &&
-                chatHistory[chatHistory.length - 1]?.type === 'server';
-
-            // Initial scroll
-            scrollToBottom();
-
-            // For server messages, add a delayed scroll to catch async content
-            if (isLastMessageServer) {
-                setTimeout(scrollToBottom, 300);
-            }
-
-            // Watch for content size changes (e.g., when ChatSearchResults renders)
-            const resizeObserver = new ResizeObserver(() => {
-                scrollToBottom();
-            });
-
-            resizeObserver.observe(container);
-
-            return () => resizeObserver.disconnect();
-        }
-    }, [chatHistory, isLoading]);
 
     // Handle sending messages
     // messageText is required - can come from ChatInput or from search field
@@ -372,48 +334,6 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     }, [isVisible, isLoading, getInitialMessage, clearInitialMessage, handleSendMessage]);
 
 
-    /**
-     * Memoized chat messages to prevent unnecessary re-renders.
-     * Only recalculates when chatHistory changes.
-     */
-    const chatMessages = useMemo(() => {
-        return chatHistory.map((message, index) => {
-            const isLastMessage = index === chatHistory.length - 1;
-            const messageDirections = message.directionsLocationIds || (isLastMessage ? directionsLocationIds : null);
-            const canShowRoute = messageDirections?.originLocationId && messageDirections?.destinationLocationId;
-
-            return (
-                <div key={message.id} className={`chat-window__message chat-window__message--${message.type}`}>
-                    {message.type === 'server' ? (
-                        <>
-                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                {message.text}
-                            </ReactMarkdown>
-                            {message.locations && message.locations.length > 0 && (
-                                <ChatSearchResults
-                                    locations={message.locations}
-                                />
-                            )}
-                            {canShowRoute && (
-                                <div className="chat-window__directions-button">
-                                    <button
-                                        type="button"
-                                        className="chat-window__show-route-button"
-                                        style={{ backgroundColor: primaryColor }}
-                                        onClick={() => onShowRoute && onShowRoute(messageDirections)}
-                                    >
-                                        Show Route
-                                    </button>
-                                </div>
-                            )}
-                        </>
-                    ) : (
-                        <span>{message.text}</span>
-                    )}
-                </div>
-            );
-        });
-    }, [chatHistory]);
 
     // Only show the chat window if it's visible
     if (!isVisible) return null;
@@ -438,17 +358,12 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                 isLoading={isLoading}
                 primaryColor={primaryColor}
             />
-            <div ref={chatMessagesRef} className="chat-window__messages">
-                {chatMessages}
-                {isLoading && (
-                    <div className="chat-window__message chat-window__message--loading">
-                        <span className="loading-dot"></span>
-                        <span className="loading-dot"></span>
-                        <span className="loading-dot"></span>
-                        <span className="thinking-text">Thinking</span>
-                    </div>
-                )}
-            </div>
+            <ChatMessages
+                chatHistory={chatHistory}
+                isLoading={isLoading}
+                primaryColor={primaryColor}
+                onShowRoute={onShowRoute}
+            />
         </div>
     );
 }
