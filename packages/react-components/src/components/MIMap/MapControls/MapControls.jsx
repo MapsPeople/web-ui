@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import './MapControls.scss';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import CustomPositionProvider from '../../../utils/CustomPositionProvider';
+import ScreenshotButton from '../ScreenshotButton/ScreenshotButton';
 
 // Define UI element configuration objects with class names
 // This is a single source of truth for the UI elements and their class names
@@ -208,6 +209,15 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
                 {/* Bottom right desktop controls */}
                 <div className="map-controls-container desktop bottom-right">
                     {uiElements.resetView}
+                </div>
+
+                {/* Screenshot button - positioned above zoom controls */}
+                <div className="map-controls-container desktop screenshot-controls">
+                    <ScreenshotButton
+                        mapType={mapType}
+                        mapInstance={mapInstance}
+                        mapsIndoorsInstance={mapsIndoorsInstance}
+                    />
                 </div>
             </>
         );

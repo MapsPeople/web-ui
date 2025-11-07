@@ -25,6 +25,16 @@
     right: calc(5 * var(--spacing-medium));
 }
 
+// Desktop layout - screenshot controls (positioned above zoom controls)
+.map-controls-container.desktop.screenshot-controls {
+    position: absolute;
+    bottom: calc(3 * var(--spacing-medium) + 80px); // Position above zoom controls (zoom controls are ~80px tall)
+    right: calc(5 * var(--spacing-medium));
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-medium);
+}
+
 // Mobile layout, two columns aligned to the top left and right
 .mobile-column {
     @extend %control-container;

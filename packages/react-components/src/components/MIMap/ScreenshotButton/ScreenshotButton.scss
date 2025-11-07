@@ -1,0 +1,33 @@
+.screenshot-button {
+    background-color: white;
+    border: 1px solid #E6E6E6;
+    border-radius: var(--rounding-large);
+    width: var(--spacing-xx-large);
+    height: var(--spacing-xx-large);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 0 0 var(--spacing-xxx-small) #e5e7eb;
+    color: #333;
+    transition: all 0.2s;
+
+    &:hover {
+        background-color: #f5f5f5;
+    }
+
+    &:active {
+        transform: scale(0.95);
+    }
+
+    &.active {
+        background-color: #005655;
+        color: white;
+        border-color: #005655;
+    }
+
+    svg {
+        width: 20px;
+        height: 20px;
+    }
+}
