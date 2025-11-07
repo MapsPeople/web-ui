@@ -89,13 +89,7 @@ const ChatSearchResults = ({ locations }) => {
     /**
      * Get left padding when selecting a location
      */
-    const getLeftPadding = async () => {
-        if (isDesktop) {
-            return 0;
-        } else {
-            return 0;
-        }
-    };
+    const getLeftPadding = async () => 0;
 
     const handleToggle = () => {
         setIsExpanded(!isExpanded);
