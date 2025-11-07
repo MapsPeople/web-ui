@@ -1,8 +1,9 @@
-import { useEffect, useRef, useLayoutEffect, useMemo, useCallback, useState } from 'react';
+import { useEffect, useRef, useLayoutEffect, useMemo, useCallback } from 'react';
 import { useGemini } from '../../providers/GeminiProvider';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import chatHistoryState from '../../atoms/chatHistoryState';
 import { useInitialChatMessage } from '../../hooks/useInitialChatMessage';
+import { useIsDesktop } from '../../hooks/useIsDesktop';
 import PropTypes from 'prop-types';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -10,7 +11,7 @@ import './ChatWindow.scss';
 import primaryColorState from '../../atoms/primaryColorState';
 import apiKeyState from '../../atoms/apiKeyState';
 import ChatSearchResults from './ChatSearchResults/ChatSearchResults';
-import { ReactComponent as ChatModeIcon } from '../../assets/chat-mode-icon.svg';
+import ChatInput from './ChatInput/ChatInput';
 
 // Move prompt fields outside component to prevent recreation on every render
 const PROMPT_FIELDS = {
@@ -193,13 +194,11 @@ const PROMPT_FIELDS = {
 function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     const primaryColor = useRecoilValue(primaryColorState);
     const apiKey = useRecoilValue(apiKeyState);
+    const isDesktop = useIsDesktop();
     const chatWindowRef = useRef(null);
     const chatMessagesRef = useRef(null);
-    const inputRef = useRef(null);
     const { getInitialMessage, clearInitialMessage } = useInitialChatMessage();
 
-    // Local state for input field
-    const [inputValue, setInputValue] = useState('');
 
     // TODO: Hide header for now, redesign later
     const isHeaderVisible = false;
@@ -209,15 +208,6 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
 
     // Use Recoil for chat history
     const [chatHistory, setChatHistory] = useRecoilState(chatHistoryState);
-
-    // Focus input field
-    function focusInput() {
-        if (inputRef.current) {
-            requestAnimationFrame(() => {
-                inputRef.current?.focus();
-            });
-        }
-    }
 
     // Memoize the fetch locations function to prevent recreation on every render
     const fetchLocationsAndUpdateMessage = useCallback(async (searchResultIds) => {
@@ -326,26 +316,23 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
         }
     }, [chatHistory, isLoading]);
 
-    // Handle sending messages from input field
-    // messageFromSearch is optional and can be used to send a message from the search field
-    // if it is not provided, the message from the input field is used
-    const handleSendMessage = useCallback(async (messageFromSearch) => {
-        const messageText = (messageFromSearch || inputValue).trim();
+    // Handle sending messages
+    // messageText is required - can come from ChatInput or from search field
+    const handleSendMessage = useCallback(async (messageText) => {
+        const trimmedMessage = messageText.trim();
 
-        if (!messageText || isLoading) return;
-
-        setInputValue('');
+        if (!trimmedMessage || isLoading) return;
 
         const userMessage = {
             id: Date.now(),
-            text: messageText,
+            text: trimmedMessage,
             type: 'user'
         };
         setChatHistory(prev => [...prev, userMessage]);
 
         // Call Gemini service for response (provider API expects an object)
         try {
-            const response = await generateResponse(apiKey, messageText, PROMPT_FIELDS, tools);
+            const response = await generateResponse(apiKey, trimmedMessage, PROMPT_FIELDS, tools);
             setChatHistory(prev => [
                 ...prev,
                 {
@@ -367,15 +354,8 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                 }
             ]);
         }
-    }, [inputValue, isLoading, generateResponse, apiKey, tools]);
+    }, [isLoading, generateResponse, apiKey, tools]);
 
-    // Handle Enter key in input field
-    const handleKeyDown = useCallback((event) => {
-        if (event.key === 'Enter' && !event.shiftKey) {
-            event.preventDefault();
-            handleSendMessage();
-        }
-    }, [handleSendMessage]);
 
     // Automatically send initial message when chat opens with a message from search
     // This is used to send the initial message from the search field when the chat window opens
@@ -387,7 +367,6 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                 const messageText = initialMessage.trim();
                 clearInitialMessage();
                 handleSendMessage(messageText);
-                focusInput();
             }
         }
     }, [isVisible, isLoading, getInitialMessage, clearInitialMessage, handleSendMessage]);
@@ -439,8 +418,10 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     // Only show the chat window if it's visible
     if (!isVisible) return null;
 
+    const chatWindowClassName = `chat-window ${isDesktop ? 'desktop' : 'mobile'}`;
+
     return (
-        <div ref={chatWindowRef} className="chat-window" style={{ '--chat-window-primary-color': primaryColor }}>
+        <div ref={chatWindowRef} className={chatWindowClassName} style={{ '--chat-window-primary-color': primaryColor }}>
             {isHeaderVisible && <div className="chat-window__header">
                 <span className="chat-window__title">Maps Indoors AI Assistant</span>
                 <button
@@ -452,32 +433,11 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                     ×
                 </button>
             </div>}
-            {/* Input at the top - sticky */}
-            <div className="chat-window__input-container">
-                <div className="chat-window__input-wrapper">
-                    <ChatModeIcon className="chat-window__input-icon" />
-                    <textarea
-                        ref={inputRef}
-                        value={inputValue}
-                        onChange={(e) => setInputValue(e.target.value)}
-                        onKeyDown={handleKeyDown}
-                        placeholder="Ask about locations, directions, or anything else..."
-                        className="chat-window__input"
-                        rows={1}
-                    />
-                </div>
-                <button
-                    type="button"
-                    onClick={handleSendMessage}
-                    disabled={!inputValue.trim() || isLoading}
-                    className="chat-window__send-button"
-                    style={{ backgroundColor: primaryColor }}
-                    aria-label="Send message"
-                >
-                    Send
-                </button>
-            </div>
-            {/* Messages below - scrollable */}
+            <ChatInput
+                onSendMessage={handleSendMessage}
+                isLoading={isLoading}
+                primaryColor={primaryColor}
+            />
             <div ref={chatMessagesRef} className="chat-window__messages">
                 {chatMessages}
                 {isLoading && (
