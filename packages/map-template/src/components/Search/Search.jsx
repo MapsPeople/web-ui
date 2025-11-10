@@ -201,7 +201,7 @@ function Search({ onSetSize, isOpen }) {
      * @returns {Array} Sorted or original array based on configuration
      */
     function getSortedSearchResults(results) {
-        if (appConfig?.appSettings?.sortSearchResultsAlphabetically && selectedCategory) {
+        if (selectedCategory) {
             return [...results].sort((a, b) => 
                 (a.properties?.name || '').localeCompare(b.properties?.name || '')
             );

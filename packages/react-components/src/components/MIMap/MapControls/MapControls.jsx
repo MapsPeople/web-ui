@@ -73,16 +73,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
     const setPositionAndHandleFloor = (devicePosition) => {
         // Set the position and start watching if successful
         if (positionButtonRef.current.customPositionProvider.setPosition(devicePosition)) {
-            positionButtonRef.current.watchPosition();
-
-            // If floor information is provided, set the floor on the map
-            if (devicePosition.floorIndex && mapsIndoorsInstance) {
-                const currentFloor = mapsIndoorsInstance.getFloor();
-                const floorNumber = parseInt(devicePosition.floorIndex, 10);
-                if (floorNumber !== currentFloor) {
-                    mapsIndoorsInstance.setFloor(floorNumber);
-                }
-            }
+        positionButtonRef.current.watchPosition();
         }
     };
 

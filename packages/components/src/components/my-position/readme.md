@@ -175,7 +175,7 @@ A `myPositionOptions` attribute is available on the `<mi-my-position>` element. 
 
 ## Methods
 
-### `setPosition(position: GeolocationPosition) => Promise<void>`
+### `setPosition(position: MapsIndoorsPosition) => Promise<void>`
 
 Sets a custom position. Works with any provider that implements setPosition.
 Uses this.positionProvider (the resolved provider) instead of this.customPositionProvider
