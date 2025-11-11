@@ -18,6 +18,8 @@ export interface DirectionsTranslations {
     exit: string;
     enter: string;
     stops: string;
+    getOn: string;
+    getOff: string;
     andContinue: string;
     continueStraightAhead: string;
     goLeft: string;

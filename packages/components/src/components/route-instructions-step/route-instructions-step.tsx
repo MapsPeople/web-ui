@@ -435,9 +435,15 @@ export class RouteInstructionsStep implements ComponentInterface {
      * @returns {JSX.Element}
      */
     renderTransitStep(): JSX.Element {
+
+        // Build "Get on" message for transit
+        const getOnMessage = `${this.translationsData.getOn}`;
+        // const getOffMessage = ` ${this.translationsData.getOff}`;
+        console.log(this.stepData);
+        
         return <div class="step" onClick={(e): void => this.stepClickHandler(e)}>
             <div class="step__info">
-                <h3 part="step-heading" class="step__heading">{this.stepData?.instructions}</h3>
+                <h3 part="step-heading" class="step__heading">{this.stepData.travel_mode === 'TRANSIT' ? getOnMessage : this.stepData?.instructions}</h3>
                 {this.renderToggleButton()}
             </div>
             {this.renderTravelMode()}

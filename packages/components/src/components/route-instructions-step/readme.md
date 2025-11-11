@@ -275,6 +275,8 @@ Translation object should have translations for the following properties:
 | exit                  |
 | enter                 |
 | stops                 |
+| getOn                 |
+| getOff                |
 | arrive                |
 | andContinue           |
 | continueStraightAhead |

@@ -63,6 +63,8 @@ const RouteInstructionsStep = forwardRef(function RouteInstructionsStepComponent
         exit: t('Exit'),
         enter: t('Enter'),
         stops: t('stops'),
+        getOn: t('Get on the bus'),
+        getOff: t('Get off the bus'),
         andContinue: t('and continue'),
         continueStraightAhead: t('Continue straight ahead'),
         goLeft: t('Go left'),
