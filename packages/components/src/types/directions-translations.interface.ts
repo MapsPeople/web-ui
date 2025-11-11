@@ -20,6 +20,7 @@ export interface DirectionsTranslations {
     stops: string;
     andContinue: string;
     continueStraightAhead: string;
+    rideTheBus: string;
     goLeft: string;
     goSharpLeft: string;
     goSlightLeft: string;
