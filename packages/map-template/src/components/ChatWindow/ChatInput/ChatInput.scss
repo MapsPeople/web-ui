@@ -91,3 +91,26 @@
     }
 }
 
+.chat-input__close-button {
+    width: var(--spacing-xxx-large);
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: normal;
+    line-height: 1;
+    color: var(--color-gray-90);
+    background-color: var(--tailwind-colors-white);
+    border-radius: var(--rounding-large);
+    border: 1px solid #E6E6E6;
+    cursor: pointer;
+    flex-shrink: 0;
+    text-align: center;
+    
+    &:hover {
+        background-color: var(--tailwind-colors-gray-100);
+        border: 1px solid var(--tailwind-colors-gray-200);
+    }
+}
+

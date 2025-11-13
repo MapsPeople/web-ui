@@ -1,11 +1,13 @@
 import { useRef, useCallback, useEffect, useState } from 'react';
 import { ReactComponent as ChatModeIcon } from '../../../assets/chat-mode-icon.svg';
+import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import PropTypes from 'prop-types';
 import './ChatInput.scss';
 
-function ChatInput({ onSendMessage, isLoading, primaryColor }) {
+function ChatInput({ onSendMessage, isLoading, primaryColor, onClose }) {
     const inputRef = useRef(null);
     const [inputValue, setInputValue] = useState('');
+    const isDesktop = useIsDesktop();
 
     // Auto-focus input on mount
     useEffect(() => {
@@ -20,7 +22,7 @@ function ChatInput({ onSendMessage, isLoading, primaryColor }) {
     const handleSend = useCallback(() => {
         const messageText = inputValue.trim();
         if (!messageText || isLoading) return;
-        
+
         setInputValue('');
         onSendMessage(messageText);
     }, [inputValue, isLoading, onSendMessage]);
@@ -47,16 +49,28 @@ function ChatInput({ onSendMessage, isLoading, primaryColor }) {
                     rows={1}
                 />
             </div>
-            <button
-                type="button"
-                onClick={handleSend}
-                disabled={!inputValue.trim() || isLoading}
-                className="chat-input__button"
-                style={{ backgroundColor: primaryColor }}
-                aria-label="Send message"
-            >
-                Send
-            </button>
+            {!isDesktop && (
+                <button
+                    type="button"
+                    onClick={handleSend}
+                    disabled={!inputValue.trim() || isLoading}
+                    className="chat-input__button"
+                    style={{ backgroundColor: primaryColor }}
+                    aria-label="Send message"
+                >
+                    Send
+                </button>
+            )}
+            {isDesktop && (
+                <button
+                    type="button"
+                    onClick={onClose}
+                    className="chat-input__close-button"
+                    aria-label="Close chat"
+                >
+                    ×
+                </button>
+            )}
         </div>
     );
 }
@@ -64,7 +78,8 @@ function ChatInput({ onSendMessage, isLoading, primaryColor }) {
 ChatInput.propTypes = {
     onSendMessage: PropTypes.func.isRequired,
     isLoading: PropTypes.bool.isRequired,
-    primaryColor: PropTypes.string.isRequired
+    primaryColor: PropTypes.string.isRequired,
+    onClose: PropTypes.func.isRequired
 };
 
 export default ChatInput;
