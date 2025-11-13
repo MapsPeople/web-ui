@@ -89,6 +89,8 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
 
     const mapType = useRecoilValue(mapTypeState);
 
+    const isKiosk = useIsKioskContext();
+
     useEffect(() => {
         return () => {
             setDestinationDisplayRule(null);
@@ -111,7 +113,7 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
             Promise.all([getBottomPadding(padding), getLeftPadding(padding)]).then(([bottomPadding, leftPadding]) => {
                 directionsRenderer = new window.mapsindoors.directions.DirectionsRenderer({
                     mapsIndoors: mapsIndoorsInstance,
-                    fitBoundsPadding: {
+                    fitBounds: isKiosk ? false : {
                         top: padding,
                         bottom: bottomPadding,
                         left: leftPadding,
