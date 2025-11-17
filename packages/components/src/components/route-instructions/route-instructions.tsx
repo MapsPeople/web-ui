@@ -124,7 +124,8 @@ export class RouteInstructions implements ComponentInterface {
         turnAround: 'Turn around',
         days: 'd',
         hours: 'h',
-        minutes: 'min'
+        minutes: 'min',
+        rideTheBus: 'Ride the bus'
     };
 
     miStepElements: HTMLMiRouteInstructionsStepElement[] = [];

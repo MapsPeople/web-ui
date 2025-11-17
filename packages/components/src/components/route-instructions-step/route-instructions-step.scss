@@ -110,6 +110,13 @@
         @include font.size(small);
     }
 
+    &__transit-action {
+        @include font.weight(medium);
+        @include font.size(small);
+        @include margin.bottom(variables.$spacing-xx-small);
+        @include color.gray(60);
+    }
+
     &__toggle {
         display: grid;
         justify-content: center;

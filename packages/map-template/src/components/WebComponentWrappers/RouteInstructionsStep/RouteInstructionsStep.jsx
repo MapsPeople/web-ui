@@ -74,7 +74,8 @@ const RouteInstructionsStep = forwardRef(function RouteInstructionsStepComponent
         turnAround: t('Turn around'),
         days: t('d'),
         hours: t('h'),
-        minutes: t('min')
+        minutes: t('min'),
+        rideTheBus: t('Ride the bus')
     };
 
     useEffect(() => {
