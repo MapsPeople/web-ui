@@ -430,7 +430,7 @@ export class RouteInstructionsStep implements ComponentInterface {
     }
 
     /**
-     * Render a transit step.
+     * Render a transit step. Inclusing BUSWAY instruction.
      *
      * @returns {JSX.Element}
      */
