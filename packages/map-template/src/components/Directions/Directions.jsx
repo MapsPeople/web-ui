@@ -111,7 +111,8 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
             Promise.all([getBottomPadding(padding), getLeftPadding(padding)]).then(([bottomPadding, leftPadding]) => {
                 directionsRenderer = new window.mapsindoors.directions.DirectionsRenderer({
                     mapsIndoors: mapsIndoorsInstance,
-                    fitBounds: isKioskContext ? false : {
+                    fitBounds: isKioskContext ? false : true,
+                    fitBoundsPadding: isKioskContext ? undefined : {
                         top: padding,
                         bottom: bottomPadding,
                         left: leftPadding,
@@ -222,7 +223,7 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
      * Render the next navigation step on the map.
      */
     function onNext() {
-        if (directionsRenderer && !isKioskContext) {
+        if (directionsRenderer) {
             directionsRenderer.nextStep();
             onFitCurrentDirections();
         }
