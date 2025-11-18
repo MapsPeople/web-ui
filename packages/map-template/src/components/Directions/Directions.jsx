@@ -187,19 +187,6 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
         }
     }, [isOpen]);
 
-    /**
-     * Get current padding values for fitting bounds to current step.
-     */
-    async function getCurrentBoundsPadding() {
-        const padding = Math.min(window.innerHeight, window.innerWidth) * 0.06;
-        const [bottomPadding, leftPadding] = await Promise.all([getBottomPadding(padding), getLeftPadding(padding)]);
-        return {
-            top: padding,
-            bottom: bottomPadding,
-            left: leftPadding,
-            right: padding
-        };
-    }
 
     /**
      * Transform the steps in legs to a flat array of steps.
@@ -225,7 +212,6 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
     function onNext() {
         if (directionsRenderer) {
             directionsRenderer.nextStep();
-            onFitCurrentDirections();
         }
     }
 
@@ -233,19 +219,8 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
      * Render the previous navigation step on the map.
      */
     function onPrevious() {
-        if (directionsRenderer && !isKioskContext) {
+        if (directionsRenderer) {
             directionsRenderer.previousStep();
-            onFitCurrentDirections();
-        }
-    }
-
-    /**
-     * Fit bounds to show the current step properly.
-     */
-    async function onFitCurrentDirections() {
-        if (directionsRenderer && !isKioskContext) {
-            const currentPadding = await getCurrentBoundsPadding();
-            directionsRenderer.fitBounds(currentPadding);
         }
     }
 
