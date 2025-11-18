@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fix map not fitting to bounds outside kiosk context
 - An issue when it was necessary to hold command/ctrl when zooming in/out on Google Maps.
 
 ## [1.87.10] - 2025-11-17
