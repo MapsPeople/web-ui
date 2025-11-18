@@ -102,6 +102,7 @@ function GoogleMapsMap({ apiKey, onInitialized, center, zoom, bounds, heading, t
                 heading: heading ?? 0,
                 tilt: tilt ?? 0,
                 mapId: gmMapId,
+                gestureHandling: 'greedy',
                 ...mapOptions
             };
 

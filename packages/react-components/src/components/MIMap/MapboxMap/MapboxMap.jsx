@@ -109,7 +109,7 @@ function MapboxMap({ accessToken, onInitialized, center, zoom, bounds, bearing, 
             mapViewOptions.mapsIndoorsTransitionLevel = parseInt(mapOptions.miTransitionLevel);
         }
 
-        // If showRoadNames is not null or undefined, set it as showRoadNames in the mapViewOptions.
+        // If showRoadNames is not null or undefined, set it as showRoadNames in the mapViewOptions. Comment.
         if (!isNullOrUndefined(mapOptions?.showRoadNames)) {
             mapViewOptions.showRoadNameLabels = mapOptions.showRoadNames;
         }
