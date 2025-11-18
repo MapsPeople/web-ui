@@ -111,7 +111,8 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
             Promise.all([getBottomPadding(padding), getLeftPadding(padding)]).then(([bottomPadding, leftPadding]) => {
                 directionsRenderer = new window.mapsindoors.directions.DirectionsRenderer({
                     mapsIndoors: mapsIndoorsInstance,
-                    fitBounds: isKioskContext ? false : {
+                    fitBounds: isKioskContext ? false : true,
+                    fitBoundsPadding: isKioskContext ? undefined : {
                         top: padding,
                         bottom: bottomPadding,
                         left: leftPadding,
@@ -185,6 +186,7 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
             setMinZoom(ZoomLevelValues.minZoom);
         }
     }, [isOpen]);
+
 
     /**
      * Transform the steps in legs to a flat array of steps.
