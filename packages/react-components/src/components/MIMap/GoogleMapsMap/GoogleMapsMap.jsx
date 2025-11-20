@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Loader as GoogleMapsApiLoader } from '@googlemaps/js-api-loader';
 import './GoogleMapsMap.scss';
-import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import isNullOrUndefined from '../../../../../map-template/src/helpers/isNullOrUndefined';
 
 GoogleMapsMap.propTypes = {
@@ -32,10 +31,7 @@ GoogleMapsMap.propTypes = {
  */
 function GoogleMapsMap({ apiKey, onInitialized, center, zoom, bounds, heading, tilt, mapsIndoorsInstance, mapOptions, gmMapId }) {
 
-    const [google, setGoogle] = useState();
     const [mapViewInstance, setMapViewInstance] = useState();
-    const [hasZoomControl, setHasZoomControl] = useState(false);
-    const isDesktop = useIsDesktop();
 
     /*
      * React on any props that are used to control the position of the map.
@@ -67,22 +63,6 @@ function GoogleMapsMap({ apiKey, onInitialized, center, zoom, bounds, heading, t
         }
     }, [mapViewInstance, center, zoom, heading, tilt, bounds, mapOptions]);
 
-    // Add map controls to the map when ready.
-    useEffect(() => {
-        if (mapsIndoorsInstance && mapViewInstance && google && !hasZoomControl && isDesktop) {
-            // Enable only the Zoom control
-            mapViewInstance.getMap().setOptions({
-                zoomControl: true,
-                zoomControlOptions: {
-                    style: google.maps.ZoomControlStyle.DEFAULT,
-                    position: google.maps.ControlPosition.RIGHT_BOTTOM,
-                }
-            });
-            setHasZoomControl(true);
-        }
-
-    }, [mapsIndoorsInstance, mapViewInstance, google])
-
     useEffect(() => {
         const loader = new GoogleMapsApiLoader({
             apiKey: apiKey,
@@ -90,8 +70,7 @@ function GoogleMapsMap({ apiKey, onInitialized, center, zoom, bounds, heading, t
             libraries: ['geometry', 'places']
         });
 
-        loader.load().then(loadedGoogle => {
-            setGoogle(loadedGoogle);
+        loader.load().then(() => {
 
             // Initialize Google Maps MapView
             const mapViewOptions = {

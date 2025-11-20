@@ -4,7 +4,6 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './MapboxMap.scss';
 import ViewModeSwitch from './ViewModeSwitch/ViewModeSwitch';
-import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import isNullOrUndefined from '../../../../../map-template/src/helpers/isNullOrUndefined';
 
 MapboxMap.propTypes = {
@@ -37,11 +36,9 @@ MapboxMap.propTypes = {
  * @param {Object} [props.mapOptions] - Options for instantiating and styling the map as well as UI elements.
  * @param {Object} [props.appConfig] - Object that contains app config.
  */
-function MapboxMap({ accessToken, onInitialized, center, zoom, bounds, bearing, pitch, resetViewMode, mapsIndoorsInstance, viewModeSwitchVisible, mapOptions, appConfig }) {
+function MapboxMap({ accessToken, onInitialized, center, zoom, bounds, bearing, pitch, resetViewMode, viewModeSwitchVisible, mapOptions, appConfig }) {
 
     const [mapViewInstance, setMapViewInstance] = useState();
-    const [hasZoomControl, setHasZoomControl] = useState(false);
-    const isDesktop = useIsDesktop();
 
     /*
      * React on any props that are used to control the position of the map.
@@ -78,16 +75,6 @@ function MapboxMap({ accessToken, onInitialized, center, zoom, bounds, bearing, 
             }
         }
     }, [mapViewInstance, center, zoom, bearing, pitch, bounds, mapOptions]);
-
-    useEffect(() => {
-        if (mapsIndoorsInstance && mapViewInstance && !hasZoomControl && isDesktop) {
-            mapViewInstance
-                .getMap()
-                .addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'bottom-right');
-            setHasZoomControl(true);
-        }
-    }, [mapsIndoorsInstance, mapViewInstance, hasZoomControl]);
-
 
     useEffect(() => {
         // Initialize MapboxV3View MapView
