@@ -4,6 +4,7 @@ import './MapControls.scss';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import CustomPositionProvider from '../../../utils/CustomPositionProvider';
 import MapZoomControl from '../MapZoomControl/MapZoomControl';
+import TextSizeButton from '../TextSizeButton/TextSizeButton';
 
 // Define UI element configuration objects with class names
 // This is a single source of truth for the UI elements and their class names
@@ -208,6 +209,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
 
                 {/* Bottom right desktop controls */}
                 <div className="map-controls-container desktop bottom-right">
+                    <TextSizeButton />
                     {shouldRenderElement('zoomControls') && (
                         <MapZoomControl mapType={mapType} mapInstance={mapInstance} />
                     )}
