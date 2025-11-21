@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import './MapControls.scss';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import CustomPositionProvider from '../../../utils/CustomPositionProvider';
+import MapZoomControl from '../MapZoomControl/MapZoomControl';
+import TextSizeButton from '../TextSizeButton/TextSizeButton';
 
 // Define UI element configuration objects with class names
 // This is a single source of truth for the UI elements and their class names
@@ -23,7 +25,8 @@ MapControls.propTypes = {
     onPositionControl: PropTypes.func,
     brandingColor: PropTypes.string,
     devicePosition: PropTypes.object,
-    excludedElements: PropTypes.string
+    excludedElements: PropTypes.string,
+    isKiosk: PropTypes.bool
 };
 
 /**
@@ -39,11 +42,12 @@ MapControls.propTypes = {
  * @param {string} [props.brandingColor] - Custom branding color for controls
  * @param {Object} [props.devicePosition] - Device position data (if available)
  * @param {string} [props.excludedElements] - Comma-separated string of element names to exclude from rendering, defaults to empty string -> renders all elements
+ * @param {boolean} [props.isKiosk] - Set to true to enable kiosk layout
  *
  * @returns {JSX.Element} Map controls container with venue selector, floor selector,
- * position button, and view mode switch, arranged differently for desktop and mobile layouts
+ * position button, and view mode switch, arranged differently for desktop, kiosk, and mobile layouts
  */
-function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionControl, brandingColor, devicePosition, excludedElements = '' }) {
+function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionControl, brandingColor, devicePosition, excludedElements = '', isKiosk  }) {
     const isDesktop = useIsDesktop();
     const floorSelectorRef = useRef(null);
     const positionButtonRef = useRef(null);
@@ -73,7 +77,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
     const setPositionAndHandleFloor = (devicePosition) => {
         // Set the position and start watching if successful
         if (positionButtonRef.current.customPositionProvider.setPosition(devicePosition)) {
-        positionButtonRef.current.watchPosition();
+            positionButtonRef.current.watchPosition();
         }
     };
 
@@ -191,7 +195,29 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
         });
     }, [excludedElements, shouldRenderElement, isDesktop]);
 
-    if (isDesktop) {
+    if (isKiosk) {
+        {/* For kiosk layout, render the controls in bottom right */ }
+        return (
+            <>
+                {/* Top right kiosk controls */}
+                <div className="map-controls-container kiosk top-right">
+                </div>
+
+                {/* Bottom right kiosk controls */}
+                <div className="map-controls-container kiosk bottom-right">
+                    {uiElements.venueSelector}
+                    {uiElements.viewSelector}
+                    {uiElements.myPosition}
+                    <MapZoomControl mapType={mapType} mapInstance={mapInstance} />
+                    {uiElements.languageSelector}
+                    <TextSizeButton />
+                    {uiElements.viewModeSwitch}
+                    {uiElements.floorSelector}
+                    {uiElements.resetView}
+                </div>
+            </>
+        );
+    } else if (isDesktop) {
         {/* For desktop layout, render the controls in the correct container based on the layout */ }
         return (
             <>
@@ -207,6 +233,9 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
 
                 {/* Bottom right desktop controls */}
                 <div className="map-controls-container desktop bottom-right">
+                    {shouldRenderElement('zoomControls') && (
+                        <MapZoomControl mapType={mapType} mapInstance={mapInstance} />
+                    )}
                     {uiElements.resetView}
                 </div>
             </>
