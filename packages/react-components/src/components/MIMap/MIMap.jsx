@@ -26,7 +26,8 @@ MIMap.propTypes = {
     mapOptions: PropTypes.object,
     onInitialized: PropTypes.func,
     gmMapId: PropTypes.string,
-    devicePosition: PropTypes.object
+    devicePosition: PropTypes.object,
+    isKiosk: PropTypes.bool
 }
 
 /**
@@ -47,8 +48,9 @@ MIMap.propTypes = {
  *    and position control and knowledge of the View mode switch is ready. The instance, position control and boolean for if the view mode switch is active is given as payload.
  * @param {string} [props.gmMapId] - The Google Maps Map ID for custom styling.
  * @param {object} [props.devicePosition] - Device position object with coords and timestamp for custom positioning.
+ * @param {boolean} [props.isKiosk] - Set to true to enable kiosk layout
  */
-function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bearing, pitch, resetUICounter, mapOptions, onInitialized, gmMapId, devicePosition }) {
+function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bearing, pitch, resetUICounter, mapOptions, onInitialized, gmMapId, devicePosition, isKiosk }) {
 
     const [mapType, setMapType] = useState();
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
@@ -200,6 +202,7 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bear
                 brandingColor={mapOptions?.brandingColor}
                 devicePosition={devicePosition}
                 excludedElements={excludedElements}
+                isKiosk={isKiosk}
             />
         )}
     </>

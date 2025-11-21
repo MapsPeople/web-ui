@@ -26,6 +26,7 @@ import LanguageSelector from '../LanguageSelector/LanguageSelector.jsx';
 import appConfigState from '../../atoms/appConfigState';
 import isNullOrUndefined from '../../helpers/isNullOrUndefined';
 import ResetKioskViewButton from '../ResetKioskViewButton/ResetKioskViewButton.jsx';
+import { useIsKioskContext } from '../../hooks/useIsKioskContext';
 
 MapWrapper.propTypes = {
     onLocationClick: PropTypes.func,
@@ -87,7 +88,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
     const appConfig = useRecoilValue(appConfigState);
     const [isViewSelectorVisible, setIsViewSelectorVisible] = useState(false);
     const [isLanguageSelectorVisible, setIsLanguageSelectorVisible] = useState(false);
-
+    const isKiosk = useIsKioskContext();
     useLiveData(apiKey);
 
     const [mapPositionInvestigating, mapPositionKnown] = useMapBoundsDeterminer();
@@ -336,6 +337,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
             mapOptions={mapOptions}
             gmMapId={gmMapId}
             devicePosition={devicePosition}
+            isKiosk={isKiosk}
         />}
         {/* Pass isWayfindingOrDirections prop to ViewSelector to disable interactions while wayfinding or directions is active*/}
         {apiKey && <>
