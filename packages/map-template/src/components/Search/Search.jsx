@@ -592,7 +592,7 @@ function Search({ onSetSize, isOpen }) {
             { /* Search info which includes legend button if in a Kiosk context. */}
 
             <div className="search__info" style={{ gridTemplateColumns: isKioskContext && showLegendButton ? 'min-content 1fr' : 'auto' }}>
-                {isKioskContext && showLegendButton && <button className="search__legend" onClick={() => setShowLegendDialog(true)}><Legend /></button>}
+                {isKioskContext && showLegendButton && <button className="search__legend" onClick={() => setShowLegendDialog(true)} aria-label={t('Show legend')}><Legend /></button>}
 
                 { /* Search field that allows users to search for locations (MapsIndoors Locations and external) */}
                 <label className="search__label">

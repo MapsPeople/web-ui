@@ -182,7 +182,9 @@ function OpeningHours({ openingHours, isMondayFirstDayOfTheWeek = true, onExpand
         <div className="opening-hours">
             <button
                 className="contact-action-button contact-action-button--opening-hours"
-                onClick={handleExpand}>
+                onClick={handleExpand}
+                aria-label={t(isExpanded ? 'Collapse opening hours' : 'Expand opening hours')}
+                aria-expanded={isExpanded}>
                 <div className="contact-action-button__icon-wrapper">
                     <ClockIcon />
                 </div>
