@@ -70,7 +70,7 @@ function MapZoomControl({ mapType, mapInstance }) {
         <div className="map-zoom-control">
             <button
                 type="button"
-                className="map-zoom-control__button map-zoom-control__button--zoom-in"
+                className="map-zoom-control__button"
                 onClick={handleZoomIn}
                 aria-label="Zoom in"
             >
@@ -78,7 +78,7 @@ function MapZoomControl({ mapType, mapInstance }) {
             </button>
             <button
                 type="button"
-                className="map-zoom-control__button map-zoom-control__button--zoom-out"
+                className="map-zoom-control__button"
                 onClick={handleZoomOut}
                 aria-label="Zoom out"
             >

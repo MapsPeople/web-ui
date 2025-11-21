@@ -1,9 +1,10 @@
 .map-zoom-control {
     display: flex;
     flex-direction: column;
-    background: white;
     border-radius: var(--rounding-large, 8px);
     overflow: hidden;
+    border: 1px solid var(--tailwind-colors-gray-200, #e6e6e6);
+    background: var(--tailwind-colors-white, white);
 
     &__button {
         display: flex;
@@ -11,17 +12,16 @@
         justify-content: center;
         width: var(--spacing-xxx-large, 48px);
         height: var(--spacing-xxx-large, 48px);
-        border: 1px solid var(--tailwind-colors-gray-200, #e6e6e6);
+        border: none;
         background: var(--tailwind-colors-white, white);
         cursor: pointer;
         padding: var(--spacing-x-small, 8px);
         color: inherit;
         font: inherit;
-        transition: background-color 0.2s, border-color 0.2s;
+        transition: background-color 0.2s;
 
         &:hover {
             background-color: var(--tailwind-colors-gray-50, #f9fafb);
-            border-color: var(--tailwind-colors-gray-200, #e5e7eb);
         }
 
         &:active {
@@ -43,8 +43,8 @@
             display: block;
         }
 
-        &--zoom-in {
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        &:not(:last-child) {
+            border-bottom: 1px solid var(--tailwind-colors-gray-200, #e6e6e6);
         }
     }
 }
