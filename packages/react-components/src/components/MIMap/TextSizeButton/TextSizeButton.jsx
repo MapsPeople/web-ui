@@ -27,6 +27,7 @@ function TextSizeButton() {
         applyTextSize(newState);
     }, [isLargeText, applyTextSize]);
 
+    // Early return if not used in desktop layout
     if (!isDesktop) {
         return null;
     }
