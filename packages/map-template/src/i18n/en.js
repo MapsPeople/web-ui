@@ -90,6 +90,9 @@ const en = {
     // Accessibility
     'Increase text size to 200%': 'Increase text size to 200%',
     'Decrease text size to 100%': 'Decrease text size to 100%',
+    // Map Controls
+    'Zoom in': 'Zoom in',
+    'Zoom out': 'Zoom out',
 };
 
 export default en;

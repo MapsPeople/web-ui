@@ -90,6 +90,9 @@ const nl = {
     // Accessibility
     'Increase text size to 200%': 'Tekstgrootte verhogen naar 200%',
     'Decrease text size to 100%': 'Tekstgrootte verlagen naar 100%',
+    // Map Controls
+    'Zoom in': 'Inzoomen',
+    'Zoom out': 'Uitzoomen',
 };
 
 export default nl;

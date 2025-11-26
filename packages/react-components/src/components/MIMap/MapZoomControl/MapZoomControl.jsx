@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import { ReactComponent as PlusIcon } from '../../../assets/plus.svg';
@@ -20,6 +21,7 @@ MapZoomControl.propTypes = {
  * @param {Object} props.mapInstance - Map instance (Google Maps or Mapbox MapView)
  */
 function MapZoomControl({ mapType, mapInstance }) {
+    const { t } = useTranslation();
     const isDesktop = useIsDesktop();
 
     const handleZoomIn = useCallback(() => {
@@ -69,7 +71,7 @@ function MapZoomControl({ mapType, mapInstance }) {
                 type="button"
                 className="map-zoom-control__button"
                 onClick={handleZoomIn}
-                aria-label="Zoom in"
+                aria-label={t('Zoom in')}
             >
                 <PlusIcon />
             </button>
@@ -77,7 +79,7 @@ function MapZoomControl({ mapType, mapInstance }) {
                 type="button"
                 className="map-zoom-control__button"
                 onClick={handleZoomOut}
-                aria-label="Zoom out"
+                aria-label={t('Zoom out')}
             >
                 <MinusIcon />
             </button>

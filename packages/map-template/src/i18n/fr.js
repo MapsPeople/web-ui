@@ -90,6 +90,9 @@ const fr = {
     // Accessibility
     'Increase text size to 200%': 'Augmenter la taille du texte à 200%',
     'Decrease text size to 100%': 'Réduire la taille du texte à 100%',
+    // Map Controls
+    'Zoom in': 'Zoom avant',
+    'Zoom out': 'Zoom arrière',
 };
 
 export default fr;

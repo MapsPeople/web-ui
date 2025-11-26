@@ -89,6 +89,9 @@ const zh = {
     // Accessibility
     'Increase text size to 200%': '将文本大小增加到 200%',
     'Decrease text size to 100%': '将文本大小减少到 100%',
+    // Map Controls
+    'Zoom in': '放大',
+    'Zoom out': '缩小',
 };
 
 export default zh;
