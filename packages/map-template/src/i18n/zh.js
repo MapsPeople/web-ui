@@ -80,6 +80,8 @@ const zh = {
     // Opening Hours
     'Open': '营业中',
     'Closed': '已关闭',
+    'Expand opening hours': '展开营业时间',
+    'Collapse opening hours': '收起营业时间',
     // View Selector
     'Go to view': '定位到',
     // Language Selector

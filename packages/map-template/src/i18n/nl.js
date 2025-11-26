@@ -80,6 +80,8 @@ const nl = {
     // Opening Hours
     'Open': 'Open',
     'Closed': 'Gesloten',
+    'Expand opening hours': 'Openingsuren uitklappen',
+    'Collapse opening hours': 'Openingsuren inklappen',
     // View Selector
     'Go to view': 'Toon locatie',
     'Close view selector': 'Sluiten weergavekiezer',

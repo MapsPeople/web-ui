@@ -80,6 +80,8 @@ const fr = {
     // Opening Hours
     'Open': 'Ouvert',
     'Closed': 'Fermé',
+    'Expand opening hours': 'Développer les heures d\'ouverture',
+    'Collapse opening hours': 'Réduire les heures d\'ouverture',
     // View Selector
     'Go to view': 'Afficher le plan',
     'Close view selector': 'Fermer le sélecteur de vue',

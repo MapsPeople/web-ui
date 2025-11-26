@@ -80,6 +80,8 @@ const da = {
     //Opening Hours
     'Open': 'Åben',
     'Closed': 'Lukket',
+    'Expand opening hours': 'Udvid åbningstider',
+    'Collapse opening hours': 'Skjul åbningstider',
     // View Selector
     'Go to view': 'Vis lokation',
     'Close view selector': 'Luk visningsvælger',

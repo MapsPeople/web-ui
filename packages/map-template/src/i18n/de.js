@@ -80,6 +80,8 @@ const de = {
     // Opening Hours
     'Open': 'Geöffnet',
     'Closed': 'Geschlossen',
+    'Expand opening hours': 'Öffnungszeiten erweitern',
+    'Collapse opening hours': 'Öffnungszeiten reduzieren',
     // View Selector
     'Go to view': 'Ansicht wechseln',
     'Close view selector': 'Ansichtsauswahl schließen',
