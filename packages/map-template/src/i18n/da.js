@@ -85,6 +85,9 @@ const da = {
     'Close view selector': 'Luk visningsvælger',
     // Language Selector
     'Select language': 'Vælg sprog',
+    // Accessibility
+    'Increase text size to 200%': 'Forøg tekststørrelse til 200%',
+    'Decrease text size to 100%': 'Formindsk tekststørrelse til 100%',
 };
 
 export default da;

@@ -85,6 +85,9 @@ const nl = {
     'Close view selector': 'Sluiten weergavekiezer',
     // Language Selector
     'Select language': 'Selecteer taal',
+    // Accessibility
+    'Increase text size to 200%': 'Tekstgrootte verhogen naar 200%',
+    'Decrease text size to 100%': 'Tekstgrootte verlagen naar 100%',
 };
 
 export default nl;

@@ -84,6 +84,9 @@ const zh = {
     'Go to view': '定位到',
     // Language Selector
     'Select language': '选择语言',
+    // Accessibility
+    'Increase text size to 200%': '将文本大小增加到 200%',
+    'Decrease text size to 100%': '将文本大小减少到 100%',
 };
 
 export default zh;

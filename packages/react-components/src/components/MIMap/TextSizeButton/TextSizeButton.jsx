@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import { ReactComponent as TextSizeIcon } from '../../../assets/icon-text-size.svg';
 import './TextSizeButton.scss';
@@ -10,6 +11,7 @@ import './TextSizeButton.scss';
  * @param {Object} props - Component properties
  */
 function TextSizeButton() {
+    const { t } = useTranslation();
     const isDesktop = useIsDesktop();
     const [isLargeText, setIsLargeText] = useState(false);
 
@@ -37,7 +39,7 @@ function TextSizeButton() {
             type="button"
             className={`text-size-button ${isLargeText ? 'text-size-button--active' : ''}`}
             onClick={handleToggle}
-            aria-label={isLargeText ? 'Decrease text size to 100%' : 'Increase text size to 200%'}
+            aria-label={isLargeText ? t('Decrease text size to 100%') : t('Increase text size to 200%')}
             aria-pressed={isLargeText}
         >
             <TextSizeIcon />

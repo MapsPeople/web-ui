@@ -85,6 +85,9 @@ const fr = {
     'Close view selector': 'Fermer le sélecteur de vue',
     // Language Selector
     'Select language': 'Sélectionner langue',
+    // Accessibility
+    'Increase text size to 200%': 'Augmenter la taille du texte à 200%',
+    'Decrease text size to 100%': 'Réduire la taille du texte à 100%',
 };
 
 export default fr;
