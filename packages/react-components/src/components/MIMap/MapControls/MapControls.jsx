@@ -15,7 +15,8 @@ const UI_ELEMENTS = {
     viewModeSwitch: { key: 'viewmode-switch', className: 'viewmode-switch-portal' },
     myPosition: { key: 'my-position', className: 'my-position-element-portal' },
     floorSelector: { key: 'floor-selector', className: 'floor-selector-portal' },
-    resetView: { key: 'reset-view', className: 'reset-view-portal' }
+    resetView: { key: 'reset-view', className: 'reset-view-portal' },
+    zoomControls: { key: 'zoom-controls', className: null } // React component imported directly, no portal needed
 };
 
 MapControls.propTypes = {
@@ -183,6 +184,9 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
     // Handle visibility of portal elements based on excludedElements
     useEffect(() => {
         Object.entries(UI_ELEMENTS).forEach(([elementName, config]) => {
+            // Skip elements without a portal (e.g., React components like zoomControls)
+            if (!config.className) return;
+            
             const portal = document.querySelector(`.${config.className}`);
             if (portal) {
                 const shouldShow = shouldRenderElement(elementName);
@@ -208,7 +212,9 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
                     {uiElements.venueSelector}
                     {uiElements.viewSelector}
                     {uiElements.myPosition}
-                    <MapZoomControl mapType={mapType} mapInstance={mapInstance} />
+                    {shouldRenderElement('zoomControls') && (
+                        <MapZoomControl mapType={mapType} mapInstance={mapInstance} />
+                    )}
                     {uiElements.languageSelector}
                     <TextSizeButton />
                     {uiElements.viewModeSwitch}
