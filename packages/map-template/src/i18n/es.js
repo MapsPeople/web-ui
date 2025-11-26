@@ -7,6 +7,7 @@ const es = {
     'Estimated time': 'Hora Prevista',
     'Level': 'Nivel',
     'Search by name, category, building...': 'Busca por nombre, categoría, edificio...',
+    'Show legend': 'Mostrar leyenda',
     'Nothing was found': 'No se encontró nada',
     'd': 'd',
     'h': 'h',

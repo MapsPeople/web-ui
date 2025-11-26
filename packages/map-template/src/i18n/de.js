@@ -7,6 +7,7 @@ const de = {
     'Estimated time': 'Geschätzte Zeit',
     'Level': 'Etage',
     'Search by name, category, building...': 'Nach Name, Kategorie, Gebäude suchen...',
+    'Show legend': 'Legende anzeigen',
     'Nothing was found': 'Keine Suchtreffer',
     'd': 'd',
     'h': 'h',

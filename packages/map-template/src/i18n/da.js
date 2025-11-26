@@ -7,6 +7,7 @@ const da = {
     'Estimated time': 'Forventet tid',
     'Level': 'Etage',
     'Search by name, category, building...': 'Søg efter navn, kategori, bygning...',
+    'Show legend': 'Vis forklaring',
     'Nothing was found': 'Intet fundet',
     'd': 'd',
     'h': 't',

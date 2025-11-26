@@ -7,6 +7,7 @@ const fr = {
     'Estimated time': 'Heure d\'arrivée estimée',
     'Level': 'Niveau',
     'Search by name, category, building...': 'Recherche par nom, catégorie, bâtiment...',
+    'Show legend': 'Afficher la légende',
     'Nothing was found': 'Rien n\'a été trouvé',
     'd': 'd',
     'h': 'h',

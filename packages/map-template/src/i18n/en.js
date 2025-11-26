@@ -7,6 +7,7 @@ const en = {
     'Estimated time': 'Estimated time',
     'Level': 'Level',
     'Search by name, category, building...': 'Search by name, category, building...',
+    'Show legend': 'Show legend',
     'Nothing was found': 'Nothing was found',
     'd': 'd',
     'h': 'h',

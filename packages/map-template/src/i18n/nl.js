@@ -7,6 +7,7 @@ const nl = {
     'Estimated time': 'Geschatte tijd',
     'Level': 'Niveau',
     'Search by name, category, building...': 'Zoeken op naam, categorie, gebouw…',
+    'Show legend': 'Legende weergeven',
     'Nothing was found': 'Er is niets gevonden',
     'd': 'd',
     'h': 'u',

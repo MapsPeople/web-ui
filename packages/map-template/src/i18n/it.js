@@ -7,6 +7,7 @@ const it = {
     'Estimated time': 'Tempo stimato',
     'Level': 'Piano',
     'Search by name, category, building...': 'Cerca per nome, categoria, edificio...',
+    'Show legend': 'Mostra legenda',
     'Nothing was found': 'Non è stato trovato nulla',
     'd': 'g',
     'h': 'o',
