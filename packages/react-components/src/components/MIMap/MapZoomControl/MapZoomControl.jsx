@@ -62,6 +62,7 @@ function MapZoomControl({ mapType, mapInstance }) {
         }
     }, [mapType, mapInstance]);
 
+    // Early return if not used in desktop layout, not needed in mobile layout
     if (!isDesktop) {
         return null;
     }
