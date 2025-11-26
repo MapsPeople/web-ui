@@ -23,9 +23,7 @@ function MapZoomControl({ mapType, mapInstance }) {
     const isDesktop = useIsDesktop();
 
     const handleZoomIn = useCallback(() => {
-        if (!mapInstance) return;
-
-        const map = mapInstance.getMap();
+        const map = mapInstance?.getMap();
         if (!map) return;
 
         switch (mapType) {
@@ -43,9 +41,7 @@ function MapZoomControl({ mapType, mapInstance }) {
     }, [mapType, mapInstance]);
 
     const handleZoomOut = useCallback(() => {
-        if (!mapInstance) return;
-
-        const map = mapInstance.getMap();
+        const map = mapInstance?.getMap();
         if (!map) return;
 
         switch (mapType) {
