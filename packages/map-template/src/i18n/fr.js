@@ -55,6 +55,7 @@ const fr = {
     // Wayfinding component
     'Switch': 'Changer',
     'Avoid stairs and escalators': 'Éviter les escaliers et les escalators',
+    'Include bus transportation': 'Inclure le transport en bus',
     'No route found': 'Aucun itinéraire trouvé',
     'My position': 'Ma position',
     'Go!': 'C\'est parti!',

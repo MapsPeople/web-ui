@@ -55,6 +55,7 @@ const zh = {
     // Wayfinding component
     'Switch': '切换',
     'Avoid stairs and escalators': '避开楼梯和扶梯',
+    'Include bus transportation': '包含公交交通',
     'No route found': '未找到路线',
     'My position': '我的位置',
     'Go!': '出发！',

@@ -55,6 +55,7 @@ const nl = {
     // Wayfinding component
     'Switch': 'Schakelaar',
     'Avoid stairs and escalators': 'Vermijd trappen en roltrappen',
+    'Include bus transportation': 'Busvervoer opnemen',
     'No route found': 'Geen route gevonden',
     'My position': 'Mijn positie',
     'Go!': 'Gaan!',
