@@ -7,6 +7,7 @@ const nl = {
     'Estimated time': 'Geschatte tijd',
     'Level': 'Niveau',
     'Search by name, category, building...': 'Zoeken op naam, categorie, gebouw…',
+    'Show legend': 'Legende weergeven',
     'Nothing was found': 'Er is niets gevonden',
     'd': 'd',
     'h': 'u',
@@ -54,6 +55,7 @@ const nl = {
     // Wayfinding component
     'Switch': 'Schakelaar',
     'Avoid stairs and escalators': 'Vermijd trappen en roltrappen',
+    'Include bus transportation': 'Busvervoer opnemen',
     'No route found': 'Geen route gevonden',
     'My position': 'Mijn positie',
     'Go!': 'Gaan!',
@@ -78,11 +80,19 @@ const nl = {
     // Opening Hours
     'Open': 'Open',
     'Closed': 'Gesloten',
+    'Expand opening hours': 'Openingsuren uitklappen',
+    'Collapse opening hours': 'Openingsuren inklappen',
     // View Selector
     'Go to view': 'Toon locatie',
     'Close view selector': 'Sluiten weergavekiezer',
     // Language Selector
     'Select language': 'Selecteer taal',
+    // Accessibility
+    'Increase text size to 200%': 'Tekstgrootte verhogen naar 200%',
+    'Decrease text size to 100%': 'Tekstgrootte verlagen naar 100%',
+    // Map Controls
+    'Zoom in': 'Inzoomen',
+    'Zoom out': 'Uitzoomen',
 };
 
 export default nl;

@@ -6,18 +6,18 @@ $desktop-breakpoint: 992px;
     height: fit-content;
     border-radius: var(--spacing-small);
     border: 1px solid #E6E6E6;
-    gap: var(--spacing-xx-small);
-    padding: var(--spacing-xx-small);
     grid-auto-flow: row; // Stack buttons vertically
     width: fit-content; // Only take up needed space
     
     &__button {
-        border-radius: var(--rounding-large);
-        width: var(--spacing-xx-large);
-        height: var(--spacing-xx-large);
+        border-radius: var(--rounding-large, 4px);
+        width: var(--spacing-xxx-large);
+        height: var(--spacing-xxx-large);
+        box-sizing: border-box;
         display: grid;
         align-items: center;
         justify-content: center;
-        border: none;
+        border: 2px solid var(--tailwind-colors-white, white);
+        background-clip: padding-box;
     }
 }

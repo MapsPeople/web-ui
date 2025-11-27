@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import './MapControls.scss';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import CustomPositionProvider from '../../../utils/CustomPositionProvider';
+import MapZoomControl from '../MapZoomControl/MapZoomControl';
+import TextSizeButton from '../TextSizeButton/TextSizeButton';
 
 // Define UI element configuration objects with class names
 // This is a single source of truth for the UI elements and their class names
@@ -13,7 +15,9 @@ const UI_ELEMENTS = {
     viewModeSwitch: { key: 'viewmode-switch', className: 'viewmode-switch-portal' },
     myPosition: { key: 'my-position', className: 'my-position-element-portal' },
     floorSelector: { key: 'floor-selector', className: 'floor-selector-portal' },
-    resetView: { key: 'reset-view', className: 'reset-view-portal' }
+    resetView: { key: 'reset-view', className: 'reset-view-portal' },
+    zoomControls: { key: 'zoom-controls', className: null }, // React component imported directly, no portal needed
+    textSizeButton: { key: 'text-size-button', className: null } // React component imported directly, no portal needed
 };
 
 MapControls.propTypes = {
@@ -23,7 +27,8 @@ MapControls.propTypes = {
     onPositionControl: PropTypes.func,
     brandingColor: PropTypes.string,
     devicePosition: PropTypes.object,
-    excludedElements: PropTypes.string
+    excludedElements: PropTypes.string,
+    isKiosk: PropTypes.bool
 };
 
 /**
@@ -39,11 +44,12 @@ MapControls.propTypes = {
  * @param {string} [props.brandingColor] - Custom branding color for controls
  * @param {Object} [props.devicePosition] - Device position data (if available)
  * @param {string} [props.excludedElements] - Comma-separated string of element names to exclude from rendering, defaults to empty string -> renders all elements
+ * @param {boolean} [props.isKiosk] - Set to true to enable kiosk layout
  *
  * @returns {JSX.Element} Map controls container with venue selector, floor selector,
- * position button, and view mode switch, arranged differently for desktop and mobile layouts
+ * position button, and view mode switch, arranged differently for desktop, kiosk, and mobile layouts
  */
-function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionControl, brandingColor, devicePosition, excludedElements = '' }) {
+function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionControl, brandingColor, devicePosition, excludedElements = '', isKiosk  }) {
     const isDesktop = useIsDesktop();
     const floorSelectorRef = useRef(null);
     const positionButtonRef = useRef(null);
@@ -73,7 +79,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
     const setPositionAndHandleFloor = (devicePosition) => {
         // Set the position and start watching if successful
         if (positionButtonRef.current.customPositionProvider.setPosition(devicePosition)) {
-        positionButtonRef.current.watchPosition();
+            positionButtonRef.current.watchPosition();
         }
     };
 
@@ -179,6 +185,9 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
     // Handle visibility of portal elements based on excludedElements
     useEffect(() => {
         Object.entries(UI_ELEMENTS).forEach(([elementName, config]) => {
+            // Skip elements without a portal (e.g., React components like zoomControls)
+            if (!config.className) return;
+            
             const portal = document.querySelector(`.${config.className}`);
             if (portal) {
                 const shouldShow = shouldRenderElement(elementName);
@@ -191,7 +200,33 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
         });
     }, [excludedElements, shouldRenderElement, isDesktop]);
 
-    if (isDesktop) {
+    if (isKiosk) {
+        {/* For kiosk layout, render the controls in bottom right */ }
+        return (
+            <>
+                {/* Top right kiosk controls */}
+                <div className="map-controls-container kiosk top-right">
+                </div>
+
+                {/* Bottom right kiosk controls */}
+                <div className="map-controls-container kiosk bottom-right">
+                    {uiElements.venueSelector}
+                    {uiElements.viewSelector}
+                    {uiElements.myPosition}
+                    {shouldRenderElement('zoomControls') && (
+                        <MapZoomControl mapType={mapType} mapInstance={mapInstance} />
+                    )}
+                    {uiElements.languageSelector}
+                    {shouldRenderElement('textSizeButton') && (
+                        <TextSizeButton />
+                    )}
+                    {uiElements.viewModeSwitch}
+                    {uiElements.floorSelector}
+                    {uiElements.resetView}
+                </div>
+            </>
+        );
+    } else if (isDesktop) {
         {/* For desktop layout, render the controls in the correct container based on the layout */ }
         return (
             <>
@@ -207,6 +242,9 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
 
                 {/* Bottom right desktop controls */}
                 <div className="map-controls-container desktop bottom-right">
+                    {shouldRenderElement('zoomControls') && (
+                        <MapZoomControl mapType={mapType} mapInstance={mapInstance} />
+                    )}
                     {uiElements.resetView}
                 </div>
             </>

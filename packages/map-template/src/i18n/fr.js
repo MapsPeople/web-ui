@@ -7,6 +7,7 @@ const fr = {
     'Estimated time': 'Heure d\'arrivée estimée',
     'Level': 'Niveau',
     'Search by name, category, building...': 'Recherche par nom, catégorie, bâtiment...',
+    'Show legend': 'Afficher la légende',
     'Nothing was found': 'Rien n\'a été trouvé',
     'd': 'd',
     'h': 'h',
@@ -54,6 +55,7 @@ const fr = {
     // Wayfinding component
     'Switch': 'Changer',
     'Avoid stairs and escalators': 'Éviter les escaliers et les escalators',
+    'Include bus transportation': 'Inclure le transport en bus',
     'No route found': 'Aucun itinéraire trouvé',
     'My position': 'Ma position',
     'Go!': 'C\'est parti!',
@@ -78,11 +80,19 @@ const fr = {
     // Opening Hours
     'Open': 'Ouvert',
     'Closed': 'Fermé',
+    'Expand opening hours': 'Développer les heures d\'ouverture',
+    'Collapse opening hours': 'Réduire les heures d\'ouverture',
     // View Selector
     'Go to view': 'Afficher le plan',
     'Close view selector': 'Fermer le sélecteur de vue',
     // Language Selector
     'Select language': 'Sélectionner langue',
+    // Accessibility
+    'Increase text size to 200%': 'Augmenter la taille du texte à 200%',
+    'Decrease text size to 100%': 'Réduire la taille du texte à 100%',
+    // Map Controls
+    'Zoom in': 'Zoom avant',
+    'Zoom out': 'Zoom arrière',
 };
 
 export default fr;
