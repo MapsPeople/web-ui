@@ -430,14 +430,14 @@ export class RouteInstructionsStep implements ComponentInterface {
     }
 
     /**
-     * Render a transit step.
+     * Render a transit step. Inclusing BUSWAY instruction.
      *
      * @returns {JSX.Element}
      */
     renderTransitStep(): JSX.Element {
         return <div class="step" onClick={(e): void => this.stepClickHandler(e)}>
             <div class="step__info">
-                <h3 part="step-heading" class="step__heading">{this.stepData?.instructions}</h3>
+                <h3 part="step-heading" class="step__heading">{this.stepData.travel_mode === 'TRANSIT' ? `${this.translationsData.rideTheBus}` : this.stepData?.instructions}</h3>
                 {this.renderToggleButton()}
             </div>
             {this.renderTravelMode()}
