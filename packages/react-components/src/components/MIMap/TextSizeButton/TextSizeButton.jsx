@@ -7,8 +7,6 @@ import './TextSizeButton.scss';
 /**
  * TextSizeButton component provides a button to toggle text size between default (100%) and large (200%).
  * This is an accessibility feature that increases text size across the application.
- * 
- * @param {Object} props - Component properties
  */
 function TextSizeButton() {
     const { t } = useTranslation();
