@@ -16,7 +16,8 @@ const UI_ELEMENTS = {
     myPosition: { key: 'my-position', className: 'my-position-element-portal' },
     floorSelector: { key: 'floor-selector', className: 'floor-selector-portal' },
     resetView: { key: 'reset-view', className: 'reset-view-portal' },
-    zoomControls: { key: 'zoom-controls', className: null } // React component imported directly, no portal needed
+    zoomControls: { key: 'zoom-controls', className: null }, // React component imported directly, no portal needed
+    textSizeButton: { key: 'text-size-button', className: null } // React component imported directly, no portal needed
 };
 
 MapControls.propTypes = {
@@ -216,7 +217,9 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
                         <MapZoomControl mapType={mapType} mapInstance={mapInstance} />
                     )}
                     {uiElements.languageSelector}
-                    <TextSizeButton />
+                    {shouldRenderElement('textSizeButton') && (
+                        <TextSizeButton />
+                    )}
                     {uiElements.viewModeSwitch}
                     {uiElements.floorSelector}
                     {uiElements.resetView}
