@@ -338,10 +338,10 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     // Only show the chat window if it's visible
     if (!isVisible) return null;
 
-    const chatWindowClassName = `chat-window ${isDesktop ? 'desktop' : 'mobile'}`;
+    const chatWindowLayout = `chat-window ${isDesktop ? 'desktop' : 'mobile'}`;
 
     return (
-        <div ref={chatWindowRef} className={chatWindowClassName} style={{ '--chat-window-primary-color': primaryColor }}>
+        <div ref={chatWindowRef} className={chatWindowLayout} style={{ '--chat-window-primary-color': primaryColor }}>
             {isHeaderVisible && <div className="chat-window__header">
                 <span className="chat-window__title">Maps Indoors AI Assistant</span>
                 <button
