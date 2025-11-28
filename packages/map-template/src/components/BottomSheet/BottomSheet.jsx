@@ -11,7 +11,9 @@ import Wayfinding from '../Wayfinding/Wayfinding';
 import Directions from '../Directions/Directions';
 import Search from '../Search/Search';
 import LocationsList from '../LocationsList/LocationsList';
+import ChatWindow from '../ChatWindow/ChatWindow';
 import locationIdState from '../../atoms/locationIdState';
+import { useChatLocations, useChatDirections } from '../../hooks/useChat';
 import PropTypes from 'prop-types';
 import { snapPoints } from '../../constants/snapPoints';
 
@@ -48,8 +50,13 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
     const locationDetailsSheetRef = useRef();
     const wayfindingSheetRef = useRef();
     const directionsSheetRef = useRef();
+    const chatSheetRef = useRef();
 
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
+
+    // Use chat hooks for handling chat interactions
+    const handleChatSearchResults = useChatLocations();
+    const handleChatShowRoute = useChatDirections(pushAppView, appViews);
 
     // Holds boolean depicting if the current Location contains more information than just the basic info that is shown in minimal height bottom sheet.
     const [currentLocationIsDetailed, setCurrentLocationIsDetailed] = useState(false);
@@ -136,6 +143,7 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
             <Search
                 isOpen={currentAppView === appViews.SEARCH}
                 onSetSize={size => searchSheetRef.current.setSnapPoint(size)}
+                onOpenChat={() => pushAppView(appViews.CHAT)}
             />
         </Sheet>,
         <Sheet
@@ -195,6 +203,21 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
                 isOpen={currentAppView === appViews.DIRECTIONS}
                 onBack={() => pushAppView(appViews.WAYFINDING)}
                 onRouteFinished={() => onRouteFinished()}
+            />
+        </Sheet>,
+        <Sheet
+            minimizedHeight={600}
+            isOpen={currentAppView === appViews.CHAT}
+            initialSnapPoint={snapPoints.FIT}
+            ref={chatSheetRef}
+            key="CHAT"
+            disableSwipe={true}
+        >
+            <ChatWindow
+                isVisible={currentAppView === appViews.CHAT}
+                onClose={() => pushAppView(appViews.SEARCH)}
+                onSearchResults={handleChatSearchResults}
+                onShowRoute={handleChatShowRoute}
             />
         </Sheet>
     ];
