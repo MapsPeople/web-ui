@@ -1,23 +1,23 @@
 import { useRef, useCallback, useEffect, useState } from 'react';
 import { ReactComponent as ChatModeIcon } from '../../../assets/chat-mode-icon.svg';
 import { ReactComponent as CloseIcon } from '../../../assets/close.svg';
-// import { useIsDesktop } from '../../../hooks/useIsDesktop';
+import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import PropTypes from 'prop-types';
 import './ChatInput.scss';
 
 function ChatInput({ onSendMessage, isLoading, onClose }) {
     const inputRef = useRef(null);
     const [inputValue, setInputValue] = useState('');
-    // const isDesktop = useIsDesktop();
+    const isDesktop = useIsDesktop();
 
-    // Auto-focus input on mount
+    // Auto-focus input on mount only on desktop
     useEffect(() => {
-        if (inputRef.current) {
+        if (inputRef.current && isDesktop) {
             requestAnimationFrame(() => {
                 inputRef.current?.focus();
             });
         }
-    }, []);
+    }, [isDesktop]);
 
     // Handle sending message from input
     const handleSend = useCallback(() => {
