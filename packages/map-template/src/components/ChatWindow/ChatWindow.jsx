@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 import { useGemini } from '../../providers/GeminiProvider';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import chatHistoryState from '../../atoms/chatHistoryState';
@@ -195,6 +195,8 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     const isDesktop = useIsDesktop();
     const chatWindowRef = useRef(null);
     const { getInitialMessage, clearInitialMessage } = useInitialChatMessage();
+    const [isMobileKeyboardVisible, setIsMobileKeyboardVisible] = useState(false);
+    const [keyboardHeight, setKeyboardHeight] = useState(0);
 
 
     // TODO: Hide header for now, redesign later
@@ -333,15 +335,96 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
         }
     }, [isVisible, isLoading, getInitialMessage, clearInitialMessage, handleSendMessage]);
 
+    // Handle mobile keyboard appearance - move ChatWindow up when keyboard is visible
+    useEffect(() => {
+        if (isDesktop || !isVisible) return;
 
+        const handleViewportResize = () => {
+            if (window.visualViewport) {
+                const viewportHeight = window.visualViewport.height;
+                const windowHeight = window.innerHeight;
+                const calculatedKeyboardHeight = windowHeight - viewportHeight;
+                
+                if (calculatedKeyboardHeight > 50) {
+                    setIsMobileKeyboardVisible(true);
+                    setKeyboardHeight(calculatedKeyboardHeight);
+                } else {
+                    setIsMobileKeyboardVisible(false);
+                    setKeyboardHeight(0);
+                }
+            }
+        };
+
+        // Listen to visual viewport resize events
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', handleViewportResize);
+            handleViewportResize();
+        }
+
+        return () => {
+            if (window.visualViewport) {
+                window.visualViewport.removeEventListener('resize', handleViewportResize);
+            }
+        };
+    }, [isDesktop, isVisible]);
+
+
+
+    /**
+     * Get the layout classes for the ChatWindow component based on current state
+     * 
+     * @returns {string} Space-separated class names
+     * 
+     * Desktop: Returns 'chat-window desktop'
+     * Mobile without keyboard: Returns 'chat-window mobile'
+     * Mobile with keyboard: Returns 'chat-window mobile chat-window--keyboard-visible'
+     */
+    function getChatWindowLayout() {
+        const baseClass = 'chat-window';
+        
+        // Desktop layout - no keyboard handling needed
+        if (isDesktop) {
+            return `${baseClass} desktop`;
+        }
+        
+        // Mobile layout with keyboard visible - adds modifier class for positioning
+        if (isMobileKeyboardVisible) {
+            return `${baseClass} mobile chat-window--keyboard-visible`;
+        }
+        
+        // Mobile layout without keyboard - default position at bottom
+        return `${baseClass} mobile`;
+    }
+
+    /**
+     * Get inline styles for the ChatWindow component based on current state
+     * 
+     * @returns {Object} Style object with CSS custom properties
+     * 
+     * Always includes: '--chat-window-primary-color'
+     * Mobile with keyboard: Also includes '--keyboard-height'
+     */
+    function getChatWindowStyles() {
+        const baseStyles = {
+            '--chat-window-primary-color': primaryColor
+        };
+
+        // Add keyboard height for mobile when keyboard is visible
+        if (!isDesktop && isMobileKeyboardVisible) {
+            return {
+                ...baseStyles,
+                '--keyboard-height': `${keyboardHeight}px`
+            };
+        }
+
+        return baseStyles;
+    }
 
     // Only show the chat window if it's visible
     if (!isVisible) return null;
 
-    const chatWindowLayout = `chat-window ${isDesktop ? 'desktop' : 'mobile'}`;
-
     return (
-        <div ref={chatWindowRef} className={chatWindowLayout} style={{ '--chat-window-primary-color': primaryColor }}>
+        <div ref={chatWindowRef} className={getChatWindowLayout()} style={getChatWindowStyles()}>
             {isHeaderVisible && <div className="chat-window__header">
                 <span className="chat-window__title">Maps Indoors AI Assistant</span>
                 <button

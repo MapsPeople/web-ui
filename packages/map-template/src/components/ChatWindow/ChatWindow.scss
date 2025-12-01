@@ -52,6 +52,36 @@
 }
 
 
+// Base mobile styles - size and position without keyboard
 .chat-window.mobile {
-    // TODO: Add mobile styles
+    margin: 8px;
+    height: 40vh;
+    overflow-y: auto;
+    pointer-events: all;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    transition: bottom 0.1s ease-out;
+    border-radius: var(--rounding-large);
+}
+
+// Mobile with keyboard - adjust position to move above keyboard
+.chat-window.mobile.chat-window--keyboard-visible {
+    bottom: var(--keyboard-height, 0);
+}
+
+.chat-window.mobile .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0; // Important for flex scrolling
+}
+
+.chat-window.mobile .chat-input {
+    flex-shrink: 0;
+    position: relative; // Changed from sticky since container is fixed
+    z-index: 2;
+    background-color: var(--color-white-white);
 }
