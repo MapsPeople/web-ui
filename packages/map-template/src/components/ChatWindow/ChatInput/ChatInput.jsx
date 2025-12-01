@@ -1,5 +1,6 @@
 import { useRef, useCallback, useEffect, useState } from 'react';
 import { ReactComponent as ChatModeIcon } from '../../../assets/chat-mode-icon.svg';
+import { ReactComponent as CloseIcon } from '../../../assets/close.svg';
 // import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import PropTypes from 'prop-types';
 import './ChatInput.scss';
@@ -67,7 +68,7 @@ function ChatInput({ onSendMessage, isLoading, onClose }) {
                     className="chat-input__close-button"
                     aria-label="Close chat"
                 >
-                    ×
+                    <CloseIcon />
                 </button>
         </div>
     );
