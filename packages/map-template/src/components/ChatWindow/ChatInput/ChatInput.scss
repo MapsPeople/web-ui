@@ -59,6 +59,9 @@
 
     &::placeholder {
         color: var(--color-gray-60);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
 

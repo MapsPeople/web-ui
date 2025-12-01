@@ -439,7 +439,6 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
             <ChatInput
                 onSendMessage={handleSendMessage}
                 isLoading={isLoading}
-                primaryColor={primaryColor}
                 onClose={onClose}
             />
             <ChatMessages

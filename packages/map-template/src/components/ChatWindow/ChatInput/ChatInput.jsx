@@ -1,13 +1,13 @@
 import { useRef, useCallback, useEffect, useState } from 'react';
 import { ReactComponent as ChatModeIcon } from '../../../assets/chat-mode-icon.svg';
-import { useIsDesktop } from '../../../hooks/useIsDesktop';
+// import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import PropTypes from 'prop-types';
 import './ChatInput.scss';
 
-function ChatInput({ onSendMessage, isLoading, primaryColor, onClose }) {
+function ChatInput({ onSendMessage, isLoading, onClose }) {
     const inputRef = useRef(null);
     const [inputValue, setInputValue] = useState('');
-    const isDesktop = useIsDesktop();
+    // const isDesktop = useIsDesktop();
 
     // Auto-focus input on mount
     useEffect(() => {
@@ -49,7 +49,7 @@ function ChatInput({ onSendMessage, isLoading, primaryColor, onClose }) {
                     rows={1}
                 />
             </div>
-            {!isDesktop && (
+            {/* {!isDesktop && (
                 <button
                     type="button"
                     onClick={handleSend}
@@ -60,8 +60,7 @@ function ChatInput({ onSendMessage, isLoading, primaryColor, onClose }) {
                 >
                     Send
                 </button>
-            )}
-            {isDesktop && (
+            )} */}
                 <button
                     type="button"
                     onClick={onClose}
@@ -70,7 +69,6 @@ function ChatInput({ onSendMessage, isLoading, primaryColor, onClose }) {
                 >
                     ×
                 </button>
-            )}
         </div>
     );
 }
