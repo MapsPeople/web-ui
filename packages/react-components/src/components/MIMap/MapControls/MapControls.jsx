@@ -157,7 +157,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
      * Handle layout changes and element movement, this handles moving the elements to the correct DOM location based on the layout
      * and ensures that the elements are not duplicated in the DOM.
      * This is important for performance and to avoid issues with the web components.
-     * The useEffect will run when the component mounts and when the layout changes (isDesktop changes).
+     * The useEffect will run when the component mounts and when the layout changes (isDesktop or isKiosk changes).
      */
     useEffect(() => {
         if (!floorSelectorRef.current || !positionButtonRef.current) return;
@@ -172,15 +172,17 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
             }
         };
 
-        // Only move elements if their portals are visible
-        if (shouldRenderElement('floorSelector')) {
-            moveElementToTarget(floorSelectorRef.current, UI_ELEMENTS.floorSelector.className);
-        }
-        if (shouldRenderElement('myPosition')) {
-            moveElementToTarget(positionButtonRef.current, UI_ELEMENTS.myPosition.className);
-        }
+        requestAnimationFrame(() => {
+            // Only move elements if their portals are visible
+            if (shouldRenderElement('floorSelector')) {
+                moveElementToTarget(floorSelectorRef.current, UI_ELEMENTS.floorSelector.className);
+            }
+            if (shouldRenderElement('myPosition')) {
+                moveElementToTarget(positionButtonRef.current, UI_ELEMENTS.myPosition.className);
+            }
+        });
 
-    }, [isDesktop, shouldRenderElement]); // Re-run when layout changes or visibility logic changes
+    }, [isDesktop, isKiosk, shouldRenderElement]); // Re-run when layout changes or visibility logic changes
 
     // Handle visibility of portal elements based on excludedElements
     useEffect(() => {
