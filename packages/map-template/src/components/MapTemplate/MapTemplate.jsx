@@ -780,7 +780,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             <div className={`mapsindoors-map
             ${currentAppView === appStates.DIRECTIONS ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}
             ${(venuesInSolution.length > 1 && showVenueSelector) ? '' : 'mapsindoors-map--hide-venue-selector'}
-            ${showPositionControl ? 'mapsindoors-map--show-my-position' : 'mapsindoors-map--hide-my-position'}`}>
+            ${showPositionControl ? 'mapsindoors-map--show-my-position' : 'mapsindoors-map--hide-my-position'}
+            ${(currentAppView === appStates.CHAT && !isDesktop) ? 'mapsindoors-map--hide-map-controls' : ''}`}>
                 <Notification />
                 {!isMapReady && <SplashScreen />}
                 {venuesInSolution.length > 1 && showVenueSelector && <VenueSelector
