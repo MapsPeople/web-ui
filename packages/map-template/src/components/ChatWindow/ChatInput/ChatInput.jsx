@@ -45,7 +45,7 @@ function ChatInput({ onSendMessage, isLoading, onClose }) {
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    placeholder="Ask about locations, directions, or anything else..."
+                    placeholder="Ask or search about anything"
                     className="chat-input__textarea"
                     rows={1}
                 />
