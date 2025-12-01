@@ -50,7 +50,6 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
     const locationDetailsSheetRef = useRef();
     const wayfindingSheetRef = useRef();
     const directionsSheetRef = useRef();
-    const chatSheetRef = useRef();
 
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
 
@@ -132,99 +131,123 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
         setFilteredLocationsByExternalID([]);
     }
 
-    const bottomSheets = [
-        <Sheet
-            minimizedHeight={80}
-            initialSnapPoint={snapPoints.MIN}
-            key="SEARCH"
-            isOpen={currentAppView === appViews.SEARCH}
-            ref={searchSheetRef}
-        >
-            <Search
-                isOpen={currentAppView === appViews.SEARCH}
-                onSetSize={size => searchSheetRef.current.setSnapPoint(size)}
-                onOpenChat={() => pushAppView(appViews.CHAT)}
-            />
-        </Sheet>,
-        <Sheet
-            minimizedHeight={200}
-            isOpen={currentAppView === appViews.EXTERNALIDS}
-            initialSnapPoint={snapPoints.MIN}
-            key="EXTERNALIDS"
-            ref={locationsListSheetRef}
-        >
-            <LocationsList
-                onSetSize={size => locationsListSheetRef.current.setSnapPoint(size)}
-                onBack={() => closeLocationsList()}
-                locations={filteredLocationsByExternalIDs}
-                onLocationClick={location => setCurrentLocation(location)}
-            />
-        </Sheet>,
-        <Sheet
-            minimizedHeight={currentLocationIsDetailed ? 180 : 136}
-            key="LOCATION_DETAILS"
-            initialSnapPoint={snapPoints.MIN}
-            isOpen={currentAppView === appViews.LOCATION_DETAILS}
-            ref={locationDetailsSheetRef}
-        >
-            <LocationDetails
-                onSetSize={size => locationDetailsSheetRef.current.setSnapPoint(size)}
-                onStartWayfinding={() => pushAppView(appViews.WAYFINDING)}
-                onBack={() => closeLocationDetails()}
-                onStartDirections={() => pushAppView(appViews.DIRECTIONS)}
-                isOpen={currentAppView === appViews.LOCATION_DETAILS}
-            />
-        </Sheet>,
-        <Sheet
-            minimizedHeight={190}
-            key="WAYFINDING"
-            initialSnapPoint={snapPoints.FIT}
-            isOpen={currentAppView === appViews.WAYFINDING}
-            ref={wayfindingSheetRef}
-        >
-            <Wayfinding
-                onSetSize={size => wayfindingSheetRef.current.setSnapPoint(size)}
-                onStartDirections={() => pushAppView(appViews.DIRECTIONS)}
-                directionsToLocation={directionsToLocation}
-                directionsFromLocation={directionsFromLocation}
-                onBack={() => pushAppView(currentLocation ? appViews.LOCATION_DETAILS : appViews.SEARCH)}
-                isActive={currentAppView === appViews.WAYFINDING}
-            ></Wayfinding>
-        </Sheet>,
-        <Sheet
-            minimizedHeight={273}
-            isOpen={currentAppView === appViews.DIRECTIONS}
-            initialSnapPoint={snapPoints.FIT}
-            ref={directionsSheetRef}
-            key="DIRECTIONS"
-        >
-            <Directions
-                onSetSize={size => directionsSheetRef.current.setSnapPoint(size)}
-                isOpen={currentAppView === appViews.DIRECTIONS}
-                onBack={() => pushAppView(appViews.WAYFINDING)}
-                onRouteFinished={() => onRouteFinished()}
-            />
-        </Sheet>,
-        <Sheet
-            minimizedHeight={600}
-            isOpen={currentAppView === appViews.CHAT}
-            initialSnapPoint={snapPoints.FIT}
-            ref={chatSheetRef}
-            key="CHAT"
-            disableSwipe={true}
-        >
-            <ChatWindow
-                isVisible={currentAppView === appViews.CHAT}
-                onClose={() => pushAppView(appViews.SEARCH)}
-                onSearchResults={handleChatSearchResults}
-                onShowRoute={handleChatShowRoute}
-            />
-        </Sheet>
-    ];
+    /**
+     * Render the appropriate sheet based on the current app view.
+     */
+    function renderCurrentSheet() {
+        switch (currentAppView) {
+            case appViews.SEARCH:
+                return (
+                    <Sheet
+                        minimizedHeight={80}
+                        initialSnapPoint={snapPoints.MIN}
+                        key="SEARCH"
+                        isOpen={true}
+                        ref={searchSheetRef}
+                    >
+                        <Search
+                            isOpen={true}
+                            onSetSize={size => searchSheetRef.current.setSnapPoint(size)}
+                            onOpenChat={() => pushAppView(appViews.CHAT)}
+                        />
+                    </Sheet>
+                );
+
+            case appViews.EXTERNALIDS:
+                return (
+                    <Sheet
+                        minimizedHeight={200}
+                        initialSnapPoint={snapPoints.MIN}
+                        key="EXTERNALIDS"
+                        isOpen={true}
+                        ref={locationsListSheetRef}
+                    >
+                        <LocationsList
+                            onSetSize={size => locationsListSheetRef.current.setSnapPoint(size)}
+                            onBack={() => closeLocationsList()}
+                            locations={filteredLocationsByExternalIDs}
+                            onLocationClick={location => setCurrentLocation(location)}
+                        />
+                    </Sheet>
+                );
+
+            case appViews.LOCATION_DETAILS:
+                return (
+                    <Sheet
+                        minimizedHeight={currentLocationIsDetailed ? 180 : 136}
+                        key="LOCATION_DETAILS"
+                        initialSnapPoint={snapPoints.MIN}
+                        isOpen={true}
+                        ref={locationDetailsSheetRef}
+                    >
+                        <LocationDetails
+                            onSetSize={size => locationDetailsSheetRef.current.setSnapPoint(size)}
+                            onStartWayfinding={() => pushAppView(appViews.WAYFINDING)}
+                            onBack={() => closeLocationDetails()}
+                            onStartDirections={() => pushAppView(appViews.DIRECTIONS)}
+                            isOpen={true}
+                        />
+                    </Sheet>
+                );
+
+            case appViews.WAYFINDING:
+                return (
+                    <Sheet
+                        minimizedHeight={190}
+                        key="WAYFINDING"
+                        initialSnapPoint={snapPoints.FIT}
+                        isOpen={true}
+                        ref={wayfindingSheetRef}
+                    >
+                        <Wayfinding
+                            onSetSize={size => wayfindingSheetRef.current.setSnapPoint(size)}
+                            onStartDirections={() => pushAppView(appViews.DIRECTIONS)}
+                            directionsToLocation={directionsToLocation}
+                            directionsFromLocation={directionsFromLocation}
+                            onBack={() => pushAppView(currentLocation ? appViews.LOCATION_DETAILS : appViews.SEARCH)}
+                            isActive={true}
+                        />
+                    </Sheet>
+                );
+
+            case appViews.DIRECTIONS:
+                return (
+                    <Sheet
+                        minimizedHeight={273}
+                        initialSnapPoint={snapPoints.FIT}
+                        ref={directionsSheetRef}
+                        key="DIRECTIONS"
+                        isOpen={true}
+                    >
+                        <Directions
+                            onSetSize={size => directionsSheetRef.current.setSnapPoint(size)}
+                            isOpen={true}
+                            onBack={() => pushAppView(appViews.WAYFINDING)}
+                            onRouteFinished={() => onRouteFinished()}
+                        />
+                    </Sheet>
+                );
+
+            case appViews.CHAT:
+                return (
+                    <div ref={bottomSheetRef} className="bottom-sheets">
+                      <ChatWindow
+                        isVisible
+                        onClose={() => pushAppView(appViews.SEARCH)}
+                        onSearchResults={handleChatSearchResults}
+                        onShowRoute={handleChatShowRoute}
+                      />
+                    </div>
+                  );
+
+            default:
+                return null;
+        }
+    }
 
     return <div ref={bottomSheetRef} className="bottom-sheets">
         <ContainerContext.Provider value={bottomSheetRef}>
-            {bottomSheets}
+            {renderCurrentSheet()}
         </ContainerContext.Provider>
     </div>
 }
