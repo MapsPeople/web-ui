@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.2] - 2025-12-01
+
+### Added
+
+- Added kiosk prop to MapWrapper and MIMap components
+- Added kiosk layout support to MapControls component
+- Added TextSizeButton component for adjustable text size
+- Added text size button to map controls with conditional rendering
+- Added custom zoom controls for Google Maps and Mapbox
+- Aligned zoomControls rendering with the rest of the components
+
+### Fixed
+
+- Simplified early returns in MapZoomControls
+
+### Changed
+
+- Refactored map control logic
+
+### Style
+
+- Updated ViewModeSwitch button style for improved accessibility
+- Simplified button classes and enhanced MapZoomControl styling
+
 ## [1.1.1] - 2025-10-30
 
 ### Fixed
