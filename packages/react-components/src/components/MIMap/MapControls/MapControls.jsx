@@ -5,6 +5,7 @@ import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import CustomPositionProvider from '../../../utils/CustomPositionProvider';
 import MapZoomControl from '../MapZoomControl/MapZoomControl';
 import TextSizeButton from '../TextSizeButton/TextSizeButton';
+import NavigationControls from '../NavigationControls/NavigationControls';
 
 // Define UI element configuration objects with class names
 // This is a single source of truth for the UI elements and their class names
@@ -224,6 +225,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
                     )}
                     {uiElements.viewModeSwitch}
                     {uiElements.floorSelector}
+                    <NavigationControls mapType={mapType} mapInstance={mapInstance} />
                     {uiElements.resetView}
                 </div>
             </>

@@ -1,0 +1,105 @@
+.navigation-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    border-radius: var(--rounding-large, 8px);
+    overflow: visible;
+    border: 1px solid var(--tailwind-colors-gray-200, #e6e6e6);
+    background: var(--tailwind-colors-white, white);
+    position: relative;
+
+
+    &__toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: var(--spacing-xxx-large, 48px);
+        height: var(--spacing-xxx-large, 48px);
+        border: none;
+        background: var(--tailwind-colors-white, white);
+        cursor: pointer;
+        padding: var(--spacing-x-small, 8px);
+        color: inherit;
+        font: inherit;
+        transition: background-color 0.2s;
+        flex-shrink: 0;
+
+        &:hover {
+            background-color: var(--tailwind-colors-gray-50, #f9fafb);
+        }
+
+        &:active {
+            background-color: var(--tailwind-colors-gray-100, #f3f4f6);
+        }
+
+        &:focus {
+            outline: 2px solid #0066cc;
+            outline-offset: -2px;
+        }
+
+        &:focus:not(:focus-visible) {
+            outline: none;
+        }
+
+        svg {
+            width: 20px;
+            height: 20px;
+            display: block;
+        }
+    }
+
+    &__content {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-x-small, 8px);
+        position: absolute;
+        right: calc(100% + 16px);
+        bottom: 0;
+        z-index: 1;
+    }
+
+    &__row {
+        display: flex;
+        gap: var(--spacing-x-small, 8px);
+    }
+
+    &__button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: var(--spacing-xxx-large, 48px);
+        height: var(--spacing-xxx-large, 48px);
+        border: 1px solid var(--tailwind-colors-gray-200, #e6e6e6);
+        border-radius: var(--rounding-large, 8px);
+        background: var(--tailwind-colors-white, white);
+        cursor: pointer;
+        padding: var(--spacing-x-small, 8px);
+        color: inherit;
+        font: inherit;
+        transition: background-color 0.2s;
+
+        &:hover {
+            background-color: var(--tailwind-colors-gray-50, #f9fafb);
+        }
+
+        &:active {
+            background-color: var(--tailwind-colors-gray-100, #f3f4f6);
+        }
+
+        &:focus {
+            outline: 2px solid #0066cc;
+            outline-offset: -2px;
+        }
+
+        &:focus:not(:focus-visible) {
+            outline: none;
+        }
+
+        svg {
+            width: 20px;
+            height: 20px;
+            display: block;
+        }
+    }
+}
+
