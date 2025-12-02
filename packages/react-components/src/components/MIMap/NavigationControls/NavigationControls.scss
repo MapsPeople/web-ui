@@ -100,6 +100,21 @@
             height: 20px;
             display: block;
         }
+
+        &--spacer {
+            border: none;
+            background: transparent;
+            cursor: default;
+            pointer-events: none;
+
+            &:hover {
+                background-color: transparent;
+            }
+
+            &:active {
+                background-color: transparent;
+            }
+        }
     }
 }
 
