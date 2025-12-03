@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.87.13] - 2025-12-01
+
+### Added
+
+- Added translations for map controls 'Zoom in' and 'Zoom out'
+- Added translations for 'Expand opening hours' and 'Collapse opening hours'
+- Added accessibility translations for text size button
+- Added translation for 'Include bus transportation'
+- Added 'Show legend' translation in i18n files
+
+### Fixed
+
+- Enhanced accessibility by adding aria-labels to buttons in Directions, LocationDetails, OpeningHours, Search, and ShuttleBus components
+
+### Changed
+
+- Removed searchDisabled state and updated disabled logic in Search component for improved accessibility
+
 ## [1.87.12] - 2025-11-27
 
 ### Fixed
