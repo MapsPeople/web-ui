@@ -220,7 +220,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
                     )}
                     {uiElements.languageSelector}
                     {shouldRenderElement('textSizeButton') && (
-                        <TextSizeButton />
+                        <TextSizeButton mapsIndoorsInstance={mapsIndoorsInstance}/>
                     )}
                     {uiElements.viewModeSwitch}
                     {uiElements.floorSelector}
