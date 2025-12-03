@@ -233,8 +233,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             const miSdkApiTag = document.createElement('script');
             miSdkApiTag.setAttribute('type', 'text/javascript');
-            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.44.3/mapsindoors-4.44.3.js.gz');
-            miSdkApiTag.setAttribute('integrity', 'sha384-5W9MCHut7z0re2ycdODA393sU9AP3cqHNT+G0SD1pP1r9m8Cbug+k9ZFZyz3Yjoq');
+            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.45.0/mapsindoors-4.45.0.js.gz');
+            miSdkApiTag.setAttribute('integrity', 'sha384-g6i/cAWAyDc9wRRgY49L0cz2lPKh8emTU9+fGSIRfxDuQaX3tXA7i3Fgd1kfJ5eJ');
             miSdkApiTag.setAttribute('crossorigin', 'anonymous');
             document.body.appendChild(miSdkApiTag);
             miSdkApiTag.onload = () => {
@@ -516,7 +516,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                         ? appConfig.appSettings.showMapMarkers.toLowerCase() === 'true'
                         : appConfig?.appSettings?.showMapMarkers),
             miTransitionLevel: miTransitionLevel,
-            minZoom: ZoomLevelValues.minZoom,
+            minZoom: appConfig?.appSettings?.ignoreViewportBounds ? 1 : ZoomLevelValues.minZoom,
             mapboxMapStyle: appConfig?.appSettings?.mapboxMapStyle || mapboxMapStyle
         })
     }, [primaryColor, showRoadNames, miTransitionLevel, color, showMapMarkers, appConfig]);
