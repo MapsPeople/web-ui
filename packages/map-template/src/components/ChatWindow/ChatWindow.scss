@@ -54,7 +54,7 @@
 
 // Base mobile styles - size and position without keyboard
 .chat-window.mobile {
-    margin: 8px;
+    margin: var(--spacing-x-small);
     height: 40vh;
     overflow-y: auto;
     pointer-events: all;
@@ -64,8 +64,16 @@
     right: 0;
     display: flex;
     flex-direction: column;
-    transition: bottom 0.1s ease-out;
     border-radius: var(--rounding-large);
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out, bottom 0.1s ease-out;
+    transform: translateY(100%);
+    opacity: 0;
+
+    // Animation when visible - slide up from bottom
+    &.chat-window--visible {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 // Mobile with keyboard - adjust position to move above keyboard

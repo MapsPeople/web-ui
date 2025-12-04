@@ -64,6 +64,7 @@ import { ZoomLevelValues } from '../../constants/zoomLevelValues.js';
 import { useOnRouteFinished } from '../../hooks/useOnRouteFinished.js';
 import notificationMessageState from '../../atoms/notificationMessageState.js';
 import { GeminiProvider } from '../../providers/GeminiProvider';
+import ChatButton from '../ChatButton/ChatButton';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -792,6 +793,11 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 />}
                 {qrCodeLink && <QRCodeDialog />}
                 {showLegendDialog && <LegendDialog />}
+                <ChatButton 
+                    pushAppView={pushAppView}
+                    currentAppView={currentAppView}
+                    appViews={appStates}
+                />
                 {isMapPositionInvestigating &&
                     <Fragment key={resetCount}>
                         {isDesktop &&

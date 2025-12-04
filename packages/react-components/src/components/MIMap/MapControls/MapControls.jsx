@@ -13,7 +13,8 @@ const UI_ELEMENTS = {
     viewModeSwitch: { key: 'viewmode-switch', className: 'viewmode-switch-portal' },
     myPosition: { key: 'my-position', className: 'my-position-element-portal' },
     floorSelector: { key: 'floor-selector', className: 'floor-selector-portal' },
-    resetView: { key: 'reset-view', className: 'reset-view-portal' }
+    resetView: { key: 'reset-view', className: 'reset-view-portal' },
+    chatButton: { key: 'chat-button', className: 'chat-button-portal' }
 };
 
 MapControls.propTypes = {
@@ -208,6 +209,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
                 {/* Bottom right desktop controls */}
                 <div className="map-controls-container desktop bottom-right">
                     {uiElements.resetView}
+                    {uiElements.chatButton}
                 </div>
             </>
         );
@@ -224,6 +226,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
                 <div className="map-controls-right-column mobile-column">
                     {uiElements.myPosition}
                     {uiElements.floorSelector}
+                    {uiElements.chatButton}
                 </div>
             </>
         );

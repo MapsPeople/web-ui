@@ -77,7 +77,6 @@ function ChatInput({ onSendMessage, isLoading, onClose }) {
 ChatInput.propTypes = {
     onSendMessage: PropTypes.func.isRequired,
     isLoading: PropTypes.bool.isRequired,
-    primaryColor: PropTypes.string.isRequired,
     onClose: PropTypes.func.isRequired
 };
 

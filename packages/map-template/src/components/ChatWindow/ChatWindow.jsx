@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useCallback, useState } from 'react';
 import { useGemini } from '../../providers/GeminiProvider';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import chatHistoryState from '../../atoms/chatHistoryState';
@@ -197,6 +197,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     const { getInitialMessage, clearInitialMessage } = useInitialChatMessage();
     const [isMobileKeyboardVisible, setIsMobileKeyboardVisible] = useState(false);
     const [keyboardHeight, setKeyboardHeight] = useState(0);
+    const [isAnimated, setIsAnimated] = useState(false);
 
 
     // TODO: Hide header for now, redesign later
@@ -335,6 +336,16 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
         }
     }, [isVisible, isLoading, getInitialMessage, clearInitialMessage, handleSendMessage]);
 
+    // Trigger animation when chat window becomes visible on mobile
+    // useLayoutEffect runs synchronously after DOM mutations, perfect for triggering animations
+    useLayoutEffect(() => {
+        if (!isDesktop && isVisible) {
+            setIsAnimated(true);
+        } else {
+            setIsAnimated(false);
+        }
+    }, [isVisible, isDesktop]);
+
     // Handle mobile keyboard appearance - move ChatWindow up when keyboard is visible
     useEffect(() => {
         if (isDesktop || !isVisible) return;
@@ -376,8 +387,8 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
      * @returns {string} Space-separated class names
      * 
      * Desktop: Returns 'chat-window desktop'
-     * Mobile without keyboard: Returns 'chat-window mobile'
-     * Mobile with keyboard: Returns 'chat-window mobile chat-window--keyboard-visible'
+     * Mobile without keyboard: Returns 'chat-window mobile' (with 'chat-window--visible' when animated)
+     * Mobile with keyboard: Returns 'chat-window mobile chat-window--keyboard-visible' (with 'chat-window--visible' when animated)
      */
     function getChatWindowLayout() {
         const baseClass = 'chat-window';
@@ -389,11 +400,11 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
         
         // Mobile layout with keyboard visible - adds modifier class for positioning
         if (isMobileKeyboardVisible) {
-            return `${baseClass} mobile chat-window--keyboard-visible`;
+            return `${baseClass} mobile chat-window--keyboard-visible${isAnimated ? ' chat-window--visible' : ''}`;
         }
         
-        // Mobile layout without keyboard - default position at bottom
-        return `${baseClass} mobile`;
+        // Mobile layout without keyboard - default position at bottom with animation
+        return `${baseClass} mobile${isAnimated ? ' chat-window--visible' : ''}`;
     }
 
     /**
