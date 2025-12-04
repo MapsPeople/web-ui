@@ -26,7 +26,12 @@ function ChatInput({ onSendMessage, isLoading, onClose }) {
 
         setInputValue('');
         onSendMessage(messageText);
-    }, [inputValue, isLoading, onSendMessage]);
+        
+        // Blur input on mobile to dismiss keyboard after sending message
+        if (!isDesktop && inputRef.current) {
+            inputRef.current.blur();
+        }
+    }, [inputValue, isLoading, onSendMessage, isDesktop]);
 
     // Handle Enter key in input field
     const handleKeyDown = useCallback((event) => {
