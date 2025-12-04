@@ -28,12 +28,14 @@ function ResetKioskViewButton() {
     const isDesktop = useIsDesktop();
 
     /**
-     * 
+     * Resets the map position to the kiosk origin location.
      */
     function resetMapPosition() {
         window.mapsindoors.services.LocationsService.getLocation(kioskOriginLocationId)
             .then(kioskLocation => {
-                fitMapBoundsToLocations([kioskLocation]);
+                if (kioskLocation) {
+                    fitMapBoundsToLocations([kioskLocation]);
+                }
             })
             .catch(error => {
                 console.error('Error resetting map position:', error);
@@ -43,11 +45,20 @@ function ResetKioskViewButton() {
     /**
      * Adjusts the map view to fit the bounds of the provided locations.
      * It will filter out Locations that are not on the current floor or not part of the current venue.
+     * If the kiosk location is included, it will set the floor to match the kiosk location's floor first.
      *
      * @param {Array} locations - An array of Location objects to fit within the map bounds.
      */
     function fitMapBoundsToLocations(locations) {
         if (!mapsIndoorsInstance.goTo) return; // Early exit to prevent crashes if using an older version of the MapsIndoors JS SDK. The goTo method was introduced in version 4.38.0.
+
+        // If the kiosk location is in the list, set the floor to match it first.
+        // This ensures the floor changes before we filter, so the kiosk location won't be filtered out.
+        const kioskLocationInList = locations.find(location => location.id === kioskOriginLocationId);
+        if (kioskLocationInList) {
+            const locationFloor = kioskLocationInList.properties.floor;
+            mapsIndoorsInstance.setFloor(locationFloor);
+        }
 
         const currentFloorIndex = mapsIndoorsInstance.getFloor();
 

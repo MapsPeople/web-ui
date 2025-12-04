@@ -122,7 +122,11 @@ function OpeningHours({ openingHours, isMondayFirstDayOfTheWeek = true, onExpand
 
     // Determines if a location is currently open based on its operating hours
     const isLocationCurrentlyOpen = useCallback((dayData) => {
-        if (!dayData || dayData.closedAllDay || !dayData.startHours) return false;
+        /*
+         * We mark the location as closed if there's no data for the day, it's
+         * closed all day, or valid start/end times are missing.
+         */
+        if (!dayData || dayData.closedAllDay || !dayData.startTime || !dayData.endTime) return false;
 
         const now = new Date();
         const currentTime = now.getHours() * 60 + now.getMinutes();
@@ -130,8 +134,8 @@ function OpeningHours({ openingHours, isMondayFirstDayOfTheWeek = true, onExpand
         const [startHours, startMinutes] = dayData.startTime.split(':');
         const [endHours, endMinutes] = dayData.endTime.split(':');
 
-        const startTime = parseInt(startHours) * 60 + parseInt(startMinutes);
-        const endTime = parseInt(endHours) * 60 + parseInt(endMinutes);
+        const startTime = parseInt(startHours, 10) * 60 + parseInt(startMinutes, 10);
+        const endTime = parseInt(endHours, 10) * 60 + parseInt(endMinutes, 10);
 
         return currentTime >= startTime && currentTime <= endTime;
     }, []);
