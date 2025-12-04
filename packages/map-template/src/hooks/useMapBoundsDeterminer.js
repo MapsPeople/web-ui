@@ -100,33 +100,25 @@ const useMapBoundsDeterminer = () => {
 
             if (kioskOriginLocationId && isDesktop) {
                 setKioskOriginLocationInfo(previousLocationInfo => ({ ...previousLocationInfo, id: kioskOriginLocationId })); // Track current kiosk location
-                if (!isNullOrUndefined(center)) {
-                    // When in Kiosk mode and center prop is defined, set centerPoint to be center prop.
-                    getDesktopPaddingBottom().then(desktopPaddingBottom => {
-                        setMapPositionKnown(getCenterPoint().geometry);
-                        goTo(getCenterPoint().geometry, mapsIndoorsInstance, desktopPaddingBottom, 0, getZoomLevel(startZoomLevel), currentPitch, bearing);
-                    });
-                } else {
-                    // When in Kiosk mode (which can only happen on desktop), the map is fitted to the bounds of the given Location with some bottom padding to accommodate
-                    // for the bottom-centered modal.
-                    window.mapsindoors.services.LocationsService.getLocation(kioskOriginLocationId).then(kioskLocation => {
-                        if (kioskLocation) {
-                            // Set the floor to the one that the Location belongs to.
-                            const locationFloor = kioskLocation.properties.floor;
-                            mapsIndoorsInstance.setFloor(locationFloor);
+                // When in Kiosk mode (which can only happen on desktop), the map is fitted to the bounds of the given Location with some bottom padding to accommodate
+                // for the bottom-centered modal. kioskOriginLocationId always takes precedence over center prop.
+                window.mapsindoors.services.LocationsService.getLocation(kioskOriginLocationId).then(kioskLocation => {
+                    if (kioskLocation) {
+                        // Set the floor to the one that the Location belongs to.
+                        const locationFloor = kioskLocation.properties.floor;
+                        mapsIndoorsInstance.setFloor(locationFloor);
 
-                            // Save original display rule before changing
-                            const displayRule = mapsIndoorsInstance.getDisplayRule(kioskLocation);
-                            setKioskOriginLocationInfo(previousLocationInfo => ({ ...previousLocationInfo, originalRule: { ...displayRule } }));
-                            setKioskDisplayRule(kioskLocation);
+                        // Save original display rule before changing
+                        const displayRule = mapsIndoorsInstance.getDisplayRule(kioskLocation);
+                        setKioskOriginLocationInfo(previousLocationInfo => ({ ...previousLocationInfo, originalRule: { ...displayRule } }));
+                        setKioskDisplayRule(kioskLocation);
 
-                            getDesktopPaddingBottom().then(desktopPaddingBottom => {
-                                setMapPositionKnown(kioskLocation.geometry);
-                                goTo(kioskLocation.geometry, mapsIndoorsInstance, desktopPaddingBottom, 0, startZoomLevel ? getZoomLevel(startZoomLevel) : undefined, currentPitch, bearing);
-                            });
-                        }
-                    });
-                }
+                        getDesktopPaddingBottom().then(desktopPaddingBottom => {
+                            setMapPositionKnown(kioskLocation.geometry);
+                            goTo(kioskLocation.geometry, mapsIndoorsInstance, desktopPaddingBottom, 0, startZoomLevel ? getZoomLevel(startZoomLevel) : undefined, currentPitch, bearing);
+                        });
+                    }
+                });
             } else if (locationId && !venueWasSelected) {
                 if (!isNullOrUndefined(center)) {
                     // When locationId is defined and center prop is defined, set centerPoint to be center prop.
@@ -249,7 +241,7 @@ const useMapBoundsDeterminer = () => {
      */
     function getCenterPoint() {
         const [longitude, latitude] = center
-            ? center.split(",").map(Number)
+            ? center.split(',').map(Number)
             : [undefined, undefined];
 
         const centerPoint = { geometry: { type: 'Point', coordinates: [longitude, latitude] } };
