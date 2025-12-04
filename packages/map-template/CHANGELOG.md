@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.87.14] - 2025-12-04
+
+### Fixed
+
+- Fixed center prop taking priority over kioskOriginLocationId.
+- Fixed floor not changing when returning to original kiosk location in ResetKioskView
+
 ## [1.87.13] - 2025-12-03
 
 ### Fixed
