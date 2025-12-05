@@ -280,7 +280,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
 
 
     // Handle sending messages
-    // messageText is required - can come from ChatInput or from search field
+    // messageText is required - from the ChatInput component
     const handleSendMessage = useCallback(async (messageText) => {
         const trimmedMessage = messageText.trim();
 
