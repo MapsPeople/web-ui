@@ -4,6 +4,7 @@ import { useRecoilValue, useRecoilState } from 'recoil';
 import chatHistoryState from '../../atoms/chatHistoryState';
 import { useInitialChatMessage } from '../../hooks/useInitialChatMessage';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
+import { useKeyboardHeight } from '../../hooks/useKeyboardHeight';
 import PropTypes from 'prop-types';
 import './ChatWindow.scss';
 import primaryColorState from '../../atoms/primaryColorState';
@@ -189,15 +190,36 @@ const PROMPT_FIELDS = {
     </DIRECTIONS>`,
 };
 
+/**
+ * Updates the latest server message in the messages array with the provided updates.
+ * 
+ * @param {Array} messages - The array of message objects
+ * @param {Object} updates - The properties to update on the latest server message
+ * @returns {Array} A new array with the updated message
+ */
+function updateLatestServerMessage(messages, updates) {
+    const updatedMessages = [...messages];
+    const lastServerIndex = updatedMessages.findLastIndex(msg => msg.type === 'server');
+    
+    if (lastServerIndex !== -1) {
+        updatedMessages[lastServerIndex] = {
+            ...updatedMessages[lastServerIndex],
+            ...updates
+        };
+    }
+    
+    return updatedMessages;
+}
+
 function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     const primaryColor = useRecoilValue(primaryColorState);
     const apiKey = useRecoilValue(apiKeyState);
     const isDesktop = useIsDesktop();
     const chatWindowRef = useRef(null);
     const { getInitialMessage, clearInitialMessage } = useInitialChatMessage();
-    const [isMobileKeyboardVisible, setIsMobileKeyboardVisible] = useState(false);
-    const [keyboardHeight, setKeyboardHeight] = useState(0);
     const [isAnimated, setIsAnimated] = useState(false);
+    const keyboardHeight = useKeyboardHeight(isDesktop);
+    const isMobileKeyboardVisible = keyboardHeight > 0;
 
 
     // TODO: Hide header for now, redesign later
@@ -221,20 +243,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
             console.log('ChatWindow: Successfully fetched locations:', validLocations);
 
             // Update the latest server message with location data
-            setChatHistory(prev => {
-                const updatedMessages = [...prev];
-                // Find the last server message and update it with locations
-                for (let i = updatedMessages.length - 1; i >= 0; i--) {
-                    if (updatedMessages[i].type === 'server') {
-                        updatedMessages[i] = {
-                            ...updatedMessages[i],
-                            locations: validLocations
-                        };
-                        break;
-                    }
-                }
-                return updatedMessages;
-            });
+            setChatHistory(prev => updateLatestServerMessage(prev, { locations: validLocations }));
         } catch (error) {
             console.error('ChatWindow: Error fetching locations by IDs:', error);
         }
@@ -260,22 +269,11 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
             console.log('ChatWindow: Received directions location IDs from provider:', directionsLocationIds);
 
             // Update the latest server message with directions location IDs and route info
-            setChatHistory(prev => {
-                const updatedMessages = [...prev];
-                // Find the last server message and update it with directions location IDs
-                for (let i = updatedMessages.length - 1; i >= 0; i--) {
-                    if (updatedMessages[i].type === 'server') {
-                        updatedMessages[i] = {
-                            ...updatedMessages[i],
-                            directionsLocationIds: directionsLocationIds,
-                            canShowRoute: true,
-                            routeDirections: directionsLocationIds
-                        };
-                        break;
-                    }
-                }
-                return updatedMessages;
-            });
+            setChatHistory(prev => updateLatestServerMessage(prev, {
+                directionsLocationIds: directionsLocationIds,
+                canShowRoute: true,
+                routeDirections: directionsLocationIds
+            }));
         }
     }, [directionsLocationIds]);
 
@@ -336,8 +334,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
         }
     }, [isVisible, isLoading, getInitialMessage, clearInitialMessage, handleSendMessage]);
 
-    // Trigger animation when chat window becomes visible on mobile
-    // useLayoutEffect runs synchronously after DOM mutations, perfect for triggering animations
+    // Animate the chat window when it becomes visible on mobile
     useLayoutEffect(() => {
         if (!isDesktop && isVisible) {
             setIsAnimated(true);
@@ -345,40 +342,6 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
             setIsAnimated(false);
         }
     }, [isVisible, isDesktop]);
-
-    // Handle mobile keyboard appearance - move ChatWindow up when keyboard is visible
-    useEffect(() => {
-        if (isDesktop || !isVisible) return;
-
-        const handleViewportResize = () => {
-            if (window.visualViewport) {
-                const viewportHeight = window.visualViewport.height;
-                const windowHeight = window.innerHeight;
-                const calculatedKeyboardHeight = windowHeight - viewportHeight;
-                
-                if (calculatedKeyboardHeight > 50) {
-                    setIsMobileKeyboardVisible(true);
-                    setKeyboardHeight(calculatedKeyboardHeight);
-                } else {
-                    setIsMobileKeyboardVisible(false);
-                    setKeyboardHeight(0);
-                }
-            }
-        };
-
-        // Listen to visual viewport resize events
-        if (window.visualViewport) {
-            window.visualViewport.addEventListener('resize', handleViewportResize);
-            handleViewportResize();
-        }
-
-        return () => {
-            if (window.visualViewport) {
-                window.visualViewport.removeEventListener('resize', handleViewportResize);
-            }
-        };
-    }, [isDesktop, isVisible]);
-
 
 
     /**
