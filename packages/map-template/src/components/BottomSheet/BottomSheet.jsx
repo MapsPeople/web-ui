@@ -230,15 +230,13 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
 
             case appViews.CHAT:
                 return (
-                    <div ref={bottomSheetRef} className="bottom-sheets">
-                      <ChatWindow
+                    <ChatWindow
                         isVisible
                         onClose={() => pushAppView(appViews.SEARCH)}
                         onSearchResults={handleChatSearchResults}
                         onShowRoute={handleChatShowRoute}
-                      />
-                    </div>
-                  );
+                    />
+                );
 
             default:
                 return null;
