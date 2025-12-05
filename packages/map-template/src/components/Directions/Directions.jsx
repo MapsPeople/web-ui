@@ -137,6 +137,15 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
                 setMinZoom(null);
             });
         }
+
+        return () => {
+            // Cleanup: stop rendering directions and reset minZoom when component unmounts or dependencies change
+            if (directionsRenderer) {
+                directionsRenderer.setRoute(null);
+                directionsRenderer = null;
+            }
+            setMinZoom(ZoomLevelValues.minZoom);
+        };
     }, [isOpen, directions, mapsIndoorsInstance, travelMode]);
 
 
