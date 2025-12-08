@@ -4,6 +4,7 @@ import { useRecoilValue } from 'recoil';
 import PropTypes from 'prop-types';
 import chatHistoryState from '../../atoms/chatHistoryState';
 import primaryColorState from '../../atoms/primaryColorState';
+import {ReactComponent as ChatButtonIcon} from '../../assets/chat-icon.svg';
 import './ChatButton.scss';
 
 ChatButton.propTypes = {
@@ -71,7 +72,7 @@ function ChatButton({ pushAppView, currentAppView, appViews }) {
             type="button"
             style={{ '--chat-button-primary-color': primaryColor }}
         >
-            Chat
+            <ChatButtonIcon />
         </button>,
         portalContainer
     );
