@@ -203,7 +203,7 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bear
                 devicePosition={devicePosition}
                 excludedElements={excludedElements}
                 isKiosk={isKiosk}
-                enableAccessibilityKioskControls={appConfig?.appSettings?.enableAccessibilityKioskControls}
+                enableAccessibilityKioskControls={!!appConfig?.appSettings?.enableAccessibilityKioskControls}
             />
         )}
     </>
