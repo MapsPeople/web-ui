@@ -33,11 +33,15 @@ function TextSizeButton({ mapsIndoorsInstance }) {
     }, [mapsIndoorsInstance]);
 
     // Reset multiplier to 1.0 on mount to ensure clean state and avoid stray multipliers
+    // Keep global font size and MapsIndoors label size in sync with state, and clean up on unmount
     useEffect(() => {
-        if (mapsIndoorsInstance?.getMapView) {
-            mapsIndoorsInstance?.getMapView()?.resetLabelTextSize();
-        }
-    }, [mapsIndoorsInstance]);
+        applyTextSize(isLargeText);
+
+        return () => {
+            // Ensure we don't leave the document or map view in a "large text" state
+            applyTextSize(false);
+        };
+    }, [isLargeText, applyTextSize]);
 
     const handleToggle = useCallback(() => {
         const newState = !isLargeText;
