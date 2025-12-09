@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.87.13] - 2025-12-09
+## [1.88.0] - 2025-12-09
 
 ### Added
 
@@ -22,6 +22,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Removed searchDisabled state and updated disabled logic in Search component for improved accessibility
+
+## [1.87.14] - 2025-12-04
+
+### Fixed
+
+- Fixed center prop taking priority over kioskOriginLocationId.
+- Fixed floor not changing when returning to original kiosk location in ResetKioskView
+
+## [1.87.13] - 2025-12-03
+
+### Fixed
+
+- Upgraded to Web SDK version 4.45.0.
 
 ## [1.87.12] - 2025-11-27
 

@@ -516,7 +516,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                         ? appConfig.appSettings.showMapMarkers.toLowerCase() === 'true'
                         : appConfig?.appSettings?.showMapMarkers),
             miTransitionLevel: miTransitionLevel,
-            minZoom: ZoomLevelValues.minZoom,
+            // If ignoreViewportBounds is true, we would like to see the map at the minimum zoom level (World Map).
+            minZoom: appConfig?.appSettings?.ignoreViewportBounds ? 1 : ZoomLevelValues.minZoom,
             mapboxMapStyle: appConfig?.appSettings?.mapboxMapStyle || mapboxMapStyle
         })
     }, [primaryColor, showRoadNames, miTransitionLevel, color, showMapMarkers, appConfig]);
