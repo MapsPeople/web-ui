@@ -23,7 +23,7 @@ function TextSizeButton({ mapsIndoorsInstance }) {
             // Set the font size for MapTemplate content to 200%
             document.documentElement.style.fontSize = '200%';
             // Set the font size for MapsIndoors content to 200%
-            mapsIndoorsInstance.getMapView().setLabelTextSizeMultiplier(2.0);
+            mapsIndoorsInstance?.getMapView()?.setLabelTextSizeMultiplier(2.0);
         } else {
             // Reset the font size for MapTemplate content to default
             document.documentElement.style.fontSize = '';
