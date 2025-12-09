@@ -28,7 +28,8 @@ MapControls.propTypes = {
     brandingColor: PropTypes.string,
     devicePosition: PropTypes.object,
     excludedElements: PropTypes.string,
-    isKiosk: PropTypes.bool
+    isKiosk: PropTypes.bool,
+    enableAccessibilityKioskControls: PropTypes.bool
 };
 
 /**
@@ -45,11 +46,12 @@ MapControls.propTypes = {
  * @param {Object} [props.devicePosition] - Device position data (if available)
  * @param {string} [props.excludedElements] - Comma-separated string of element names to exclude from rendering, defaults to empty string -> renders all elements
  * @param {boolean} [props.isKiosk] - Set to true to enable kiosk layout
+ * @param {boolean} [props.enableAccessibilityKioskControls] - Set to true to enable accessibility kiosk controls, defaults to false
  *
  * @returns {JSX.Element} Map controls container with venue selector, floor selector,
  * position button, and view mode switch, arranged differently for desktop, kiosk, and mobile layouts
  */
-function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionControl, brandingColor, devicePosition, excludedElements = '', isKiosk  }) {
+function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionControl, brandingColor, devicePosition, excludedElements = '', isKiosk, enableAccessibilityKioskControls = false }) {
     const isDesktop = useIsDesktop();
     const floorSelectorRef = useRef(null);
     const positionButtonRef = useRef(null);
@@ -189,7 +191,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
         Object.entries(UI_ELEMENTS).forEach(([elementName, config]) => {
             // Skip elements without a portal (e.g., React components like zoomControls)
             if (!config.className) return;
-            
+
             const portal = document.querySelector(`.${config.className}`);
             if (portal) {
                 const shouldShow = shouldRenderElement(elementName);
@@ -203,31 +205,53 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
     }, [excludedElements, shouldRenderElement, isDesktop]);
 
     if (isKiosk) {
-        {/* For kiosk layout, render the controls in bottom right */ }
-        return (
-            <>
-                {/* Top right kiosk controls */}
-                <div className="map-controls-container kiosk top-right">
-                </div>
+        if (enableAccessibilityKioskControls) {
+            return (
+                <>
+                    {/* Top right kiosk controls */}
+                    <div className="map-controls-container kiosk top-right">
+                    </div>
 
-                {/* Bottom right kiosk controls */}
-                <div className="map-controls-container kiosk bottom-right">
-                    {uiElements.venueSelector}
-                    {uiElements.viewSelector}
-                    {uiElements.myPosition}
-                    {shouldRenderElement('zoomControls') && (
-                        <MapZoomControl mapType={mapType} mapInstance={mapInstance} />
-                    )}
-                    {uiElements.languageSelector}
-                    {shouldRenderElement('textSizeButton') && (
-                        <TextSizeButton />
-                    )}
-                    {uiElements.viewModeSwitch}
-                    {uiElements.floorSelector}
-                    {uiElements.resetView}
-                </div>
-            </>
-        );
+                    {/* Bottom right kiosk controls */}
+                    <div className="map-controls-container kiosk bottom-right">
+                        {uiElements.venueSelector}
+                        {uiElements.viewSelector}
+                        {uiElements.myPosition}
+                        {shouldRenderElement('zoomControls') && (
+                            <MapZoomControl mapType={mapType} mapInstance={mapInstance} />
+                        )}
+                        {uiElements.languageSelector}
+                        {shouldRenderElement('textSizeButton') && (
+                            <TextSizeButton mapsIndoorsInstance={mapsIndoorsInstance} />
+                        )}
+                        {uiElements.viewModeSwitch}
+                        {uiElements.floorSelector}
+                        {uiElements.resetView}
+                    </div>
+                </>
+            );
+        } else {
+            {/* For kiosk layout, render the controls in bottom right */ }
+            {/* If enableAccessibilityKioskControls is false, render the default kiosk layout */ }
+            return (
+                <>
+                    {/* Top right kiosk controls */}
+                    <div className="map-controls-container kiosk top-right">
+                        {uiElements.venueSelector}
+                        {uiElements.viewSelector}
+                        {uiElements.languageSelector}
+                        {uiElements.viewModeSwitch}
+                        {uiElements.myPosition}
+                        {uiElements.floorSelector}
+                    </div>
+
+                    {/* Bottom right kiosk controls */}
+                    <div className="map-controls-container kiosk bottom-right">
+                        {uiElements.resetView}
+                    </div>
+                </>
+            );
+        }
     } else if (isDesktop) {
         {/* For desktop layout, render the controls in the correct container based on the layout */ }
         return (
