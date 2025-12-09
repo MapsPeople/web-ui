@@ -22,7 +22,21 @@
 .map-controls-container.desktop.bottom-right {
     @extend %control-container;
     bottom: calc(3 * var(--spacing-medium));
-    right: calc(5 * var(--spacing-medium));
+    right: calc(1 * var(--spacing-medium));
+}
+
+// Kiosk layout - top right
+.map-controls-container.kiosk.top-right {
+    @extend %control-container;
+    top: var(--spacing-medium);
+    right: var(--spacing-medium);
+}
+
+// Kiosk layout - bottom right
+.map-controls-container.kiosk.bottom-right {
+    @extend %control-container;
+    bottom: calc(3 * var(--spacing-medium));
+    right: calc(1 * var(--spacing-medium));
 }
 
 // Mobile layout, two columns aligned to the top left and right

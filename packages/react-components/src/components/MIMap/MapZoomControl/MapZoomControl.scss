@@ -1,0 +1,51 @@
+.map-zoom-control {
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--rounding-large, 8px);
+    overflow: hidden;
+    border: 1px solid var(--tailwind-colors-gray-200, #e6e6e6);
+    background: var(--tailwind-colors-white, white);
+
+    &__button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: var(--spacing-xxx-large, 48px);
+        height: var(--spacing-xxx-large, 48px);
+        border: none;
+        background: var(--tailwind-colors-white, white);
+        cursor: pointer;
+        padding: var(--spacing-x-small, 8px);
+        color: inherit;
+        font: inherit;
+        transition: background-color 0.2s;
+
+        &:hover {
+            background-color: var(--tailwind-colors-gray-50, #f9fafb);
+        }
+
+        &:active {
+            background-color: var(--tailwind-colors-gray-100, #f3f4f6);
+        }
+
+        &:focus {
+            outline: 2px solid #0066cc;
+            outline-offset: -2px;
+        }
+
+        &:focus:not(:focus-visible) {
+            outline: none;
+        }
+
+        svg {
+            width: 20px;
+            height: 20px;
+            display: block;
+        }
+
+        &:not(:last-child) {
+            border-bottom: 1px solid var(--tailwind-colors-gray-200, #e6e6e6);
+        }
+    }
+}
+

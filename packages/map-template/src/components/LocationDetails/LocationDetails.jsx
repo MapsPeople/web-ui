@@ -358,7 +358,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
                     </div>
                     <div className="location-info__actions">
                         <ShareLocationLink buttonClassName="location-info__button" location={location} />
-                        <button className="location-info__button" onClick={() => back()}>
+                        <button className="location-info__button" onClick={() => back()} aria-label={t('Close')}>
                             <CloseIcon />
                         </button>
                     </div>
