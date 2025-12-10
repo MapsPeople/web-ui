@@ -90,6 +90,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
 
     const [destinationLocation, setDestinationLocation] = useState();
     const [originLocation, setOriginLocation] = useState();
+    const [showFloor, setShowFloor] = useState(true);
 
     const isDesktop = useIsDesktop();
 
@@ -102,6 +103,31 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
     const showExternalIDs = useRecoilValue(showExternalIDsState);
 
     const clickedOutsideMapsIndoorsData = useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOpen);
+
+    // Check if the venue has floors
+    useEffect(() => {
+        const checkVenueHasFloors = async () => {
+            if (mapsIndoorsInstance && location) {
+                try {
+                    // Get the current venue
+                    const building = mapsIndoorsInstance.getBuilding();
+                    if (building && building.floors) {
+                        // If floors exist, check if there's more than just a ground floor
+                        const floorCount = Object.keys(building.floors).length;
+                        setShowFloor(floorCount > 1);
+                    } else {
+                        // No floor information available
+                        setShowFloor(false);
+                    }
+                } catch (error) {
+                    // Fallback: if unable to get floor info, show it
+                    setShowFloor(true);
+                }
+            }
+        };
+
+        checkVenueHasFloors();
+    }, [mapsIndoorsInstance, location]);
 
     useEffect(() => {
         return () => {
@@ -354,7 +380,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
                         <div className="location-info__name">
                             {location.properties.name}
                         </div>
-                        <mi-location-info level={t('Level')} ref={locationInfoElement} show-external-id={showExternalIDs} />
+                        <mi-location-info level={t('Level')} ref={locationInfoElement} show-external-id={showExternalIDs} show-floor={showFloor} />
                     </div>
                     <div className="location-info__actions">
                         <ShareLocationLink buttonClassName="location-info__button" location={location} />
