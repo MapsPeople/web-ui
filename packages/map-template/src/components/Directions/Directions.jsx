@@ -334,7 +334,7 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
                     <hr />
                     <div className="directions__kiosk">
                         <Accessibility onAccessibilityChanged={() => resetSubsteps()} />
-                        <button className="directions__qr-code" onClick={() => showQRCode()}><QRCode />{t('Scan QR code')}</button>
+                        <button className="directions__qr-code" onClick={() => showQRCode()} aria-label={t('Scan QR code to view route on phone')}><QRCode />{t('Scan QR code')}</button>
                     </div>
                 </>
             }
