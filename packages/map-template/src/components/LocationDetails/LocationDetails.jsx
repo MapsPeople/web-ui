@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback, useLayoutEffect } from 'react';
+import React, { useEffect, useState, useRef, useCallback, useLayoutEffect, useMemo } from 'react';
 import './LocationDetails.scss';
 import { useTranslation } from 'react-i18next';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
@@ -21,6 +21,7 @@ import OpeningHours from './OpeningHours/OpeningHours';
 import PropTypes from 'prop-types';
 import ShareLocationLink from './ShareLocationLink/ShareLocationLink';
 import ContactActionButton from '../ContactActionButton/ContactActionButton';
+import appConfigState from '../../atoms/appConfigState';
 
 LocationDetails.propTypes = {
     onBack: PropTypes.func,
@@ -103,6 +104,13 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
 
     const clickedOutsideMapsIndoorsData = useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOpen);
 
+    const appConfig = useRecoilValue(appConfigState);
+
+    const excludedElements = useMemo(() => {
+        return appConfig?.appSettings?.excludeFromUI || '';
+    }, [appConfig?.appSettings?.excludeFromUI]);
+    console.log(excludedElements.includes('wayfindingDisabled'));
+    
     useEffect(() => {
         return () => {
             setLocationDisplayRule(null);
@@ -365,23 +373,25 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
                 </div>
 
                 {/* Wayfinding Button */}
-                {kioskLocation && isDesktop ? (
-                    <button
-                        disabled={!hasFoundRoute}
-                        onClick={() => startDirections()}
-                        className={`location-details__wayfinding ${!hasFoundRoute ? 'location-details--no-route' : ''}`}
-                        style={{ background: primaryColor }}
-                    >
-                        {!hasFoundRoute ? t('Directions not available') : t('Start directions')}
-                    </button>
-                ) : (
-                    <button
-                        onClick={() => startWayfinding()}
-                        style={{ background: primaryColor }}
-                        className="location-details__wayfinding"
-                    >
-                        {t('Start wayfinding')}
-                    </button>
+                {!excludedElements.includes('wayfindingDisabled') && (
+                    kioskLocation && isDesktop ? (
+                        <button
+                            disabled={!hasFoundRoute}
+                            onClick={() => startDirections()}
+                            className={`location-details__wayfinding ${!hasFoundRoute ? 'location-details--no-route' : ''}`}
+                            style={{ background: primaryColor }}
+                        >
+                            {!hasFoundRoute ? t('Directions not available') : t('Start directions')}
+                        </button>
+                    ) : (
+                        <button
+                            onClick={() => startWayfinding()}
+                            style={{ background: primaryColor }}
+                            className="location-details__wayfinding"
+                        >
+                            {t('Start wayfinding')}
+                        </button>
+                    )
                 )}
             </div>
             <div
