@@ -105,7 +105,8 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
     const clickedOutsideMapsIndoorsData = useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOpen);
 
     const appConfig = useRecoilValue(appConfigState);
-    console.log(appConfig?.appSettings);
+
+    const isWayfindingDisabled = appConfig?.appSettings?.excludeFromUI?.includes('wayfindingDisabled');
     
     useEffect(() => {
         return () => {
@@ -369,7 +370,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
                 </div>
 
                 {/* Wayfinding Button */}
-                {!appConfig?.appSettings?.excludeFromUI?.includes('wayfindingDisabled') && (
+                {!isWayfindingDisabled && (
                     kioskLocation && isDesktop ? (
                         <button
                             disabled={!hasFoundRoute}
