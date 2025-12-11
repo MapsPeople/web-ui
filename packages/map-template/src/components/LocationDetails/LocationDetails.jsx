@@ -21,6 +21,7 @@ import OpeningHours from './OpeningHours/OpeningHours';
 import PropTypes from 'prop-types';
 import ShareLocationLink from './ShareLocationLink/ShareLocationLink';
 import ContactActionButton from '../ContactActionButton/ContactActionButton';
+import appConfigState from '../../atoms/appConfigState';
 
 LocationDetails.propTypes = {
     onBack: PropTypes.func,
@@ -104,6 +105,10 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
 
     const clickedOutsideMapsIndoorsData = useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOpen);
 
+    const appConfig = useRecoilValue(appConfigState);
+
+    const isWayfindingDisabled = appConfig?.appSettings?.excludeFromUI?.includes('wayfindingDisabled');
+    
     /**
      * Check if venue has floors and set `showFloor` state accordingly
      * If venue has only one floor, we don't show the floor information in
@@ -391,23 +396,25 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
                 </div>
 
                 {/* Wayfinding Button */}
-                {kioskLocation && isDesktop ? (
-                    <button
-                        disabled={!hasFoundRoute}
-                        onClick={() => startDirections()}
-                        className={`location-details__wayfinding ${!hasFoundRoute ? 'location-details--no-route' : ''}`}
-                        style={{ background: primaryColor }}
-                    >
-                        {!hasFoundRoute ? t('Directions not available') : t('Start directions')}
-                    </button>
-                ) : (
-                    <button
-                        onClick={() => startWayfinding()}
-                        style={{ background: primaryColor }}
-                        className="location-details__wayfinding"
-                    >
-                        {t('Start wayfinding')}
-                    </button>
+                {!isWayfindingDisabled && (
+                    kioskLocation && isDesktop ? (
+                        <button
+                            disabled={!hasFoundRoute}
+                            onClick={() => startDirections()}
+                            className={`location-details__wayfinding ${!hasFoundRoute ? 'location-details--no-route' : ''}`}
+                            style={{ background: primaryColor }}
+                        >
+                            {!hasFoundRoute ? t('Directions not available') : t('Start directions')}
+                        </button>
+                    ) : (
+                        <button
+                            onClick={() => startWayfinding()}
+                            style={{ background: primaryColor }}
+                            className="location-details__wayfinding"
+                        >
+                            {t('Start wayfinding')}
+                        </button>
+                    )
                 )}
             </div>
             <div
