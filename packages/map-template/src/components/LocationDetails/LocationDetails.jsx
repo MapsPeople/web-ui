@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback, useLayoutEffect, useMemo } from 'react';
+import React, { useEffect, useState, useRef, useCallback, useLayoutEffect } from 'react';
 import './LocationDetails.scss';
 import { useTranslation } from 'react-i18next';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
@@ -105,11 +105,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
     const clickedOutsideMapsIndoorsData = useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOpen);
 
     const appConfig = useRecoilValue(appConfigState);
-
-    const excludedElements = useMemo(() => {
-        return appConfig?.appSettings?.excludeFromUI || '';
-    }, [appConfig?.appSettings?.excludeFromUI]);
-    console.log(excludedElements.includes('wayfindingDisabled'));
+    console.log(appConfig?.appSettings);
     
     useEffect(() => {
         return () => {
@@ -373,7 +369,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
                 </div>
 
                 {/* Wayfinding Button */}
-                {!excludedElements.includes('wayfindingDisabled') && (
+                {!appConfig?.appSettings?.excludeFromUI?.includes('wayfindingDisabled') && (
                     kioskLocation && isDesktop ? (
                         <button
                             disabled={!hasFoundRoute}
