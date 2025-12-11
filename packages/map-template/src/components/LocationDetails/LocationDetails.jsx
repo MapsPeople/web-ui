@@ -104,23 +104,23 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
 
     const clickedOutsideMapsIndoorsData = useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOpen);
 
-    // Check if the venue has floors
+    /**
+     * Check if venue has floors and set `showFloor` state accordingly
+     * If venue has only one floor, we don't show the floor information in
+     * the `<mi-location-info>` component.
+     */
     useEffect(() => {
-        const checkVenueHasFloors = async () => {
+        const checkVenueHasFloors = () => {
             if (mapsIndoorsInstance && location) {
                 try {
-                    // Get the current venue
                     const building = mapsIndoorsInstance.getBuilding();
                     if (building && building.floors) {
-                        // If floors exist, check if there's more than just a ground floor
                         const floorCount = Object.keys(building.floors).length;
                         setShowFloor(floorCount > 1);
                     } else {
-                        // No floor information available
                         setShowFloor(false);
                     }
                 } catch (error) {
-                    // Fallback: if unable to get floor info, show it
                     setShowFloor(true);
                 }
             }
