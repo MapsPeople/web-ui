@@ -258,7 +258,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     const isHeaderVisible = false;
 
     // Use Gemini provider
-    const { generateResponse, isLoading, tools, searchResults, directionsLocationIds } = useGemini();
+    const { generateResponse, isLoading, searchResults, directionsLocationIds } = useGemini();
 
     // Use Recoil for chat history
     const [chatHistory, setChatHistory] = useRecoilState(chatHistoryState);
@@ -327,7 +327,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
 
         // Call Gemini service for response (provider API expects an object)
         try {
-            const response = await generateResponse(apiKey, trimmedMessage, PROMPT_FIELDS, tools);
+            const response = await generateResponse(apiKey, trimmedMessage, PROMPT_FIELDS);
             setChatHistory(prev => [
                 ...prev,
                 {
@@ -349,7 +349,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                 }
             ]);
         }
-    }, [isLoading, generateResponse, apiKey, tools]);
+    }, [isLoading, generateResponse, apiKey]);
 
 
     // Automatically send initial message when chat opens with a message from search

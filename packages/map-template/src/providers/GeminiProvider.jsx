@@ -1,38 +1,24 @@
-import { createContext, useContext, useCallback, useState, useEffect } from 'react';
+import { createContext, useContext, useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
-import { generateResponse, getAvailableMCPTools, systemPrompt, getFinalFunctionResponse } from 'mcp-demo-client';
+import { generateResponse, systemPrompt, getFinalFunctionResponse } from 'mcp-demo-client';
 
 // Create the context
 const GeminiContext = createContext();
 
 export function GeminiProvider({ children }) {
     const [isLoading, setIsLoading] = useState(false);
-    const [tools, setTools] = useState({ functionDeclarations: [] });
     const [searchResults, setSearchResults] = useState([]);
     const [directionsLocationIds, setDirectionsLocationIds] = useState(null);
     const defaultPrompt = systemPrompt;
 
-    // Get available MCP tools and set them in state
-    const getAvailableMCPToolsWrapper = useCallback(async () => {
-        // Log the system prompt
-        try {
-            const toolsObject = await getAvailableMCPTools();
-            setTools(toolsObject);
-            return toolsObject;
-        } catch (error) {
-            console.error('Error getting MCP tools:', error);
-            return { functionDeclarations: [] };
-        }
-    }, []);
-
     // Wrapper function to generate a response using the Gemini service
-    const generateResponseWrapper = useCallback(async (apiKey, prompt, promptFields, toolsParam) => {
+    const generateResponseWrapper = useCallback(async (apiKey, prompt, promptFields) => {
         setIsLoading(true);
         // Clear previous directions data when starting a new request
         setDirectionsLocationIds(null);
         try {
             console.log('Generating response for prompt:', prompt);
-            const response = await generateResponse(apiKey, prompt, promptFields, toolsParam);
+            const response = await generateResponse(apiKey, prompt, promptFields);
 
             const finalFunctionResponse = getFinalFunctionResponse();
             // Extract search result IDs based on the final function response
@@ -84,17 +70,10 @@ export function GeminiProvider({ children }) {
         setDirectionsLocationIds(null);
     }, []);
 
-
-    // Initialize tools on provider mount
-    useEffect(() => {
-        getAvailableMCPToolsWrapper().catch(console.error);
-    }, [getAvailableMCPToolsWrapper]);
-
     // Provider value
     const geminiContextValue = {
         generateResponse: generateResponseWrapper,
         isLoading,
-        tools,
         searchResults,
         directionsLocationIds,
         clearDirectionsLocationIds,

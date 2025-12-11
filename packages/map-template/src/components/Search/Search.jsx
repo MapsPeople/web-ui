@@ -620,7 +620,7 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
             setShowNotFoundMessage(false);
             setIsInputFieldInFocus(false);
             setShowAskWithAiButton(false);
-            setSearchDisabled(true);
+            //setSearchDisabled(true);
             // Clear search results to show fresh state
             setSearchResults([]);
             // Clear search field if needed
