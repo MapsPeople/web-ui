@@ -406,6 +406,10 @@ export namespace Components {
           * @description Whether to show the External ID.
          */
         "showExternalId": boolean;
+        /**
+          * @description Whether to show the floor information. Default is true.
+         */
+        "showFloor": boolean;
     }
     interface MiMapGooglemaps {
         /**
@@ -1847,6 +1851,10 @@ declare namespace LocalJSX {
           * @description Whether to show the External ID.
          */
         "showExternalId"?: boolean;
+        /**
+          * @description Whether to show the floor information. Default is true.
+         */
+        "showFloor"?: boolean;
     }
     interface MiMapGooglemaps {
         /**

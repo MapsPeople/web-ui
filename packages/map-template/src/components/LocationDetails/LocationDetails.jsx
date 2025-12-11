@@ -91,6 +91,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
 
     const [destinationLocation, setDestinationLocation] = useState();
     const [originLocation, setOriginLocation] = useState();
+    const [showFloor, setShowFloor] = useState(true);
 
     const isDesktop = useIsDesktop();
 
@@ -108,6 +109,31 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
 
     const isWayfindingDisabled = appConfig?.appSettings?.excludeFromUI?.includes('wayfindingDisabled');
     
+    /**
+     * Check if venue has floors and set `showFloor` state accordingly
+     * If venue has only one floor, we don't show the floor information in
+     * the `<mi-location-info>` component.
+     */
+    useEffect(() => {
+        const checkVenueHasFloors = () => {
+            if (mapsIndoorsInstance && location) {
+                try {
+                    const building = mapsIndoorsInstance.getBuilding();
+                    if (building && building.floors) {
+                        const floorCount = Object.keys(building.floors).length;
+                        setShowFloor(floorCount > 1);
+                    } else {
+                        setShowFloor(false);
+                    }
+                } catch (error) {
+                    setShowFloor(true);
+                }
+            }
+        };
+
+        checkVenueHasFloors();
+    }, [mapsIndoorsInstance, location]);
+
     useEffect(() => {
         return () => {
             setLocationDisplayRule(null);
@@ -359,7 +385,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
                         <div className="location-info__name">
                             {location.properties.name}
                         </div>
-                        <mi-location-info level={t('Level')} ref={locationInfoElement} show-external-id={showExternalIDs} />
+                        <mi-location-info level={t('Level')} ref={locationInfoElement} show-external-id={showExternalIDs} show-floor={showFloor} />
                     </div>
                     <div className="location-info__actions">
                         <ShareLocationLink buttonClassName="location-info__button" location={location} />

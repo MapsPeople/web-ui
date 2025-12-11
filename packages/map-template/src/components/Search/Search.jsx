@@ -200,10 +200,12 @@ function Search({ onSetSize, isOpen }) {
      */
     function getSortedSearchResults(results) {
         if (selectedCategory) {
-            return [...results].sort((a, b) => 
-                (a.properties?.name || '').localeCompare(b.properties?.name || '')
-            );
+            return [...results].sort((a, b) => {
+                return (a.properties?.name || '')
+                    .localeCompare(b.properties?.name || '', undefined, { numeric: true });
+            })
         }
+
         return results;
     }
 
