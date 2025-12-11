@@ -23,6 +23,11 @@ export class LocationInfo implements ComponentInterface {
     @Prop() showExternalId: boolean = true;
 
     /**
+     * @description Whether to show the floor information. Default is true.
+     */
+    @Prop() showFloor: boolean = true;
+
+    /**
      * Get locations info as a string.
      *
      * @returns {string}
@@ -35,7 +40,7 @@ export class LocationInfo implements ComponentInterface {
             details.push(this.location.properties.externalId);
         }
         // Floor name
-        if (this.location.properties.floorName) {
+        if (this.location.properties.floorName && this.showFloor) {
             details.push(`${this.level} ${this.location.properties.floorName}`);
         }
         // Building
