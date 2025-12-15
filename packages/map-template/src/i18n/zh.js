@@ -7,6 +7,7 @@ const zh = {
     'Estimated time': '预计时间',
     'Level': '楼层',
     'Search by name, category, building...': '按名称、类别、建筑物搜索...',
+    'Show legend': '显示图例',
     'Nothing was found': '未找到任何结果',
     'd': '天',
     'h': '小时',
@@ -54,6 +55,7 @@ const zh = {
     // Wayfinding component
     'Switch': '切换',
     'Avoid stairs and escalators': '避开楼梯和扶梯',
+    'Include bus transportation': '包含公交交通',
     'No route found': '未找到路线',
     'My position': '我的位置',
     'Go!': '出发！',
@@ -78,10 +80,18 @@ const zh = {
     // Opening Hours
     'Open': '营业中',
     'Closed': '已关闭',
+    'Expand opening hours': '展开营业时间',
+    'Collapse opening hours': '收起营业时间',
     // View Selector
     'Go to view': '定位到',
     // Language Selector
     'Select language': '选择语言',
+    // Accessibility
+    'Increase text size to 200%': '将文本大小增加到 200%',
+    'Decrease text size to 100%': '将文本大小减少到 100%',
+    // Map Controls
+    'Zoom in': '放大',
+    'Zoom out': '缩小',
 };
 
 export default zh;

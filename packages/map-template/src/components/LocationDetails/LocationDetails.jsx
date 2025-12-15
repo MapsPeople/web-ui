@@ -21,6 +21,7 @@ import OpeningHours from './OpeningHours/OpeningHours';
 import PropTypes from 'prop-types';
 import ShareLocationLink from './ShareLocationLink/ShareLocationLink';
 import ContactActionButton from '../ContactActionButton/ContactActionButton';
+import appConfigState from '../../atoms/appConfigState';
 
 LocationDetails.propTypes = {
     onBack: PropTypes.func,
@@ -90,6 +91,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
 
     const [destinationLocation, setDestinationLocation] = useState();
     const [originLocation, setOriginLocation] = useState();
+    const [showFloor, setShowFloor] = useState(true);
 
     const isDesktop = useIsDesktop();
 
@@ -102,6 +104,35 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
     const showExternalIDs = useRecoilValue(showExternalIDsState);
 
     const clickedOutsideMapsIndoorsData = useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOpen);
+
+    const appConfig = useRecoilValue(appConfigState);
+
+    const isWayfindingDisabled = appConfig?.appSettings?.excludeFromUI?.includes('wayfindingDisabled');
+    
+    /**
+     * Check if venue has floors and set `showFloor` state accordingly
+     * If venue has only one floor, we don't show the floor information in
+     * the `<mi-location-info>` component.
+     */
+    useEffect(() => {
+        const checkVenueHasFloors = () => {
+            if (mapsIndoorsInstance && location) {
+                try {
+                    const building = mapsIndoorsInstance.getBuilding();
+                    if (building && building.floors) {
+                        const floorCount = Object.keys(building.floors).length;
+                        setShowFloor(floorCount > 1);
+                    } else {
+                        setShowFloor(false);
+                    }
+                } catch (error) {
+                    setShowFloor(true);
+                }
+            }
+        };
+
+        checkVenueHasFloors();
+    }, [mapsIndoorsInstance, location]);
 
     useEffect(() => {
         return () => {
@@ -354,34 +385,36 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
                         <div className="location-info__name">
                             {location.properties.name}
                         </div>
-                        <mi-location-info level={t('Level')} ref={locationInfoElement} show-external-id={showExternalIDs} />
+                        <mi-location-info level={t('Level')} ref={locationInfoElement} show-external-id={showExternalIDs} show-floor={showFloor} />
                     </div>
                     <div className="location-info__actions">
                         <ShareLocationLink buttonClassName="location-info__button" location={location} />
-                        <button className="location-info__button" onClick={() => back()}>
+                        <button className="location-info__button" onClick={() => back()} aria-label={t('Close')}>
                             <CloseIcon />
                         </button>
                     </div>
                 </div>
 
                 {/* Wayfinding Button */}
-                {kioskLocation && isDesktop ? (
-                    <button
-                        disabled={!hasFoundRoute}
-                        onClick={() => startDirections()}
-                        className={`location-details__wayfinding ${!hasFoundRoute ? 'location-details--no-route' : ''}`}
-                        style={{ background: primaryColor }}
-                    >
-                        {!hasFoundRoute ? t('Directions not available') : t('Start directions')}
-                    </button>
-                ) : (
-                    <button
-                        onClick={() => startWayfinding()}
-                        style={{ background: primaryColor }}
-                        className="location-details__wayfinding"
-                    >
-                        {t('Start wayfinding')}
-                    </button>
+                {!isWayfindingDisabled && (
+                    kioskLocation && isDesktop ? (
+                        <button
+                            disabled={!hasFoundRoute}
+                            onClick={() => startDirections()}
+                            className={`location-details__wayfinding ${!hasFoundRoute ? 'location-details--no-route' : ''}`}
+                            style={{ background: primaryColor }}
+                        >
+                            {!hasFoundRoute ? t('Directions not available') : t('Start directions')}
+                        </button>
+                    ) : (
+                        <button
+                            onClick={() => startWayfinding()}
+                            style={{ background: primaryColor }}
+                            className="location-details__wayfinding"
+                        >
+                            {t('Start wayfinding')}
+                        </button>
+                    )
                 )}
             </div>
             <div

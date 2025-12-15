@@ -5,6 +5,10 @@
 
     @media (max-width: $desktop-breakpoint) {
         padding: var(--spacing-medium) var(--spacing-x-small) var(--spacing-medium) var(--spacing-x-small);
+
+        mi-search input::placeholder {
+            color: #737373;
+        }
     }
 
     &__error {
@@ -47,9 +51,5 @@
         span {
             display: none;
         }
-    }
-
-    @media (max-width: $desktop-breakpoint) {
-        padding: var(--spacing-medium) var(--spacing-x-small) var(--spacing-medium) var(--spacing-x-small);
     }
 }

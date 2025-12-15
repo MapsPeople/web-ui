@@ -68,8 +68,6 @@ function Search({ onSetSize, isOpen }) {
 
     /** Maximum number of search results to show */
     const MAX_RESULTS = 100;
-
-    const [searchDisabled, setSearchDisabled] = useState(true);
     const [searchResults, setSearchResults] = useRecoilState(searchResultsState);
     const categories = useRecoilValue(categoriesState);
     const useKeyboard = useRecoilValue(useKeyboardState);
@@ -202,10 +200,12 @@ function Search({ onSetSize, isOpen }) {
      */
     function getSortedSearchResults(results) {
         if (selectedCategory) {
-            return [...results].sort((a, b) => 
-                (a.properties?.name || '').localeCompare(b.properties?.name || '')
-            );
+            return [...results].sort((a, b) => {
+                return (a.properties?.name || '')
+                    .localeCompare(b.properties?.name || '', undefined, { numeric: true });
+            })
         }
+
         return results;
     }
 
@@ -305,7 +305,6 @@ function Search({ onSetSize, isOpen }) {
      * But wait for any bottom sheet transition to end before doing that to avoid content jumping when virtual keyboard appears.
      */
     function searchFieldClicked() {
-        setSearchDisabled(false);
         searchFieldRef.current.getInputField();
 
         const sheet = searchRef.current.closest('.sheet');
@@ -595,7 +594,7 @@ function Search({ onSetSize, isOpen }) {
             { /* Search info which includes legend button if in a Kiosk context. */}
 
             <div className="search__info" style={{ gridTemplateColumns: isKioskContext && showLegendButton ? 'min-content 1fr' : 'auto' }}>
-                {isKioskContext && showLegendButton && <button className="search__legend" onClick={() => setShowLegendDialog(true)}><Legend /></button>}
+                {isKioskContext && showLegendButton && <button className="search__legend" onClick={() => setShowLegendDialog(true)} aria-label={t('Show legend')}><Legend /></button>}
 
                 { /* Search field that allows users to search for locations (MapsIndoors Locations and external) */}
                 <label className="search__label">
@@ -608,7 +607,7 @@ function Search({ onSetSize, isOpen }) {
                         clicked={() => searchFieldClicked()}
                         cleared={() => cleared()}
                         category={selectedCategory}
-                        disabled={searchDisabled} // Disabled initially to prevent content jumping when clicking and changing sheet size.
+                        disabled={!isOpen} // Disabled when not open to prevent content jumping, enabled when open for keyboard accessibility
                     />
                 </label>
             </div>

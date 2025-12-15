@@ -7,6 +7,7 @@ const da = {
     'Estimated time': 'Forventet tid',
     'Level': 'Etage',
     'Search by name, category, building...': 'Søg efter navn, kategori, bygning...',
+    'Show legend': 'Vis forklaring',
     'Nothing was found': 'Intet fundet',
     'd': 'd',
     'h': 't',
@@ -54,6 +55,7 @@ const da = {
     // Wayfinding component
     'Switch': 'Skift',
     'Avoid stairs and escalators': 'Undgå trapper og rulletrapper',
+    'Include bus transportation': 'Inkluder bus transport',
     'No route found': 'Ingen rute fundet',
     'My position': 'Min position',
     'Go!': 'Go!',
@@ -78,11 +80,19 @@ const da = {
     //Opening Hours
     'Open': 'Åben',
     'Closed': 'Lukket',
+    'Expand opening hours': 'Udvid åbningstider',
+    'Collapse opening hours': 'Skjul åbningstider',
     // View Selector
     'Go to view': 'Vis lokation',
     'Close view selector': 'Luk visningsvælger',
     // Language Selector
     'Select language': 'Vælg sprog',
+    // Accessibility
+    'Increase text size to 200%': 'Forøg tekststørrelse til 200%',
+    'Decrease text size to 100%': 'Formindsk tekststørrelse til 100%',
+    // Map Controls
+    'Zoom in': 'Zoom ind',
+    'Zoom out': 'Zoom ud',
 };
 
 export default da;
