@@ -143,7 +143,7 @@ export class MapsIndoorsAuthHandler {
      * Get the redirect URI for the current application
      */
     getRedirectUri() {
-        return `${window.location.origin}${window.location.pathname}${window.location.search}`;
+        return `${window.location.origin}${window.location.pathname}`;
     }
 
     /**

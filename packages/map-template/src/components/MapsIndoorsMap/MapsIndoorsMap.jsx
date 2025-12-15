@@ -3,6 +3,7 @@ import { RecoilRoot } from 'recoil';
 import MapTemplate from '../MapTemplate/MapTemplate.jsx';
 import getBooleanValue from '../../helpers/GetBooleanValue.js';
 import PropTypes from 'prop-types';
+import { useMapsIndoorsAuth } from '../../hooks/useMapsIndoorsAuth';
 
 MapsIndoorsMap.propTypes = {
     apiKey: PropTypes.string,
@@ -81,14 +82,25 @@ MapsIndoorsMap.propTypes = {
 function MapsIndoorsMap(props) {
 
     const [mapTemplateProps, setMapTemplateProps] = useState();
+    
+    // Initialize auth handler at the top level
+    // This manages authentication and URL restoration after auth redirects
+    const { currentUrl, initializeAuthHandler } = useMapsIndoorsAuth();
 
     /*
-     * Listening for all props.
+     * Listening for all props and URL changes.
      * Will use query parameters to pass to the child component is the supportsUrlParameters prop is set to true.
      * Applies default values for some props if needed.
+     * 
+     * Note: currentUrl from useMapsIndoorsAuth will update after auth completes,
+     * triggering this effect to re-read URL parameters.
      */
     useEffect(() => {
-        const queryString = window.location.search;
+        // Extract search params from currentUrl (which includes pathname + search)
+        // or fall back to window.location.search for initial load
+        const urlToUse = currentUrl || `${window.location.pathname}${window.location.search}`;
+        const searchMatch = urlToUse.match(/\?([^#]*)/);
+        const queryString = searchMatch ? `?${searchMatch[1]}` : window.location.search;
         const queryStringParams = new URLSearchParams(queryString);
 
         const defaultProps = {
@@ -182,11 +194,11 @@ function MapsIndoorsMap(props) {
             mapboxMapStyle: props.supportsUrlParameters && mapboxMapStyleQueryParameter ? mapboxMapStyleQueryParameter : props.mapboxMapStyle,
         });
 
-    }, [props]);
+    }, [props, currentUrl]);
 
     return (
         <RecoilRoot>
-            {mapTemplateProps && <MapTemplate {...mapTemplateProps}></MapTemplate>}
+            {mapTemplateProps && <MapTemplate {...mapTemplateProps} initializeAuthHandler={initializeAuthHandler}></MapTemplate>}
         </RecoilRoot>
     )
 }

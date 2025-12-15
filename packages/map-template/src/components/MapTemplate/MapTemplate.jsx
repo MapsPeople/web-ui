@@ -4,7 +4,6 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
 import i18n from 'i18next';
 import initI18n from '../../i18n/initialize.js';
-import { authHandler } from '../../utils/authHandler';
 import './MapTemplate.scss';
 import { mapClickActions } from '../../constants/mapClickActions.js';
 import MapWrapper from '../MapWrapper/MapWrapper';
@@ -102,7 +101,8 @@ MapTemplate.propTypes = {
     useAppTitle: PropTypes.bool,
     showMapMarkers: PropTypes.bool,
     mapboxMapStyle: PropTypes.string,
-    devicePosition: PropTypes.object
+    devicePosition: PropTypes.object,
+    initializeAuthHandler: PropTypes.func
 };
 
 /**
@@ -141,7 +141,7 @@ MapTemplate.propTypes = {
  * @param {boolean} [props.showMapMarkers] - Specifies if the Map Template should show the base map providers Map Markers. The default value is set to true.
  * @param {string} [props.mapboxMapStyle] - Specifies the Mapbox Map Style to use. The default value is set to "mapbox://styles/mapbox/standard".
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations, center, useAppTitle, showMapMarkers, mapboxMapStyle, devicePosition }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations, center, useAppTitle, showMapMarkers, mapboxMapStyle, devicePosition, initializeAuthHandler }) {
 
     const [userSelectedLanguage, setUserSelectedLanguage] = useState(false);
     const [mapOptions, setMapOptions] = useState({ brandingColor: primaryColor });
@@ -272,16 +272,16 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         initializeMapsIndoorsSDK().then(() => {
             // Initialize the authentication handler after SDK is loaded
-            authHandler.initializeAuthHandler();
-            // Set a callback to set the map as ready after auth completes
-            authHandler.setOnAuthComplete(() => setMapReady(true));
+            if (initializeAuthHandler) {
+                initializeAuthHandler();
+            }
             setMapsindoorsSDKAvailable(true);
         });
 
         return () => {
             setInitialFilteredLocations();
         }
-    }, []);
+    }, [initializeAuthHandler]);
 
     /*
      * React on changes in the currentLanguage (from Recoil).
