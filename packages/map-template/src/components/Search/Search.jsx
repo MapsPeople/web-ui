@@ -486,13 +486,11 @@ function Search({ onSetSize, isOpen }) {
     /*
      * Reset search state when Search component opens to ensure it starts in default state.
      * This is particularly important when returning from directions/wayfinding.
-     * Only reset if there's stale state (results or category tree) without a selected category,
-     * which indicates returning from directions. This avoids interfering with handleBack()
-     * which clears results before re-searching.
+     * Only reset if there's stale state (results or category tree) without a selected category
      */
     useEffect(() => {
         // Only reset if Search is open, no category selected, but stale data exists
-        if (isOpen && !selectedCategory && (searchResults.length > 0 || selectedCategoriesArray.current.length > 0)) {
+        if (isOpen && !selectedCategory) {
             // Reset search results and filtered locations
             setSearchResults([]);
             setFilteredLocations([]);
@@ -500,13 +498,8 @@ function Search({ onSetSize, isOpen }) {
             
             // Clear the category selection tree
             selectedCategoriesArray.current = [];
-            
-            // Clear the search input field if it exists
-            if (searchFieldRef.current) {
-                searchFieldRef.current.clear();
-            }
         }
-    }, [isOpen, selectedCategory, searchResults.length]);
+    }, [isOpen, selectedCategory]);
 
     /*
      * React on changes in the venue prop.
