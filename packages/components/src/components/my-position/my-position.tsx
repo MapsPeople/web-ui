@@ -111,6 +111,16 @@ export class MyPositionComponent {
     private positionProvider: IPositionProvider;
 
     /**
+     * Track the last applied fillOpacity to avoid unnecessary refreshes.
+     * Only refresh the marker when opacity actually changes (crossing floor boundaries).
+     */
+    private lastAppliedOpacity: number = 1;
+
+    private readonly defaultFillOpacity = 1;
+
+    private readonly reducedFillOpacity = 0.3;
+
+    /**
      * Default options.
      */
     private defaultOptions = {
@@ -125,7 +135,7 @@ export class MyPositionComponent {
             strokeWeight: '2px',
             strokeColor: 'white',
             fillColor: '#4169E1',
-            fillOpacity: 1
+            fillOpacity: this.defaultFillOpacity
         },
         accuracyCircleStyles: {
             fillColor: '#4169E1',
@@ -188,10 +198,17 @@ export class MyPositionComponent {
             if (this.positionState === PositionStateTypes.POSITION_FOLLOW) {
                 this.handleFollowModePosition(position);
                 // Stay in FOLLOW state, don't transition
-            } else if (this.positionState === PositionStateTypes.POSITION_TRACKED) {
-                this.setPositionState(PositionStateTypes.POSITION_UNTRACKED);
-            } else if (this.positionState !== PositionStateTypes.POSITION_UNTRACKED) {
-                this.setPositionState(PositionStateTypes.POSITION_KNOWN);
+                // No opacity change needed - floor auto-changes to match position
+            } else {
+                // In non-FOLLOW modes, update opacity based on floor match
+                // This shows dimmed dot when position is on a different floor than displayed
+                this.applyOpacityForPosition(position);
+
+                if (this.positionState === PositionStateTypes.POSITION_TRACKED) {
+                    this.setPositionState(PositionStateTypes.POSITION_UNTRACKED);
+                } else if (this.positionState !== PositionStateTypes.POSITION_UNTRACKED) {
+                    this.setPositionState(PositionStateTypes.POSITION_KNOWN);
+                }
             }
             window.removeEventListener('deviceorientation', this.handleDeviceOrientationReference);
 
@@ -258,6 +275,68 @@ export class MyPositionComponent {
                 this.mapView.setPositionProvider(this);
             });
         }
+    }
+
+    /**
+     * Forces the position provider to refresh by removing and re-adding it.
+     * This makes the SDK re-read the updated options and redraw the marker.
+     */
+    private refreshPositionProvider(): void {
+        if (this.mapView.isReady) {
+            // Remove the provider
+            this.mapView.setPositionProvider(null);
+            // Re-add it on next frame to force redraw
+            requestAnimationFrame(() => {
+                this.mapView.setPositionProvider(this);
+            });
+        }
+    }
+
+    /**
+     * Sets fillOpacity based on floor match and reapplies the provider so SDK re-reads styles.
+     * Only refreshes the marker when opacity actually changes to improve performance.
+     */
+    private applyOpacityForPosition(position: MapsIndoorsPosition): void {
+        if (!this.options?.positionMarkerStyles) return;
+
+        const matches = this.isFloorMatching(position);
+        const fillOpacity = matches ? this.defaultFillOpacity : this.reducedFillOpacity;
+
+        // Only refresh if opacity actually changed (crossing floor boundary)
+        if (fillOpacity === this.lastAppliedOpacity) {
+            return; // No change needed, skip expensive refresh
+        }
+
+        // Update fillOpacity directly - no need for new objects since we're forcing a refresh
+        this.options.positionMarkerStyles.fillOpacity = fillOpacity;
+
+        // Track the new opacity to avoid redundant refreshes
+        this.lastAppliedOpacity = fillOpacity;
+
+        // Force refresh to make SDK re-read options and redraw marker
+        this.refreshPositionProvider();
+    }
+
+    /**
+     * Compares incoming position floor with current map floor and returns the result.
+     * Only used for modern providers during position updates.
+     *
+     * @param {MapsIndoorsPosition} position - The position to compare.
+     * @returns {boolean} - True if the floor matches, false otherwise.
+     */
+    private isFloorMatching(position: MapsIndoorsPosition): boolean {
+        if (!this.mapsindoors) return false;
+        const incomingFloor = position.floorIndex;
+        const currentFloor = this.mapsindoors.getFloor();
+
+
+        if (incomingFloor === undefined || incomingFloor === null || currentFloor === undefined || currentFloor === null) {
+            return false;
+        }
+
+        const incoming = incomingFloor.toString();
+        const matches = incoming === currentFloor;
+        return matches;
     }
 
     /**
@@ -650,6 +729,9 @@ export class MyPositionComponent {
                     selfInvoked: false,
                     accurate: true
                 });
+
+                // Update marker opacity based on floor match
+                // this.applyOpacityForPosition(this.currentPosition);
             } else {
                 this.setPositionState(PositionStateTypes.POSITION_UNKNOWN);
             }
