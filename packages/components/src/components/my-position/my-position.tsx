@@ -103,6 +103,12 @@ export class MyPositionComponent {
     private onPositionErrorHandler: ((error?: any) => void) | null = null;
 
     /**
+     * Reference to the floor_changed event handler.
+     * Stored to enable proper cleanup when component disconnects.
+     */
+    private floorChangedHandler: (() => void) | null = null;
+
+    /**
      * The position provider instance to use internally.
      * This is the resolved, validated provider that the component actually uses.
      * It's either the customPositionProvider (if valid) or the default GeoLocationProvider.
@@ -194,21 +200,25 @@ export class MyPositionComponent {
             // Ensure the position provider is set on the MapView so the dot appears
             this.setPositionProviderOnMapView();
 
-            // Handle FOLLOW mode - automatically pan and change floors
-            if (this.positionState === PositionStateTypes.POSITION_FOLLOW) {
-                this.handleFollowModePosition(position);
-                // Stay in FOLLOW state, don't transition
-                // No opacity change needed - floor auto-changes to match position
-            } else {
-                // In non-FOLLOW modes, update opacity based on floor match
-                // This shows dimmed dot when position is on a different floor than displayed
-                this.applyOpacityForPosition(position);
+            // Update state based on current position state
+            if (this.positionState === PositionStateTypes.POSITION_TRACKED) {
+                this.setPositionState(PositionStateTypes.POSITION_UNTRACKED);
+            } else if (this.positionState === PositionStateTypes.POSITION_UNKNOWN || this.positionState === PositionStateTypes.POSITION_REQUESTING) {
+                // Auto-enter FOLLOW mode only on first position (from UNKNOWN or REQUESTING)
+                this.setPositionState(PositionStateTypes.POSITION_FOLLOW);
+            } else if (this.positionState !== PositionStateTypes.POSITION_UNTRACKED && this.positionState !== PositionStateTypes.POSITION_FOLLOW) {
+                // For other states, transition to KNOWN
+                this.setPositionState(PositionStateTypes.POSITION_KNOWN);
+            }
 
-                if (this.positionState === PositionStateTypes.POSITION_TRACKED) {
-                    this.setPositionState(PositionStateTypes.POSITION_UNTRACKED);
-                } else if (this.positionState !== PositionStateTypes.POSITION_UNTRACKED) {
-                    this.setPositionState(PositionStateTypes.POSITION_KNOWN);
-                }
+            // Handle mode-specific behavior
+            if (this.positionState === PositionStateTypes.POSITION_FOLLOW) {
+                // FOLLOW mode: auto-pan and change floors
+                this.handleFollowModePosition(position);
+                this.applyOpacityForPosition(position);
+            } else {
+                // Non-FOLLOW modes: update opacity based on floor match
+                this.applyOpacityForPosition(position);
             }
             window.removeEventListener('deviceorientation', this.handleDeviceOrientationReference);
 
@@ -740,6 +750,19 @@ export class MyPositionComponent {
         this.mapView.on('rotateend', () => {
             this.setCompassStyle(this.mapView.getBearing());
         });
+
+        // Listen for floor changes to update position marker opacity
+        // When user manually changes floor via floor selector, update opacity based on position's floor
+        if (this.mapsindoors && this.isModernProvider(this.positionProvider)) {
+            this.floorChangedHandler = (): void => {
+                // Only update if we have a current position and not in FOLLOW mode
+                // FOLLOW mode auto-changes floors so this isn't needed
+                if (this.currentPosition && this.positionState !== PositionStateTypes.POSITION_FOLLOW) {
+                    this.applyOpacityForPosition(this.currentPosition);
+                }
+            };
+            this.mapsindoors.on('floor_changed', this.floorChangedHandler);
+        }
     }
 
     /**
@@ -817,6 +840,12 @@ export class MyPositionComponent {
         } else {
             // Clean up modern provider event listeners
             this.cleanupModernProviderListeners();
+        }
+
+        // Clean up floor_changed listener
+        if (this.mapsindoors && this.floorChangedHandler) {
+            this.mapsindoors.off('floor_changed', this.floorChangedHandler);
+            this.floorChangedHandler = null;
         }
     }
 
