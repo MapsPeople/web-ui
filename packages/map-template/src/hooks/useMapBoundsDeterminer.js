@@ -121,18 +121,24 @@ const useMapBoundsDeterminer = () => {
                 });
             } else if (locationId && !venueWasSelected) {
                 if (!isNullOrUndefined(center)) {
-                    // When locationId is defined and center prop is defined, set centerPoint to be center prop.
-                    if (isDesktop) {
-                        getDesktopPaddingLeft().then(desktopPaddingLeft => {
-                            setMapPositionKnown(getCenterPoint().geometry);
-                            goTo(getCenterPoint().geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, getZoomLevel(startZoomLevel), currentPitch, bearing);
-                        });
-                    } else {
-                        getMobilePaddingBottom().then(mobilePaddingBottom => {
-                            setMapPositionKnown(getCenterPoint().geometry);
-                            goTo(getCenterPoint().geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, getZoomLevel(startZoomLevel), currentPitch, bearing);
-                        });
-                    }
+                    window.mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
+                        if (location) {
+                            const locationFloor = location.properties.floor;
+                            mapsIndoorsInstance.setFloor(locationFloor);
+                            // When locationId is defined and center prop is defined, set centerPoint to be center prop.
+                            if (isDesktop) {
+                                getDesktopPaddingLeft().then(desktopPaddingLeft => {
+                                    setMapPositionKnown(getCenterPoint().geometry);
+                                    goTo(getCenterPoint().geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, getZoomLevel(startZoomLevel), currentPitch, bearing);
+                                });
+                            } else {
+                                getMobilePaddingBottom().then(mobilePaddingBottom => {
+                                    setMapPositionKnown(getCenterPoint().geometry);
+                                    goTo(getCenterPoint().geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, getZoomLevel(startZoomLevel), currentPitch, bearing);
+                                });
+                            }
+                        }
+                    })
                 } else {
                     // When a LocationID is set, the map is centered fitted to the bounds of the given Location with some padding,
                     // either bottom (on mobile to accommodate for the bottom sheet) or to the left (on desktop to accommodate for the modal).
