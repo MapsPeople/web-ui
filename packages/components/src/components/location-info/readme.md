@@ -51,6 +51,10 @@ A `location` attribute is available on the `<mi-location-info>` element which sh
 
 If false, the component will not show the location's Extrenal ID. The attribute is not required.  If not set, it will default to true.
 
+## `showFloor` attribute
+
+If false, the component will not show the location's floor name. The attribute is not required.  If not set, it will default to true.
+
 <!-- markdownlint-disable -->
 <!-- Auto Generated Below -->
 
@@ -62,6 +66,7 @@ If false, the component will not show the location's Extrenal ID. The attribute 
 | `level`          | `level`            |             | `string`  | `'Level'`   |
 | `location`       | `location`         |             | `any`     | `undefined` |
 | `showExternalId` | `show-external-id` |             | `boolean` | `true`      |
+| `showFloor`      | `show-floor`       |             | `boolean` | `true`      |
 
 
 ----------------------------------------------

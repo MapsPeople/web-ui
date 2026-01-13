@@ -26,6 +26,9 @@ import PropTypes from 'prop-types';
 import baseLinkSelector from '../../selectors/baseLink';
 import mapTypeState from '../../atoms/mapTypeState';
 import { ZoomLevelValues } from '../../constants/zoomLevelValues';
+import ShuttleBus from '../ShuttleBus/ShuttleBus';
+import shuttleBusOnState from '../../atoms/shuttleBusOnState';
+import appConfigState from '../../atoms/appConfigState';
 
 let directionsRenderer;
 
@@ -89,6 +92,10 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
 
     const mapType = useRecoilValue(mapTypeState);
 
+    const shuttleBusOn = useRecoilValue(shuttleBusOnState);
+
+    const appConfig = useRecoilValue(appConfigState);
+
     useEffect(() => {
         return () => {
             setDestinationDisplayRule(null);
@@ -146,7 +153,7 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
             }
             setMinZoom(ZoomLevelValues.minZoom);
         };
-    }, [isOpen, directions, mapsIndoorsInstance, travelMode]);
+    }, [isOpen, directions, mapsIndoorsInstance, travelMode, shuttleBusOn]);
 
 
     /**
@@ -334,6 +341,7 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
                     <hr />
                     <div className="directions__kiosk">
                         <Accessibility onAccessibilityChanged={() => resetSubsteps()} />
+                        {appConfig?.appSettings?.includeTransitSelection === 'true' && <ShuttleBus/>}
                         <button className="directions__qr-code" onClick={() => showQRCode()} aria-label={t('Scan QR code to view route on phone')}><QRCode />{t('Scan QR code')}</button>
                     </div>
                 </>
