@@ -331,20 +331,33 @@ export class MyPositionComponent {
      * Compares incoming position floor with current map floor and returns the result.
      * Only used for modern providers during position updates.
      *
+     * Returns true (full opacity) when:
+     * - The incoming floor matches the current map floor
+     * - The incoming floor is invalid (doesn't exist in the building) - treated as "no floor data"
+     *
+     * Returns false (reduced opacity) when:
+     * - The incoming floor is valid but different from the current map floor.
+     *
      * @param {MapsIndoorsPosition} position - The position to compare.
-     * @returns {boolean} - True if the floor matches, false otherwise.
+     * @returns {boolean} - True if the floor matches or is invalid, false otherwise.
      */
     private isFloorMatching(position: MapsIndoorsPosition): boolean {
         if (!this.mapsindoors) return false;
         const incomingFloor = position.floorIndex;
         const currentFloor = this.mapsindoors.getFloor();
 
-
         if (incomingFloor === undefined || incomingFloor === null || currentFloor === undefined || currentFloor === null) {
             return false;
         }
 
         const incoming = incomingFloor.toString();
+
+        // If the incoming floor doesn't exist in the building, treat it as "no floor data"
+        // and return true to keep full opacity (don't penalize invalid floor data)
+        if (!this.isValidFloorForCurrentBuilding(incoming)) {
+            return true;
+        }
+
         const matches = incoming === currentFloor;
         return matches;
     }
