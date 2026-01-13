@@ -11,6 +11,41 @@ import {
 } from '@openid/appauth';
 import { setFlag } from '@openid/appauth/built/flags';
 
+const OIDC_STATE_STORAGE_KEY = 'mapsindoors_oidc_state';
+const OIDC_URL_STORAGE_KEY = 'mapsindoors_oidc_url';
+
+/**
+ * Generate random state string for OIDC authentication
+ */
+function generateSecureState() {
+    const array = new Uint8Array(32);
+    crypto.getRandomValues(array);
+    // Convert to base64 and make URL-safe
+    return btoa(String.fromCharCode(...array))
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_')
+        .replace(/=/g, '');
+}
+
+/**
+ * Validate that a URL is safe for redirection (relative path only)
+ */
+function isValidRedirectUrl(url) {
+    if (!url || typeof url !== 'string') return false;
+    return url.startsWith('/') &&
+        !url.startsWith('//') &&
+        !url.match(/^https?:/i);
+}
+
+function normalizeStateParam(value) {
+    if (!value) return null;
+    try {
+        return decodeURIComponent(value);
+    } catch {
+        return value;
+    }
+}
+
 /**
  * Custom hook for MapsIndoors OIDC Authentication
  * 
@@ -38,6 +73,16 @@ export function useMapsIndoorsAuth() {
     const storedStateRef = useRef(null);
     const isInitializedRef = useRef(false);
 
+    const clearStoredState = useCallback(() => {
+        storedStateRef.current = null;
+        try {
+            window.sessionStorage?.removeItem(OIDC_STATE_STORAGE_KEY);
+            window.sessionStorage?.removeItem(OIDC_URL_STORAGE_KEY);
+        } catch {
+            // ignore
+        }
+    }, []);
+
     // Silence @openid/appauth internal logging (auth codes/state only; no tokens logged)
     useEffect(() => {
         setFlag('IS_LOG', false);
@@ -61,79 +106,64 @@ export function useMapsIndoorsAuth() {
      * Check if the current page load is a return from authentication
      */
     const isReturningFromAuth = useCallback(() => {
-        return window.location.hash.includes('code') && window.location.hash.includes('state');
-    }, []);
-
-    /**
-     * Parse hash params from the current URL
-     */
-    const getHashParams = useCallback(() => {
         const hash = window.location.hash.startsWith('#') ? window.location.hash.slice(1) : window.location.hash;
-        return new URLSearchParams(hash);
+        const hashParams = new URLSearchParams(hash);
+        return hashParams.has('code') && hashParams.has('state');
     }, []);
 
     /**
      * Restore the URL from the state parameter after authentication
      */
     const restoreUrlFromState = useCallback((receivedState) => {
-        if (!receivedState) {
-            return;
-        }
-
         try {
-            // The @openid/appauth library should decode the state from the URL hash,
-            // but we'll handle both encoded and decoded cases
-            let decodedState = receivedState;
-            try {
-                // Try URL decoding (safe - decodeURIComponent is idempotent for non-encoded strings)
-                decodedState = decodeURIComponent(receivedState);
-            } catch (e) {
-                // If it fails, use the original (might already be decoded)
-                decodedState = receivedState;
-            }
-            
-            // Also decode the stored state for comparison
-            let storedStateDecoded = storedStateRef.current;
-            if (storedStateDecoded) {
-                try {
-                    storedStateDecoded = decodeURIComponent(storedStateRef.current);
-                } catch (e) {
-                    // Already decoded
-                }
+            if (!receivedState) {
+                clearStoredState();
+                return;
             }
 
-            // Compare with stored state
-            if (decodedState !== storedStateDecoded) {
-                // Don't return - try to restore anyway if we can decode the state
+            const expectedState =
+                storedStateRef.current || window.sessionStorage?.getItem(OIDC_STATE_STORAGE_KEY) || null;
+
+            const normalizedReceivedState = normalizeStateParam(receivedState);
+
+            // CRITICAL: Validate state matches to prevent CSRF attacks
+            if (!expectedState || normalizedReceivedState !== expectedState) {
+                const error = new Error('State validation failed - possible CSRF attack');
+                setAuthError(error);
+                clearStoredState();
+                throw error;
             }
 
-            // Decode the base64 state and restore the URL
-            const stateData = JSON.parse(atob(decodedState));
-            
-            if (stateData.url) {
+            // Retrieve the stored URL separately
+            const storedUrl = window.sessionStorage?.getItem(OIDC_URL_STORAGE_KEY);
+
+            // Validate the URL is safe before restoring
+            if (storedUrl && isValidRedirectUrl(storedUrl)) {
                 // Restore the original URL (this removes the hash fragment)
                 window.history.replaceState(
                     null,
                     '',
-                    `${window.location.origin}${stateData.url}`
+                    `${window.location.origin}${storedUrl}`
                 );
-                
+
                 // Explicitly clear the hash to ensure it's removed
                 if (window.location.hash) {
                     window.location.hash = '';
                 }
-                
+
                 // Update the currentUrl state to trigger re-renders
                 // This will cause MapsIndoorsMap to re-read URL parameters
-                setCurrentUrl(stateData.url);
+                setCurrentUrl(storedUrl);
             }
 
-            // Clear the stored state after successful validation
-            storedStateRef.current = null;
+            // Clear the stored state after successful validation/restoration
+            clearStoredState();
         } catch (error) {
             setAuthError(error);
+            clearStoredState();
+            throw error;
         }
-    }, []);
+    }, [clearStoredState]);
 
     /**
      * Handle the authentication callback when returning from the auth provider
@@ -169,10 +199,10 @@ export function useMapsIndoorsAuth() {
 
                         const tokenResponse = await tokenHandler.performTokenRequest(config, tokenRequest);
                         window.mapsindoors.MapsIndoors.setAuthToken(tokenResponse.accessToken);
-                        
+
                         setIsAuthenticated(true);
                         setIsAuthenticating(false);
-                        
+
                         // URL is already restored by restoreUrlFromState above
                         // Just ensure any remaining hash is cleaned up
                         if (window.location.hash) {
@@ -182,7 +212,7 @@ export function useMapsIndoorsAuth() {
                                 `${window.location.origin}${window.location.pathname}${window.location.search}`
                             );
                         }
-                        
+
                         resolve(tokenResponse);
                     } catch (tokenError) {
                         setAuthError(tokenError);
@@ -212,16 +242,21 @@ export function useMapsIndoorsAuth() {
             ? authClient.preferredIDPs[0]
             : '';
 
-        // Store the current URL in the state parameter
-        const currentUrlValue = getCurrentUrl();
-        const stateData = {
-            url: currentUrlValue,
-            timestamp: Date.now()
-        };
+        // Generate cryptographically secure random state for CSRF protection
+        const stateString = generateSecureState();
 
-        // Generate and store the state
-        const stateString = btoa(JSON.stringify(stateData));
+        // Store the current URL separately from the state
+        const currentUrlValue = getCurrentUrl();
+
+        // Store state and URL in session storage
         storedStateRef.current = stateString;
+        try {
+            window.sessionStorage?.setItem(OIDC_STATE_STORAGE_KEY, stateString);
+            window.sessionStorage?.setItem(OIDC_URL_STORAGE_KEY, currentUrlValue);
+        } catch (error) {
+            console.warn('Failed to store auth state:', error);
+            // Continue anyway - we have it in memory via storedStateRef
+        }
 
         const request = new AuthorizationRequest({
             client_id: authClient.clientId,
@@ -271,24 +306,19 @@ export function useMapsIndoorsAuth() {
         isInitializedRef.current = true;
     }, [isReturningFromAuth, handleAuthCallback, initiateAuthFlow]);
 
-    // If we land on the page with a code/state hash, prime currentUrl from state
+    // If we land on the page with a code/state hash, prime currentUrl from stored URL
     useEffect(() => {
         if (!isReturningFromAuth()) return;
 
-        const hashParams = getHashParams();
-        const stateParam = hashParams.get('state');
-
-        if (!stateParam) return;
-
         try {
-            const decodedState = JSON.parse(atob(stateParam));
-            if (decodedState?.url) {
-                setCurrentUrl(decodedState.url);
+            const storedUrl = window.sessionStorage?.getItem(OIDC_URL_STORAGE_KEY);
+            if (storedUrl && isValidRedirectUrl(storedUrl)) {
+                setCurrentUrl(storedUrl);
             }
         } catch (error) {
             setAuthError(error);
         }
-    }, [getHashParams, isReturningFromAuth]);
+    }, [isReturningFromAuth]);
 
     // If deep-link navigation is reintroduced, re-enable this listener.
     // useEffect(() => {
