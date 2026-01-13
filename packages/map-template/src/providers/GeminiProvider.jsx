@@ -92,7 +92,7 @@ export function GeminiProvider({ children }) {
                 throw new Error(errorData.error || `HTTP error! status: ${messageRes.status}`);
             }
 
-            const { response, functionData } = await messageRes.json();
+            const { response, tools, functionData } = await messageRes.json();
 
             // Process function data if available
             if (functionData) {
@@ -127,6 +127,8 @@ export function GeminiProvider({ children }) {
                     setSearchResults(searchResultIds);
                 }
             }
+
+            console.log('Agent tool calls:', JSON.stringify(tools, null, 2));
 
             return response;
         } catch (error) {
