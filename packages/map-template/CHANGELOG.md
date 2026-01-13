@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.89.9] - 2026-01-12
+
+### Fixed
+
+- Upgraded to Web SDK version 4.47.1.
+
+## [1.89.8] - 2026-01-09
+
+### Fixed
+
+- Upgraded to Web SDK version 4.47.0.
+
+## [1.89.7] - 2026-01-07
+
+### Fixed
+
+- An issue when floor level was not respected when setting locationId prop.
+
+## [1.89.6] - 2026-01-06
+
+### Fixed
+
+- Updated @mapsindoors/components dependency to include fix for `TypeError` in `mi-my-position` component when accessing compass button style before the element is rendered.
+
 ## [1.89.5] - 2025-12-16
 
 ### Fixed

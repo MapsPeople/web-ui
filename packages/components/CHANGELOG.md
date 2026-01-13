@@ -12,6 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added floor change handling to MyPositionComponent.
 - Enhanced MyPositionComponent with opacity management and refresh logic.
 
+## [13.32.1] - 2026-01-06
+
+### Fixed
+
+- Fixed `TypeError` in `mi-my-position` component when accessing compass button style before the element is rendered.
+
 ## [13.32.0] - 2025-12-11
 
 ### Added

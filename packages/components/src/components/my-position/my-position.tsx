@@ -493,7 +493,9 @@ export class MyPositionComponent {
      * @param {number} bearing
      */
     private setCompassStyle(bearing: number): void {
-        this.compassButton.style.transform = `rotate(${bearing}deg)`;
+        if (this.compassButton) {
+            this.compassButton.style.transform = `rotate(${bearing}deg)`;
+        }
     }
 
     /**
