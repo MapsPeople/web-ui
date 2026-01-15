@@ -174,17 +174,10 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
         }
 
         // Add venue info if available
-        if (currentVenueName && mapsIndoorsInstance) {
-            if (currentVenueName) {
-                extra.venue = {
-                    name: currentVenueName.name,
-                    // id: currentVenueName.id
-                };
-            }
-            console.log(extra);
-
-            console.log("CurrentVenue name", currentVenueName);
-
+        if (currentVenueName) {
+            extra.venue = {
+                name: currentVenueName
+            };
         }
 
         // Add timezone
