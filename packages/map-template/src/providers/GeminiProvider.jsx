@@ -12,7 +12,7 @@ export function GeminiProvider({ children }) {
     const [searchResults, setSearchResults] = useState([]);
     const [directionsLocationIds, setDirectionsLocationIds] = useState(null);
     const defaultPrompt = '';
-    
+
     // Store session info - using refs to track current session without causing re-renders
     const sessionIdRef = useRef(null);
     const currentApiKeyRef = useRef(null);
@@ -21,8 +21,8 @@ export function GeminiProvider({ children }) {
     // Helper function to create or get session
     const ensureSession = useCallback(async (apiKey, promptFields) => {
         // Check if we need to create a new session
-        const needsNewSession = 
-            !sessionIdRef.current || 
+        const needsNewSession =
+            !sessionIdRef.current ||
             currentApiKeyRef.current !== apiKey ||
             JSON.stringify(currentPromptFieldsRef.current) !== JSON.stringify(promptFields);
 
@@ -65,17 +65,17 @@ export function GeminiProvider({ children }) {
     }, []);
 
     // Wrapper function to generate a response using the Gemini service
-    const generateResponseWrapper = useCallback(async (apiKey, prompt, promptFields) => {
+    const generateResponseWrapper = useCallback(async (apiKey, prompt, promptFields, extra = {}) => {
         setIsLoading(true);
         // Clear previous directions data when starting a new request
         setDirectionsLocationIds(null);
         try {
             console.log('Generating response for prompt:', prompt);
-            
+
             // Ensure we have a valid session
             const sessionId = await ensureSession(apiKey, promptFields);
-            
-            // Send message to the session
+
+            // Send message to the session with extra context
             const messageRes = await fetch(`${API_BASE_URL}/api/chat/message`, {
                 method: 'POST',
                 headers: {
@@ -83,7 +83,8 @@ export function GeminiProvider({ children }) {
                 },
                 body: JSON.stringify({
                     sessionId,
-                    message: prompt
+                    message: prompt,
+                    extra: extra
                 })
             });
 

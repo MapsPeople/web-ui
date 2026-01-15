@@ -9,14 +9,17 @@ import PropTypes from 'prop-types';
 import './ChatWindow.scss';
 import primaryColorState from '../../atoms/primaryColorState';
 import apiKeyState from '../../atoms/apiKeyState';
+import userPositionState from '../../atoms/userPositionState';
+import currentVenueNameState from '../../atoms/currentVenueNameState';
+import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import ChatMessages from './ChatMessages/ChatMessages';
 import ChatInput from './ChatInput/ChatInput';
 
 // Move prompt fields outside component to prevent recreation on every render
 const PROMPT_FIELDS = {
-  SystemContext:
+    SystemContext:
         "You are an indoor spatial assistant using MapsIndoors developed by MapsPeople. You can answer questions about georeferenced indoor locations within the data that is available to you through the MCP tools.",
-  Response: `
+    Response: `
   ### TONE & INTERACTION
   Respond in a helpful, guiding tone. If a query is unclear, ask clarifying questions only AFTER searching for broad matches.
   - **Floors**: Use floor NAMES in user-facing text, but floor INDEXES for tool calls.
@@ -48,7 +51,7 @@ const PROMPT_FIELDS = {
   User: "room for 4 people" 
   Assistant: "I found 2 rooms for 4+ people: Ocean's Twelve (Floor 1, seats 4), E.T. (Floor 1, seats 4)"`,
 
-  MapsIndoorsLimitations: `You are not able to show wayfinding or routing on the map. You are not able to book meeting rooms. You are not able to search the web or use other sources than what is available through the MCP tools.
+    MapsIndoorsLimitations: `You are not able to show wayfinding or routing on the map. You are not able to book meeting rooms. You are not able to search the web or use other sources than what is available through the MCP tools.
 If the data is available on the location type or on the location properties, you can find available meeting rooms and other properties of a location by looking through the properties of the location.`,
 };
 
@@ -62,20 +65,23 @@ If the data is available on the location type or on the location properties, you
 function updateLatestServerMessage(messages, updates) {
     const updatedMessages = [...messages];
     const lastServerIndex = updatedMessages.findLastIndex(msg => msg.type === 'server');
-    
+
     if (lastServerIndex !== -1) {
         updatedMessages[lastServerIndex] = {
             ...updatedMessages[lastServerIndex],
             ...updates
         };
     }
-    
+
     return updatedMessages;
 }
 
 function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     const primaryColor = useRecoilValue(primaryColorState);
     const apiKey = useRecoilValue(apiKeyState);
+    const userPosition = useRecoilValue(userPositionState);
+    const currentVenueName = useRecoilValue(currentVenueNameState);
+    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const isDesktop = useIsDesktop();
     const chatWindowRef = useRef(null);
     const { getInitialMessage, clearInitialMessage } = useInitialChatMessage();
@@ -155,9 +161,38 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
         };
         setChatHistory(prev => [...prev, userMessage]);
 
-        // Call Gemini service for response (provider API expects an object)
+        // Build extra context object
+        const extra = {};
+
+        // Add user position if available
+        if (userPosition) {
+            extra.userPosition = {
+                latitude: userPosition.coords.latitude,
+                longitude: userPosition.coords.longitude,
+                floor: userPosition.floorIndex?.toString()
+            };
+        }
+
+        // Add venue info if available
+        if (currentVenueName && mapsIndoorsInstance) {
+            if (currentVenueName) {
+                extra.venue = {
+                    name: currentVenueName.name,
+                    // id: currentVenueName.id
+                };
+            }
+            console.log(extra);
+
+            console.log("CurrentVenue name", currentVenueName);
+
+        }
+
+        // Add timezone
+        extra.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+        // Call Gemini service for response with extra context
         try {
-            const response = await generateResponse(apiKey, trimmedMessage, PROMPT_FIELDS);
+            const response = await generateResponse(apiKey, trimmedMessage, PROMPT_FIELDS, extra);
             setChatHistory(prev => [
                 ...prev,
                 {
@@ -179,7 +214,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                 }
             ]);
         }
-    }, [isLoading, generateResponse, apiKey]);
+    }, [isLoading, generateResponse, apiKey, userPosition, currentVenueName, mapsIndoorsInstance]);
 
 
     // Automatically send initial message when chat opens with a message from search
@@ -217,17 +252,17 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
      */
     function getChatWindowLayout() {
         const baseClass = 'chat-window';
-        
+
         // Desktop layout - no keyboard handling needed
         if (isDesktop) {
             return `${baseClass} desktop`;
         }
-        
+
         // Mobile layout with keyboard visible - adds modifier class for positioning
         if (isMobileKeyboardVisible) {
             return `${baseClass} mobile chat-window--keyboard-visible${isAnimated ? ' chat-window--visible' : ''}`;
         }
-        
+
         // Mobile layout without keyboard - default position at bottom with animation
         return `${baseClass} mobile${isAnimated ? ' chat-window--visible' : ''}`;
     }
