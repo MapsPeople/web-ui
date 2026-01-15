@@ -589,7 +589,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * If the removeMapboxExtrudedBuildings is true, set the extruded buildings visibility to false.
      */
     useEffect(() => {
-        if (mapsIndoorsInstance && appConfig?.appSettings?.removeMapboxExtrudedBuildings === true) {
+        if (mapsIndoorsInstance && appConfig?.appSettings?.removeMapboxExtrudedBuildings === 'true') {
             mapsIndoorsInstance.getMapView().setExtrudedBuildingsVisibility(false);
         }
     }, [mapsIndoorsInstance, appConfig]);
