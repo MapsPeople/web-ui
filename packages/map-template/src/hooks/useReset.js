@@ -15,6 +15,7 @@ import mapboxViewModeState from '../atoms/mapboxViewModeState';
 import venueWasSelectedState from '../atoms/venueWasSelectedState';
 import initialVenueNameState from '../atoms/initialVenueNameState';
 import currentVenueNameState from '../atoms/currentVenueNameState';
+import userPositionState from '../atoms/userPositionState';
 
 /**
  * Reset a number of Recoil atoms to initial values.
@@ -40,6 +41,7 @@ export function useReset() {
     const isLegendDialogVisible  = useResetRecoilState(isLegendDialogVisibleState);
     const mapboxViewMode = useResetRecoilState(mapboxViewModeState);
     const venueWasSelected = useResetRecoilState(venueWasSelectedState);
+    const userPosition = useResetRecoilState(userPositionState);
 
     return () => {
         activeStep();
@@ -56,6 +58,7 @@ export function useReset() {
         isLegendDialogVisible();
         mapboxViewMode();
         venueWasSelected();
+        userPosition();
 
         // Make sure to reset the venue to the initial one.
         if (initialVenueName) {
