@@ -48,7 +48,7 @@ export const useChatLocations = () => {
             setFilteredLocations(validLocations);
 
             // Pan the map to fit the bounds of the locations only if we have valid locations
-            if (validLocations.length > 0 && mapsIndoorsInstance) {                
+            if (validLocations.length > 0 && mapsIndoorsInstance) {
                 // Calculate padding for map bounds based on context (desktop/mobile, kiosk mode)
                 const getBottomPadding = async () => {
                     if (isDesktop) {
@@ -95,10 +95,10 @@ export const useChatLocations = () => {
 function changeFloorIfNeeded(validLocations, mapsIndoorsInstance) {
     const currentFloorIndex = mapsIndoorsInstance.getFloor();
     const locationFloorIndices = validLocations.map(location => location.properties.floor);
-    
+
     // Check if any location is on the current floor
     const hasCurrentFloor = locationFloorIndices.some(floor => String(floor) === String(currentFloorIndex));
-    
+
     // If no locations are on the current floor, change to the most common floor
     if (!hasCurrentFloor && locationFloorIndices.length > 0) {
         // Count how many locations are on each floor
@@ -107,7 +107,7 @@ function changeFloorIfNeeded(validLocations, mapsIndoorsInstance) {
             const floorString = String(floor);
             floorCounts[floorString] = (floorCounts[floorString] || 0) + 1;
         }
-        
+
         // Find which floor has the most locations
         let mostCommonFloor = null;
         let maxLocationsPerFloor = 0;
@@ -117,11 +117,23 @@ function changeFloorIfNeeded(validLocations, mapsIndoorsInstance) {
                 mostCommonFloor = floor;
             }
         }
-        
+
         if (mostCommonFloor !== null) {
             mapsIndoorsInstance.setFloor(mostCommonFloor);
         }
     }
+}
+
+/**
+ * Determines the type of origin based on the provided value.
+ * Coordinates are formatted as "lat,lng,floor" (e.g., "32.3604447,-97.7427429,0") - only numbers, commas, dots, and minus signs
+ * Location IDs are alphanumeric strings (e.g., "c30bfe0600434a44b6cd6a5a") - contain letters
+ *
+ * @param {string} origin - Either a location ID string or a comma-separated coordinate string
+ * @returns {'coordinates'|'locationId'} The type of origin
+ */
+function getOriginType(origin) {
+    return /[a-zA-Z]/.test(origin) ? 'locationId' : 'coordinates';
 }
 
 /**
@@ -151,26 +163,48 @@ export const useChatDirections = (pushAppView, appViews) => {
         }
 
         try {
-            // Fetch both location objects in parallel
-            const [originLocation, destinationLocation] = await Promise.all([
-                window.mapsindoors.services.LocationsService.getLocation(directionIds.originLocationId),
-                window.mapsindoors.services.LocationsService.getLocation(directionIds.destinationLocationId)
-            ]);
+            const originType = getOriginType(directionIds.originLocationId);
+            let originLocation = null;
+            let originPoint;
 
-            if (!originLocation || !destinationLocation) {
-                console.error('useChatDirections: Failed to fetch one or both locations');
-                return;
+            // Origin can be either:
+            // - 'coordinates': A comma-separated string "lat,lng,floor" (e.g., "32.3604447,-97.7427429,0")
+            // - 'locationId': An alphanumeric location ID (e.g., "c30bfe0600434a44b6cd6a5a")
+            switch (originType) {
+                case 'coordinates': {
+                    const parts = directionIds.originLocationId.split(',');
+                    originPoint = {
+                        lat: parseFloat(parts[0]),
+                        lng: parseFloat(parts[1]),
+                        ...(parts[2] && { floor: parseInt(parts[2], 10) })
+                    };
+                    break;
+                }
+                case 'locationId': {
+                    originLocation = await window.mapsindoors.services.LocationsService.getLocation(directionIds.originLocationId);
+                    if (!originLocation?.geometry) {
+                        console.error('useChatDirections: Failed to fetch origin location or missing geometry');
+                        return;
+                    }
+                    originPoint = getLocationPoint(originLocation);
+                    break;
+                }
+                default:
+                    console.error('useChatDirections: Invalid origin type');
+                    return;
             }
 
-            // Check if locations have geometry (required for routing)
-            if (!originLocation.geometry || !destinationLocation.geometry) {
-                console.error('useChatDirections: Locations missing geometry required for routing');
+            // Fetch destination location
+            const destinationLocation = await window.mapsindoors.services.LocationsService.getLocation(directionIds.destinationLocationId);
+
+            if (!destinationLocation?.geometry) {
+                console.error('useChatDirections: Failed to fetch destination location or missing geometry');
                 return;
             }
 
             // Calculate the route
             const directionsResult = await directionsService.getRoute({
-                origin: getLocationPoint(originLocation),
+                origin: originPoint,
                 destination: getLocationPoint(destinationLocation),
                 travelMode: travelMode,
                 avoidStairs: accessibilityOn,
