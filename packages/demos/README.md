@@ -8,8 +8,10 @@ This tutorial demonstrates:
 
 1. **Map Display** - Initialize and display a MapsIndoors map using Mapbox
 2. **Floor Selector** - Navigate between building floors
-3. **Location Search** - Search for locations and highlight results on the map
-4. **Directions/Routing** - Get directions between two locations with route visualization
+3. **My Position** - Display and track the user's current position on the map
+4. **People Tracking** - Display multiple people's locations from a database on the map
+5. **Location Search** - Search for locations and highlight results on the map
+6. **Directions/Routing** - Get directions between two locations with route visualization
 
 ## Prerequisites
 
@@ -67,6 +69,24 @@ Before running this tutorial, you need:
    - Switch to the correct floor
    - Select and highlight the location on the map
 4. All matching locations are highlighted on the map
+
+### Use My Position
+
+1. Click the "My Position" button in the bottom-right corner of the map
+2. Your browser will ask for permission to access your location - click "Allow"
+3. Your current position will be displayed as a blue dot on the map
+4. Click the button again to:
+   - Center the map on your position
+   - Enable tracking mode (map follows your movement)
+   - Exit tracking mode
+
+### People Tracking
+
+The map automatically displays people's locations from your database:
+- Each person appears as a colored marker with their initials
+- Click on a marker to see person details (name, floor, status, last updated)
+- Locations update automatically every 5 seconds
+- To connect to your database, edit `people-tracker.js` and update the `fetchPeopleLocations()` function with your API endpoint
 
 ### Get Directions
 
@@ -135,6 +155,48 @@ const result = await directionsService.getRoute({
 - Ensure your Mapbox access token is correct and has the necessary permissions
 - Check that both origin and destination locations are selected
 - Verify the locations are in the same building/venue
+
+## Connecting to Your Database
+
+To display real people's locations from your database:
+
+1. **Update the API endpoint** in `people-tracker.js`:
+   ```javascript
+   async function fetchPeopleLocations() {
+     try {
+       const response = await fetch('https://your-api.com/api/people/locations');
+       const data = await response.json();
+       return data;
+     } catch (error) {
+       console.error('Error fetching people locations:', error);
+       return [];
+     }
+   }
+   ```
+
+2. **Ensure your API returns data in this format**:
+   ```json
+   [
+     {
+       "id": "1",
+       "name": "John Doe",
+       "lat": 38.8975,
+       "lng": -77.0363,
+       "floor": 0,
+       "timestamp": "2024-01-01T12:00:00Z",
+       "status": "active"
+     }
+   ]
+   ```
+
+3. **Adjust update frequency** by changing the interval in `initPeopleTracker()`:
+   ```javascript
+   updateInterval = setInterval(() => {
+     loadPeopleLocations();
+   }, 5000); // Update every 5 seconds
+   ```
+
+4. **Customize marker appearance** in the `addPersonMarker()` function in `people-tracker.js`
 
 ## Next Steps
 

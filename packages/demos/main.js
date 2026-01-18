@@ -56,6 +56,31 @@ function initApp() {
   const navigationControl = new mapboxgl.NavigationControl();
   mapboxInstance.addControl(navigationControl, 'top-left');
 
+  // Add My Position control (shows user's current location)
+  const myPositionEl = document.createElement('div');
+  const positionControl = new mapsindoors.PositionControl(myPositionEl, {
+    mapsIndoors: mapsIndoorsInstance,
+    positionOptions: {
+      enableHighAccuracy: true,
+      maximumAge: 0,
+      timeout: 10000
+    }
+  });
+  
+  const myPositionControl = {
+    onAdd: () => {
+      myPositionEl.classList.add('mapboxgl-ctrl');
+      return myPositionEl;
+    },
+    onRemove: () => {
+      if (myPositionEl.parentNode) {
+        myPositionEl.parentNode.removeChild(myPositionEl);
+      }
+    }
+  };
+  
+  mapboxInstance.addControl(myPositionControl, 'bottom-right');
+
   // Wait for MapsIndoors to be ready before setting up search and directions
   mapsIndoorsInstance.on('ready', () => {
     console.log('MapsIndoors is ready!');
@@ -72,6 +97,12 @@ function initApp() {
 
       // Setup directions functionality
       setupDirections(directionsService);
+
+      // Initialize people tracking (display people from database)
+      if (typeof initPeopleTracker === 'function') {
+        initPeopleTracker(mapboxInstance);
+        console.log('People tracker initialized');
+      }
     }, 500);
   });
 
