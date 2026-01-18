@@ -38,8 +38,8 @@ async function fetchPeopleLocations() {
           {
             id: '1',
             name: 'John Doe',
-            lat: 38.8975,
-            lng: -77.0363,
+            lat: 33.1847,
+            lng: -96.9067,
             floor: 0,
             timestamp: new Date().toISOString(),
             status: 'active'
@@ -47,8 +47,8 @@ async function fetchPeopleLocations() {
           {
             id: '2',
             name: 'Jane Smith',
-            lat: 38.8978,
-            lng: -77.0365,
+            lat: 33.1850,
+            lng: -96.9070,
             floor: 1,
             timestamp: new Date().toISOString(),
             status: 'active'
@@ -56,8 +56,8 @@ async function fetchPeopleLocations() {
           {
             id: '3',
             name: 'Bob Johnson',
-            lat: 38.8972,
-            lng: -77.0361,
+            lat: 33.1844,
+            lng: -96.9064,
             floor: 0,
             timestamp: new Date().toISOString(),
             status: 'active'

@@ -24,7 +24,7 @@ function initApp() {
   const mapViewOptions = {
     accessToken: MAPBOX_ACCESS_TOKEN,
     element: document.getElementById('map'),
-    center: { lat: 38.8974905, lng: -77.0362723 }, // Default: White House
+    center: { lat: 33.1847, lng: -96.9067 }, // 1968 Sunnyside Dr, Little Elm, TX 75068
     zoom: 17,
     maxZoom: 22,
   };
