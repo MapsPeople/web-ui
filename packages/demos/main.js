@@ -59,17 +59,20 @@ function initApp() {
   // Wait for MapsIndoors to be ready before setting up search and directions
   mapsIndoorsInstance.on('ready', () => {
     console.log('MapsIndoors is ready!');
+    
+    // Wait a bit for the venue to be set
+    setTimeout(() => {
+      // Initialize Directions Service
+      const directionsService = new mapsindoors.services.DirectionsService(
+        new mapsindoors.directions.MapboxProvider(MAPBOX_ACCESS_TOKEN)
+      );
 
-    // Initialize Directions Service
-    const directionsService = new mapsindoors.services.DirectionsService(
-      new mapsindoors.directions.MapboxProvider(MAPBOX_ACCESS_TOKEN)
-    );
+      // Setup search functionality
+      setupSearch();
 
-    // Setup search functionality
-    setupSearch();
-
-    // Setup directions functionality
-    setupDirections(directionsService);
+      // Setup directions functionality
+      setupDirections(directionsService);
+    }, 500);
   });
 
   console.log('MapsIndoors initialized successfully!');
@@ -89,8 +92,21 @@ function setupSearch() {
   const searchInput = document.getElementById('search-input');
   const searchResultsEl = document.getElementById('search-results');
 
+  // Check if elements exist
+  if (!searchInput || !searchResultsEl) {
+    console.error('Search input or results element not found');
+    return;
+  }
+
+  // Create debounced search function
+  const debouncedSearch = debounce(async (query) => {
+    await performSearch(query);
+  }, 500);
+
   async function performSearch(query) {
-    if (!query || query.trim().length < 3) {
+    const searchQuery = typeof query === 'string' ? query : query.target?.value || '';
+    
+    if (!searchQuery || searchQuery.trim().length < 3) {
       searchResultsEl.innerHTML = '';
       if (mapsIndoorsInstance) {
         mapsIndoorsInstance.highlight();
@@ -106,9 +122,15 @@ function setupSearch() {
       return;
     }
 
+    // Show loading state
+    searchResultsEl.innerHTML = '<li style="color: #666; font-style: italic;">Searching...</li>';
+
     try {
-      const params = { q: query.trim() };
+      const params = { q: searchQuery.trim() };
       console.log('Searching with params:', params);
+      console.log('MapsIndoors instance:', mapsIndoorsInstance);
+      console.log('LocationsService:', mapsindoors.services.LocationsService);
+      
       const locations = await mapsindoors.services.LocationsService.getLocations(params);
       console.log('Search results:', locations);
 
@@ -117,13 +139,16 @@ function setupSearch() {
       
       if (!locations || locations.length === 0) {
         searchResultsEl.innerHTML = '<li style="color: #666; font-style: italic;">No locations found</li>';
-        mapsIndoorsInstance.highlight();
+        if (mapsIndoorsInstance) {
+          mapsIndoorsInstance.highlight();
+        }
         return;
       }
 
       locations.forEach(loc => {
         const li = document.createElement('li');
         li.textContent = loc.properties.name || 'Unnamed location';
+        li.style.cursor = 'pointer';
         li.addEventListener('click', () => {
           // Pan/zoom to location, switch floor, and select it
           if (loc.properties.anchor && loc.properties.anchor.coordinates) {
@@ -147,11 +172,25 @@ function setupSearch() {
       mapsIndoorsInstance.highlight(locations.map(l => l.id));
     } catch (err) {
       console.error('Search error:', err);
+      console.error('Error stack:', err.stack);
       searchResultsEl.innerHTML = '<li style="color: red;">Error searching locations: ' + (err.message || 'Unknown error') + '</li>';
     }
   }
 
-  searchInput.addEventListener('input', debounce((e) => performSearch(e.target.value), 500));
+  // Add event listener
+  searchInput.addEventListener('input', (e) => {
+    debouncedSearch(e.target.value);
+  });
+
+  // Also allow Enter key to trigger search
+  searchInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      debouncedSearch(e.target.value);
+    }
+  });
+
+  console.log('Search functionality initialized');
 }
 
 // Setup directions functionality
