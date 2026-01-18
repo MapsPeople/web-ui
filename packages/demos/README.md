@@ -6,7 +6,7 @@ This is a complete implementation of the [MapsIndoors Web SDK Tutorial](https://
 
 This tutorial demonstrates:
 
-1. **Map Display** - Initialize and display a MapsIndoors map using Google Maps
+1. **Map Display** - Initialize and display a MapsIndoors map using Mapbox
 2. **Floor Selector** - Navigate between building floors
 3. **Location Search** - Search for locations and highlight results on the map
 4. **Directions/Routing** - Get directions between two locations with route visualization
@@ -17,22 +17,21 @@ Before running this tutorial, you need:
 
 1. **MapsIndoors API Key** - Get your API key from [MapsIndoors](https://www.mapsindoors.com/)
    - For testing, you can use the demo key: `02c329e6777d431a88480a09`
-2. **Google Maps JavaScript API Key** - Get your API key from [Google Cloud Console](https://console.cloud.google.com/)
-   - Required APIs: Maps JavaScript API, Directions API (for routing)
+2. **Mapbox Access Token** - Get your access token from [Mapbox](https://www.mapbox.com/)
+   - Sign up for a free account at [Mapbox](https://account.mapbox.com/) to get your access token
 
 ## Setup Instructions
 
 1. **Update API Keys**
 
-   Edit `index.html` and replace the placeholder API keys:
+   Edit `main.js` and replace the Mapbox access token:
 
-   ```html
-   <!-- Replace YOUR_MAPSINDOORS_API_KEY with your actual MapsIndoors API key -->
-   <script src="https://app.mapsindoors.com/mapsindoors/js/sdk/4.48.0/mapsindoors-4.48.0.js.gz?apikey=YOUR_MAPSINDOORS_API_KEY"></script>
-   
-   <!-- Replace YOUR_GOOGLE_MAPS_API_KEY with your actual Google Maps API key -->
-   <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=geometry"></script>
+   ```javascript
+   // Replace YOUR_MAPBOX_ACCESS_TOKEN with your actual Mapbox access token
+   const MAPBOX_ACCESS_TOKEN = 'YOUR_MAPBOX_ACCESS_TOKEN';
    ```
+
+   Note: The MapsIndoors API key is already configured in `index.html` as `02c329e6777d431a88480a09`.
 
 2. **Run the Tutorial**
 
@@ -93,7 +92,7 @@ demos/
 ### Map Initialization
 
 ```javascript
-const mapViewInstance = new mapsindoors.mapView.GoogleMapsView(mapViewOptions);
+const mapViewInstance = new mapsindoors.mapView.MapboxView(mapViewOptions);
 const mapsIndoorsInstance = new mapsindoors.MapsIndoors({ mapView: mapViewInstance });
 ```
 
@@ -108,7 +107,7 @@ mapsIndoorsInstance.highlight(locations.map(l => l.id));
 
 ```javascript
 const directionsService = new mapsindoors.services.DirectionsService(
-  new mapsindoors.directions.GoogleMapsProvider()
+  new mapsindoors.directions.MapboxProvider(MAPBOX_ACCESS_TOKEN)
 );
 const result = await directionsService.getRoute({
   origin: originCoord,
@@ -133,7 +132,7 @@ const result = await directionsService.getRoute({
 
 ### Directions don't work
 
-- Ensure your Google Maps API key has the Directions API enabled
+- Ensure your Mapbox access token is correct and has the necessary permissions
 - Check that both origin and destination locations are selected
 - Verify the locations are in the same building/venue
 
@@ -151,5 +150,5 @@ After completing this tutorial, you can:
 
 - [MapsIndoors Web SDK Documentation](https://docs.mapsindoors.com/sdks-and-frameworks/web)
 - [MapsIndoors Tutorial](https://docs.mapsindoors.com/sdks-and-frameworks/web/tutorial)
-- [Google Maps JavaScript API](https://developers.google.com/maps/documentation/javascript)
+- [Mapbox GL JS Documentation](https://docs.mapbox.com/mapbox-gl-js/)
 - [MapsIndoors Support](https://support.mapsindoors.com/)
