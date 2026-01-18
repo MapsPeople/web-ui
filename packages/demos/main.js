@@ -1,15 +1,18 @@
 // main.js - MapsIndoors Tutorial Implementation
 
-// Wait for both MapsIndoors SDK and Google Maps to be loaded
+// Wait for both MapsIndoors SDK and Mapbox to be loaded
 let mapsIndoorsInstance = null;
 let mapViewInstance = null;
 let directionsRenderer = null;
 let originLocation = null;
 let destinationLocation = null;
 
+// Mapbox access token
+const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoianByaWNlNjc5MSIsImEiOiJjbWtqNWo3OHoxMnI5M2NwbmlwM2locDhlIn0._L18RGG3ZVn-QeD6zs-MEQ';
+
 // Initialize the application when both SDKs are ready
 function initApp() {
-  if (typeof mapsindoors === 'undefined' || typeof google === 'undefined') {
+  if (typeof mapsindoors === 'undefined' || typeof mapboxgl === 'undefined') {
     console.log('Waiting for SDKs to load...');
     setTimeout(initApp, 100);
     return;
@@ -17,33 +20,57 @@ function initApp() {
 
   console.log('Initializing MapsIndoors...');
 
-  // Initialize Map View (Google Maps)
+  // Initialize Map View (Mapbox)
   const mapViewOptions = {
+    accessToken: MAPBOX_ACCESS_TOKEN,
     element: document.getElementById('map'),
     center: { lat: 38.8974905, lng: -77.0362723 }, // Default: White House
     zoom: 17,
     maxZoom: 22,
   };
 
-  mapViewInstance = new mapsindoors.mapView.GoogleMapsView(mapViewOptions);
+  mapViewInstance = new mapsindoors.mapView.MapboxView(mapViewOptions);
   mapsIndoorsInstance = new mapsindoors.MapsIndoors({ mapView: mapViewInstance });
 
-  // Add Floor Selector control to Google Maps
-  const googleMapsInstance = mapViewInstance.getMap();
+  // Add Floor Selector control to Mapbox
+  const mapboxInstance = mapViewInstance.getMap();
   const floorSelectorEl = document.createElement('div');
-  new mapsindoors.FloorSelector(floorSelectorEl, mapsIndoorsInstance);
-  googleMapsInstance.controls[google.maps.ControlPosition.RIGHT_TOP].push(floorSelectorEl);
+  const floorSelectorInstance = new mapsindoors.FloorSelector(floorSelectorEl, mapsIndoorsInstance);
+  
+  // Create a Mapbox control for the Floor Selector
+  const floorSelectorControl = {
+    onAdd: () => {
+      floorSelectorEl.classList.add('mapboxgl-ctrl');
+      return floorSelectorEl;
+    },
+    onRemove: () => {
+      if (floorSelectorEl.parentNode) {
+        floorSelectorEl.parentNode.removeChild(floorSelectorEl);
+      }
+    }
+  };
+  
+  mapboxInstance.addControl(floorSelectorControl, 'top-right');
 
-  // Initialize Directions Service
-  const directionsService = new mapsindoors.services.DirectionsService(
-    new mapsindoors.directions.GoogleMapsProvider()
-  );
+  // Add navigation controls
+  const navigationControl = new mapboxgl.NavigationControl();
+  mapboxInstance.addControl(navigationControl, 'top-left');
 
-  // Setup search functionality
-  setupSearch();
+  // Wait for MapsIndoors to be ready before setting up search and directions
+  mapsIndoorsInstance.on('ready', () => {
+    console.log('MapsIndoors is ready!');
 
-  // Setup directions functionality
-  setupDirections(directionsService);
+    // Initialize Directions Service
+    const directionsService = new mapsindoors.services.DirectionsService(
+      new mapsindoors.directions.MapboxProvider(MAPBOX_ACCESS_TOKEN)
+    );
+
+    // Setup search functionality
+    setupSearch();
+
+    // Setup directions functionality
+    setupDirections(directionsService);
+  });
 
   console.log('MapsIndoors initialized successfully!');
 }
@@ -65,28 +92,50 @@ function setupSearch() {
   async function performSearch(query) {
     if (!query || query.trim().length < 3) {
       searchResultsEl.innerHTML = '';
-      mapsIndoorsInstance.highlight();
-      mapsIndoorsInstance.selectLocation(null);
+      if (mapsIndoorsInstance) {
+        mapsIndoorsInstance.highlight();
+        mapsIndoorsInstance.selectLocation(null);
+      }
+      return;
+    }
+
+    // Check if MapsIndoors is ready
+    if (!mapsIndoorsInstance) {
+      console.error('MapsIndoors instance not available');
+      searchResultsEl.innerHTML = '<li style="color: red;">MapsIndoors not initialized</li>';
       return;
     }
 
     try {
-      const params = { q: query };
+      const params = { q: query.trim() };
+      console.log('Searching with params:', params);
       const locations = await mapsindoors.services.LocationsService.getLocations(params);
+      console.log('Search results:', locations);
 
       // Show list of results
       searchResultsEl.innerHTML = '';
+      
+      if (!locations || locations.length === 0) {
+        searchResultsEl.innerHTML = '<li style="color: #666; font-style: italic;">No locations found</li>';
+        mapsIndoorsInstance.highlight();
+        return;
+      }
+
       locations.forEach(loc => {
         const li = document.createElement('li');
-        li.textContent = loc.properties.name;
+        li.textContent = loc.properties.name || 'Unnamed location';
         li.addEventListener('click', () => {
           // Pan/zoom to location, switch floor, and select it
-          mapsIndoorsInstance.goTo({
-            lat: loc.properties.anchor.coordinates[1],
-            lng: loc.properties.anchor.coordinates[0],
-            floor: loc.properties.floor
-          });
-          mapsIndoorsInstance.setFloor(loc.properties.floor);
+          if (loc.properties.anchor && loc.properties.anchor.coordinates) {
+            mapsIndoorsInstance.goTo({
+              lat: loc.properties.anchor.coordinates[1],
+              lng: loc.properties.anchor.coordinates[0],
+              floor: loc.properties.floor
+            });
+            if (loc.properties.floor !== undefined) {
+              mapsIndoorsInstance.setFloor(loc.properties.floor);
+            }
+          }
           mapsIndoorsInstance.selectLocation(loc);
           // Highlight the selected location
           mapsIndoorsInstance.highlight([loc.id]);
@@ -98,7 +147,7 @@ function setupSearch() {
       mapsIndoorsInstance.highlight(locations.map(l => l.id));
     } catch (err) {
       console.error('Search error:', err);
-      searchResultsEl.innerHTML = '<li style="color: red;">Error searching locations</li>';
+      searchResultsEl.innerHTML = '<li style="color: red;">Error searching locations: ' + (err.message || 'Unknown error') + '</li>';
     }
   }
 
@@ -121,13 +170,25 @@ function setupDirections(directionsService) {
       return;
     }
 
-    debounce(async () => {
+    if (!mapsIndoorsInstance) {
+      console.error('MapsIndoors instance not available');
+      targetListEl.innerHTML = '<li style="color: red;">MapsIndoors not initialized</li>';
+      return;
+    }
+
+    const debouncedSearch = debounce(async () => {
       try {
-        const locs = await mapsindoors.services.LocationsService.getLocations({ q: query });
+        const locs = await mapsindoors.services.LocationsService.getLocations({ q: query.trim() });
         targetListEl.innerHTML = '';
+        
+        if (!locs || locs.length === 0) {
+          targetListEl.innerHTML = '<li style="color: #666; font-style: italic;">No locations found</li>';
+          return;
+        }
+
         locs.forEach(loc => {
           const li = document.createElement('li');
-          li.textContent = loc.properties.name;
+          li.textContent = loc.properties.name || 'Unnamed location';
           li.addEventListener('click', () => {
             callback(loc);
             targetListEl.innerHTML = '';
@@ -136,9 +197,11 @@ function setupDirections(directionsService) {
         });
       } catch (e) {
         console.error('Location search error:', e);
-        targetListEl.innerHTML = '<li style="color: red;">Error searching locations</li>';
+        targetListEl.innerHTML = '<li style="color: red;">Error searching locations: ' + (e.message || 'Unknown error') + '</li>';
       }
-    }, 400)();
+    }, 400);
+    
+    debouncedSearch();
   }
 
   // Setup origin input listener
