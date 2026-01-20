@@ -95,10 +95,9 @@ export function GeminiProvider({ children }) {
 
             const { response, tools, functionData } = await messageRes.json();
 
-            // Process function data if available
+            // Extract search result IDs based on the function data
+            let searchResultIds = [];
             if (functionData) {
-                // Extract search result IDs based on the function data
-                let searchResultIds = [];
                 switch (functionData?.key) {
                     case 'single_location':
                         searchResultIds = [functionData.value];
@@ -112,24 +111,17 @@ export function GeminiProvider({ children }) {
                         // Extract only the location IDs we need
                         const { originLocationId, destinationLocationId } = functionData.value;
                         setDirectionsLocationIds({ originLocationId, destinationLocationId });
-                        // Clear search results since this is a directions request, not a search
-                        setSearchResults([]);
                         break;
                     }
                     default:
                         break;
                 }
-
-                // Check for search results after the response is generated
-                console.log('Search result IDs:', searchResultIds);
-
-                if (searchResultIds.length > 0) {
-                    console.log('Search results found:', searchResultIds);
-                    setSearchResults(searchResultIds);
-                }
             }
 
-            console.log('Agent tool calls:', JSON.stringify(tools, null, 2));
+            console.log('Search result IDs:', searchResultIds);
+            setSearchResults(searchResultIds);
+
+            console.log('Agent tool calls:\n' + JSON.stringify(tools, null, 2));
 
             return response;
         } catch (error) {

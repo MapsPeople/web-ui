@@ -119,14 +119,14 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
 
     // Listen for search results from Gemini provider
     useEffect(() => {
+        // Always notify parent of search results changes (including empty arrays to clear highlights)
+        if (onSearchResults) {
+            onSearchResults(searchResults);
+        }
+
+        // Only fetch location details if we have results
         if (searchResults && searchResults.length > 0) {
             console.log('ChatWindow: Received search results from provider:', searchResults);
-
-            // Pass the location IDs to parent component for highlighting
-            if (onSearchResults) {
-                onSearchResults(searchResults);
-            }
-
             fetchLocationsAndUpdateMessage(searchResults);
         }
     }, [searchResults, onSearchResults, fetchLocationsAndUpdateMessage]);
