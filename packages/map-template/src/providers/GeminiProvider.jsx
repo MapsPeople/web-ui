@@ -16,15 +16,13 @@ export function GeminiProvider({ children }) {
     // Store session info - using refs to track current session without causing re-renders
     const sessionIdRef = useRef(null);
     const currentApiKeyRef = useRef(null);
-    const currentPromptFieldsRef = useRef(null);
 
     // Helper function to create or get session
-    const ensureSession = useCallback(async (apiKey, promptFields) => {
+    const ensureSession = useCallback(async (apiKey) => {
         // Check if we need to create a new session
         const needsNewSession =
             !sessionIdRef.current ||
-            currentApiKeyRef.current !== apiKey ||
-            JSON.stringify(currentPromptFieldsRef.current) !== JSON.stringify(promptFields);
+            currentApiKeyRef.current !== apiKey;
 
         if (needsNewSession) {
             // If we have an old session, clean it up first
@@ -45,8 +43,7 @@ export function GeminiProvider({ children }) {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    apiKey,
-                    promptFields
+                    apiKey
                 })
             });
 
@@ -58,14 +55,13 @@ export function GeminiProvider({ children }) {
             const { sessionId } = await startRes.json();
             sessionIdRef.current = sessionId;
             currentApiKeyRef.current = apiKey;
-            currentPromptFieldsRef.current = promptFields;
         }
 
         return sessionIdRef.current;
     }, []);
 
     // Wrapper function to generate a response using the Gemini service
-    const generateResponseWrapper = useCallback(async (apiKey, prompt, promptFields, extra = {}) => {
+    const generateResponseWrapper = useCallback(async (apiKey, prompt, extra = {}) => {
         setIsLoading(true);
         // Clear previous directions data when starting a new request
         setDirectionsLocationIds(null);
@@ -73,7 +69,7 @@ export function GeminiProvider({ children }) {
             console.log('Generating response for prompt:', prompt);
 
             // Ensure we have a valid session
-            const sessionId = await ensureSession(apiKey, promptFields);
+            const sessionId = await ensureSession(apiKey);
 
             // Send message to the session with extra context
             const messageRes = await fetch(`${API_BASE_URL}/api/chat/message`, {
