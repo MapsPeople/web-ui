@@ -788,7 +788,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [language, appConfig, currentLanguage, setCurrentLanguage, userSelectedLanguage]);
 
     return (
-        <GeminiProvider>
+        <GeminiProvider enabled={false}>
             <div className={`mapsindoors-map
             ${currentAppView === appStates.DIRECTIONS ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}
             ${(venuesInSolution.length > 1 && showVenueSelector) ? '' : 'mapsindoors-map--hide-venue-selector'}
@@ -803,7 +803,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 />}
                 {qrCodeLink && <QRCodeDialog />}
                 {showLegendDialog && <LegendDialog />}
-                <ChatButton 
+                <ChatButton
                     pushAppView={pushAppView}
                     currentAppView={currentAppView}
                     appViews={appStates}

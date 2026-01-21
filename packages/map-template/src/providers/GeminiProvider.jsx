@@ -7,7 +7,7 @@ const GeminiContext = createContext();
 // API base URL - can be configured via environment variable or defaults to localhost:4000
 const API_BASE_URL = 'http://localhost:4000';
 
-export function GeminiProvider({ children }) {
+export function GeminiProvider({ children, enabled }) {
     const [isLoading, setIsLoading] = useState(false);
     const [searchResults, setSearchResults] = useState([]);
     const [directionsLocationIds, setDirectionsLocationIds] = useState(null);
@@ -152,6 +152,7 @@ export function GeminiProvider({ children }) {
 
     // Provider value
     const geminiContextValue = {
+        enabled,
         generateResponse: generateResponseWrapper,
         isLoading,
         searchResults,
@@ -179,5 +180,6 @@ export function useGemini() {
 export default GeminiProvider;
 
 GeminiProvider.propTypes = {
-    children: PropTypes.node.isRequired
+    children: PropTypes.node.isRequired,
+    enabled: PropTypes.bool
 };

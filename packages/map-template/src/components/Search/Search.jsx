@@ -5,6 +5,7 @@ import appConfigState from '../../atoms/appConfigState';
 import categoriesState from '../../atoms/categoriesState';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
 import { useInitialChatMessage } from '../../hooks/useInitialChatMessage';
+import { useGemini } from '../../providers/GeminiProvider';
 import { snapPoints } from '../../constants/snapPoints';
 import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
@@ -106,6 +107,7 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
 
     const searchInput = useRecoilValue(searchInputState);
     const { setInitialMessage, } = useInitialChatMessage();
+    const { enabled: isAiChatEnabled } = useGemini();
 
     const isKioskContext = useIsKioskContext();
 
@@ -652,7 +654,7 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
      * Handle Enter key press on search input field to open chat when "Ask with AI" button is visible.
      */
     useEffect(() => {
-        if (!searchInput || !isInputFieldInFocus || !showAskWithAiButton) {
+        if (!isAiChatEnabled || !searchInput || !isInputFieldInFocus || !showAskWithAiButton) {
             return;
         }
 
@@ -675,7 +677,7 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
                 searchInput.removeEventListener('keydown', handleKeyDown);
             }
         };
-    }, [searchInput, isInputFieldInFocus, showAskWithAiButton, onOpenChat, setInitialMessage]);
+    }, [isAiChatEnabled, searchInput, isInputFieldInFocus, showAskWithAiButton, onOpenChat, setInitialMessage]);
 
 
     return (
@@ -705,8 +707,8 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
                 </label>
             </div>
 
-            {/* Only show when input is in focus and has more than 5 characters */}
-            {isInputFieldInFocus && showAskWithAiButton && (
+            {/* Only show when AI chat is enabled, input is in focus and has more than 5 characters */}
+            {isAiChatEnabled && isInputFieldInFocus && showAskWithAiButton && (
                 <button
                     className="search__ask-ai-button"
                     style={{ '--ask-ai-button-primary-color': primaryColor }}
