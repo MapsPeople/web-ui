@@ -93,18 +93,19 @@
 }
 
 .chat-messages__directions-button {
-    margin-top: 12px;
+    margin-top: var(--spacing-small);
     display: flex;
     justify-content: flex-start;
 }
 
 .chat-messages__show-route-button {
-    padding: 8px 16px;
+    padding: var(--spacing-x-small) var(--spacing-medium);
     border: none;
-    border-radius: 6px;
-    color: white;
-    font-size: 14px;
-    font-weight: 500;
+    border-radius: var(--rounding-large);
+    background-color: var(--chat-window-primary-color, #005655);
+    color: var(--color-white-white);
+    font-size: var(--font-size-small);
+    font-weight: var(--font-weight-medium);
     cursor: pointer;
     transition: opacity 0.2s ease;
 

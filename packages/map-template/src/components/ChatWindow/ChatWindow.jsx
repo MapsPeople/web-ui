@@ -12,8 +12,10 @@ import apiKeyState from '../../atoms/apiKeyState';
 import userPositionState from '../../atoms/userPositionState';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
+import userLocationShareState from '../../atoms/userLocationShareState';
 import ChatMessages from './ChatMessages/ChatMessages';
 import ChatInput from './ChatInput/ChatInput';
+import LocationConsentPopup from './LocationConsentPopup/LocationConsentPopup';
 
 /**
  * Updates the latest server message in the messages array with the provided updates.
@@ -58,6 +60,23 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
 
     // Use Recoil for chat history
     const [chatHistory, setChatHistory] = useRecoilState(chatHistoryState);
+
+    // Location sharing consent state
+    const [locationShareConsent, setLocationShareConsent] = useRecoilState(userLocationShareState);
+
+    // Pending message waiting for consent decision
+    const [pendingMessage, setPendingMessage] = useState(null);
+
+    // Show consent popup when user position is available and consent hasn't been decided
+    const shouldShowConsentPopup = userPosition && locationShareConsent === null && pendingMessage !== null;
+
+    const handleConsentAccept = useCallback(() => {
+        setLocationShareConsent('granted');
+    }, [setLocationShareConsent]);
+
+    const handleConsentDecline = useCallback(() => {
+        setLocationShareConsent('denied');
+    }, [setLocationShareConsent]);
 
     // Memoize the fetch locations function to prevent recreation on every render
     const fetchLocationsAndUpdateMessage = useCallback(async (searchResultIds) => {
@@ -114,6 +133,12 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
 
         if (!trimmedMessage || isLoading) return;
 
+        // If user position is available but consent hasn't been decided, wait for consent
+        if (userPosition && locationShareConsent === null) {
+            setPendingMessage(trimmedMessage);
+            return;
+        }
+
         const userMessage = {
             id: Date.now(),
             text: trimmedMessage,
@@ -124,13 +149,14 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
         // Build extra context object
         const extra = {};
 
-        // Add user position if available
-        if (userPosition) {
+        // Add user position and timezone if available and consent is granted
+        if (userPosition && locationShareConsent === 'granted') {
             extra.userPosition = {
                 latitude: userPosition.coords.latitude,
                 longitude: userPosition.coords.longitude,
                 floor: userPosition.floorIndex?.toString()
             };
+            extra.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
         }
 
         // Add venue info if available
@@ -139,9 +165,6 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                 name: currentVenueName
             };
         }
-
-        // Add timezone
-        extra.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
         // Call Gemini service for response with extra context
         try {
@@ -167,7 +190,16 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                 }
             ]);
         }
-    }, [isLoading, generateResponse, apiKey, userPosition, currentVenueName, mapsIndoorsInstance]);
+    }, [isLoading, generateResponse, apiKey, userPosition, currentVenueName, mapsIndoorsInstance, locationShareConsent]);
+
+    // Send pending message after consent is decided
+    useEffect(() => {
+        if (pendingMessage && locationShareConsent !== null) {
+            const messageToSend = pendingMessage;
+            setPendingMessage(null);
+            handleSendMessage(messageToSend);
+        }
+    }, [locationShareConsent, pendingMessage, handleSendMessage]);
 
 
     // Automatically send initial message when chat opens with a message from search
@@ -265,6 +297,12 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                 isLoading={isLoading}
                 onClose={onClose}
             />
+            {shouldShowConsentPopup && (
+                <LocationConsentPopup
+                    onAccept={handleConsentAccept}
+                    onDecline={handleConsentDecline}
+                />
+            )}
             <ChatMessages
                 chatHistory={chatHistory}
                 isLoading={isLoading}
