@@ -788,7 +788,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [language, appConfig, currentLanguage, setCurrentLanguage, userSelectedLanguage]);
 
     return (
-        <GeminiProvider enabled={false}>
+        <GeminiProvider enabled={appConfig?.appSettings?.enableChat === 'true'}>
             <div className={`mapsindoors-map
             ${currentAppView === appStates.DIRECTIONS ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}
             ${(venuesInSolution.length > 1 && showVenueSelector) ? '' : 'mapsindoors-map--hide-venue-selector'}
