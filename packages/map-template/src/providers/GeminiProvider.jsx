@@ -62,6 +62,9 @@ export function GeminiProvider({ children, enabled }) {
 
     // Wrapper function to generate a response using the Gemini service
     const generateResponseWrapper = useCallback(async (apiKey, prompt, extra = {}) => {
+        if (!enabled) {
+            return;
+        }
         setIsLoading(true);
         // Clear previous directions data when starting a new request
         setDirectionsLocationIds(null);
@@ -130,7 +133,7 @@ export function GeminiProvider({ children, enabled }) {
         } finally {
             setIsLoading(false);
         }
-    }, [ensureSession]);
+    }, [ensureSession, enabled]);
 
     // Function to clear directions data
     const clearDirectionsLocationIds = useCallback(() => {
