@@ -67,7 +67,7 @@ function ChatMessages({ chatHistory, isLoading, primaryColor, onShowRoute }) {
                                 locations={message.locations}
                             />
                         )}
-                        {message.type === 'server' && message.canShowRoute && message.routeDirections && (
+                        {message.type === 'server' && message.canShowRoute && message.routeDirections && onShowRoute && (
                             <div className="chat-messages__directions-button">
                                 <button
                                     type="button"
