@@ -225,7 +225,7 @@ const Sheet = forwardRef(function SheetComponent({ children, isOpen, initialSnap
      * Pass through ref to share the ref between the component and the useSwipeable hook.
      */
     const refPassthrough = el => {
-        if (swipeHandler.ref) {
+        if (swipeHandler?.ref) {
             swipeHandler.ref(el);
         }
         sheetRef.current = el;
