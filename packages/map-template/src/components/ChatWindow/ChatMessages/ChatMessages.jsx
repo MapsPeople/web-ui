@@ -30,10 +30,9 @@ function ChatMessages({ chatHistory, isLoading, primaryColor, onShowRoute }) {
             // Initial scroll
             scrollToBottom();
 
-            // For server messages, add a delayed scroll to catch async content
-            if (isLastMessageServer) {
-                setTimeout(scrollToBottom, 300);
-            }
+            const delayedScrollId = isLastMessageServer
+                ? setTimeout(scrollToBottom, 300)
+                : null;
 
             // Watch for content size changes (e.g., when ChatSearchResults renders)
             const resizeObserver = new ResizeObserver(() => {
@@ -42,7 +41,12 @@ function ChatMessages({ chatHistory, isLoading, primaryColor, onShowRoute }) {
 
             resizeObserver.observe(container);
 
-            return () => resizeObserver.disconnect();
+            return () => {
+                if (delayedScrollId) {
+                    clearTimeout(delayedScrollId);
+                }
+                resizeObserver.disconnect();
+            };
         }
     }, [chatHistory, isLoading]);
 
