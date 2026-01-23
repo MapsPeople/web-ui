@@ -35,6 +35,9 @@ function ChatInput({ onSendMessage, isLoading, onClose }) {
 
     // Handle Enter key in input field
     const handleKeyDown = useCallback((event) => {
+        // Check if IME composition is in progress
+        // keyCode 229 indicates an IME (Input Method Editor) composition event,
+        //We prevent Enter from submitting while the user is still composing characters.
         if (event.isComposing || event.nativeEvent?.isComposing || event.keyCode === 229) {
             return;
         }
