@@ -26,7 +26,7 @@ function ChatInput({ onSendMessage, isLoading, onClose }) {
 
         setInputValue('');
         onSendMessage(messageText);
-        
+
         // Blur input on mobile to dismiss keyboard after sending message
         if (!isDesktop && inputRef.current) {
             inputRef.current.blur();
@@ -52,6 +52,7 @@ function ChatInput({ onSendMessage, isLoading, onClose }) {
                     onKeyDown={handleKeyDown}
                     placeholder="Ask or search about anything"
                     className="chat-input__textarea"
+                    aria-label="Chat message"
                     rows={1}
                 />
             </div>
@@ -67,14 +68,14 @@ function ChatInput({ onSendMessage, isLoading, onClose }) {
                     Send
                 </button>
             )} */}
-                <button
-                    type="button"
-                    onClick={onClose}
-                    className="chat-input__close-button"
-                    aria-label="Close chat"
-                >
-                    <CloseIcon />
-                </button>
+            <button
+                type="button"
+                onClick={onClose}
+                className="chat-input__close-button"
+                aria-label="Close chat"
+            >
+                <CloseIcon />
+            </button>
         </div>
     );
 }
