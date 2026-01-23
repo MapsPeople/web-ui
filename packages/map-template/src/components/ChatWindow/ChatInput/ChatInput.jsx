@@ -35,6 +35,9 @@ function ChatInput({ onSendMessage, isLoading, onClose }) {
 
     // Handle Enter key in input field
     const handleKeyDown = useCallback((event) => {
+        if (event.isComposing || event.nativeEvent?.isComposing || event.keyCode === 229) {
+            return;
+        }
         if (event.key === 'Enter' && !event.shiftKey) {
             event.preventDefault();
             handleSend();
