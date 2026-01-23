@@ -23,7 +23,7 @@ const DEFAULT_LOCATIONS_TO_SHOW = 3;
 const ChatSearchResults = ({ locations }) => {
     const [isExpanded, setIsExpanded] = useState(false);
     const [hoveredLocationId, setHoveredLocationId] = useState(null);
-    
+
     // Recoil state for location handling
     const [, setCurrentLocation] = useRecoilState(currentLocationState);
     const [, setIsLocationClicked] = useRecoilState(isLocationClickedState);
@@ -46,11 +46,11 @@ const ChatSearchResults = ({ locations }) => {
      */
     const handleLocationClick = async (location) => {
         if (!mapsIndoorsInstance) return;
-        
+
         setCurrentLocation(location);
 
         // Set the current venue to be the selected location venue
-        if (location.properties.venueId.toLowerCase() !== currentVenueName.toLowerCase()) {
+        if (location?.properties?.venueId?.toLowerCase() !== currentVenueName?.toLowerCase()) {
             setCurrentVenueName(location.properties.venueId);
             setIsLocationClicked(true);
         }
