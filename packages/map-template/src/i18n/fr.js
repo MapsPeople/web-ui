@@ -8,6 +8,7 @@ const fr = {
     'Level': 'Niveau',
     'Search by name, category, building...': 'Recherche par nom, catégorie, bâtiment...',
     'Show legend': 'Afficher la légende',
+    'Ask with AI': 'Demander à l\'IA',
     'Nothing was found': 'Rien n\'a été trouvé',
     'd': 'd',
     'h': 'h',

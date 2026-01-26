@@ -8,6 +8,7 @@ const en = {
     'Level': 'Level',
     'Search by name, category, building...': 'Search by name, category, building...',
     'Show legend': 'Show legend',
+    'Ask with AI': 'Ask with AI',
     'Nothing was found': 'Nothing was found',
     'd': 'd',
     'h': 'h',
