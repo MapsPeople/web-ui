@@ -5,6 +5,78 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.90.2] - 2026-01-20
+
+### Fixed
+
+- Update Web SDK version.
+
+## [1.90.1] - 2026-01-15
+
+### Fixed
+
+- Fixed residual user position state not being cleared when location becomes unavailable or on inactivity reset.
+
+## [1.90.0] - 2026-01-15
+
+### Added
+
+- Possibility to remove Mapbox Extruded buildings via App Config.
+
+## [1.89.10] - 2026-01-14
+
+### Fixed
+
+- Updated @mapsindoors/components dependency to include blue dot fixes: floor change handling, opacity management, and refresh logic improvements.
+
+## [1.89.9] - 2026-01-12
+
+### Fixed
+
+- Upgraded to Web SDK version 4.47.1.
+
+## [1.89.8] - 2026-01-09
+
+### Fixed
+
+- Upgraded to Web SDK version 4.47.0.
+
+## [1.89.7] - 2026-01-07
+
+### Fixed
+
+- An issue when floor level was not respected when setting locationId prop.
+
+## [1.89.6] - 2026-01-06
+
+### Fixed
+
+- Updated @mapsindoors/components dependency to include fix for `TypeError` in `mi-my-position` component when accessing compass button style before the element is rendered.
+
+## [1.89.5] - 2025-12-16
+
+### Fixed
+
+- Fix route rendering incorrectly in kiosk.
+
+## [1.89.4] - 2025-12-16
+
+### Fixed
+
+- Fix search results being cleared accidentally.
+
+## [1.89.3] - 2025-12-16
+
+### Fixed
+
+- Upgraded to Web SDK version 4.46.1.
+
+## [1.89.2] - 2025-12-15
+
+### Fixed
+
+- Fixed Search component not resetting to default state when returning from directions/wayfinding.
+
 ## [1.89.1] - 2025-12-11
 
 ### Fixed

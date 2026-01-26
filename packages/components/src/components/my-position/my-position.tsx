@@ -103,12 +103,28 @@ export class MyPositionComponent {
     private onPositionErrorHandler: ((error?: any) => void) | null = null;
 
     /**
+     * Reference to the floor_changed event handler.
+     * Stored to enable proper cleanup when component disconnects.
+     */
+    private floorChangedHandler: (() => void) | null = null;
+
+    /**
      * The position provider instance to use internally.
      * This is the resolved, validated provider that the component actually uses.
      * It's either the customPositionProvider (if valid) or the default GeoLocationProvider.
      * All internal methods use this instead of customPositionProvider to ensure consistency.
      */
     private positionProvider: IPositionProvider;
+
+    /**
+     * Track the last applied fillOpacity to avoid unnecessary refreshes.
+     * Only refresh the marker when opacity actually changes (crossing floor boundaries).
+     */
+    private lastAppliedOpacity: number = 1;
+
+    private readonly defaultFillOpacity = 1;
+
+    private readonly reducedFillOpacity = 0.3;
 
     /**
      * Default options.
@@ -125,7 +141,7 @@ export class MyPositionComponent {
             strokeWeight: '2px',
             strokeColor: 'white',
             fillColor: '#4169E1',
-            fillOpacity: 1
+            fillOpacity: this.defaultFillOpacity
         },
         accuracyCircleStyles: {
             fillColor: '#4169E1',
@@ -184,14 +200,25 @@ export class MyPositionComponent {
             // Ensure the position provider is set on the MapView so the dot appears
             this.setPositionProviderOnMapView();
 
-            // Handle FOLLOW mode - automatically pan and change floors
-            if (this.positionState === PositionStateTypes.POSITION_FOLLOW) {
-                this.handleFollowModePosition(position);
-                // Stay in FOLLOW state, don't transition
-            } else if (this.positionState === PositionStateTypes.POSITION_TRACKED) {
+            // Update state based on current position state
+            if (this.positionState === PositionStateTypes.POSITION_TRACKED) {
                 this.setPositionState(PositionStateTypes.POSITION_UNTRACKED);
-            } else if (this.positionState !== PositionStateTypes.POSITION_UNTRACKED) {
+            } else if (this.positionState === PositionStateTypes.POSITION_UNKNOWN || this.positionState === PositionStateTypes.POSITION_REQUESTING) {
+                // Auto-enter FOLLOW mode only on first position (from UNKNOWN or REQUESTING)
+                this.setPositionState(PositionStateTypes.POSITION_FOLLOW);
+            } else if (this.positionState !== PositionStateTypes.POSITION_UNTRACKED && this.positionState !== PositionStateTypes.POSITION_FOLLOW) {
+                // For other states, transition to KNOWN
                 this.setPositionState(PositionStateTypes.POSITION_KNOWN);
+            }
+
+            // Handle mode-specific behavior
+            if (this.positionState === PositionStateTypes.POSITION_FOLLOW) {
+                // FOLLOW mode: auto-pan and change floors
+                this.handleFollowModePosition(position);
+                this.applyOpacityForPosition(position);
+            } else {
+                // Non-FOLLOW modes: update opacity based on floor match
+                this.applyOpacityForPosition(position);
             }
             window.removeEventListener('deviceorientation', this.handleDeviceOrientationReference);
 
@@ -258,6 +285,81 @@ export class MyPositionComponent {
                 this.mapView.setPositionProvider(this);
             });
         }
+    }
+
+    /**
+     * Forces the position provider to refresh by removing and re-adding it.
+     * This makes the SDK re-read the updated options and redraw the marker.
+     */
+    private refreshPositionProvider(): void {
+        if (this.mapView.isReady) {
+            // Remove the provider
+            this.mapView.setPositionProvider(null);
+            // Re-add it on next frame to force redraw
+            requestAnimationFrame(() => {
+                this.mapView.setPositionProvider(this);
+            });
+        }
+    }
+
+    /**
+     * Sets fillOpacity based on floor match and reapplies the provider so SDK re-reads styles.
+     * Only refreshes the marker when opacity actually changes to improve performance.
+     */
+    private applyOpacityForPosition(position: MapsIndoorsPosition): void {
+        if (!this.options?.positionMarkerStyles) return;
+
+        const matches = this.isFloorMatching(position);
+        const fillOpacity = matches ? this.defaultFillOpacity : this.reducedFillOpacity;
+
+        // Only refresh if opacity actually changed (crossing floor boundary)
+        if (fillOpacity === this.lastAppliedOpacity) {
+            return; // No change needed, skip expensive refresh
+        }
+
+        // Update fillOpacity directly - no need for new objects since we're forcing a refresh
+        this.options.positionMarkerStyles.fillOpacity = fillOpacity;
+
+        // Track the new opacity to avoid redundant refreshes
+        this.lastAppliedOpacity = fillOpacity;
+
+        // Force refresh to make SDK re-read options and redraw marker
+        this.refreshPositionProvider();
+    }
+
+    /**
+     * Compares incoming position floor with current map floor and returns the result.
+     * Only used for modern providers during position updates.
+     *
+     * Returns true (full opacity) when:
+     * - The incoming floor matches the current map floor
+     * - The incoming floor is invalid (doesn't exist in the building) - treated as "no floor data"
+     *
+     * Returns false (reduced opacity) when:
+     * - The incoming floor is valid but different from the current map floor.
+     *
+     * @param {MapsIndoorsPosition} position - The position to compare.
+     * @returns {boolean} - True if the floor matches or is invalid, false otherwise.
+     */
+    private isFloorMatching(position: MapsIndoorsPosition): boolean {
+        if (!this.mapsindoors) return false;
+        const incomingFloor = position.floorIndex;
+        const currentFloor = this.mapsindoors.getFloor();
+
+        if (incomingFloor === undefined || incomingFloor === null || currentFloor === undefined || currentFloor === null) {
+            return false;
+        }
+
+        const incoming = incomingFloor.toString();
+
+        // If the incoming floor doesn't exist in the building, treat it as "no floor data"
+        // and return true to keep full opacity (don't penalize invalid floor data)
+        if (!this.isValidFloorForCurrentBuilding(incoming)) {
+            return true;
+        }
+
+        const matches = incoming === currentFloor;
+        return matches;
     }
 
     /**
@@ -404,7 +506,9 @@ export class MyPositionComponent {
      * @param {number} bearing
      */
     private setCompassStyle(bearing: number): void {
-        this.compassButton.style.transform = `rotate(${bearing}deg)`;
+        if (this.compassButton) {
+            this.compassButton.style.transform = `rotate(${bearing}deg)`;
+        }
     }
 
     /**
@@ -650,6 +754,9 @@ export class MyPositionComponent {
                     selfInvoked: false,
                     accurate: true
                 });
+
+                // Update marker opacity based on floor match
+                // this.applyOpacityForPosition(this.currentPosition);
             } else {
                 this.setPositionState(PositionStateTypes.POSITION_UNKNOWN);
             }
@@ -658,6 +765,19 @@ export class MyPositionComponent {
         this.mapView.on('rotateend', () => {
             this.setCompassStyle(this.mapView.getBearing());
         });
+
+        // Listen for floor changes to update position marker opacity
+        // When user manually changes floor via floor selector, update opacity based on position's floor
+        if (this.mapsindoors && this.isModernProvider(this.positionProvider)) {
+            this.floorChangedHandler = (): void => {
+                // Only update if we have a current position and not in FOLLOW mode
+                // FOLLOW mode auto-changes floors so this isn't needed
+                if (this.currentPosition && this.positionState !== PositionStateTypes.POSITION_FOLLOW) {
+                    this.applyOpacityForPosition(this.currentPosition);
+                }
+            };
+            this.mapsindoors.on('floor_changed', this.floorChangedHandler);
+        }
     }
 
     /**
@@ -735,6 +855,12 @@ export class MyPositionComponent {
         } else {
             // Clean up modern provider event listeners
             this.cleanupModernProviderListeners();
+        }
+
+        // Clean up floor_changed listener
+        if (this.mapsindoors && this.floorChangedHandler) {
+            this.mapsindoors.off('floor_changed', this.floorChangedHandler);
+            this.floorChangedHandler = null;
         }
     }
 

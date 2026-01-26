@@ -285,11 +285,17 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
                     setUserPosition(positionInfo.detail.position);
                 }
             });
+            positionControl.addEventListener('position_error', () => {
+                setUserPosition(null);
+            });
         } else {
             positionControl.on('position_received', positionInfo => {
                 if (positionInfo.accurate === true) {
                     setUserPosition(positionInfo.position);
                 }
+            });
+            positionControl.on('position_error', () => {
+                setUserPosition(null);
             });
         }
         setPositionControl(positionControl);
