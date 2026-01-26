@@ -62,6 +62,7 @@ function ChatInput({ onSendMessage, isLoading, onClose }) {
                     rows={1}
                 />
             </div>
+            {/* TODO: Address if we need this button once we enable kiosk usage */}
             {/* {!isDesktop && (
                 <button
                     type="button"
