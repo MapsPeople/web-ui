@@ -70,7 +70,7 @@ const ChatSearchResults = ({ locations }) => {
         ]);
 
         mapsIndoorsInstance.goTo(location, {
-            maxZoom: 22,
+            maxZoom: 25,
             padding: { bottom: bottomPadding, left: leftPadding, top: 0, right: 0 }
         });
     };
