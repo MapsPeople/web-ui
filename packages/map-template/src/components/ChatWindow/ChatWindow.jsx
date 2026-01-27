@@ -139,7 +139,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
         }
 
         const userMessage = {
-            id: Date.now(),
+            id: crypto.randomUUID(),
             text: trimmedMessage,
             type: 'user'
         };
@@ -171,7 +171,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
             setChatHistory(prev => [
                 ...prev,
                 {
-                    id: Date.now() + 1,
+                    id: crypto.randomUUID(),
                     text: response,
                     type: 'server',
                     locations: [], // Will be populated by search results effect
@@ -182,7 +182,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
             setChatHistory(prev => [
                 ...prev,
                 {
-                    id: Date.now() + 2,
+                    id: crypto.randomUUID(),
                     text: 'Sorry, I encountered an error processing your request.',
                     type: 'server',
                     locations: []
