@@ -264,6 +264,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
                     {uiElements.languageSelector}
                     {uiElements.viewModeSwitch}
                     {uiElements.myPosition}
+                    {uiElements.chatButton}
                     {uiElements.floorSelector}
                 </div>
 
@@ -273,7 +274,6 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
                         <MapZoomControl mapType={mapType} mapInstance={mapInstance} />
                     )}
                     {uiElements.resetView}
-                    {uiElements.chatButton}
                 </div>
             </>
         );
