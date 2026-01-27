@@ -51,12 +51,12 @@ const ChatSearchResults = ({ locations }) => {
 
         // Set the current venue to be the selected location venue
         if (location?.properties?.venueId?.toLowerCase() !== currentVenueName?.toLowerCase()) {
-            setCurrentVenueName(location.properties.venueId);
+            setCurrentVenueName(location?.properties?.venueId);
             setIsLocationClicked(true);
         }
 
         const currentFloor = mapsIndoorsInstance.getFloor();
-        const locationFloor = location.properties.floor;
+        const locationFloor = location?.properties?.floor;
 
         // Set the floor to the one that the location belongs to
         if (locationFloor !== currentFloor) {
