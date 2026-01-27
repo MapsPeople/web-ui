@@ -82,8 +82,10 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
             const promises = searchResultIds.map(id =>
                 window.mapsindoors.services.LocationsService.getLocation(id)
             );
-            const locations = await Promise.all(promises);
-            const validLocations = locations.filter(location => location !== null);
+            const results = await Promise.allSettled(promises);
+            const validLocations = results
+                .filter(result => result.status === 'fulfilled' && result.value !== null)
+                .map(result => result.value);
             console.log('ChatWindow: Successfully fetched locations:', validLocations);
 
             // Update the latest server message with location data
