@@ -52,9 +52,6 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     const isMobileKeyboardVisible = keyboardHeight > 0;
 
 
-    // TODO: Hide header for now, redesign later
-    const isHeaderVisible = false;
-
     // Use Gemini provider
     const { generateResponse, isLoading, searchResults, directionsLocationIds } = useGemini();
 
@@ -281,17 +278,6 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
 
     return (
         <div ref={chatWindowRef} className={getChatWindowLayout()} style={getChatWindowStyles()}>
-            {isHeaderVisible && <div className="chat-window__header">
-                <span className="chat-window__title">Maps Indoors AI Assistant</span>
-                <button
-                    className="chat-window__minimize-button"
-                    onClick={onClose}
-                    type="button"
-                    aria-label="Close chat"
-                >
-                    ×
-                </button>
-            </div>}
             <ChatInput
                 onSendMessage={handleSendMessage}
                 isLoading={isLoading}
