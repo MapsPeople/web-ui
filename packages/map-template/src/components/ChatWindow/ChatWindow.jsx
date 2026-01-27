@@ -26,7 +26,14 @@ import LocationConsentPopup from './LocationConsentPopup/LocationConsentPopup';
  */
 function updateLatestServerMessage(messages, updates) {
     const updatedMessages = [...messages];
-    const lastServerIndex = updatedMessages.findLastIndex(msg => msg.type === 'server');
+    // Find last server message index using reverse loop (ES5 compatible)
+    let lastServerIndex = -1;
+    for (let i = updatedMessages.length - 1; i >= 0; i--) {
+        if (updatedMessages[i].type === 'server') {
+            lastServerIndex = i;
+            break;
+        }
+    }
 
     if (lastServerIndex !== -1) {
         updatedMessages[lastServerIndex] = {
