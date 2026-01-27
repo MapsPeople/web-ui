@@ -51,4 +51,10 @@
     &.map-controls-right-column {
         right: var(--spacing-medium);
     }
+
+    &.map-controls-right-bottom {
+        top: auto;
+        bottom: calc(6 * var(--spacing-medium));
+        right: var(--spacing-medium);
+    }
 }

@@ -290,6 +290,8 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
                 <div className="map-controls-right-column mobile-column">
                     {uiElements.myPosition}
                     {uiElements.floorSelector}
+                </div>
+                <div className="map-controls-right-bottom mobile-column">
                     {uiElements.chatButton}
                 </div>
             </>
