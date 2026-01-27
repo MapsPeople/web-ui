@@ -16,6 +16,7 @@ const UI_ELEMENTS = {
     myPosition: { key: 'my-position', className: 'my-position-element-portal' },
     floorSelector: { key: 'floor-selector', className: 'floor-selector-portal' },
     resetView: { key: 'reset-view', className: 'reset-view-portal' },
+    chatButton: { key: 'chat-button', className: 'chat-button-portal' },
     zoomControls: { key: 'zoom-controls', className: null }, // React component imported directly, no portal needed
     textSizeButton: { key: 'text-size-button', className: null } // React component imported directly, no portal needed
 };
@@ -263,6 +264,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
                     {uiElements.languageSelector}
                     {uiElements.viewModeSwitch}
                     {uiElements.myPosition}
+                    {uiElements.chatButton}
                     {uiElements.floorSelector}
                 </div>
 
@@ -288,6 +290,9 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
                 <div className="map-controls-right-column mobile-column">
                     {uiElements.myPosition}
                     {uiElements.floorSelector}
+                </div>
+                <div className="map-controls-right-bottom mobile-column">
+                    {uiElements.chatButton}
                 </div>
             </>
         );

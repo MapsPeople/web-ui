@@ -8,6 +8,7 @@ const de = {
     'Level': 'Etage',
     'Search by name, category, building...': 'Nach Name, Kategorie, Gebäude suchen...',
     'Show legend': 'Legende anzeigen',
+    'Ask with AI': 'Mit KI fragen',
     'Nothing was found': 'Keine Suchtreffer',
     'd': 'd',
     'h': 'h',

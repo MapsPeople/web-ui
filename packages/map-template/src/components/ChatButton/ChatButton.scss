@@ -1,0 +1,58 @@
+$desktop-breakpoint: 992px;
+
+.chat-button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #e6e6e6;
+    border-radius: var(--rounding-large);
+    width: var(--spacing-xxx-large);
+    height: var(--spacing-xxx-large);
+    background: var(--tailwind-colors-white);
+    transition: background-color 0.2s, border-color 0.2s;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    font-size: var(--font-size-small, 0.875rem);
+    font-weight: 500;
+
+    &:not(:disabled):hover {
+        background-color: var(--tailwind-colors-gray-100);
+        border: 1px solid var(--tailwind-colors-gray-200);
+    }
+
+    &:focus {
+        outline: none;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--chat-button-primary-color, #007bff);
+        outline-offset: 2px;
+    }
+}
+
+// TEMPORARY: Override chat button portal position on desktop to place it to the right of the search sidebar.
+// This positions the chat button next to the sidebar modal (width: 568px, left: spacing-medium).
+// Using position: fixed to break out of the parent's (map-controls-container) positioning context.
+// Top position accounts for: modal top (spacing-medium) + search container padding (spacing-medium) - vertical centering offset ((64px - 48px) / 2 = 8px)
+@media (min-width: $desktop-breakpoint) {
+    .chat-button-portal {
+        position: fixed;
+        top: calc(2 * var(--spacing-medium) - 8px);
+        left: calc(var(--spacing-medium) + 568px + var(--spacing-small));
+        z-index: var(--z-index-overlay);
+
+        // TEMPORARY: Override button and icon size for desktop placement
+        .chat-button {
+            width: 64px;
+            height: 64px;
+
+            svg {
+                width: 32px;
+                height: 32px;
+            }
+        }
+    }
+}
+

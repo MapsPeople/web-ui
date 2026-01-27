@@ -8,6 +8,7 @@ const zh = {
     'Level': '楼层',
     'Search by name, category, building...': '按名称、类别、建筑物搜索...',
     'Show legend': '显示图例',
+    'Ask with AI': '询问 AI',
     'Nothing was found': '未找到任何结果',
     'd': '天',
     'h': '小时',

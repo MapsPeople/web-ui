@@ -8,8 +8,10 @@ import Wayfinding from '../Wayfinding/Wayfinding';
 import Directions from '../Directions/Directions';
 import Search from '../Search/Search';
 import LocationsList from '../LocationsList/LocationsList';
+import ChatWindow from '../ChatWindow/ChatWindow';
 import locationIdState from '../../atoms/locationIdState';
 import kioskLocationState from '../../atoms/kioskLocationState';
+import { useChatLocations, useChatDirections } from '../../hooks/useChat';
 import PropTypes from 'prop-types';
 
 Sidebar.propTypes = {
@@ -42,7 +44,11 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
     const [, setLocationId] = useRecoilState(locationIdState);
-    const kioskLocation = useRecoilValue(kioskLocationState)
+    const kioskLocation = useRecoilValue(kioskLocationState);
+
+    // Use chat hooks for handling chat interactions
+    const handleChatSearchResults = useChatLocations();
+    const handleChatShowRoute = useChatDirections(pushAppView, appViews);
 
     /*
      * React on changes on the current location and directions locations and set relevant bottom sheet.
@@ -104,9 +110,13 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
         }
     }
 
+
     const pages = [
         <Modal isOpen={currentAppView === appViews.SEARCH} key="SEARCH">
-            <Search isOpen={currentAppView === appViews.SEARCH} />
+            <Search 
+                isOpen={currentAppView === appViews.SEARCH} 
+                onOpenChat={() => pushAppView(appViews.CHAT)}
+            />
         </Modal>,
         <Modal isOpen={currentAppView === appViews.EXTERNALIDS} key="EXTERNALIDS">
             <LocationsList
@@ -137,6 +147,14 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
                 isOpen={currentAppView === appViews.DIRECTIONS}
                 onBack={() => closeDirections()}
                 onRouteFinished={() => onRouteFinished()}
+            />
+        </Modal>,
+        <Modal isOpen={currentAppView === appViews.CHAT} key="CHAT">
+            <ChatWindow
+                isVisible={currentAppView === appViews.CHAT}
+                onClose={() => pushAppView(appViews.SEARCH)}
+                onSearchResults={handleChatSearchResults}
+                onShowRoute={handleChatShowRoute}
             />
         </Modal>
     ];

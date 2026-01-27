@@ -8,6 +8,7 @@ const nl = {
     'Level': 'Niveau',
     'Search by name, category, building...': 'Zoeken op naam, categorie, gebouw…',
     'Show legend': 'Legende weergeven',
+    'Ask with AI': 'Vraag met AI',
     'Nothing was found': 'Er is niets gevonden',
     'd': 'd',
     'h': 'u',

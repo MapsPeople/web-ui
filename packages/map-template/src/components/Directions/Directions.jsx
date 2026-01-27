@@ -144,6 +144,15 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
                 setMinZoom(null);
             });
         }
+
+        return () => {
+            // Cleanup: stop rendering directions and reset minZoom when component unmounts or dependencies change
+            if (directionsRenderer) {
+                directionsRenderer.setRoute(null);
+                directionsRenderer = null;
+            }
+            setMinZoom(ZoomLevelValues.minZoom);
+        };
     }, [isOpen, directions, mapsIndoorsInstance, travelMode, shuttleBusOn]);
 
 
@@ -255,10 +264,13 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
      * @param {number} zoomLevel
      */
     function setMinZoom(zoomLevel) {
+        const mapView = mapsIndoorsInstance?.getMapView?.();
+        const map = mapView?.getMap?.();
+        if (!mapsIndoorsInstance || !mapView || !map) return;
         if (mapType === 'mapbox') {
-            mapsIndoorsInstance.getMapView().getMap().setMinZoom(zoomLevel);
+            map.setMinZoom(zoomLevel);
         } else if (mapType === 'google') {
-            mapsIndoorsInstance.getMapView().getMap().setOptions({ minZoom: zoomLevel })
+            map.setOptions({ minZoom: zoomLevel });
         }
     }
 
@@ -332,7 +344,7 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
                     <hr />
                     <div className="directions__kiosk">
                         <Accessibility onAccessibilityChanged={() => resetSubsteps()} />
-                        {appConfig?.appSettings?.includeTransitSelection === 'true' && <ShuttleBus/>}
+                        {appConfig?.appSettings?.includeTransitSelection === 'true' && <ShuttleBus />}
                         <button className="directions__qr-code" onClick={() => showQRCode()} aria-label={t('Scan QR code to view route on phone')}><QRCode />{t('Scan QR code')}</button>
                     </div>
                 </>

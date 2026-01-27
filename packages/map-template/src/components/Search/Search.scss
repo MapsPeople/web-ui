@@ -47,6 +47,38 @@
         background-color: white;
     }
 
+    &__ask-ai-button {
+        margin-top: var(--spacing-small);
+        padding: var(--spacing-small) var(--spacing-medium);
+        width: 100%;
+        background-color: var(--ask-ai-button-primary-color);
+        color: white;
+        border: none;
+        border-radius: var(--rounding-large);
+        font-size: var(--font-size-medium);
+        font-weight: var(--font-weight-large);
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--spacing-x-small);
+
+        svg {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        &:hover {
+            opacity: 0.9;
+        }
+
+        &:active {
+            opacity: 0.8;
+        }
+    }
+
     &__label {
         span {
             display: none;

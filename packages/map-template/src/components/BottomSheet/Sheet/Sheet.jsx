@@ -28,7 +28,7 @@ import PropTypes from 'prop-types';
  * @param {number} props.initialSnapPoint - The initial snap point of the sheet.
  * @param {number} props.minimizedHeight - The minimum height of the sheet. It cannot be resized below this height.
  */
-const Sheet = forwardRef(function SheetComponent({ children, isOpen, initialSnapPoint, minimizedHeight }, ref) {
+const Sheet = forwardRef(function SheetComponent({ children, isOpen, initialSnapPoint, minimizedHeight, disableSwipe = false, disableContentScroll = false }, ref) {
     /** Referencing the sheet DOM element */
     const sheetRef = useRef();
 
@@ -174,8 +174,16 @@ const Sheet = forwardRef(function SheetComponent({ children, isOpen, initialSnap
      *
      * The handler is created using the useSwipeable hook from the react-swipeable library.
      * It allows the user to swipe up and down to change the height of the sheet.
+     * When disableSwipe is true, no-op handlers are passed to disable swipe functionality.
      */
-    const swipeHandler = useSwipeable({
+    const swipeHandler = useSwipeable(disableSwipe ? {
+        // No-op handlers when swipe is disabled
+        onSwipeStart: () => {},
+        onSwiping: () => {},
+        onSwiped: () => {},
+        trackMouse: false,
+        preventScrollOnSwipe: false
+    } : {
         onSwipeStart: () => {
             setIsDragging(true);
             setSwipedSnapPoint(null);
@@ -217,7 +225,9 @@ const Sheet = forwardRef(function SheetComponent({ children, isOpen, initialSnap
      * Pass through ref to share the ref between the component and the useSwipeable hook.
      */
     const refPassthrough = el => {
-        swipeHandler.ref(el);
+        if (swipeHandler?.ref) {
+            swipeHandler.ref(el);
+        }
         sheetRef.current = el;
     }
 
@@ -232,6 +242,8 @@ const Sheet = forwardRef(function SheetComponent({ children, isOpen, initialSnap
         cloneElement(child, { snapPointSwipedByUser: swipedSnapPoint })
     );
 
+    const contentClassName = `sheet__content ${(snappedTo.current === snapPoints.MIN || disableContentScroll) ? 'sheet__content--no-scroll' : ''}`;
+
     return (
         <div
             {...swipeHandler}
@@ -240,7 +252,7 @@ const Sheet = forwardRef(function SheetComponent({ children, isOpen, initialSnap
             style={style}
         >
             {/* We need to have a div in a div for it being able to scroll content separately and for the height to be measurable */}
-            <div ref={contentRef} className={`sheet__content ${snappedTo.current === snapPoints.MIN ? 'sheet__content--no-scroll' : ''}`} style={style}>
+            <div ref={contentRef} className={contentClassName} style={style}>
                 {clonedChildren}
             </div>
         </div>
@@ -251,7 +263,9 @@ Sheet.propTypes = {
     children: PropTypes.node.isRequired,
     isOpen: PropTypes.bool.isRequired,
     initialSnapPoint: PropTypes.string.isRequired,
-    minimizedHeight: PropTypes.number.isRequired
+    minimizedHeight: PropTypes.number.isRequired,
+    disableSwipe: PropTypes.bool,
+    disableContentScroll: PropTypes.bool
 };
 
 export default Sheet;

@@ -8,6 +8,7 @@ const it = {
     'Level': 'Piano',
     'Search by name, category, building...': 'Cerca per nome, categoria, edificio...',
     'Show legend': 'Mostra legenda',
+    'Ask with AI': 'Chiedi all\'IA',
     'Nothing was found': 'Non è stato trovato nulla',
     'd': 'g',
     'h': 'o',

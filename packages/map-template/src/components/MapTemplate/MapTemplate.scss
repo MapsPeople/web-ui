@@ -67,6 +67,15 @@
         }
     }
 
+    &--hide-map-controls {
+        // Hide all MapControls containers when ChatWindow is active
+        .map-controls-container,
+        .map-controls-left-column,
+        .map-controls-right-column {
+            display: none !important;
+        }
+    }
+
     .mi-floor-selector__list {
         box-sizing: unset;
     }
