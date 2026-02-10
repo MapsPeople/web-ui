@@ -17,6 +17,7 @@ import ChatMessages from './ChatMessages/ChatMessages';
 import ChatInput from './ChatInput/ChatInput';
 import LocationConsentPopup from './LocationConsentPopup/LocationConsentPopup';
 import UsageConsentOverlay from './UsageConsentOverlay/UsageConsentOverlay';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Updates the latest server message in the messages array with the provided updates.
@@ -47,6 +48,7 @@ function updateLatestServerMessage(messages, updates) {
 }
 
 function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
+    const { t } = useTranslation();
     const primaryColor = useRecoilValue(primaryColorState);
     const apiKey = useRecoilValue(apiKeyState);
     const userPosition = useRecoilValue(userPositionState);
@@ -320,7 +322,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                 </>
             )}
             <p className="chat-window__disclaimer">
-                Ask with AI may make mistakes. Double-check important details before heading out.
+                {t('AI disclaimer')}
             </p>
         </div>
     );
