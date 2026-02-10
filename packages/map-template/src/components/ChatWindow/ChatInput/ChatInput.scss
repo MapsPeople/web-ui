@@ -15,10 +15,15 @@
     border: 1px solid var(--tailwind-colors-gray-200);
     border-radius: var(--rounding-large);
     background-color: var(--color-white-white);
+    transition: filter 0.2s ease;
 
     &:focus-within {
         border-color: var(--chat-window-primary-color, #1890ff);
         box-shadow: 0 0 0 2px #cfe0fc;
+    }
+
+    &--disabled {
+        pointer-events: none;
     }
 }
 
@@ -54,9 +59,7 @@
     }
 
     &:disabled {
-        background-color: var(--color-gray-10);
-        color: var(--color-gray-60);
-        cursor: not-allowed;
+        cursor: default;
     }
 
     &::placeholder {

@@ -1,10 +1,22 @@
 .chat-window {
+    position: relative;
     display: flex;
     flex-direction: column;
     height: fit-content;
     max-height: 100%;
     background-color: var(--color-white-white);
     overflow: hidden;
+}
+
+// Blur backdrop when consent overlay is active
+.chat-window--consent::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    background-color: rgba(255, 255, 255, 0.5);
+    z-index: 5;
 }
 
 .chat-window.desktop {
@@ -45,6 +57,15 @@
     flex: 1;
     overflow-y: auto;
     min-height: 0; // Important for flex scrolling
+}
+
+.chat-window__disclaimer {
+    margin: 0;
+    padding: var(--spacing-x-small) var(--spacing-small);
+    font-size: 11px;
+    color: var(--color-gray-60);
+    text-align: center;
+    flex-shrink: 0;
 }
 
 .chat-window.mobile .chat-input {
