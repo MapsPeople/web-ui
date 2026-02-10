@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import MIMap from '@mapsindoors/react-components/src/components/MIMap/MIMap';
+import MIMap from '../MIMap/MIMap';
 import { mapTypes } from '../../constants/mapTypes';
 import useLiveData from '../../hooks/useLivedata';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
