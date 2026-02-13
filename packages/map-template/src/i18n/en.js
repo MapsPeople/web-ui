@@ -96,10 +96,14 @@ const en = {
     'Zoom out': 'Zoom out',
     // Ask with AI - Usage Consent
     'Usage consent title': 'Ask with AI - Usage Consent',
-    'Usage consent message': 'Ask with AI helps you find places and navigate this venue using artificial intelligence. While we strive for accuracy, the AI may sometimes get things wrong. Please double-check important details before heading out.',
+    'Usage consent message': 'Ask with AI helps you find places and navigate this venue using Artificial Intelligence (AI). While we strive for accuracy, the AI may sometimes get things wrong. Please double-check important details before heading out.',
     'Usage consent accept': 'I understand',
     'Usage consent decline': 'Decline',
     'AI disclaimer': 'Ask with AI may make mistakes. Double-check important details before heading out.',
+    // Location Consent
+    'Location consent message': 'To provide personalized directions and help you discover what\'s nearby, Ask with AI would like to access your location. The chat will still work without knowing your location, but instead you\'ll need to specify a start point.',
+    'Location consent accept': 'Allow',
+    'Location consent decline': 'Decline',
 };
 
 export default en;
