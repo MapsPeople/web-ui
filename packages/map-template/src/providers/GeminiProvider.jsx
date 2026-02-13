@@ -36,14 +36,16 @@ export function GeminiProvider({ children, enabled }) {
                 }
             }
 
-            // Create new session
+            // Create new session with a client-generated session ID
+            const sessionId = crypto.randomUUID();
             const startRes = await fetch(`${API_BASE_URL}/api/chat/start`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    apiKey
+                    apiKey,
+                    sessionId
                 })
             });
 
@@ -52,7 +54,6 @@ export function GeminiProvider({ children, enabled }) {
                 throw new Error(errorData.error || `Failed to create session: ${startRes.status}`);
             }
 
-            const { sessionId } = await startRes.json();
             sessionIdRef.current = sessionId;
             currentApiKeyRef.current = apiKey;
         }
