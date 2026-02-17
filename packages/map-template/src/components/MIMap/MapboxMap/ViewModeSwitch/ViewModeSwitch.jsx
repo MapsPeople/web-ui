@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
 import './ViewModeSwitch.scss';
-import isNullOrUndefined from '../../../../../../map-template/src/helpers/isNullOrUndefined';
+import isNullOrUndefined from '../../../../helpers/isNullOrUndefined';
 import { ReactComponent as Light2D } from '../../../../assets/2d-light.svg';
 import { ReactComponent as Dark2D } from '../../../../assets/2d-dark.svg';
 import { ReactComponent as Light3D } from '../../../../assets/3d-light.svg';

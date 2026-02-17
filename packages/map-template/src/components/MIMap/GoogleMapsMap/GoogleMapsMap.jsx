@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Loader as GoogleMapsApiLoader } from '@googlemaps/js-api-loader';
 import './GoogleMapsMap.scss';
-import isNullOrUndefined from '../../../../../map-template/src/helpers/isNullOrUndefined';
+import isNullOrUndefined from '../../../helpers/isNullOrUndefined';
 
 GoogleMapsMap.propTypes = {
     apiKey: PropTypes.string.isRequired,
