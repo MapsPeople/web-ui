@@ -4,7 +4,7 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './MapboxMap.scss';
 import ViewModeSwitch from './ViewModeSwitch/ViewModeSwitch';
-import isNullOrUndefined from '../../../../../map-template/src/helpers/isNullOrUndefined';
+import isNullOrUndefined from '../../../helpers/isNullOrUndefined';
 
 MapboxMap.propTypes = {
     accessToken: PropTypes.string.isRequired,

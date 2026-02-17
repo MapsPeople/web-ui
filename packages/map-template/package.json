@@ -1,7 +1,7 @@
 {
   "name": "@mapsindoors/map-template",
   "description": "Get a MapsIndoors map up and running in less than 10 mins.",
-  "version": "1.91.5",
+  "version": "1.92.0",
   "private": false,
   "files": [
     "dist/*.js",
@@ -12,7 +12,6 @@
     "@mapsindoors/components": "*",
     "@mapsindoors/css": "^3.0.0",
     "@mapsindoors/midt": "*",
-    "@mapsindoors/react-components": "*",
     "@r2wc/react-to-web-component": "2.0.3",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
