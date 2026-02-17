@@ -93,6 +93,16 @@ const zh = {
     // Map Controls
     'Zoom in': '放大',
     'Zoom out': '缩小',
+    // Ask with AI - Usage Consent
+    'Usage consent title': 'Ask with AI - 使用须知',
+    'Usage consent message': 'Ask with AI 利用人工智能（AI）帮助您查找地点并在此场所内导航。尽管我们力求准确，但 AI 有时可能会出错。请在出发前仔细核实重要信息。',
+    'Usage consent accept': '我已了解',
+    'Usage consent decline': '拒绝',
+    'AI disclaimer': 'Ask with AI 可能会出错。请在出发前仔细核实重要信息。',
+    // Location Consent
+    'Location consent message': '为了提供个性化的路线指引并帮助您发现附近的地点，Ask with AI 需要访问您的位置信息。即使不提供位置信息，聊天功能仍然可用，但您需要手动指定起点。',
+    'Location consent accept': '允许',
+    'Location consent decline': '拒绝',
 };
 
 export default zh;
