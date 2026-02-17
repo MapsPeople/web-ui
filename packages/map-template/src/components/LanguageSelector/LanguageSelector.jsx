@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { createPortal } from 'react-dom';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
+import { usePortalTarget } from '../../hooks/usePortalTarget';
 import { supportedLanguages } from '../../i18n/initialize.js';
 import { ReactComponent as LanguageSelectorIcon } from '../../assets/language-selector.svg';
 import './LanguageSelector.scss';
@@ -80,27 +81,8 @@ function LanguageSelector({ currentLanguage, setLanguage, isVisible }) {
     const [isExpanded, setIsExpanded] = useState(false);
     const dropdownRef = useRef(null);
     const toggleButtonRef = useRef(null);
-    const [portalContainer, setPortalContainer] = useState(null);
+    const portalContainer = usePortalTarget('.language-selector-portal');
     const isDesktop = useIsDesktop();
-    const languageSelectorMountPoint = '.language-selector-portal';
-
-    // Find portal target
-    useEffect(() => {
-        let portalTargetMountPoint = document.querySelector(languageSelectorMountPoint);
-        if (portalTargetMountPoint) {
-            setPortalContainer(portalTargetMountPoint);
-            return;
-        }
-        const observer = new MutationObserver(() => {
-            portalTargetMountPoint = document.querySelector(languageSelectorMountPoint);
-            if (portalTargetMountPoint) {
-                setPortalContainer(portalTargetMountPoint);
-                observer.disconnect();
-            }
-        });
-        observer.observe(document.body, { childList: true, subtree: true });
-        return () => observer.disconnect();
-    }, []);
 
     // Click outside to close (desktop only)
     useEffect(() => {
