@@ -336,6 +336,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
     return (<>
         {apiKey && <MIMap
             apiKey={apiKey}
+            mapType={mapType}
             mapboxAccessToken={mapType === mapTypes.Mapbox ? mapboxAccessToken : undefined}
             gmApiKey={mapType === mapTypes.Google ? gmApiKey : undefined}
             onInitialized={onInitialized}
