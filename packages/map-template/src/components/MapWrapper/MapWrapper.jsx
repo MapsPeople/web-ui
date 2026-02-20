@@ -329,8 +329,9 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
     }, [appConfig])
 
     return (<>
-        {apiKey && <MIMap
+        {apiKey && mapType && <MIMap
             apiKey={apiKey}
+            mapType={mapType}
             mapboxAccessToken={mapType === mapTypes.Mapbox ? mapboxAccessToken : undefined}
             gmApiKey={mapType === mapTypes.Google ? gmApiKey : undefined}
             onInitialized={onInitialized}
@@ -341,7 +342,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
             isKiosk={isKiosk}
         />}
         {/* Pass isWayfindingOrDirections prop to ViewSelector to disable interactions while wayfinding or directions is active*/}
-        {apiKey && <>
+        {apiKey && mapType && <>
             <ViewSelector isViewSelectorVisible={isViewSelectorVisible} isViewSelectorDisabled={isWayfindingOrDirections} />
             <LanguageSelector currentLanguage={currentLanguage} setLanguage={setLanguage} isVisible={isLanguageSelectorVisible} />
             <ResetKioskViewButton />

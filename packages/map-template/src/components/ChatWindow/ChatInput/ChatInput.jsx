@@ -5,19 +5,19 @@ import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import PropTypes from 'prop-types';
 import './ChatInput.scss';
 
-function ChatInput({ onSendMessage, isLoading, onClose }) {
+function ChatInput({ onSendMessage, isLoading, onClose, disabled }) {
     const inputRef = useRef(null);
     const [inputValue, setInputValue] = useState('');
     const isDesktop = useIsDesktop();
 
-    // Auto-focus input on mount only on desktop
+    // Auto-focus input on mount only on desktop and when not disabled
     useEffect(() => {
-        if (inputRef.current && isDesktop) {
+        if (inputRef.current && isDesktop && !disabled) {
             requestAnimationFrame(() => {
                 inputRef.current?.focus();
             });
         }
-    }, [isDesktop]);
+    }, [isDesktop, disabled]);
 
     // Handle sending message from input
     const handleSend = useCallback(() => {
@@ -49,7 +49,7 @@ function ChatInput({ onSendMessage, isLoading, onClose }) {
 
     return (
         <div className="chat-input">
-            <div className="chat-input__wrapper">
+            <div className={`chat-input__wrapper${disabled ? ' chat-input__wrapper--disabled' : ''}`}>
                 <ChatModeIcon className="chat-input__icon" />
                 <textarea
                     ref={inputRef}
@@ -60,6 +60,7 @@ function ChatInput({ onSendMessage, isLoading, onClose }) {
                     className="chat-input__textarea"
                     aria-label="Chat message"
                     rows={1}
+                    disabled={disabled}
                 />
             </div>
             {/* TODO: Address if we need this button once we enable kiosk usage */}
@@ -75,11 +76,13 @@ function ChatInput({ onSendMessage, isLoading, onClose }) {
                     Send
                 </button>
             )} */}
+            {/* Remove from tab order while usage consent overlay is visible to prevent accidental closes */}
             <button
                 type="button"
-                onClick={onClose}
-                className="chat-input__close-button"
+                onClick={disabled ? undefined : onClose}
+                className={`chat-input__close-button${disabled ? ' chat-input__close-button--disabled' : ''}`}
                 aria-label="Close chat"
+                tabIndex={disabled ? -1 : 0}
             >
                 <CloseIcon />
             </button>
@@ -90,7 +93,8 @@ function ChatInput({ onSendMessage, isLoading, onClose }) {
 ChatInput.propTypes = {
     onSendMessage: PropTypes.func.isRequired,
     isLoading: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired
+    onClose: PropTypes.func.isRequired,
+    disabled: PropTypes.bool
 };
 
 export default ChatInput;

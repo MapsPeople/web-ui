@@ -16,6 +16,8 @@ import userLocationShareState from '../../atoms/userLocationShareState';
 import ChatMessages from './ChatMessages/ChatMessages';
 import ChatInput from './ChatInput/ChatInput';
 import LocationConsentPopup from './LocationConsentPopup/LocationConsentPopup';
+import UsageConsentOverlay from './UsageConsentOverlay/UsageConsentOverlay';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Updates the latest server message in the messages array with the provided updates.
@@ -46,6 +48,7 @@ function updateLatestServerMessage(messages, updates) {
 }
 
 function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
+    const { t } = useTranslation();
     const primaryColor = useRecoilValue(primaryColorState);
     const apiKey = useRecoilValue(apiKeyState);
     const userPosition = useRecoilValue(userPositionState);
@@ -58,7 +61,6 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     const keyboardHeight = useKeyboardHeight(isDesktop);
     const isMobileKeyboardVisible = keyboardHeight > 0;
 
-
     // Use Gemini provider
     const { generateResponse, isLoading, searchResults, directionsLocationIds } = useGemini();
 
@@ -67,6 +69,9 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
 
     // Location sharing consent state
     const [locationShareConsent, setLocationShareConsent] = useRecoilState(userLocationShareState);
+
+    // Usage consent state (local, resets on remount/reload)
+    const [usageConsentAccepted, setUsageConsentAccepted] = useState(false);
 
     // Pending message waiting for consent decision
     const [pendingMessage, setPendingMessage] = useState(null);
@@ -81,6 +86,10 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     const handleConsentDecline = useCallback(() => {
         setLocationShareConsent('denied');
     }, [setLocationShareConsent]);
+
+    const handleDisclaimerAccept = useCallback(() => {
+        setUsageConsentAccepted(true);
+    }, [setUsageConsentAccepted]);
 
     // Memoize the fetch locations function to prevent recreation on every render
     const fetchLocationsAndUpdateMessage = useCallback(async (searchResultIds) => {
@@ -130,12 +139,13 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
         }
     }, [directionsLocationIds]);
 
-
-
     // Handle sending messages
     // messageText is required - from the ChatInput component
     const handleSendMessage = useCallback(async (messageText) => {
         const trimmedMessage = messageText.trim();
+
+        // Block all messages until usage consent is accepted
+        if (!usageConsentAccepted) return;
 
         if (!trimmedMessage || isLoading) return;
 
@@ -196,7 +206,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                 }
             ]);
         }
-    }, [isLoading, generateResponse, apiKey, userPosition, currentVenueName, mapsIndoorsInstance, locationShareConsent]);
+    }, [isLoading, generateResponse, apiKey, userPosition, currentVenueName, mapsIndoorsInstance, locationShareConsent, usageConsentAccepted]);
 
     // Send pending message after consent is decided
     useEffect(() => {
@@ -207,11 +217,10 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
         }
     }, [locationShareConsent, pendingMessage, handleSendMessage]);
 
-
     // Automatically send initial message when chat opens with a message from search
     // This is used to send the initial message from the search field when the chat window opens
     useEffect(() => {
-        if (isVisible && !isLoading) {
+        if (isVisible && !isLoading && usageConsentAccepted) {
             const initialMessage = getInitialMessage();
 
             if (initialMessage && initialMessage.trim()) {
@@ -220,7 +229,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                 handleSendMessage(messageText);
             }
         }
-    }, [isVisible, isLoading, getInitialMessage, clearInitialMessage, handleSendMessage]);
+    }, [isVisible, isLoading, usageConsentAccepted, getInitialMessage, clearInitialMessage, handleSendMessage]);
 
     // Animate the chat window when it becomes visible on mobile
     useLayoutEffect(() => {
@@ -230,7 +239,6 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
             setIsAnimated(false);
         }
     }, [isVisible, isDesktop]);
-
 
     /**
      * Get the layout classes for the ChatWindow component based on current state
@@ -244,18 +252,20 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     function getChatWindowLayout() {
         const baseClass = 'chat-window';
 
+        const consentBackdropClass = !usageConsentAccepted ? ' chat-window--consent' : '';
+
         // Desktop layout - no keyboard handling needed
         if (isDesktop) {
-            return `${baseClass} desktop`;
+            return `${baseClass} desktop${consentBackdropClass}`;
         }
 
         // Mobile layout with keyboard visible - adds modifier class for positioning
         if (isMobileKeyboardVisible) {
-            return `${baseClass} mobile chat-window--keyboard-visible${isAnimated ? ' chat-window--visible' : ''}`;
+            return `${baseClass} mobile chat-window--keyboard-visible${consentBackdropClass}${isAnimated ? ' chat-window--visible' : ''}`;
         }
 
         // Mobile layout without keyboard - default position at bottom with animation
-        return `${baseClass} mobile${isAnimated ? ' chat-window--visible' : ''}`;
+        return `${baseClass} mobile${consentBackdropClass}${isAnimated ? ' chat-window--visible' : ''}`;
     }
 
     /**
@@ -291,19 +301,29 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                 onSendMessage={handleSendMessage}
                 isLoading={isLoading}
                 onClose={onClose}
+                disabled={!usageConsentAccepted}
             />
-            {shouldShowConsentPopup && (
-                <LocationConsentPopup
-                    onAccept={handleConsentAccept}
-                    onDecline={handleConsentDecline}
-                />
+            {!usageConsentAccepted ? (
+                <UsageConsentOverlay onAccept={handleDisclaimerAccept} onDecline={onClose} />
+            ) : (
+                <>
+                    {shouldShowConsentPopup && (
+                        <LocationConsentPopup
+                            onAccept={handleConsentAccept}
+                            onDecline={handleConsentDecline}
+                        />
+                    )}
+                    <ChatMessages
+                        chatHistory={chatHistory}
+                        isLoading={isLoading}
+                        primaryColor={primaryColor}
+                        onShowRoute={onShowRoute}
+                    />
+                </>
             )}
-            <ChatMessages
-                chatHistory={chatHistory}
-                isLoading={isLoading}
-                primaryColor={primaryColor}
-                onShowRoute={onShowRoute}
-            />
+            <p className="chat-window__disclaimer">
+                {t('AI disclaimer')}
+            </p>
         </div>
     );
 }

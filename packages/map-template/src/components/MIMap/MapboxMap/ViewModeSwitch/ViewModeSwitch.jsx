@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
 import './ViewModeSwitch.scss';
 import isNullOrUndefined from '../../../../helpers/isNullOrUndefined';
+import { usePortalTarget } from '../../../../hooks/usePortalTarget';
 import { ReactComponent as Light2D } from '../../../../assets/2d-light.svg';
 import { ReactComponent as Dark2D } from '../../../../assets/2d-dark.svg';
 import { ReactComponent as Light3D } from '../../../../assets/3d-light.svg';
@@ -36,7 +37,7 @@ ViewModeSwitch.propTypes = {
 function ViewModeSwitch({ mapView, pitch, reset, activeColor = '#005655', show2DModelsIn3D }) {
 
     const [viewMode, setViewMode] = useState(ViewModes.initial3D);
-    const portalTarget = document.querySelector('.viewmode-switch-portal');
+    const portalTarget = usePortalTarget('.viewmode-switch-portal');
 
     // The show2DModelsIn3D property from AppConfig is received as a string ("true"/"false") or might be undefined.
     // We need to explicitly check for the string value "true" for the setting to take effect.
