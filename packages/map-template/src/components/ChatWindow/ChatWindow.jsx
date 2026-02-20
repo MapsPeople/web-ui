@@ -71,6 +71,13 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     // Pending message waiting for consent decision
     const [pendingMessage, setPendingMessage] = useState(null);
 
+    // Track the current thought during streaming
+    const [currentThought, setCurrentThought] = useState('');
+
+    // Keep responseId ref for streaming support - allows updating message text and metadata
+    // as chunks arrive if we add progressive text streaming in the future
+    const currentResponseIdRef = useRef(null);
+
     // Show consent popup when user position is available and consent hasn't been decided
     const shouldShowConsentPopup = userPosition && locationShareConsent === null && pendingMessage !== null;
 
@@ -172,19 +179,54 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
             };
         }
 
-        // Call Gemini service for response with extra context
+        // Call Gemini service for response with extra context and streaming callbacks
         try {
-            const response = await generateResponse(apiKey, trimmedMessage, extra);
+            const responseId = crypto.randomUUID();
+            currentResponseIdRef.current = responseId;
+            setCurrentThought(''); // Reset current thought when starting a new message
+
+            // Add placeholder message for streaming
             setChatHistory(prev => [
                 ...prev,
                 {
-                    id: crypto.randomUUID(),
-                    text: response,
+                    id: responseId,
+                    text: '',
                     type: 'server',
-                    locations: [], // Will be populated by search results effect
-                    directionsLocationIds: null // Will be populated by directions effect
+                    locations: [],
+                    directionsLocationIds: null
                 }
             ]);
+
+            // Call with streaming callbacks
+            await generateResponse(apiKey, trimmedMessage, {
+                extra,
+                onChunk: (text) => {
+                    const currentMessageId = currentResponseIdRef.current;
+                    setChatHistory(prev => {
+                        const updatedHistory = [...prev];
+                        const messageIndex = updatedHistory.findIndex(m => m.id === currentMessageId);
+                        if (messageIndex >= 0) {
+                            updatedHistory[messageIndex] = {
+                                ...updatedHistory[messageIndex],
+                                text: (updatedHistory[messageIndex].text || '') + text
+                            };
+                        }
+                        return updatedHistory;
+                    });
+                },
+                onThought: (thoughtText) => {
+                    // Extract headline from thought (text between ** markers)
+                    const headlineMatch = thoughtText.match(/\*\*([^*]+)\*\*/);
+                    const headline = headlineMatch ? headlineMatch[1] : thoughtText;
+
+                    // Update UI with current thought
+                    setCurrentThought(headline);
+                },
+                onComplete: () => {
+                    // Streaming complete - function data is already processed by provider
+                    currentResponseIdRef.current = null;
+                }
+            });
         } catch (error) {
             setChatHistory(prev => [
                 ...prev,
@@ -195,6 +237,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                     locations: []
                 }
             ]);
+            setCurrentThought('');
         }
     }, [isLoading, generateResponse, apiKey, userPosition, currentVenueName, mapsIndoorsInstance, locationShareConsent]);
 
@@ -299,10 +342,11 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                 />
             )}
             <ChatMessages
-                chatHistory={chatHistory}
+                chatHistory={chatHistory.filter(message => message.type !== 'server' || message.text)} // Filter out empty server messages
                 isLoading={isLoading}
                 primaryColor={primaryColor}
                 onShowRoute={onShowRoute}
+                currentThought={currentThought}
             />
         </div>
     );

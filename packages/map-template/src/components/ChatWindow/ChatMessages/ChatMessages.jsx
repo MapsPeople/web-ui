@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import ChatSearchResults from '../ChatSearchResults/ChatSearchResults';
 import './ChatMessages.scss';
 
-function ChatMessages({ chatHistory, isLoading, primaryColor, onShowRoute }) {
+function ChatMessages({ chatHistory, isLoading, primaryColor, onShowRoute, currentThought }) {
     const chatMessagesRef = useRef(null);
 
     // Auto-scroll to bottom when messages change or loading state changes
@@ -95,7 +95,9 @@ function ChatMessages({ chatHistory, isLoading, primaryColor, onShowRoute }) {
                     <span className="chat-messages__loading-dot"></span>
                     <span className="chat-messages__loading-dot"></span>
                     <span className="chat-messages__loading-dot"></span>
-                    <span className="chat-messages__thinking-text">Thinking</span>
+                    <span className="chat-messages__thinking-text">
+                        {currentThought || 'Thinking'}
+                    </span>
                 </div>
             )}
         </div>
@@ -106,7 +108,8 @@ ChatMessages.propTypes = {
     chatHistory: PropTypes.array.isRequired,
     isLoading: PropTypes.bool.isRequired,
     primaryColor: PropTypes.string.isRequired,
-    onShowRoute: PropTypes.func
+    onShowRoute: PropTypes.func,
+    currentThought: PropTypes.string
 };
 
 export default ChatMessages;
