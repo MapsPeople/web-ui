@@ -312,6 +312,8 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
         setSearchResults([]);
         setShowNotFoundMessage(false);
         setShowAskWithAiButton(false);
+
+        mapsIndoorsInstance?.highlight?.([]);
         if (selectedCategory) {
             getFilteredLocations(selectedCategory);
         }
