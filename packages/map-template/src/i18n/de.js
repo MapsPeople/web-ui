@@ -94,6 +94,16 @@ const de = {
     // Map Controls
     'Zoom in': 'Vergrößern',
     'Zoom out': 'Verkleinern',
+    // Ask with AI - Usage Consent
+    'Usage consent title': 'Ask with AI - Nutzungszustimmung',
+    'Usage consent message': 'Ask with AI hilft Ihnen, Orte zu finden und sich in diesem Gebäude mithilfe von Künstlicher Intelligenz (KI) zurechtzufinden. Obwohl wir nach Genauigkeit streben, kann die KI manchmal Fehler machen. Bitte überprüfen Sie wichtige Details, bevor Sie losgehen.',
+    'Usage consent accept': 'Ich verstehe',
+    'Usage consent decline': 'Ablehnen',
+    'AI disclaimer': 'Ask with AI kann Fehler machen. Überprüfen Sie wichtige Details, bevor Sie losgehen.',
+    // Location Consent
+    'Location consent message': 'Um personalisierte Wegbeschreibungen bereitzustellen und Ihnen zu helfen, Orte in der Nähe zu entdecken, möchte Ask with AI auf Ihren Standort zugreifen. Der Chat funktioniert auch ohne Ihren Standort, aber Sie müssen dann einen Startpunkt angeben.',
+    'Location consent accept': 'Erlauben',
+    'Location consent decline': 'Ablehnen',
 };
 
 export default de;

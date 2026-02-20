@@ -94,6 +94,16 @@ const da = {
     // Map Controls
     'Zoom in': 'Zoom ind',
     'Zoom out': 'Zoom ud',
+    // Ask with AI - Usage Consent
+    'Usage consent title': 'Ask with AI - Samtykkeerklæring',
+    'Usage consent message': 'Ask with AI hjælper dig med at finde steder og navigere på dette sted ved hjælp af Kunstig Intelligens (AI). Selvom vi stræber efter nøjagtighed, kan AI\'en til tider tage fejl. Dobbelttjek venligst vigtige detaljer, inden du begiver dig af sted.',
+    'Usage consent accept': 'Jeg forstår',
+    'Usage consent decline': 'Afvis',
+    'AI disclaimer': 'Ask with AI kan begå fejl. Dobbelttjek vigtige detaljer, inden du begiver dig af sted.',
+    // Location Consent
+    'Location consent message': 'For at give personlige rutevejledninger og hjælpe dig med at opdage, hvad der er i nærheden, vil Ask with AI gerne have adgang til din placering. Chatten fungerer stadig uden at kende din placering, men i stedet skal du angive et startpunkt.',
+    'Location consent accept': 'Tillad',
+    'Location consent decline': 'Afvis',
 };
 
 export default da;

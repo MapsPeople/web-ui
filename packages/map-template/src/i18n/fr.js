@@ -94,6 +94,16 @@ const fr = {
     // Map Controls
     'Zoom in': 'Zoom avant',
     'Zoom out': 'Zoom arrière',
+    // Ask with AI - Usage Consent
+    'Usage consent title': 'Ask with AI - Consentement d\'utilisation',
+    'Usage consent message': 'Ask with AI vous aide à trouver des lieux et à vous orienter dans ce site grâce à l\'Intelligence Artificielle (IA). Bien que nous nous efforcions d\'être précis, l\'IA peut parfois se tromper. Veuillez vérifier les détails importants avant de vous mettre en route.',
+    'Usage consent accept': 'Je comprends',
+    'Usage consent decline': 'Refuser',
+    'AI disclaimer': 'Ask with AI peut faire des erreurs. Vérifiez les détails importants avant de vous mettre en route.',
+    // Location Consent
+    'Location consent message': 'Pour fournir des itinéraires personnalisés et vous aider à découvrir ce qui se trouve à proximité, Ask with AI souhaite accéder à votre position. Le chat fonctionnera toujours sans connaître votre position, mais vous devrez spécifier un point de départ.',
+    'Location consent accept': 'Autoriser',
+    'Location consent decline': 'Refuser',
 };
 
 export default fr;

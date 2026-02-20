@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import './LocationConsentPopup.scss';
 
 /**
@@ -19,26 +20,30 @@ import './LocationConsentPopup.scss';
  * @returns {JSX.Element} The location consent popup component
  */
 function LocationConsentPopup({ onAccept, onDecline }) {
+    const { t } = useTranslation();
+
     return (
         <div className="location-consent-popup">
-            <p className="location-consent-popup__message">
-                To provide personalized directions and help you discover what&apos;s nearby, MapsIndoors AI Assistant would like to access your location. The chat will still work without knowing your location, but instead you&apos;ll need to specify a start point.
-            </p>
-            <div className="location-consent-popup__buttons">
-                <button
-                    type="button"
-                    className="location-consent-popup__button location-consent-popup__button--decline"
-                    onClick={onDecline}
-                >
-                    Decline
-                </button>
-                <button
-                    type="button"
-                    className="location-consent-popup__button location-consent-popup__button--accept"
-                    onClick={onAccept}
-                >
-                    Allow
-                </button>
+            <div className="location-consent-popup__card">
+                <p className="location-consent-popup__message">
+                    {t('Location consent message')}
+                </p>
+                <div className="location-consent-popup__buttons">
+                    <button
+                        type="button"
+                        className="location-consent-popup__button location-consent-popup__button--accept"
+                        onClick={onAccept}
+                    >
+                        {t('Location consent accept')}
+                    </button>
+                    <button
+                        type="button"
+                        className="location-consent-popup__button location-consent-popup__button--decline"
+                        onClick={onDecline}
+                    >
+                        {t('Location consent decline')}
+                    </button>
+                </div>
             </div>
         </div>
     );
