@@ -32,7 +32,7 @@ MIMap.propTypes = {
  *
  * @param {Object} props
  * @param {string} props.apiKey - MapsIndoors API key or solution alias.
- * @param {string} [props.mapType] - The resolved map type ('google' or 'mapbox').
+ * @param {string} props.mapType - The resolved map type ('google' or 'mapbox').
  * @param {string} [props.gmApiKey] - Google Maps API key if you want to show a Google Maps map.
  * @param {string} [props.mapboxAccessToken] - Mapbox Access Token if you want to show a Mapbox map.
  * @param {Object} [props.center] - Object with latitude and longitude on which the map will center. Example: { lat: 55, lng: 10 }
