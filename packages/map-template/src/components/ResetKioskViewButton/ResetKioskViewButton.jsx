@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { createPortal } from 'react-dom';
 import { ReactComponent as ResetKioskViewIcon } from '../../assets/reset-kiosk-view.svg';
 import './ResetKioskViewButton.scss';
 import { useIsKioskContext } from '../../hooks/useIsKioskContext';
+import { usePortalTarget } from '../../hooks/usePortalTarget';
 import kioskOriginLocationIdState from '../../atoms/kioskOriginLocationIdState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
@@ -18,8 +18,7 @@ import getDesktopPaddingLeft from '../../helpers/GetDesktopPaddingLeft';
  * Positioned above zoom controls using portal system
  */
 function ResetKioskViewButton() {
-    const [portalContainer, setPortalContainer] = useState(null);
-    const resetButtonMountPoint = '.reset-view-portal';
+    const portalContainer = usePortalTarget('.reset-view-portal');
     const isKiosk = useIsKioskContext();
     const kioskOriginLocationId = useRecoilValue(kioskOriginLocationIdState);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
@@ -125,26 +124,6 @@ function ResetKioskViewButton() {
             }
         });
     }
-
-    // Find portal target
-    useEffect(() => {
-        let portalTargetMountPoint = document.querySelector(resetButtonMountPoint);
-        if (portalTargetMountPoint) {
-            setPortalContainer(portalTargetMountPoint);
-            return;
-        }
-        
-        const observer = new MutationObserver(() => {
-            portalTargetMountPoint = document.querySelector(resetButtonMountPoint);
-            if (portalTargetMountPoint) {
-                setPortalContainer(portalTargetMountPoint);
-                observer.disconnect();
-            }
-        });
-
-        observer.observe(document.body, { childList: true, subtree: true });
-        return () => observer.disconnect();
-    }, []);
 
     // Early return if not visible
     if (!isKiosk) {

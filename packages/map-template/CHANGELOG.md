@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.92.2] - 2026-02-20
+
+### Added
+
+- Usage consent overlay with translations for multiple languages to inform users about data usage in chat.
+- Location consent messages and translations displayed when users interact with chat features.
+- Enhanced accessibility for chat input and usage consent overlay components.
+
+### Fixed
+
+- Prevented accidental closes by removing close button from tab order when usage consent overlay is visible.
+
+## [1.92.1] - 2026-02-20
+
+### Fixed
+
+- Made `mapType` prop required in `MIMap` component to match actual behavior and prevent silent failures.
+- Updated `MapWrapper` to conditionally render `MIMap` only when both `apiKey` and `mapType` are defined.
+- Updated JSDoc documentation for `mapType` prop to correctly reflect it as required.
+- Implemented `usePortalTarget` hook for improved portal management across components.
+- Removed duplicate map type set logic.
+
 ## [1.92.0] - 2026-02-16
 
 ### Changed

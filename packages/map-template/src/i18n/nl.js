@@ -94,6 +94,16 @@ const nl = {
     // Map Controls
     'Zoom in': 'Inzoomen',
     'Zoom out': 'Uitzoomen',
+    // Ask with AI - Usage Consent
+    'Usage consent title': 'Ask with AI - Toestemming voor gebruik',
+    'Usage consent message': 'Ask with AI helpt je plaatsen te vinden en te navigeren in deze locatie met behulp van Kunstmatige Intelligentie (AI). Hoewel we streven naar nauwkeurigheid, kan de AI soms fouten maken. Controleer belangrijke details voordat je op weg gaat.',
+    'Usage consent accept': 'Ik begrijp het',
+    'Usage consent decline': 'Weigeren',
+    'AI disclaimer': 'Ask with AI kan fouten maken. Controleer belangrijke details voordat je op weg gaat.',
+    // Location Consent
+    'Location consent message': 'Om gepersonaliseerde routebeschrijvingen te bieden en je te helpen ontdekken wat er in de buurt is, wil Ask with AI toegang tot je locatie. De chat werkt nog steeds zonder je locatie te kennen, maar je zult dan een startpunt moeten opgeven.',
+    'Location consent accept': 'Toestaan',
+    'Location consent decline': 'Weigeren',
 };
 
 export default nl;
