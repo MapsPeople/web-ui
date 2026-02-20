@@ -3,18 +3,15 @@ import PropTypes from 'prop-types';
 import MapControls from './MapControls/MapControls';
 import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
 import './MIMap.scss';
+import { mapTypes } from '../../constants/mapTypes';
 
 // Lazy load Mapbox and Google Maps components
 const MapboxMap = lazy(() => import('./MapboxMap/MapboxMap'));
 const GoogleMapsMap = lazy(() => import('./GoogleMapsMap/GoogleMapsMap'));
 
-const mapTypes = {
-    Google: 'google',
-    Mapbox: 'mapbox'
-};
-
 MIMap.propTypes = {
     apiKey: PropTypes.string.isRequired,
+    mapType: PropTypes.string.isRequired,
     gmApiKey: PropTypes.string,
     mapboxAccessToken: PropTypes.string,
     center: PropTypes.object,
@@ -35,6 +32,7 @@ MIMap.propTypes = {
  *
  * @param {Object} props
  * @param {string} props.apiKey - MapsIndoors API key or solution alias.
+ * @param {string} props.mapType - The resolved map type ('google' or 'mapbox').
  * @param {string} [props.gmApiKey] - Google Maps API key if you want to show a Google Maps map.
  * @param {string} [props.mapboxAccessToken] - Mapbox Access Token if you want to show a Mapbox map.
  * @param {Object} [props.center] - Object with latitude and longitude on which the map will center. Example: { lat: 55, lng: 10 }
@@ -50,9 +48,7 @@ MIMap.propTypes = {
  * @param {object} [props.devicePosition] - Device position object with coords and timestamp for custom positioning.
  * @param {boolean} [props.isKiosk] - Set to true to enable kiosk layout
  */
-function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bearing, pitch, resetUICounter, mapOptions, onInitialized, gmMapId, devicePosition, isKiosk }) {
-
-    const [mapType, setMapType] = useState();
+function MIMap({ apiKey, mapType, gmApiKey, mapboxAccessToken, center, zoom, bounds, bearing, pitch, resetUICounter, mapOptions, onInitialized, gmMapId, devicePosition, isKiosk }) {
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const [positionControl, setPositionControl] = useState();
     const [viewModeSwitchVisible, setViewModeSwitchVisible] = useState();
@@ -146,17 +142,6 @@ function MIMap({ apiKey, gmApiKey, mapboxAccessToken, center, zoom, bounds, bear
             setViewModeSwitchVisible(false);
         }
     }, [solution, mapType]);
-
-    /*
-     * Determine map type based on the given map provider tokens.
-     */
-    useEffect(() => {
-        if (mapboxAccessToken) {
-            setMapType(mapTypes.Mapbox);
-        } else if (gmApiKey) {
-            setMapType(mapTypes.Google);
-        }
-    }, [gmApiKey, mapboxAccessToken]);
 
     return <>
         {mapType === mapTypes.Google && (

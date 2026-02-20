@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
+import { usePortalTarget } from '../../hooks/usePortalTarget';
 import { ReactComponent as ViewSelectorIcon } from '../../assets/view-selector.svg';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
@@ -34,68 +35,11 @@ function ViewSelector({ isViewSelectorDisabled, isViewSelectorVisible }) {
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const currentVenueName = useRecoilValue(currentVenueNameState);
     const viewSelectorMountPoint = '.view-selector-portal';
-    const [portalContainer, setPortalContainer] = useState(null);
+    const portalContainer = usePortalTarget(viewSelectorMountPoint);
     const buildingListRef = useRef(null);
     const toggleButtonRef = useRef(null);
     const MAX_BUILDINGS_DESKTOP = 6;
     const BUILDING_LIST_ITEM_HEIGHT = 60; // Height of each building list item in pixels
-
-    // Effect to find the portal target DOM node.
-    // It tries to find it immediately, and if not found,
-    // uses a MutationObserver to detect when it's added to the DOM.
-    useEffect(() => {
-        // Attempt to find the target immediately
-        let target = document.querySelector(viewSelectorMountPoint);
-        if (target) {
-            setPortalContainer(target);
-            return; // Found it, no observer needed
-        }
-
-        // If not found, set up a MutationObserver
-        const observer = new MutationObserver(() => {
-            target = document.querySelector(viewSelectorMountPoint);
-            if (target) {
-                setPortalContainer(target);
-                observer.disconnect(); // Stop observing once found - use the observer instance
-            }
-        });
-
-        // Start observing the document body for additions of child elements.
-        const observerTargetElement = document.body;
-        const config = { childList: true, subtree: true };
-
-        observer.observe(observerTargetElement, config);
-
-        return () => {
-            observer?.disconnect(); // Cleanup with optional chaining
-        };
-    }, []); // Empty dependency array, so it runs once on mount to set up the finder/observer.
-
-    // Effect to handle the portal target and view selector visibility when screen size changes
-    // This effect is responsible for updating the actualPortalTarget when the screen size changes
-    useEffect(() => {
-        // Function to handle portal target and view selector visibility when screen size changes
-        const updateViewSelector = () => {
-            // Check if portal target exists
-            const target = document.querySelector(viewSelectorMountPoint);
-            if (target) {
-                setPortalContainer(target);
-            }
-        };
-
-        // Create a resize observer
-        const resizeObserver = new ResizeObserver(() => {
-            updateViewSelector();
-        });
-
-        // Start observing the document body for size changes
-        resizeObserver.observe(document.body);
-
-        // Clean up the observer on component unmount or when isDesktop changes
-        return () => {
-            resizeObserver?.disconnect(); // Cleanup with optional chaining
-        };
-    }, [isDesktop]); // Include isDesktop in the dependency array
 
     // Effect to fetch venueId from mapsIndoorsInstance when mapsIndoorsInstance and currentVenueName are available
     // Prevents some edge cases where mapsIndoorsInstance is not ready yet
