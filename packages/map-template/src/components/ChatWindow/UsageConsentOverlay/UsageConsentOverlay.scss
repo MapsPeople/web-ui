@@ -60,6 +60,11 @@
         &:active {
             background-color: var(--tailwind-colors-gray-100);
         }
+
+        &:focus-visible {
+            outline: 2px solid var(--color-black-black);
+            outline-offset: 2px;
+        }
     }
 
     &--accept {
@@ -73,6 +78,11 @@
 
         &:active {
             opacity: 0.8;
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--color-black-black);
+            outline-offset: 2px;
         }
     }
 }

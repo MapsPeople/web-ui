@@ -79,8 +79,8 @@ function ChatInput({ onSendMessage, isLoading, onClose, disabled }) {
             {/* Remove from tab order while usage consent overlay is visible to prevent accidental closes */}
             <button
                 type="button"
-                onClick={onClose}
-                className="chat-input__close-button"
+                onClick={disabled ? undefined : onClose}
+                className={`chat-input__close-button${disabled ? ' chat-input__close-button--disabled' : ''}`}
                 aria-label="Close chat"
                 tabIndex={disabled ? -1 : 0}
             >

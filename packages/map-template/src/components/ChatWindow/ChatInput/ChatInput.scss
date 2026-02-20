@@ -116,5 +116,11 @@
         background-color: var(--tailwind-colors-gray-100);
         border: 1px solid var(--tailwind-colors-gray-200);
     }
+
+    &--disabled {
+        pointer-events: none;
+        opacity: 0.5;
+        cursor: default;
+    }
 }
 
