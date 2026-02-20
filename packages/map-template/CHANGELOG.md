@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.92.3] - 2026-02-20
+
+### Fixed
+
+- Removed unecessary `update()` method called when panning around the map.
+
 ## [1.92.2] - 2026-02-20
 
 ### Added
