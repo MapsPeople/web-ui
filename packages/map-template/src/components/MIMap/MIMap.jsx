@@ -11,7 +11,7 @@ const GoogleMapsMap = lazy(() => import('./GoogleMapsMap/GoogleMapsMap'));
 
 MIMap.propTypes = {
     apiKey: PropTypes.string.isRequired,
-    mapType: PropTypes.string,
+    mapType: PropTypes.string.isRequired,
     gmApiKey: PropTypes.string,
     mapboxAccessToken: PropTypes.string,
     center: PropTypes.object,
