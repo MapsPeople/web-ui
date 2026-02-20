@@ -215,12 +215,8 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                     });
                 },
                 onThought: (thoughtText) => {
-                    // Extract headline from thought (text between ** markers)
-                    const headlineMatch = thoughtText.match(/\*\*([^*]+)\*\*/);
-                    const headline = headlineMatch ? headlineMatch[1] : thoughtText;
-
                     // Update UI with current thought
-                    setCurrentThought(headline);
+                    setCurrentThought(thoughtText);
                 },
                 onComplete: () => {
                     // Streaming complete - function data is already processed by provider
