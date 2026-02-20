@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { CSSTransition } from 'react-transition-group';
 import './VenueSelector.scss';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import { usePortalTarget } from '../../hooks/usePortalTarget';
 import venuesInSolutionState from '../../atoms/venuesInSolutionState';
 import { ReactComponent as BuildingIcon } from '../../assets/building.svg';
 import { ReactComponent as CloseIcon } from '../../assets/close.svg';
@@ -39,7 +40,7 @@ function VenueSelector({ onOpen, onClose, active }) {
 
     const [, setIsLocationClicked] = useRecoilState(isLocationClickedState);
 
-    const portalTarget = document.querySelector('.venue-selector-portal');
+    const portalTarget = usePortalTarget('.venue-selector-portal');
 
     /**
      * When a Venue is selected, close the list of Venues and do the callback.

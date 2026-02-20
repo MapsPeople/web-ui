@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useRecoilValue } from 'recoil';
 import PropTypes from 'prop-types';
 import chatHistoryState from '../../atoms/chatHistoryState';
 import primaryColorState from '../../atoms/primaryColorState';
 import {ReactComponent as ChatButtonIcon} from '../../assets/chat-icon.svg';
+import { usePortalTarget } from '../../hooks/usePortalTarget';
 import './ChatButton.scss';
 
 ChatButton.propTypes = {
@@ -18,36 +18,15 @@ ChatButton.propTypes = {
  * Positioned in map controls using portal system
  */
 function ChatButton({ pushAppView, currentAppView, appViews }) {
-    const [portalContainer, setPortalContainer] = useState(null);
-    const chatButtonMountPoint = '.chat-button-portal';
+    const portalContainer = usePortalTarget('.chat-button-portal');
     const chatHistory = useRecoilValue(chatHistoryState);
     const primaryColor = useRecoilValue(primaryColorState);
 
     // Check if there is any chat history
     const hasChatHistory = chatHistory && chatHistory.length > 0;
-    
+
     // Don't show button if chat is already open
     const isChatOpen = currentAppView === appViews.CHAT;
-
-    // Find portal target
-    useEffect(() => {
-        let portalTargetMountPoint = document.querySelector(chatButtonMountPoint);
-        if (portalTargetMountPoint) {
-            setPortalContainer(portalTargetMountPoint);
-            return;
-        }
-        
-        const observer = new MutationObserver(() => {
-            portalTargetMountPoint = document.querySelector(chatButtonMountPoint);
-            if (portalTargetMountPoint) {
-                setPortalContainer(portalTargetMountPoint);
-                observer.disconnect();
-            }
-        });
-
-        observer.observe(document.body, { childList: true, subtree: true });
-        return () => observer.disconnect();
-    }, []);
 
     /**
      * Opens the chat window by pushing the CHAT app view
