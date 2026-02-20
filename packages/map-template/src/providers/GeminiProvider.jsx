@@ -61,22 +61,38 @@ export function GeminiProvider({ children, enabled }) {
         return sessionIdRef.current;
     }, []);
 
-    // Wrapper function to generate a response using the Gemini service
-    const generateResponseWrapper = useCallback(async (apiKey, prompt, extra = {}) => {
-        if (!enabled) {
-            return;
+    // Helper function to process function data and extract search results
+    const processFunctionData = useCallback((functionData) => {
+        let searchResultIds = [];
+        if (functionData) {
+            switch (functionData?.key) {
+                case 'single_location':
+                    searchResultIds = [functionData.value];
+                    break;
+
+                case 'multiple_locations':
+                    searchResultIds = functionData.value.filter(Boolean);
+                    break;
+
+                case 'directions': {
+                    // Extract only the location IDs we need
+                    const { originLocationId, destinationLocationId } = functionData.value;
+                    setDirectionsLocationIds({ originLocationId, destinationLocationId });
+                    break;
+                }
+                default:
+                    break;
+            }
         }
-        setIsLoading(true);
-        // Clear previous directions data when starting a new request
-        setDirectionsLocationIds(null);
+        return searchResultIds;
+    }, []);
+
+    // Handle streaming response from /api/chat/stream endpoint
+    const handleStreamingResponse = useCallback(async (sessionId, prompt, extra, callbacks) => {
+        const { onChunk, onThought, onComplete } = callbacks;
+
         try {
-            console.log('Generating response for prompt:', prompt);
-
-            // Ensure we have a valid session
-            const sessionId = await ensureSession(apiKey);
-
-            // Send message to the session with extra context
-            const messageRes = await fetch(`${API_BASE_URL}/api/chat/message`, {
+            const streamRes = await fetch(`${API_BASE_URL}/api/chat/stream`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -88,53 +104,179 @@ export function GeminiProvider({ children, enabled }) {
                 })
             });
 
-            if (!messageRes.ok) {
-                const errorData = await messageRes.json().catch(() => ({}));
-                throw new Error(errorData.error || `HTTP error! status: ${messageRes.status}`);
+            if (!streamRes.ok) {
+                const errorData = await streamRes.json().catch(() => ({}));
+                throw new Error(errorData.error || `HTTP error! status: ${streamRes.status}`);
             }
 
-            const { response, tools, functionData } = await messageRes.json();
+            const reader = streamRes.body.getReader();
+            const decoder = new TextDecoder();
+            let buffer = '';
+            let fullResponse = '';
+            let lastFunctionData = null;
 
-            // Extract search result IDs based on the function data
-            let searchResultIds = [];
-            if (functionData) {
-                switch (functionData?.key) {
-                    case 'single_location':
-                        searchResultIds = [functionData.value];
-                        break;
+            let reading = true;
+            while (reading) {
+                const { done, value } = await reader.read();
+                if (done) {
+                    reading = false;
+                    break;
+                }
 
-                    case 'multiple_locations':
-                        searchResultIds = functionData.value.filter(Boolean);
-                        break;
+                buffer += decoder.decode(value, { stream: true });
+                const lines = buffer.split('\n');
 
-                    case 'directions': {
-                        // Extract only the location IDs we need
-                        const { originLocationId, destinationLocationId } = functionData.value;
-                        setDirectionsLocationIds({ originLocationId, destinationLocationId });
-                        break;
+                // Keep the last incomplete line in the buffer
+                buffer = lines.pop() || '';
+
+                for (const line of lines) {
+                    if (!line.trim() || line.startsWith(':')) continue;
+
+                    // Parse SSE format: "data: {...}"
+                    if (line.startsWith('data: ')) {
+                        // Remove SSE "data: " prefix (6 characters)
+                        const jsonStr = line.slice(6);
+
+                        // Skip completion signal
+                        if (jsonStr === '[DONE]') {
+                            // Stream complete, no more chunks
+                            continue;
+                        }
+
+                        try {
+                            const chunk = JSON.parse(jsonStr);
+
+                            if (chunk.isThought) {
+                                // This is a thought - call onThought callback
+                                if (onThought) {
+                                    onThought(chunk.text);
+                                }
+                            } else {
+                                // This is response text - accumulate and call onChunk
+                                fullResponse += chunk.text;
+                                if (onChunk) {
+                                    onChunk(chunk.text);
+                                }
+
+                                // Track function data if present (only on answer chunks, not thoughts)
+                                if (chunk.functionResponse) {
+                                    lastFunctionData = chunk.functionResponse;
+                                }
+
+                                // Log tool calls if present (only on answer chunks)
+                                if (chunk.log?.toolCalls) {
+                                    console.log('Agent tool calls:\n' + JSON.stringify(chunk.log.toolCalls, null, 2));
+                                }
+                            }
+                        } catch (parseError) {
+                            console.warn('Failed to parse streaming chunk:', jsonStr, parseError);
+                        }
                     }
-                    default:
-                        break;
                 }
             }
 
-            console.log('Search result IDs:', searchResultIds);
-            setSearchResults(searchResultIds);
+            // Process final function data
+            if (lastFunctionData) {
+                const searchResultIds = processFunctionData(lastFunctionData);
+                console.log('Search result IDs:', searchResultIds);
+                setSearchResults(searchResultIds);
+            }
 
-            console.log('Agent tool calls:\n' + JSON.stringify(tools, null, 2));
+            // Call onComplete callback with final response
+            if (onComplete) {
+                onComplete({ response: fullResponse, functionData: lastFunctionData });
+            }
 
-            return response;
+            return fullResponse;
+        } catch (error) {
+            console.error('Error in streaming response:', error);
+            throw error;
+        }
+    }, [processFunctionData]);
+
+    // Handle non-streaming API response
+    const handleNonStreamingResponse = useCallback(async (sessionId, prompt, extra, onComplete) => {
+        const messageRes = await fetch(`${API_BASE_URL}/api/chat/message`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                sessionId,
+                message: prompt,
+                extra: extra
+            })
+        });
+
+        if (!messageRes.ok) {
+            const errorData = await messageRes.json().catch(() => ({}));
+            throw new Error(errorData.error || `HTTP error! status: ${messageRes.status}`);
+        }
+
+        const { response, tools, functionData } = await messageRes.json();
+
+        // Extract search result IDs based on the function data
+        const searchResultIds = processFunctionData(functionData);
+
+        console.log('Search result IDs:', searchResultIds);
+        setSearchResults(searchResultIds);
+
+        console.log('Agent tool calls:\n' + JSON.stringify(tools, null, 2));
+
+        // Call onComplete callback if provided
+        if (onComplete) {
+            onComplete({ response, tools, functionData });
+        }
+
+        return response;
+    }, [processFunctionData]);
+
+    // Wrapper function to generate a response using the Gemini service
+    // Supports optional callbacks for streaming and intermediate data
+    const generateResponseWrapper = useCallback(async (apiKey, prompt, options = {}) => {
+        if (!enabled) {
+            return;
+        }
+
+        setIsLoading(true);
+        setDirectionsLocationIds(null);
+
+        try {
+            console.log('Generating response for prompt:', prompt);
+
+            // Extract options
+            const extra = options.extra || {};
+            const { onChunk, onThought, onComplete } = options;
+
+            // Ensure we have a valid session
+            const sessionId = await ensureSession(apiKey);
+
+            // Route to streaming or non-streaming endpoint based on callbacks
+            if (onChunk || onThought) {
+                return await handleStreamingResponse(sessionId, prompt, extra, {
+                    onChunk,
+                    onThought,
+                    onComplete
+                });
+            }
+
+            return await handleNonStreamingResponse(sessionId, prompt, extra, onComplete);
         } catch (error) {
             console.error('Error generating response:', error);
             if (error instanceof Error) {
                 console.error('Error message:', error.message);
                 console.error('Error stack:', error.stack);
             }
-            return 'I\'m sorry, I encountered an error processing your request. Please try again later.';
+            const errorMessage = 'I\'m sorry, I encountered an error processing your request. Please try again later.';
+            // Call onComplete with error if provided
+            if (options.onComplete) {
+                options.onComplete({ response: errorMessage, error });
+            }
+            return errorMessage;
         } finally {
             setIsLoading(false);
         }
-    }, [ensureSession, enabled]);
+    }, [ensureSession, enabled, handleStreamingResponse, handleNonStreamingResponse]);
 
     // Function to clear directions data
     const clearDirectionsLocationIds = useCallback(() => {
