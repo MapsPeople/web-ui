@@ -36,7 +36,7 @@
 
     &__scroll-buttons {
         position: fixed;
-        left: calc(50% + 16.5vw + 20px); /* Half viewport width + half kiosk modal width (33vw / 2) + gap */
+        left: calc(50% + max(16.5vw, 284px) + 20px); /* Half viewport width + half kiosk modal width (max(33vw, 568px) / 2) + gap */
         bottom: var(--spacing-x-large);
     }
 
