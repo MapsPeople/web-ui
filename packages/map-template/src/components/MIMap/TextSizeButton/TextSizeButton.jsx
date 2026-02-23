@@ -22,11 +22,13 @@ function TextSizeButton({ mapsIndoorsInstance }) {
         if (large) {
             // Set the font size for MapTemplate content to 200%
             document.documentElement.style.fontSize = '200%';
+            document.documentElement.dataset.fontScaled = 'true';
             // Set the font size for MapsIndoors content to 200%
             mapsIndoorsInstance?.getMapView()?.setLabelTextSizeMultiplier(2.0);
         } else {
             // Reset the font size for MapTemplate content to default
             document.documentElement.style.fontSize = '';
+            delete document.documentElement.dataset.fontScaled;
             // Reset the font size for MapsIndoors content to default
             mapsIndoorsInstance?.getMapView()?.resetLabelTextSize();
         }
