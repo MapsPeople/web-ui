@@ -524,7 +524,6 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
             setSearchResults([]);
             setFilteredLocations([]);
             setShowNotFoundMessage(false);
-            
             // Clear the category selection tree
             selectedCategoriesArray.current = [];
         }
@@ -722,7 +721,7 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
                                 onOpenChat();
                             }
                         }
-                    }}type="button" aria-label={t('Ask with AI')} title={t('Ask with AI')}>
+                    }} type="button" aria-label={t('Ask with AI')} title={t('Ask with AI')}>
                     <AskWithAiIcon />
                     {t('Ask with AI')}
                 </button>
@@ -746,7 +745,7 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
 
             {/* When search results are found (category is selected or search term is used) */}
             {searchResults.length > 0 && (
-                <div className="search__results prevent-scroll" {...scrollableContentSwipePrevent}>
+                <div className={`search__results prevent-scroll${isKioskContext ? ' search__results--kiosk' : ''}`} {...scrollableContentSwipePrevent}>
 
                     {/* Subcategories should only show if a top level category is selected and if that top level category has any childKeys */}
                     {selectedCategory && (
