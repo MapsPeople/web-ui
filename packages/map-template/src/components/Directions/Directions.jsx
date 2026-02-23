@@ -118,8 +118,8 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
             Promise.all([getBottomPadding(padding), getLeftPadding(padding)]).then(([bottomPadding, leftPadding]) => {
                 directionsRenderer = new window.mapsindoors.directions.DirectionsRenderer({
                     mapsIndoors: mapsIndoorsInstance,
-                    fitBounds: isKioskContext ? false : true,
-                    fitBoundsPadding: isKioskContext ? undefined : {
+                    fitBounds: isKioskContext && appConfig?.appSettings?.disableKioskStepMove === 'false' ? false : true,
+                    fitBoundsPadding: isKioskContext && appConfig?.appSettings?.disableKioskStepMove === 'false' ? undefined : {
                         top: padding,
                         bottom: bottomPadding,
                         left: leftPadding,
