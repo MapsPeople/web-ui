@@ -114,19 +114,18 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
             // Set the directions renderer and the route to null, in order to avoid multiple routes shown simultaneously.
             directionsRenderer?.setRoute(null);
             directionsRenderer = null;
-
+            
             Promise.all([getBottomPadding(padding), getLeftPadding(padding)]).then(([bottomPadding, leftPadding]) => {
                 directionsRenderer = new window.mapsindoors.directions.DirectionsRenderer({
                     mapsIndoors: mapsIndoorsInstance,
-                    fitBounds: isKioskContext ? false : true,
-                    fitBoundsPadding: isKioskContext ? undefined : {
+                    fitBounds: (isKioskContext && appConfig?.appSettings?.disableKioskStepMove === 'true'),
+                    fitBoundsPadding: isKioskContext && appConfig?.appSettings?.disableKioskStepMove === 'true' ? undefined : {
                         top: padding,
                         bottom: bottomPadding,
                         left: leftPadding,
                         right: padding
                     }
                 });
-
                 directionsRenderer.setRoute(directions.directionsResult).then(() => {
                     // Set the step index to be 0 in order to display the correct instruction on the map.
                     directionsRenderer.setStepIndex(0);
