@@ -5,4 +5,5 @@
     display: block;
     @include color.gray(90);
     @include font.weight(medium);
+    padding-bottom: 0.25rem;
 }

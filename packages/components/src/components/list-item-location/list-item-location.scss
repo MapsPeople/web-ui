@@ -10,7 +10,7 @@
 @import "../../global/global";
 
 :host {
-    @include padding.all(medium);
+    padding: 1rem;
     @include font.size(medium);
     @include font.weight(large);
     @include font.leading(medium);
@@ -22,7 +22,7 @@
     flex-direction: row;
     align-items: center;
     cursor: pointer;
-    gap: variables.$spacing-medium;
+    gap: 1rem;
     border: 1px solid variables.$color-gray-30;
 }
 
@@ -32,11 +32,12 @@
 }
 
 .img-container {
-    width: variables.$spacing-x-large;
-    height: variables.$spacing-x-large;
+    width: 2rem;
+    height: 2rem;
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-shrink: 0;
 }
 
 img {
@@ -47,10 +48,11 @@ img {
 }
 
 .details {
-    @include padding.right(medium);
+    padding-right: 1rem;
     flex: 1;
+    min-width: 0; /* prevent flex overflow */
     display: grid;
-    gap: variables.$spacing-xx-small;
+    gap: 0.25rem;
 
     &-title {
         margin: 0;
