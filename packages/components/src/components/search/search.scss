@@ -13,10 +13,12 @@ mi-search {
     input[type="search"] {
         @include border.radius(large);
         @include background-color.white(white);
+
         padding-left: 2.5rem;
         min-height: 3rem;
         height: auto;
         @include font.size(medium);
+
         padding-right: 2.5rem;
         @include font.family(system);
 
@@ -24,6 +26,7 @@ mi-search {
         &:placeholder-shown {
             padding-right: 0.875rem;
         }
+
         appearance: none;
         width: 100%;
         position: relative;
