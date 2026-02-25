@@ -207,26 +207,29 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                 }
             ]);
 
-            // Call with streaming callbacks
+            // Call with streaming callbacks to update the message as chunks arrive and to set the current thought
+            // The provider will handle updating the message text and metadata as chunks arrive, and will call onComplete when done
             await generateResponse(apiKey, trimmedMessage, {
                 extra,
-                onChunk: (text) => {
-                    const currentMessageId = currentResponseIdRef.current;
-                    setChatHistory(prev => {
-                        const updatedHistory = [...prev];
-                        const messageIndex = updatedHistory.findIndex(m => m.id === currentMessageId);
-                        if (messageIndex >= 0) {
-                            updatedHistory[messageIndex] = {
-                                ...updatedHistory[messageIndex],
-                                text: (updatedHistory[messageIndex].text || '') + text
-                            };
-                        }
-                        return updatedHistory;
-                    });
-                },
-                onThought: (thoughtText) => {
-                    // Update UI with current thought
-                    setCurrentThought(thoughtText);
+                onUpdate: ({ text, isThought }) => {
+                    if (isThought) {
+                        // Update UI with current thought
+                        setCurrentThought(text);
+                    } else {
+                        // Update message with response text
+                        const currentMessageId = currentResponseIdRef.current;
+                        setChatHistory(prev => {
+                            const updatedHistory = [...prev];
+                            const messageIndex = updatedHistory.findIndex(m => m.id === currentMessageId);
+                            if (messageIndex >= 0) {
+                                updatedHistory[messageIndex] = {
+                                    ...updatedHistory[messageIndex],
+                                    text: (updatedHistory[messageIndex].text || '') + text
+                                };
+                            }
+                            return updatedHistory;
+                        });
+                    }
                 },
                 onComplete: () => {
                     // Streaming complete - function data is already processed by provider

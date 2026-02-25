@@ -89,7 +89,7 @@ export function GeminiProvider({ children, enabled }) {
 
     // Handle streaming response from /api/chat/stream endpoint
     const handleStreamingResponse = useCallback(async (sessionId, prompt, extra, callbacks) => {
-        const { onChunk, onThought, onComplete } = callbacks;
+        const { onUpdate, onComplete } = callbacks;
 
         try {
             const streamRes = await fetch(`${API_BASE_URL}/api/chat/stream`, {
@@ -139,34 +139,31 @@ export function GeminiProvider({ children, enabled }) {
 
                         // Skip completion signal
                         if (jsonStr === '[DONE]') {
-                            // Stream complete, no more chunks
                             continue;
                         }
 
                         try {
                             const chunk = JSON.parse(jsonStr);
 
-                            if (chunk.isThought) {
-                                // This is a thought - call onThought callback
-                                if (onThought) {
-                                    onThought(chunk.text);
-                                }
-                            } else {
-                                // This is response text - accumulate and call onChunk
-                                fullResponse += chunk.text;
-                                if (onChunk) {
-                                    onChunk(chunk.text);
-                                }
+                            // Update consumer with the flag and text
+                            if (onUpdate) {
+                                onUpdate({
+                                    text: chunk.text,
+                                    isThought: chunk.isThought
+                                });
+                            }
 
-                                // Track function data if present (only on answer chunks, not thoughts)
-                                if (chunk.functionResponse) {
-                                    lastFunctionData = chunk.functionResponse;
-                                }
+                            // Accumulate response text (both thoughts and responses)
+                            fullResponse += chunk.text;
 
-                                // Log tool calls if present (only on answer chunks)
-                                if (chunk.log?.toolCalls) {
-                                    console.log('Agent tool calls:\n' + JSON.stringify(chunk.log.toolCalls, null, 2));
-                                }
+                            // Track function data if present
+                            if (chunk.functionResponse) {
+                                lastFunctionData = chunk.functionResponse;
+                            }
+
+                            // Log tool calls if present
+                            if (chunk.log?.toolCalls) {
+                                console.log('Agent tool calls:\n' + JSON.stringify(chunk.log.toolCalls, null, 2));
                             }
                         } catch (parseError) {
                             console.warn('Failed to parse streaming chunk:', jsonStr, parseError);
@@ -246,16 +243,15 @@ export function GeminiProvider({ children, enabled }) {
 
             // Extract options
             const extra = options.extra || {};
-            const { onChunk, onThought, onComplete } = options;
+            const { onUpdate, onComplete } = options;
 
             // Ensure we have a valid session
             const sessionId = await ensureSession(apiKey);
 
             // Route to streaming or non-streaming endpoint based on callbacks
-            if (onChunk || onThought) {
+            if (onUpdate) {
                 return await handleStreamingResponse(sessionId, prompt, extra, {
-                    onChunk,
-                    onThought,
+                    onUpdate,
                     onComplete
                 });
             }
