@@ -1,7 +1,7 @@
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import eslint from 'vite-plugin-eslint';
-import { ViteFaviconsPlugin } from 'vite-plugin-favicon2';
+import vitePluginFaviconsInject from 'vite-plugin-favicons-inject';
 import svgr from 'vite-plugin-svgr';
 
 export default defineConfig(() => {
@@ -16,7 +16,7 @@ export default defineConfig(() => {
         plugins: [
             react(),
             svgr(),
-            ViteFaviconsPlugin('./public/favicon.png'),
+            vitePluginFaviconsInject('./public/favicon.png', {}, { failGraciously: true }),
             eslint(),
         ]
     }

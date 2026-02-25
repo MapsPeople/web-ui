@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { createPortal } from 'react-dom';
-import { ReactComponent as ResetKioskViewIcon } from '../../assets/reset-kiosk-view.svg';
+import ResetKioskViewIcon from '../../assets/reset-kiosk-view.svg?react';
 import './ResetKioskViewButton.scss';
 import { useIsKioskContext } from '../../hooks/useIsKioskContext';
 import { usePortalTarget } from '../../hooks/usePortalTarget';

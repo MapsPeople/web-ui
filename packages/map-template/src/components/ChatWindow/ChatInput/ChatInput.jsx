@@ -1,6 +1,6 @@
 import { useRef, useCallback, useEffect, useState } from 'react';
-import { ReactComponent as ChatModeIcon } from '../../../assets/chat-mode-icon.svg';
-import { ReactComponent as CloseIcon } from '../../../assets/close.svg';
+import ChatModeIcon from '../../../assets/chat-mode-icon.svg?react';
+import CloseIcon from '../../../assets/close.svg?react';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import PropTypes from 'prop-types';
 import './ChatInput.scss';

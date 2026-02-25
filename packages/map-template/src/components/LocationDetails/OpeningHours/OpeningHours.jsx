@@ -3,9 +3,9 @@ import { useRecoilValue } from 'recoil';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import './OpeningHours.scss';
-import { ReactComponent as ClockIcon } from '../../../assets/clock-light.svg';
-import { ReactComponent as ChevronDownIcon } from '../../../assets/chevron-down.svg';
-import { ReactComponent as ChevronUpIcon } from '../../../assets/chevron-up.svg';
+import ClockIcon from '../../../assets/clock-light.svg?react';
+import ChevronDownIcon from '../../../assets/chevron-down.svg?react';
+import ChevronUpIcon from '../../../assets/chevron-up.svg?react';
 import languageState from '../../../atoms/languageState';
 
 OpeningHours.propTypes = {

@@ -3,7 +3,7 @@ import { useRecoilValue } from 'recoil';
 import PropTypes from 'prop-types';
 import chatHistoryState from '../../atoms/chatHistoryState';
 import primaryColorState from '../../atoms/primaryColorState';
-import {ReactComponent as ChatButtonIcon} from '../../assets/chat-icon.svg';
+import ChatButtonIcon from '../../assets/chat-icon.svg?react';
 import { usePortalTarget } from '../../hooks/usePortalTarget';
 import './ChatButton.scss';
 

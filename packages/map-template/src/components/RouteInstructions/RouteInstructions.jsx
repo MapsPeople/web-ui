@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import './RouteInstructions.scss';
 import { useTranslation } from 'react-i18next';
-import { ReactComponent as ArrowRight } from '../../assets/arrow-right.svg';
-import { ReactComponent as ArrowLeft } from '../../assets/arrow-left.svg';
+import ArrowRight from '../../assets/arrow-right.svg?react';
+import ArrowLeft from '../../assets/arrow-left.svg?react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import directionsResponseState from '../../atoms/directionsResponseState';
 import activeStepState from '../../atoms/activeStep';

@@ -6,7 +6,7 @@ import { createPortal } from 'react-dom';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
 import { usePortalTarget } from '../../hooks/usePortalTarget';
 import { supportedLanguages } from '../../i18n/initialize.js';
-import { ReactComponent as LanguageSelectorIcon } from '../../assets/language-selector.svg';
+import LanguageSelectorIcon from '../../assets/language-selector.svg?react';
 import './LanguageSelector.scss';
 
 /**
