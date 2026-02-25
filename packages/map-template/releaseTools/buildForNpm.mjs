@@ -43,7 +43,7 @@ const libraries = [
                 entry: path.resolve(__dirname, 'webcomponent.js'),
                 name: 'MapTemplate', // unused, but required
                 fileName: format => `mapsindoors-webcomponent.${format}.js`,
-                formats: ['es', 'umd']
+                formats: ['es']
             },
             emptyOutDir: false,
             rollupOptions: {
