@@ -13,17 +13,27 @@ mi-search {
     input[type="search"] {
         @include border.radius(large);
         @include background-color.white(white);
-        @include padding.left(xx-large);
-        @include sizing.height(xxx-large);
+
+        padding-left: 2.5rem;
+        min-height: 3rem;
+        height: auto;
         @include font.size(medium);
-        @include padding.right(xx-large);
+
+        padding-right: 2.5rem;
         @include font.family(system);
+
+        /* When placeholder is visible, the clear button is not rendered — reclaim that padding */
+        &:placeholder-shown {
+            padding-right: 0.875rem;
+        }
+
         appearance: none;
         width: 100%;
         position: relative;
         background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xMS43MSAxMUgxMi41TDE3LjQ5IDE2TDE2IDE3LjQ5TDExIDEyLjVWMTEuNzFMMTAuNzMgMTEuNDNDOS41OSAxMi40MSA4LjExIDEzIDYuNSAxM0MyLjkxIDEzIDAgMTAuMDkgMCA2LjVDMCAyLjkxIDIuOTEgMCA2LjUgMEMxMC4wOSAwIDEzIDIuOTEgMTMgNi41QzEzIDguMTEgMTIuNDEgOS41OSAxMS40MyAxMC43M0wxMS43MSAxMVpNMiA2LjVDMiA4Ljk5IDQuMDEgMTEgNi41IDExQzguOTkgMTEgMTEgOC45OSAxMSA2LjVDMTEgNC4wMSA4Ljk5IDIgNi41IDJDNC4wMSAyIDIgNC4wMSAyIDYuNVoiIGZpbGw9IiM4RDk4QUEiLz4KPC9zdmc+Cg==");
         background-repeat: no-repeat;
-        background-position: variables.$spacing-medium center;
+        background-position: 1rem center;
+        background-size: 1.125rem 1.125rem;
         border-color: #E6E6E6;
         color: var(--tailwind-colors-neutral-500);
         border: 1px solid var(--tailwind-colors-gray-200);
@@ -60,11 +70,11 @@ mi-search {
 
     button {
         position: absolute;
-        right: 14px; /* relates to input field height and button size: button should be placed with equal distance to top, right and bottom */
+        right: 0.875rem; /* relates to input field height and button size: button should be placed with equal distance to top, right and bottom */
         top: 50%;
         transform: translateY(-50%);
-        width: 20px;
-        height: 20px;
+        width: 1.25rem;
+        height: 1.25rem;
         @include background-color.gray(60);
         @include border.radius(circle);
         @include padding.all(none);
@@ -79,8 +89,8 @@ mi-search {
 
         svg {
             fill: white;
-            width: 10px;
-            height: 10px;
+            width: 0.625rem;
+            height: 0.625rem;
         }
     }
 }

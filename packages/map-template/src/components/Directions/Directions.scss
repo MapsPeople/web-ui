@@ -17,6 +17,7 @@
         height: fit-content;
         padding: var(--spacing-medium);
         text-transform: uppercase;
+        font-size: var(--font-size-small);
         font-weight: var(--font-weight-x-large);
         color: var(--color-gray-70);
 
@@ -61,18 +62,21 @@
         grid-auto-flow: column;
         gap: var(--spacing-xx-small);
         font-size: var(--font-size-small);
-    }
-
-    mi-location-info {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+    }
+
+    mi-location-info {
         max-width: 100%;
+        overflow-wrap: break-word;
     }
 
     &__content {
         display: grid;
         gap: var(--spacing-xx-small);
+        min-width: 0; /* prevent flex overflow — allows content to shrink below its natural width */
+        overflow: hidden;
     }
 
     &__qr-code {

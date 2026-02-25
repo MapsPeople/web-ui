@@ -20,17 +20,28 @@
         flex-direction: column;
         gap: var(--spacing-x-small);
         overflow: auto;
+        margin-top: 0.5rem;
+        border-radius: var(--rounding-large);
 
         > * {
             height: fit-content; /* fixing issue on mobile Safari causing them to bee too large in case of just one search result */
+        }
+
+        /* In kiosk context, limit visible results to 5 at a time. Users can scroll through remaining results using the on-screen scroll buttons. */
+        &--kiosk {
+            max-height: calc(5 * 5rem + 4 * var(--spacing-x-small));
         }
     }
 
 
     &__scroll-buttons {
         position: fixed;
-        left: calc(50% + 284px + 20px); /* Half viewport width + half modal width + gap */
+        left: calc(50% + 284px + 20px); /* Half viewport width + half kiosk modal width (568px / 2) + gap */
         bottom: var(--spacing-x-large);
+
+        :root[data-font-scaled="true"] & {
+            left: calc(50% + max(16.5vw, 284px) + 20px); /* Wider modal when text is scaled: max(33vw, 568px) / 2 */
+        }
     }
 
     &__info {
@@ -40,8 +51,8 @@
     }
 
     &__legend {
-        width: var(--spacing-xxx-large);
-        height: var(--spacing-xxx-large);
+        width: 3rem;
+        height: 3rem;
         border: 1px solid var(--color-gray-30);
         border-radius: var(--rounding-large);
         background-color: white;
@@ -65,8 +76,8 @@
         gap: var(--spacing-x-small);
 
         svg {
-            width: 24px;
-            height: 24px;
+            width: 1.5rem;
+            height: 1.5rem;
             flex-shrink: 0;
         }
 
