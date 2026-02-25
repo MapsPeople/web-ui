@@ -2,7 +2,7 @@
 
 .location-details {
     /* Remove top padding, keep horizontal and bottom for alignment */
-    padding: 0 var(--spacing-medium) var(--spacing-medium);
+    padding: 0 1rem 1rem;
     color: var(--color-black-base);
     display: grid;
     height: 100%;
@@ -14,9 +14,9 @@
         background: var(--color-white-white);
         z-index: 3;
         /* Add padding to match the new layout */
-        padding: var(--spacing-medium) var(--spacing-medium) 0;
+        padding: 1rem 1rem 0;
         /* Compensate for parent's horizontal padding to be full-width */
-        margin: 0 calc(var(--spacing-medium) * -1);
+        margin: 0 -1rem;
     }
 
     &--content-below {
@@ -61,10 +61,10 @@
     &__details-content {
         display: flex;
         flex-direction: column;
-        gap: var(--spacing-medium);
+        gap: 1rem;
         overflow-y: auto;
         min-height: 0;
-        padding-bottom: var(--spacing-small);
+        padding-bottom: 0.75rem;
         position: relative;
         z-index: 1;
         /* Hide scrollbar */
@@ -78,7 +78,7 @@
         width: 100%;
         border-radius: var(--rounding-large);
         object-fit: contain;
-        margin: var(--spacing-medium) 0;
+        margin: 1rem 0;
     }
 
     &__categories {
@@ -95,14 +95,14 @@
             color: var(--color-gray-70);
             line-height: 1.5;
             overflow-y: hidden;
-            max-height: var(--spacing-xxxx-large); /* corresponding to approx. 3 lines of description text */
+            max-height: 4rem; /* corresponding to approx. 3 lines of description text, scales with font size */
         }
 
         button {
             all: unset;
             font-size: var(--font-size-small);
             color: var(--color-blue-base);
-            margin-top: var(--spacing-x-small);
+            margin-top: 0.5rem;
             cursor: pointer;
         }
 
@@ -116,13 +116,14 @@
     &__wayfinding {
         position: sticky;
         top: 0;
-        margin-bottom: var(--spacing-medium);
+        margin-bottom: 1rem;
         color: var(--color-white-white);
         border-radius: var(--rounding-large);
         border: none;
         font-size: var(--font-size-small);
         width: 100%;
-        height: var(--spacing-xxx-large);
+        min-height: 3rem;
+        height: auto;
         font-weight: var(--font-weight-x-large);
         background: var(--color-primary);
 
@@ -142,14 +143,14 @@
     align-items: center;
     font-size: var(--font-size-small);
     grid-template-columns: min-content 1fr min-content;
-    gap: var(--spacing-x-small);
-    height: 72px; /* fixed height for layout consistency. Content can be two or three lines */
+    gap: 0.5rem;
+    min-height: 4.5rem; /* scales with font size; was 72px fixed which clipped content at large text sizes */
 
     &__icon {
-        margin-right: var(--spacing-medium);
+        margin-right: 1rem;
 
         img {
-            height: var(--spacing-x-large);
+            height: 2rem;
             display: block; /* to avoid spacing below */
         }
     }
@@ -157,15 +158,15 @@
     &__actions {
         margin-left: auto;
         display: flex;
-        gap: var(--spacing-x-small);
+        gap: 0.5rem;
     }
 
     &__button {
         background: none;
         border: 1px solid var(--tailwind-colors-gray-200);
         margin-left: auto;
-        width: var(--spacing-xx-large);
-        height: var(--spacing-xx-large);
+        width: 2.5rem;
+        height: 2.5rem;
         border-radius: var(--rounding-large);
         display: grid;
         justify-content: center;
@@ -187,12 +188,12 @@
 
     &__content {
         display: grid;
-        gap: var(--spacing-xx-small);
+        gap: 0.25rem;
     }
 }
 
 .contact-action-buttons-container {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-x-small);
+    gap: 0.5rem;
 }

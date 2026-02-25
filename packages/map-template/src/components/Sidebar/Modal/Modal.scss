@@ -38,6 +38,9 @@ $desktop-breakpoint: 992px;
         right: 0;
         margin-left: auto;
         margin-right: auto;
+        :root[data-font-scaled="true"] & {
+            width: max(33vw, 568px); // ~33% of screen width when text size is increased, minimum 568px
+        }
         top: auto; // Override the top positioning for kiosk modals
         bottom: var(--spacing-x-large); // Keep bottom positioning for kiosk mode
 
