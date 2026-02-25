@@ -66,5 +66,8 @@
     "license": "MIT",
     "optionalDependencies": {
         "fsevents": "^2.3.2"
+    },
+    "engines": {
+        "node": ">=22.0.0"
     }
 }

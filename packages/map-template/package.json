@@ -67,6 +67,9 @@
       "last 1 safari version"
     ]
   },
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "dependencies": {
     "react-markdown": "^10.1.0",
     "remark-gfm": "^4.0.1"
