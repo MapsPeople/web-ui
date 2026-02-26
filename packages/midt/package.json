@@ -31,5 +31,8 @@
     "np": "^10.2.0",
     "style-dictionary": "^3.7.2"
   },
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "homepage": "https://github.com/MapsPeople/web-ui/tree/main/packages/midt"
 }

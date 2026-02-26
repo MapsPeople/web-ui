@@ -28,7 +28,10 @@
     "packages/*"
   ],
   "devDependencies": {
-    "lerna": "^6.4.0"
+    "lerna": "^9.0.4"
+  },
+  "engines": {
+    "node": ">=22.0.0"
   },
   "dependencies": {
     "mapbox-gl": "3.15.0"

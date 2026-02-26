@@ -14,8 +14,8 @@ import categoryState from '../../../atoms/categoryState';
 import useOutsideMapsIndoorsDataClick from '../../../hooks/useOutsideMapsIndoorsDataClick';
 import mapsIndoorsInstanceState from '../../../atoms/mapsIndoorsInstanceState';
 import PropTypes from 'prop-types';
-import { ReactComponent as ChevronLeft } from '../../../assets/chevron-left.svg';
-import { ReactComponent as ChevronRight } from '../../../assets/chevron-right.svg';
+import ChevronLeft from '../../../assets/chevron-left.svg?react';
+import ChevronRight from '../../../assets/chevron-right.svg?react';
 import { useIsKioskContext } from '../../../hooks/useIsKioskContext';
 import { useTranslation } from 'react-i18next';
 

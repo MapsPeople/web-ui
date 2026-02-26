@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback, useLayoutEffect } from 'react';
 import './LocationDetails.scss';
 import { useTranslation } from 'react-i18next';
-import { ReactComponent as CloseIcon } from '../../assets/close.svg';
+import CloseIcon from '../../assets/close.svg?react';
 import { useRecoilValue } from 'recoil';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import currentLocationState from '../../atoms/currentLocationState';
