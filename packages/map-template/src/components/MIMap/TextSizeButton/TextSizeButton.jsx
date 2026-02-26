@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
-import { ReactComponent as TextSizeIcon } from '../../../assets/icon-text-size.svg';
+import TextSizeIcon from '../../../assets/icon-text-size.svg?react';
 import './TextSizeButton.scss';
 
 TextSizeButton.propTypes = {

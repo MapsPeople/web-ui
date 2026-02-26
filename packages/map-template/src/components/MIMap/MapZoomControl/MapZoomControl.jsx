@@ -2,8 +2,8 @@ import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
-import { ReactComponent as PlusIcon } from '../../../assets/plus.svg';
-import { ReactComponent as MinusIcon } from '../../../assets/minus.svg';
+import PlusIcon from '../../../assets/plus.svg?react';
+import MinusIcon from '../../../assets/minus.svg?react';
 import './MapZoomControl.scss';
 
 MapZoomControl.propTypes = {

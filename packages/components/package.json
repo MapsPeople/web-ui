@@ -1,6 +1,6 @@
 {
     "name": "@mapsindoors/components",
-    "version": "13.32.3",
+    "version": "13.33.0",
     "description": "Web components for MapsIndoors",
     "main": "dist/index.js",
     "module": "dist/index.mjs",
@@ -66,5 +66,8 @@
     "license": "MIT",
     "optionalDependencies": {
         "fsevents": "^2.3.2"
+    },
+    "engines": {
+        "node": ">=22.0.0"
     }
 }

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import travelModeState from '../../atoms/travelModeState';
-import { ReactComponent as QRCode } from '../../assets/qrcode.svg';
+import QRCode from '../../assets/qrcode.svg?react';
 import RouteInstructions from '../RouteInstructions/RouteInstructions';
 import directionsResponseState from '../../atoms/directionsResponseState';
 import activeStepState from '../../atoms/activeStep';

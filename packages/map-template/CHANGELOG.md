@@ -5,6 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.94.0] - 2026-02-26
+
+### Changed
+
+- Upgraded Lerna from 6.4.0 to 9.0.4
+- Upgraded Vite from 4.3.4 to 7.3.1
+- Upgraded @vitejs/plugin-react to 5.1.4
+- Upgraded vite-plugin-svgr to 4.5.0
+- Replaced vite-plugin-favicon2 with vite-plugin-favicons-inject
+- Enhanced buildForNpm script to handle Stencil shared runtime chunks
+- Removed UMD format from MapTemplate library build configuration
+- Updated SVG imports to use new syntax with updated plugins
+
+### Added
+
+- Added Node.js engine requirement (>=22.0.0) to package.json
+
+### Fixed
+
+- Set skipLibCheck to true in tsconfig.json for better build performance
+
+## [1.93.2] - 2026-02-26
+
+### Fixed
+
+- Upgraded to Web SDK 4.51.0
+
 ## [1.93.1] - 2026-02-25
 
 ### Fixed
