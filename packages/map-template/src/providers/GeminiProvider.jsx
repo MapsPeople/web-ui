@@ -71,13 +71,17 @@ export function GeminiProvider({ children, enabled }) {
                     break;
 
                 case 'multiple_locations':
-                    searchResultIds = functionData.value.filter(Boolean);
+                    searchResultIds = Array.isArray(functionData.value)
+                        ? functionData.value.filter(Boolean)
+                        : [];
                     break;
 
                 case 'directions': {
-                    // Extract only the location IDs we need
-                    const { originLocationId, destinationLocationId } = functionData.value;
-                    setDirectionsLocationIds({ originLocationId, destinationLocationId });
+                    const originLocationId = functionData.value?.originLocationId;
+                    const destinationLocationId = functionData.value?.destinationLocationId;
+                    if (originLocationId && destinationLocationId) {
+                        setDirectionsLocationIds({ originLocationId, destinationLocationId });
+                    }
                     break;
                 }
                 default:

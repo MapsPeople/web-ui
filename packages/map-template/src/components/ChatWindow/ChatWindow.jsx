@@ -231,7 +231,24 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                         });
                     }
                 },
-                onComplete: () => {
+                onComplete: (payload) => {
+                    // Check if completion payload contains an error
+                    if (payload && payload.error) {
+                        // Update placeholder message with error response
+                        const currentMessageId = currentResponseIdRef.current;
+                        setChatHistory(prev => {
+                            const updatedHistory = [...prev];
+                            const messageIndex = updatedHistory.findIndex(m => m.id === currentMessageId);
+                            if (messageIndex >= 0) {
+                                updatedHistory[messageIndex] = {
+                                    ...updatedHistory[messageIndex],
+                                    text: payload.response || 'An error occurred',
+                                    error: true
+                                };
+                            }
+                            return updatedHistory;
+                        });
+                    }
                     // Streaming complete - function data is already processed by provider
                     currentResponseIdRef.current = null;
                 }
