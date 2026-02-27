@@ -181,6 +181,12 @@ Sets a custom position. Works with any provider that implements setPosition.
 Uses this.positionProvider (the resolved provider) instead of this.customPositionProvider
 to ensure we're working with the validated, active provider.
 
+#### Parameters
+
+| Name       | Type                  | Description |
+| ---------- | --------------------- | ----------- |
+| `position` | `MapsIndoorsPosition` |             |
+
 #### Returns
 
 Type: `Promise<void>`
@@ -190,6 +196,12 @@ Type: `Promise<void>`
 ### `watchPosition(selfInvoked?: boolean) => Promise<void>`
 
 Method for requesting the current position, emitting events and showing position on map based on result.
+
+#### Parameters
+
+| Name          | Type      | Description                                                                 |
+| ------------- | --------- | --------------------------------------------------------------------------- |
+| `selfInvoked` | `boolean` | - Used to track if call was invoked by clicking on position control or not. |
 
 #### Returns
 

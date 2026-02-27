@@ -10,6 +10,12 @@
 
 
 
+#### Parameters
+
+| Name     | Type      | Description |
+| -------- | --------- | ----------- |
+| `active` | `boolean` |             |
+
 #### Returns
 
 Type: `Promise<boolean>`

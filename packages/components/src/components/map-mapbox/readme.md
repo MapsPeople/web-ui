@@ -296,6 +296,12 @@ Type: `Promise<any>`
 
 Highlight a MapsIndoors location. Only a single location can be highlighted at the time.
 
+#### Parameters
+
+| Name       | Type       | Description |
+| ---------- | ---------- | ----------- |
+| `location` | `Location` |             |
+
 #### Returns
 
 Type: `Promise<void>`
