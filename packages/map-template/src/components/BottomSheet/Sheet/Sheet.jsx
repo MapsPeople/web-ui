@@ -98,7 +98,16 @@ const Sheet = forwardRef(function SheetComponent({ children, isOpen, initialSnap
                     break;
                 case snapPoints.FIT: {
                     // Get the height of the contentRef div
-                    const height = contentRef.current.children.item(0).clientHeight;
+                    const firstChild = contentRef.current?.children.item(0);
+                    if (!firstChild) {
+                        // If no child exists yet, use minimized height as fallback
+                        setStyle({ height: `${minimizedHeight}px` });
+                        contentHeightRef.current = minimizedHeight;
+                        snapPoint = snapPoints.MIN;
+                        break;
+                    }
+
+                    const height = firstChild.clientHeight;
 
                     // if that height is less than the minimized height, set the height to the minimized height
                     if (height < minimizedHeight) {
@@ -150,6 +159,10 @@ const Sheet = forwardRef(function SheetComponent({ children, isOpen, initialSnap
             fitMutationObserver.current.disconnect();
         }
 
+        if (!contentRef.current) {
+            return;
+        }
+
         fitMutationObserver.current = new MutationObserver(() => {
             snapSheetHeightToSnapPoint(snapPoints.FIT);
         });
@@ -195,13 +208,18 @@ const Sheet = forwardRef(function SheetComponent({ children, isOpen, initialSnap
         },
         onSwiped: swipeEvent => {
             setIsDragging(false);
+            const firstChild = contentRef.current?.children.item(0);
+            if (!firstChild) {
+                return;
+            }
+
             const snapPoint = calculateSnapPoint(
                 swipeEvent.dir,
                 swipeEvent.deltaY,
                 snappedTo.current,
                 minimizedHeight,
                 container.current.clientHeight, // max available height: the height of the bottom sheet container
-                contentRef.current.children.item(0) // the dom element of the sheet content (child)
+                firstChild // the dom element of the sheet content (child)
             );
 
             if (snapPoint) {

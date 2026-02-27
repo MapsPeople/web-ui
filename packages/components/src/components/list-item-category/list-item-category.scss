@@ -6,7 +6,7 @@
 @use "~@mapsindoors/midt/padding";
 @use "~@mapsindoors/midt/transitions";
 
-@import "../../global/global";
+@use "../../global/global";
 
 :host {
     @include color.black(base);

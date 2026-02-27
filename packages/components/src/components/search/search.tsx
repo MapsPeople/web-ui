@@ -176,7 +176,7 @@ export class Search implements ComponentInterface {
      * Programmatically trigger the search.
      */
     @Method()
-    triggerSearch(): void {
+    async triggerSearch(): Promise<void> {
         const inputValue = this.inputElement.value;
         this.search(inputValue);
     }
@@ -186,7 +186,7 @@ export class Search implements ComponentInterface {
      * Setting it will not perform a search.
      */
     @Method()
-    setDisplayText(displayText: string): void {
+    async setDisplayText(displayText: string): Promise<void> {
         this.preventSearch = true;
         this.inputElement.value = displayText;
         this.value = displayText;
@@ -199,7 +199,7 @@ export class Search implements ComponentInterface {
      * from scrolling the document to bring the newly-focused element into view.
      */
     @Method()
-    focusInput(): void {
+    async focusInput(): Promise<void> {
         this.inputElement.focus({ preventScroll: true });
     }
 

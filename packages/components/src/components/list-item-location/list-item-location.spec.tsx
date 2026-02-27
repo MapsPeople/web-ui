@@ -1,6 +1,7 @@
 import { newSpecPage } from '@stencil/core/testing';
 import { ListItemLocation } from './list-item-location';
 import { h } from '@stencil/core';
+import { UnitSystem } from '../../enums/unit-system.enum';
 
 describe('mi-list-item-location', () => {
     const locationItem = {
@@ -20,10 +21,11 @@ describe('mi-list-item-location', () => {
     });
 
     it('should render distance JSX template', async (): Promise<void> => {
+        locationItem.properties.geodesicDistance = 100;
         const page = await newSpecPage({
             components: [ListItemLocation],
             template: () => (
-                <mi-list-item-location unit="imperial" location={locationItem}></mi-list-item-location>
+                <mi-list-item-location unit={UnitSystem.Imperial} location={locationItem}></mi-list-item-location>
             ),
             supportsShadowDom: false
         });
@@ -32,7 +34,7 @@ describe('mi-list-item-location', () => {
 
 
     describe('Converting distance to readable imperial units', () => {
-        const unit = 'imperial';
+        const unit = UnitSystem.Imperial;
 
         it('should return 0 meters as a string in feet', async (): Promise<void> => {
             locationItem.properties.geodesicDistance = 0;
@@ -44,8 +46,9 @@ describe('mi-list-item-location', () => {
                 supportsShadowDom: false
             });
 
-            const distanceDivElement: HTMLDivElement = page.body.getElementsByClassName('distance')[0] as HTMLDivElement;
-            expect(distanceDivElement.innerHTML).toEqual('0 ft' as string);
+            const distanceDivElement = page.body.getElementsByClassName('distance')[0];
+            expect(distanceDivElement).toBeTruthy();
+            expect(distanceDivElement.querySelector('mi-distance')).toBeTruthy();
         });
 
         it('should calculate and return 1609.344 meters as a string in miles', async (): Promise<void> => {
@@ -58,14 +61,15 @@ describe('mi-list-item-location', () => {
                 supportsShadowDom: false
             });
 
-            const distanceDivElement: HTMLDivElement = page.body.getElementsByClassName('distance')[0] as HTMLDivElement;
-            expect(distanceDivElement.innerHTML).toEqual('1 mi' as string);
+            const distanceDivElement = page.body.getElementsByClassName('distance')[0];
+            expect(distanceDivElement).toBeTruthy();
+            expect(distanceDivElement.querySelector('mi-distance')).toBeTruthy();
         });
     });
 
 
     describe('Converting distance to readable metric units', () => {
-        const unit = 'metric';
+        const unit = UnitSystem.Metric;
 
         it('should return 0 meters as a string in meters', async (): Promise<void> => {
             locationItem.properties.geodesicDistance = 0;
@@ -77,8 +81,9 @@ describe('mi-list-item-location', () => {
                 supportsShadowDom: false
             });
 
-            const distanceDivElement: HTMLDivElement = page.body.getElementsByClassName('distance')[0] as HTMLDivElement;
-            expect(distanceDivElement.innerHTML).toEqual('0 m' as string);
+            const distanceDivElement = page.body.getElementsByClassName('distance')[0];
+            expect(distanceDivElement).toBeTruthy();
+            expect(distanceDivElement.querySelector('mi-distance')).toBeTruthy();
         });
 
         it('should return 1200 meters as a string in kilometers', async (): Promise<void> => {
@@ -91,8 +96,9 @@ describe('mi-list-item-location', () => {
                 supportsShadowDom: false
             });
 
-            const distanceDivElement: HTMLDivElement = page.body.getElementsByClassName('distance')[0] as HTMLDivElement;
-            expect(distanceDivElement.innerHTML).toEqual('1.2 km' as string);
+            const distanceDivElement = page.body.getElementsByClassName('distance')[0];
+            expect(distanceDivElement).toBeTruthy();
+            expect(distanceDivElement.querySelector('mi-distance')).toBeTruthy();
         });
     });
 

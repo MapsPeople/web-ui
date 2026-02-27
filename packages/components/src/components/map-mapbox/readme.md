@@ -6,7 +6,7 @@ Working example:
 
 <mi-map-mapbox
     style="width: 600px; height: 400px;"
-    access-token="pk.eyJ1IjoiZW5lcHBlciIsImEiOiJjazVzNjB5a3EwODd0M2Ztb3FjYmZmbzJhIn0._fo_iTl7ZHPrl634-F2qYg"
+    access-token="YOUR_MAPBOX_ACCESS_TOKEN"
     mi-api-key="demo"
     floor-selector-control-position="top-right"
     my-position-control-position="top-right">
@@ -66,7 +66,7 @@ Example usage:
 
 <mi-map-mapbox
     style="width: 600px; height: 400px;"
-    access-token="pk.eyJ1IjoiZW5lcHBlciIsImEiOiJjazVzNjB5a3EwODd0M2Ztb3FjYmZmbzJhIn0._fo_iTl7ZHPrl634-F2qYg"
+    access-token="YOUR_MAPBOX_ACCESS_TOKEN"
     mi-api-key="demo"
     floor-selector-control-position="top-right"
     my-position-control-position="top-right">

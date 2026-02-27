@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- Upgraded Stencil from version 2 to version 4.
+- Updated component methods (`dropdown`, `keyboard`, `my-position`, `route-instructions-step`, `search`, `time`, `list-item-location`) to return Promises for improved async handling.
+- Updated MapsIndoors SDK to version 4.51.0.
+- Moved margin reset for empty-page to child elements in combo-box and dropdown styles.
+
+### Fixed
+
+- Updated Mapbox and MapsIndoors SDK versions in component test files.
+
 ## [13.32.4] - 2026-02-26
 
 ### Changed

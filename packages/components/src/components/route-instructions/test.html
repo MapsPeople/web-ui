@@ -151,7 +151,7 @@
             if (provider === 'google') {
                 externalDirectionsProvider = new mapsindoors.directions.GoogleMapsProvider()
             } else if (provider === 'mapbox') {
-                externalDirectionsProvider = new mapsindoors.directions.MapboxProvider('pk.eyJ1IjoiZW5lcHBlciIsImEiOiJjazVzNjB5a3EwODd0M2Ztb3FjYmZmbzJhIn0._fo_iTl7ZHPrl634-F2qYg');
+                externalDirectionsProvider = new mapsindoors.directions.MapboxProvider('YOUR_MAPBOX_ACCESS_TOKEN');
             }
 
             const directionsServiceInstance = new mapsindoors.services.DirectionsService(externalDirectionsProvider);

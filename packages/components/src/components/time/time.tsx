@@ -26,7 +26,7 @@ export class Time implements ComponentInterface {
             this.translationsData = { days: 'd', hours: 'h', minutes: 'min' };
         }
     }
-    @State() translationsData;
+    @State() translationsData = { days: 'd', hours: 'h', minutes: 'min' };
 
     componentWillLoad(): void {
         this.setTranslations();

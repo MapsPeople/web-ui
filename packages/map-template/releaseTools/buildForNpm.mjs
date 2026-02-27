@@ -24,7 +24,7 @@ const componentsEsmDir = path.join(componentsPkgDir, 'dist/esm');
 // suffix (e.g. index-7e9696f3.js, utils-ae714467.js). Entry files (*.entry.js),
 // the loader (loader.js, index.js) and the CDN bundle (mi-components.js) do not
 // carry a hash and are intentionally excluded.
-const CHUNK_HASH_PATTERN = /-[0-9a-f]{8}\.js$/;
+const CHUNK_HASH_PATTERN = /-[0-9a-zA-Z_-]{8}\.js$/;
 const stencilSharedFiles = readdirSync(componentsEsmDir)
     .filter(f => CHUNK_HASH_PATTERN.test(f))
     .map(f => path.join(componentsEsmDir, f));

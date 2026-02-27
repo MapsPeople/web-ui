@@ -114,11 +114,11 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
             setCurrentLocation();
             setFilteredLocationsByExternalID([]);
             // Reset the search sheet height to its minimum size when closing location details
-            searchSheetRef.current.setSnapPoint(snapPoints.MIN);
+            searchSheetRef.current?.setSnapPoint(snapPoints.MIN);
         } else {
             pushAppView(appViews.SEARCH);
             setCurrentLocation();
-            searchSheetRef.current.setSnapPoint(snapPoints.MIN);
+            searchSheetRef.current?.setSnapPoint(snapPoints.MIN);
         }
     }
 
@@ -147,7 +147,7 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
                     >
                         <Search
                             isOpen={true}
-                            onSetSize={size => searchSheetRef.current.setSnapPoint(size)}
+                            onSetSize={size => searchSheetRef.current?.setSnapPoint(size)}
                             onOpenChat={() => pushAppView(appViews.CHAT)}
                         />
                     </Sheet>
@@ -163,7 +163,7 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
                         ref={locationsListSheetRef}
                     >
                         <LocationsList
-                            onSetSize={size => locationsListSheetRef.current.setSnapPoint(size)}
+                            onSetSize={size => locationsListSheetRef.current?.setSnapPoint(size)}
                             onBack={() => closeLocationsList()}
                             locations={filteredLocationsByExternalIDs}
                             onLocationClick={location => setCurrentLocation(location)}
@@ -181,7 +181,7 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
                         ref={locationDetailsSheetRef}
                     >
                         <LocationDetails
-                            onSetSize={size => locationDetailsSheetRef.current.setSnapPoint(size)}
+                            onSetSize={size => locationDetailsSheetRef.current?.setSnapPoint(size)}
                             onStartWayfinding={() => pushAppView(appViews.WAYFINDING)}
                             onBack={() => closeLocationDetails()}
                             onStartDirections={() => pushAppView(appViews.DIRECTIONS)}
@@ -200,7 +200,7 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
                         ref={wayfindingSheetRef}
                     >
                         <Wayfinding
-                            onSetSize={size => wayfindingSheetRef.current.setSnapPoint(size)}
+                            onSetSize={size => wayfindingSheetRef.current?.setSnapPoint(size)}
                             onStartDirections={() => pushAppView(appViews.DIRECTIONS)}
                             directionsToLocation={directionsToLocation}
                             directionsFromLocation={directionsFromLocation}
@@ -220,7 +220,7 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
                         isOpen={true}
                     >
                         <Directions
-                            onSetSize={size => directionsSheetRef.current.setSnapPoint(size)}
+                            onSetSize={size => directionsSheetRef.current?.setSnapPoint(size)}
                             isOpen={true}
                             onBack={() => pushAppView(appViews.WAYFINDING)}
                             onRouteFinished={() => onRouteFinished()}
