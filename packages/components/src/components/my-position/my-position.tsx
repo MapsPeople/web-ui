@@ -517,7 +517,7 @@ export class MyPositionComponent {
      * @param {boolean} [selfInvoked=false] - Used to track if call was invoked by clicking on position control or not.
      */
     @Method()
-    public watchPosition(selfInvoked = false): void {
+    public async watchPosition(selfInvoked = false): Promise<void> {
         this.setPositionProviderOnMapView();
 
         if (this.isLegacyProvider(this.positionProvider)) {

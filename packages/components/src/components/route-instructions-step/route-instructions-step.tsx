@@ -107,7 +107,7 @@ export class RouteInstructionsStep implements ComponentInterface {
      * Programmatically open the substeps.
      */
     @Method()
-    openSubsteps(): void {
+    async openSubsteps(): Promise<void> {
         this.substepsAreOpen = true;
     }
 
@@ -115,7 +115,7 @@ export class RouteInstructionsStep implements ComponentInterface {
      * Programmatically close the substeps.
      */
     @Method()
-    closeSubsteps(): void {
+    async closeSubsteps(): Promise<void> {
         this.substepsAreOpen = false;
     }
 

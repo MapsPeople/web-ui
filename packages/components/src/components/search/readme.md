@@ -286,6 +286,12 @@ Type: `Promise<HTMLInputElement>`
 Sets text to be shown in the search field.
 Setting it will not perform a search.
 
+#### Parameters
+
+| Name          | Type     | Description |
+| ------------- | -------- | ----------- |
+| `displayText` | `string` |             |
+
 #### Returns
 
 Type: `Promise<void>`

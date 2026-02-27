@@ -100,7 +100,7 @@ export class Keyboard implements ComponentInterface {
      * Clear the input field.
      */
     @Method()
-    clearInputField(): void {
+    async clearInputField(): Promise<void> {
         this.simpleKeyboard.clearInput();
     }
 

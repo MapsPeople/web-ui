@@ -13,7 +13,7 @@ Working example:
     mapsindoors.MapsIndoors.setMapsIndoorsApiKey('173386a6ff5e43cead3e396b');
     mapsindoors.MapsIndoors.setLanguage('en');
 
-    const accessToken = 'pk.eyJ1IjoiZW5lcHBlciIsImEiOiJjazVzNjB5a3EwODd0M2Ztb3FjYmZmbzJhIn0._fo_iTl7ZHPrl634-F2qYg';
+    const accessToken = 'YOUR_MAPBOX_ACCESS_TOKEN';
     const mapView = new mapsindoors.mapView.MapboxView({
         accessToken: accessToken,
         element: document.getElementById('map'),
@@ -53,7 +53,7 @@ Example usage:
     mapsindoors.MapsIndoors.setMapsIndoorsApiKey('173386a6ff5e43cead3e396b');
     mapsindoors.MapsIndoors.setLanguage('en');
 
-    const accessToken = 'pk.eyJ1IjoiZW5lcHBlciIsImEiOiJjazVzNjB5a3EwODd0M2Ztb3FjYmZmbzJhIn0._fo_iTl7ZHPrl634-F2qYg';
+    const accessToken = 'YOUR_MAPBOX_ACCESS_TOKEN';
     const mapView = new mapsindoors.mapView.MapboxView({
         accessToken: accessToken,
         element: document.getElementById('map'),

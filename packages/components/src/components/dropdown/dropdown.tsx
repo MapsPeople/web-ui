@@ -518,7 +518,7 @@ export class Dropdown {
      * Clear filter.
      */
     @Method()
-    public clearFilter(): void {
+    public async clearFilter(): Promise<void> {
         if (this.filterElement) {
             this.filterElement.value = '';
             this.filterElement.focus();
@@ -621,7 +621,7 @@ export class Dropdown {
                     onInput={(): void => { this.filter(); }}
                     tabIndex={this.open ? 0 : -1} />
 
-                <button ref={(el): HTMLButtonElement => this.clearButtonElement = el} tabindex={this.isClearButtonVisible ? 0 : -1} type="button" onClick={(): void => this.clearFilter()} class={`filter__clear ${this.isClearButtonVisible === false ? 'filter__clear--hidden' : ''}`} aria-label="Clear">
+                <button ref={(el): HTMLButtonElement => this.clearButtonElement = el} tabindex={this.isClearButtonVisible ? 0 : -1} type="button" onClick={() => this.clearFilter()} class={`filter__clear ${this.isClearButtonVisible === false ? 'filter__clear--hidden' : ''}`} aria-label="Clear">
                     <svg viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M14 1.41L12.59 0L7 5.59L1.41 0L0 1.41L5.59 7L0 12.59L1.41 14L7 8.41L12.59 14L14 12.59L8.41 7L14 1.41Z" />
                     </svg>

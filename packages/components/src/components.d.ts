@@ -16,10 +16,30 @@ import { NotificationType } from "./enums/notification-type.enum";
 import { Route } from "./types/route.interface";
 import { RouteTravelMode } from "./enums/route-travel-mode.enum";
 import { DirectionsTranslations } from "./types/directions-translations.interface";
+export { SortOrder } from "./enums/sort-order.enum";
+export { UnitSystem } from "./enums/unit-system.enum";
+export { Location } from "@mapsindoors/typescript-interfaces";
+export { LocationBookingDuration } from "./enums/location-booking-duration.enum";
+export { IPositionProvider, MapsIndoorsPosition } from "./types/position-provider.interface";
+export { NotificationPosition } from "./enums/notification-position.enum";
+export { NotificationMessage } from "./types/notification-message.interface";
+export { NotificationType } from "./enums/notification-type.enum";
+export { Route } from "./types/route.interface";
+export { RouteTravelMode } from "./enums/route-travel-mode.enum";
+export { DirectionsTranslations } from "./types/directions-translations.interface";
 export namespace Components {
     interface ComboBoxItem {
+        /**
+          * @default false
+         */
         "disabled": boolean;
+        /**
+          * @default false
+         */
         "excludefromall": boolean;
+        /**
+          * @default false
+         */
         "selected": boolean;
         "text": string;
         "value": string;
@@ -30,11 +50,13 @@ export namespace Components {
         /**
           * Checks if the chip is active and applies different styling to the component.
           * @type {boolean}
+          * @default false
          */
         "active": boolean;
         /**
           * The background color of the chip. The default #005655 HEX value refers to the --brand-colors-dark-pine-100 from MIDT
           * @type {string}
+          * @default '#005655'
          */
         "backgroundColor"?: string;
         /**
@@ -67,6 +89,7 @@ export namespace Components {
           * If present, the column width is fitted the content.
           * @type {boolean}
           * @memberof Column
+          * @default false
          */
         "fitContent": boolean;
         /**
@@ -79,6 +102,7 @@ export namespace Components {
           * The monospace property sets the font-family to monospace.
           * @type {boolean}
           * @memberof Column
+          * @default false
          */
         "monospace": boolean;
         /**
@@ -105,17 +129,20 @@ export namespace Components {
     interface MiComboBox {
         /**
           * Sets the disabled state for the dropdown.
+          * @default false
          */
         "disabled": boolean;
         /**
           * This attribute indicates that the items can be filtered using the input field present at the top. If it is not specified, the input field will not be visible, and filtering is not possible.
           * @type {boolean}
+          * @default false
          */
         "filterable": boolean;
         /**
           * Gets or sets the list items.
           * @type {Array<HTMLMiDropdownItemElement>}
-          * @returns
+          * @returns 
+          * @default []
          */
         "items": Array<HTMLMiDropdownItemElement>;
         /**
@@ -125,22 +152,26 @@ export namespace Components {
         "itemsOrder": SortOrder;
         /**
           * Guiding message when presented with a content window that has no rows. Default language is English.
+          * @default 'No results found'
          */
         "noResultsMessage": string;
         /**
           * Gets or sets the state of the dropdown. If the attribute is set to true then the dropdown will be expanded.
           * @type {boolean}
+          * @default false
          */
         "open": boolean;
         /**
           * Gets the selected items.
           * @type {Array<HTMLMiDropdownItemElement>}
+          * @default []
          */
         "selected": Array<HTMLMiDropdownItemElement>;
     }
     interface MiDataTable {
         /**
           * Guiding message when presented with a table that has no rows.
+          * @default 'No results found'
          */
         "emptyPageHeader": string;
         /**
@@ -149,6 +180,7 @@ export namespace Components {
         "emptyPageSubheader": string;
         /**
           * Whether or not the table header should be sticky.
+          * @default true
          */
         "isHeaderSticky": boolean;
         /**
@@ -161,14 +193,17 @@ export namespace Components {
         "page": number;
         /**
           * Array of objects for each row in the table.
+          * @default []
          */
         "rows": Array<any>;
         /**
           * The selectable attribute specifies whether the first column in the table should be checkboxes. The header will be a select all or none checkbox.
+          * @default false
          */
         "selectable": boolean;
         /**
           * The selected property contains a Set of all selected rows. This property is only relevant if the selectable attribute is present.
+          * @default new Set()
          */
         "selected": Set<any>;
     }
@@ -181,6 +216,7 @@ export namespace Components {
         /**
           * Set imperial or metric as default unit system. Default is Metric unless the browser is running US English. In that case Imperial.
           * @type {UnitSystem}
+          * @default navigator.language === 'en-US' ? UnitSystem.Imperial : UnitSystem.Metric
          */
         "unit": UnitSystem;
     }
@@ -191,16 +227,19 @@ export namespace Components {
         "clearFilter": () => Promise<void>;
         /**
           * Sets the disabled state for the dropdown.
+          * @default false
          */
         "disabled": boolean;
         /**
           * Sets the alignment of the dropdown. The default alignment is 'left'.
           * @type {('right' | 'left')}
+          * @default 'left'
          */
         "dropdownAlignment": 'right' | 'left';
         /**
           * This attribute indicates that the items can be filtered using the input field present at the top. If it is not specified, the input field will not be visible, and filtering is not possible.
           * @type {boolean}
+          * @default false
          */
         "filterable": boolean;
         /**
@@ -214,6 +253,7 @@ export namespace Components {
         /**
           * Gets or sets the list items.
           * @type {Array<HTMLMiDropdownItemElement>}
+          * @default []
          */
         "items": Array<HTMLMiDropdownItemElement>;
         /**
@@ -229,31 +269,45 @@ export namespace Components {
         /**
           * This attribute indicates that multiple items can be selected in the list. If it is not specified, then only one item can be selected at a time.
           * @type {boolean}
+          * @default false
          */
         "multiple": boolean;
         /**
           * Guiding message when presented with a content window that has no rows. Default language is English.
+          * @default 'No results found'
          */
         "noResultsMessage": string;
         /**
           * Gets or sets the state of the dropdown. If the attribute is set to true then the dropdown will be expanded.
           * @type {boolean}
+          * @default false
          */
         "open": boolean;
         /**
           * If present, it dictates placeholder for an filterable input field in the dropdown. Defaults to 'Type to filter...'.
           * @type {string}
+          * @default 'Type to filter...'
          */
         "placeholder": string;
         /**
           * Gets the selected items.
           * @type {Array<HTMLMiDropdownItemElement>}
+          * @default []
          */
         "selected": Array<HTMLMiDropdownItemElement>;
     }
     interface MiDropdownItem {
+        /**
+          * @default false
+         */
         "disabled": boolean;
+        /**
+          * @default false
+         */
         "excludefromall": boolean;
+        /**
+          * @default false
+         */
         "selected": boolean;
         "text": string;
         "value": string;
@@ -266,6 +320,7 @@ export namespace Components {
         /**
           * The color to use as the primary color (as background color of the selected floor in the list).
           * @type {string}
+          * @default '#005655'
          */
         "primaryColor"?: string;
     }
@@ -293,6 +348,7 @@ export namespace Components {
         /**
           * The keyboard layout to use. Defaults to alphabetic.
           * @type {KeyboardLayout}
+          * @default KeyboardLayout.Alphabetic
          */
         "layout": string;
     }
@@ -300,11 +356,13 @@ export namespace Components {
         /**
           * @description Determines if the MI Scroll Buttons Component should be rendered.
           * @type {boolean}
+          * @default false
          */
         "scrollButtonsEnabled": boolean;
         /**
           * @description Determines how far to scroll when clicking one of the buttons from the MI Scroll Buttons Component.
           * @type {number}
+          * @default 100
          */
         "scrollLength": number;
     }
@@ -317,6 +375,7 @@ export namespace Components {
         /**
           * @description List orientation. Accepts the following values: 'vertical' and 'horizontal'.
           * @type {string}
+          * @default 'vertical'
          */
         "orientation": string;
     }
@@ -338,6 +397,7 @@ export namespace Components {
         "iconBadgeValue": string;
         /**
           * @description The word used for "Level" when showing level info. Default is "Level".
+          * @default 'Level'
          */
         "level": string;
         /**
@@ -346,6 +406,7 @@ export namespace Components {
         "location": any;
         /**
           * Whether to show the External ID.
+          * @default true
          */
         "showExternalId": boolean;
         /**
@@ -358,11 +419,13 @@ export namespace Components {
         /**
           * The title of the created bookings. Defaults to "Booked".
           * @type {string}
+          * @default 'Booked'
          */
         "bookingTitle": string;
         /**
           * Wether booking should be performed for 30 or 60 minutes.
           * @type {LocationBookingDuration}
+          * @default LocationBookingDuration.min30
          */
         "duration": LocationBookingDuration;
         /**
@@ -372,20 +435,24 @@ export namespace Components {
         "location": Location;
         /**
           * How many time slots to show going forward in time. Default to 4.
+          * @default 4
          */
         "show": number;
         /**
           * No bookings will be allowed before this hour. Default value is 8.
           * @type {number} - the hour in 24h format
+          * @default 8
          */
         "startHour": number;
         /**
           * No bookings will be allowed within and after this hour. Default value is 18.
           * @type {number} - the hour (0-23)
+          * @default 18
          */
         "stopHour": number;
         /**
           * Translations object for translatable strings.
+          * @default {         book: 'Book',         cancel: 'Cancel',         booked: 'Booked'     }
          */
         "translations": {
         book: string;
@@ -396,6 +463,7 @@ export namespace Components {
     interface MiLocationInfo {
         /**
           * @description The word used for "Level" when showing level info. Default is "Level".
+          * @default 'Level'
          */
         "level": string;
         /**
@@ -404,10 +472,12 @@ export namespace Components {
         "location": any;
         /**
           * @description Whether to show the External ID.
+          * @default true
          */
         "showExternalId": boolean;
         /**
           * @description Whether to show the floor information. Default is true.
+          * @default true
          */
         "showFloor": boolean;
     }
@@ -420,6 +490,7 @@ export namespace Components {
         /**
           * Set to true to prevent external links on the map from opening. This can be useful when running the map on a kiosk where you never want the browser to navigate away.
           * @type {boolean}
+          * @default false
          */
         "disableExternalLinks": boolean;
         /**
@@ -455,11 +526,13 @@ export namespace Components {
         /**
           * The Google Maps API key.
           * @type {string}
+          * @default ''
          */
         "gmApiKey": string;
         /**
           * Google Maps options. Defaults to zoom: 17, maxZoom: 21, center: { lat: 0, lng: 0 }, mapTypeControl: false, streetViewControl: false. https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions
           * @type {google.maps.MapOptions}
+          * @default {         zoom: 17,         maxZoom: 21,         center: { lat: 0, lng: 0 },         mapTypeControl: false,         streetViewControl: false     }
          */
         "gmOptions": google.maps.MapOptions;
         /**
@@ -470,11 +543,13 @@ export namespace Components {
         "highlightLocation": (location: Location) => Promise<void>;
         /**
           * Set the component language. Default set to English (en). Will not react to changes.
+          * @default 'en'
          */
         "language": string;
         /**
           * The MapsIndoors API key.
           * @type {string}
+          * @default ''
          */
         "miApiKey": string;
         /**
@@ -485,11 +560,13 @@ export namespace Components {
         /**
           * Styling of polygon highlight when a location is clicked. Set it to null to turn off highlighting.
           * @type {object}
+          * @default {         strokeColor: '#EF6CCE',         strokeOpacity: 1,         strokeWeight: 2,         fillColor: '#EF6CCE',         fillOpacity: 0.2     }
          */
         "polygonHighlightOptions": { strokeColor: string; strokeOpacity: number; strokeWeight: number; fillColor: string; fillOpacity: number; };
         /**
           * Styling of how the polyline looks when getting a route. Color: The stroke color of direction polyline on the map. Accepts any legal HTML color value. Default: '#307ad9'. Opacity: The stroke opacity of directions polylines on the map. Numerical value between 0.0 and 1.0. Default: 1. Weight: The width of the direction polyline in pixels. Default: 4.
           * @type {{ color: string, weight: number, opacity: number }}
+          * @default {         color: '#3071d9',         opacity: 1,         weight: 4     }
          */
         "polylineOptions": { color: string, weight: number, opacity: number };
     }
@@ -502,6 +579,7 @@ export namespace Components {
         /**
           * Set or get the bearing of the map.
           * @type {string}
+          * @default '0'
          */
         "bearing": string;
         /**
@@ -512,6 +590,7 @@ export namespace Components {
         /**
           * Set to true to prevent external links on the map from opening. This can be useful when running the map on a kiosk where you never want the browser to navigate away.
           * @type {boolean}
+          * @default false
          */
         "disableExternalLinks": boolean;
         /**
@@ -552,21 +631,25 @@ export namespace Components {
         "highlightLocation": (location: Location) => Promise<void>;
         /**
           * Set the component language. Default set to English (en). Will not react to changes.
+          * @default 'en'
          */
         "language": string;
         /**
           * Set or get the max pitch of the map (0-85).
           * @type {number}
+          * @default 60
          */
         "maxPitch": number;
         /**
           * Set or get the max zoom level of the map.
           * @type {string}
+          * @default undefined
          */
         "maxZoom": string;
         /**
           * The MapsIndoors API key.
           * @type {string}
+          * @default ''
          */
         "miApiKey": string;
         /**
@@ -577,21 +660,25 @@ export namespace Components {
         /**
           * Set or get the pitch (tilt) of the map. Measured in degrees (0-60).
           * @type {string}
+          * @default '0'
          */
         "pitch": string;
         /**
           * Styling of polygon highlight when a location is clicked. Set it to null to turn off highlighting.
           * @type {object}
+          * @default {         strokeColor: '#EF6CCE',         strokeOpacity: 1,         strokeWeight: 2,         fillColor: '#EF6CCE',         fillOpacity: 0.2     }
          */
         "polygonHighlightOptions": { strokeColor: string; strokeOpacity: number; strokeWeight: number; fillColor: string; fillOpacity: number; };
         /**
           * Styling of how the polyline looks when getting a route. Color: The stroke color of direction polyline on the map. Accepts any legal HTML color value. Default: '#307ad9'. Opacity: The stroke opacity of directions polylines on the map. Numerical value between 0.0 and 1.0. Default: 1. Weight: The width of the direction polyline in pixels. Default: 4.
           * @type {{ color: string, weight: number, opacity: number }}
+          * @default {         color: '#3071d9',         opacity: 1,         weight: 4     }
          */
         "polylineOptions": { color: string, weight: number, opacity: number };
         /**
           * Set or get the current zoom level of the map.
           * @type {string}
+          * @default '17'
          */
         "zoom": string;
     }
@@ -606,12 +693,14 @@ export namespace Components {
           * This is the metric title.
           * @type {string}
           * @memberof MetricCard
+          * @default ''
          */
         "label": string;
         /**
           * When present a loading spinner will be displayed until the value or error attribute is set or the spinner attribute is removed
           * @type {boolean}
           * @memberof MetricCard
+          * @default false
          */
         "spinner": boolean;
         /**
@@ -624,6 +713,7 @@ export namespace Components {
           * This is the metric value.
           * @type {string}
           * @memberof MetricCard
+          * @default ''
          */
         "value": string;
     }
@@ -659,11 +749,13 @@ export namespace Components {
         /**
           * Time the notification should be visible. Default value is 3.
           * @type {number} - Duration in seconds.
+          * @default 3
          */
         "duration": number;
         /**
           * Where the notifications should be positioned.
           * @type {NotificationPosition}
+          * @default NotificationPosition.BOTTOM_RIGHT
          */
         "position": NotificationPosition;
         /**
@@ -679,6 +771,7 @@ export namespace Components {
         /**
           * Set active step to populate it with an "active" class. Defaults to legIndex 0 and stepIndex 0.
           * @type {{ legIndex: number, stepIndex: number }}
+          * @default {         legIndex: 0,         stepIndex: 0     }
          */
         "activeStep": { legIndex: number, stepIndex: number };
         /**
@@ -694,6 +787,7 @@ export namespace Components {
         /**
           * If indoor substeps/maneuvers should be hidden.
           * @type {boolean}
+          * @default false
          */
         "hideIndoorSubsteps": boolean;
         /**
@@ -713,16 +807,19 @@ export namespace Components {
         "route": Route;
         /**
           * Translations object for translatable labels.
+          * @default {         walk: 'Walk',         bike: 'Bike',         transit: 'Transit',         drive: 'Drive',         leave: 'Leave',         from: 'From',         park: 'Park',         at: 'at',         building: 'Building',         venue: 'Venue',         takeStaircaseToLevel: 'Take staircase to level',         takeLadderToLevel: 'Take the ladder to level',         takeElevatorToLevel: 'Take elevator to level',         takeEscalatorToLevel: 'Take escalator to level',         takeWheelchairLiftToLevel: 'Take wheelchair lift to level',         takeWheelchairRampToLevel: 'Take wheelchair ramp to level',         exit: 'Exit',         enter: 'Enter',         stops: 'stops',         andContinue: 'and continue',         continueStraightAhead: 'Continue straight ahead',         goLeft: 'Go left',         goSharpLeft: 'Go sharp left',         goSlightLeft: 'Go slight left',         goRight: 'Go right',         goSharpRight: 'Go sharp right',         goSlightRight: 'Go slight right',         turnAround: 'Turn around',         days: 'd',         hours: 'h',         minutes: 'min',         rideTheBus: 'Ride the bus'     }
          */
         "translations": DirectionsTranslations;
         /**
           * Set preferred travel mode. Defaults to "walking".
           * @type {RouteTravelMode} 'walking', 'bicycling', 'transit', 'driving'.
+          * @default RouteTravelMode.Walking
          */
         "travelMode": RouteTravelMode;
         /**
           * Set imperial or metric as default unit system.
           * @type {UnitSystem} 'imperial' or 'metric'
+          * @default UnitSystem.Metric
          */
         "unit": UnitSystem;
     }
@@ -747,15 +844,20 @@ export namespace Components {
           * @type {number}
          */
         "totalWalkingDistance": number;
+        /**
+          * @default {         from: 'From',         to: 'To',         avoidStairs: 'Avoid stairs',         walk: 'Walk',         walking: 'Walking',         bike: 'Bike',         bicycling: 'Bicycling',         transit: 'Transit',         car: 'Car',         driving: 'Driving'     }
+         */
         "translations": { from: string; to: string; avoidStairs: string; walk: string; walking: string; bike: string; bicycling: string; transit: string; car: string; driving: string; };
         /**
           * Set preferred travel mode. Defaults to "walking".
           * @type {RouteTravelMode} 'walking', 'bicycling', 'transit', 'driving'.
+          * @default RouteTravelMode.Walking
          */
         "travelMode": RouteTravelMode;
         /**
           * Set 'imperial' or 'metric' as default unit system.
           * @type {UnitSystem} 'imperial' or 'metric'
+          * @default UnitSystem.Metric
          */
         "unit": UnitSystem;
     }
@@ -772,6 +874,7 @@ export namespace Components {
         /**
           * Set imperial or metric as default unit system.
           * @type {UnitSystem} 'imperial' or 'metric'
+          * @default UnitSystem.Metric
          */
         "unit": UnitSystem;
     }
@@ -788,6 +891,7 @@ export namespace Components {
         /**
           * Set imperial or metric as default unit system.
           * @type {UnitSystem} 'imperial' or 'metric'
+          * @default UnitSystem.Metric
          */
         "unit": UnitSystem;
     }
@@ -799,6 +903,7 @@ export namespace Components {
         /**
           * The route context of previous step, if any.
           * @type {string}
+          * @default ''
          */
         "fromRouteContext": string;
         /**
@@ -814,6 +919,7 @@ export namespace Components {
         /**
           * If indoor substeps/maneuvers should be hidden.
           * @type {boolean}
+          * @default true
          */
         "hideIndoorSubsteps": boolean;
         /**
@@ -823,6 +929,7 @@ export namespace Components {
         /**
           * Indicates if it should show the toggle button.
           * @type {boolean}
+          * @default true
          */
         "showToggleButton": boolean;
         /**
@@ -836,6 +943,7 @@ export namespace Components {
         /**
           * Set imperial or metric as default unit system. Default is Metric unless the browser is running US English. In that case Imperial.
           * @type {UnitSystem}
+          * @default navigator.language === 'en-US' ? UnitSystem.Imperial : UnitSystem.Metric
          */
         "unit": UnitSystem;
     }
@@ -843,6 +951,7 @@ export namespace Components {
         /**
           * The route context of previous step, if any.
           * @type {string}
+          * @default ''
          */
         "fromRouteContext": string;
         /**
@@ -858,6 +967,7 @@ export namespace Components {
         /**
           * If indoor substeps/maneuvers should be hidden.
           * @type {boolean}
+          * @default true
          */
         "hideIndoorSubsteps": boolean;
         /**
@@ -871,6 +981,7 @@ export namespace Components {
         /**
           * Set imperial or metric as default unit system.
           * @type {UnitSystem} 'imperial' or 'metric'
+          * @default UnitSystem.Metric
          */
         "unit": UnitSystem;
     }
@@ -883,6 +994,7 @@ export namespace Components {
         /**
           * Determines how far to scroll when clicking one of the buttons. Default value is 100.
           * @type {number}
+          * @default 100
          */
         "scrollLength": number;
         /**
@@ -902,10 +1014,12 @@ export namespace Components {
         "clear": () => Promise<void>;
         /**
           * Data attributes for the input field.
+          * @default {}
          */
         "dataAttributes": { [key: string]: string };
         /**
           * Make the search field disabled
+          * @default false
          */
         "disabled": boolean;
         /**
@@ -922,22 +1036,27 @@ export namespace Components {
         "gmCountryCode": string;
         /**
           * If searching should include Google Places autocomplete suggestions.  Remember to comply to Google's policy by showing a "Power By Google" badge somewhere on your page if not already showing a Google map: https://developers.google.com/places/web-service/policies
+          * @default false
          */
         "google": boolean;
         /**
           * Id for the input field.
+          * @default ''
          */
         "idAttribute": string;
         /**
           * The language used when retrieving Google Places or Mapbox autocomplete suggestions.
+          * @default 'en'
          */
         "language": string;
         /**
           * If searching should include Mapbox autocomplete suggestions.
+          * @default false
          */
         "mapbox": boolean;
         /**
           * If searching should include MapsIndoors locations.
+          * @default false
          */
         "mapsindoors": boolean;
         /**
@@ -946,6 +1065,7 @@ export namespace Components {
         "miCategories": string;
         /**
           * Which fields on MapsIndoors locations to search in. Comma separated string.
+          * @default 'name,description,aliases,categories,externalId'
          */
         "miFields": string;
         /**
@@ -970,6 +1090,7 @@ export namespace Components {
         "miVenue": string;
         /**
           * Placeholder for the input field.
+          * @default ''
          */
         "placeholder": string;
         /**
@@ -997,6 +1118,7 @@ export namespace Components {
         /**
           * Default value for country code input field.
           * @type {string}
+          * @default '1'
          */
         "countryCode": string;
         /**
@@ -1012,11 +1134,13 @@ export namespace Components {
         /**
           * Placeholder text for phone number input field.
           * @type {string}
+          * @default 'Enter phone number'
          */
         "phoneNumberInputPlaceholder": string;
         /**
           * Label for submit button.
           * @type {string}
+          * @default 'Send SMS'
          */
         "submitButtonLabel": string;
         /**
@@ -1029,6 +1153,7 @@ export namespace Components {
         /**
           * The inverse attribute will inverse the color of the spinner.
           * @type {boolean}
+          * @default false
          */
         "inverse": boolean;
     }
@@ -1041,11 +1166,13 @@ export namespace Components {
         /**
           * Step index to show. Defaults to first step.
           * @type {number}
+          * @default 0
          */
         "stepIndex": number;
         /**
           * Steps to display dots for.
           * @type {any[]}
+          * @default []
          */
         "steps": any[];
     }
@@ -1057,9 +1184,13 @@ export namespace Components {
         "active": (active?: boolean) => Promise<boolean>;
     }
     interface MiTabs {
+        /**
+          * @default 0
+         */
         "active": number;
         /**
           * Sets a border surrounding the content view.
+          * @default false
          */
         "bordered": boolean;
     }
@@ -1158,19 +1289,52 @@ declare global {
         prototype: HTMLMiChipElement;
         new (): HTMLMiChipElement;
     };
+    interface HTMLMiColumnElementEventMap {
+        "clicked": object;
+    }
     interface HTMLMiColumnElement extends Components.MiColumn, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLMiColumnElementEventMap>(type: K, listener: (this: HTMLMiColumnElement, ev: MiColumnCustomEvent<HTMLMiColumnElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLMiColumnElementEventMap>(type: K, listener: (this: HTMLMiColumnElement, ev: MiColumnCustomEvent<HTMLMiColumnElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLMiColumnElement: {
         prototype: HTMLMiColumnElement;
         new (): HTMLMiColumnElement;
     };
+    interface HTMLMiComboBoxElementEventMap {
+        "change": any;
+    }
     interface HTMLMiComboBoxElement extends Components.MiComboBox, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLMiComboBoxElementEventMap>(type: K, listener: (this: HTMLMiComboBoxElement, ev: MiComboBoxCustomEvent<HTMLMiComboBoxElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLMiComboBoxElementEventMap>(type: K, listener: (this: HTMLMiComboBoxElement, ev: MiComboBoxCustomEvent<HTMLMiComboBoxElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLMiComboBoxElement: {
         prototype: HTMLMiComboBoxElement;
         new (): HTMLMiComboBoxElement;
     };
+    interface HTMLMiDataTableElementEventMap {
+        "selectionChanged": object;
+    }
     interface HTMLMiDataTableElement extends Components.MiDataTable, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLMiDataTableElementEventMap>(type: K, listener: (this: HTMLMiDataTableElement, ev: MiDataTableCustomEvent<HTMLMiDataTableElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLMiDataTableElementEventMap>(type: K, listener: (this: HTMLMiDataTableElement, ev: MiDataTableCustomEvent<HTMLMiDataTableElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLMiDataTableElement: {
         prototype: HTMLMiDataTableElement;
@@ -1182,7 +1346,19 @@ declare global {
         prototype: HTMLMiDistanceElement;
         new (): HTMLMiDistanceElement;
     };
+    interface HTMLMiDropdownElementEventMap {
+        "change": any;
+        "cleared": void;
+    }
     interface HTMLMiDropdownElement extends Components.MiDropdown, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLMiDropdownElementEventMap>(type: K, listener: (this: HTMLMiDropdownElement, ev: MiDropdownCustomEvent<HTMLMiDropdownElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLMiDropdownElementEventMap>(type: K, listener: (this: HTMLMiDropdownElement, ev: MiDropdownCustomEvent<HTMLMiDropdownElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLMiDropdownElement: {
         prototype: HTMLMiDropdownElement;
@@ -1218,19 +1394,57 @@ declare global {
         prototype: HTMLMiListElement;
         new (): HTMLMiListElement;
     };
+    interface HTMLMiListItemCategoryElementEventMap {
+        "categoryClicked": any;
+        "listItemDidRender": any;
+    }
     interface HTMLMiListItemCategoryElement extends Components.MiListItemCategory, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLMiListItemCategoryElementEventMap>(type: K, listener: (this: HTMLMiListItemCategoryElement, ev: MiListItemCategoryCustomEvent<HTMLMiListItemCategoryElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLMiListItemCategoryElementEventMap>(type: K, listener: (this: HTMLMiListItemCategoryElement, ev: MiListItemCategoryCustomEvent<HTMLMiListItemCategoryElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLMiListItemCategoryElement: {
         prototype: HTMLMiListItemCategoryElement;
         new (): HTMLMiListItemCategoryElement;
     };
+    interface HTMLMiListItemLocationElementEventMap {
+        "locationClicked": any;
+        "listItemDidRender": any;
+    }
     interface HTMLMiListItemLocationElement extends Components.MiListItemLocation, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLMiListItemLocationElementEventMap>(type: K, listener: (this: HTMLMiListItemLocationElement, ev: MiListItemLocationCustomEvent<HTMLMiListItemLocationElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLMiListItemLocationElementEventMap>(type: K, listener: (this: HTMLMiListItemLocationElement, ev: MiListItemLocationCustomEvent<HTMLMiListItemLocationElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLMiListItemLocationElement: {
         prototype: HTMLMiListItemLocationElement;
         new (): HTMLMiListItemLocationElement;
     };
+    interface HTMLMiLocationBookingElementEventMap {
+        "bookingCompleted": object;
+        "bookingFailed": Error;
+        "cancelCompleted": void;
+        "cancelFailed": Error;
+    }
     interface HTMLMiLocationBookingElement extends Components.MiLocationBooking, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLMiLocationBookingElementEventMap>(type: K, listener: (this: HTMLMiLocationBookingElement, ev: MiLocationBookingCustomEvent<HTMLMiLocationBookingElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLMiLocationBookingElementEventMap>(type: K, listener: (this: HTMLMiLocationBookingElement, ev: MiLocationBookingCustomEvent<HTMLMiLocationBookingElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLMiLocationBookingElement: {
         prototype: HTMLMiLocationBookingElement;
@@ -1242,13 +1456,35 @@ declare global {
         prototype: HTMLMiLocationInfoElement;
         new (): HTMLMiLocationInfoElement;
     };
+    interface HTMLMiMapGooglemapsElementEventMap {
+        "mapsIndoorsReady": any;
+    }
     interface HTMLMiMapGooglemapsElement extends Components.MiMapGooglemaps, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLMiMapGooglemapsElementEventMap>(type: K, listener: (this: HTMLMiMapGooglemapsElement, ev: MiMapGooglemapsCustomEvent<HTMLMiMapGooglemapsElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLMiMapGooglemapsElementEventMap>(type: K, listener: (this: HTMLMiMapGooglemapsElement, ev: MiMapGooglemapsCustomEvent<HTMLMiMapGooglemapsElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLMiMapGooglemapsElement: {
         prototype: HTMLMiMapGooglemapsElement;
         new (): HTMLMiMapGooglemapsElement;
     };
+    interface HTMLMiMapMapboxElementEventMap {
+        "mapsIndoorsReady": any;
+    }
     interface HTMLMiMapMapboxElement extends Components.MiMapMapbox, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLMiMapMapboxElementEventMap>(type: K, listener: (this: HTMLMiMapMapboxElement, ev: MiMapMapboxCustomEvent<HTMLMiMapMapboxElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLMiMapMapboxElementEventMap>(type: K, listener: (this: HTMLMiMapMapboxElement, ev: MiMapMapboxCustomEvent<HTMLMiMapMapboxElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLMiMapMapboxElement: {
         prototype: HTMLMiMapMapboxElement;
@@ -1260,7 +1496,19 @@ declare global {
         prototype: HTMLMiMetricCardElement;
         new (): HTMLMiMetricCardElement;
     };
+    interface HTMLMiMyPositionElementEventMap {
+        "position_error": object;
+        "position_received": object;
+    }
     interface HTMLMiMyPositionElement extends Components.MiMyPosition, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLMiMyPositionElementEventMap>(type: K, listener: (this: HTMLMiMyPositionElement, ev: MiMyPositionCustomEvent<HTMLMiMyPositionElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLMiMyPositionElementEventMap>(type: K, listener: (this: HTMLMiMyPositionElement, ev: MiMyPositionCustomEvent<HTMLMiMyPositionElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLMiMyPositionElement: {
         prototype: HTMLMiMyPositionElement;
@@ -1272,7 +1520,18 @@ declare global {
         prototype: HTMLMiNotificationElement;
         new (): HTMLMiNotificationElement;
     };
+    interface HTMLMiRouteInstructionsElementEventMap {
+        "clicked": object;
+    }
     interface HTMLMiRouteInstructionsElement extends Components.MiRouteInstructions, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLMiRouteInstructionsElementEventMap>(type: K, listener: (this: HTMLMiRouteInstructionsElement, ev: MiRouteInstructionsCustomEvent<HTMLMiRouteInstructionsElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLMiRouteInstructionsElementEventMap>(type: K, listener: (this: HTMLMiRouteInstructionsElement, ev: MiRouteInstructionsCustomEvent<HTMLMiRouteInstructionsElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLMiRouteInstructionsElement: {
         prototype: HTMLMiRouteInstructionsElement;
@@ -1296,13 +1555,36 @@ declare global {
         prototype: HTMLMiRouteInstructionsManeuverLegacyElement;
         new (): HTMLMiRouteInstructionsManeuverLegacyElement;
     };
+    interface HTMLMiRouteInstructionsStepElementEventMap {
+        "stepClicked": object;
+        "substepsToggled": void;
+    }
     interface HTMLMiRouteInstructionsStepElement extends Components.MiRouteInstructionsStep, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLMiRouteInstructionsStepElementEventMap>(type: K, listener: (this: HTMLMiRouteInstructionsStepElement, ev: MiRouteInstructionsStepCustomEvent<HTMLMiRouteInstructionsStepElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLMiRouteInstructionsStepElementEventMap>(type: K, listener: (this: HTMLMiRouteInstructionsStepElement, ev: MiRouteInstructionsStepCustomEvent<HTMLMiRouteInstructionsStepElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLMiRouteInstructionsStepElement: {
         prototype: HTMLMiRouteInstructionsStepElement;
         new (): HTMLMiRouteInstructionsStepElement;
     };
+    interface HTMLMiRouteInstructionsStepLegacyElementEventMap {
+        "stepClicked": object;
+    }
     interface HTMLMiRouteInstructionsStepLegacyElement extends Components.MiRouteInstructionsStepLegacy, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLMiRouteInstructionsStepLegacyElementEventMap>(type: K, listener: (this: HTMLMiRouteInstructionsStepLegacyElement, ev: MiRouteInstructionsStepLegacyCustomEvent<HTMLMiRouteInstructionsStepLegacyElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLMiRouteInstructionsStepLegacyElementEventMap>(type: K, listener: (this: HTMLMiRouteInstructionsStepLegacyElement, ev: MiRouteInstructionsStepLegacyCustomEvent<HTMLMiRouteInstructionsStepLegacyElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLMiRouteInstructionsStepLegacyElement: {
         prototype: HTMLMiRouteInstructionsStepLegacyElement;
@@ -1314,13 +1596,40 @@ declare global {
         prototype: HTMLMiScrollButtonsElement;
         new (): HTMLMiScrollButtonsElement;
     };
+    interface HTMLMiSearchElementEventMap {
+        "results": object[];
+        "cleared": void;
+        "componentRendered": void;
+        "shortInput": void;
+        "changed": void;
+    }
     interface HTMLMiSearchElement extends Components.MiSearch, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLMiSearchElementEventMap>(type: K, listener: (this: HTMLMiSearchElement, ev: MiSearchCustomEvent<HTMLMiSearchElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLMiSearchElementEventMap>(type: K, listener: (this: HTMLMiSearchElement, ev: MiSearchCustomEvent<HTMLMiSearchElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLMiSearchElement: {
         prototype: HTMLMiSearchElement;
         new (): HTMLMiSearchElement;
     };
+    interface HTMLMiShareSmsElementEventMap {
+        "successfullySent": any;
+        "unsuccessfullySent": string;
+    }
     interface HTMLMiShareSmsElement extends Components.MiShareSms, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLMiShareSmsElementEventMap>(type: K, listener: (this: HTMLMiShareSmsElement, ev: MiShareSmsCustomEvent<HTMLMiShareSmsElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLMiShareSmsElementEventMap>(type: K, listener: (this: HTMLMiShareSmsElement, ev: MiShareSmsCustomEvent<HTMLMiShareSmsElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLMiShareSmsElement: {
         prototype: HTMLMiShareSmsElement;
@@ -1332,7 +1641,18 @@ declare global {
         prototype: HTMLMiSpinnerElement;
         new (): HTMLMiSpinnerElement;
     };
+    interface HTMLMiStepSwitcherElementEventMap {
+        "stepIndexChanged": number;
+    }
     interface HTMLMiStepSwitcherElement extends Components.MiStepSwitcher, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLMiStepSwitcherElementEventMap>(type: K, listener: (this: HTMLMiStepSwitcherElement, ev: MiStepSwitcherCustomEvent<HTMLMiStepSwitcherElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLMiStepSwitcherElementEventMap>(type: K, listener: (this: HTMLMiStepSwitcherElement, ev: MiStepSwitcherCustomEvent<HTMLMiStepSwitcherElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLMiStepSwitcherElement: {
         prototype: HTMLMiStepSwitcherElement;
@@ -1403,9 +1723,20 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    type OneOf<K extends string, PropT, AttrT = PropT> = { [P in K]: PropT } & { [P in `attr:${K}` | `prop:${K}`]?: never } | { [P in `attr:${K}`]: AttrT } & { [P in K | `prop:${K}`]?: never } | { [P in `prop:${K}`]: PropT } & { [P in K | `attr:${K}`]?: never };
+
     interface ComboBoxItem {
+        /**
+          * @default false
+         */
         "disabled"?: boolean;
+        /**
+          * @default false
+         */
         "excludefromall"?: boolean;
+        /**
+          * @default false
+         */
         "selected"?: boolean;
         "text"?: string;
         "value"?: string;
@@ -1416,11 +1747,13 @@ declare namespace LocalJSX {
         /**
           * Checks if the chip is active and applies different styling to the component.
           * @type {boolean}
+          * @default false
          */
         "active"?: boolean;
         /**
           * The background color of the chip. The default #005655 HEX value refers to the --brand-colors-dark-pine-100 from MIDT
           * @type {string}
+          * @default '#005655'
          */
         "backgroundColor"?: string;
         /**
@@ -1453,6 +1786,7 @@ declare namespace LocalJSX {
           * If present, the column width is fitted the content.
           * @type {boolean}
           * @memberof Column
+          * @default false
          */
         "fitContent"?: boolean;
         /**
@@ -1465,6 +1799,7 @@ declare namespace LocalJSX {
           * The monospace property sets the font-family to monospace.
           * @type {boolean}
           * @memberof Column
+          * @default false
          */
         "monospace"?: boolean;
         /**
@@ -1497,17 +1832,20 @@ declare namespace LocalJSX {
     interface MiComboBox {
         /**
           * Sets the disabled state for the dropdown.
+          * @default false
          */
         "disabled"?: boolean;
         /**
           * This attribute indicates that the items can be filtered using the input field present at the top. If it is not specified, the input field will not be visible, and filtering is not possible.
           * @type {boolean}
+          * @default false
          */
         "filterable"?: boolean;
         /**
           * Gets or sets the list items.
           * @type {Array<HTMLMiDropdownItemElement>}
-          * @returns
+          * @returns 
+          * @default []
          */
         "items"?: Array<HTMLMiDropdownItemElement>;
         /**
@@ -1517,6 +1855,7 @@ declare namespace LocalJSX {
         "itemsOrder"?: SortOrder;
         /**
           * Guiding message when presented with a content window that has no rows. Default language is English.
+          * @default 'No results found'
          */
         "noResultsMessage"?: string;
         /**
@@ -1527,17 +1866,20 @@ declare namespace LocalJSX {
         /**
           * Gets or sets the state of the dropdown. If the attribute is set to true then the dropdown will be expanded.
           * @type {boolean}
+          * @default false
          */
         "open"?: boolean;
         /**
           * Gets the selected items.
           * @type {Array<HTMLMiDropdownItemElement>}
+          * @default []
          */
         "selected"?: Array<HTMLMiDropdownItemElement>;
     }
     interface MiDataTable {
         /**
           * Guiding message when presented with a table that has no rows.
+          * @default 'No results found'
          */
         "emptyPageHeader"?: string;
         /**
@@ -1546,6 +1888,7 @@ declare namespace LocalJSX {
         "emptyPageSubheader"?: string;
         /**
           * Whether or not the table header should be sticky.
+          * @default true
          */
         "isHeaderSticky"?: boolean;
         /**
@@ -1563,14 +1906,17 @@ declare namespace LocalJSX {
         "page"?: number;
         /**
           * Array of objects for each row in the table.
+          * @default []
          */
         "rows"?: Array<any>;
         /**
           * The selectable attribute specifies whether the first column in the table should be checkboxes. The header will be a select all or none checkbox.
+          * @default false
          */
         "selectable"?: boolean;
         /**
           * The selected property contains a Set of all selected rows. This property is only relevant if the selectable attribute is present.
+          * @default new Set()
          */
         "selected"?: Set<any>;
     }
@@ -1583,22 +1929,26 @@ declare namespace LocalJSX {
         /**
           * Set imperial or metric as default unit system. Default is Metric unless the browser is running US English. In that case Imperial.
           * @type {UnitSystem}
+          * @default navigator.language === 'en-US' ? UnitSystem.Imperial : UnitSystem.Metric
          */
         "unit"?: UnitSystem;
     }
     interface MiDropdown {
         /**
           * Sets the disabled state for the dropdown.
+          * @default false
          */
         "disabled"?: boolean;
         /**
           * Sets the alignment of the dropdown. The default alignment is 'left'.
           * @type {('right' | 'left')}
+          * @default 'left'
          */
         "dropdownAlignment"?: 'right' | 'left';
         /**
           * This attribute indicates that the items can be filtered using the input field present at the top. If it is not specified, the input field will not be visible, and filtering is not possible.
           * @type {boolean}
+          * @default false
          */
         "filterable"?: boolean;
         /**
@@ -1612,6 +1962,7 @@ declare namespace LocalJSX {
         /**
           * Gets or sets the list items.
           * @type {Array<HTMLMiDropdownItemElement>}
+          * @default []
          */
         "items"?: Array<HTMLMiDropdownItemElement>;
         /**
@@ -1627,10 +1978,12 @@ declare namespace LocalJSX {
         /**
           * This attribute indicates that multiple items can be selected in the list. If it is not specified, then only one item can be selected at a time.
           * @type {boolean}
+          * @default false
          */
         "multiple"?: boolean;
         /**
           * Guiding message when presented with a content window that has no rows. Default language is English.
+          * @default 'No results found'
          */
         "noResultsMessage"?: string;
         /**
@@ -1645,22 +1998,34 @@ declare namespace LocalJSX {
         /**
           * Gets or sets the state of the dropdown. If the attribute is set to true then the dropdown will be expanded.
           * @type {boolean}
+          * @default false
          */
         "open"?: boolean;
         /**
           * If present, it dictates placeholder for an filterable input field in the dropdown. Defaults to 'Type to filter...'.
           * @type {string}
+          * @default 'Type to filter...'
          */
         "placeholder"?: string;
         /**
           * Gets the selected items.
           * @type {Array<HTMLMiDropdownItemElement>}
+          * @default []
          */
         "selected"?: Array<HTMLMiDropdownItemElement>;
     }
     interface MiDropdownItem {
+        /**
+          * @default false
+         */
         "disabled"?: boolean;
+        /**
+          * @default false
+         */
         "excludefromall"?: boolean;
+        /**
+          * @default false
+         */
         "selected"?: boolean;
         "text"?: string;
         "value"?: string;
@@ -1673,6 +2038,7 @@ declare namespace LocalJSX {
         /**
           * The color to use as the primary color (as background color of the selected floor in the list).
           * @type {string}
+          * @default '#005655'
          */
         "primaryColor"?: string;
     }
@@ -1696,6 +2062,7 @@ declare namespace LocalJSX {
         /**
           * The keyboard layout to use. Defaults to alphabetic.
           * @type {KeyboardLayout}
+          * @default KeyboardLayout.Alphabetic
          */
         "layout"?: string;
     }
@@ -1703,11 +2070,13 @@ declare namespace LocalJSX {
         /**
           * @description Determines if the MI Scroll Buttons Component should be rendered.
           * @type {boolean}
+          * @default false
          */
         "scrollButtonsEnabled"?: boolean;
         /**
           * @description Determines how far to scroll when clicking one of the buttons from the MI Scroll Buttons Component.
           * @type {number}
+          * @default 100
          */
         "scrollLength"?: number;
     }
@@ -1730,6 +2099,7 @@ declare namespace LocalJSX {
         /**
           * @description List orientation. Accepts the following values: 'vertical' and 'horizontal'.
           * @type {string}
+          * @default 'vertical'
          */
         "orientation"?: string;
     }
@@ -1751,6 +2121,7 @@ declare namespace LocalJSX {
         "iconBadgeValue"?: string;
         /**
           * @description The word used for "Level" when showing level info. Default is "Level".
+          * @default 'Level'
          */
         "level"?: string;
         /**
@@ -1769,6 +2140,7 @@ declare namespace LocalJSX {
         "onLocationClicked"?: (event: MiListItemLocationCustomEvent<any>) => void;
         /**
           * Whether to show the External ID.
+          * @default true
          */
         "showExternalId"?: boolean;
         /**
@@ -1781,11 +2153,13 @@ declare namespace LocalJSX {
         /**
           * The title of the created bookings. Defaults to "Booked".
           * @type {string}
+          * @default 'Booked'
          */
         "bookingTitle"?: string;
         /**
           * Wether booking should be performed for 30 or 60 minutes.
           * @type {LocationBookingDuration}
+          * @default LocationBookingDuration.min30
          */
         "duration"?: LocationBookingDuration;
         /**
@@ -1817,20 +2191,24 @@ declare namespace LocalJSX {
         "onCancelFailed"?: (event: MiLocationBookingCustomEvent<Error>) => void;
         /**
           * How many time slots to show going forward in time. Default to 4.
+          * @default 4
          */
         "show"?: number;
         /**
           * No bookings will be allowed before this hour. Default value is 8.
           * @type {number} - the hour in 24h format
+          * @default 8
          */
         "startHour"?: number;
         /**
           * No bookings will be allowed within and after this hour. Default value is 18.
           * @type {number} - the hour (0-23)
+          * @default 18
          */
         "stopHour"?: number;
         /**
           * Translations object for translatable strings.
+          * @default {         book: 'Book',         cancel: 'Cancel',         booked: 'Booked'     }
          */
         "translations"?: {
         book: string;
@@ -1841,6 +2219,7 @@ declare namespace LocalJSX {
     interface MiLocationInfo {
         /**
           * @description The word used for "Level" when showing level info. Default is "Level".
+          * @default 'Level'
          */
         "level"?: string;
         /**
@@ -1849,10 +2228,12 @@ declare namespace LocalJSX {
         "location"?: any;
         /**
           * @description Whether to show the External ID.
+          * @default true
          */
         "showExternalId"?: boolean;
         /**
           * @description Whether to show the floor information. Default is true.
+          * @default true
          */
         "showFloor"?: boolean;
     }
@@ -1860,6 +2241,7 @@ declare namespace LocalJSX {
         /**
           * Set to true to prevent external links on the map from opening. This can be useful when running the map on a kiosk where you never want the browser to navigate away.
           * @type {boolean}
+          * @default false
          */
         "disableExternalLinks"?: boolean;
         /**
@@ -1875,20 +2257,24 @@ declare namespace LocalJSX {
         /**
           * The Google Maps API key.
           * @type {string}
+          * @default ''
          */
         "gmApiKey"?: string;
         /**
           * Google Maps options. Defaults to zoom: 17, maxZoom: 21, center: { lat: 0, lng: 0 }, mapTypeControl: false, streetViewControl: false. https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions
           * @type {google.maps.MapOptions}
+          * @default {         zoom: 17,         maxZoom: 21,         center: { lat: 0, lng: 0 },         mapTypeControl: false,         streetViewControl: false     }
          */
         "gmOptions"?: google.maps.MapOptions;
         /**
           * Set the component language. Default set to English (en). Will not react to changes.
+          * @default 'en'
          */
         "language"?: string;
         /**
           * The MapsIndoors API key.
           * @type {string}
+          * @default ''
          */
         "miApiKey"?: string;
         /**
@@ -1905,11 +2291,13 @@ declare namespace LocalJSX {
         /**
           * Styling of polygon highlight when a location is clicked. Set it to null to turn off highlighting.
           * @type {object}
+          * @default {         strokeColor: '#EF6CCE',         strokeOpacity: 1,         strokeWeight: 2,         fillColor: '#EF6CCE',         fillOpacity: 0.2     }
          */
         "polygonHighlightOptions"?: { strokeColor: string; strokeOpacity: number; strokeWeight: number; fillColor: string; fillOpacity: number; };
         /**
           * Styling of how the polyline looks when getting a route. Color: The stroke color of direction polyline on the map. Accepts any legal HTML color value. Default: '#307ad9'. Opacity: The stroke opacity of directions polylines on the map. Numerical value between 0.0 and 1.0. Default: 1. Weight: The width of the direction polyline in pixels. Default: 4.
           * @type {{ color: string, weight: number, opacity: number }}
+          * @default {         color: '#3071d9',         opacity: 1,         weight: 4     }
          */
         "polylineOptions"?: { color: string, weight: number, opacity: number };
     }
@@ -1922,11 +2310,13 @@ declare namespace LocalJSX {
         /**
           * Set or get the bearing of the map.
           * @type {string}
+          * @default '0'
          */
         "bearing"?: string;
         /**
           * Set to true to prevent external links on the map from opening. This can be useful when running the map on a kiosk where you never want the browser to navigate away.
           * @type {boolean}
+          * @default false
          */
         "disableExternalLinks"?: boolean;
         /**
@@ -1941,21 +2331,25 @@ declare namespace LocalJSX {
         "floorSelectorControlPosition"?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
         /**
           * Set the component language. Default set to English (en). Will not react to changes.
+          * @default 'en'
          */
         "language"?: string;
         /**
           * Set or get the max pitch of the map (0-85).
           * @type {number}
+          * @default 60
          */
         "maxPitch"?: number;
         /**
           * Set or get the max zoom level of the map.
           * @type {string}
+          * @default undefined
          */
         "maxZoom"?: string;
         /**
           * The MapsIndoors API key.
           * @type {string}
+          * @default ''
          */
         "miApiKey"?: string;
         /**
@@ -1972,21 +2366,25 @@ declare namespace LocalJSX {
         /**
           * Set or get the pitch (tilt) of the map. Measured in degrees (0-60).
           * @type {string}
+          * @default '0'
          */
         "pitch"?: string;
         /**
           * Styling of polygon highlight when a location is clicked. Set it to null to turn off highlighting.
           * @type {object}
+          * @default {         strokeColor: '#EF6CCE',         strokeOpacity: 1,         strokeWeight: 2,         fillColor: '#EF6CCE',         fillOpacity: 0.2     }
          */
         "polygonHighlightOptions"?: { strokeColor: string; strokeOpacity: number; strokeWeight: number; fillColor: string; fillOpacity: number; };
         /**
           * Styling of how the polyline looks when getting a route. Color: The stroke color of direction polyline on the map. Accepts any legal HTML color value. Default: '#307ad9'. Opacity: The stroke opacity of directions polylines on the map. Numerical value between 0.0 and 1.0. Default: 1. Weight: The width of the direction polyline in pixels. Default: 4.
           * @type {{ color: string, weight: number, opacity: number }}
+          * @default {         color: '#3071d9',         opacity: 1,         weight: 4     }
          */
         "polylineOptions"?: { color: string, weight: number, opacity: number };
         /**
           * Set or get the current zoom level of the map.
           * @type {string}
+          * @default '17'
          */
         "zoom"?: string;
     }
@@ -2001,12 +2399,14 @@ declare namespace LocalJSX {
           * This is the metric title.
           * @type {string}
           * @memberof MetricCard
+          * @default ''
          */
         "label"?: string;
         /**
           * When present a loading spinner will be displayed until the value or error attribute is set or the spinner attribute is removed
           * @type {boolean}
           * @memberof MetricCard
+          * @default false
          */
         "spinner"?: boolean;
         /**
@@ -2019,6 +2419,7 @@ declare namespace LocalJSX {
           * This is the metric value.
           * @type {string}
           * @memberof MetricCard
+          * @default ''
          */
         "value"?: string;
     }
@@ -2042,11 +2443,13 @@ declare namespace LocalJSX {
         /**
           * Time the notification should be visible. Default value is 3.
           * @type {number} - Duration in seconds.
+          * @default 3
          */
         "duration"?: number;
         /**
           * Where the notifications should be positioned.
           * @type {NotificationPosition}
+          * @default NotificationPosition.BOTTOM_RIGHT
          */
         "position"?: NotificationPosition;
     }
@@ -2054,6 +2457,7 @@ declare namespace LocalJSX {
         /**
           * Set active step to populate it with an "active" class. Defaults to legIndex 0 and stepIndex 0.
           * @type {{ legIndex: number, stepIndex: number }}
+          * @default {         legIndex: 0,         stepIndex: 0     }
          */
         "activeStep"?: { legIndex: number, stepIndex: number };
         /**
@@ -2069,6 +2473,7 @@ declare namespace LocalJSX {
         /**
           * If indoor substeps/maneuvers should be hidden.
           * @type {boolean}
+          * @default false
          */
         "hideIndoorSubsteps"?: boolean;
         /**
@@ -2097,16 +2502,19 @@ declare namespace LocalJSX {
         "route"?: Route;
         /**
           * Translations object for translatable labels.
+          * @default {         walk: 'Walk',         bike: 'Bike',         transit: 'Transit',         drive: 'Drive',         leave: 'Leave',         from: 'From',         park: 'Park',         at: 'at',         building: 'Building',         venue: 'Venue',         takeStaircaseToLevel: 'Take staircase to level',         takeLadderToLevel: 'Take the ladder to level',         takeElevatorToLevel: 'Take elevator to level',         takeEscalatorToLevel: 'Take escalator to level',         takeWheelchairLiftToLevel: 'Take wheelchair lift to level',         takeWheelchairRampToLevel: 'Take wheelchair ramp to level',         exit: 'Exit',         enter: 'Enter',         stops: 'stops',         andContinue: 'and continue',         continueStraightAhead: 'Continue straight ahead',         goLeft: 'Go left',         goSharpLeft: 'Go sharp left',         goSlightLeft: 'Go slight left',         goRight: 'Go right',         goSharpRight: 'Go sharp right',         goSlightRight: 'Go slight right',         turnAround: 'Turn around',         days: 'd',         hours: 'h',         minutes: 'min',         rideTheBus: 'Ride the bus'     }
          */
         "translations"?: DirectionsTranslations;
         /**
           * Set preferred travel mode. Defaults to "walking".
           * @type {RouteTravelMode} 'walking', 'bicycling', 'transit', 'driving'.
+          * @default RouteTravelMode.Walking
          */
         "travelMode"?: RouteTravelMode;
         /**
           * Set imperial or metric as default unit system.
           * @type {UnitSystem} 'imperial' or 'metric'
+          * @default UnitSystem.Metric
          */
         "unit"?: UnitSystem;
     }
@@ -2131,15 +2539,20 @@ declare namespace LocalJSX {
           * @type {number}
          */
         "totalWalkingDistance"?: number;
+        /**
+          * @default {         from: 'From',         to: 'To',         avoidStairs: 'Avoid stairs',         walk: 'Walk',         walking: 'Walking',         bike: 'Bike',         bicycling: 'Bicycling',         transit: 'Transit',         car: 'Car',         driving: 'Driving'     }
+         */
         "translations"?: { from: string; to: string; avoidStairs: string; walk: string; walking: string; bike: string; bicycling: string; transit: string; car: string; driving: string; };
         /**
           * Set preferred travel mode. Defaults to "walking".
           * @type {RouteTravelMode} 'walking', 'bicycling', 'transit', 'driving'.
+          * @default RouteTravelMode.Walking
          */
         "travelMode"?: RouteTravelMode;
         /**
           * Set 'imperial' or 'metric' as default unit system.
           * @type {UnitSystem} 'imperial' or 'metric'
+          * @default UnitSystem.Metric
          */
         "unit"?: UnitSystem;
     }
@@ -2156,6 +2569,7 @@ declare namespace LocalJSX {
         /**
           * Set imperial or metric as default unit system.
           * @type {UnitSystem} 'imperial' or 'metric'
+          * @default UnitSystem.Metric
          */
         "unit"?: UnitSystem;
     }
@@ -2172,6 +2586,7 @@ declare namespace LocalJSX {
         /**
           * Set imperial or metric as default unit system.
           * @type {UnitSystem} 'imperial' or 'metric'
+          * @default UnitSystem.Metric
          */
         "unit"?: UnitSystem;
     }
@@ -2179,6 +2594,7 @@ declare namespace LocalJSX {
         /**
           * The route context of previous step, if any.
           * @type {string}
+          * @default ''
          */
         "fromRouteContext"?: string;
         /**
@@ -2194,6 +2610,7 @@ declare namespace LocalJSX {
         /**
           * If indoor substeps/maneuvers should be hidden.
           * @type {boolean}
+          * @default true
          */
         "hideIndoorSubsteps"?: boolean;
         /**
@@ -2209,6 +2626,7 @@ declare namespace LocalJSX {
         /**
           * Indicates if it should show the toggle button.
           * @type {boolean}
+          * @default true
          */
         "showToggleButton"?: boolean;
         /**
@@ -2222,6 +2640,7 @@ declare namespace LocalJSX {
         /**
           * Set imperial or metric as default unit system. Default is Metric unless the browser is running US English. In that case Imperial.
           * @type {UnitSystem}
+          * @default navigator.language === 'en-US' ? UnitSystem.Imperial : UnitSystem.Metric
          */
         "unit"?: UnitSystem;
     }
@@ -2229,6 +2648,7 @@ declare namespace LocalJSX {
         /**
           * The route context of previous step, if any.
           * @type {string}
+          * @default ''
          */
         "fromRouteContext"?: string;
         /**
@@ -2244,6 +2664,7 @@ declare namespace LocalJSX {
         /**
           * If indoor substeps/maneuvers should be hidden.
           * @type {boolean}
+          * @default true
          */
         "hideIndoorSubsteps"?: boolean;
         /**
@@ -2264,6 +2685,7 @@ declare namespace LocalJSX {
         /**
           * Set imperial or metric as default unit system.
           * @type {UnitSystem} 'imperial' or 'metric'
+          * @default UnitSystem.Metric
          */
         "unit"?: UnitSystem;
     }
@@ -2276,16 +2698,19 @@ declare namespace LocalJSX {
         /**
           * Determines how far to scroll when clicking one of the buttons. Default value is 100.
           * @type {number}
+          * @default 100
          */
         "scrollLength"?: number;
     }
     interface MiSearch {
         /**
           * Data attributes for the input field.
+          * @default {}
          */
         "dataAttributes"?: { [key: string]: string };
         /**
           * Make the search field disabled
+          * @default false
          */
         "disabled"?: boolean;
         /**
@@ -2294,22 +2719,27 @@ declare namespace LocalJSX {
         "gmCountryCode"?: string;
         /**
           * If searching should include Google Places autocomplete suggestions.  Remember to comply to Google's policy by showing a "Power By Google" badge somewhere on your page if not already showing a Google map: https://developers.google.com/places/web-service/policies
+          * @default false
          */
         "google"?: boolean;
         /**
           * Id for the input field.
+          * @default ''
          */
         "idAttribute"?: string;
         /**
           * The language used when retrieving Google Places or Mapbox autocomplete suggestions.
+          * @default 'en'
          */
         "language"?: string;
         /**
           * If searching should include Mapbox autocomplete suggestions.
+          * @default false
          */
         "mapbox"?: boolean;
         /**
           * If searching should include MapsIndoors locations.
+          * @default false
          */
         "mapsindoors"?: boolean;
         /**
@@ -2318,6 +2748,7 @@ declare namespace LocalJSX {
         "miCategories"?: string;
         /**
           * Which fields on MapsIndoors locations to search in. Comma separated string.
+          * @default 'name,description,aliases,categories,externalId'
          */
         "miFields"?: string;
         /**
@@ -2362,6 +2793,7 @@ declare namespace LocalJSX {
         "onShortInput"?: (event: MiSearchCustomEvent<void>) => void;
         /**
           * Placeholder for the input field.
+          * @default ''
          */
         "placeholder"?: string;
         /**
@@ -2381,6 +2813,7 @@ declare namespace LocalJSX {
         /**
           * Default value for country code input field.
           * @type {string}
+          * @default '1'
          */
         "countryCode"?: string;
         /**
@@ -2406,11 +2839,13 @@ declare namespace LocalJSX {
         /**
           * Placeholder text for phone number input field.
           * @type {string}
+          * @default 'Enter phone number'
          */
         "phoneNumberInputPlaceholder"?: string;
         /**
           * Label for submit button.
           * @type {string}
+          * @default 'Send SMS'
          */
         "submitButtonLabel"?: string;
         /**
@@ -2423,6 +2858,7 @@ declare namespace LocalJSX {
         /**
           * The inverse attribute will inverse the color of the spinner.
           * @type {boolean}
+          * @default false
          */
         "inverse"?: boolean;
     }
@@ -2440,11 +2876,13 @@ declare namespace LocalJSX {
         /**
           * Step index to show. Defaults to first step.
           * @type {number}
+          * @default 0
          */
         "stepIndex"?: number;
         /**
           * Steps to display dots for.
           * @type {any[]}
+          * @default []
          */
         "steps"?: any[];
     }
@@ -2455,9 +2893,13 @@ declare namespace LocalJSX {
     interface MiTabPanel {
     }
     interface MiTabs {
+        /**
+          * @default 0
+         */
         "active"?: number;
         /**
           * Sets a border surrounding the content view.
+          * @default false
          */
         "bordered"?: boolean;
     }
@@ -2472,87 +2914,324 @@ declare namespace LocalJSX {
          */
         "translations"?: string;
     }
+
+    interface ComboBoxItemAttributes {
+        "selected": boolean;
+        "disabled": boolean;
+        "excludefromall": boolean;
+        "value": string;
+        "text": string;
+    }
+    interface MiChipAttributes {
+        "icon": string;
+        "content": string;
+        "backgroundColor": string;
+        "active": boolean;
+    }
+    interface MiColumnAttributes {
+        "monospace": boolean;
+        "alignContent": string;
+        "label": string;
+        "sortable": string;
+        "sort": string;
+        "binding": string;
+        "fitContent": boolean;
+        "width": string;
+    }
+    interface MiComboBoxAttributes {
+        "open": boolean;
+        "itemsOrder": SortOrder;
+        "filterable": boolean;
+        "noResultsMessage": string;
+        "disabled": boolean;
+    }
+    interface MiDataTableAttributes {
+        "maxRows": number;
+        "page": number;
+        "selectable": boolean;
+        "emptyPageHeader": string;
+        "emptyPageSubheader": string;
+        "isHeaderSticky": boolean;
+    }
+    interface MiDistanceAttributes {
+        "meters": number;
+        "unit": UnitSystem;
+    }
+    interface MiDropdownAttributes {
+        "open": boolean;
+        "itemsOrder": SortOrder;
+        "label": string;
+        "filterable": boolean;
+        "placeholder": string;
+        "multiple": boolean;
+        "noResultsMessage": string;
+        "iconSrc": string;
+        "iconAlt": string;
+        "dropdownAlignment": 'right' | 'left';
+        "disabled": boolean;
+    }
+    interface MiDropdownItemAttributes {
+        "selected": boolean;
+        "disabled": boolean;
+        "excludefromall": boolean;
+        "value": string;
+        "text": string;
+    }
+    interface MiFloorSelectorAttributes {
+        "mapsindoors": string;
+        "primaryColor": string;
+    }
+    interface MiIconAttributes {
+        "iconName": string;
+    }
+    interface MiKeyboardAttributes {
+        "layout": string;
+        "language": string;
+    }
+    interface MiListAttributes {
+        "scrollButtonsEnabled": boolean;
+        "scrollLength": number;
+    }
+    interface MiListItemCategoryAttributes {
+        "category": string;
+        "orientation": string;
+    }
+    interface MiListItemLocationAttributes {
+        "location": string;
+        "showExternalId": boolean;
+        "unit": UnitSystem;
+        "icon": string;
+        "level": string;
+        "iconBadge": string;
+        "iconBadgeValue": string;
+    }
+    interface MiLocationBookingAttributes {
+        "duration": LocationBookingDuration;
+        "show": number;
+        "startHour": number;
+        "stopHour": number;
+        "bookingTitle": string;
+    }
+    interface MiLocationInfoAttributes {
+        "location": string;
+        "level": string;
+        "showExternalId": boolean;
+        "showFloor": boolean;
+    }
+    interface MiMapGooglemapsAttributes {
+        "gmApiKey": string;
+        "miApiKey": string;
+        "disableExternalLinks": boolean;
+        "floorSelectorControlPosition": string;
+        "floorIndex": string;
+        "myPositionControlPosition": string;
+        "language": string;
+    }
+    interface MiMapMapboxAttributes {
+        "accessToken": string;
+        "miApiKey": string;
+        "disableExternalLinks": boolean;
+        "floorSelectorControlPosition": 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+        "floorIndex": string;
+        "myPositionControlPosition": 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+        "zoom": string;
+        "maxPitch": number;
+        "maxZoom": string;
+        "bearing": string;
+        "pitch": string;
+        "language": string;
+    }
+    interface MiMetricCardAttributes {
+        "label": string;
+        "value": string;
+        "tip": string;
+        "spinner": boolean;
+        "error": string;
+    }
+    interface MiMyPositionAttributes {
+        "mapsindoors": string;
+        "myPositionOptions": string;
+    }
+    interface MiNotificationAttributes {
+        "position": NotificationPosition;
+        "duration": number;
+    }
+    interface MiRouteInstructionsAttributes {
+        "unit": UnitSystem;
+        "hideIndoorSubsteps": boolean;
+        "travelMode": RouteTravelMode;
+        "originName": string;
+        "destinationName": string;
+    }
+    interface MiRouteInstructionsHeadingAttributes {
+        "originName": string;
+        "destinationName": string;
+        "totalTravelTime": number;
+        "totalWalkingDistance": number;
+        "travelMode": RouteTravelMode;
+        "unit": UnitSystem;
+    }
+    interface MiRouteInstructionsManeuverAttributes {
+        "maneuver": string;
+        "translations": string;
+        "unit": UnitSystem;
+    }
+    interface MiRouteInstructionsManeuverLegacyAttributes {
+        "maneuver": string;
+        "translations": string;
+        "unit": UnitSystem;
+    }
+    interface MiRouteInstructionsStepAttributes {
+        "step": string;
+        "hideIndoorSubsteps": boolean;
+        "fromRouteContext": string;
+        "fromTravelMode": string;
+        "fromTransitStop": string;
+        "unit": UnitSystem;
+        "showToggleButton": boolean;
+        "translations": string;
+    }
+    interface MiRouteInstructionsStepLegacyAttributes {
+        "step": string;
+        "hideIndoorSubsteps": boolean;
+        "fromRouteContext": string;
+        "fromTravelMode": string;
+        "fromTransitStop": string;
+        "unit": UnitSystem;
+        "translations": string;
+    }
+    interface MiScrollButtonsAttributes {
+        "scrollLength": number;
+    }
+    interface MiSearchAttributes {
+        "placeholder": string;
+        "idAttribute": string;
+        "mapsindoors": boolean;
+        "google": boolean;
+        "mapbox": boolean;
+        "language": string;
+        "miFields": string;
+        "miTake": number;
+        "miSkip": number;
+        "miOrder": string;
+        "miCategories": string;
+        "miNear": string;
+        "miVenue": string;
+        "gmCountryCode": string;
+        "value": string;
+        "disabled": boolean;
+        "sessionToken": string;
+        "userPosition": string;
+    }
+    interface MiShareSmsAttributes {
+        "venueId": string;
+        "originLocationId": string;
+        "destinationLocationId": string;
+        "countryCode": string;
+        "phoneNumberInputPlaceholder": string;
+        "submitButtonLabel": string;
+    }
+    interface MiSpinnerAttributes {
+        "inverse": boolean;
+    }
+    interface MiStepSwitcherAttributes {
+        "heading": string;
+        "stepIndex": number;
+    }
+    interface MiTabAttributes {
+        "label": string;
+        "tabFor": string;
+    }
+    interface MiTabsAttributes {
+        "active": number;
+        "bordered": boolean;
+    }
+    interface MiTimeAttributes {
+        "seconds": number;
+        "translations": string;
+    }
+
     interface IntrinsicElements {
-        "combo-box-item": ComboBoxItem;
+        "combo-box-item": Omit<ComboBoxItem, keyof ComboBoxItemAttributes> & { [K in keyof ComboBoxItem & keyof ComboBoxItemAttributes]?: ComboBoxItem[K] } & { [K in keyof ComboBoxItem & keyof ComboBoxItemAttributes as `attr:${K}`]?: ComboBoxItemAttributes[K] } & { [K in keyof ComboBoxItem & keyof ComboBoxItemAttributes as `prop:${K}`]?: ComboBoxItem[K] };
         "mi-card": MiCard;
-        "mi-chip": MiChip;
-        "mi-column": MiColumn;
-        "mi-combo-box": MiComboBox;
-        "mi-data-table": MiDataTable;
-        "mi-distance": MiDistance;
-        "mi-dropdown": MiDropdown;
-        "mi-dropdown-item": MiDropdownItem;
-        "mi-floor-selector": MiFloorSelector;
-        "mi-icon": MiIcon;
-        "mi-keyboard": MiKeyboard;
-        "mi-list": MiList;
-        "mi-list-item-category": MiListItemCategory;
-        "mi-list-item-location": MiListItemLocation;
-        "mi-location-booking": MiLocationBooking;
-        "mi-location-info": MiLocationInfo;
-        "mi-map-googlemaps": MiMapGooglemaps;
-        "mi-map-mapbox": MiMapMapbox;
-        "mi-metric-card": MiMetricCard;
-        "mi-my-position": MiMyPosition;
-        "mi-notification": MiNotification;
-        "mi-route-instructions": MiRouteInstructions;
-        "mi-route-instructions-heading": MiRouteInstructionsHeading;
-        "mi-route-instructions-maneuver": MiRouteInstructionsManeuver;
-        "mi-route-instructions-maneuver-legacy": MiRouteInstructionsManeuverLegacy;
-        "mi-route-instructions-step": MiRouteInstructionsStep;
-        "mi-route-instructions-step-legacy": MiRouteInstructionsStepLegacy;
-        "mi-scroll-buttons": MiScrollButtons;
-        "mi-search": MiSearch;
-        "mi-share-sms": MiShareSms;
-        "mi-spinner": MiSpinner;
-        "mi-step-switcher": MiStepSwitcher;
-        "mi-tab": MiTab;
+        "mi-chip": Omit<MiChip, keyof MiChipAttributes> & { [K in keyof MiChip & keyof MiChipAttributes]?: MiChip[K] } & { [K in keyof MiChip & keyof MiChipAttributes as `attr:${K}`]?: MiChipAttributes[K] } & { [K in keyof MiChip & keyof MiChipAttributes as `prop:${K}`]?: MiChip[K] };
+        "mi-column": Omit<MiColumn, keyof MiColumnAttributes> & { [K in keyof MiColumn & keyof MiColumnAttributes]?: MiColumn[K] } & { [K in keyof MiColumn & keyof MiColumnAttributes as `attr:${K}`]?: MiColumnAttributes[K] } & { [K in keyof MiColumn & keyof MiColumnAttributes as `prop:${K}`]?: MiColumn[K] };
+        "mi-combo-box": Omit<MiComboBox, keyof MiComboBoxAttributes> & { [K in keyof MiComboBox & keyof MiComboBoxAttributes]?: MiComboBox[K] } & { [K in keyof MiComboBox & keyof MiComboBoxAttributes as `attr:${K}`]?: MiComboBoxAttributes[K] } & { [K in keyof MiComboBox & keyof MiComboBoxAttributes as `prop:${K}`]?: MiComboBox[K] };
+        "mi-data-table": Omit<MiDataTable, keyof MiDataTableAttributes> & { [K in keyof MiDataTable & keyof MiDataTableAttributes]?: MiDataTable[K] } & { [K in keyof MiDataTable & keyof MiDataTableAttributes as `attr:${K}`]?: MiDataTableAttributes[K] } & { [K in keyof MiDataTable & keyof MiDataTableAttributes as `prop:${K}`]?: MiDataTable[K] };
+        "mi-distance": Omit<MiDistance, keyof MiDistanceAttributes> & { [K in keyof MiDistance & keyof MiDistanceAttributes]?: MiDistance[K] } & { [K in keyof MiDistance & keyof MiDistanceAttributes as `attr:${K}`]?: MiDistanceAttributes[K] } & { [K in keyof MiDistance & keyof MiDistanceAttributes as `prop:${K}`]?: MiDistance[K] };
+        "mi-dropdown": Omit<MiDropdown, keyof MiDropdownAttributes> & { [K in keyof MiDropdown & keyof MiDropdownAttributes]?: MiDropdown[K] } & { [K in keyof MiDropdown & keyof MiDropdownAttributes as `attr:${K}`]?: MiDropdownAttributes[K] } & { [K in keyof MiDropdown & keyof MiDropdownAttributes as `prop:${K}`]?: MiDropdown[K] } & OneOf<"label", MiDropdown["label"], MiDropdownAttributes["label"]>;
+        "mi-dropdown-item": Omit<MiDropdownItem, keyof MiDropdownItemAttributes> & { [K in keyof MiDropdownItem & keyof MiDropdownItemAttributes]?: MiDropdownItem[K] } & { [K in keyof MiDropdownItem & keyof MiDropdownItemAttributes as `attr:${K}`]?: MiDropdownItemAttributes[K] } & { [K in keyof MiDropdownItem & keyof MiDropdownItemAttributes as `prop:${K}`]?: MiDropdownItem[K] };
+        "mi-floor-selector": Omit<MiFloorSelector, keyof MiFloorSelectorAttributes> & { [K in keyof MiFloorSelector & keyof MiFloorSelectorAttributes]?: MiFloorSelector[K] } & { [K in keyof MiFloorSelector & keyof MiFloorSelectorAttributes as `attr:${K}`]?: MiFloorSelectorAttributes[K] } & { [K in keyof MiFloorSelector & keyof MiFloorSelectorAttributes as `prop:${K}`]?: MiFloorSelector[K] };
+        "mi-icon": Omit<MiIcon, keyof MiIconAttributes> & { [K in keyof MiIcon & keyof MiIconAttributes]?: MiIcon[K] } & { [K in keyof MiIcon & keyof MiIconAttributes as `attr:${K}`]?: MiIconAttributes[K] } & { [K in keyof MiIcon & keyof MiIconAttributes as `prop:${K}`]?: MiIcon[K] };
+        "mi-keyboard": Omit<MiKeyboard, keyof MiKeyboardAttributes> & { [K in keyof MiKeyboard & keyof MiKeyboardAttributes]?: MiKeyboard[K] } & { [K in keyof MiKeyboard & keyof MiKeyboardAttributes as `attr:${K}`]?: MiKeyboardAttributes[K] } & { [K in keyof MiKeyboard & keyof MiKeyboardAttributes as `prop:${K}`]?: MiKeyboard[K] };
+        "mi-list": Omit<MiList, keyof MiListAttributes> & { [K in keyof MiList & keyof MiListAttributes]?: MiList[K] } & { [K in keyof MiList & keyof MiListAttributes as `attr:${K}`]?: MiListAttributes[K] } & { [K in keyof MiList & keyof MiListAttributes as `prop:${K}`]?: MiList[K] };
+        "mi-list-item-category": Omit<MiListItemCategory, keyof MiListItemCategoryAttributes> & { [K in keyof MiListItemCategory & keyof MiListItemCategoryAttributes]?: MiListItemCategory[K] } & { [K in keyof MiListItemCategory & keyof MiListItemCategoryAttributes as `attr:${K}`]?: MiListItemCategoryAttributes[K] } & { [K in keyof MiListItemCategory & keyof MiListItemCategoryAttributes as `prop:${K}`]?: MiListItemCategory[K] };
+        "mi-list-item-location": Omit<MiListItemLocation, keyof MiListItemLocationAttributes> & { [K in keyof MiListItemLocation & keyof MiListItemLocationAttributes]?: MiListItemLocation[K] } & { [K in keyof MiListItemLocation & keyof MiListItemLocationAttributes as `attr:${K}`]?: MiListItemLocationAttributes[K] } & { [K in keyof MiListItemLocation & keyof MiListItemLocationAttributes as `prop:${K}`]?: MiListItemLocation[K] };
+        "mi-location-booking": Omit<MiLocationBooking, keyof MiLocationBookingAttributes> & { [K in keyof MiLocationBooking & keyof MiLocationBookingAttributes]?: MiLocationBooking[K] } & { [K in keyof MiLocationBooking & keyof MiLocationBookingAttributes as `attr:${K}`]?: MiLocationBookingAttributes[K] } & { [K in keyof MiLocationBooking & keyof MiLocationBookingAttributes as `prop:${K}`]?: MiLocationBooking[K] };
+        "mi-location-info": Omit<MiLocationInfo, keyof MiLocationInfoAttributes> & { [K in keyof MiLocationInfo & keyof MiLocationInfoAttributes]?: MiLocationInfo[K] } & { [K in keyof MiLocationInfo & keyof MiLocationInfoAttributes as `attr:${K}`]?: MiLocationInfoAttributes[K] } & { [K in keyof MiLocationInfo & keyof MiLocationInfoAttributes as `prop:${K}`]?: MiLocationInfo[K] };
+        "mi-map-googlemaps": Omit<MiMapGooglemaps, keyof MiMapGooglemapsAttributes> & { [K in keyof MiMapGooglemaps & keyof MiMapGooglemapsAttributes]?: MiMapGooglemaps[K] } & { [K in keyof MiMapGooglemaps & keyof MiMapGooglemapsAttributes as `attr:${K}`]?: MiMapGooglemapsAttributes[K] } & { [K in keyof MiMapGooglemaps & keyof MiMapGooglemapsAttributes as `prop:${K}`]?: MiMapGooglemaps[K] };
+        "mi-map-mapbox": Omit<MiMapMapbox, keyof MiMapMapboxAttributes> & { [K in keyof MiMapMapbox & keyof MiMapMapboxAttributes]?: MiMapMapbox[K] } & { [K in keyof MiMapMapbox & keyof MiMapMapboxAttributes as `attr:${K}`]?: MiMapMapboxAttributes[K] } & { [K in keyof MiMapMapbox & keyof MiMapMapboxAttributes as `prop:${K}`]?: MiMapMapbox[K] };
+        "mi-metric-card": Omit<MiMetricCard, keyof MiMetricCardAttributes> & { [K in keyof MiMetricCard & keyof MiMetricCardAttributes]?: MiMetricCard[K] } & { [K in keyof MiMetricCard & keyof MiMetricCardAttributes as `attr:${K}`]?: MiMetricCardAttributes[K] } & { [K in keyof MiMetricCard & keyof MiMetricCardAttributes as `prop:${K}`]?: MiMetricCard[K] };
+        "mi-my-position": Omit<MiMyPosition, keyof MiMyPositionAttributes> & { [K in keyof MiMyPosition & keyof MiMyPositionAttributes]?: MiMyPosition[K] } & { [K in keyof MiMyPosition & keyof MiMyPositionAttributes as `attr:${K}`]?: MiMyPositionAttributes[K] } & { [K in keyof MiMyPosition & keyof MiMyPositionAttributes as `prop:${K}`]?: MiMyPosition[K] };
+        "mi-notification": Omit<MiNotification, keyof MiNotificationAttributes> & { [K in keyof MiNotification & keyof MiNotificationAttributes]?: MiNotification[K] } & { [K in keyof MiNotification & keyof MiNotificationAttributes as `attr:${K}`]?: MiNotificationAttributes[K] } & { [K in keyof MiNotification & keyof MiNotificationAttributes as `prop:${K}`]?: MiNotification[K] };
+        "mi-route-instructions": Omit<MiRouteInstructions, keyof MiRouteInstructionsAttributes> & { [K in keyof MiRouteInstructions & keyof MiRouteInstructionsAttributes]?: MiRouteInstructions[K] } & { [K in keyof MiRouteInstructions & keyof MiRouteInstructionsAttributes as `attr:${K}`]?: MiRouteInstructionsAttributes[K] } & { [K in keyof MiRouteInstructions & keyof MiRouteInstructionsAttributes as `prop:${K}`]?: MiRouteInstructions[K] };
+        "mi-route-instructions-heading": Omit<MiRouteInstructionsHeading, keyof MiRouteInstructionsHeadingAttributes> & { [K in keyof MiRouteInstructionsHeading & keyof MiRouteInstructionsHeadingAttributes]?: MiRouteInstructionsHeading[K] } & { [K in keyof MiRouteInstructionsHeading & keyof MiRouteInstructionsHeadingAttributes as `attr:${K}`]?: MiRouteInstructionsHeadingAttributes[K] } & { [K in keyof MiRouteInstructionsHeading & keyof MiRouteInstructionsHeadingAttributes as `prop:${K}`]?: MiRouteInstructionsHeading[K] };
+        "mi-route-instructions-maneuver": Omit<MiRouteInstructionsManeuver, keyof MiRouteInstructionsManeuverAttributes> & { [K in keyof MiRouteInstructionsManeuver & keyof MiRouteInstructionsManeuverAttributes]?: MiRouteInstructionsManeuver[K] } & { [K in keyof MiRouteInstructionsManeuver & keyof MiRouteInstructionsManeuverAttributes as `attr:${K}`]?: MiRouteInstructionsManeuverAttributes[K] } & { [K in keyof MiRouteInstructionsManeuver & keyof MiRouteInstructionsManeuverAttributes as `prop:${K}`]?: MiRouteInstructionsManeuver[K] };
+        "mi-route-instructions-maneuver-legacy": Omit<MiRouteInstructionsManeuverLegacy, keyof MiRouteInstructionsManeuverLegacyAttributes> & { [K in keyof MiRouteInstructionsManeuverLegacy & keyof MiRouteInstructionsManeuverLegacyAttributes]?: MiRouteInstructionsManeuverLegacy[K] } & { [K in keyof MiRouteInstructionsManeuverLegacy & keyof MiRouteInstructionsManeuverLegacyAttributes as `attr:${K}`]?: MiRouteInstructionsManeuverLegacyAttributes[K] } & { [K in keyof MiRouteInstructionsManeuverLegacy & keyof MiRouteInstructionsManeuverLegacyAttributes as `prop:${K}`]?: MiRouteInstructionsManeuverLegacy[K] };
+        "mi-route-instructions-step": Omit<MiRouteInstructionsStep, keyof MiRouteInstructionsStepAttributes> & { [K in keyof MiRouteInstructionsStep & keyof MiRouteInstructionsStepAttributes]?: MiRouteInstructionsStep[K] } & { [K in keyof MiRouteInstructionsStep & keyof MiRouteInstructionsStepAttributes as `attr:${K}`]?: MiRouteInstructionsStepAttributes[K] } & { [K in keyof MiRouteInstructionsStep & keyof MiRouteInstructionsStepAttributes as `prop:${K}`]?: MiRouteInstructionsStep[K] };
+        "mi-route-instructions-step-legacy": Omit<MiRouteInstructionsStepLegacy, keyof MiRouteInstructionsStepLegacyAttributes> & { [K in keyof MiRouteInstructionsStepLegacy & keyof MiRouteInstructionsStepLegacyAttributes]?: MiRouteInstructionsStepLegacy[K] } & { [K in keyof MiRouteInstructionsStepLegacy & keyof MiRouteInstructionsStepLegacyAttributes as `attr:${K}`]?: MiRouteInstructionsStepLegacyAttributes[K] } & { [K in keyof MiRouteInstructionsStepLegacy & keyof MiRouteInstructionsStepLegacyAttributes as `prop:${K}`]?: MiRouteInstructionsStepLegacy[K] };
+        "mi-scroll-buttons": Omit<MiScrollButtons, keyof MiScrollButtonsAttributes> & { [K in keyof MiScrollButtons & keyof MiScrollButtonsAttributes]?: MiScrollButtons[K] } & { [K in keyof MiScrollButtons & keyof MiScrollButtonsAttributes as `attr:${K}`]?: MiScrollButtonsAttributes[K] } & { [K in keyof MiScrollButtons & keyof MiScrollButtonsAttributes as `prop:${K}`]?: MiScrollButtons[K] };
+        "mi-search": Omit<MiSearch, keyof MiSearchAttributes> & { [K in keyof MiSearch & keyof MiSearchAttributes]?: MiSearch[K] } & { [K in keyof MiSearch & keyof MiSearchAttributes as `attr:${K}`]?: MiSearchAttributes[K] } & { [K in keyof MiSearch & keyof MiSearchAttributes as `prop:${K}`]?: MiSearch[K] };
+        "mi-share-sms": Omit<MiShareSms, keyof MiShareSmsAttributes> & { [K in keyof MiShareSms & keyof MiShareSmsAttributes]?: MiShareSms[K] } & { [K in keyof MiShareSms & keyof MiShareSmsAttributes as `attr:${K}`]?: MiShareSmsAttributes[K] } & { [K in keyof MiShareSms & keyof MiShareSmsAttributes as `prop:${K}`]?: MiShareSms[K] };
+        "mi-spinner": Omit<MiSpinner, keyof MiSpinnerAttributes> & { [K in keyof MiSpinner & keyof MiSpinnerAttributes]?: MiSpinner[K] } & { [K in keyof MiSpinner & keyof MiSpinnerAttributes as `attr:${K}`]?: MiSpinnerAttributes[K] } & { [K in keyof MiSpinner & keyof MiSpinnerAttributes as `prop:${K}`]?: MiSpinner[K] };
+        "mi-step-switcher": Omit<MiStepSwitcher, keyof MiStepSwitcherAttributes> & { [K in keyof MiStepSwitcher & keyof MiStepSwitcherAttributes]?: MiStepSwitcher[K] } & { [K in keyof MiStepSwitcher & keyof MiStepSwitcherAttributes as `attr:${K}`]?: MiStepSwitcherAttributes[K] } & { [K in keyof MiStepSwitcher & keyof MiStepSwitcherAttributes as `prop:${K}`]?: MiStepSwitcher[K] };
+        "mi-tab": Omit<MiTab, keyof MiTabAttributes> & { [K in keyof MiTab & keyof MiTabAttributes]?: MiTab[K] } & { [K in keyof MiTab & keyof MiTabAttributes as `attr:${K}`]?: MiTabAttributes[K] } & { [K in keyof MiTab & keyof MiTabAttributes as `prop:${K}`]?: MiTab[K] };
         "mi-tab-panel": MiTabPanel;
-        "mi-tabs": MiTabs;
-        "mi-time": MiTime;
+        "mi-tabs": Omit<MiTabs, keyof MiTabsAttributes> & { [K in keyof MiTabs & keyof MiTabsAttributes]?: MiTabs[K] } & { [K in keyof MiTabs & keyof MiTabsAttributes as `attr:${K}`]?: MiTabsAttributes[K] } & { [K in keyof MiTabs & keyof MiTabsAttributes as `prop:${K}`]?: MiTabs[K] };
+        "mi-time": Omit<MiTime, keyof MiTimeAttributes> & { [K in keyof MiTime & keyof MiTimeAttributes]?: MiTime[K] } & { [K in keyof MiTime & keyof MiTimeAttributes as `attr:${K}`]?: MiTimeAttributes[K] } & { [K in keyof MiTime & keyof MiTimeAttributes as `prop:${K}`]?: MiTime[K] };
     }
 }
 export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            "combo-box-item": LocalJSX.ComboBoxItem & JSXBase.HTMLAttributes<HTMLComboBoxItemElement>;
-            "mi-card": LocalJSX.MiCard & JSXBase.HTMLAttributes<HTMLMiCardElement>;
-            "mi-chip": LocalJSX.MiChip & JSXBase.HTMLAttributes<HTMLMiChipElement>;
-            "mi-column": LocalJSX.MiColumn & JSXBase.HTMLAttributes<HTMLMiColumnElement>;
-            "mi-combo-box": LocalJSX.MiComboBox & JSXBase.HTMLAttributes<HTMLMiComboBoxElement>;
-            "mi-data-table": LocalJSX.MiDataTable & JSXBase.HTMLAttributes<HTMLMiDataTableElement>;
-            "mi-distance": LocalJSX.MiDistance & JSXBase.HTMLAttributes<HTMLMiDistanceElement>;
-            "mi-dropdown": LocalJSX.MiDropdown & JSXBase.HTMLAttributes<HTMLMiDropdownElement>;
-            "mi-dropdown-item": LocalJSX.MiDropdownItem & JSXBase.HTMLAttributes<HTMLMiDropdownItemElement>;
-            "mi-floor-selector": LocalJSX.MiFloorSelector & JSXBase.HTMLAttributes<HTMLMiFloorSelectorElement>;
-            "mi-icon": LocalJSX.MiIcon & JSXBase.HTMLAttributes<HTMLMiIconElement>;
-            "mi-keyboard": LocalJSX.MiKeyboard & JSXBase.HTMLAttributes<HTMLMiKeyboardElement>;
-            "mi-list": LocalJSX.MiList & JSXBase.HTMLAttributes<HTMLMiListElement>;
-            "mi-list-item-category": LocalJSX.MiListItemCategory & JSXBase.HTMLAttributes<HTMLMiListItemCategoryElement>;
-            "mi-list-item-location": LocalJSX.MiListItemLocation & JSXBase.HTMLAttributes<HTMLMiListItemLocationElement>;
-            "mi-location-booking": LocalJSX.MiLocationBooking & JSXBase.HTMLAttributes<HTMLMiLocationBookingElement>;
-            "mi-location-info": LocalJSX.MiLocationInfo & JSXBase.HTMLAttributes<HTMLMiLocationInfoElement>;
-            "mi-map-googlemaps": LocalJSX.MiMapGooglemaps & JSXBase.HTMLAttributes<HTMLMiMapGooglemapsElement>;
-            "mi-map-mapbox": LocalJSX.MiMapMapbox & JSXBase.HTMLAttributes<HTMLMiMapMapboxElement>;
-            "mi-metric-card": LocalJSX.MiMetricCard & JSXBase.HTMLAttributes<HTMLMiMetricCardElement>;
-            "mi-my-position": LocalJSX.MiMyPosition & JSXBase.HTMLAttributes<HTMLMiMyPositionElement>;
-            "mi-notification": LocalJSX.MiNotification & JSXBase.HTMLAttributes<HTMLMiNotificationElement>;
-            "mi-route-instructions": LocalJSX.MiRouteInstructions & JSXBase.HTMLAttributes<HTMLMiRouteInstructionsElement>;
-            "mi-route-instructions-heading": LocalJSX.MiRouteInstructionsHeading & JSXBase.HTMLAttributes<HTMLMiRouteInstructionsHeadingElement>;
-            "mi-route-instructions-maneuver": LocalJSX.MiRouteInstructionsManeuver & JSXBase.HTMLAttributes<HTMLMiRouteInstructionsManeuverElement>;
-            "mi-route-instructions-maneuver-legacy": LocalJSX.MiRouteInstructionsManeuverLegacy & JSXBase.HTMLAttributes<HTMLMiRouteInstructionsManeuverLegacyElement>;
-            "mi-route-instructions-step": LocalJSX.MiRouteInstructionsStep & JSXBase.HTMLAttributes<HTMLMiRouteInstructionsStepElement>;
-            "mi-route-instructions-step-legacy": LocalJSX.MiRouteInstructionsStepLegacy & JSXBase.HTMLAttributes<HTMLMiRouteInstructionsStepLegacyElement>;
-            "mi-scroll-buttons": LocalJSX.MiScrollButtons & JSXBase.HTMLAttributes<HTMLMiScrollButtonsElement>;
-            "mi-search": LocalJSX.MiSearch & JSXBase.HTMLAttributes<HTMLMiSearchElement>;
-            "mi-share-sms": LocalJSX.MiShareSms & JSXBase.HTMLAttributes<HTMLMiShareSmsElement>;
-            "mi-spinner": LocalJSX.MiSpinner & JSXBase.HTMLAttributes<HTMLMiSpinnerElement>;
-            "mi-step-switcher": LocalJSX.MiStepSwitcher & JSXBase.HTMLAttributes<HTMLMiStepSwitcherElement>;
-            "mi-tab": LocalJSX.MiTab & JSXBase.HTMLAttributes<HTMLMiTabElement>;
-            "mi-tab-panel": LocalJSX.MiTabPanel & JSXBase.HTMLAttributes<HTMLMiTabPanelElement>;
-            "mi-tabs": LocalJSX.MiTabs & JSXBase.HTMLAttributes<HTMLMiTabsElement>;
-            "mi-time": LocalJSX.MiTime & JSXBase.HTMLAttributes<HTMLMiTimeElement>;
+            "combo-box-item": LocalJSX.IntrinsicElements["combo-box-item"] & JSXBase.HTMLAttributes<HTMLComboBoxItemElement>;
+            "mi-card": LocalJSX.IntrinsicElements["mi-card"] & JSXBase.HTMLAttributes<HTMLMiCardElement>;
+            "mi-chip": LocalJSX.IntrinsicElements["mi-chip"] & JSXBase.HTMLAttributes<HTMLMiChipElement>;
+            "mi-column": LocalJSX.IntrinsicElements["mi-column"] & JSXBase.HTMLAttributes<HTMLMiColumnElement>;
+            "mi-combo-box": LocalJSX.IntrinsicElements["mi-combo-box"] & JSXBase.HTMLAttributes<HTMLMiComboBoxElement>;
+            "mi-data-table": LocalJSX.IntrinsicElements["mi-data-table"] & JSXBase.HTMLAttributes<HTMLMiDataTableElement>;
+            "mi-distance": LocalJSX.IntrinsicElements["mi-distance"] & JSXBase.HTMLAttributes<HTMLMiDistanceElement>;
+            "mi-dropdown": LocalJSX.IntrinsicElements["mi-dropdown"] & JSXBase.HTMLAttributes<HTMLMiDropdownElement>;
+            "mi-dropdown-item": LocalJSX.IntrinsicElements["mi-dropdown-item"] & JSXBase.HTMLAttributes<HTMLMiDropdownItemElement>;
+            "mi-floor-selector": LocalJSX.IntrinsicElements["mi-floor-selector"] & JSXBase.HTMLAttributes<HTMLMiFloorSelectorElement>;
+            "mi-icon": LocalJSX.IntrinsicElements["mi-icon"] & JSXBase.HTMLAttributes<HTMLMiIconElement>;
+            "mi-keyboard": LocalJSX.IntrinsicElements["mi-keyboard"] & JSXBase.HTMLAttributes<HTMLMiKeyboardElement>;
+            "mi-list": LocalJSX.IntrinsicElements["mi-list"] & JSXBase.HTMLAttributes<HTMLMiListElement>;
+            "mi-list-item-category": LocalJSX.IntrinsicElements["mi-list-item-category"] & JSXBase.HTMLAttributes<HTMLMiListItemCategoryElement>;
+            "mi-list-item-location": LocalJSX.IntrinsicElements["mi-list-item-location"] & JSXBase.HTMLAttributes<HTMLMiListItemLocationElement>;
+            "mi-location-booking": LocalJSX.IntrinsicElements["mi-location-booking"] & JSXBase.HTMLAttributes<HTMLMiLocationBookingElement>;
+            "mi-location-info": LocalJSX.IntrinsicElements["mi-location-info"] & JSXBase.HTMLAttributes<HTMLMiLocationInfoElement>;
+            "mi-map-googlemaps": LocalJSX.IntrinsicElements["mi-map-googlemaps"] & JSXBase.HTMLAttributes<HTMLMiMapGooglemapsElement>;
+            "mi-map-mapbox": LocalJSX.IntrinsicElements["mi-map-mapbox"] & JSXBase.HTMLAttributes<HTMLMiMapMapboxElement>;
+            "mi-metric-card": LocalJSX.IntrinsicElements["mi-metric-card"] & JSXBase.HTMLAttributes<HTMLMiMetricCardElement>;
+            "mi-my-position": LocalJSX.IntrinsicElements["mi-my-position"] & JSXBase.HTMLAttributes<HTMLMiMyPositionElement>;
+            "mi-notification": LocalJSX.IntrinsicElements["mi-notification"] & JSXBase.HTMLAttributes<HTMLMiNotificationElement>;
+            "mi-route-instructions": LocalJSX.IntrinsicElements["mi-route-instructions"] & JSXBase.HTMLAttributes<HTMLMiRouteInstructionsElement>;
+            "mi-route-instructions-heading": LocalJSX.IntrinsicElements["mi-route-instructions-heading"] & JSXBase.HTMLAttributes<HTMLMiRouteInstructionsHeadingElement>;
+            "mi-route-instructions-maneuver": LocalJSX.IntrinsicElements["mi-route-instructions-maneuver"] & JSXBase.HTMLAttributes<HTMLMiRouteInstructionsManeuverElement>;
+            "mi-route-instructions-maneuver-legacy": LocalJSX.IntrinsicElements["mi-route-instructions-maneuver-legacy"] & JSXBase.HTMLAttributes<HTMLMiRouteInstructionsManeuverLegacyElement>;
+            "mi-route-instructions-step": LocalJSX.IntrinsicElements["mi-route-instructions-step"] & JSXBase.HTMLAttributes<HTMLMiRouteInstructionsStepElement>;
+            "mi-route-instructions-step-legacy": LocalJSX.IntrinsicElements["mi-route-instructions-step-legacy"] & JSXBase.HTMLAttributes<HTMLMiRouteInstructionsStepLegacyElement>;
+            "mi-scroll-buttons": LocalJSX.IntrinsicElements["mi-scroll-buttons"] & JSXBase.HTMLAttributes<HTMLMiScrollButtonsElement>;
+            "mi-search": LocalJSX.IntrinsicElements["mi-search"] & JSXBase.HTMLAttributes<HTMLMiSearchElement>;
+            "mi-share-sms": LocalJSX.IntrinsicElements["mi-share-sms"] & JSXBase.HTMLAttributes<HTMLMiShareSmsElement>;
+            "mi-spinner": LocalJSX.IntrinsicElements["mi-spinner"] & JSXBase.HTMLAttributes<HTMLMiSpinnerElement>;
+            "mi-step-switcher": LocalJSX.IntrinsicElements["mi-step-switcher"] & JSXBase.HTMLAttributes<HTMLMiStepSwitcherElement>;
+            "mi-tab": LocalJSX.IntrinsicElements["mi-tab"] & JSXBase.HTMLAttributes<HTMLMiTabElement>;
+            "mi-tab-panel": LocalJSX.IntrinsicElements["mi-tab-panel"] & JSXBase.HTMLAttributes<HTMLMiTabPanelElement>;
+            "mi-tabs": LocalJSX.IntrinsicElements["mi-tabs"] & JSXBase.HTMLAttributes<HTMLMiTabsElement>;
+            "mi-time": LocalJSX.IntrinsicElements["mi-time"] & JSXBase.HTMLAttributes<HTMLMiTimeElement>;
         }
     }
 }

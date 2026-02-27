@@ -7,7 +7,7 @@
 @use "~@mapsindoors/midt/transitions";
 @use "~@mapsindoors/midt/build/scss/variables" as variables;
 
-@import "../../global/global";
+@use "../../global/global";
 
 :host {
     padding: 1rem;

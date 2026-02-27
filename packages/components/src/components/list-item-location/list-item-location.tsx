@@ -218,7 +218,7 @@ export class ListItemLocation {
                     <mi-location-info level={this.level} ref={(el) => this.infoElement = el as HTMLMiLocationInfoElement} showExternalId={this.showExternalId}></mi-location-info>
                 </div>
 
-                {this.location.properties.geodesicDistance && this.renderDistance()}
+                {typeof this.location.properties.geodesicDistance === 'number' && this.renderDistance()}
             </Host>
         );
     }
