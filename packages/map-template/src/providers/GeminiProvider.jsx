@@ -237,7 +237,11 @@ export function GeminiProvider({ children, enabled }) {
     // Supports optional callbacks for streaming and intermediate data
     const generateResponseWrapper = useCallback(async (apiKey, prompt, options = {}) => {
         if (!enabled) {
-            return;
+            const errorMessage = '';
+            if (options.onComplete) {
+                options.onComplete({ response: errorMessage, error: new Error('Gemini provider is disabled') });
+            }
+            return errorMessage;
         }
 
         setIsLoading(true);
