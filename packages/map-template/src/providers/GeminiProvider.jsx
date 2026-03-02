@@ -127,14 +127,16 @@ export function GeminiProvider({ children, enabled }) {
                 const { done, value } = await reader.read();
                 if (done) {
                     reading = false;
-                    break;
                 }
 
-                buffer += decoder.decode(value, { stream: true });
+                if (!done) {
+                    buffer += decoder.decode(value, { stream: true });
+                }
+
                 const lines = buffer.split('\n');
 
-                // Keep the last incomplete line in the buffer
-                buffer = lines.pop() || '';
+                // Keep the last incomplete line in the buffer (unless we're done)
+                buffer = !done ? (lines.pop() || '') : '';
 
                 for (const line of lines) {
                     if (!line.trim() || line.startsWith(':')) continue;
@@ -176,6 +178,10 @@ export function GeminiProvider({ children, enabled }) {
                             console.warn('Failed to parse streaming chunk:', jsonStr, parseError);
                         }
                     }
+                }
+
+                if (done) {
+                    break;
                 }
             }
 
