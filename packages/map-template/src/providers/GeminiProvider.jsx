@@ -113,6 +113,9 @@ export function GeminiProvider({ children, enabled }) {
                 throw new Error(errorData.error || `HTTP error! status: ${streamRes.status}`);
             }
 
+            if (!streamRes.body) {
+                throw new Error('Streaming response body is empty');
+            }
             const reader = streamRes.body.getReader();
             const decoder = new TextDecoder();
             let buffer = '';
@@ -176,12 +179,10 @@ export function GeminiProvider({ children, enabled }) {
                 }
             }
 
-            // Process final function data
-            if (lastFunctionData) {
-                const searchResultIds = processFunctionData(lastFunctionData);
-                console.log('Search result IDs:', searchResultIds);
-                setSearchResults(searchResultIds);
-            }
+            // Process final function data (or clear stale search results)
+            const searchResultIds = lastFunctionData ? processFunctionData(lastFunctionData) : [];
+            console.log('Search result IDs:', searchResultIds);
+            setSearchResults(searchResultIds);
 
             // Call onComplete callback with final response
             if (onComplete) {
