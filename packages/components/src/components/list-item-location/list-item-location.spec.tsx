@@ -48,7 +48,10 @@ describe('mi-list-item-location', () => {
 
             const distanceDivElement = page.body.getElementsByClassName('distance')[0];
             expect(distanceDivElement).toBeTruthy();
-            expect(distanceDivElement.querySelector('mi-distance')).toBeTruthy();
+            const distanceElement = distanceDivElement.querySelector('mi-distance') as HTMLElement;
+            expect(distanceElement).toBeTruthy();
+            expect(distanceElement.getAttribute('meters')).toBe('0');
+            expect(distanceElement.getAttribute('unit')).toBe(UnitSystem.Imperial);
         });
 
         it('should calculate and return 1609.344 meters as a string in miles', async (): Promise<void> => {
@@ -63,7 +66,10 @@ describe('mi-list-item-location', () => {
 
             const distanceDivElement = page.body.getElementsByClassName('distance')[0];
             expect(distanceDivElement).toBeTruthy();
-            expect(distanceDivElement.querySelector('mi-distance')).toBeTruthy();
+            const distanceElement = distanceDivElement.querySelector('mi-distance') as HTMLElement;
+            expect(distanceElement).toBeTruthy();
+            expect(distanceElement.getAttribute('meters')).toBe('1609.344');
+            expect(distanceElement.getAttribute('unit')).toBe(UnitSystem.Imperial);
         });
     });
 
@@ -83,7 +89,10 @@ describe('mi-list-item-location', () => {
 
             const distanceDivElement = page.body.getElementsByClassName('distance')[0];
             expect(distanceDivElement).toBeTruthy();
-            expect(distanceDivElement.querySelector('mi-distance')).toBeTruthy();
+            const distanceElement = distanceDivElement.querySelector('mi-distance') as HTMLElement;
+            expect(distanceElement).toBeTruthy();
+            expect(distanceElement.getAttribute('meters')).toBe('0');
+            expect(distanceElement.getAttribute('unit')).toBe(UnitSystem.Metric);
         });
 
         it('should return 1200 meters as a string in kilometers', async (): Promise<void> => {
@@ -98,7 +107,10 @@ describe('mi-list-item-location', () => {
 
             const distanceDivElement = page.body.getElementsByClassName('distance')[0];
             expect(distanceDivElement).toBeTruthy();
-            expect(distanceDivElement.querySelector('mi-distance')).toBeTruthy();
+            const distanceElement = distanceDivElement.querySelector('mi-distance') as HTMLElement;
+            expect(distanceElement).toBeTruthy();
+            expect(distanceElement.getAttribute('meters')).toBe('1200');
+            expect(distanceElement.getAttribute('unit')).toBe(UnitSystem.Metric);
         });
     });
 
