@@ -279,7 +279,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
         setLocationDisplayRule(null);
 
         if (location) {
-            locationInfoElement.current.location = location;
+            locationInfoElement.current && (locationInfoElement.current.location = location);
             setLocationDisplayRule(mapsIndoorsInstance.getDisplayRule(location));
             setDestinationLocation(location)
         }

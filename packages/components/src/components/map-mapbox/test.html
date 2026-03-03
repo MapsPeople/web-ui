@@ -7,7 +7,9 @@
     <title>mi-map-mapbox test page</title>
     <script type="module" src="/build/mi-components.esm.js"></script>
     <script nomodule src="/build/mi-components.js"></script>
-    <script src="https://app.mapsindoors.com/mapsindoors/js/sdk/4.13.0/mapsindoors-4.13.0.js.gz"></script>
+    <script src="https://app.mapsindoors.com/mapsindoors/js/sdk/4.52.0/mapsindoors-4.52.0.js.gz"
+        integrity="sha384-SQW2ysGv3g5kWSBG2/w19r7EjQXsIsGByxXP8OhjKWx/3+h+kXholaf6szwfH4BF"
+        crossorigin="anonymous"></script>
 
     <style>
         body {
@@ -18,9 +20,9 @@
 
 <body>
     <mi-map-mapbox style="width: 600px; height: 600px;" id="mi-mapbox-demo-map" mi-api-key="demo"
-        access-token="pk.eyJ1IjoiZW5lcHBlciIsImEiOiJjazVzNjB5a3EwODd0M2Ztb3FjYmZmbzJhIn0._fo_iTl7ZHPrl634-F2qYg"
-        floor-selector-control-position="top-right" my-position-control-position="top-right"
-        disable-external-links="true" zoom="15" max-zoom="17" bearing="0" pitch="0">
+        access-token="YOUR_MAPBOX_ACCESS_TOKEN" floor-selector-control-position="top-right"
+        my-position-control-position="top-right" disable-external-links="true" zoom="15" max-zoom="17" bearing="0"
+        pitch="0">
     </mi-map-mapbox>
 
     <button onclick="previousLeg()">Previous Leg</button>
@@ -39,7 +41,7 @@
             miMapMapBox.getDirectionsRendererInstance().then((directionsRendererInstance) => miDirectionsRendererInstance = directionsRendererInstance);
 
             miMapMapBox.getMapInstance().then((mapInstance) => {
-                mapInstance.setCenter({lat: 38.8974905, lng: -77.0362723}); // The White House
+                mapInstance.setCenter({ lat: 38.8974905, lng: -77.0362723 }); // The White House
             });
 
             miMapMapBox.getMapsIndoorsInstance().then((mapsIndoorsInstance) => {
@@ -49,15 +51,15 @@
 
         function getAnchorCoordinates(location) {
             return location.geometry.type.toLowerCase() === 'point' ?
-                {lat: location.geometry.coordinates[1], lng: location.geometry.coordinates[0]} :
-                {lat: location.properties.anchor.coordinates[1], lng: location.properties.anchor.coordinates[0]};
+                { lat: location.geometry.coordinates[1], lng: location.geometry.coordinates[0] } :
+                { lat: location.properties.anchor.coordinates[1], lng: location.properties.anchor.coordinates[0] };
         }
 
         function setRoute(destination) {
             const destCoordinates = this.getAnchorCoordinates(destination);
             const routeParams = {
-                origin: {lat: 38.8956311, lng: -77.0395035, floor: 0},
-                destination: {lat: destCoordinates.lat, lng: destCoordinates.lng, floor: destination.properties.floor},
+                origin: { lat: 38.8956311, lng: -77.0395035, floor: 0 },
+                destination: { lat: destCoordinates.lat, lng: destCoordinates.lng, floor: destination.properties.floor },
                 travelMode: 'WALKING',
                 fitBounds: true
             };

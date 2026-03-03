@@ -81,7 +81,7 @@ const useMapBoundsDeterminer = () => {
      * determine where to make the map go to.
      */
     function determineMapBounds() {
-        const currentVenue = venuesInSolution.find(venue => venue.name.toLowerCase() === currentVenueName.toLowerCase());
+        const currentVenue = venuesInSolution.find(venue => venue.name?.toLowerCase() === currentVenueName.toLowerCase());
 
         // If kioskOriginLocationId was set and is now removed, revert display rule
         if (!kioskOriginLocationId && kioskOriginLocationInfo.id && mapsIndoorsInstance && kioskLocationDisplayRuleWasChanged) {

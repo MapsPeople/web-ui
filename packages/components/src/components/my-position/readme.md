@@ -13,7 +13,7 @@ Working example:
     mapsindoors.MapsIndoors.setMapsIndoorsApiKey('173386a6ff5e43cead3e396b');
     mapsindoors.MapsIndoors.setLanguage('en');
 
-    const accessToken = 'pk.eyJ1IjoiZW5lcHBlciIsImEiOiJjazVzNjB5a3EwODd0M2Ztb3FjYmZmbzJhIn0._fo_iTl7ZHPrl634-F2qYg';
+    const accessToken = 'YOUR_MAPBOX_ACCESS_TOKEN';
     const mapView = new mapsindoors.mapView.MapboxView({
         accessToken: accessToken,
         element: document.getElementById('map'),
@@ -51,7 +51,7 @@ Example usage:
     mapsindoors.MapsIndoors.setMapsIndoorsApiKey('173386a6ff5e43cead3e396b');
     mapsindoors.MapsIndoors.setLanguage('en');
 
-    const accessToken = 'pk.eyJ1IjoiZW5lcHBlciIsImEiOiJjazVzNjB5a3EwODd0M2Ztb3FjYmZmbzJhIn0._fo_iTl7ZHPrl634-F2qYg';
+    const accessToken = 'YOUR_MAPBOX_ACCESS_TOKEN';
     const mapView = new mapsindoors.mapView.MapboxView({
         accessToken: accessToken,
         element: document.getElementById('map'),
@@ -181,6 +181,12 @@ Sets a custom position. Works with any provider that implements setPosition.
 Uses this.positionProvider (the resolved provider) instead of this.customPositionProvider
 to ensure we're working with the validated, active provider.
 
+#### Parameters
+
+| Name       | Type                  | Description |
+| ---------- | --------------------- | ----------- |
+| `position` | `MapsIndoorsPosition` |             |
+
 #### Returns
 
 Type: `Promise<void>`
@@ -190,6 +196,12 @@ Type: `Promise<void>`
 ### `watchPosition(selfInvoked?: boolean) => Promise<void>`
 
 Method for requesting the current position, emitting events and showing position on map based on result.
+
+#### Parameters
+
+| Name          | Type      | Description                                                                 |
+| ------------- | --------- | --------------------------------------------------------------------------- |
+| `selfInvoked` | `boolean` | - Used to track if call was invoked by clicking on position control or not. |
 
 #### Returns
 

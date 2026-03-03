@@ -139,16 +139,16 @@ export class MapMapbox implements ComponentInterface {
      * Set or get the max pitch of the map (0-85).
      * @type {number}
      */
-      @Prop({ mutable: true, reflect: true }) maxPitch: number = 60;
-      @Watch('maxPitch')
-      maxPitchChange(newPitch, oldPitch): void {
-          if (newPitch !== oldPitch && newPitch !== this.mapboxInstance.getMaxPitch()) {
-              if (newPitch === null) {
-                  newPitch = 0; // Setting the DOM attribute to "0" will be passed on here as null, so we need to circumvent that.
-              }
-              this.mapboxInstance.setMaxPitch(newPitch);
-          }
-      }
+    @Prop({ mutable: true, reflect: true }) maxPitch: number = 60;
+    @Watch('maxPitch')
+    maxPitchChange(newPitch, oldPitch): void {
+        if (newPitch !== oldPitch && newPitch !== this.mapboxInstance.getMaxPitch()) {
+            if (newPitch === null) {
+                newPitch = 0; // Setting the DOM attribute to "0" will be passed on here as null, so we need to circumvent that.
+            }
+            this.mapboxInstance.setMaxPitch(newPitch);
+        }
+    }
 
     /**
      * Set or get the max zoom level of the map.
@@ -335,7 +335,7 @@ export class MapMapbox implements ComponentInterface {
                 const mapboxApiTag = document.createElement('script');
                 mapboxApiTag.setAttribute('type', 'text/javascript');
                 // When upgrading the version please remember to update url to the MapBox css in the render function.
-                mapboxApiTag.setAttribute('src', 'https://api.mapbox.com/mapbox-gl-js/v2.3.0/mapbox-gl.js');
+                mapboxApiTag.setAttribute('src', 'https://api.mapbox.com/mapbox-gl-js/v3.19.0/mapbox-gl.js');
                 document.body.appendChild(mapboxApiTag);
                 mapboxApiTag.onload = () => resolve();
             });
@@ -525,7 +525,7 @@ export class MapMapbox implements ComponentInterface {
     render(): JSX.Element {
         return (
             <Host>
-                <link href='https://api.mapbox.com/mapbox-gl-js/v2.3.0/mapbox-gl.css' rel='stylesheet' />
+                <link href='https://api.mapbox.com/mapbox-gl-js/v3.19.0/mapbox-gl.css' rel='stylesheet' />
                 <div ref={(el) => this.mapElement = el as HTMLDivElement}></div>
             </Host>
         );

@@ -151,12 +151,12 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         if (activeSearchField === searchFieldIdentifiers.TO) {
             decorateLocation(location).then(decoratedLocation => {
                 setDestinationLocation(decoratedLocation);
-                toFieldRef.current.setDisplayText(decoratedLocation.properties.name);
+                toFieldRef.current?.setDisplayText(decoratedLocation.properties.name);
             }, () => setHasFoundRoute(false));
         } else if (activeSearchField === searchFieldIdentifiers.FROM) {
             decorateLocation(location).then(decoratedLocation => {
                 setOriginLocation(decoratedLocation);
-                fromFieldRef.current.setDisplayText(decoratedLocation.properties.name);
+                fromFieldRef.current?.setDisplayText(decoratedLocation.properties.name);
             }, () => setHasFoundRoute(false));
         }
         setHasGooglePlaces(false);
@@ -207,10 +207,10 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         const myPositionLocation = generateMyPositionLocation(userPosition);
 
         if (activeSearchField === searchFieldIdentifiers.TO) {
-            toFieldRef.current.setDisplayText(myPositionLocation.properties.name);
+            toFieldRef.current?.setDisplayText(myPositionLocation.properties.name);
             setDestinationLocation(myPositionLocation);
         } else if (activeSearchField === searchFieldIdentifiers.FROM) {
-            fromFieldRef.current.setDisplayText(myPositionLocation.properties.name);
+            fromFieldRef.current?.setDisplayText(myPositionLocation.properties.name);
             setOriginLocation(myPositionLocation);
         }
         setSearchResults([]);
@@ -291,15 +291,15 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     function triggerSearch(searchFieldIdentifier) {
         if (searchFieldIdentifier === searchFieldIdentifiers.TO) {
             setSearchResults([]);
-            if (toFieldRef.current.getValue()) {
+            if (toFieldRef.current?.getValue()) {
                 setSearchTriggered(true)
-                toFieldRef.current.triggerSearch();
+                toFieldRef.current?.triggerSearch();
             }
         } else if (searchFieldIdentifier === searchFieldIdentifiers.FROM) {
             setSearchResults([]);
-            if (fromFieldRef.current.getValue()) {
+            if (fromFieldRef.current?.getValue()) {
                 setSearchTriggered(true)
-                fromFieldRef.current.triggerSearch();
+                fromFieldRef.current?.triggerSearch();
             }
         }
     }
@@ -310,14 +310,14 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     function switchDirectionsHandler() {
         if (destinationLocation || originLocation) {
             if (originLocation) {
-                toFieldRef.current.setDisplayText(originLocation.properties.name);
+                toFieldRef.current?.setDisplayText(originLocation.properties.name);
             } else {
-                toFieldRef.current.clear();
+                toFieldRef.current?.clear();
             }
             if (destinationLocation) {
-                fromFieldRef.current.setDisplayText(destinationLocation.properties.name);
+                fromFieldRef.current?.setDisplayText(destinationLocation.properties.name);
             } else {
-                fromFieldRef.current.clear();
+                fromFieldRef.current?.clear();
             }
             setDestinationLocation(originLocation);
             setOriginLocation(destinationLocation);
@@ -330,7 +330,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
      */
     function closeWayfinding() {
         setOriginLocation();
-        fromFieldRef.current.setDisplayText('');
+        fromFieldRef.current?.setDisplayText('');
         onBack();
     }
 
@@ -361,11 +361,11 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
 
         if (activeSearchField === searchFieldIdentifiers.FROM) {
             // If the FROM field is active, set the wayfindingLocation as the originLocation.
-            fromFieldRef.current.setDisplayText(wayfindingLocation.properties.name);
+            fromFieldRef.current?.setDisplayText(wayfindingLocation.properties.name);
             setOriginLocation(wayfindingLocation);
         } else if (activeSearchField === searchFieldIdentifiers.TO) {
             // If the TO field is active and empty, set the wayfindingLocation as the destinationLocation.
-            toFieldRef.current.setDisplayText(wayfindingLocation.properties.name);
+            toFieldRef.current?.setDisplayText(wayfindingLocation.properties.name);
             setDestinationLocation(wayfindingLocation);
         } else {
             return;
@@ -386,14 +386,14 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
 
         // If there is a directionsToLocation and no currentLocation (otherwise the user had actively selected something else), use that as the "to" field.
         if (directionsToLocation?.properties && !currentLocation) {
-            toFieldRef.current.setDisplayText(directionsToLocation.properties.name);
+            toFieldRef.current?.setDisplayText(directionsToLocation.properties.name);
             setDestinationLocation(directionsToLocation);
         }
 
         // If there is a directionsFromLocation, use that as the 'from' field (if it has not been overridden). Otherwise trigger focus on search field.
         if (directionsFromLocation?.properties) {
             if (!originLocation) {
-                fromFieldRef.current.setDisplayText(directionsFromLocation.properties.name);
+                fromFieldRef.current?.setDisplayText(directionsFromLocation.properties.name);
                 setOriginLocation(directionsFromLocation);
                 originLocationWasSet = true;
             }
@@ -406,7 +406,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                 // If the user's position is known and no origin location is set, use the position as Origin.
 
                 const myPositionLocation = generateMyPositionLocation(userPosition);
-                fromFieldRef.current.setDisplayText(myPositionLocation.properties.name);
+                fromFieldRef.current?.setDisplayText(myPositionLocation.properties.name);
                 setOriginLocation(myPositionLocation);
                 setHasFoundRoute(true);
                 setHasSearchResults(true);
@@ -431,7 +431,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     useEffect(() => {
         if (currentLocation) {
             setDestinationLocation(currentLocation);
-            toFieldRef.current.setDisplayText(currentLocation.properties.name);
+            toFieldRef.current?.setDisplayText(currentLocation.properties.name);
         }
     }, [currentLocation]);
 

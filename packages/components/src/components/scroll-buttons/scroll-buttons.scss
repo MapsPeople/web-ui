@@ -6,7 +6,7 @@
 @use "~@mapsindoors/midt/background-color";
 @use "~@mapsindoors/midt/border";
 
-@import "../../global/global";
+@use "../../global/global";
 @import "../../../../../node_modules/@mapsindoors/css/buttons.css";
 
 .scroll-buttons {

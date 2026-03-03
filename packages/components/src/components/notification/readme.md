@@ -106,6 +106,14 @@ Type: `Promise<void>`
 
 Show a notification.
 
+#### Parameters
+
+| Name      | Type      | Description                                                                                |
+| --------- | --------- | ------------------------------------------------------------------------------------------ |
+| `message` | `string`  | - Message to display.                                                                      |
+| `type`    | `string`  | - Type of notification. Available types: 'info', 'warning', 'success', 'error' and 'none'. |
+| `sticky`  | `boolean` | - Set message as sticky to prevent it from disappearing.                                   |
+
 #### Returns
 
 Type: `Promise<void>`

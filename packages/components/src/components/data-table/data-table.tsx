@@ -1,5 +1,5 @@
 
-import { Component, Element, Event, EventEmitter, h, Host, JSX, Prop, State, Watch } from '@stencil/core'; //eslint-disable-line @typescript-eslint/no-unused-vars
+import { Component, Element, Event, EventEmitter, h, Host, JSX, Prop, State, Watch } from '@stencil/core';
 import { isNullOrUndefined, isNumber } from '../../utils/utils';
 
 @Component({

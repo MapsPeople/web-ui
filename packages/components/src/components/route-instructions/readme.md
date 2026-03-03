@@ -8,7 +8,7 @@ Working example:
 
 <script type="text/javascript" src="//maps.googleapis.com/maps/api/js?v=3&key=AIzaSyBNhmxW2OntKAVs7hjxmAjFscioPcfWZSc&libraries=geometry,places">
 </script>
-<script type="text/javascript" src="https://app.mapsindoors.com/mapsindoors/js/sdk/4.13.0/mapsindoors-4.13.0.js.gz?apikey=demo">
+<script src="https://app.mapsindoors.com/mapsindoors/js/sdk/4.52.0/mapsindoors-4.52.0.js.gz?apikey=demo" integrity="sha384-SQW2ysGv3g5kWSBG2/w19r7EjQXsIsGByxXP8OhjKWx/3+h+kXholaf6szwfH4BF" crossorigin="anonymous"></script>
 </script>
 <script>
     const externalDirectionsProvider = new mapsindoors.directions.GoogleMapsProvider()
