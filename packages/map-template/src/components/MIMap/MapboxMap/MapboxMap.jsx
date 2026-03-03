@@ -112,7 +112,7 @@ function MapboxMap({ accessToken, onInitialized, center, zoom, bounds, bearing, 
 
         // If mapboxMapStyle is not null or undefined and useMapsIndoorsMapboxStyle is false, set it as mapboxMapStyle in the mapView.
         if (!isNullOrUndefined(mapOptions?.mapboxMapStyle) && !mapViewOptions.useMapsIndoorsMapboxStyle) {
-            mapView.getMap().setStyle(mapOptions.mapboxMapStyle);
+            mapView?.getMap()?.setStyle(mapOptions.mapboxMapStyle);
         }
 
         onInitialized(mapView);

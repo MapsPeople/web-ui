@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded Stencil from version 2 to version 4.
 - Updated component methods (`dropdown`, `keyboard`, `my-position`, `route-instructions-step`, `search`, `time`, `list-item-location`) to return Promises for improved async handling.
-- Updated MapsIndoors SDK to version 4.51.0.
+- Updated MapsIndoors SDK to version 4.52.0 across several test files.
 - Moved margin reset for empty-page to child elements in combo-box and dropdown styles.
 
 ### Fixed

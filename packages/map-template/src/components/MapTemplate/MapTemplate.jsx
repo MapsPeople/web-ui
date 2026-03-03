@@ -235,8 +235,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             const miSdkApiTag = document.createElement('script');
             miSdkApiTag.setAttribute('type', 'text/javascript');
-            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.52.0/mapsindoors-4.52.0.js.gz');
-            miSdkApiTag.setAttribute('integrity', 'sha384-SQW2ysGv3g5kWSBG2/w19r7EjQXsIsGByxXP8OhjKWx/3+h+kXholaf6szwfH4BF');
+            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.52.1/mapsindoors-4.52.1.js.gz');
+            miSdkApiTag.setAttribute('integrity', 'sha384-RbCb1/diH55t2cnWlZXwGpFYDT5C8UuVH5nXoJF9AuQ0zPbNHHTNTUeeEiEo83ii');
             miSdkApiTag.setAttribute('crossorigin', 'anonymous');
             document.body.appendChild(miSdkApiTag);
             miSdkApiTag.onload = () => {
@@ -592,7 +592,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         if (mapsIndoorsInstance && appConfig?.appSettings?.removeMapboxExtrudedBuildings === 'true') {
-            mapsIndoorsInstance.getMapView().setExtrudedBuildingsVisibility(false);
+            mapsIndoorsInstance?.getMapView()?.setExtrudedBuildingsVisibility(false);
         }
     }, [mapsIndoorsInstance, appConfig]);
 
