@@ -25,7 +25,7 @@ Working example:
 </script>
 
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=geometry,places&key=AIzaSyBNhmxW2OntKAVs7hjxmAjFscioPcfWZSc"></script>
-<script type="text/javascript" src="https://app.mapsindoors.com/mapsindoors/js/sdk/4.13.0/mapsindoors-4.13.0.js.gz?apikey=mapspeople"></script>
+<script src="https://app.mapsindoors.com/mapsindoors/js/sdk/4.52.0/mapsindoors-4.52.0.js.gz?apikey=mapspeople" integrity="sha384-SQW2ysGv3g5kWSBG2/w19r7EjQXsIsGByxXP8OhjKWx/3+h+kXholaf6szwfH4BF" crossorigin="anonymous"></script>
 
 Example usage:
 

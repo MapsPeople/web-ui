@@ -6,7 +6,7 @@ Working example:
 
 <mi-list-item-location></mi-list-item-location>
 
-<script src="https://app.mapsindoors.com/mapsindoors/js/sdk/4.51.0/mapsindoors-4.51.0.js.gz"></script>
+<script src="https://app.mapsindoors.com/mapsindoors/js/sdk/4.52.0/mapsindoors-4.52.0.js.gz" integrity="sha384-SQW2ysGv3g5kWSBG2/w19r7EjQXsIsGByxXP8OhjKWx/3+h+kXholaf6szwfH4BF" crossorigin="anonymous"></script>
 <script>
     mapsindoors.MapsIndoors.setMapsIndoorsApiKey('demo');
     mapsindoors.services.LocationsService.getLocation('337006664e044df99916054c')
