@@ -684,6 +684,7 @@ export class MyPositionComponent {
      * 5. Styling the compass button.
      */
     connectedCallback(): void {
+        if (!this.mapsindoors) return;
         this.mapView = this.mapsindoors.getMapView();
         this.options = merge(this.defaultOptions, this.myPositionOptions ?? {});
 
@@ -836,6 +837,7 @@ export class MyPositionComponent {
      * Component render callback.
      */
     componentDidRender(): void {
+        if (!this.mapView) return;
         this.setCompassStyle(this.mapView.getBearing());
     }
 

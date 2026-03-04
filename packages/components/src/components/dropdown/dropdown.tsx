@@ -276,6 +276,7 @@ export class Dropdown {
      * Lifecycle method called when the component is updated.
      */
     componentDidRender(): void {
+        if (!this.items) return;
         this.calculateDropDownPosition();
         if (!this.multiple) {
             // Makes sure that an item is always highlighted when the content window is open.

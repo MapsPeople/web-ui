@@ -101,6 +101,7 @@ export class DataTable {
     private selectAllCheckbox: HTMLInputElement;
 
     connectedCallback(): any {
+        if (!this.rows) return;
         const miColumns = this.el.querySelectorAll('mi-column');
         this.columns = Array.from(miColumns).map((miColumn: HTMLMiColumnElement) => {
             const column = {

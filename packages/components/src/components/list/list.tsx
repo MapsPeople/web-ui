@@ -25,6 +25,9 @@ export class List {
     private miScrollButtonsElement: HTMLMiScrollButtonsElement;
 
     componentDidLoad(): void {
+        if (!this.scrollButtonsEnabled && this.scrollButtonsEnabled !== false) return;
+        if (typeof this.scrollLength !== 'number') return;
+
         this.addIntersectionObserver();
 
         if (this.scrollButtonsEnabled) {

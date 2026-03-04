@@ -93,6 +93,7 @@ export class Keyboard implements ComponentInterface {
         });
 
         // Populate the keyboard's internal input value with any existing value from the input field.
+        if (!this.inputElement) return;
         this.simpleKeyboard.setInput(this.inputElement.value);
     }
 

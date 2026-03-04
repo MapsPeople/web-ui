@@ -166,6 +166,7 @@ export class Search implements ComponentInterface {
      */
     @Method()
     async clear(): Promise<void> {
+        if (!this.inputElement) return;
         this.inputElement.value = '';
         this.value = '';
         this.lastRequested = null;
@@ -177,6 +178,7 @@ export class Search implements ComponentInterface {
      */
     @Method()
     async triggerSearch(): Promise<void> {
+        if (!this.inputElement) return;
         const inputValue = this.inputElement.value;
         this.search(inputValue);
     }
@@ -187,6 +189,7 @@ export class Search implements ComponentInterface {
      */
     @Method()
     async setDisplayText(displayText: string): Promise<void> {
+        if (!this.inputElement) return;
         this.preventSearch = true;
         this.inputElement.value = displayText;
         this.value = displayText;
@@ -200,6 +203,7 @@ export class Search implements ComponentInterface {
      */
     @Method()
     async focusInput(): Promise<void> {
+        if (!this.inputElement) return;
         this.inputElement.focus({ preventScroll: true });
     }
 
@@ -208,6 +212,7 @@ export class Search implements ComponentInterface {
      */
     @Method()
     public async getInputField(): Promise<HTMLInputElement> {
+        if (!this.inputElement) return null;
         return this.inputElement;
     }
 
@@ -410,6 +415,7 @@ export class Search implements ComponentInterface {
     }
 
     componentDidRender(): void {
+        if (!this.inputElement) return;
         if (this.dataAttributes) {
             for (const key in this.dataAttributes) {
                 this.inputElement.setAttribute(key, this.dataAttributes[key]);
