@@ -4,9 +4,7 @@
   "version": "1.95.4",
   "private": false,
   "files": [
-    "dist/*.js",
-    "dist/*.mjs",
-    "dist/polyfills/"
+    "dist/"
   ],
   "devDependencies": {
     "@googlemaps/js-api-loader": "^1.15.1",
