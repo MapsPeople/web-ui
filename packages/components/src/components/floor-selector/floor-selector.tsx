@@ -178,6 +178,7 @@ export class FloorSelector {
      * It resets the floorlist and the active floor when the building changes.
      */
     connectedCallback(): void {
+        if (!this.mapsindoors) return;
         this.mapsindoors.addListener('building_changed', () => {
             this.floors = [];
             const building = this.mapsindoors.getBuilding();
@@ -211,6 +212,7 @@ export class FloorSelector {
      * Called after every render().
      */
     componentDidRender(): void {
+        if (!this.mapsindoors || !this.floorSelectorElement) return;
         if (!this.mapsindoors.getBuilding() || this.mapsindoors.getFloor() === null || this.mapsindoors.getFloor() === undefined) {
             this.floorSelectorElement.classList.add('mi-floor-selector--hidden');
         } else {

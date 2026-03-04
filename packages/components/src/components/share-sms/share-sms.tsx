@@ -72,6 +72,7 @@ export class ShareSms implements ComponentInterface {
     miKeyboardElement: HTMLMiKeyboardElement;
 
     componentDidRender(): void {
+        if (!this.countryCodeInputElement || !this.countryCode) return;
         this.countryCodeInputElement.value = this.countryCode;
     }
 

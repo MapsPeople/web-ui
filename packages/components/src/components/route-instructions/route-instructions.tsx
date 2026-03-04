@@ -135,6 +135,7 @@ export class RouteInstructions implements ComponentInterface {
     lastStepTransitStop = null;
 
     componentDidRender(): void {
+        if (!this.hideIndoorSubsteps && this.hideIndoorSubsteps !== false) return;
         this.miStepElements.forEach((element: HTMLMiRouteInstructionsStepElement) => {
             element.hideIndoorSubsteps = this.hideIndoorSubsteps;
         });

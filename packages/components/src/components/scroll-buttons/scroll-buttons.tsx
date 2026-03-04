@@ -76,6 +76,7 @@ export class ScrollButtons {
      */
     @Method()
     async updateScrollButtonsState(): Promise<void> {
+        if (!this.scrollContainerElementRef || !this.upButtonElement) return;
         // Disable or enable the scroll up button
         if (this.scrollContainerElementRef.scrollTop === 0) {
             this.upButtonElement.disabled = true;
