@@ -55,6 +55,7 @@ export const config: Config = {
     ],
     outputTargets: [
         { type: 'dist', esmLoaderPath: '../loader' },
+        { type: 'dist-custom-elements', customElementsExportBehavior: 'bundle' },
         {
             type: 'docs-readme',
             dependencies: false,
