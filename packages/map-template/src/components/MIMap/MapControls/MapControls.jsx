@@ -69,6 +69,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
     }, [excludedElements]);
 
     // Create UI elements inside component based on the UI_ELEMENTS configuration object.
+    // This way we can easily manage the elements and their class names in one place, and we can also easily add new elements in the future if needed.
     const uiElements = useMemo(() => {
         const elements = {};
         for (const [elementName, elementDetails] of Object.entries(UI_ELEMENTS)) {
