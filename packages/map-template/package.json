@@ -6,6 +6,7 @@
   "files": [
     "dist/*.js",
     "dist/*.mjs",
+    "dist/esm/**",
     "dist/polyfills/"
   ],
   "devDependencies": {
