@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.95.9] - 2026-03-05
+
+### Changed
+
+- Updated component imports from lazy-loaded `@mapsindoors/components/dist/esm/loader.js` to fully-bundled `@mapsindoors/components/dist/components/index.js` in `MapTemplate.jsx` and `MIMap.jsx`
+- Simplified `buildForNpm.mjs` to remove component file copying logic (no longer needed with static bundling)
+- Removed `createRequire`, `cpSync`, and related configuration from npm build script
+
 ## [1.95.8] - 2026-03-04
 
 ### Added

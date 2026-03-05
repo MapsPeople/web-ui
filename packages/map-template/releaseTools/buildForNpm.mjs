@@ -3,16 +3,9 @@
 import { build } from 'vite';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { createRequire } from 'module';
-import { cpSync } from 'fs';
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 
-const require = createRequire(import.meta.url);
-
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-const componentsPkgDir = path.dirname(require.resolve('@mapsindoors/components/package.json'));
-const componentsEsmDir = path.join(componentsPkgDir, 'dist/esm');
 
 const libraries = [
     // Web Component
@@ -73,9 +66,3 @@ const libraries = [
 for (const library of libraries) {
     await build(library);
 }
-
-// Copy Stencil component ESM files so they're available at runtime.
-// The webcomponent imports @mapsindoors/components/dist/esm/loader.js which
-// dynamically defines custom elements, and these entry files are loaded on-demand.
-const distDir = path.resolve(__dirname, '../dist');
-cpSync(componentsEsmDir, distDir, { recursive: true });
