@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Reduced minimum splash screen wait time from 3 seconds to 1 second during map initialization
 - Added `<link rel="preload">` for the MapsIndoors SDK script in `index.html` so the browser begins fetching it during HTML parsing, before JavaScript executes
+- Fixed removing locations highlight when clicking outside the MapsIndoors data.
 
 
 ## [1.95.9] - 2026-03-05
