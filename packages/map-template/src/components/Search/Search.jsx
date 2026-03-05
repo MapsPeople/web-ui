@@ -139,7 +139,7 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
     function handleBack() {
         // If selected categories tree has only parent category, then on back, we need to perform those clear functions.
         // Else, remove child category from selected categories tree array.
-        if (selectedCategoriesArray.current.length === 1) {
+        if (selectedCategoriesArray.current.length === 0) {
             setSelectedCategory(null);
             setSearchResults([]);
             setFilteredLocations([]);
