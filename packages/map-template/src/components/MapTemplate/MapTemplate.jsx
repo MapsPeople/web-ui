@@ -235,6 +235,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             const miSdkApiTag = document.createElement('script');
             miSdkApiTag.setAttribute('type', 'text/javascript');
+            // Remember to update the root index.html with the same version / integrity
             miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.52.2/mapsindoors-4.52.2.js.gz');
             miSdkApiTag.setAttribute('integrity', 'sha384-TWIYcrdh2EinyHvpkk8WCrvdz3G9c5NXZcRSdGcgrEQyyFY+uM3oPU9QPZtGaA9A');
             miSdkApiTag.setAttribute('crossorigin', 'anonymous');
@@ -349,8 +350,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                     setSolution(solutionResult);
                     return solutionResult;
                 }),
-                // Ensure a minimum waiting time of 3 seconds
-                new Promise(resolve => setTimeout(resolve, 3000))
+                // Ensure a minimum waiting time of 1 second
+                new Promise(resolve => setTimeout(resolve, 1000))
             ]).then(([venuesResult, appConfigResult]) => {
                 venuesResult = venuesResult.map(venue => {
                     venue.image = appConfigResult.venueImages[venue.name.toLowerCase()];
