@@ -1,11 +1,11 @@
-@import '../../variables.scss';
+@use '../../variables.scss';
 
 .wayfinding {
     color: var(--brand-colors-black-100);
     display: grid;
     grid-template-rows: 190px min-content;
 
-    @media (min-width: $desktop-breakpoint) {
+    @media (min-width: variables.$desktop-breakpoint) {
         min-height: 435px; // avoid content jumping on larger screens. On smaller screens we control the height more explicitly.
     }
 

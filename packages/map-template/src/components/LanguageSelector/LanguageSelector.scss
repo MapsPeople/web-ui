@@ -1,4 +1,4 @@
-@import '../../variables.scss';
+@use '../../variables.scss';
 
 .language-selector {
   &__button-container {
@@ -43,7 +43,7 @@
     flex-direction: column;
 
     // Dekstop specific styles
-    @media (min-width: $desktop-breakpoint) {
+    @media (min-width: variables.$desktop-breakpoint) {
       position: absolute;
       right: 100%;
       margin-right: var(--spacing-small);
@@ -52,7 +52,7 @@
     }
 
     // Mobile specific styles
-    @media (max-width: $desktop-breakpoint - 1) {
+    @media (max-width: variables.$desktop-breakpoint - 1) {
       position: absolute;
       top: 50%;
       left: 50%;
@@ -71,12 +71,12 @@
     overflow-y: auto;
 
     // Hide scrollbar on mobile devices
-    @media (max-width: $desktop-breakpoint - 1) {
+    @media (max-width: variables.$desktop-breakpoint - 1) {
       scrollbar-width: none;
     }
 
     // Subtle scrollbar for desktop
-    @media (min-width: $desktop-breakpoint) {
+    @media (min-width: variables.$desktop-breakpoint) {
       scrollbar-width: thin;
       scrollbar-color: var(--tailwind-colors-gray-300) transparent;
     }

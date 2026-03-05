@@ -1,9 +1,9 @@
-@import '../../variables.scss';
+@use '../../variables.scss';
 
 .search {
     padding: var(--spacing-medium);
 
-    @media (max-width: $desktop-breakpoint) {
+    @media (max-width: variables.$desktop-breakpoint) {
         padding: var(--spacing-medium) var(--spacing-x-small) var(--spacing-medium) var(--spacing-x-small);
 
         mi-search input::placeholder {

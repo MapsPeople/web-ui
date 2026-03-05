@@ -1,4 +1,4 @@
-@import '../../variables.scss';
+@use '../../variables.scss';
 
 .directions {
     color: var(--brand-colors-black-100);
@@ -124,7 +124,7 @@
         border-top: 1px solid var(--color-gray-30);
     }
 
-    @media (max-width: $desktop-breakpoint) {
+    @media (max-width: variables.$desktop-breakpoint) {
         min-height: 273px;
     }
 }
