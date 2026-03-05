@@ -54,7 +54,9 @@ export const config: Config = {
         })
     ],
     outputTargets: [
+        // Legacy lazy-loaded output - kept for backward compatibility
         { type: 'dist', esmLoaderPath: '../loader' },
+        // Static bundled output - used by map-template for full bundling without lazy loading
         { type: 'dist-custom-elements', customElementsExportBehavior: 'bundle' },
         {
             type: 'docs-readme',
