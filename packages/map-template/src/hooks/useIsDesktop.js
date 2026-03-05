@@ -1,4 +1,4 @@
-import useMediaQuery from "./useMediaQuery";
+import useMediaQuery from './useMediaQuery';
 
 /**
  * React hook that returns a boolean whether 

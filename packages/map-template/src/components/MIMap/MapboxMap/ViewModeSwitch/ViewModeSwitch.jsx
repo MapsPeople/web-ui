@@ -42,7 +42,7 @@ function ViewModeSwitch({ mapView, pitch, reset, activeColor = '#005655', show2D
     // The show2DModelsIn3D property from AppConfig is received as a string ("true"/"false") or might be undefined.
     // We need to explicitly check for the string value "true" for the setting to take effect.
     const is2DModelsEnabledIn3D = () => {
-        return show2DModelsIn3D === "true";
+        return show2DModelsIn3D === 'true';
     };
 
     useEffect(() => {
