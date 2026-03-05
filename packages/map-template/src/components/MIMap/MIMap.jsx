@@ -1,7 +1,7 @@
 import { useEffect, useState, Suspense, lazy, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import MapControls from './MapControls/MapControls';
-import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
+import { defineCustomElements } from '@mapsindoors/components/dist/components/index.js';
 import './MIMap.scss';
 import { mapTypes } from '../../constants/mapTypes';
 

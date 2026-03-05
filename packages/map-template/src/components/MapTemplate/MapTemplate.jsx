@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useRef } from 'react';
 import { useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { defineCustomElements } from '@mapsindoors/components/dist/esm/loader.js';
+import { defineCustomElements } from '@mapsindoors/components/dist/components/index.js';
 import i18n from 'i18next';
 import initI18n from '../../i18n/initialize.js';
 import './MapTemplate.scss';

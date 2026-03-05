@@ -4,15 +4,11 @@
   "version": "1.95.8",
   "private": false,
   "files": [
-    "dist/*.js",
-    "dist/*.mjs",
-    "dist/esm/**",
-    "dist/polyfills/"
+    "dist/**",
+    "!dist/**/*.map"
   ],
   "devDependencies": {
     "@googlemaps/js-api-loader": "^1.15.1",
-    "@mapsindoors/components": "*",
-    "@mapsindoors/css": "^3.0.0",
     "@mapsindoors/midt": "*",
     "@r2wc/react-to-web-component": "2.0.3",
     "@testing-library/jest-dom": "^5.16.5",
@@ -72,6 +68,8 @@
     "node": ">=22.0.0"
   },
   "dependencies": {
+    "@mapsindoors/components": "*",
+    "@mapsindoors/css": "^3.0.0",
     "react-markdown": "^10.1.0",
     "remark-gfm": "^4.0.1"
   }
