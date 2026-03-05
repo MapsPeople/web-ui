@@ -70,8 +70,10 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     // Location sharing consent state
     const [locationShareConsent, setLocationShareConsent] = useRecoilState(userLocationShareState);
 
-    // Usage consent state (local, resets on remount/reload)
-    const [usageConsentAccepted, setUsageConsentAccepted] = useState(false);
+    // Persisted in sessionStorage to survive navigation-triggered remounts; intentionally separate from the cookie banner.
+    const [usageConsentAccepted, setUsageConsentAccepted] = useState(
+        () => sessionStorage.getItem('chatUsageConsentAccepted') === 'true'
+    );
 
     // Pending message waiting for consent decision
     const [pendingMessage, setPendingMessage] = useState(null);
@@ -95,6 +97,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     }, [setLocationShareConsent]);
 
     const handleDisclaimerAccept = useCallback(() => {
+        sessionStorage.setItem('chatUsageConsentAccepted', 'true');
         setUsageConsentAccepted(true);
     }, [setUsageConsentAccepted]);
 
