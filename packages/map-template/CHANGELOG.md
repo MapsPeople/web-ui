@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.96.1] - Unreleased
+
+### Changed
+
+- Migrated Sass `@import` to `@use` module system across all stylesheets to resolve Dart Sass deprecation warnings
+- Fixed ESLint quote-style warnings in several files
+- Upgraded `sass` to `^1.97.3`
+
 ## [1.96.0] - 2026-03-05
 
 ### Fixed
