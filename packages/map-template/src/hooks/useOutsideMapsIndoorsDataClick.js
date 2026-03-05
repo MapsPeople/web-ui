@@ -33,8 +33,14 @@ export default function useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOp
      */
     function attachMapboxClickListeners(map, mapsIndoorsInstance, isOpen, setClickedOutside) {
         const mapboxClickHandler = (clickResult) => {
-            if (!isOpen) return;
             const features = mapsIndoorsInstance.getMap().queryRenderedFeatures(clickResult.point);
+            
+            // If no features are found and there is a highlight, clear the highlight
+            if (!features.length && mapsIndoorsInstance?.getHighlight()?.length > 0) {
+                mapsIndoorsInstance.highlight([]);
+            }
+
+            if (!isOpen) return;
 
             if (features.length) {
                 setClickedOutside(false);
@@ -63,8 +69,9 @@ export default function useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOp
             if (!isOpen) return;
             setClickedOutside(false);
         };
-
+        
         const googleMapsIndoorsClickHandler = () => {
+            mapsIndoorsInstance.highlight([]); 
             if (!isOpen) return;
             setClickedOutside(true);
         };
