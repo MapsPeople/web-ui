@@ -29,6 +29,10 @@
         color: inherit;
         font: inherit;
 
+        &:not(:disabled) {
+            cursor: pointer;
+        }
+
         &:not(:disabled):hover {
             background-color: var(--tailwind-colors-gray-100);
             border: 1px solid var(--tailwind-colors-gray-200);

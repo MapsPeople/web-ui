@@ -94,6 +94,8 @@ const de = {
     // Map Controls
     'Zoom in': 'Vergrößern',
     'Zoom out': 'Verkleinern',
+    'Enter fullscreen': 'Vollbild',
+    'Exit fullscreen': 'Vollbild beenden',
     // Ask with AI - Usage Consent
     'Usage consent title': 'Ask with AI - Nutzungszustimmung',
     'Usage consent message': 'Ask with AI hilft Ihnen, Orte zu finden und sich in diesem Gebäude mithilfe von Künstlicher Intelligenz (KI) zurechtzufinden. Obwohl wir nach Genauigkeit streben, kann die KI manchmal Fehler machen. Bitte überprüfen Sie wichtige Details, bevor Sie losgehen.',
