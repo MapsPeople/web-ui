@@ -272,6 +272,11 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * Wait for the MapsIndoors JS SDK to be initialized, then set the mapsindoorsSDKAvailable state to true.
      */
     useEffect(() => {
+        if (window.mapsindoors === undefined) {
+            setErrorMessage({ text: 'Failed to load MapsIndoors SDK.', type: 'error' });
+            return;
+        }
+
         initializeMapsIndoorsSDK().then(() => {
             setMapsindoorsSDKAvailable(true);
         });
