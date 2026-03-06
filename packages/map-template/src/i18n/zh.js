@@ -93,6 +93,8 @@ const zh = {
     // Map Controls
     'Zoom in': '放大',
     'Zoom out': '缩小',
+    'Enter fullscreen': '进入全屏',
+    'Exit fullscreen': '退出全屏',
     // Ask with AI - Usage Consent
     'Usage consent title': 'Ask with AI - 使用须知',
     'Usage consent message': 'Ask with AI 利用人工智能（AI）帮助您查找地点并在此场所内导航。尽管我们力求准确，但 AI 有时可能会出错。请在出发前仔细核实重要信息。',
