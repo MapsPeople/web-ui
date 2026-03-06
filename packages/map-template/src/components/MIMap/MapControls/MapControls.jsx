@@ -5,6 +5,7 @@ import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import CustomPositionProvider from '../../../utils/CustomPositionProvider';
 import MapZoomControl from '../MapZoomControl/MapZoomControl';
 import TextSizeButton from '../TextSizeButton/TextSizeButton';
+import FullScreenButton from '../FullScreenButton/FullScreenButton';
 
 // Define UI element configuration objects with class names
 // This is a single source of truth for the UI elements and their class names
@@ -30,7 +31,8 @@ MapControls.propTypes = {
     devicePosition: PropTypes.object,
     excludedElements: PropTypes.string,
     isKiosk: PropTypes.bool,
-    enableAccessibilityKioskControls: PropTypes.bool
+    enableAccessibilityKioskControls: PropTypes.bool,
+    enableFullScreenButton: PropTypes.bool
 };
 
 /**
@@ -48,11 +50,12 @@ MapControls.propTypes = {
  * @param {string} [props.excludedElements] - Comma-separated string of element names to exclude from rendering, defaults to empty string -> renders all elements
  * @param {boolean} [props.isKiosk] - Set to true to enable kiosk layout
  * @param {boolean} [props.enableAccessibilityKioskControls] - Set to true to enable accessibility kiosk controls, defaults to false
+ * @param {boolean} [props.enableFullScreenButton] - Set to true to show the fullscreen button, configurable via App Config enableFullScreenButton
  *
  * @returns {JSX.Element} Map controls container with venue selector, floor selector,
  * position button, and view mode switch, arranged differently for desktop, kiosk, and mobile layouts
  */
-function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionControl, brandingColor, devicePosition, excludedElements = '', isKiosk, enableAccessibilityKioskControls = false }) {
+function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionControl, brandingColor, devicePosition, excludedElements = '', isKiosk, enableAccessibilityKioskControls = false, enableFullScreenButton = false }) {
     const isDesktop = useIsDesktop();
     const floorSelectorRef = useRef(null);
     const positionButtonRef = useRef(null);
@@ -274,6 +277,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
                     {shouldRenderElement('zoomControls') && (
                         <MapZoomControl mapType={mapType} mapInstance={mapInstance} />
                     )}
+                    {enableFullScreenButton && <FullScreenButton />}
                     {uiElements.resetView}
                 </div>
             </>
