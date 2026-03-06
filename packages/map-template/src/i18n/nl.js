@@ -94,6 +94,8 @@ const nl = {
     // Map Controls
     'Zoom in': 'Inzoomen',
     'Zoom out': 'Uitzoomen',
+    'Enter fullscreen': 'Volledig scherm',
+    'Exit fullscreen': 'Volledig scherm afsluiten',
     // Ask with AI - Usage Consent
     'Usage consent title': 'Ask with AI - Toestemming voor gebruik',
     'Usage consent message': 'Ask with AI helpt je plaatsen te vinden en te navigeren in deze locatie met behulp van Kunstmatige Intelligentie (AI). Hoewel we streven naar nauwkeurigheid, kan de AI soms fouten maken. Controleer belangrijke details voordat je op weg gaat.',
