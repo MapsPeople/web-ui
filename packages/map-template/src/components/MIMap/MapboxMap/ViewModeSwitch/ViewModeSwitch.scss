@@ -19,5 +19,6 @@ $desktop-breakpoint: 992px;
         justify-content: center;
         border: 2px solid var(--tailwind-colors-white, white);
         background-clip: padding-box;
+        cursor: pointer;
     }
 }
