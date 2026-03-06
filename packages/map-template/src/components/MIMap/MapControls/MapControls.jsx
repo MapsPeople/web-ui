@@ -19,7 +19,8 @@ const UI_ELEMENTS = {
     resetView: { key: 'reset-view', className: 'reset-view-portal' },
     chatButton: { key: 'chat-button', className: 'chat-button-portal' },
     zoomControls: { key: 'zoom-controls', className: null }, // React component imported directly, no portal needed
-    textSizeButton: { key: 'text-size-button', className: null } // React component imported directly, no portal needed
+    textSizeButton: { key: 'text-size-button', className: null }, // React component imported directly, no portal needed
+    fullScreenButton: { key: 'fullscreen-button', className: null } // React component imported directly, no portal needed
 };
 
 MapControls.propTypes = {
@@ -47,10 +48,10 @@ MapControls.propTypes = {
  * @param {Function} [props.onPositionControl] - Callback function for position control events
  * @param {string} [props.brandingColor] - Custom branding color for controls
  * @param {Object} [props.devicePosition] - Device position data (if available)
- * @param {string} [props.excludedElements] - Comma-separated string of element names to exclude from rendering, defaults to empty string -> renders all elements
+ * @param {string} [props.excludedElements] - Comma-separated string of element names to exclude from rendering, defaults to empty string -> renders all elements. Use "fullScreenButton" in excludeFromUI (App Config) to hide the fullscreen button.
+ * @param {boolean} [props.enableFullScreenButton] - Set to true to show the fullscreen button. Configurable via App Config enableFullScreenButton under appSettings. When false or unset, button is hidden.
  * @param {boolean} [props.isKiosk] - Set to true to enable kiosk layout
  * @param {boolean} [props.enableAccessibilityKioskControls] - Set to true to enable accessibility kiosk controls, defaults to false
- * @param {boolean} [props.enableFullScreenButton] - Set to true to show the fullscreen button, configurable via App Config enableFullScreenButton
  *
  * @returns {JSX.Element} Map controls container with venue selector, floor selector,
  * position button, and view mode switch, arranged differently for desktop, kiosk, and mobile layouts
@@ -277,7 +278,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
                     {shouldRenderElement('zoomControls') && (
                         <MapZoomControl mapType={mapType} mapInstance={mapInstance} />
                     )}
-                    {enableFullScreenButton && <FullScreenButton />}
+                    {enableFullScreenButton && shouldRenderElement('fullScreenButton') && <FullScreenButton />}
                     {uiElements.resetView}
                 </div>
             </>
