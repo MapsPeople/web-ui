@@ -1,4 +1,4 @@
-@import '../../variables.scss';
+@use '../../variables';
 
 .locations-list {
     display: grid;
@@ -35,7 +35,7 @@
         overflow: auto;
     }
 
-    @media (max-width: $desktop-breakpoint) {
+    @media (max-width: variables.$desktop-breakpoint) {
         min-height: 200px;
     }
 }

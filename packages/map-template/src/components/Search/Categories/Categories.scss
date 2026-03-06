@@ -1,4 +1,4 @@
-@import '../../../variables.scss';
+@use '../../../variables';
 
 .categories {
     /* Remove overflow: auto to prevent nested scrolling - let parent container handle scrolling */

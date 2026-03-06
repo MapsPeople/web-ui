@@ -94,6 +94,8 @@ const fr = {
     // Map Controls
     'Zoom in': 'Zoom avant',
     'Zoom out': 'Zoom arrière',
+    'Enter fullscreen': 'Plein écran',
+    'Exit fullscreen': 'Quitter le plein écran',
     // Ask with AI - Usage Consent
     'Usage consent title': 'Ask with AI - Consentement d\'utilisation',
     'Usage consent message': 'Ask with AI vous aide à trouver des lieux et à vous orienter dans ce site grâce à l\'Intelligence Artificielle (IA). Bien que nous nous efforcions d\'être précis, l\'IA peut parfois se tromper. Veuillez vérifier les détails importants avant de vous mettre en route.',

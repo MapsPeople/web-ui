@@ -105,7 +105,7 @@ const SearchField = forwardRef(function SearchFieldComponent(props, ref) {
     }, [placeholder, mapsindoors, results, clicked, cleared, google, mapbox, changed]);
 
     return <mi-search ref={elementRef}
-        id-attribute='search'
+        id-attribute="search"
         placeholder={placeholder}
         session-token={mapboxPlacesSessionToken}
         user-position={(userPositionCoordinates.latitude !== undefined && userPositionCoordinates.longitude !== undefined) ? Object.values(userPositionCoordinates).join(',') : null}

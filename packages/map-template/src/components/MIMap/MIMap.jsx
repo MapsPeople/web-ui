@@ -189,6 +189,7 @@ function MIMap({ apiKey, mapType, gmApiKey, mapboxAccessToken, center, zoom, bou
                 excludedElements={excludedElements}
                 isKiosk={isKiosk}
                 enableAccessibilityKioskControls={!!appConfig?.appSettings?.enableAccessibilityKioskControls}
+                enableFullScreenButton={!!mapOptions?.enableFullScreenButton}
             />
         )}
     </>

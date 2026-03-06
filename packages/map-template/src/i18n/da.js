@@ -94,6 +94,8 @@ const da = {
     // Map Controls
     'Zoom in': 'Zoom ind',
     'Zoom out': 'Zoom ud',
+    'Enter fullscreen': 'Gå til fuld skærm',
+    'Exit fullscreen': 'Afslut fuld skærm',
     // Ask with AI - Usage Consent
     'Usage consent title': 'Ask with AI - Samtykkeerklæring',
     'Usage consent message': 'Ask with AI hjælper dig med at finde steder og navigere på dette sted ved hjælp af Kunstig Intelligens (AI). Selvom vi stræber efter nøjagtighed, kan AI\'en til tider tage fejl. Dobbelttjek venligst vigtige detaljer, inden du begiver dig af sted.',
