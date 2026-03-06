@@ -100,8 +100,8 @@ const RouteInstructionsStep = forwardRef(function RouteInstructionsStepComponent
         step={JSON.stringify(totalSteps[activeStep])}
         translations={JSON.stringify(translations)}
         destination-location={directions?.destinationLocation.properties.name}
-        from-travel-mode={previous?.travel_mode ?? ""}
-        from-route-context={previous?.route_context ?? originLocation?.properties?.name ?? ""}>
+        from-travel-mode={previous?.travel_mode ?? ''}
+        from-route-context={previous?.route_context ?? originLocation?.properties?.name ?? ''}>
     </mi-route-instructions-step>
 });
 

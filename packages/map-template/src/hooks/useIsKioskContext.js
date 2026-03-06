@@ -1,6 +1,6 @@
-import { useRecoilValue } from "recoil";
-import kioskLocationState from "../atoms/kioskLocationState";
-import { useIsDesktop } from "./useIsDesktop";
+import { useRecoilValue } from 'recoil';
+import kioskLocationState from '../atoms/kioskLocationState';
+import { useIsDesktop } from './useIsDesktop';
 
 /**
  * React hook that can be used indicate if we are on a kiosk context.

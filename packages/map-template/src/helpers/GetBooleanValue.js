@@ -1,4 +1,4 @@
-import isNullOrUndefined from "./isNullOrUndefined";
+import isNullOrUndefined from './isNullOrUndefined';
 
 /**
  * Determines the boolean value based on several parameters.
