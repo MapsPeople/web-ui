@@ -59,7 +59,11 @@ const libraries = [
         },
         plugins: [
             cssInjectedByJsPlugin()
-        ]
+        ],
+        define: {
+            'process.env.NODE_ENV': '"production"',
+            'process.env.npm_package_version': JSON.stringify(process.env.npm_package_version)
+        }
     }
 ]
 
