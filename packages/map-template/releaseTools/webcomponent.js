@@ -1,5 +1,6 @@
 import MapsIndoorsMap from '../src/components/MapsIndoorsMap/MapsIndoorsMap';
 import r2wc from '@r2wc/react-to-web-component';
+import getVersion from '../src/helpers/getVersion';
 
 /*
  * Exports the MapsIndoorsMap React component as a Web Component.
@@ -45,4 +46,5 @@ const WebMapsIndoorsMap = r2wc(MapsIndoorsMap, {
 })
 
 window.customElements.define('mapsindoors-map', WebMapsIndoorsMap);
+window.getMapTemplateVersion = getVersion;
 export default WebMapsIndoorsMap;
