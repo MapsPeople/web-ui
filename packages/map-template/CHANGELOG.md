@@ -5,11 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.96.3] - 2026-03-06
+## [1.96.7] - 2026-03-10
 
 ### Changed
 
 - Upgraded to Mapbox GL JS 3.19.1.
+
+## [1.96.6] - 2026-03-09
+
+### Added
+
+- Added global function `getMapTemplateVersion()` that returns current version of the `map-template` package
+
+## [1.96.5] - 2026-03-09
+
+### Changed
+
+- Disabled sourcemaps creation.
+
+## [1.96.4] - 2026-03-09
+
+### Changed
+- Include source maps to the built web components in `map-template`
+
+## [1.96.3] - 2026-03-09
+
+### Changed
+- Changed script fetching from preload to script defer
 
 ## [1.96.2] - 2026-03-06
 
