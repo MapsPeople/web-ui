@@ -27,6 +27,7 @@ const SearchField = forwardRef(function SearchFieldComponent(props, ref) {
     const { placeholder, mapsindoors, results, clicked, cleared, changed, category, google, mapbox, disabled = false } = props;
     const elementRef = useRef();
     const pendingDisplayText = useRef(null);
+    const isComponentReady = useRef(false);
 
     const userPosition = useRecoilValue(userPositionState);
     const language = useRecoilValue(languageState);
@@ -58,8 +59,10 @@ const SearchField = forwardRef(function SearchFieldComponent(props, ref) {
             return elementRef.current.value;
         },
         setDisplayText(displayText) {
-            // The componentRendered listener below will apply it once the component is ready
-            pendingDisplayText?.current = displayText;
+            if (!isComponentReady.current) {
+                // Buffer until component is ready
+                pendingDisplayText.current = displayText;
+            }
             elementRef.current.setDisplayText(displayText);
         },
         focusInput() {
@@ -87,6 +90,7 @@ const SearchField = forwardRef(function SearchFieldComponent(props, ref) {
         const { current } = elementRef;
 
         const onComponentRendered = () => {
+            isComponentReady.current = true;
             if (pendingDisplayText.current !== null) {
                 current.setDisplayText(pendingDisplayText.current);
                 pendingDisplayText.current = null;
