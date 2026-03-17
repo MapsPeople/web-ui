@@ -59,7 +59,7 @@ const SearchField = forwardRef(function SearchFieldComponent(props, ref) {
         },
         setDisplayText(displayText) {
             // The componentRendered listener below will apply it once the component is ready
-            pendingDisplayText.current = displayText;
+            pendingDisplayText?.current = displayText;
             elementRef.current.setDisplayText(displayText);
         },
         focusInput() {
