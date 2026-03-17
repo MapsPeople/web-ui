@@ -1,11 +1,10 @@
 .route-instructions {
-    height: 100%;
     display: grid;
     grid-template-rows: 1fr min-content;
 
     &__footer {
         position: sticky;
-        bottom: 8.375rem;
+        bottom: 9rem;
         background: white;
         padding-bottom: var(--spacing-medium);
 
