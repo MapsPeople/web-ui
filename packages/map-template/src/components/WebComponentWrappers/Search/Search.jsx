@@ -89,6 +89,12 @@ const SearchField = forwardRef(function SearchFieldComponent(props, ref) {
     useEffect(() => {
         const { current } = elementRef;
 
+        if (current.componentOnReady) {
+            current.componentOnReady().then(() => {
+                isComponentReady.current = true;
+            });
+        }
+
         const onComponentRendered = () => {
             isComponentReady.current = true;
             if (pendingDisplayText.current !== null) {
