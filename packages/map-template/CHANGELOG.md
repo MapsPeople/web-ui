@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.96.11] - 2026-03-18
+
+### Fixed
+
+- Added comprehensive null checks in FloorSelector component to improve stability when floor elements or data are missing.
+- Improved element selection logic with optional chaining (?.) operators for safer property access.
+- Added fallback mechanism to select the first floor element when active floor is unavailable.
+- Fixed scrolling behavior to gracefully handle missing currentFloorElement.
+
+### Added
+
+- Upgraded to Web SDK 4.54.0.
+
 ## [1.96.10] - 2026-03-18
 
 ### Added
