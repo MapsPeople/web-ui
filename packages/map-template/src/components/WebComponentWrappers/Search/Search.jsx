@@ -26,6 +26,8 @@ import PropTypes from 'prop-types';
 const SearchField = forwardRef(function SearchFieldComponent(props, ref) {
     const { placeholder, mapsindoors, results, clicked, cleared, changed, category, google, mapbox, disabled = false } = props;
     const elementRef = useRef();
+    const pendingDisplayText = useRef(null);
+    const isComponentReady = useRef(false);
 
     const userPosition = useRecoilValue(userPositionState);
     const language = useRecoilValue(languageState);
@@ -57,6 +59,10 @@ const SearchField = forwardRef(function SearchFieldComponent(props, ref) {
             return elementRef.current.value;
         },
         setDisplayText(displayText) {
+            if (!isComponentReady.current) {
+                // Buffer until component is ready
+                pendingDisplayText.current = displayText;
+            }
             elementRef.current.setDisplayText(displayText);
         },
         focusInput() {
@@ -79,6 +85,27 @@ const SearchField = forwardRef(function SearchFieldComponent(props, ref) {
             });
         }
     }, [language]);
+
+    useEffect(() => {
+        const { current } = elementRef;
+
+        if (current.componentOnReady) {
+            current.componentOnReady().then(() => {
+                isComponentReady.current = true;
+            });
+        }
+
+        const onComponentRendered = () => {
+            isComponentReady.current = true;
+            if (pendingDisplayText.current !== null) {
+                current.setDisplayText(pendingDisplayText.current);
+                pendingDisplayText.current = null;
+            }
+        };
+
+        current.addEventListener('componentRendered', onComponentRendered);
+        return () => current.removeEventListener('componentRendered', onComponentRendered);
+    }, []);
 
     useEffect(() => {
         const searchResultsHandler = customEvent => results(customEvent.detail);
