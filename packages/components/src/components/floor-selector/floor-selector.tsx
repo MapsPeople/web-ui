@@ -36,6 +36,8 @@ export class FloorSelector {
      * Scrolling the floorList element to the selected floor.
      */
     private scrollToSelectedFloor(): void {
+        if (!this.currentFloorElement) return;
+
         // Get the container and list heights
         const containerHeight = this.floorSelectorElement.clientHeight;
         const listHeight = this.floorListElement.scrollHeight;
@@ -70,7 +72,7 @@ export class FloorSelector {
      */
     private animateTranslateY(element: HTMLElement, distance: number, duration: number): void {
         const keyframes = [{ transform: `translateY(${distance}px)` }];
-        element.animate(keyframes, { duration, fill: 'forwards' });
+        element?.animate?.(keyframes, { duration, fill: 'forwards' });
     }
 
     /**
@@ -78,28 +80,29 @@ export class FloorSelector {
      */
     private animateFloorSelector(): void {
         const floorElements = this.el.querySelectorAll('.mi-floor-selector__floor');
+        const displayFloorIndex = this.currentFloorElement?.getAttribute('data-floor');
 
         // Elements that are placed before the selected element in the markup.
         const elementsBeforeSelected = [];
         for (let i = 0; i < floorElements.length; i++) {
             // Stop iterating when we reach the clicked element
-            if (floorElements[i].getAttribute('data-floor') === this.currentFloor) {
+            if (floorElements[i]?.getAttribute?.('data-floor') === displayFloorIndex) {
                 break;
             }
-            elementsBeforeSelected.push(floorElements[i]);
+            elementsBeforeSelected.push(floorElements[i] as HTMLElement);
         }
 
         if (this.floorSelectorClosed) {
-            const listScrollTop = this.floorListElement.scrollTop;
+            const listScrollTop = this.floorListElement?.scrollTop;
             const listPaddingTop: number = parseInt(window.getComputedStyle(this.floorListElement).getPropertyValue('padding-top'));
-            const selectedElementDistanceFromTop = this.currentFloorElement.offsetTop - this.floorListElement.offsetTop;
+            const selectedElementDistanceFromTop = this.currentFloorElement?.offsetTop - this.floorListElement?.offsetTop;
             const newElementDistanceFromTop: number = -(selectedElementDistanceFromTop - listScrollTop - listPaddingTop);
             this.animateTranslateY(this.currentFloorElement, newElementDistanceFromTop, 250);
 
             // If the floor selector has been scrolled, all floors need to be pushed down.
             if (this.floorListElement.scrollTop > 0) {
                 floorElements.forEach(floorElement => {
-                    if (floorElement.getAttribute('data-floor') !== this.currentFloor) {
+                    if (floorElement.getAttribute('data-floor') !== displayFloorIndex) {
                         // Floors placed before the first floor need to be pushed further down.
                         if (elementsBeforeSelected.indexOf(floorElement) > -1) {
                             this.animateTranslateY(floorElement as HTMLElement, (floorElement as HTMLElement).offsetTop + this.floorListElement.scrollTop, 250);
@@ -119,7 +122,7 @@ export class FloorSelector {
             // If the floor selector is closed, all elements need to be animated back to their original position.
             this.animateTranslateY(this.currentFloorElement, 0, 250);
             floorElements.forEach(floorElement => {
-                if (floorElement.getAttribute('data-floor') !== this.currentFloor) {
+                if (floorElement.getAttribute('data-floor') !== displayFloorIndex) {
                     this.animateTranslateY(floorElement as HTMLElement, 0, 250);
                 }
             });
@@ -219,9 +222,11 @@ export class FloorSelector {
             this.floorSelectorElement.classList.remove('mi-floor-selector--hidden');
         }
 
-        this.currentFloorElement = this.el.querySelector('.mi-floor-selector__floor--active');
+        this.currentFloorElement =
+            this.el.querySelector('.mi-floor-selector__floor--active')
+            || this.el.querySelector('.mi-floor-selector__floor');
 
-        if (this.currentFloorElement && this.currentFloor) {
+        if (this.currentFloorElement) {
             this.animateFloorSelector();
         }
     }
