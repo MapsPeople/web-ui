@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [13.33.4] - Unreleased
+
+### Fixed
+
+- **mi-floor-selector**: changed floor selector max height.
+- **mi-floor-selector**: Removed visible scrollbar in favour of fade gradient indicators, preventing layout shift within the 48px component width.
+- **mi-floor-selector**: Fixed visual glitch when switching buildings while the floor selector is closed — in-flight animations are now cancelled and new floor positions snap into place instantly.
+
 ## [13.33.3] - 2026-03-05
 
 ### Changed
