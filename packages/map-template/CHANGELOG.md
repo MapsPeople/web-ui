@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.96.10] - 2026-03-18
+
+### Added
+
+- Upgraded to latest mapbox-gl-js version.
+
+## [1.96.9] - 2026-03-18
+
+### Fixed
+
+- Fixed SearchField display text not being applied by ensuring component readiness before setting display text
+
+## [1.96.8] - 2026-03-17
+
+### Fixed
+
+- Adjusted footer positioning and removed height from route instructions
+
 ## [1.96.7] - 2026-03-13
 
 ### Added
