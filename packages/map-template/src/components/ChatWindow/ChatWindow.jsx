@@ -11,6 +11,7 @@ import primaryColorState from '../../atoms/primaryColorState';
 import apiKeyState from '../../atoms/apiKeyState';
 import userPositionState from '../../atoms/userPositionState';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
+import venuesInSolutionState from '../../atoms/venuesInSolutionState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import userLocationShareState from '../../atoms/userLocationShareState';
 import ChatMessages from './ChatMessages/ChatMessages';
@@ -53,6 +54,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     const apiKey = useRecoilValue(apiKeyState);
     const userPosition = useRecoilValue(userPositionState);
     const currentVenueName = useRecoilValue(currentVenueNameState);
+    const venuesInSolution = useRecoilValue(venuesInSolutionState);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const isDesktop = useIsDesktop();
     const chatWindowRef = useRef(null);
@@ -187,9 +189,17 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
 
         // Add venue info if available
         if (currentVenueName) {
+            const currentVenue = venuesInSolution.find(
+                venue => venue.name.toLowerCase() === currentVenueName.toLowerCase()
+            );
+
             extra.venue = {
                 name: currentVenueName
             };
+
+            if (currentVenue?.id) {
+                extra.venue.venueId = currentVenue.id;
+            }
         }
 
         // Call Gemini service for response with extra context and streaming callbacks
@@ -268,7 +278,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
             ]);
             setCurrentThought('');
         }
-    }, [isLoading, generateResponse, apiKey, userPosition, currentVenueName, mapsIndoorsInstance, locationShareConsent, usageConsentAccepted]);
+    }, [isLoading, generateResponse, apiKey, userPosition, currentVenueName, venuesInSolution, mapsIndoorsInstance, locationShareConsent, usageConsentAccepted]);
 
     // Send pending message after consent is decided
     useEffect(() => {
