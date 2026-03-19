@@ -30,7 +30,8 @@ export class FloorSelector {
     private floorSelectorElement: HTMLDivElement;
     private floorListElement: HTMLDivElement;
     private currentFloorElement: HTMLElement;
-    private maxListHeight: number = 300; // The floor-selector.scss: $max-list-height variable needs to be synced with this value
+    private maxListHeight: number = 224; // The floor-selector.scss: $max-list-height variable needs to be synced with this value
+    private buildingChanging: boolean = false;
 
     /**
      * Scrolling the floorList element to the selected floor.
@@ -78,7 +79,7 @@ export class FloorSelector {
     /**
      * Calls the animation for the needed elements with the calculated animation values.
      */
-    private animateFloorSelector(): void {
+    private animateFloorSelector(duration: number = 250): void {
         const floorElements = this.el.querySelectorAll('.mi-floor-selector__floor');
         const displayFloorIndex = this.currentFloorElement?.getAttribute('data-floor');
 
@@ -97,7 +98,7 @@ export class FloorSelector {
             const listPaddingTop: number = parseInt(window.getComputedStyle(this.floorListElement).getPropertyValue('padding-top'));
             const selectedElementDistanceFromTop = this.currentFloorElement?.offsetTop - this.floorListElement?.offsetTop;
             const newElementDistanceFromTop: number = -(selectedElementDistanceFromTop - listScrollTop - listPaddingTop);
-            this.animateTranslateY(this.currentFloorElement, newElementDistanceFromTop, 250);
+            this.animateTranslateY(this.currentFloorElement, newElementDistanceFromTop, duration);
 
             // If the floor selector has been scrolled, all floors need to be pushed down.
             if (this.floorListElement.scrollTop > 0) {
@@ -105,9 +106,9 @@ export class FloorSelector {
                     if (floorElement.getAttribute('data-floor') !== displayFloorIndex) {
                         // Floors placed before the first floor need to be pushed further down.
                         if (elementsBeforeSelected.indexOf(floorElement) > -1) {
-                            this.animateTranslateY(floorElement as HTMLElement, (floorElement as HTMLElement).offsetTop + this.floorListElement.scrollTop, 250);
+                            this.animateTranslateY(floorElement as HTMLElement, (floorElement as HTMLElement).offsetTop + this.floorListElement.scrollTop, duration);
                         } else {
-                            this.animateTranslateY(floorElement as HTMLElement, this.floorListElement.scrollTop, 250);
+                            this.animateTranslateY(floorElement as HTMLElement, this.floorListElement.scrollTop, duration);
                         }
                     }
                 });
@@ -115,15 +116,15 @@ export class FloorSelector {
                 // If the floor selector has NOT been scrolled, only the elements above the selected floor need to be pushed down.
                 // The selected floor will take the position of the first floor in the list.
                 elementsBeforeSelected.forEach(floorElement => {
-                    this.animateTranslateY(floorElement, floorElement.offsetTop, 250);
+                    this.animateTranslateY(floorElement, floorElement.offsetTop, duration);
                 });
             }
         } else {
             // If the floor selector is closed, all elements need to be animated back to their original position.
-            this.animateTranslateY(this.currentFloorElement, 0, 250);
+            this.animateTranslateY(this.currentFloorElement, 0, duration);
             floorElements.forEach(floorElement => {
                 if (floorElement.getAttribute('data-floor') !== displayFloorIndex) {
-                    this.animateTranslateY(floorElement as HTMLElement, 0, 250);
+                    this.animateTranslateY(floorElement as HTMLElement, 0, duration);
                 }
             });
         }
@@ -183,6 +184,10 @@ export class FloorSelector {
     connectedCallback(): void {
         if (!this.mapsindoors) return;
         this.mapsindoors.addListener('building_changed', () => {
+            this.el.querySelectorAll('.mi-floor-selector__floor').forEach(el => {
+                el.getAnimations().forEach(anim => anim.cancel());
+            });
+            this.buildingChanging = true;
             this.floors = [];
             const building = this.mapsindoors.getBuilding();
             if (building) {
@@ -227,7 +232,8 @@ export class FloorSelector {
             || this.el.querySelector('.mi-floor-selector__floor');
 
         if (this.currentFloorElement) {
-            this.animateFloorSelector();
+            this.animateFloorSelector(this.buildingChanging ? 0 : 250);
+            this.buildingChanging = false;
         }
     }
 
