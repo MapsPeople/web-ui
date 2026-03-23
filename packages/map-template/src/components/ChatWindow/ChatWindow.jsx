@@ -12,7 +12,6 @@ import apiKeyState from '../../atoms/apiKeyState';
 import userPositionState from '../../atoms/userPositionState';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
 import venuesInSolutionState from '../../atoms/venuesInSolutionState';
-import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import userLocationShareState from '../../atoms/userLocationShareState';
 import ChatMessages from './ChatMessages/ChatMessages';
 import ChatInput from './ChatInput/ChatInput';
@@ -55,7 +54,6 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     const userPosition = useRecoilValue(userPositionState);
     const currentVenueName = useRecoilValue(currentVenueNameState);
     const venuesInSolution = useRecoilValue(venuesInSolutionState);
-    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const isDesktop = useIsDesktop();
     const chatWindowRef = useRef(null);
     const { getInitialMessage, clearInitialMessage } = useInitialChatMessage();
@@ -263,6 +261,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                         });
                     }
                     // Streaming complete - function data is already processed by provider
+                    setCurrentThought('');
                     currentResponseIdRef.current = null;
                 }
             });
@@ -278,7 +277,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
             ]);
             setCurrentThought('');
         }
-    }, [isLoading, generateResponse, apiKey, userPosition, currentVenueName, venuesInSolution, mapsIndoorsInstance, locationShareConsent, usageConsentAccepted]);
+    }, [isLoading, generateResponse, apiKey, userPosition, currentVenueName, venuesInSolution, locationShareConsent, usageConsentAccepted]);
 
     // Send pending message after consent is decided
     useEffect(() => {

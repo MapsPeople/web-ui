@@ -175,9 +175,9 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
      * Dynamically filter or highlight location based on the "filteredLocations", "filteredLocationsByExternalIDs" and "hideNonMatches" property.
      */
     useEffect(() => {
+        if (!mapsIndoorsInstance) return;
         const locations = filteredLocations || filteredLocationsByExternalIDs;
-        if (!locations || locations.length === 0 || !mapsIndoorsInstance) return;
-        const locationIds = locations.map(location => location.id);
+        const locationIds = locations ? locations.map(location => location.id) : [];
 
         // Check if the hideNonMatches prop or highlight method in the SDK exists
         if (hideNonMatches || !mapsIndoorsInstance.highlight) {
