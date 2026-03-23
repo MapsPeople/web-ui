@@ -1,4 +1,4 @@
-import { useResetRecoilState } from 'recoil';
+import { useResetRecoilState, useRecoilValue } from 'recoil';
 import activeStepState from '../atoms/activeStep';
 import currentLocationState from '../atoms/currentLocationState';
 import directionsResponseState from '../atoms/directionsResponseState';
@@ -7,6 +7,7 @@ import isLocationClickedState from '../atoms/isLocationClickedState';
 import notificationMessageState from '../atoms/notificationMessageState';
 import travelModeState from '../atoms/travelModeState';
 import accessibilityOnState from '../atoms/accessibilityOnState';
+import mapsIndoorsInstanceState from '../atoms/mapsIndoorsInstanceState';
 
 /**
  * Reset a number of Recoil atoms to initial values when route is finished.
@@ -23,6 +24,7 @@ export function useOnRouteFinished() {
     const notificationMessage = useResetRecoilState(notificationMessageState);
     const travelMode = useResetRecoilState(travelModeState);
     const accessibilityOn = useResetRecoilState(accessibilityOnState);
+    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
 
     return () => {
         activeStep();
@@ -33,5 +35,10 @@ export function useOnRouteFinished() {
         notificationMessage();
         travelMode();
         accessibilityOn();
+        
+        // Clear any selection pins when route is finished to avoid visual clutter
+        if (mapsIndoorsInstance) {
+            mapsIndoorsInstance.deselectLocation();
+        }
     };
 }
