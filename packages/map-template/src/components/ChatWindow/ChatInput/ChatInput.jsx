@@ -1,6 +1,7 @@
 import { useRef, useCallback, useEffect, useState } from 'react';
 import ChatModeIcon from '../../../assets/chat-mode-icon.svg?react';
 import CloseIcon from '../../../assets/close.svg?react';
+import SendIcon from '../../../assets/send.svg?react';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import PropTypes from 'prop-types';
 import './ChatInput.scss';
@@ -62,20 +63,19 @@ function ChatInput({ onSendMessage, isLoading, onClose, disabled, primaryColor }
                     rows={1}
                     disabled={disabled}
                 />
+                {!isDesktop && (
+                    <button
+                        type="button"
+                        onClick={handleSend}
+                        disabled={!inputValue.trim() || isLoading || disabled}
+                        className="chat-input__send-button"
+                        style={{ backgroundColor: inputValue.trim() && !isLoading && !disabled ? primaryColor : undefined }}
+                        aria-label="Send message"
+                    >
+                        <SendIcon />
+                    </button>
+                )}
             </div>
-            {/* TODO: Address if we need this button once we enable kiosk usage */}
-            {!isDesktop && (
-                <button
-                    type="button"
-                    onClick={handleSend}
-                    disabled={!inputValue.trim() || isLoading}
-                    className="chat-input__button"
-                    style={{ backgroundColor: primaryColor }}
-                    aria-label="Send message"
-                >
-                    Send
-                </button>
-            )}
             {/* Remove from tab order while usage consent overlay is visible to prevent accidental closes */}
             <button
                 type="button"
