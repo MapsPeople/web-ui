@@ -49,7 +49,7 @@ function ListItemLocation({ location, locationClicked, icon, isHovered, disableH
             if (disableHover) return;
             
             // Check if the location is non-selectable before unhovering it
-            if (!location.properties.locationSettings?.selectable !== false) {
+            if (location.properties.locationSettings?.selectable !== false) {
                 mapsIndoorsInstance.unhoverLocation(location);
             }
         }, 150);
