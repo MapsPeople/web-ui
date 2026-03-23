@@ -92,6 +92,21 @@
     }
 }
 
+.chat-messages__toggle-expand {
+    background: none;
+    border: none;
+    padding: 0;
+    margin-top: var(--spacing-x-small);
+    color: var(--color-gray-60);
+    font-size: var(--font-size-small);
+    cursor: pointer;
+    align-self: flex-start;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
 .chat-messages__directions-button {
     margin-top: var(--spacing-small);
     display: flex;

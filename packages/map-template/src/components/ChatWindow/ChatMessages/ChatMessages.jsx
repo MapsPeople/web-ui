@@ -1,12 +1,37 @@
-import { useRef, useLayoutEffect } from 'react';
+import { useRef, useLayoutEffect, useState, useCallback } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import PropTypes from 'prop-types';
 import ChatSearchResults from '../ChatSearchResults/ChatSearchResults';
 import './ChatMessages.scss';
 
+// Number of top-level markdown nodes (paragraphs, headings, lists, etc.) to show in collapsed state.
+const MAX_COLLAPSED_NODES = 1;
+
+/**
+ * Remark plugin that truncates the markdown AST to the first N top-level nodes.
+ * Used to show a preview of long server messages without breaking markdown syntax.
+ */
+function remarkTruncate({ maxNodes = MAX_COLLAPSED_NODES } = {}) {
+    return (tree) => {
+        if (tree.children.length > maxNodes) {
+            tree.children = tree.children.slice(0, maxNodes);
+        }
+    };
+}
+
+/**
+ * Checks whether a markdown string contains more than MAX_COLLAPSED_NODES paragraph blocks.
+ * Paragraphs in markdown are separated by double newlines.
+ */
+function hasMoreContent(text) {
+    return text.split(/\n\n+/).filter(Boolean).length > MAX_COLLAPSED_NODES;
+}
+
 function ChatMessages({ chatHistory, isLoading, primaryColor, onShowRoute, currentThought }) {
     const chatMessagesRef = useRef(null);
+    // Tracks which server messages are expanded (show full content) by message ID.
+    const [expandedMessages, setExpandedMessages] = useState(new Map());
 
     // Auto-scroll to bottom when messages change or loading state changes
     // Uses immediate scroll + 300ms delay for server messages + ResizeObserver for async content
@@ -50,18 +75,34 @@ function ChatMessages({ chatHistory, isLoading, primaryColor, onShowRoute, curre
         }
     }, [chatHistory, isLoading]);
 
-    /**
-     * Render chat messages - purely presentational component.
-     * All logic is handled by ChatWindow parent.
-     */
+    const toggleMessageExpanded = useCallback((messageId) => {
+        setExpandedMessages(prevExpandedMessages => {
+            const nextExpandedMessages = new Map(prevExpandedMessages);
+            nextExpandedMessages.set(messageId, !nextExpandedMessages.get(messageId));
+            return nextExpandedMessages;
+        });
+    }, []);
+
     const chatMessages = chatHistory.map((message) => {
+        const isExpanded = expandedMessages.get(message.id);
+        const isTruncatable = message.type === 'server' && hasMoreContent(message.text);
+
         return (
             <div key={message.id} className={`chat-messages__message chat-messages__message--${message.type}`}>
                 {message.type === 'server' ? (
                     <>
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                        <ReactMarkdown remarkPlugins={isTruncatable && !isExpanded ? [[remarkTruncate], remarkGfm] : [remarkGfm]}>
                             {message.text}
                         </ReactMarkdown>
+                        {isTruncatable && (
+                            <button
+                                type="button"
+                                className="chat-messages__toggle-expand"
+                                onClick={() => toggleMessageExpanded(message.id)}
+                            >
+                                {isExpanded ? 'Show less' : 'Show more'}
+                            </button>
+                        )}
                         {message.locations && message.locations.length > 0 && (
                             <ChatSearchResults
                                 locations={message.locations}
