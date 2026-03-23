@@ -15,6 +15,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - An issue with deselection of locations (edge-case scenario).
 
+## [1.96.13] - 2026-03-19
+
+### Changed
+
+- Bumped `@mapsindoors/components` to pick up `mi-floor-selector` height clamping, layout shift fix, and building-change animation glitch fix.
+
+## [1.96.12] - 2026-03-19
+
+### Added
+
+- Added venue ID to chat message context to provide venue-specific information during queries
+
 ## [1.96.11] - 2026-03-18
 
 ### Fixed
