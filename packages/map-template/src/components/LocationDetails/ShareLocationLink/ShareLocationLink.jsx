@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import ClickAwayListener from 'react-click-away-listener';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
@@ -36,7 +36,7 @@ function ShareLocationLink({ location, buttonClassName }) {
     const [showCopyButton, setShowCopyButton] = useState(false);
     const kioskLocation = useRecoilValue(kioskLocationState);
 
-    const [, setQrCodeLink] = useRecoilState(qrCodeLinkState);
+    const setQrCodeLink = useSetRecoilState(qrCodeLinkState);
 
     const isDesktop = useIsDesktop();
 

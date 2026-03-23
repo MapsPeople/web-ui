@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import MIMap from '../MIMap/MIMap';
 import { mapTypes } from '../../constants/mapTypes';
 import useLiveData from '../../hooks/useLivedata';
@@ -74,16 +74,16 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
     const mapboxAccessToken = useRecoilValue(mapboxAccessTokenState);
     const [mapType, setMapType] = useRecoilState(mapTypeState);
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useRecoilState(mapsIndoorsInstanceState);
-    const [, setUserPosition] = useRecoilState(userPositionState);
-    const [, setDirectionsService] = useRecoilState(directionsServiceState);
+    const setUserPosition = useSetRecoilState(userPositionState);
+    const setDirectionsService = useSetRecoilState(directionsServiceState);
     const filteredLocations = useRecoilValue(filteredLocationsState);
     const filteredLocationsByExternalIDs = useRecoilValue(filteredLocationsByExternalIDState);
     const tileStyle = useRecoilValue(tileStyleState);
     const bearing = useRecoilValue(bearingState);
     const pitch = useRecoilValue(pitchState);
-    const [, setPositionControl] = useRecoilState(positionControlState);
+    const setPositionControl = useSetRecoilState(positionControlState);
     const solution = useRecoilValue(solutionState);
-    const [, setErrorMessage] = useRecoilState(notificationMessageState);
+    const setErrorMessage = useSetRecoilState(notificationMessageState);
     const hideNonMatches = useRecoilValue(hideNonMatchesState);
     const appConfig = useRecoilValue(appConfigState);
     const [isViewSelectorVisible, setIsViewSelectorVisible] = useState(false);

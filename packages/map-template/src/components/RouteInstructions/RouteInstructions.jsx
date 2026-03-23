@@ -3,7 +3,7 @@ import './RouteInstructions.scss';
 import { useTranslation } from 'react-i18next';
 import ArrowRight from '../../assets/arrow-right.svg?react';
 import ArrowLeft from '../../assets/arrow-left.svg?react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import directionsResponseState from '../../atoms/directionsResponseState';
 import activeStepState from '../../atoms/activeStep';
 import RouteInstructionsStep from '../WebComponentWrappers/RouteInstructionsStep/RouteInstructionsStep';
@@ -52,7 +52,7 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
 
     const substepsOpen = useRecoilValue(substepsToggledState);
 
-    const [, setIsDestinationStep] = useRecoilState(isDestinationStepState);
+    const setIsDestinationStep = useSetRecoilState(isDestinationStepState);
 
     const isKioskContext = useIsKioskContext();
 

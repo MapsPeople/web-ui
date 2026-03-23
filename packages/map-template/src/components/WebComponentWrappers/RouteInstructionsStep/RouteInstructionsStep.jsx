@@ -1,6 +1,6 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import substepsToggledState from '../../../atoms/substepsToggledState';
 import triggerSubstepsState from '../../../atoms/triggerSubstepsState';
 import { useIsKioskContext } from '../../../hooks/useIsKioskContext';
@@ -25,7 +25,7 @@ const RouteInstructionsStep = forwardRef(function RouteInstructionsStepComponent
     const { t } = useTranslation();
 
     const [substepsOpen, setSubstepsOpen] = useRecoilState(substepsToggledState);
-    const [, setTriggerSubsteps] = useRecoilState(triggerSubstepsState);
+    const setTriggerSubsteps = useSetRecoilState(triggerSubstepsState);
 
     const isKioskContext = useIsKioskContext();
 
