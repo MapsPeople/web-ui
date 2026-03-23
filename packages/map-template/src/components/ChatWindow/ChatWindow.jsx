@@ -373,6 +373,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                 isLoading={isLoading}
                 onClose={onClose}
                 disabled={!usageConsentAccepted}
+                primaryColor={primaryColor}
             />
             {!usageConsentAccepted ? (
                 <UsageConsentOverlay onAccept={handleDisclaimerAccept} onDecline={onClose} />

@@ -5,7 +5,7 @@ import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import PropTypes from 'prop-types';
 import './ChatInput.scss';
 
-function ChatInput({ onSendMessage, isLoading, onClose, disabled }) {
+function ChatInput({ onSendMessage, isLoading, onClose, disabled, primaryColor }) {
     const inputRef = useRef(null);
     const [inputValue, setInputValue] = useState('');
     const isDesktop = useIsDesktop();
@@ -64,7 +64,7 @@ function ChatInput({ onSendMessage, isLoading, onClose, disabled }) {
                 />
             </div>
             {/* TODO: Address if we need this button once we enable kiosk usage */}
-            {/* {!isDesktop && (
+            {!isDesktop && (
                 <button
                     type="button"
                     onClick={handleSend}
@@ -75,7 +75,7 @@ function ChatInput({ onSendMessage, isLoading, onClose, disabled }) {
                 >
                     Send
                 </button>
-            )} */}
+            )}
             {/* Remove from tab order while usage consent overlay is visible to prevent accidental closes */}
             <button
                 type="button"
@@ -94,7 +94,8 @@ ChatInput.propTypes = {
     onSendMessage: PropTypes.func.isRequired,
     isLoading: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
-    disabled: PropTypes.bool
+    disabled: PropTypes.bool,
+    primaryColor: PropTypes.string
 };
 
 export default ChatInput;
