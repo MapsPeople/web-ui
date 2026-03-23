@@ -127,6 +127,8 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
 
     const [showAskWithAiButton, setShowAskWithAiButton] = useState(false);
 
+    const skipHighlightRef = useRef(false);
+
     const selectedCategoriesArray = useRef([]);
 
     const [childKeys, setChildKeys] = useState([]);
@@ -152,7 +154,10 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
                 searchFieldRef.current.triggerSearch();
             } else {
                 // If it's empty or just whitespace, clear the search field
-                searchFieldRef.current?.clear();
+                if (searchFieldRef.current) {
+                    skipHighlightRef.current = true;
+                    searchFieldRef.current.clear();
+                }
             }
             selectedCategoriesArray.current.pop();
         } else {
@@ -313,7 +318,11 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
         setShowNotFoundMessage(false);
         setShowAskWithAiButton(false);
 
-        mapsIndoorsInstance?.highlight?.([]);
+        if (!skipHighlightRef.current) {
+            mapsIndoorsInstance?.highlight?.([]);
+        }
+        skipHighlightRef.current = false;
+
         if (selectedCategory) {
             getFilteredLocations(selectedCategory);
         }
@@ -647,7 +656,10 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
             // Clear search results to show fresh state
             setSearchResults([]);
             // Clear search field if needed
-            searchFieldRef.current?.clear();
+            if (searchFieldRef.current) {
+                skipHighlightRef.current = true;
+                searchFieldRef.current.clear();
+            }
         }
     }, [isOpen, setSearchResults]);
 
@@ -665,7 +677,10 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
                 const searchValue = (event.target?.value || searchInput?.value || '').trim();
                 if (searchValue) {
                     setInitialMessage(searchValue);
-                    searchFieldRef.current?.clear();
+                    if (searchFieldRef.current) {
+                        skipHighlightRef.current = true;
+                        searchFieldRef.current.clear();
+                    }
                     onOpenChat();
                 }
             }
@@ -719,7 +734,10 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
                             const searchValue = (searchInput?.value || searchFieldRef.current?.getValue() || '').trim();
                             if (searchValue) {
                                 setInitialMessage(searchValue);
-                                searchFieldRef.current?.clear();
+                                if (searchFieldRef.current) {
+                                    skipHighlightRef.current = true;
+                                    searchFieldRef.current.clear();
+                                }
                                 onOpenChat();
                             }
                         }
