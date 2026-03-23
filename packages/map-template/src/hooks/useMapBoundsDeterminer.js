@@ -59,6 +59,7 @@ const useMapBoundsDeterminer = () => {
     const [center,] = useRecoilState(centerState);
     // Store kiosk location info for cleanup
     const [kioskOriginLocationInfo, setKioskOriginLocationInfo] = useState({ id: null, originalRule: null });
+    const [originalMapCenter, setOriginalMapCenter] = useState(null);
 
     /**
      * If the app is inactive, run code to reset to initial map position.
@@ -120,6 +121,12 @@ const useMapBoundsDeterminer = () => {
                     }
                 });
             } else if (locationId && !venueWasSelected) {
+                // Store original map center before applying padding for location details
+                if (!originalMapCenter && mapsIndoorsInstance) {
+                    const currentCenter = mapsIndoorsInstance.getMapView().getCenter();
+                    setOriginalMapCenter(currentCenter);
+                }
+                
                 if (!isNullOrUndefined(center)) {
                     window.mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
                         if (location) {
@@ -162,6 +169,10 @@ const useMapBoundsDeterminer = () => {
                         }
                     });
                 }
+            } else if (!locationId && originalMapCenter && mapsIndoorsInstance) {
+                // Restore original map center when location details are closed
+                mapsIndoorsInstance.getMapView().setCenter(originalMapCenter);
+                setOriginalMapCenter(null);
             } else if (currentVenue) {
                 if (venueWasSelected) {
                     if (isDesktop) {
