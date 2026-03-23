@@ -129,11 +129,6 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
                 directionsRenderer.setRoute(directions.directionsResult).then(() => {
                     // Set the step index to be 0 in order to display the correct instruction on the map.
                     directionsRenderer.setStepIndex(0);
-                    
-                    // Clear selection pins now that route is successfully created (SDK recommendation)
-                    if (mapsIndoorsInstance) {
-                        mapsIndoorsInstance.deselectLocation();
-                    }
                 });
 
                 destinationInfoElement.current.location = directions.destinationLocation;
