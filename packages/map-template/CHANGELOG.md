@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- Replaced `useRecoilState` with `useSetRecoilState` across 17 files where only the setter was used, eliminating unnecessary re-render subscriptions.
+
 ## [1.97.0] - 2026-03-23
 
 ### Added
