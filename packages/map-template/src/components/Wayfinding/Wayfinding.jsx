@@ -38,6 +38,7 @@ import searchExternalLocationsState from '../../atoms/searchExternalLocationsSta
 import PropTypes from 'prop-types';
 import wayfindingLocationState from '../../atoms/wayfindingLocation';
 import appConfigState from '../../atoms/appConfigState';
+import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 
 const searchFieldIdentifiers = {
     TO: 'TO',
@@ -124,6 +125,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     const searchExternalLocations = useRecoilValue(searchExternalLocationsState);
 
     const appConfig = useRecoilValue(appConfigState);
+    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
 
     /**
      * Decorates location with data that is required for wayfinding to work.
@@ -252,7 +254,9 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         triggerSearch(searchFieldIdentifier);
         setHasFoundRoute(true);
         setHasGooglePlaces(false);
-        showMyPositionOptionButton(searchFieldIdentifier)
+        showMyPositionOptionButton(searchFieldIdentifier);
+        
+        // Don't clear selection pins here - keep destination visible until route is created
     }
 
     /**
@@ -331,6 +335,12 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     function closeWayfinding() {
         setOriginLocation();
         fromFieldRef.current?.setDisplayText('');
+        
+        // Clear selection when routing dialog closes (SDK recommendation)
+        if (mapsIndoorsInstance) {
+            mapsIndoorsInstance.deselectLocation();
+        }
+        
         onBack();
     }
 
@@ -494,7 +504,8 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                                 key={location.id}
                                 icon={(location.properties.type === 'google_places' || location.properties.type === 'mapbox_places') ? externalLocationIcon : undefined}
                                 location={location}
-                                locationClicked={e => locationClickHandler(e)} />
+                                locationClicked={e => locationClickHandler(e)}
+                                disableHover={true} />
                         )}
                         {hasGooglePlaces && <img className="wayfinding__google" alt="Powered by Google" src={GooglePlaces} />}
                     </div>
