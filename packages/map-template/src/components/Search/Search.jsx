@@ -372,8 +372,6 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
      * @param {object} location
      */
     function onLocationClicked(location) {
-        setCurrentLocation(location);
-
         // Set the current venue to be the selected location venue.
         if (location.properties.venueId.toLowerCase() !== currentVenueName.toLowerCase()) {
             setCurrentVenueName(location.properties.venueId);
@@ -387,6 +385,10 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
         if (locationFloor !== currentFloor) {
             mapsIndoorsInstance.setFloor(locationFloor);
         }
+
+        setTimeout(() => {
+            setCurrentLocation(location);
+        }, 500);
 
         Promise.all([getBottomPadding(), getLeftPadding()]).then(([bottomPadding, leftPadding]) => {
             mapsIndoorsInstance.goTo(location, {
