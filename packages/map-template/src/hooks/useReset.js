@@ -1,4 +1,4 @@
-import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
+import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 import activeStepState from '../atoms/activeStep';
 import currentLocationState from '../atoms/currentLocationState';
 import directionsResponseState from '../atoms/directionsResponseState';
@@ -25,7 +25,7 @@ import userPositionState from '../atoms/userPositionState';
 export function useReset() {
 
     const initialVenueName = useRecoilValue(initialVenueNameState);
-    const [, setCurrentVenueName] = useRecoilState(currentVenueNameState);
+    const setCurrentVenueName = useSetRecoilState(currentVenueNameState);
 
     const activeStep = useResetRecoilState(activeStepState);
     const currentLocation = useResetRecoilState(currentLocationState);

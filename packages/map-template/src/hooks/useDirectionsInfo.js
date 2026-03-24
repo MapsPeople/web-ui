@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import getLocationPoint from '../helpers/GetLocationPoint';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import directionsResponseState from '../atoms/directionsResponseState';
 import hasFoundRouteState from '../atoms/hasFoundRouteState';
 import shuttleBusOnState from '../atoms/shuttleBusOnState';
@@ -13,7 +13,7 @@ const useDirectionsInfo = (originLocation, destinationLocation, directionsServic
     const [totalDistance, setTotalDistance] = useState()
     const [totalTime, setTotalTime] = useState();
     const [hasFoundRoute, setHasFoundRoute] = useRecoilState(hasFoundRouteState);
-    const [, setDirectionsResponse] = useRecoilState(directionsResponseState);
+    const setDirectionsResponse = useSetRecoilState(directionsResponseState);
     const [areDirectionsReady, setAreDirectionReady] = useState();
     const shuttleBusOn = useRecoilValue(shuttleBusOnState);
 

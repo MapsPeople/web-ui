@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useRef } from 'react';
 import { useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { defineCustomElements } from '@mapsindoors/components/dist/components/index.js';
 import i18n from 'i18next';
 import initI18n from '../../i18n/initialize.js';
@@ -146,37 +146,37 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     const [userSelectedLanguage, setUserSelectedLanguage] = useState(false);
     const [mapOptions, setMapOptions] = useState({ brandingColor: primaryColor });
-    const [, setApiKey] = useRecoilState(apiKeyState);
-    const [, setGmApiKey] = useRecoilState(gmApiKeyState);
-    const [, setMapboxAccessToken] = useRecoilState(mapboxAccessTokenState);
+    const setApiKey = useSetRecoilState(apiKeyState);
+    const setGmApiKey = useSetRecoilState(gmApiKeyState);
+    const setMapboxAccessToken = useSetRecoilState(mapboxAccessTokenState);
     const [isMapReady, setMapReady] = useRecoilState(isMapReadyState);
     const [venuesInSolution, setVenuesInSolution] = useRecoilState(venuesInSolutionState);
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const categories = useRecoilValue(categoriesState);
-    const [, setLocationId] = useRecoilState(locationIdState);
+    const setLocationId = useSetRecoilState(locationIdState);
     const [color, setPrimaryColor] = useRecoilState(primaryColorState);
-    const [, setLogo] = useRecoilState(logoState);
-    const [, setGmMapId] = useRecoilState(gmMapIdState);
+    const setLogo = useSetRecoilState(logoState);
+    const setGmMapId = useSetRecoilState(gmMapIdState);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const [currentLanguage, setCurrentLanguage] = useRecoilState(languageState);
-    const [, setKioskLocation] = useRecoilState(kioskLocationState);
-    const [, setKioskOriginLocationId] = useRecoilState(kioskOriginLocationIdState);
-    const [, setTimeoutValue] = useRecoilState(timeoutState);
+    const setKioskLocation = useSetRecoilState(kioskLocationState);
+    const setKioskOriginLocationId = useSetRecoilState(kioskOriginLocationIdState);
+    const setTimeoutValue = useSetRecoilState(timeoutState);
     const isInactive = useInactive(); // Hook to detect if user is inactive. Used in combination with timeout prop to reset the Map Template to initial values after a specified time.
-    const [, setSupportsUrlParameters] = useRecoilState(supportsUrlParametersState);
-    const [, setUseKeyboard] = useRecoilState(useKeyboardState);
-    const [, setMiTransitionLevel] = useRecoilState(miTransitionLevelState);
-    const [, setSelectedCategory] = useRecoilState(selectedCategoryState);
-    const [, setSearchAllVenues] = useRecoilState(searchAllVenuesState);
-    const [, setCategory] = useRecoilState(categoryState);
-    const [, setHideNonMatches] = useRecoilState(hideNonMatchesState);
-    const [, setshowExternalIDs] = useRecoilState(showExternalIDsState);
-    const [, setShowRoadNames] = useRecoilState(showRoadNamesState);
-    const [, setSearchExternalLocations] = useRecoilState(searchExternalLocationsState);
-    const [, setCenter] = useRecoilState(centerState);
+    const setSupportsUrlParameters = useSetRecoilState(supportsUrlParametersState);
+    const setUseKeyboard = useSetRecoilState(useKeyboardState);
+    const setMiTransitionLevel = useSetRecoilState(miTransitionLevelState);
+    const setSelectedCategory = useSetRecoilState(selectedCategoryState);
+    const setSearchAllVenues = useSetRecoilState(searchAllVenuesState);
+    const setCategory = useSetRecoilState(categoryState);
+    const setHideNonMatches = useSetRecoilState(hideNonMatchesState);
+    const setshowExternalIDs = useSetRecoilState(showExternalIDsState);
+    const setShowRoadNames = useSetRecoilState(showRoadNamesState);
+    const setSearchExternalLocations = useSetRecoilState(searchExternalLocationsState);
+    const setCenter = useSetRecoilState(centerState);
     const [viewModeSwitchVisible, setViewModeSwitchVisible] = useState();
     const mapClickActionRef = useRef();
-    const [, setWayfindingLocation] = useRecoilState(wayfindingLocationState);
+    const setWayfindingLocation = useSetRecoilState(wayfindingLocationState);
     const qrCodeLink = useRecoilValue(qrCodeLinkState)
 
     const [showVenueSelector, setShowVenueSelector] = useState(true);
@@ -188,7 +188,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [isMapPositionInvestigating, setIsMapPositionInvestigating] = useState(false);
 
     // The filtered locations by external id, if present.
-    const [, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
+    const setFilteredLocationsByExternalID = useSetRecoilState(filteredLocationsByExternalIDState);
 
     // The filtered locations that the user sets when selecting a category/location.
     const [filteredLocations, setFilteredLocations] = useRecoilState(filteredLocationsState);
@@ -197,13 +197,13 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [initialFilteredLocations, setInitialFilteredLocations] = useState();
 
     const [appConfig, setAppConfig] = useRecoilState(appConfigState);
-    const [, setSolution] = useRecoilState(solutionState);
+    const setSolution = useSetRecoilState(solutionState);
 
-    const [, setTileStyle] = useRecoilState(tileStyleState);
-    const [, setStartZoomLevel] = useRecoilState(startZoomLevelState);
+    const setTileStyle = useSetRecoilState(tileStyleState);
+    const setStartZoomLevel = useSetRecoilState(startZoomLevelState);
 
-    const [, setBearing] = useRecoilState(bearingState);
-    const [, setPitch] = useRecoilState(pitchState);
+    const setBearing = useSetRecoilState(bearingState);
+    const setPitch = useSetRecoilState(pitchState);
 
     const isDesktop = useIsDesktop();
     const resetState = useReset();
@@ -220,7 +220,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [setCurrentVenueName, updateCategories] = useCurrentVenue();
 
     const finishRoute = useOnRouteFinished();
-    const [, setErrorMessage] = useRecoilState(notificationMessageState);
+    const setErrorMessage = useSetRecoilState(notificationMessageState);
 
     /**
      * Ensure that MapsIndoors Web SDK is available.
