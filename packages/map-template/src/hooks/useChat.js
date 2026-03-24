@@ -21,7 +21,7 @@ import { useIsDesktop } from './useIsDesktop';
  * and setting them in filteredLocations state for highlighting on the map.
  * Also pans the map to fit the bounds of the locations.
  *
- * @returns {function} handleChatSearchResults - Callback function to handle search results
+ * @returns {function} handleChatLocations - Callback function to handle search results
  */
 export const useChatLocations = () => {
     const [, setFilteredLocations] = useRecoilState(filteredLocationsState);
@@ -30,7 +30,7 @@ export const useChatLocations = () => {
     const kioskLocation = useRecoilValue(kioskLocationState);
     const isDesktop = useIsDesktop();
 
-    const handleChatSearchResults = useCallback(async (locationIds) => {
+    const handleChatLocations = useCallback(async (locationIds) => {
         if (!locationIds || locationIds.length === 0) {
             setFilteredLocations([]);
             return;
@@ -82,7 +82,7 @@ export const useChatLocations = () => {
         }
     }, [setFilteredLocations, mapsIndoorsInstance, currentVenueName, isDesktop, kioskLocation]);
 
-    return handleChatSearchResults;
+    return handleChatLocations;
 };
 
 /**
