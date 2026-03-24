@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useSetRecoilState, useRecoilValue } from 'recoil';
 import filteredLocationsState from '../atoms/filteredLocationsState';
 import directionsServiceState from '../atoms/directionsServiceState';
 import directionsResponseState from '../atoms/directionsResponseState';
@@ -42,7 +42,7 @@ async function getLeftPadding(isDesktop, kioskLocation) {
  * @returns {function} handleChatLocations - Callback function to handle search results
  */
 export const useChatLocations = () => {
-    const [, setFilteredLocations] = useRecoilState(filteredLocationsState);
+    const setFilteredLocations = useSetRecoilState(filteredLocationsState);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const currentVenueName = useRecoilValue(currentVenueNameState);
     const kioskLocation = useRecoilValue(kioskLocationState);
@@ -143,8 +143,8 @@ function getOriginType(origin) {
  */
 export const useChatDirections = (pushAppView, appViews) => {
     const directionsService = useRecoilValue(directionsServiceState);
-    const [, setDirectionsResponse] = useRecoilState(directionsResponseState);
-    const [, setHasFoundRoute] = useRecoilState(hasFoundRouteState);
+    const setDirectionsResponse = useSetRecoilState(directionsResponseState);
+    const setHasFoundRoute = useSetRecoilState(hasFoundRouteState);
     const travelMode = useRecoilValue(travelModeState);
     const accessibilityOn = useRecoilValue(accessibilityOnState);
     const shuttleBusOn = useRecoilValue(shuttleBusOnState);

@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import './Directions.scss';
 import { useTranslation } from 'react-i18next';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import travelModeState from '../../atoms/travelModeState';
 import QRCode from '../../assets/qrcode.svg?react';
@@ -68,7 +68,7 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
 
     const directions = useRecoilValue(directionsResponseState);
 
-    const [, setActiveStep] = useRecoilState(activeStepState);
+    const setActiveStep = useSetRecoilState(activeStepState);
 
     const [substepsOpen, setSubstepsOpen] = useRecoilState(substepsToggledState);
 
@@ -76,7 +76,7 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
 
     const isDesktop = useIsDesktop();
 
-    const [, setQRCodeLink] = useRecoilState(qrCodeLinkState)
+    const setQRCodeLink = useSetRecoilState(qrCodeLinkState)
 
     const isDestinationStep = useRecoilValue(isDestinationStepState);
 

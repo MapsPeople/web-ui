@@ -1,6 +1,6 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import useNear from '../../../hooks/useNear';
-import { useRecoilValue, useRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import userPositionState from '../../../atoms/userPositionState';
 import languageState from '../../../atoms/languageState';
 import searchInputState from '../../../atoms/searchInputState';
@@ -32,7 +32,7 @@ const SearchField = forwardRef(function SearchFieldComponent(props, ref) {
     const userPosition = useRecoilValue(userPositionState);
     const language = useRecoilValue(languageState);
 
-    const [, setSearchInput] = useRecoilState(searchInputState)
+    const setSearchInput = useSetRecoilState(searchInputState)
 
     const mapboxPlacesSessionToken = sessionStorage.getItem('mapboxPlacesSessionToken');
 

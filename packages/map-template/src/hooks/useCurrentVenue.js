@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import venuesInSolutionState from '../atoms/venuesInSolutionState';
 import currentVenueNameState from '../atoms/currentVenueNameState';
 import mapsIndoorsInstanceState from '../atoms/mapsIndoorsInstanceState';
@@ -22,8 +22,8 @@ export const useCurrentVenue = () => {
     const venuesInSolution = useRecoilValue(venuesInSolutionState);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const appConfig = useRecoilValue(appConfigState);
-    const [, setCategories] = useRecoilState(categoriesState);
-    const [, setSearchResults] = useRecoilState(searchResultsState);
+    const setCategories = useSetRecoilState(categoriesState);
+    const setSearchResults = useSetRecoilState(searchResultsState);
     const searchInput = useRecoilValue(searchInputState);
     const [initialVenueName, setInitialVenueName] = useRecoilState(initialVenueNameState);
     

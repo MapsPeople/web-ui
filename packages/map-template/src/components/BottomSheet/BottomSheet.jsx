@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useState } from 'react';
 import { ContainerContext } from './ContainerContext';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import currentLocationState from '../../atoms/currentLocationState';
 import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
 import Sheet from './Sheet/Sheet';
@@ -62,7 +62,7 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
 
     const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
 
-    const [, setLocationId] = useRecoilState(locationIdState);
+    const setLocationId = useSetRecoilState(locationIdState);
 
     /*
      * React on changes on the current location and directions locations and set relevant bottom sheet.

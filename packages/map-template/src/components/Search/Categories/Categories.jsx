@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import './Categories.scss';
 import categoriesState from '../../../atoms/categoriesState';
 import { snapPoints } from '../../../constants/snapPoints';
@@ -51,9 +51,9 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, t
 
     const [selectedCategory, setSelectedCategory] = useRecoilState(selectedCategoryState);
 
-    const [, setSearchResults] = useRecoilState(searchResultsState);
+    const setSearchResults = useSetRecoilState(searchResultsState);
 
-    const [, setFilteredLocations] = useRecoilState(filteredLocationsState);
+    const setFilteredLocations = useSetRecoilState(filteredLocationsState);
 
     const scrollableContentSwipePrevent = usePreventSwipe();
 
