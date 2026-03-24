@@ -587,7 +587,19 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
         if (currentLocation && currentLocation.id !== kioskOriginLocationId) {
             if (mapsIndoorsInstance?.selectLocation) {
-                mapsIndoorsInstance.selectLocation(currentLocation);
+
+                // On selection, unhighlight current locations if it is highlighted.
+                if (mapsIndoorsInstance?.getHighlight?.()?.length > 0) {
+                    mapsIndoorsInstance.highlight([]);
+                }
+                
+                // When Location is selected from a List, wait until the highlight is cleared before selecting the location.
+                // TODO: This is a workaround to ensure the highlight is cleared before selecting the location.
+                setTimeout(() => {
+                    if (mapsIndoorsInstance?.getHighlight?.()?.length === 0) {
+                        mapsIndoorsInstance.selectLocation(currentLocation);
+                    }
+                }, 500);
             }
         } else {
             if (mapsIndoorsInstance?.deselectLocation) {
