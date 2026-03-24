@@ -34,7 +34,10 @@ function ListItemLocation({ location, locationClicked, icon, isHovered, disableH
     const showExternalIDs = useRecoilValue(showExternalIDsState);
 
     useEffect(() => {
-        const clickHandler = customEvent => locationClicked(customEvent.detail);
+        const clickHandler = customEvent => {
+            mapsIndoorsInstance.unhoverLocation();
+            locationClicked(customEvent.detail);
+        };
         const hoverHandler = debounce(() => {
             // Skip hover functionality if disabled (e.g., during routing to prevent dual pins)
             if (disableHover) return;
@@ -43,7 +46,7 @@ function ListItemLocation({ location, locationClicked, icon, isHovered, disableH
             if (location.properties.locationSettings?.selectable !== false) {
                 mapsIndoorsInstance.hoverLocation(location);
             }
-        }, 150);
+        });
         const unhoverHandler = debounce(() => {
             // Skip unhover functionality if disabled
             if (disableHover) return;
@@ -52,7 +55,7 @@ function ListItemLocation({ location, locationClicked, icon, isHovered, disableH
             if (location.properties.locationSettings?.selectable !== false) {
                 mapsIndoorsInstance.unhoverLocation(location);
             }
-        }, 150);
+        });
 
         // Add a "non-selectable" class to the non-selectable locations.
         if (location.properties.locationSettings?.selectable === false) {
