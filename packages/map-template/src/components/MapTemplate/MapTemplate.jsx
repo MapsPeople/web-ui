@@ -587,8 +587,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
         if (currentLocation && currentLocation.id !== kioskOriginLocationId) {
             if (mapsIndoorsInstance?.selectLocation) {
-                mapsIndoorsInstance.selectLocation(currentLocation);
                 mapsIndoorsInstance.highlight?.([]);
+                mapsIndoorsInstance.selectLocation(currentLocation);
             }
         } else {
             if (mapsIndoorsInstance?.deselectLocation) {
