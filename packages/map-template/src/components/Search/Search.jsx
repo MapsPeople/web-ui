@@ -37,6 +37,8 @@ import isNullOrUndefined from '../../helpers/isNullOrUndefined';
 import venuesInSolutionState from '../../atoms/venuesInSolutionState';
 import initialVenueNameState from '../../atoms/initialVenueNameState';
 import primaryColorState from '../../atoms/primaryColorState';
+import mapTypeState from '../../atoms/mapTypeState';
+import { mapTypes } from '../../constants/mapTypes';
 import PropTypes from 'prop-types';
 
 Search.propTypes = {
@@ -88,6 +90,7 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
     const [hoveredLocation, setHoveredLocation] = useState();
 
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
+    const mapType = useRecoilValue(mapTypeState);
 
     const setFilteredLocations = useSetRecoilState(filteredLocationsState);
 
@@ -381,14 +384,24 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
         const currentFloor = mapsIndoorsInstance.getFloor();
         const locationFloor = location.properties.floor;
 
-        // Set the floor to the one that the location belongs to.
         if (locationFloor !== currentFloor) {
+            // Register listener before setFloor — floor_changed fires
+            // synchronously inside setFloor(), so it would be missed otherwise.
+            mapsIndoorsInstance.once('floor_changed', () => {
+                const map = mapsIndoorsInstance.getMap();
+                if (mapType === mapTypes.Mapbox) {
+                    map.once('idle', () => setCurrentLocation(location));
+                } else if (mapType === mapTypes.Google) {
+                    const listener = map.addListener('idle', () => {
+                        listener.remove();
+                        setCurrentLocation(location);
+                    });
+                }
+            });
             mapsIndoorsInstance.setFloor(locationFloor);
-        }
-
-        setTimeout(() => {
+        } else {
             setCurrentLocation(location);
-        }, 500);
+        }
 
         Promise.all([getBottomPadding(), getLeftPadding()]).then(([bottomPadding, leftPadding]) => {
             mapsIndoorsInstance.goTo(location, {
