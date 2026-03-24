@@ -1,6 +1,6 @@
 import './Search.scss';
 import { useRef, useState, useEffect } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import appConfigState from '../../atoms/appConfigState';
 import categoriesState from '../../atoms/categoriesState';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
@@ -89,11 +89,11 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
 
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
 
-    const [, setFilteredLocations] = useRecoilState(filteredLocationsState);
+    const setFilteredLocations = useSetRecoilState(filteredLocationsState);
 
-    const [, setCurrentLocation] = useRecoilState(currentLocationState);
+    const setCurrentLocation = useSetRecoilState(currentLocationState);
 
-    const [, setIsLocationClicked] = useRecoilState(isLocationClickedState);
+    const setIsLocationClicked = useSetRecoilState(isLocationClickedState);
 
     const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
 
@@ -111,7 +111,7 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
 
     const isKioskContext = useIsKioskContext();
 
-    const [, setShowLegendDialog] = useRecoilState(isLegendDialogVisibleState);
+    const setShowLegendDialog = useSetRecoilState(isLegendDialogVisibleState);
 
     const [showLegendButton, setShowLegendButton] = useState(false);
 

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import './ChatSearchResults.scss';
 import PropTypes from 'prop-types';
 import ListItemLocation from '../../WebComponentWrappers/ListItemLocation/ListItemLocation';
@@ -25,8 +25,8 @@ const ChatSearchResults = ({ locations }) => {
     const [hoveredLocationId, setHoveredLocationId] = useState(null);
 
     // Recoil state for location handling
-    const [, setCurrentLocation] = useRecoilState(currentLocationState);
-    const [, setIsLocationClicked] = useRecoilState(isLocationClickedState);
+    const setCurrentLocation = useSetRecoilState(currentLocationState);
+    const setIsLocationClicked = useSetRecoilState(isLocationClickedState);
     const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const isDesktop = useIsDesktop();

@@ -5,7 +5,7 @@ import CloseIcon from '../../assets/close.svg?react';
 import ClockIcon from '../../assets/clock.svg?react';
 import WalkingIcon from '../../assets/walk.svg?react';
 import SwitchIcon from '../../assets/switch.svg?react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import userPositionState from '../../atoms/userPositionState';
 import directionsServiceState from '../../atoms/directionsServiceState';
 import currentLocationState from '../../atoms/currentLocationState';
@@ -91,7 +91,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     const [activeSearchField, setActiveSearchField] = useState();
 
     /** Indicate if a route has been found */
-    const [, setHasFoundRoute] = useRecoilState(hasFoundRouteState);
+    const setHasFoundRoute = useSetRecoilState(hasFoundRouteState);
 
     /** Indicate if search results have been found */
     const [hasSearchResults, setHasSearchResults] = useState(true);
