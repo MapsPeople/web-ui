@@ -30,8 +30,8 @@ function hasMoreContent(text) {
 
 function ChatMessages({ chatHistory, isLoading, primaryColor, onShowRoute, currentThought }) {
     const chatMessagesRef = useRef(null);
-    // Tracks which server messages are expanded (show full content) by message ID.
-    const [expandedMessages, setExpandedMessages] = useState(new Map());
+    // Set of expanded message IDs — presence means expanded, absence means collapsed.
+    const [expandedMessages, setExpandedMessages] = useState(new Set());
 
     // Auto-scroll to bottom when messages change or loading state changes
     // Uses immediate scroll + 300ms delay for server messages + ResizeObserver for async content
@@ -77,21 +77,25 @@ function ChatMessages({ chatHistory, isLoading, primaryColor, onShowRoute, curre
 
     const toggleMessageExpanded = useCallback((messageId) => {
         setExpandedMessages(prevExpandedMessages => {
-            const nextExpandedMessages = new Map(prevExpandedMessages);
-            nextExpandedMessages.set(messageId, !nextExpandedMessages.get(messageId));
+            const nextExpandedMessages = new Set(prevExpandedMessages);
+            if (nextExpandedMessages.has(messageId)) {
+                nextExpandedMessages.delete(messageId);
+            } else {
+                nextExpandedMessages.add(messageId);
+            }
             return nextExpandedMessages;
         });
     }, []);
 
     const chatMessages = chatHistory.map((message) => {
-        const isExpanded = expandedMessages.get(message.id);
+        const isExpanded = expandedMessages.has(message.id);
         const isTruncatable = message.type === 'server' && hasMoreContent(message.text);
 
         return (
             <div key={message.id} className={`chat-messages__message chat-messages__message--${message.type}`}>
                 {message.type === 'server' ? (
                     <>
-                        <ReactMarkdown remarkPlugins={isTruncatable && !isExpanded ? [[remarkTruncate], remarkGfm] : [remarkGfm]}>
+                        <ReactMarkdown remarkPlugins={isTruncatable && !isExpanded ? [remarkTruncate, remarkGfm] : [remarkGfm]}>
                             {message.text}
                         </ReactMarkdown>
                         {isTruncatable && (
