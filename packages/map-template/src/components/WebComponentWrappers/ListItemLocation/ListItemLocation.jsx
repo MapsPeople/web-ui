@@ -5,8 +5,6 @@ import { useTranslation } from 'react-i18next';
 import './ListItemLocation.scss';
 import showExternalIDsState from '../../../atoms/showExternalIDsState';
 import PropTypes from 'prop-types';
-import { debounce } from 'lodash';
-
 ListItemLocation.propTypes = {
     location: PropTypes.object,
     locationClicked: PropTypes.func,
@@ -38,24 +36,18 @@ function ListItemLocation({ location, locationClicked, icon, isHovered, disableH
             mapsIndoorsInstance.unhoverLocation();
             locationClicked(customEvent.detail);
         };
-        const hoverHandler = debounce(() => {
-            // Skip hover functionality if disabled (e.g., during routing to prevent dual pins)
+        const hoverHandler = () => {
             if (disableHover) return;
-            
-            // Check if the location is non-selectable before hovering it
             if (location.properties.locationSettings?.selectable !== false) {
                 mapsIndoorsInstance.hoverLocation(location);
             }
-        });
-        const unhoverHandler = debounce(() => {
-            // Skip unhover functionality if disabled
+        };
+        const unhoverHandler = () => {
             if (disableHover) return;
-            
-            // Check if the location is non-selectable before unhovering it
             if (location.properties.locationSettings?.selectable !== false) {
                 mapsIndoorsInstance.unhoverLocation(location);
             }
-        });
+        };
 
         // Add a "non-selectable" class to the non-selectable locations.
         if (location.properties.locationSettings?.selectable === false) {
