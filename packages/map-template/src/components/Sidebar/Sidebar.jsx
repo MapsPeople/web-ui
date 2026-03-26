@@ -47,7 +47,7 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
     const kioskLocation = useRecoilValue(kioskLocationState);
 
     // Use chat hooks for handling chat interactions
-    const handleChatSearchResults = useChatLocations();
+    const handleChatLocations = useChatLocations();
     const handleChatShowRoute = useChatDirections(pushAppView, appViews);
 
     /*
@@ -153,7 +153,7 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
             <ChatWindow
                 isVisible={currentAppView === appViews.CHAT}
                 onClose={() => pushAppView(appViews.SEARCH)}
-                onSearchResults={handleChatSearchResults}
+                onSearchResults={handleChatLocations}
                 onShowRoute={handleChatShowRoute}
             />
         </Modal>

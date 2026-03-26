@@ -54,7 +54,7 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
 
     // Use chat hooks for handling chat interactions
-    const handleChatSearchResults = useChatLocations();
+    const handleChatLocations = useChatLocations();
     const handleChatShowRoute = useChatDirections(pushAppView, appViews);
 
     // Holds boolean depicting if the current Location contains more information than just the basic info that is shown in minimal height bottom sheet.
@@ -233,7 +233,7 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
                     <ChatWindow
                         isVisible
                         onClose={() => pushAppView(appViews.SEARCH)}
-                        onSearchResults={handleChatSearchResults}
+                        onSearchResults={handleChatLocations}
                         onShowRoute={handleChatShowRoute}
                     />
                 );

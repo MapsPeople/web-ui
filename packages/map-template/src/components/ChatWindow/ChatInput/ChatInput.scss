@@ -70,6 +70,32 @@
     }
 }
 
+.chat-input__send-button {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: var(--color-gray-30);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-right: var(--spacing-x-small);
+    transition: opacity 0.2s ease, background-color 0.2s ease;
+
+    svg {
+        width: 14px;
+        height: 14px;
+        color: white;
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+}
+
 .chat-input__button {
     padding: var(--spacing-x-small) var(--spacing-medium);
     border: none;

@@ -178,7 +178,6 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
      */
     useEffect(() => {
         if (!mapsIndoorsInstance) return;
-
         const locations = filteredLocations || filteredLocationsByExternalIDs;
 
         if (currentLocation || !locations || locations.length === 0) {
@@ -186,7 +185,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
             return;
         }
 
-        const locationIds = locations.map(location => location.id);
+        const locationIds = locations ? locations.map(location => location.id) : [];
 
         if (hideNonMatches || !mapsIndoorsInstance.highlight) {
             mapsIndoorsInstance.filter(locationIds);

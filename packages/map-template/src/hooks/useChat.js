@@ -16,12 +16,30 @@ import getDesktopPaddingBottom from '../helpers/GetDesktopPaddingBottom';
 import fitMapBoundsToLocations from '../helpers/FitMapBoundsToLocations';
 import { useIsDesktop } from './useIsDesktop';
 
+// Returns bottom padding for map bounds: kiosk uses dynamic value, desktop sidebar needs none, mobile needs space for bottom sheet
+async function getBottomPadding(isDesktop, kioskLocation) {
+    if (isDesktop) {
+        if (kioskLocation) return await getDesktopPaddingBottom();
+        return 0;
+    }
+    return 200;
+}
+
+// Returns left padding for map bounds: desktop sidebar needs space, kiosk and mobile need none
+async function getLeftPadding(isDesktop, kioskLocation) {
+    if (isDesktop) {
+        if (kioskLocation) return 0;
+        return await getDesktopPaddingLeft();
+    }
+    return 0;
+}
+
 /**
  * Hook to handle chat search results by fetching Location objects from IDs
  * and setting them in filteredLocations state for highlighting on the map.
  * Also pans the map to fit the bounds of the locations.
  *
- * @returns {function} handleChatSearchResults - Callback function to handle search results
+ * @returns {function} handleChatLocations - Callback function to handle search results
  */
 export const useChatLocations = () => {
     const setFilteredLocations = useSetRecoilState(filteredLocationsState);
@@ -30,7 +48,7 @@ export const useChatLocations = () => {
     const kioskLocation = useRecoilValue(kioskLocationState);
     const isDesktop = useIsDesktop();
 
-    const handleChatSearchResults = useCallback(async (locationIds) => {
+    const handleChatLocations = useCallback(async (locationIds) => {
         if (!locationIds || locationIds.length === 0) {
             setFilteredLocations([]);
             return;
@@ -49,31 +67,10 @@ export const useChatLocations = () => {
 
             // Pan the map to fit the bounds of the locations only if we have valid locations
             if (validLocations.length > 0 && mapsIndoorsInstance) {
-                // Calculate padding for map bounds based on context (desktop/mobile, kiosk mode)
-                const getBottomPadding = async () => {
-                    if (isDesktop) {
-                        if (kioskLocation) {
-                            return await getDesktopPaddingBottom();
-                        }
-                        return 0;
-                    }
-                    return 200;
-                };
-
-                const getLeftPadding = async () => {
-                    if (isDesktop) {
-                        if (kioskLocation) {
-                            return 0;
-                        }
-                        return await getDesktopPaddingLeft();
-                    }
-                    return 0;
-                };
-
                 // Determine if we require to change the floor
                 changeFloorIfNeeded(validLocations, mapsIndoorsInstance);
 
-                const [bottomPadding, leftPadding] = await Promise.all([getBottomPadding(), getLeftPadding()]);
+                const [bottomPadding, leftPadding] = await Promise.all([getBottomPadding(isDesktop, kioskLocation), getLeftPadding(isDesktop, kioskLocation)]);
                 await fitMapBoundsToLocations(validLocations, mapsIndoorsInstance, currentVenueName, bottomPadding, leftPadding);
             }
         } catch (error) {
@@ -82,7 +79,7 @@ export const useChatLocations = () => {
         }
     }, [setFilteredLocations, mapsIndoorsInstance, currentVenueName, isDesktop, kioskLocation]);
 
-    return handleChatSearchResults;
+    return handleChatLocations;
 };
 
 /**
