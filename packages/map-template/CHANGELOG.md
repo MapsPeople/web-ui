@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.96.17] - 2026-03-26
+
+### Fixed
+
+- Upgraded to Web SDK 4.56.2.
+- Location selection will await if the map is in the idle state.
+
 ## [1.96.16] - 2026-03-25
 
 ### Fixed
