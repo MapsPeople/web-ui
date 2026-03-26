@@ -65,6 +65,8 @@ import { useOnRouteFinished } from '../../hooks/useOnRouteFinished.js';
 import notificationMessageState from '../../atoms/notificationMessageState.js';
 import { GeminiProvider } from '../../providers/GeminiProvider';
 import ChatButton from '../ChatButton/ChatButton';
+import mapTypeState from '../../atoms/mapTypeState.js';
+import { mapTypes } from '../../constants/mapTypes.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -222,6 +224,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const finishRoute = useOnRouteFinished();
     const setErrorMessage = useSetRecoilState(notificationMessageState);
 
+    const mapType = useRecoilValue(mapTypeState);
+
     /**
      * Ensure that MapsIndoors Web SDK is available.
      *
@@ -236,8 +240,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             const miSdkApiTag = document.createElement('script');
             miSdkApiTag.setAttribute('type', 'text/javascript');
             // Remember to update the root index.html with the same version / integrity
-            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.55.0/mapsindoors-4.55.0.js.gz');
-            miSdkApiTag.setAttribute('integrity', 'sha384-oW7TEiuEViUPGMgbrtXn96vWoBrrtrT+tYYCaVNll6KZTr8GWS5dqjV0sdJOcyhk');
+            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.56.2/mapsindoors-4.56.2.js.gz');
+            miSdkApiTag.setAttribute('integrity', 'sha384-AbC6/Ti9R/Fs5vC9Vd+dXtQvBOSMbw7PQ1+xyaL3W5et4ZuNiP1K0GdmoDZvve7G');
             miSdkApiTag.setAttribute('crossorigin', 'anonymous');
             document.body.appendChild(miSdkApiTag);
             miSdkApiTag.onload = () => {
@@ -587,14 +591,21 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
         if (currentLocation && currentLocation.id !== kioskOriginLocationId) {
             if (mapsIndoorsInstance?.selectLocation) {
-                mapsIndoorsInstance.selectLocation(currentLocation);
+                mapsIndoorsInstance.highlight?.([]);
+
+                const map = mapsIndoorsInstance.getMap();
+                if (mapType === mapTypes.Mapbox) {
+                    map.once('idle', () => mapsIndoorsInstance.selectLocation(currentLocation));
+                } else {
+                    mapsIndoorsInstance.selectLocation(currentLocation);
+                }
             }
         } else {
             if (mapsIndoorsInstance?.deselectLocation) {
                 mapsIndoorsInstance.deselectLocation();
             }
         }
-    }, [currentLocation, mapsIndoorsInstance, isMapReady]);
+    }, [currentLocation, mapsIndoorsInstance, isMapReady, mapType]);
 
     /**
      * React on changes to the app config.
@@ -798,7 +809,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [language, appConfig, currentLanguage, setCurrentLanguage, userSelectedLanguage]);
 
     return (
-        <GeminiProvider enabled={appConfig?.appSettings?.enableChat === 'true'}>
+        <GeminiProvider enabled={true}>
             <div className={`mapsindoors-map
             ${currentAppView === appStates.DIRECTIONS ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}
             ${(venuesInSolution.length > 1 && showVenueSelector) ? '' : 'mapsindoors-map--hide-venue-selector'}

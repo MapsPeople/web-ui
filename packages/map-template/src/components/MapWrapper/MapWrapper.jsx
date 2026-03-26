@@ -12,6 +12,7 @@ import gmApiKeyState from '../../atoms/gmApiKeyState';
 import mapboxAccessTokenState from '../../atoms/mapboxAccessTokenState';
 import filteredLocationsState from '../../atoms/filteredLocationsState';
 import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
+import currentLocationState from '../../atoms/currentLocationState';
 import tileStyleState from '../../atoms/tileStyleState';
 import positionControlState from '../../atoms/positionControlState';
 import bearingState from '../../atoms/bearingState';
@@ -78,6 +79,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
     const setDirectionsService = useSetRecoilState(directionsServiceState);
     const filteredLocations = useRecoilValue(filteredLocationsState);
     const filteredLocationsByExternalIDs = useRecoilValue(filteredLocationsByExternalIDState);
+    const currentLocation = useRecoilValue(currentLocationState);
     const tileStyle = useRecoilValue(tileStyleState);
     const bearing = useRecoilValue(bearingState);
     const pitch = useRecoilValue(pitchState);
@@ -177,15 +179,20 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
     useEffect(() => {
         if (!mapsIndoorsInstance) return;
         const locations = filteredLocations || filteredLocationsByExternalIDs;
+
+        if (currentLocation || !locations || locations.length === 0) {
+            mapsIndoorsInstance.highlight?.([]);
+            return;
+        }
+
         const locationIds = locations ? locations.map(location => location.id) : [];
 
-        // Check if the hideNonMatches prop or highlight method in the SDK exists
         if (hideNonMatches || !mapsIndoorsInstance.highlight) {
             mapsIndoorsInstance.filter(locationIds);
         } else {
             mapsIndoorsInstance.highlight(locationIds);
         }
-    }, [filteredLocations, filteredLocationsByExternalIDs, mapsIndoorsInstance, hideNonMatches]);
+    }, [filteredLocations, filteredLocationsByExternalIDs, mapsIndoorsInstance, hideNonMatches, currentLocation]);
 
     /*
      * React to changes in bearing and pitch props and set them on the map if mapsIndoorsInstance exists.
