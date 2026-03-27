@@ -39,6 +39,12 @@
     right: calc(1 * var(--spacing-medium));
 }
 
+// Hide bottom controls when the floor selector is expanded to prevent occlusion
+.map-controls-container--floor-selector-open {
+    visibility: hidden;
+    pointer-events: none;
+}
+
 // Mobile layout, two columns aligned to the top left and right
 .mobile-column {
     @extend %control-container;
