@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.96.20] - 2026-03-27
+
+### Fixed
+
+- An issue when expanded Floor Selector would overlap Zoom Controls and Full Screen butto.
+
 ## [1.96.19] - 2026-03-26
 
 ### Fixed
