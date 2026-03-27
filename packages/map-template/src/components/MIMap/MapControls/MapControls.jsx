@@ -1,7 +1,8 @@
-import { useEffect, useRef, useCallback, useMemo, memo } from 'react';
+import { useEffect, useRef, useState, useCallback, useMemo, memo } from 'react';
 import PropTypes from 'prop-types';
 import './MapControls.scss';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
+import { useFloorSelectorToggleObserver } from '../../../hooks/useFloorSelectorToggleObserver';
 import CustomPositionProvider from '../../../utils/CustomPositionProvider';
 import MapZoomControl from '../MapZoomControl/MapZoomControl';
 import TextSizeButton from '../TextSizeButton/TextSizeButton';
@@ -60,6 +61,26 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
     const isDesktop = useIsDesktop();
     const floorSelectorRef = useRef(null);
     const positionButtonRef = useRef(null);
+    const bottomControlsRef = useRef(null);
+    const [isFloorSelectorExpanded, setIsFloorSelectorExpanded] = useState(false);
+
+    // Measures whether the expanded floor selector overlaps the bottom controls.
+    // Uses only refs and stable setters so the dependency array can stay empty.
+    const measureOverlap = useCallback(() => {
+        const bottomControls = bottomControlsRef.current;
+        const floorSelector = floorSelectorRef.current;
+
+        if (!bottomControls || !floorSelector) {
+            setIsFloorSelectorExpanded(false);
+            return;
+        }
+
+        const selectorEl = floorSelector.querySelector('.mi-floor-selector') || floorSelector;
+        const selectorRect = selectorEl.getBoundingClientRect();
+        const controlsRect = bottomControls.getBoundingClientRect();
+
+        setIsFloorSelectorExpanded(selectorRect.bottom > controlsRect.top);
+    }, []);
 
     // Helper function to check if an element should be rendered
     const shouldRenderElement = useCallback((elementName) => {
@@ -210,6 +231,34 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
         });
     }, [excludedElements, shouldRenderElement, isDesktop]);
 
+    const isFloorSelectorOpenRef = useFloorSelectorToggleObserver({
+        floorSelectorRef,
+        setIsFloorSelectorExpanded,
+        measureOverlap,
+        mapsIndoorsInstance,
+        mapInstance
+    });
+
+    // Recompute overlap on viewport resize, orientation change, and layout transitions.
+    useEffect(() => {
+        const onViewportChange = () => {
+            if (isFloorSelectorOpenRef.current) {
+                measureOverlap();
+            }
+        };
+
+        window.addEventListener('resize', onViewportChange);
+        window.addEventListener('orientationchange', onViewportChange);
+
+        // Re-check immediately after a layout switch while the selector is already open
+        onViewportChange();
+
+        return () => {
+            window.removeEventListener('resize', onViewportChange);
+            window.removeEventListener('orientationchange', onViewportChange);
+        };
+    }, [isDesktop, isKiosk, measureOverlap]);
+
     if (isKiosk) {
         if (enableAccessibilityKioskControls) {
             return (
@@ -274,7 +323,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
                 </div>
 
                 {/* Bottom right desktop controls */}
-                <div className="map-controls-container desktop bottom-right">
+                <div ref={bottomControlsRef} className={`map-controls-container desktop bottom-right ${isFloorSelectorExpanded ? 'map-controls-container--floor-selector-open' : ''}`}>
                     {shouldRenderElement('zoomControls') && (
                         <MapZoomControl mapType={mapType} mapInstance={mapInstance} />
                     )}
