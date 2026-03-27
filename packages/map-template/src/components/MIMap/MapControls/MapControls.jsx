@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback, useMemo, memo } from 'react';
+import { useEffect, useRef, useState, useCallback, useMemo, memo } from 'react';
 import PropTypes from 'prop-types';
 import './MapControls.scss';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
@@ -60,6 +60,9 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
     const isDesktop = useIsDesktop();
     const floorSelectorRef = useRef(null);
     const positionButtonRef = useRef(null);
+    const bottomControlsRef = useRef(null);
+    const overlapTimerRef = useRef(null);
+    const [isFloorSelectorExpanded, setIsFloorSelectorExpanded] = useState(false);
 
     // Helper function to check if an element should be rendered
     const shouldRenderElement = useCallback((elementName) => {
@@ -210,6 +213,58 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
         });
     }, [excludedElements, shouldRenderElement, isDesktop]);
 
+    // Observe the floor selector's toggle button class to detect expansion,
+    // then check whether it actually overlaps the bottom controls before hiding them.
+    useEffect(() => {
+        const floorSelector = floorSelectorRef.current;
+        if (!floorSelector) return;
+
+        const checkOverlap = () => {
+            if (overlapTimerRef.current) {
+                clearTimeout(overlapTimerRef.current);
+            }
+
+            const button = floorSelector.querySelector('.mi-floor-selector__button');
+            if (!button) return;
+
+            const isOpen = button.classList.contains('mi-floor-selector__button--open');
+
+            if (!isOpen) {
+                setIsFloorSelectorExpanded(false);
+                return;
+            }
+
+            // Wait for the list expansion animation (50ms) to finish before measuring
+            overlapTimerRef.current = setTimeout(() => {
+                const bottomControls = bottomControlsRef.current;
+                if (!bottomControls) {
+                    setIsFloorSelectorExpanded(false);
+                    return;
+                }
+
+                const selectorEl = floorSelector.querySelector('.mi-floor-selector') || floorSelector;
+                const selectorRect = selectorEl.getBoundingClientRect();
+                const controlsRect = bottomControls.getBoundingClientRect();
+
+                setIsFloorSelectorExpanded(selectorRect.bottom > controlsRect.top);
+            }, 50);
+        };
+
+        const observer = new MutationObserver(checkOverlap);
+        observer.observe(floorSelector, {
+            subtree: true,
+            attributes: true,
+            attributeFilter: ['class']
+        });
+
+        return () => {
+            observer.disconnect();
+            if (overlapTimerRef.current) {
+                clearTimeout(overlapTimerRef.current);
+            }
+        };
+    }, [mapsIndoorsInstance, mapInstance]);
+
     if (isKiosk) {
         if (enableAccessibilityKioskControls) {
             return (
@@ -274,7 +329,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
                 </div>
 
                 {/* Bottom right desktop controls */}
-                <div className="map-controls-container desktop bottom-right">
+                <div ref={bottomControlsRef} className={`map-controls-container desktop bottom-right ${isFloorSelectorExpanded ? 'map-controls-container--floor-selector-open' : ''}`}>
                     {shouldRenderElement('zoomControls') && (
                         <MapZoomControl mapType={mapType} mapInstance={mapInstance} />
                     )}
