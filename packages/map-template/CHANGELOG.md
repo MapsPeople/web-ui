@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a new custom hook `useFloorSelectorToggleObserver.js`.
 - Added newly created observer to MapControls.jsx
 - `minZoom` can be now configurable via App Config object, otherwise it defaults to 10.
+- Upgraded to Web SDK 4.57.0.
 
 ## [1.96.19] - 2026-03-26
 

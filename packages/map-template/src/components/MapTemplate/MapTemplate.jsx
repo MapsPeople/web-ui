@@ -240,8 +240,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             const miSdkApiTag = document.createElement('script');
             miSdkApiTag.setAttribute('type', 'text/javascript');
             // Remember to update the root index.html with the same version / integrity
-            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.56.2/mapsindoors-4.56.2.js.gz');
-            miSdkApiTag.setAttribute('integrity', 'sha384-AbC6/Ti9R/Fs5vC9Vd+dXtQvBOSMbw7PQ1+xyaL3W5et4ZuNiP1K0GdmoDZvve7G');
+            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.57.0/mapsindoors-4.57.0.js.gz');
+            miSdkApiTag.setAttribute('integrity', 'sha384-Hxm9bx6t+2luBNdH7oGaUAgcZH+FMgbKfltKDlJYJsGbFnXcWH0bm6ZigXLgFmQg');
             miSdkApiTag.setAttribute('crossorigin', 'anonymous');
             document.body.appendChild(miSdkApiTag);
             miSdkApiTag.onload = () => {
@@ -507,6 +507,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * This effect updates the mapOptions state accordingly.
      */
     useEffect(() => {
+        console.log(appConfig?.appSettings);
+        
         setMapOptions({
             brandingColor: color,
             // Ensure showRoadNames and showMapMarkers are booleans, even if appConfig.appSettings.showRoadNames/showMapMarkers is a string
