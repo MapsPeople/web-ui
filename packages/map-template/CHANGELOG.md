@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - An issue when expanded Floor Selector would overlap Zoom Controls and Full Screen button.
+- Added a new custom hook `useFloorSelectorToggleObserver.js`.
+- Added newly created observer to MapControls.jsx
 
 ## [1.96.19] - 2026-03-26
 
