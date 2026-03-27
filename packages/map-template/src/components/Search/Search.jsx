@@ -7,7 +7,6 @@ import currentVenueNameState from '../../atoms/currentVenueNameState';
 import { useInitialChatMessage } from '../../hooks/useInitialChatMessage';
 import { useGemini } from '../../providers/GeminiProvider';
 import { snapPoints } from '../../constants/snapPoints';
-import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
 import SearchField from '../WebComponentWrappers/Search/Search';
 import filteredLocationsState from '../../atoms/filteredLocationsState';
@@ -84,8 +83,6 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
     const [showNotFoundMessage, setShowNotFoundMessage] = useState(false);
 
     const [selectedCategory, setSelectedCategory] = useRecoilState(selectedCategoryState);
-
-    const scrollableContentSwipePrevent = usePreventSwipe();
 
     const [hoveredLocation, setHoveredLocation] = useState();
 
@@ -780,7 +777,7 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
 
             {/* When search results are found (category is selected or search term is used) */}
             {searchResults.length > 0 && (
-                <div className={`search__results prevent-scroll${isKioskContext ? ' search__results--kiosk' : ''}`} {...scrollableContentSwipePrevent}>
+                <div className={`search__results prevent-scroll${isKioskContext ? ' search__results--kiosk' : ''}`}>
 
                     {/* Subcategories should only show if a top level category is selected and if that top level category has any childKeys */}
                     {selectedCategory && (

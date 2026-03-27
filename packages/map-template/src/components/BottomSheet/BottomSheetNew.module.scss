@@ -1,0 +1,28 @@
+.sheetContainer {
+    position: relative;
+
+    &::before {
+        position: absolute;
+        content: ' ';
+        top: var(--spacing-xx-small);
+        left: 50%;
+        transform: translateX(-50%);
+        width: 28px;
+        height: var(--spacing-xx-small);
+        border-radius: var(--spacing-xx-small);
+        background-color: var(--color-gray-30);
+        z-index: 1;
+    }
+}
+
+.sheetHeader {
+    height: 0;
+}
+
+.sheetContent {
+    background-color: var(--color-white-white);
+}
+
+.sheetBackdrop {
+
+}

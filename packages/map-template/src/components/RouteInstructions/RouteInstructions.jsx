@@ -8,7 +8,6 @@ import directionsResponseState from '../../atoms/directionsResponseState';
 import activeStepState from '../../atoms/activeStep';
 import RouteInstructionsStep from '../WebComponentWrappers/RouteInstructionsStep/RouteInstructionsStep';
 import substepsToggledState from '../../atoms/substepsToggledState';
-import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import isDestinationStepState from '../../atoms/isDestinationStepState';
 import { useIsKioskContext } from '../../hooks/useIsKioskContext';
 import PropTypes from 'prop-types';
@@ -36,8 +35,6 @@ RouteInstructions.propTypes = {
 function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, isOpen }) {
 
     const { t } = useTranslation();
-
-    const scrollableContentSwipePrevent = usePreventSwipe();
 
     const routeInstructionsRef = useRef();
 
@@ -108,7 +105,7 @@ function RouteInstructions({ steps, onNextStep, onPreviousStep, originLocation, 
     }
 
     return (
-        <div className="route-instructions prevent-scroll" {...scrollableContentSwipePrevent}>
+        <div className="route-instructions prevent-scroll">
             {totalSteps &&
                 <>
                     <RouteInstructionsStep

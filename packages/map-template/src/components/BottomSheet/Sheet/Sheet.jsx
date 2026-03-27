@@ -18,8 +18,7 @@ import PropTypes from 'prop-types';
  * The snap points are (see the constants/snapPoints.js file): MIN, FIT, MAX where MIN is a value specified by us in pixels (the minimizedHeight prop),
  * fit is fitting the content of the sheet and MAX is the maximum allowed height of the sheet (the height of the container element).
  *
- * The swipe up/down gesture can be set to not react on scrollable content, using the usePreventSwipe hook. This way, the user can scroll the content of the sheet without
- * the sheet reacting to the swipe gesture. This is useful for eg. a list of search results.
+ * Scrollable sheet content is handled so vertical scrolling does not move the sheet (e.g. search results lists).
  *
  *
  * @param {Object} props

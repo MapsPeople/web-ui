@@ -6,7 +6,6 @@ import { snapPoints } from '../../../constants/snapPoints';
 import searchResultsState from '../../../atoms/searchResultsState';
 import filteredLocationsState from '../../../atoms/filteredLocationsState';
 import selectedCategoryState from '../../../atoms/selectedCategoryState';
-import { usePreventSwipe } from '../../../hooks/usePreventSwipe';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import getActiveCategory from '../../../helpers/GetActiveCategory';
 import isBottomSheetLoadedState from '../../../atoms/isBottomSheetLoadedState';
@@ -54,8 +53,6 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, t
     const setSearchResults = useSetRecoilState(searchResultsState);
 
     const setFilteredLocations = useSetRecoilState(filteredLocationsState);
-
-    const scrollableContentSwipePrevent = usePreventSwipe();
 
     const [activeCategory, setActiveCategory] = useState();
 
@@ -259,7 +256,7 @@ function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, t
     }, [categories])
 
     return (
-        <div className={categoriesContainerClassName} {...scrollableContentSwipePrevent}>
+        <div className={categoriesContainerClassName}>
             {categories.length > 0 && (
                 <>
                     {/* Show nav above subcategories row if not topLevelCategory */}

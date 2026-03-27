@@ -2,7 +2,6 @@ import './LocationsList.scss';
 import { useTranslation } from 'react-i18next';
 import CloseIcon from '../../assets/close.svg?react';
 import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
-import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import { snapPoints } from '../../constants/snapPoints';
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
@@ -28,8 +27,6 @@ LocationsList.propTypes = {
 function LocationsList({ onBack, onLocationClick, locations, onSetSize }) {
 
     const { t } = useTranslation();
-
-    const scrollableContentSwipePrevent = usePreventSwipe();
 
     /**
      * Communicate size change to parent component.
@@ -57,7 +54,7 @@ function LocationsList({ onBack, onLocationClick, locations, onSetSize }) {
                     <CloseIcon />
                 </button>
             </div>
-            <div className="locations-list__scrollable prevent-scroll" {...scrollableContentSwipePrevent}>
+            <div className="locations-list__scrollable prevent-scroll">
                 <div className="locations-list__list">
                     {locations?.map(location =>
                         <ListItemLocation

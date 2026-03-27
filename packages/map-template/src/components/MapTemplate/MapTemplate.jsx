@@ -9,7 +9,8 @@ import { mapClickActions } from '../../constants/mapClickActions.js';
 import MapWrapper from '../MapWrapper/MapWrapper';
 import SplashScreen from '../SplashScreen/SplashScreen';
 import VenueSelector from '../VenueSelector/VenueSelector';
-import BottomSheet from '../BottomSheet/BottomSheet';
+// import BottomSheet from '../BottomSheet/BottomSheet';
+import BottomSheetNew from '../BottomSheet/BottomSheetNew';
 import apiKeyState from '../../atoms/apiKeyState';
 import gmApiKeyState from '../../atoms/gmApiKeyState';
 import isMapReadyState from '../../atoms/isMapReadyState.js';
@@ -842,7 +843,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                             />
                         }
                         {!isDesktop &&
-                            <BottomSheet
+                            <BottomSheetNew
                                 directionsFromLocation={directionsFromLocation}
                                 directionsToLocation={directionsToLocation}
                                 pushAppView={pushAppView}

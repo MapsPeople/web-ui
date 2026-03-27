@@ -6,7 +6,6 @@ import { useRecoilValue } from 'recoil';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import currentLocationState from '../../atoms/currentLocationState';
 import { useIsVerticalOverflow } from '../../hooks/useIsVerticalOverflow';
-import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import { snapPoints } from '../../constants/snapPoints';
 import primaryColorState from '../../atoms/primaryColorState';
 import directionsServiceState from '../../atoms/directionsServiceState';
@@ -80,8 +79,6 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
 
     // Check if the content of the Location details is overflowing
     const [isOverflowing, initialOverflow] = useIsVerticalOverflow(location, locationDetailsElement);
-
-    const scrollableContentSwipePrevent = usePreventSwipe();
 
     const primaryColor = useRecoilValue(primaryColorState);
 
@@ -419,7 +416,6 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
             </div>
             <div
                 className="location-details__details prevent-scroll"
-                {...scrollableContentSwipePrevent}
                 ref={locationDetailsDetailsRef}
             >
                 <div
