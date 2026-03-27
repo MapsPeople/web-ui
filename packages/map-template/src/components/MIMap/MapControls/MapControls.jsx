@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useCallback, useMemo, memo } from 'react';
 import PropTypes from 'prop-types';
 import './MapControls.scss';
 import { useIsDesktop } from '../../../hooks/useIsDesktop';
+import { useFloorSelectorToggleObserver } from '../../../hooks/useFloorSelectorToggleObserver';
 import CustomPositionProvider from '../../../utils/CustomPositionProvider';
 import MapZoomControl from '../MapZoomControl/MapZoomControl';
 import TextSizeButton from '../TextSizeButton/TextSizeButton';
@@ -61,8 +62,6 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
     const floorSelectorRef = useRef(null);
     const positionButtonRef = useRef(null);
     const bottomControlsRef = useRef(null);
-    const overlapTimerRef = useRef(null);
-    const isFloorSelectorOpenRef = useRef(false);
     const [isFloorSelectorExpanded, setIsFloorSelectorExpanded] = useState(false);
 
     // Measures whether the expanded floor selector overlaps the bottom controls.
@@ -232,46 +231,13 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
         });
     }, [excludedElements, shouldRenderElement, isDesktop]);
 
-    // Observe the floor selector's toggle button class to detect open/close,
-    // then measure overlap after the expansion animation finishes.
-    useEffect(() => {
-        const floorSelector = floorSelectorRef.current;
-        if (!floorSelector) return;
-
-        const onClassChange = () => {
-            if (overlapTimerRef.current) {
-                clearTimeout(overlapTimerRef.current);
-            }
-
-            const button = floorSelector.querySelector('.mi-floor-selector__button');
-            if (!button) return;
-
-            const isOpen = button.classList.contains('mi-floor-selector__button--open');
-            isFloorSelectorOpenRef.current = isOpen;
-
-            if (!isOpen) {
-                setIsFloorSelectorExpanded(false);
-                return;
-            }
-
-            // Wait for the list expansion animation (50ms) to finish before measuring
-            overlapTimerRef.current = setTimeout(measureOverlap, 50);
-        };
-
-        const observer = new MutationObserver(onClassChange);
-        observer.observe(floorSelector, {
-            subtree: true,
-            attributes: true,
-            attributeFilter: ['class']
-        });
-
-        return () => {
-            observer.disconnect();
-            if (overlapTimerRef.current) {
-                clearTimeout(overlapTimerRef.current);
-            }
-        };
-    }, [mapsIndoorsInstance, mapInstance, measureOverlap]);
+    const isFloorSelectorOpenRef = useFloorSelectorToggleObserver({
+        floorSelectorRef,
+        setIsFloorSelectorExpanded,
+        measureOverlap,
+        mapsIndoorsInstance,
+        mapInstance
+    });
 
     // Recompute overlap on viewport resize, orientation change, and layout transitions.
     useEffect(() => {
