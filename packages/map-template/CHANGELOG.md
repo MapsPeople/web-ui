@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - An issue when expanded Floor Selector would overlap Zoom Controls and Full Screen button.
 - Added a new custom hook `useFloorSelectorToggleObserver.js`.
 - Added newly created observer to MapControls.jsx
+- `minZoom` can be now configurable via App Config object, otherwise it defaults to 10.
 
 ## [1.96.19] - 2026-03-26
 
