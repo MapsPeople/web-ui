@@ -62,7 +62,26 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
     const positionButtonRef = useRef(null);
     const bottomControlsRef = useRef(null);
     const overlapTimerRef = useRef(null);
+    const isFloorSelectorOpenRef = useRef(false);
     const [isFloorSelectorExpanded, setIsFloorSelectorExpanded] = useState(false);
+
+    // Measures whether the expanded floor selector overlaps the bottom controls.
+    // Uses only refs and stable setters so the dependency array can stay empty.
+    const measureOverlap = useCallback(() => {
+        const bottomControls = bottomControlsRef.current;
+        const floorSelector = floorSelectorRef.current;
+
+        if (!bottomControls || !floorSelector) {
+            setIsFloorSelectorExpanded(false);
+            return;
+        }
+
+        const selectorEl = floorSelector.querySelector('.mi-floor-selector') || floorSelector;
+        const selectorRect = selectorEl.getBoundingClientRect();
+        const controlsRect = bottomControls.getBoundingClientRect();
+
+        setIsFloorSelectorExpanded(selectorRect.bottom > controlsRect.top);
+    }, []);
 
     // Helper function to check if an element should be rendered
     const shouldRenderElement = useCallback((elementName) => {
@@ -213,13 +232,13 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
         });
     }, [excludedElements, shouldRenderElement, isDesktop]);
 
-    // Observe the floor selector's toggle button class to detect expansion,
-    // then check whether it actually overlaps the bottom controls before hiding them.
+    // Observe the floor selector's toggle button class to detect open/close,
+    // then measure overlap after the expansion animation finishes.
     useEffect(() => {
         const floorSelector = floorSelectorRef.current;
         if (!floorSelector) return;
 
-        const checkOverlap = () => {
+        const onClassChange = () => {
             if (overlapTimerRef.current) {
                 clearTimeout(overlapTimerRef.current);
             }
@@ -228,6 +247,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
             if (!button) return;
 
             const isOpen = button.classList.contains('mi-floor-selector__button--open');
+            isFloorSelectorOpenRef.current = isOpen;
 
             if (!isOpen) {
                 setIsFloorSelectorExpanded(false);
@@ -235,22 +255,10 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
             }
 
             // Wait for the list expansion animation (50ms) to finish before measuring
-            overlapTimerRef.current = setTimeout(() => {
-                const bottomControls = bottomControlsRef.current;
-                if (!bottomControls) {
-                    setIsFloorSelectorExpanded(false);
-                    return;
-                }
-
-                const selectorEl = floorSelector.querySelector('.mi-floor-selector') || floorSelector;
-                const selectorRect = selectorEl.getBoundingClientRect();
-                const controlsRect = bottomControls.getBoundingClientRect();
-
-                setIsFloorSelectorExpanded(selectorRect.bottom > controlsRect.top);
-            }, 50);
+            overlapTimerRef.current = setTimeout(measureOverlap, 50);
         };
 
-        const observer = new MutationObserver(checkOverlap);
+        const observer = new MutationObserver(onClassChange);
         observer.observe(floorSelector, {
             subtree: true,
             attributes: true,
@@ -263,7 +271,27 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
                 clearTimeout(overlapTimerRef.current);
             }
         };
-    }, [mapsIndoorsInstance, mapInstance]);
+    }, [mapsIndoorsInstance, mapInstance, measureOverlap]);
+
+    // Recompute overlap on viewport resize, orientation change, and layout transitions.
+    useEffect(() => {
+        const onViewportChange = () => {
+            if (isFloorSelectorOpenRef.current) {
+                measureOverlap();
+            }
+        };
+
+        window.addEventListener('resize', onViewportChange);
+        window.addEventListener('orientationchange', onViewportChange);
+
+        // Re-check immediately after a layout switch while the selector is already open
+        onViewportChange();
+
+        return () => {
+            window.removeEventListener('resize', onViewportChange);
+            window.removeEventListener('orientationchange', onViewportChange);
+        };
+    }, [isDesktop, isKiosk, measureOverlap]);
 
     if (isKiosk) {
         if (enableAccessibilityKioskControls) {

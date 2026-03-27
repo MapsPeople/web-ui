@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- An issue when expanded Floor Selector would overlap Zoom Controls and Full Screen butto.
+- An issue when expanded Floor Selector would overlap Zoom Controls and Full Screen button.
 
 ## [1.96.19] - 2026-03-26
 
