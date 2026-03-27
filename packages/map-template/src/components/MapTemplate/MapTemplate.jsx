@@ -524,7 +524,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                         : appConfig?.appSettings?.showMapMarkers),
             miTransitionLevel: miTransitionLevel,
             // If ignoreViewportBounds is true, we would like to see the map at the minimum zoom level (World Map).
-            minZoom: appConfig?.appSettings?.ignoreViewportBounds ? 1 : ZoomLevelValues.minZoom,
+            minZoom: appConfig?.appSettings?.minZoom ?? ZoomLevelValues.minZoom,
             mapboxMapStyle: appConfig?.appSettings?.mapboxMapStyle || mapboxMapStyle,
             // Boolean from the App Config comes as a string. We need to return clean boolean value based on that.
             enableFullScreenButton:
