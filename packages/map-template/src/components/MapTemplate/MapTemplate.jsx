@@ -507,8 +507,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * This effect updates the mapOptions state accordingly.
      */
     useEffect(() => {
-        console.log(appConfig?.appSettings);
-        
         setMapOptions({
             brandingColor: color,
             // Ensure showRoadNames and showMapMarkers are booleans, even if appConfig.appSettings.showRoadNames/showMapMarkers is a string
