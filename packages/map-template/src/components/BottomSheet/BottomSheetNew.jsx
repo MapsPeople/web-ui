@@ -108,7 +108,7 @@ function BottomSheetNew({ directionsFromLocation, directionsToLocation, pushAppV
                 );
             }
             case appViews.WAYFINDING: {
-                const sp = [0, WAYFINDING_MIN_SNAP_HEIGHT_PX, 1];
+                const sp = [0, 1];
                 return (
                     <Sheet {...sheetProps(mountEl)} snapPoints={sp} detent="content">
                         <Sheet.Container className={styles.sheetContainer}>

@@ -3,7 +3,7 @@
 .wayfinding {
     color: var(--brand-colors-black-100);
     display: grid;
-    grid-template-rows: 190px min-content;
+    grid-template-rows: auto min-content;
 
     @media (min-width: variables.$desktop-breakpoint) {
         min-height: 435px; // avoid content jumping on larger screens. On smaller screens we control the height more explicitly.
@@ -13,7 +13,9 @@
         background-color: var(--color-gray-20);
         border-bottom: 1px solid var(--color-gray-30);
         padding: var(--spacing-medium);
-        position: relative;
+        position: sticky;
+        top: 0;
+        z-index: 1;
         border-radius: var(--rounding-large) var(--rounding-large) 0 0;
     }
 
