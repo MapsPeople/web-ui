@@ -146,8 +146,6 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
         setShowFullDescription(false);
         setDescriptionHasContentAbove(false);
         setDescriptionHasContentBelow(false);
-        setSize(snapPoints.FIT);
-
         onBack();
     });
 
@@ -170,7 +168,6 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
             setSize(snapPoints.MAX);
         } else {
             collapseLocationDescription();
-            setSize(snapPoints.FIT);
         }
     }
 
@@ -228,7 +225,6 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
         setShowFullDescription(false);
         setDescriptionHasContentAbove(false);
         setDescriptionHasContentBelow(false);
-        setSize(snapPoints.FIT);
 
         onStartWayfinding();
     }
@@ -240,7 +236,6 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
         setShowFullDescription(false);
         setDescriptionHasContentAbove(false);
         setDescriptionHasContentBelow(false);
-        setSize(snapPoints.FIT);
 
         onStartDirections();
     }
@@ -286,15 +281,6 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
         }
     }, [location, mapsIndoorsInstance, kioskLocation]);
 
-    useEffect(() => {
-        const hasAdditionalDetails = locationAdditionalDetails?.length > 0;
-        // Expand the sheet when location changes, is open, and has additional details
-        if (location && isOpen && hasAdditionalDetails) {
-            setSize(snapPoints.FIT);
-        } else {
-            setSize(snapPoints.MIN);
-        }
-    }, [location, isOpen, locationAdditionalDetails]);
 
     /*
      * When user swipes the bottom sheet to a new snap point.

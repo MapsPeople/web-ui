@@ -86,9 +86,9 @@ function BottomSheetNew({ directionsFromLocation, directionsToLocation, pushAppV
                 );
             }
             case appViews.LOCATION_DETAILS: {
-                const sp = [0, LOCATION_DETAILS_MIN_SNAP_HEIGHT_PX, 1];
+                const sp = [0, 1];
                 return (
-                    <Sheet {...sheetProps(mountEl)} snapPoints={sp}>
+                    <Sheet {...sheetProps(mountEl)} snapPoints={sp} detent="content">
                         <Sheet.Container className={styles.sheetContainer}>
                             <Sheet.Header className={styles.sheetHeader}>
                                 <div className={styles.dragHandle} />
