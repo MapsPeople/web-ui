@@ -41,12 +41,10 @@ function BottomSheetNew({ directionsFromLocation, directionsToLocation, pushAppV
     }, [currentLocation]);
 
     function snapTo(sheetSnapPoints, constant) {
-        const lastIndex = sheetSnapPoints.length - 1;
         if (constant === snapPoints.MAX) {
-            sheetRef.current?.snapTo(lastIndex);
-        } else if (constant === snapPoints.FIT) {
-            sheetRef.current?.snapTo(lastIndex - 1);
+            sheetRef.current?.snapTo(sheetSnapPoints.length - 1);
         }
+        // FIT and MIN are no-ops — detent="content" handles natural height
     }
 
     function sheetProps(mountPoint) {
@@ -66,9 +64,9 @@ function BottomSheetNew({ directionsFromLocation, directionsToLocation, pushAppV
 
         switch (currentAppView) {
             case appViews.SEARCH: {
-                const sp = [0, MIN_SNAP_HEIGHT_PX, 1];
+                const sp = [0, 1];
                 return (
-                    <Sheet {...sheetProps(mountEl)} snapPoints={sp}>
+                    <Sheet {...sheetProps(mountEl)} snapPoints={sp} detent="content">
                         <Sheet.Container className={styles.sheetContainer}>
                             <Sheet.Header className={styles.sheetHeader}>
                                 <div className={styles.dragHandle} />

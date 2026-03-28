@@ -145,7 +145,6 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
             setSelectedCategory(null);
             setSearchResults([]);
             setFilteredLocations([]);
-            setSize(snapPoints.FIT);
             setIsInputFieldInFocus(true);
 
             // If there's a search term and it's not just whitespace, re-trigger the search without category filter
@@ -448,17 +447,9 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
      * Calculate the CSS for the container based on context.
      */
     function calculateContainerStyle() {
-        if (searchResults.length > 0) {
-            let maxHeight;
-            if (isDesktop) {
-                // On desktop-sized viewports, we want the container to have a max height of 60% of the Map Template.
-                maxHeight = document.querySelector('.mapsindoors-map').clientHeight * 0.6 + 'px';
-            } else {
-                // On mobile-sized viewports, take up all available space if needed.
-                maxHeight = '100%';
-            }
-
-            return { display: 'flex', flexDirection: 'column', maxHeight, overflow: 'hidden' };
+        if (searchResults.length > 0 && isDesktop) {
+            const maxHeight = document.querySelector('.mapsindoors-map').clientHeight * 0.8 + 'px';
+            return { display: 'flex', flexDirection: 'column', maxHeight, overflow: 'auto' };
         }
     }
 
@@ -502,7 +493,6 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
             } else if (!clickedInsideResults && !clickedInsideIgnoreArea) {
                 setIsInputFieldInFocus(false);
                 setShowAskWithAiButton(false);
-                setSize(snapPoints.MIN);
                 setSelectedCategory(null);
                 setSearchResults([]);
                 setFilteredLocations([]);
