@@ -259,7 +259,6 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
     function resetSubsteps() {
         setActiveStep(0);
         setSubstepsOpen(false);
-        setSize(snapPoints.FIT);
     }
 
     /**
@@ -311,7 +310,7 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
      */
     useEffect(() => {
         requestAnimationFrameId.current = requestAnimationFrame(() => {// we use a requestAnimationFrame to ensure that the component has been re-rendered with the collapsed or expanded sub steps before we set the size
-            substepsOpen ? setSize(snapPoints.MAX) : setSize(snapPoints.FIT);
+            if (substepsOpen) setSize(snapPoints.MAX);
         });
 
         return () => {
