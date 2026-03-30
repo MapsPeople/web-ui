@@ -334,6 +334,12 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
         }
     }
 
+    function searchInputFocused() {
+        searchFieldRef.current.getInputField();
+        setIsInputFieldInFocus(true);
+        handleSearchChanged();
+    }
+
     /**
      * When search field is clicked, maximize the sheet size and set focus on the from field,
      * and if the useKeyboard prop is present, show the onscreen keyboard.
@@ -465,32 +471,18 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
     }
 
     /*
-     * Monitors clicks to manage sheet size and input focus state
+     * Closes search when clicking outside the search component.
      */
     useEffect(() => {
-        const SEARCH_FOCUS_ELEMENTS = ['.search__info', '.search__back-button', '.categories', '.sheet__content'];
-
-        // We want to ignore: Floor Selector, View Mode Switch, My Position, View Selector, Mapbox zoom controls and Google Maps zoom controls
         const IGNORE_CLOSE_ELEMENTS = ['.mi-floor-selector', '.view-mode-switch', '.mi-my-position', '.view-selector__toggle-button', '.building-list', '.mapboxgl-ctrl-bottom-right', '.gmnoprint', '.language-selector-portal'];
 
-        const handleSearchFieldFocus = (event) => {
-            const clickedInsideSearchArea = SEARCH_FOCUS_ELEMENTS.some(selector =>
-                event.target.closest(selector)
-            );
-
+        const handleOutsideClick = (event) => {
+            const clickedInsideSearch = searchRef.current?.contains(event.target);
             const clickedInsideIgnoreArea = IGNORE_CLOSE_ELEMENTS.some(selector =>
                 event.target.closest(selector)
             );
 
-            const clickedInsideResults = event.target.closest('.search__results');
-
-            if (clickedInsideSearchArea) {
-                setSize(snapPoints.MAX);
-                requestAnimationFrameId.current = requestAnimationFrame(() => { // we use a requestAnimationFrame to ensure that the size change is applied before the focus (meaning that categories are rendered)
-                    setIsInputFieldInFocus(true);
-                    handleSearchChanged();
-                });
-            } else if (!clickedInsideResults && !clickedInsideIgnoreArea) {
+            if (!clickedInsideSearch && !clickedInsideIgnoreArea) {
                 setIsInputFieldInFocus(false);
                 setShowAskWithAiButton(false);
                 setSelectedCategory(null);
@@ -501,15 +493,15 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
         };
 
         if (isOpen) {
-            requestAnimationFrameId.current = requestAnimationFrame(() => { // we use a requestAnimationFrame to ensure that the click is not registered too early (while other sheets are still "active")
-                document.addEventListener('click', handleSearchFieldFocus);
+            requestAnimationFrameId.current = requestAnimationFrame(() => {
+                document.addEventListener('click', handleOutsideClick);
             });
         } else {
-            document.removeEventListener('click', handleSearchFieldFocus);
+            document.removeEventListener('click', handleOutsideClick);
         }
 
         return () => {
-            document.removeEventListener('click', handleSearchFieldFocus);
+            document.removeEventListener('click', handleOutsideClick);
             if (requestAnimationFrameId.current) {
                 cancelAnimationFrame(requestAnimationFrameId.current);
             }
@@ -717,6 +709,7 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
                         placeholder={t('Search by name, category, building...')}
                         results={locations => onResults(locations)}
                         clicked={() => searchFieldClicked()}
+                        inputFocused={() => searchInputFocused()}
                         cleared={() => cleared()}
                         changed={() => handleSearchChanged()}
                         category={selectedCategory}

@@ -1602,6 +1602,7 @@ declare global {
         "componentRendered": void;
         "shortInput": void;
         "changed": void;
+        "focused": void;
     }
     interface HTMLMiSearchElement extends Components.MiSearch, HTMLStencilElement {
         addEventListener<K extends keyof HTMLMiSearchElementEventMap>(type: K, listener: (this: HTMLMiSearchElement, ev: MiSearchCustomEvent<HTMLMiSearchElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -2783,6 +2784,10 @@ declare namespace LocalJSX {
           * Event emitted after every component rendering.
          */
         "onComponentRendered"?: (event: MiSearchCustomEvent<void>) => void;
+        /**
+          * Event emitted when the input field receives focus.
+         */
+        "onFocused"?: (event: MiSearchCustomEvent<void>) => void;
         /**
           * Event emitted when searching is complete.
          */
