@@ -231,9 +231,10 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
      */
     function onResults(locations, fitMapBounds = false) {
         const displayResults = locations.slice(0, MAX_RESULTS);
-
-        // Expand the sheet to occupy the entire screen
-        setSize(snapPoints.MAX);
+        const hadResults = searchResults.length > 0;
+        if (!hadResults || displayResults.length === 0) {
+            setSize(snapPoints.MAX);
+        }
 
         setSearchResults(displayResults);
         setFilteredLocations(displayResults);
@@ -477,7 +478,12 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
         const IGNORE_CLOSE_ELEMENTS = ['.mi-floor-selector', '.view-mode-switch', '.mi-my-position', '.view-selector__toggle-button', '.building-list', '.mapboxgl-ctrl-bottom-right', '.gmnoprint', '.language-selector-portal'];
 
         const handleOutsideClick = (event) => {
-            const clickedInsideSearch = searchRef.current?.contains(event.target);
+            const searchEl = searchRef.current;
+            const clickedInsideSearch = Boolean(
+                searchEl
+                && (searchEl.contains(event.target)
+                    || (typeof event.composedPath === 'function' && event.composedPath().includes(searchEl)))
+            );
             const clickedInsideIgnoreArea = IGNORE_CLOSE_ELEMENTS.some(selector =>
                 event.target.closest(selector)
             );
