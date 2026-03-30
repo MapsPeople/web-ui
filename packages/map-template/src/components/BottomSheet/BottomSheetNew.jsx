@@ -1,5 +1,13 @@
-/* eslint-disable no-unused-vars */
-// TODO: usePreventSwipe was removed from scrollable panels; re-check touch scroll vs sheet drag if regressions appear
+/**
+ * Bottom sheets for map-template app views, built on react-modal-sheet.
+ *
+ * Library: https://github.com/Temzasse/react-modal-sheet
+ * Docs & examples: https://temzasse.github.io/react-modal-sheet
+ * npm: https://www.npmjs.com/package/react-modal-sheet
+ *
+ * Compound API: `Sheet`, `Sheet.Container`, `Sheet.Header`, `Sheet.Content`, `Sheet.Backdrop`.
+ * Imperative ref: `sheetRef.current.snapTo(index)` — documented in the library README as **Methods and properties** → `snapTo(index)` (https://github.com/Temzasse/react-modal-sheet#%EF%B8%8F-methods-and-properties).
+ */
 import { useRef, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Sheet } from 'react-modal-sheet';
@@ -15,11 +23,10 @@ import { useChatLocations, useChatDirections } from '../../hooks/useChat';
 import './BottomSheetNew.scss';
 import styles from './BottomSheetNew.module.scss';
 
-// Library expects ascending snapPoints including 0 (hidden) and 1 (full height); values > 1 are px from bottom.
+/** Snap array for Search: `[0, px, 1]` — library requires ascending points; `0` = hidden, `1` = full height, middle values are px from bottom. */
 const MIN_SNAP_HEIGHT_PX = 80;
-const LOCATION_DETAILS_MIN_SNAP_HEIGHT_PX = 180;
-const WAYFINDING_MIN_SNAP_HEIGHT_PX = 190;
-const DIRECTIONS_MIN_SNAP_HEIGHT_PX = 273;
+/** Two-point sheet: closed → full (see `computeSnapPoints` in react-modal-sheet). */
+const SP_DEFAULT = [0, 1];
 
 BottomSheetNew.propTypes = {
     directionsFromLocation: PropTypes.string,
@@ -30,6 +37,18 @@ BottomSheetNew.propTypes = {
     onRouteFinished: PropTypes.func.isRequired
 };
 
+/**
+ * Renders the map overlay bottom sheet (react-modal-sheet) or chat for the current app view.
+ *
+ * @param {object} props - Root props object.
+ * @param {string} [props.directionsFromLocation] - Origin location id or label for directions.
+ * @param {string} [props.directionsToLocation] - Destination location id or label for directions.
+ * @param {function(string): void} props.pushAppView - Navigates to an app view by key.
+ * @param {string} props.currentAppView - Active view key (e.g. search, location details).
+ * @param {object} props.appViews - Map of view name constants to route keys.
+ * @param {function(): void} props.onRouteFinished - Called when an in-map route completes (e.g. directions done).
+ * @returns {JSX.Element}
+ */
 function BottomSheetNew({ directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews, onRouteFinished }) {
     const sheetRef = useRef(null);
     const [mountEl, setMountEl] = useState(null);
@@ -44,14 +63,25 @@ function BottomSheetNew({ directionsFromLocation, directionsToLocation, pushAppV
         }
     }, [currentLocation]);
 
-    function snapTo(sheetSnapPoints, constant) {
-        if (constant === snapPoints.MAX) {
-            sheetRef.current?.snapTo(sheetSnapPoints.length - 1);
+    /**
+     * Builds an `onSetSize` handler for children: when the app requests `snapPoints.MAX`, calls `sheetRef.current.snapTo(lastIndex)` (react-modal-sheet).
+     *
+     * @param {number[]} sp - Same snap array passed to `Sheet` as `snapPoints`.
+     * @returns {(size: string) => void} Callback for child `onSetSize`.
+     */
+    const expandToMax = (sp) => (size) => {
+        if (size === snapPoints.MAX) {
+            sheetRef.current?.snapTo(sp.length - 1);
         }
-        // FIT and MIN are no-ops — detent="content" handles natural height
-    }
+    };
 
-    function sheetProps(mountPoint) {
+    /**
+     * Default props for `Sheet`: portal `mountPoint`, `ref`, `isOpen`, `unstyled` + local SCSS, `disableDismiss` (no swipe-to-close).
+     *
+     * @param {HTMLElement | null} mountPoint - DOM node used as `mountPoint` for the sheet portal.
+     * @returns {object} Props object to spread onto `Sheet`.
+     */
+    function baseSheetProps(mountPoint) {
         return {
             key: currentAppView,
             mountPoint,
@@ -65,96 +95,82 @@ function BottomSheetNew({ directionsFromLocation, directionsToLocation, pushAppV
         };
     }
 
+    /**
+     * One `Sheet` with `Sheet.Container` / `Header` / `Content` / `Backdrop` (react-modal-sheet compound components).
+     *
+     * @param {object} extraProps - Additional `Sheet` props (`snapPoints`, `detent`, `initialSnap`, `disableDrag`, …).
+     * @param {React.ReactNode} inner - Content rendered inside `Sheet.Content`.
+     * @returns {JSX.Element}
+     */
+    function sheetLayout(extraProps, inner) {
+        return (
+            <Sheet {...baseSheetProps(mountEl)} {...extraProps}>
+                <Sheet.Container className={styles.sheetContainer}>
+                    <Sheet.Header className={styles.sheetHeader}>
+                        <div className={styles.dragHandle} />
+                    </Sheet.Header>
+                    <Sheet.Content className={styles.sheetContent} unstyled>
+                        {inner}
+                    </Sheet.Content>
+                </Sheet.Container>
+                <Sheet.Backdrop className={styles.sheetBackdrop} />
+            </Sheet>
+        );
+    }
+
+    /**
+     * Picks the sheet or chat tree for `currentAppView`. Search uses default `detent` and `[0, 80px, 1]` snaps; other sheets use `detent="content"` unless noted.
+     *
+     * @returns {JSX.Element | null} `null` until `mountEl` exists (except `CHAT`, which does not use the sheet portal mount).
+     */
     function renderSheet() {
         if (!mountEl && currentAppView !== appViews.CHAT) return null;
 
         switch (currentAppView) {
             case appViews.SEARCH: {
                 const sp = [0, MIN_SNAP_HEIGHT_PX, 1];
-                return (
-                    <Sheet {...sheetProps(mountEl)} initialSnap={2} snapPoints={sp} detent="content">
-                        <Sheet.Container className={styles.sheetContainer}>
-                            <Sheet.Header className={styles.sheetHeader}>
-                                <div className={styles.dragHandle} />
-                            </Sheet.Header>
-                            <Sheet.Content className={styles.sheetContent} unstyled>
-                                <Search
-                                    isOpen={true}
-                                    onSetSize={size => snapTo(sp, size)}
-                                    onOpenChat={() => pushAppView(appViews.CHAT)}
-                                />
-                            </Sheet.Content>
-                        </Sheet.Container>
-                        <Sheet.Backdrop className={styles.sheetBackdrop} />
-                    </Sheet>
+                return sheetLayout(
+                    { initialSnap: 1, snapPoints: sp },
+                    <Search
+                        isOpen={true}
+                        onSetSize={expandToMax(sp)}
+                        onOpenChat={() => pushAppView(appViews.CHAT)}
+                    />
                 );
             }
-            case appViews.LOCATION_DETAILS: {
-                const sp = [0, 1];
-                return (
-                    <Sheet {...sheetProps(mountEl)} snapPoints={sp} detent="content">
-                        <Sheet.Container className={styles.sheetContainer}>
-                            <Sheet.Header className={styles.sheetHeader}>
-                                <div className={styles.dragHandle} />
-                            </Sheet.Header>
-                            <Sheet.Content className={styles.sheetContent} unstyled>
-                                <LocationDetails
-                                    isOpen={true}
-                                    onSetSize={size => snapTo(sp, size)}
-                                    onBack={() => { setCurrentLocation(); pushAppView(appViews.SEARCH); }}
-                                    onStartWayfinding={() => pushAppView(appViews.WAYFINDING)}
-                                    onStartDirections={() => pushAppView(appViews.DIRECTIONS)}
-                                />
-                            </Sheet.Content>
-                        </Sheet.Container>
-                        <Sheet.Backdrop className={styles.sheetBackdrop} />
-                    </Sheet>
+            case appViews.LOCATION_DETAILS:
+                return sheetLayout(
+                    { snapPoints: SP_DEFAULT, detent: 'content' },
+                    <LocationDetails
+                        isOpen={true}
+                        onSetSize={expandToMax(SP_DEFAULT)}
+                        onBack={() => { setCurrentLocation(); pushAppView(appViews.SEARCH); }}
+                        onStartWayfinding={() => pushAppView(appViews.WAYFINDING)}
+                        onStartDirections={() => pushAppView(appViews.DIRECTIONS)}
+                    />
                 );
-            }
-            case appViews.WAYFINDING: {
-                const sp = [0, 1];
-                return (
-                    <Sheet {...sheetProps(mountEl)} snapPoints={sp} detent="content">
-                        <Sheet.Container className={styles.sheetContainer}>
-                            <Sheet.Header className={styles.sheetHeader}>
-                                <div className={styles.dragHandle} />
-                            </Sheet.Header>
-                            <Sheet.Content className={styles.sheetContent} unstyled>
-                                <Wayfinding
-                                    onSetSize={size => snapTo(sp, size)}
-                                    onStartDirections={() => pushAppView(appViews.DIRECTIONS)}
-                                    directionsToLocation={directionsToLocation}
-                                    directionsFromLocation={directionsFromLocation}
-                                    onBack={() => pushAppView(currentLocation ? appViews.LOCATION_DETAILS : appViews.SEARCH)}
-                                    isActive={true}
-                                />
-                            </Sheet.Content>
-                        </Sheet.Container>
-                        <Sheet.Backdrop className={styles.sheetBackdrop} />
-                    </Sheet>
+            case appViews.WAYFINDING:
+                return sheetLayout(
+                    { snapPoints: SP_DEFAULT, detent: 'content' },
+                    <Wayfinding
+                        onSetSize={expandToMax(SP_DEFAULT)}
+                        onStartDirections={() => pushAppView(appViews.DIRECTIONS)}
+                        directionsToLocation={directionsToLocation}
+                        directionsFromLocation={directionsFromLocation}
+                        onBack={() => pushAppView(currentLocation ? appViews.LOCATION_DETAILS : appViews.SEARCH)}
+                        isActive={true}
+                    />
                 );
-            }
-            case appViews.DIRECTIONS: {
-                const sp = [0, 1];
-                return (
-                    <Sheet {...sheetProps(mountEl)} snapPoints={sp} detent="content" disableDrag>
-                        <Sheet.Container className={styles.sheetContainer}>
-                            <Sheet.Header className={styles.sheetHeader}>
-                                <div className={styles.dragHandle} />
-                            </Sheet.Header>
-                            <Sheet.Content className={styles.sheetContent} unstyled>
-                                <Directions
-                                    onSetSize={size => snapTo(sp, size)}
-                                    isOpen={true}
-                                    onBack={() => pushAppView(appViews.WAYFINDING)}
-                                    onRouteFinished={() => { setCurrentLocation(); onRouteFinished(); pushAppView(appViews.SEARCH); }}
-                                />
-                            </Sheet.Content>
-                        </Sheet.Container>
-                        <Sheet.Backdrop className={styles.sheetBackdrop} />
-                    </Sheet>
+            case appViews.DIRECTIONS:
+                return sheetLayout(
+                    { snapPoints: SP_DEFAULT, detent: 'content', disableDrag: true },
+                    <Directions
+                        onSetSize={expandToMax(SP_DEFAULT)}
+                        isOpen={true}
+                        onBack={() => pushAppView(appViews.WAYFINDING)}
+                        onRouteFinished={() => { setCurrentLocation(); onRouteFinished(); pushAppView(appViews.SEARCH); }}
+                    />
                 );
-            }
             case appViews.CHAT:
                 return (
                     <ChatWindow
