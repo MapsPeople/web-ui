@@ -10,6 +10,8 @@ import Search from '../Search/Search';
 import LocationDetails from '../LocationDetails/LocationDetails';
 import Wayfinding from '../Wayfinding/Wayfinding';
 import Directions from '../Directions/Directions';
+import ChatWindow from '../ChatWindow/ChatWindow';
+import { useChatLocations, useChatDirections } from '../../hooks/useChat';
 import './BottomSheetNew.scss';
 import styles from './BottomSheetNew.module.scss';
 
@@ -33,6 +35,8 @@ function BottomSheetNew({ directionsFromLocation, directionsToLocation, pushAppV
     const [mountEl, setMountEl] = useState(null);
     const isOpen = currentAppView !== appViews.VENUE_SELECTOR;
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
+    const handleChatLocations = useChatLocations();
+    const handleChatShowRoute = useChatDirections(pushAppView, appViews);
 
     useEffect(() => {
         if (currentLocation) {
@@ -56,17 +60,19 @@ function BottomSheetNew({ directionsFromLocation, directionsToLocation, pushAppV
             isOpen,
             initialSnap: 1,
             unstyled: true,
+            disableDismiss: true,
+            onClose: () => {},
         };
     }
 
     function renderSheet() {
-        if (!mountEl) return null;
+        if (!mountEl && currentAppView !== appViews.CHAT) return null;
 
         switch (currentAppView) {
             case appViews.SEARCH: {
-                const sp = [0, 1];
+                const sp = [0, MIN_SNAP_HEIGHT_PX, 1];
                 return (
-                    <Sheet {...sheetProps(mountEl)} snapPoints={sp} detent="content">
+                    <Sheet {...sheetProps(mountEl)} initialSnap={2} snapPoints={sp} detent="content">
                         <Sheet.Container className={styles.sheetContainer}>
                             <Sheet.Header className={styles.sheetHeader}>
                                 <div className={styles.dragHandle} />
@@ -141,7 +147,7 @@ function BottomSheetNew({ directionsFromLocation, directionsToLocation, pushAppV
                                     onSetSize={size => snapTo(sp, size)}
                                     isOpen={true}
                                     onBack={() => pushAppView(appViews.WAYFINDING)}
-                                    onRouteFinished={() => onRouteFinished()}
+                                    onRouteFinished={() => { setCurrentLocation(); onRouteFinished(); pushAppView(appViews.SEARCH); }}
                                 />
                             </Sheet.Content>
                         </Sheet.Container>
@@ -149,6 +155,15 @@ function BottomSheetNew({ directionsFromLocation, directionsToLocation, pushAppV
                     </Sheet>
                 );
             }
+            case appViews.CHAT:
+                return (
+                    <ChatWindow
+                        isVisible
+                        onClose={() => pushAppView(appViews.SEARCH)}
+                        onSearchResults={handleChatLocations}
+                        onShowRoute={handleChatShowRoute}
+                    />
+                );
             default:
                 return null;
         }
