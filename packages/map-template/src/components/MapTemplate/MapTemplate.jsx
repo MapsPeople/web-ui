@@ -240,9 +240,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             const miSdkApiTag = document.createElement('script');
             miSdkApiTag.setAttribute('type', 'text/javascript');
             // Remember to update the root index.html with the same version / integrity
-            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.57.0/mapsindoors-4.57.0.js.gz');
-            miSdkApiTag.setAttribute('integrity', 'sha384-Hxm9bx6t+2luBNdH7oGaUAgcZH+FMgbKfltKDlJYJsGbFnXcWH0bm6ZigXLgFmQg');
-            miSdkApiTag.setAttribute('crossorigin', 'anonymous');
+            miSdkApiTag.setAttribute('src', 'http://localhost:3001/build/index.js');
+            // miSdkApiTag.setAttribute('integrity', 'sha384-Hxm9bx6t+2luBNdH7oGaUAgcZH+FMgbKfltKDlJYJsGbFnXcWH0bm6ZigXLgFmQg');
+            // miSdkApiTag.setAttribute('crossorigin', 'anonymous');
             document.body.appendChild(miSdkApiTag);
             miSdkApiTag.onload = () => {
                 resolve();
@@ -709,8 +709,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes to the searchExternalLocations prop.
      */
     useEffect(() => {
-        setSearchExternalLocations(searchExternalLocations);
-    }, [searchExternalLocations]);
+        const externalLocationsConfig = appConfig?.appSettings?.searchExternalLocations;
+        const showExternalLocations = externalLocationsConfig !== undefined ? externalLocationsConfig === 'true' : searchExternalLocations;
+        setSearchExternalLocations(showExternalLocations);
+    }, [searchExternalLocations, appConfig]);
 
     /*
      * React on changes to the center prop.
