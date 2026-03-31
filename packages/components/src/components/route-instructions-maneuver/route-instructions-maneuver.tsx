@@ -6,7 +6,8 @@ import { DirectionsTranslations } from '../../types/directions-translations.inte
 @Component({
     tag: 'mi-route-instructions-maneuver',
     styleUrl: 'route-instructions-maneuver.scss',
-    shadow: true
+    scoped: true,
+    shadow: false
 })
 export class RouteInstructionsManeuver implements ComponentInterface {
     /**

@@ -8,7 +8,8 @@ import { isInternetExplorer } from '../../utils/utils';
 @Component({
     tag: 'mi-route-instructions-step',
     styleUrl: 'route-instructions-step.scss',
-    shadow: true
+    scoped: true,
+    shadow: false
 })
 export class RouteInstructionsStep implements ComponentInterface {
 
@@ -78,11 +79,15 @@ export class RouteInstructionsStep implements ComponentInterface {
      */
     @Prop() translations: string;
     @Watch('translations')
+    /**
+     * Parse translations prop from JSON string.
+     */
     parseTranslationsProp(): void {
         if (this.translations) {
             this.translationsData = JSON.parse(this.translations);
         }
     }
+    /** Parsed translations data. */
     @State() translationsData: DirectionsTranslations;
 
     /**
@@ -141,7 +146,7 @@ export class RouteInstructionsStep implements ComponentInterface {
     /**
      * Emits stepClicked event (if click target is not related to an action).
      *
-     * @param event - Event.
+     * @param {Event} event - Event.
      */
     stepClickHandler(event): void {
         // Don't emit click event if clicked on elements that are actions to other things

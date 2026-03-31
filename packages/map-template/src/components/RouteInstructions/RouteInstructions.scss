@@ -1,12 +1,14 @@
 .route-instructions {
     display: grid;
     grid-template-rows: 1fr min-content;
+    min-height: 0;
 
     &__footer {
         position: sticky;
-        bottom: 9rem;
+        bottom: 0;
         background: white;
         padding-bottom: var(--spacing-medium);
+        z-index: 1;
 
         &::before {
             content: '';
@@ -60,7 +62,4 @@
         opacity: 0.3;
     }
 
-    mi-route-instructions-step {
-        height: 100%;
-    }
 }
