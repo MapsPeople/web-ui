@@ -36,8 +36,7 @@ Directions.propTypes = {
     isOpen: PropTypes.bool,
     onBack: PropTypes.func,
     onSetSize: PropTypes.func,
-    onRouteFinished: PropTypes.func,
-    snapPointSwipedByUser: PropTypes.string
+    onRouteFinished: PropTypes.func
 };
 
 /**
@@ -48,10 +47,9 @@ Directions.propTypes = {
  * @param {function} props.onBack - Callback that fires when the directions view is closed by the user.
  * @param {function} props.onSetSize - Callback that is fired when the component has loaded.
  * @param {function} props.onRouteFinished - Callback that fires when the route has finished.
- * @param {string} props.snapPointSwipedByUser - Changes value when user has swiped a Bottom sheet to a new snap point.
  *
  */
-function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipedByUser }) {
+function Directions({ isOpen, onBack, onSetSize, onRouteFinished }) {
     const { t } = useTranslation();
     const requestAnimationFrameId = useRef();
 
@@ -319,15 +317,6 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
             }
         }
     }, [substepsOpen]);
-
-    /**
-     * When user swipes the bottom sheet to a new snap point.
-     */
-    useEffect(() => {
-        if (isOpen && snapPointSwipedByUser) {
-            setSubstepsOpen(snapPointSwipedByUser === snapPoints.MAX);
-        }
-    }, [isOpen, snapPointSwipedByUser]);
 
     return (
         <div className="directions" style={{ display: !isKioskContext ? 'grid' : 'block' }}>

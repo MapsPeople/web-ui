@@ -26,10 +26,8 @@ LocationDetails.propTypes = {
     onBack: PropTypes.func,
     onStartWayfinding: PropTypes.func,
     onSetSize: PropTypes.func,
-    snapPointSwiped: PropTypes.number,
     onStartDirections: PropTypes.func,
-    isOpen: PropTypes.bool,
-    snapPointSwipedByUser: PropTypes.string
+    isOpen: PropTypes.bool
 }
 
 /**
@@ -51,10 +49,9 @@ LocationDetails.propTypes = {
  * @param {function} props.onSetSize - Callback that is fired when the toggle full description button is clicked and the Sheet size changes.
  * @param {function} props.onStartDirections - Callback that fires when user clicks the Start directions button.
  * @param {boolean} props.isOpen - Whether the Location Details are open or not.
- * @param {function} props.snapPointSwipedByUser - Changes value when user has swiped a Bottom sheet to a new snap point.
  *
  */
-function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirections, isOpen, snapPointSwipedByUser }) {
+function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirections, isOpen }) {
     const { t } = useTranslation();
 
     const locationInfoElement = useRef(null);
@@ -281,25 +278,6 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
         }
     }, [location, mapsIndoorsInstance, kioskLocation]);
 
-
-    /*
-     * When user swipes the bottom sheet to a new snap point.
-     */
-    useEffect(() => {
-        if (!snapPointSwipedByUser) {
-            isInFullHeightRef.current = false;
-            return;
-        }
-
-        // If swiping to max height, expand location details.
-        // If swiping to smaller height, collapse location details.
-        setShowFullDescription(snapPointSwipedByUser === snapPoints.MAX);
-        if (snapPointSwipedByUser === snapPoints.MAX) {
-            expandLocationDescription();
-        } else {
-            collapseLocationDescription();
-        }
-    }, [snapPointSwipedByUser]);
 
     /**
      * useLayoutEffect is used here to ensure that DOM measurements (heights) are accurate

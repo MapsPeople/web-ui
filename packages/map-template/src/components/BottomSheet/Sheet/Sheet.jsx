@@ -1,4 +1,4 @@
-import React, { cloneElement, forwardRef, useContext, useEffect, useImperativeHandle } from 'react';
+import { forwardRef, useContext, useEffect, useImperativeHandle } from 'react';
 import { useRef, useState } from 'react';
 import { ContainerContext } from '../ContainerContext';
 import { useSwipeable } from 'react-swipeable';
@@ -48,9 +48,6 @@ const Sheet = forwardRef(function SheetComponent({ children, isOpen, initialSnap
 
     /** True if the sheet is currently being dragged with pointer (mouse, finger) */
     const [isDragging, setIsDragging] = useState(false);
-
-    /** Hold the snap point that the user has swiped to (and thus never initial or programatically set snap point) */
-    const [swipedSnapPoint, setSwipedSnapPoint] = useState(null);
 
     /**
      * Reference to the DOM element of the container element of all bottom sheets.
@@ -198,7 +195,6 @@ const Sheet = forwardRef(function SheetComponent({ children, isOpen, initialSnap
     } : {
         onSwipeStart: () => {
             setIsDragging(true);
-            setSwipedSnapPoint(null);
             dragStartHeight.current = sheetRef.current.clientHeight;
         },
         onSwiping: swipeEvent => {
@@ -223,7 +219,6 @@ const Sheet = forwardRef(function SheetComponent({ children, isOpen, initialSnap
 
             if (snapPoint) {
                 snapSheetHeightToSnapPoint(snapPoint);
-                setSwipedSnapPoint(snapPoint);
             }
         },
         trackMouse: true, // Allow mouse swipes. Usually only used while development, but no harm in keeping it.
@@ -248,17 +243,6 @@ const Sheet = forwardRef(function SheetComponent({ children, isOpen, initialSnap
         sheetRef.current = el;
     }
 
-    /**
-     * Clone the children.
-     *
-     * We do that because we want to pass the snapPointSwipedByUser prop to the children.
-     * Since it is not possible to pass props to children in React (they are immutable), we need to clone the children and then add the prop.
-     * See https://frontarm.com/james-k-nelson/passing-data-props-children/
-     */
-    const clonedChildren = React.Children.map(children, child =>
-        cloneElement(child, { snapPointSwipedByUser: swipedSnapPoint })
-    );
-
     const contentClassName = `sheet__content ${(snappedTo.current === snapPoints.MIN || disableContentScroll) ? 'sheet__content--no-scroll' : ''}`;
 
     return (
@@ -270,7 +254,7 @@ const Sheet = forwardRef(function SheetComponent({ children, isOpen, initialSnap
         >
             {/* We need to have a div in a div for it being able to scroll content separately and for the height to be measurable */}
             <div ref={contentRef} className={contentClassName} style={style}>
-                {clonedChildren}
+                {children}
             </div>
         </div>
     );
