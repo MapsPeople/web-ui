@@ -709,8 +709,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes to the searchExternalLocations prop.
      */
     useEffect(() => {
-        setSearchExternalLocations(searchExternalLocations);
-    }, [searchExternalLocations]);
+        const externalLocationsConfig = appConfig?.appSettings?.searchExternalLocations;
+        const showExternalLocations = externalLocationsConfig !== undefined ? externalLocationsConfig === 'true' : searchExternalLocations;
+        setSearchExternalLocations(showExternalLocations);
+    }, [searchExternalLocations, appConfig]);
 
     /*
      * React on changes to the center prop.
