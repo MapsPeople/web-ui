@@ -25,8 +25,11 @@ import styles from './BottomSheetNew.module.scss';
 
 /** Snap array for Search: `[0, px, 1]` — library requires ascending points; `0` = hidden, `1` = full height, middle values are px from bottom. */
 const MIN_SNAP_HEIGHT_PX = 80;
+const LOCATION_DETAILS_MIN_SNAP_HEIGHT_PX = 180;
 /** Two-point sheet: closed → full (see `computeSnapPoints` in react-modal-sheet). */
 const SP_DEFAULT = [0, 1];
+/** Four-point sheet for LocationDetails: closed → 180px → half → full. */
+const SP_LOCATION_DETAILS = [0, LOCATION_DETAILS_MIN_SNAP_HEIGHT_PX, 0.5, 1];
 
 BottomSheetNew.propTypes = {
     directionsFromLocation: PropTypes.string,
@@ -140,10 +143,10 @@ function BottomSheetNew({ directionsFromLocation, directionsToLocation, pushAppV
             }
             case appViews.LOCATION_DETAILS:
                 return sheetLayout(
-                    { snapPoints: SP_DEFAULT, detent: 'content' },
+                    { snapPoints: SP_LOCATION_DETAILS, initialSnap: 1 },
                     <LocationDetails
                         isOpen={true}
-                        onSetSize={expandToMax(SP_DEFAULT)}
+                        onSetSize={expandToMax(SP_LOCATION_DETAILS)}
                         onBack={() => { setCurrentLocation(); pushAppView(appViews.SEARCH); }}
                         onStartWayfinding={() => pushAppView(appViews.WAYFINDING)}
                         onStartDirections={() => pushAppView(appViews.DIRECTIONS)}
