@@ -37,3 +37,10 @@ $desktop-breakpoint: 992px;
     }
 
 }
+
+.mapsindoors-map--kiosk {
+    .mapboxgl-ctrl-logo,
+    .mapboxgl-ctrl-attrib {
+        pointer-events: none;
+    }
+}
