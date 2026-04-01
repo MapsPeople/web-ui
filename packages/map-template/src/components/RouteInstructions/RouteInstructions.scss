@@ -3,31 +3,6 @@
     grid-template-rows: 1fr min-content;
     min-height: 0;
 
-    &__footer {
-        position: sticky;
-        bottom: 0;
-        background: white;
-        padding-bottom: var(--spacing-medium);
-        z-index: 1;
-
-        &::before {
-            content: '';
-            position: absolute;
-            pointer-events: none;
-            bottom: var(--spacing-xx-large);
-            left: 0;
-            right: 0;
-            height: var(--spacing-xx-large);
-            background: linear-gradient(rgba(255, 255, 255, 0), white);
-        }
-
-        &--kiosk {
-            &::before {
-                background: transparent;
-            }
-        }
-    }
-
     &__actions {
         display: grid;
         grid-auto-flow: column;
