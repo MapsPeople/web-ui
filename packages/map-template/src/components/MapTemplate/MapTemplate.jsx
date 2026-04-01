@@ -67,6 +67,7 @@ import { GeminiProvider } from '../../providers/GeminiProvider';
 import ChatButton from '../ChatButton/ChatButton';
 import mapTypeState from '../../atoms/mapTypeState.js';
 import { mapTypes } from '../../constants/mapTypes.js';
+import { useIsKioskContext } from '../../hooks/useIsKioskContext.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -225,6 +226,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const setErrorMessage = useSetRecoilState(notificationMessageState);
 
     const mapType = useRecoilValue(mapTypeState);
+    const isKiosk = useIsKioskContext();
 
     /**
      * Ensure that MapsIndoors Web SDK is available.
@@ -816,6 +818,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             ${currentAppView === appStates.DIRECTIONS ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}
             ${(venuesInSolution.length > 1 && showVenueSelector) ? '' : 'mapsindoors-map--hide-venue-selector'}
             ${showPositionControl ? 'mapsindoors-map--show-my-position' : 'mapsindoors-map--hide-my-position'}
+            ${isKiosk ? 'mapsindoors-map--kiosk' : ''}
             ${(currentAppView === appStates.CHAT && !isDesktop) ? 'mapsindoors-map--hide-map-controls' : ''}`}>
                 <Notification />
                 {!isMapReady && <SplashScreen />}
