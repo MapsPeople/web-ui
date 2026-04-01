@@ -1,0 +1,35 @@
+@use '~@mapsindoors/midt/build/scss/variables';
+@use "~@mapsindoors/midt/font";
+@use "~@mapsindoors/midt/margin";
+
+:host {
+    display: block;
+}
+
+.step-header {
+    &__info {
+        display: grid;
+        grid-auto-flow: column;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding-bottom: variables.$spacing-x-small;
+    }
+
+    &__heading {
+        @include font.weight(large);
+        @include font.size(large);
+        @include margin.all(none);
+    }
+
+    &__toggle {
+        display: grid;
+        justify-content: center;
+
+        mi-icon {
+            width: variables.$spacing-large;
+            height: variables.$spacing-large;
+            display: block;
+        }
+    }
+}
