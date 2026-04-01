@@ -3,7 +3,7 @@
 .directions {
     display: grid;
     color: var(--brand-colors-black-100);
-    grid-template-rows: minmax(0, 1fr) auto auto auto;
+    grid-template-rows: auto minmax(0, 1fr) auto auto auto;
     min-height: 0;
     height: 100%;
 
@@ -33,15 +33,29 @@
         color: var(--color-white-white);
     }
 
+    &__header {
+        position: sticky;
+        top: 0;
+        z-index: 10000;
+        background: var(--color-white-white);
+    }
+
     &__minutes {
         font-weight: var(--font-weight-large);
         color: var(--color-gray-60);
-        position: sticky;
-        top: 0;
         background: var(--color-white-white);
-        z-index: 10000;
+        padding-left: var(--spacing-medium);
+        padding-right: var(--spacing-medium);
         padding-bottom: var(--spacing-medium);
         padding-top: var(--spacing-medium);
+    }
+
+    // Keep host spacing in map-template so the reusable Stencil header stays layout-agnostic.
+    mi-route-instructions-step-header {
+        display: block;
+        background: var(--color-white-white);
+        padding-left: var(--spacing-medium);
+        padding-right: var(--spacing-medium);
     }
 
     &__info {

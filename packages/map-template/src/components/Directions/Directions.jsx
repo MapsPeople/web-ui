@@ -31,6 +31,7 @@ import { ZoomLevelValues } from '../../constants/zoomLevelValues';
 import ShuttleBus from '../ShuttleBus/ShuttleBus';
 import shuttleBusOnState from '../../atoms/shuttleBusOnState';
 import appConfigState from '../../atoms/appConfigState';
+import RouteInstructionsStepHeader from '../WebComponentWrappers/RouteInstructionsStepHeader/RouteInstructionsStepHeader';
 
 let directionsRenderer;
 
@@ -338,8 +339,16 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished }) {
 
     return (
         <div className="directions" style={{ display: !isKioskContext ? 'grid' : 'block' }}>
-            <div className="directions__steps">
+            <div className="directions__header">
                 <div className="directions__minutes">{totalTime && <mi-time translations={JSON.stringify({ days: t('d'), hours: t('h'), minutes: t('min') })} seconds={totalTime} />}</div>
+                <RouteInstructionsStepHeader
+                    totalSteps={getRouteSteps()}
+                    activeStep={activeStep}
+                    previous={previous}
+                    originLocation={directions?.originLocation}
+                />
+            </div>
+            <div className="directions__steps">
                 <RouteInstructions
                     steps={getRouteSteps()}
                     previous={previous}
