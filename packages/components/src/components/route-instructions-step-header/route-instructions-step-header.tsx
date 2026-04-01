@@ -69,13 +69,14 @@ export class RouteInstructionsStepHeader implements ComponentInterface {
             return null;
         }
 
+        const toggleIcon = this.substepsAreOpen ? 'chevron-down' : 'chevron-up';
+
         return (
             <span class='step-header__toggle' onClick={(): void => this.toggleSubsteps()}>
-                {this.substepsAreOpen ?
-                    <mi-icon part="step-toggle" icon-name="chevron-up"></mi-icon>
-                    :
-                    <mi-icon part="step-toggle" icon-name="chevron-down"></mi-icon>
-                }
+                <mi-icon
+                    part="step-toggle"
+                    icon-name={toggleIcon}>
+                </mi-icon>
             </span>
         );
     }
