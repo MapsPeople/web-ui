@@ -38,6 +38,17 @@
         top: 0;
         z-index: 10000;
         background: var(--color-white-white);
+
+        &::after {
+            content: '';
+            position: absolute;
+            pointer-events: none;
+            left: 0;
+            right: 0;
+            bottom: calc(-1 * var(--spacing-xx-large));
+            height: var(--spacing-xx-large);
+            background: linear-gradient(var(--color-white-white), rgba(255, 255, 255, 0));
+        }
     }
 
     &__minutes {
