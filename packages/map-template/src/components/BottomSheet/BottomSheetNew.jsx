@@ -11,13 +11,16 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Sheet } from 'react-modal-sheet';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { snapPoints } from '../../constants/snapPoints';
 import currentLocationState from '../../atoms/currentLocationState';
+import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
+import locationIdState from '../../atoms/locationIdState';
 import { useSnapState } from '../../hooks/useSnapState';
 import { useChatLocations, useChatDirections } from '../../hooks/useChat';
 import Search from '../Search/Search';
 import LocationDetails from '../LocationDetails/LocationDetails';
+import LocationsList from '../LocationsList/LocationsList';
 import Wayfinding from '../Wayfinding/Wayfinding';
 import Directions from '../Directions/Directions';
 import ChatWindow from '../ChatWindow/ChatWindow';
@@ -33,6 +36,8 @@ const SNAP_POINTS_DEFAULT = [0, 1];
 const SNAP_POINTS_SEARCH = [0, SEARCH_COLLAPSED_HEIGHT_PX, 1];
 /** Four-point sheet for LocationDetails: closed → 180px → half → full. */
 const SNAP_POINTS_LOCATION_DETAILS = [0, LOCATION_DETAILS_COLLAPSED_HEIGHT_PX, 0.5, 1];
+/** Three-point sheet for LocationsList: closed → 200px → full. */
+const SNAP_POINTS_LOCATIONS_LIST = [0, 200, 1];
 
 BottomSheetNew.propTypes = {
     directionsFromLocation: PropTypes.string,
@@ -61,6 +66,8 @@ function BottomSheetNew({ directionsFromLocation, directionsToLocation, pushAppV
     const { handleSnap, isAtMaxSnap } = useSnapState(currentAppView);
     const isOpen = currentAppView !== appViews.VENUE_SELECTOR;
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
+    const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
+    const setLocationId = useSetRecoilState(locationIdState);
     const handleChatLocations = useChatLocations();
     const handleChatShowRoute = useChatDirections(pushAppView, appViews);
 
@@ -84,6 +91,40 @@ function BottomSheetNew({ directionsFromLocation, directionsToLocation, pushAppV
             navigateToView(appViews.LOCATION_DETAILS);
         }
     }, [currentLocation]);
+
+    /*
+     * When multiple locations share an external ID, show the list view.
+     * When exactly one matches, treat it as a direct location selection.
+     */
+    useEffect(() => {
+        if (filteredLocationsByExternalIDs?.length > 1) {
+            navigateToView(appViews.EXTERNALIDS);
+        } else if (filteredLocationsByExternalIDs?.length === 1) {
+            setCurrentLocation(filteredLocationsByExternalIDs[0]);
+            setLocationId(filteredLocationsByExternalIDs[0].id);
+        }
+    }, [filteredLocationsByExternalIDs]);
+
+    /*
+     * Navigate back from LocationDetails — returns to the locations list if the user arrived via
+     * multiple external ID matches, otherwise returns to search.
+     */
+    function closeLocationDetails() {
+        if (filteredLocationsByExternalIDs?.length > 1) {
+            navigateToView(appViews.EXTERNALIDS);
+        } else {
+            if (filteredLocationsByExternalIDs?.length === 1) setFilteredLocationsByExternalID([]);
+            navigateToView(appViews.SEARCH);
+        }
+    }
+
+    /*
+     * Navigate back from LocationsList — clears the external ID filter and returns to search.
+     */
+    function closeLocationsList() {
+        setFilteredLocationsByExternalID([]);
+        navigateToView(appViews.SEARCH);
+    }
 
     /**
      * Builds an `onSetSize` handler for children: when the app requests `snapPoints.MAX`, calls `sheetRef.current.snapTo(lastIndex)` (react-modal-sheet).
@@ -159,13 +200,23 @@ function BottomSheetNew({ directionsFromLocation, directionsToLocation, pushAppV
                         onOpenChat={() => navigateToView(appViews.CHAT)}
                     />
                 );
+            case appViews.EXTERNALIDS:
+                return sheetLayout(
+                    { snapPoints: SNAP_POINTS_LOCATIONS_LIST, onSnap: handleSnap },
+                    <LocationsList
+                        onSetSize={expandToMax(SNAP_POINTS_LOCATIONS_LIST)}
+                        onBack={() => closeLocationsList()}
+                        locations={filteredLocationsByExternalIDs}
+                        onLocationClick={location => setCurrentLocation(location)}
+                    />
+                );
             case appViews.LOCATION_DETAILS:
                 return sheetLayout(
                     { snapPoints: SNAP_POINTS_LOCATION_DETAILS },
                     <LocationDetails
                         isOpen={true}
                         onSetSize={expandToMax(SNAP_POINTS_LOCATION_DETAILS)}
-                        onBack={() => navigateToView(appViews.SEARCH)}
+                        onBack={() => closeLocationDetails()}
                         onStartWayfinding={() => navigateToView(appViews.WAYFINDING)}
                         onStartDirections={() => navigateToView(appViews.DIRECTIONS)}
                     />
