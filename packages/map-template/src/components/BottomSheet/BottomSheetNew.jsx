@@ -9,6 +9,7 @@
  * Imperative ref: `sheetRef.current.snapTo(index)` — documented in the library README as **Methods and properties** → `snapTo(index)` (https://github.com/Temzasse/react-modal-sheet#%EF%B8%8F-methods-and-properties).
  */
 import { useRef, useState, useEffect } from 'react';
+import { useSnapState } from '../../hooks/useSnapState';
 import PropTypes from 'prop-types';
 import { Sheet } from 'react-modal-sheet';
 import { useRecoilState } from 'recoil';
@@ -28,6 +29,8 @@ const MIN_SNAP_HEIGHT_PX = 80;
 const LOCATION_DETAILS_MIN_SNAP_HEIGHT_PX = 180;
 /** Two-point sheet: closed → full (see `computeSnapPoints` in react-modal-sheet). */
 const SP_DEFAULT = [0, 1];
+/** Three-point sheet for Search: closed → 80px → full. */
+const SP_SEARCH = [0, MIN_SNAP_HEIGHT_PX, 1];
 /** Four-point sheet for LocationDetails: closed → 180px → half → full. */
 const SP_LOCATION_DETAILS = [0, LOCATION_DETAILS_MIN_SNAP_HEIGHT_PX, 0.5, 1];
 
@@ -55,6 +58,7 @@ BottomSheetNew.propTypes = {
 function BottomSheetNew({ directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews, onRouteFinished }) {
     const sheetRef = useRef(null);
     const [mountEl, setMountEl] = useState(null);
+    const { handleSnap, isAtMaxSnap } = useSnapState(currentAppView);
     const isOpen = currentAppView !== appViews.VENUE_SELECTOR;
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const handleChatLocations = useChatLocations();
@@ -130,17 +134,16 @@ function BottomSheetNew({ directionsFromLocation, directionsToLocation, pushAppV
         if (!mountEl && currentAppView !== appViews.CHAT) return null;
 
         switch (currentAppView) {
-            case appViews.SEARCH: {
-                const sp = [0, MIN_SNAP_HEIGHT_PX, 1];
+            case appViews.SEARCH:
                 return sheetLayout(
-                    { initialSnap: 1, snapPoints: sp },
+                    { initialSnap: 1, snapPoints: SP_SEARCH, onSnap: handleSnap },
                     <Search
                         isOpen={true}
-                        onSetSize={expandToMax(sp)}
+                        isSheetExpanded={isAtMaxSnap(SP_SEARCH)}
+                        onSetSize={expandToMax(SP_SEARCH)}
                         onOpenChat={() => pushAppView(appViews.CHAT)}
                     />
                 );
-            }
             case appViews.LOCATION_DETAILS:
                 return sheetLayout(
                     { snapPoints: SP_LOCATION_DETAILS, initialSnap: 1 },

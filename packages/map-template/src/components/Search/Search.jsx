@@ -44,6 +44,7 @@ Search.propTypes = {
     categories: PropTypes.array,
     onSetSize: PropTypes.func,
     isOpen: PropTypes.bool,
+    isSheetExpanded: PropTypes.bool,
     onOpenChat: PropTypes.func
 };
 
@@ -57,7 +58,7 @@ Search.propTypes = {
  *
  * @returns
  */
-function Search({ onSetSize, isOpen, onOpenChat }) {
+function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
     const appConfig = useRecoilValue(appConfigState);
 
     const { t } = useTranslation();
@@ -750,7 +751,7 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
 
             {/* Vertical list of Categories */}
             {/* Show full category list if (kiosk mode and showCategoriesUnderSearch is true) OR input is in focus, and only when searchResults are empty */}
-            {(shouldShowCategoriesUnderSearch() || isInputFieldInFocus) && !showNotFoundMessage && categories.length > 0 && searchResults.length === 0 && (
+            {(shouldShowCategoriesUnderSearch() || isInputFieldInFocus || isSheetExpanded) && !showNotFoundMessage && categories.length > 0 && searchResults.length === 0 && (
                 <Categories
                     onSetSize={onSetSize}
                     searchFieldRef={searchFieldRef}
