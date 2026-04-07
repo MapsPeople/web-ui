@@ -93,6 +93,17 @@ function BottomSheetNew({ directionsFromLocation, directionsToLocation, pushAppV
     }, [currentLocation]);
 
     /*
+     * Auto-navigate to Wayfinding when directionsFrom/To props are set externally (e.g. via web component attributes).
+     * Guard against re-triggering while already in Directions.
+     */
+    useEffect(() => {
+        if (directionsFromLocation && directionsToLocation && currentAppView === appViews.DIRECTIONS) return;
+        if (directionsFromLocation || directionsToLocation) {
+            navigateToView(appViews.WAYFINDING);
+        }
+    }, [directionsFromLocation, directionsToLocation]);
+
+    /*
      * When multiple locations share an external ID, show the list view.
      * When exactly one matches, treat it as a direct location selection.
      */
