@@ -67,6 +67,7 @@ import { GeminiProvider } from '../../providers/GeminiProvider';
 import ChatButton from '../ChatButton/ChatButton';
 import mapTypeState from '../../atoms/mapTypeState.js';
 import { mapTypes } from '../../constants/mapTypes.js';
+import { useIsKioskContext } from '../../hooks/useIsKioskContext.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -225,6 +226,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const setErrorMessage = useSetRecoilState(notificationMessageState);
 
     const mapType = useRecoilValue(mapTypeState);
+    const isKiosk = useIsKioskContext();
 
     /**
      * Ensure that MapsIndoors Web SDK is available.
@@ -240,8 +242,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             const miSdkApiTag = document.createElement('script');
             miSdkApiTag.setAttribute('type', 'text/javascript');
             // Remember to update the root index.html with the same version / integrity
-            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.56.2/mapsindoors-4.56.2.js.gz');
-            miSdkApiTag.setAttribute('integrity', 'sha384-AbC6/Ti9R/Fs5vC9Vd+dXtQvBOSMbw7PQ1+xyaL3W5et4ZuNiP1K0GdmoDZvve7G');
+            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.57.0/mapsindoors-4.57.0.js.gz');
+            miSdkApiTag.setAttribute('integrity', 'sha384-Hxm9bx6t+2luBNdH7oGaUAgcZH+FMgbKfltKDlJYJsGbFnXcWH0bm6ZigXLgFmQg');
             miSdkApiTag.setAttribute('crossorigin', 'anonymous');
             document.body.appendChild(miSdkApiTag);
             miSdkApiTag.onload = () => {
@@ -524,7 +526,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                         : appConfig?.appSettings?.showMapMarkers),
             miTransitionLevel: miTransitionLevel,
             // If ignoreViewportBounds is true, we would like to see the map at the minimum zoom level (World Map).
-            minZoom: appConfig?.appSettings?.ignoreViewportBounds ? 1 : ZoomLevelValues.minZoom,
+            minZoom: appConfig?.appSettings?.minZoom ?? ZoomLevelValues.minZoom,
             mapboxMapStyle: appConfig?.appSettings?.mapboxMapStyle || mapboxMapStyle,
             // Boolean from the App Config comes as a string. We need to return clean boolean value based on that.
             enableFullScreenButton:
@@ -709,8 +711,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes to the searchExternalLocations prop.
      */
     useEffect(() => {
-        setSearchExternalLocations(searchExternalLocations);
-    }, [searchExternalLocations]);
+        const externalLocationsConfig = appConfig?.appSettings?.searchExternalLocations;
+        const showExternalLocations = externalLocationsConfig !== undefined ? externalLocationsConfig === 'true' : searchExternalLocations;
+        setSearchExternalLocations(showExternalLocations);
+    }, [searchExternalLocations, appConfig]);
 
     /*
      * React on changes to the center prop.
@@ -814,6 +818,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             ${currentAppView === appStates.DIRECTIONS ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}
             ${(venuesInSolution.length > 1 && showVenueSelector) ? '' : 'mapsindoors-map--hide-venue-selector'}
             ${showPositionControl ? 'mapsindoors-map--show-my-position' : 'mapsindoors-map--hide-my-position'}
+            ${isKiosk ? 'mapsindoors-map--kiosk' : ''}
             ${(currentAppView === appStates.CHAT && !isDesktop) ? 'mapsindoors-map--hide-map-controls' : ''}`}>
                 <Notification />
                 {!isMapReady && <SplashScreen />}
