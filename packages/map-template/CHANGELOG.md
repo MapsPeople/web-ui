@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.96.24] - 2026-04-07
+
+### Fixed
+
+- **Search**: Reduced bottom padding to match the top, fixing unequal vertical spacing around the search bar.
+- **Directions**: Scroll-fade gradients and the separator border above the action buttons now only appear when step details are expanded.
+
 ## [1.96.23] - 2026-04-07
 
 ### Added
