@@ -6,7 +6,6 @@ import { useRecoilValue } from 'recoil';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import currentLocationState from '../../atoms/currentLocationState';
 import { useIsVerticalOverflow } from '../../hooks/useIsVerticalOverflow';
-import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import { snapPoints } from '../../constants/snapPoints';
 import primaryColorState from '../../atoms/primaryColorState';
 import directionsServiceState from '../../atoms/directionsServiceState';
@@ -27,10 +26,8 @@ LocationDetails.propTypes = {
     onBack: PropTypes.func,
     onStartWayfinding: PropTypes.func,
     onSetSize: PropTypes.func,
-    snapPointSwiped: PropTypes.number,
     onStartDirections: PropTypes.func,
-    isOpen: PropTypes.bool,
-    snapPointSwipedByUser: PropTypes.string
+    isOpen: PropTypes.bool
 }
 
 /**
@@ -52,10 +49,9 @@ LocationDetails.propTypes = {
  * @param {function} props.onSetSize - Callback that is fired when the toggle full description button is clicked and the Sheet size changes.
  * @param {function} props.onStartDirections - Callback that fires when user clicks the Start directions button.
  * @param {boolean} props.isOpen - Whether the Location Details are open or not.
- * @param {function} props.snapPointSwipedByUser - Changes value when user has swiped a Bottom sheet to a new snap point.
  *
  */
-function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirections, isOpen, snapPointSwipedByUser }) {
+function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirections, isOpen }) {
     const { t } = useTranslation();
 
     const locationInfoElement = useRef(null);
@@ -80,8 +76,6 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
 
     // Check if the content of the Location details is overflowing
     const [isOverflowing, initialOverflow] = useIsVerticalOverflow(location, locationDetailsElement);
-
-    const scrollableContentSwipePrevent = usePreventSwipe();
 
     const primaryColor = useRecoilValue(primaryColorState);
 
@@ -149,8 +143,6 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
         setShowFullDescription(false);
         setDescriptionHasContentAbove(false);
         setDescriptionHasContentBelow(false);
-        setSize(snapPoints.FIT);
-
         onBack();
     });
 
@@ -173,7 +165,6 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
             setSize(snapPoints.MAX);
         } else {
             collapseLocationDescription();
-            setSize(snapPoints.FIT);
         }
     }
 
@@ -231,7 +222,6 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
         setShowFullDescription(false);
         setDescriptionHasContentAbove(false);
         setDescriptionHasContentBelow(false);
-        setSize(snapPoints.FIT);
 
         onStartWayfinding();
     }
@@ -243,7 +233,6 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
         setShowFullDescription(false);
         setDescriptionHasContentAbove(false);
         setDescriptionHasContentBelow(false);
-        setSize(snapPoints.FIT);
 
         onStartDirections();
     }
@@ -289,34 +278,6 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
         }
     }, [location, mapsIndoorsInstance, kioskLocation]);
 
-    useEffect(() => {
-        const hasAdditionalDetails = locationAdditionalDetails?.length > 0;
-        // Expand the sheet when location changes, is open, and has additional details
-        if (location && isOpen && hasAdditionalDetails) {
-            setSize(snapPoints.FIT);
-        } else {
-            setSize(snapPoints.MIN);
-        }
-    }, [location, isOpen, locationAdditionalDetails]);
-
-    /*
-     * When user swipes the bottom sheet to a new snap point.
-     */
-    useEffect(() => {
-        if (!snapPointSwipedByUser) {
-            isInFullHeightRef.current = false;
-            return;
-        }
-
-        // If swiping to max height, expand location details.
-        // If swiping to smaller height, collapse location details.
-        setShowFullDescription(snapPointSwipedByUser === snapPoints.MAX);
-        if (snapPointSwipedByUser === snapPoints.MAX) {
-            expandLocationDescription();
-        } else {
-            collapseLocationDescription();
-        }
-    }, [snapPointSwipedByUser]);
 
     /**
      * useLayoutEffect is used here to ensure that DOM measurements (heights) are accurate
@@ -419,7 +380,6 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
             </div>
             <div
                 className="location-details__details prevent-scroll"
-                {...scrollableContentSwipePrevent}
                 ref={locationDetailsDetailsRef}
             >
                 <div

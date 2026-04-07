@@ -14,7 +14,6 @@ import mapTypeState from '../../atoms/mapTypeState';
 import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
 import SearchField from '../WebComponentWrappers/Search/Search';
 import { snapPoints } from '../../constants/snapPoints';
-import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import generateMyPositionLocation from '../../helpers/MyPositionLocation';
 import addGooglePlaceGeometry from './googlePlacesHandler';
 import GooglePlaces from '../../assets/google-places.png';
@@ -106,8 +105,6 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     const [originLocation, setOriginLocation] = useState();
 
     const accessibilityOn = useRecoilValue(accessibilityOnState);
-
-    const scrollableContentSwipePrevent = usePreventSwipe();
 
     const [hasGooglePlaces, setHasGooglePlaces] = useState(false);
 
@@ -386,7 +383,6 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     }, [wayfindingLocation]);
 
     useEffect(() => {
-        setSize(snapPoints.FIT);
         let originLocationWasSet = false;
 
         // In case both the from and to locations are the user's position, unset the directionsToLocation. We don't want the user to be able to navigate to and from the user's position.
@@ -497,7 +493,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                 {t('My position')}
             </button>}
             {searchResults.length > 0 &&
-                <div className="wayfinding__scrollable" {...scrollableContentSwipePrevent}>
+                <div className="wayfinding__scrollable">
                     <div className="wayfinding__results">
                         {searchResults.map(location =>
                             <ListItemLocation

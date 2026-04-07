@@ -1,253 +1,278 @@
-import { useEffect, useRef } from 'react';
-import { useState } from 'react';
-import { ContainerContext } from './ContainerContext';
+/**
+ * Bottom sheets for map-template app views, built on react-modal-sheet.
+ *
+ * Library: https://github.com/Temzasse/react-modal-sheet
+ * Docs & examples: https://temzasse.github.io/react-modal-sheet
+ * npm: https://www.npmjs.com/package/react-modal-sheet
+ *
+ * Compound API: `Sheet`, `Sheet.Container`, `Sheet.Header`, `Sheet.Content`, `Sheet.Backdrop`.
+ * Imperative ref: `sheetRef.current.snapTo(index)` — documented in the library README as **Methods and properties** → `snapTo(index)` (https://github.com/Temzasse/react-modal-sheet#%EF%B8%8F-methods-and-properties).
+ */
+import { useRef, useState, useEffect, useCallback } from 'react';
+import PropTypes from 'prop-types';
+import { Sheet } from 'react-modal-sheet';
 import { useRecoilState, useSetRecoilState } from 'recoil';
+import { snapPoints } from '../../constants/snapPoints';
 import currentLocationState from '../../atoms/currentLocationState';
 import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
-import Sheet from './Sheet/Sheet';
-import './BottomSheet.scss';
+import locationIdState from '../../atoms/locationIdState';
+import { useSnapState } from '../../hooks/useSnapState';
+import { useChatLocations, useChatDirections } from '../../hooks/useChat';
+import Search from '../Search/Search';
 import LocationDetails from '../LocationDetails/LocationDetails';
+import LocationsList from '../LocationsList/LocationsList';
 import Wayfinding from '../Wayfinding/Wayfinding';
 import Directions from '../Directions/Directions';
-import Search from '../Search/Search';
-import LocationsList from '../LocationsList/LocationsList';
 import ChatWindow from '../ChatWindow/ChatWindow';
-import locationIdState from '../../atoms/locationIdState';
-import { useChatLocations, useChatDirections } from '../../hooks/useChat';
-import PropTypes from 'prop-types';
-import { snapPoints } from '../../constants/snapPoints';
+import './BottomSheet.scss';
+import styles from './BottomSheet.module.scss';
+
+/** Snap arrays: `0` = hidden, `1` = full height, middle values are px from bottom (library requires ascending order). */
+const SEARCH_COLLAPSED_HEIGHT_PX = 80;
+const LOCATION_DETAILS_COLLAPSED_HEIGHT_PX = 180;
+/** Two-point sheet: closed → full (see `computeSnapPoints` in react-modal-sheet). */
+const SNAP_POINTS_DEFAULT = [0, 1];
+/** Three-point sheet for Search: closed → 80px → full. */
+const SNAP_POINTS_SEARCH = [0, SEARCH_COLLAPSED_HEIGHT_PX, 1];
+/** Four-point sheet for LocationDetails: closed → 180px → half → full. */
+const SNAP_POINTS_LOCATION_DETAILS = [0, LOCATION_DETAILS_COLLAPSED_HEIGHT_PX, 0.5, 1];
+/** Three-point sheet for LocationsList: closed → 200px → full. */
+const SNAP_POINTS_LOCATIONS_LIST = [0, 200, 1];
 
 BottomSheet.propTypes = {
     directionsFromLocation: PropTypes.string,
     directionsToLocation: PropTypes.string,
     pushAppView: PropTypes.func.isRequired,
     currentAppView: PropTypes.string,
-    appViews: PropTypes.object,
+    appViews: PropTypes.object.isRequired,
     onRouteFinished: PropTypes.func.isRequired
 };
+
 /**
- * The BottomSheet component is responsible for rendering other components (Search, Wayfinding etc.) in a bottom sheet.
- * It is used on smaller screens. On larger screens, the Sidebar component is used.
+ * Renders the map overlay bottom sheet (react-modal-sheet) or chat for the current app view.
  *
- * All components are wrapped in a Sheet component, which handles user interactions (swiping to control the sheet size etc.).
- *
- * @param {Object} props
- * @param {string} props.directionsFromLocation - Origin Location to be used to instantly show directions.
- * @param {string} props.directionsToLocation - Destination Location to be used to instantly show directions.
- * @param {function} props.pushAppView - Function to push to app view to browser history.
- * @param {string} props.currentAppView - Holds the current view/state of the Map Template.
- * @param {array} props.appViews - Array of all possible views.
- * @param {function} props.onRouteFinished - Callback that fires when the route has finished.
- *
+ * @param {object} props - Root props object.
+ * @param {string} [props.directionsFromLocation] - Origin location id or label for directions.
+ * @param {string} [props.directionsToLocation] - Destination location id or label for directions.
+ * @param {function(string): void} props.pushAppView - Navigates to an app view by key.
+ * @param {string} props.currentAppView - Active view key (e.g. search, location details).
+ * @param {object} props.appViews - Map of view name constants to route keys.
+ * @param {function(): void} props.onRouteFinished - Called when an in-map route completes (e.g. directions done).
+ * @returns {JSX.Element}
  */
 function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews, onRouteFinished }) {
-
-    const bottomSheetRef = useRef();
-
-    // References to the Sheet components for each individual component.
-    const searchSheetRef = useRef();
-    const locationsListSheetRef = useRef();
-    const locationDetailsSheetRef = useRef();
-    const wayfindingSheetRef = useRef();
-    const directionsSheetRef = useRef();
-
+    const sheetRef = useRef(null);
+    const [sheetMountPoint, setSheetMountPoint] = useState(null);
+    const { handleSnap, isAtMaxSnap } = useSnapState(currentAppView);
+    const isOpen = currentAppView !== appViews.VENUE_SELECTOR;
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
-
-    // Use chat hooks for handling chat interactions
+    const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
+    const setLocationId = useSetRecoilState(locationIdState);
     const handleChatLocations = useChatLocations();
     const handleChatShowRoute = useChatDirections(pushAppView, appViews);
 
-    // Holds boolean depicting if the current Location contains more information than just the basic info that is shown in minimal height bottom sheet.
-    const [currentLocationIsDetailed, setCurrentLocationIsDetailed] = useState(false);
-
-    const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
-
-    const setLocationId = useSetRecoilState(locationIdState);
-
-    /*
-     * React on changes on the current location and directions locations and set relevant bottom sheet.
+    /**
+     * The single place to run logic before switching to a new view.
+     * Add a case here whenever a view transition requires setup or teardown — keeping that logic out of individual callbacks.
+     *
+     * @param {string} view - The target view key from `appViews`.
      */
-    useEffect(() => {
-        if (directionsFromLocation && directionsToLocation && currentAppView === appViews.DIRECTIONS) return; // Never change sheet when dependencies change within Directions.
-
-        if (directionsFromLocation && directionsToLocation) {
-            pushAppView(appViews.WAYFINDING);
-        } else if (directionsFromLocation) {
-            pushAppView(appViews.WAYFINDING);
-        } else if (currentLocation) {
-            pushAppView(appViews.LOCATION_DETAILS, currentLocation);
-        } else if (filteredLocationsByExternalIDs?.length > 1) {
-            pushAppView(appViews.EXTERNALIDS);
-            // If there is only one external ID, behave the same as having the location ID prop.
-        } else if (filteredLocationsByExternalIDs?.length === 1) {
-            setCurrentLocation(filteredLocationsByExternalIDs[0])
-            setLocationId(filteredLocationsByExternalIDs[0].id)
-        } else {
-            pushAppView(appViews.SEARCH);
+    function navigateToView(view) {
+        switch (view) {
+            case appViews.SEARCH:
+                setCurrentLocation(); // Clear selected location when returning to search.
+                break;
         }
-    }, [currentLocation, directionsFromLocation, directionsToLocation, filteredLocationsByExternalIDs]);
+        pushAppView(view);
+    }
 
-    /*
-     * React on changes on the current location and check if it contains more information than just the basic info that is shown in minimal height bottom sheet.
-     * If that is the case, we show a little more to indicate to the user that there is more information to be seen.
-     */
     useEffect(() => {
         if (currentLocation) {
-            const isDetailed = currentLocation.properties.imageURL
-                || currentLocation.properties.description
-                || currentLocation.properties.additionalDetails
-                || Object.keys(currentLocation.properties.categories).length > 0;
-
-            setCurrentLocationIsDetailed(isDetailed);
+            navigateToView(appViews.LOCATION_DETAILS);
         }
     }, [currentLocation]);
 
-    /**
-     * Close the location details page and navigate to either the Locations list page or the Search page.
+    /*
+     * Auto-navigate to Wayfinding when directionsFrom/To props are set externally (e.g. via web component attributes).
+     * Guard against re-triggering while already in Directions.
+     */
+    useEffect(() => {
+        if (directionsFromLocation && directionsToLocation && currentAppView === appViews.DIRECTIONS) return;
+        if (directionsFromLocation || directionsToLocation) {
+            navigateToView(appViews.WAYFINDING);
+        }
+    }, [directionsFromLocation, directionsToLocation]);
+
+    /*
+     * When multiple locations share an external ID, show the list view.
+     * When exactly one matches, treat it as a direct location selection.
+     */
+    useEffect(() => {
+        if (filteredLocationsByExternalIDs?.length > 1) {
+            navigateToView(appViews.EXTERNALIDS);
+        } else if (filteredLocationsByExternalIDs?.length === 1) {
+            setCurrentLocation(filteredLocationsByExternalIDs[0]);
+            setLocationId(filteredLocationsByExternalIDs[0].id);
+        }
+    }, [filteredLocationsByExternalIDs]);
+
+    /*
+     * Navigate back from LocationDetails — returns to the locations list if the user arrived via
+     * multiple external ID matches, otherwise returns to search.
      */
     function closeLocationDetails() {
         if (filteredLocationsByExternalIDs?.length > 1) {
-            pushAppView(appViews.EXTERNALIDS);
-            setCurrentLocation();
-        } else if (filteredLocationsByExternalIDs?.length === 1) {
-            pushAppView(appViews.SEARCH);
-            setCurrentLocation();
-            setFilteredLocationsByExternalID([]);
-            // Reset the search sheet height to its minimum size when closing location details
-            searchSheetRef.current?.setSnapPoint(snapPoints.MIN);
+            navigateToView(appViews.EXTERNALIDS);
         } else {
-            pushAppView(appViews.SEARCH);
-            setCurrentLocation();
-            searchSheetRef.current?.setSnapPoint(snapPoints.MIN);
+            if (filteredLocationsByExternalIDs?.length === 1) setFilteredLocationsByExternalID([]);
+            navigateToView(appViews.SEARCH);
         }
     }
 
-    /**
-     * Close the Locations list page and navigate to the Search page, resetting the filtered locations.
+    /*
+     * Navigate back from LocationsList — clears the external ID filter and returns to search.
      */
     function closeLocationsList() {
-        pushAppView(appViews.SEARCH);
-        setCurrentLocation();
         setFilteredLocationsByExternalID([]);
+        navigateToView(appViews.SEARCH);
     }
 
     /**
-     * Render the appropriate sheet based on the current app view.
+     * Builds an `onSetSize` handler for children: when the app requests `snapPoints.MAX`, calls `sheetRef.current.snapTo(lastIndex)` (react-modal-sheet).
+     *
+     * @param {number[]} sp - Same snap array passed to `Sheet` as `snapPoints`.
+     * @returns {(size: string) => void} Callback for child `onSetSize`.
      */
-    function renderCurrentSheet() {
+    const expandToMax = useCallback((sp) => (size) => {
+        if (size === snapPoints.MAX) {
+            sheetRef.current?.snapTo(sp.length - 1);
+        }
+    }, []);
+
+    /**
+     * Default props for `Sheet`: portal `mountPoint`, `ref`, `isOpen`, `unstyled` + local SCSS, `disableDismiss` (no swipe-to-close).
+     *
+     * @param {HTMLElement | null} mountPoint - DOM node used as `mountPoint` for the sheet portal.
+     * @returns {object} Props object to spread onto `Sheet`.
+     */
+    function baseSheetProps(mountPoint) {
+        return {
+            key: currentAppView,
+            mountPoint,
+            ref: sheetRef,
+            className: 'bottom-sheet-new',
+            isOpen,
+            initialSnap: 1,
+            unstyled: true,
+            disableDismiss: true,
+            onClose: () => { },
+        };
+    }
+
+    /**
+     * One `Sheet` with `Sheet.Container` / `Header` / `Content` / `Backdrop` (react-modal-sheet compound components).
+     *
+     * @param {object} extraProps - Additional `Sheet` props (`snapPoints`, `detent`, `initialSnap`, `disableDrag`, …).
+     * @param {React.ReactNode} inner - Content rendered inside `Sheet.Content`.
+     * @returns {JSX.Element}
+     */
+    function sheetLayout(extraProps, inner) {
+        return (
+            <Sheet {...baseSheetProps(sheetMountPoint)} {...extraProps}>
+                <Sheet.Container className={styles.sheetContainer}>
+                    <Sheet.Header className={styles.sheetHeader}>
+                        <div className={styles.dragHandle} />
+                    </Sheet.Header>
+                    <Sheet.Content className={styles.sheetContent} unstyled>
+                        {inner}
+                    </Sheet.Content>
+                </Sheet.Container>
+                <Sheet.Backdrop className={styles.sheetBackdrop} />
+            </Sheet>
+        );
+    }
+
+    /**
+     * Picks the sheet or chat tree for `currentAppView`. Search uses default `detent` and `[0, 80px, 1]` snaps; other sheets use `detent="content"` unless noted.
+     *
+     * @returns {JSX.Element | null} `null` until `sheetMountPoint` exists (except `CHAT`, which does not use the sheet portal mount).
+     */
+    function renderSheet() {
+        if (!sheetMountPoint && currentAppView !== appViews.CHAT) return null;
+
         switch (currentAppView) {
             case appViews.SEARCH:
-                return (
-                    <Sheet
-                        minimizedHeight={80}
-                        initialSnapPoint={snapPoints.MIN}
-                        key="SEARCH"
+                return sheetLayout(
+                    { snapPoints: SNAP_POINTS_SEARCH, onSnap: handleSnap },
+                    <Search
                         isOpen={true}
-                        ref={searchSheetRef}
-                    >
-                        <Search
-                            isOpen={true}
-                            onSetSize={size => searchSheetRef.current?.setSnapPoint(size)}
-                            onOpenChat={() => pushAppView(appViews.CHAT)}
-                        />
-                    </Sheet>
+                        isSheetExpanded={isAtMaxSnap(SNAP_POINTS_SEARCH)}
+                        onSetSize={expandToMax(SNAP_POINTS_SEARCH)}
+                        onOpenChat={() => navigateToView(appViews.CHAT)}
+                    />
                 );
-
             case appViews.EXTERNALIDS:
-                return (
-                    <Sheet
-                        minimizedHeight={200}
-                        initialSnapPoint={snapPoints.MIN}
-                        key="EXTERNALIDS"
-                        isOpen={true}
-                        ref={locationsListSheetRef}
-                    >
-                        <LocationsList
-                            onSetSize={size => locationsListSheetRef.current?.setSnapPoint(size)}
-                            onBack={() => closeLocationsList()}
-                            locations={filteredLocationsByExternalIDs}
-                            onLocationClick={location => setCurrentLocation(location)}
-                        />
-                    </Sheet>
+                return sheetLayout(
+                    { snapPoints: SNAP_POINTS_LOCATIONS_LIST, onSnap: handleSnap },
+                    <LocationsList
+                        onSetSize={expandToMax(SNAP_POINTS_LOCATIONS_LIST)}
+                        onBack={() => closeLocationsList()}
+                        locations={filteredLocationsByExternalIDs}
+                        onLocationClick={location => setCurrentLocation(location)}
+                    />
                 );
-
             case appViews.LOCATION_DETAILS:
-                return (
-                    <Sheet
-                        minimizedHeight={currentLocationIsDetailed ? 180 : 136}
-                        key="LOCATION_DETAILS"
-                        initialSnapPoint={snapPoints.MIN}
+                return sheetLayout(
+                    { snapPoints: SNAP_POINTS_LOCATION_DETAILS },
+                    <LocationDetails
                         isOpen={true}
-                        ref={locationDetailsSheetRef}
-                    >
-                        <LocationDetails
-                            onSetSize={size => locationDetailsSheetRef.current?.setSnapPoint(size)}
-                            onStartWayfinding={() => pushAppView(appViews.WAYFINDING)}
-                            onBack={() => closeLocationDetails()}
-                            onStartDirections={() => pushAppView(appViews.DIRECTIONS)}
-                            isOpen={true}
-                        />
-                    </Sheet>
+                        onSetSize={expandToMax(SNAP_POINTS_LOCATION_DETAILS)}
+                        onBack={() => closeLocationDetails()}
+                        onStartWayfinding={() => navigateToView(appViews.WAYFINDING)}
+                        onStartDirections={() => navigateToView(appViews.DIRECTIONS)}
+                    />
                 );
-
             case appViews.WAYFINDING:
-                return (
-                    <Sheet
-                        minimizedHeight={190}
-                        key="WAYFINDING"
-                        initialSnapPoint={snapPoints.FIT}
-                        isOpen={true}
-                        ref={wayfindingSheetRef}
-                    >
-                        <Wayfinding
-                            onSetSize={size => wayfindingSheetRef.current?.setSnapPoint(size)}
-                            onStartDirections={() => pushAppView(appViews.DIRECTIONS)}
-                            directionsToLocation={directionsToLocation}
-                            directionsFromLocation={directionsFromLocation}
-                            onBack={() => pushAppView(currentLocation ? appViews.LOCATION_DETAILS : appViews.SEARCH)}
-                            isActive={true}
-                        />
-                    </Sheet>
+                return sheetLayout(
+                    { snapPoints: SNAP_POINTS_DEFAULT, detent: 'content' },
+                    <Wayfinding
+                        onSetSize={expandToMax(SNAP_POINTS_DEFAULT)}
+                        onStartDirections={() => navigateToView(appViews.DIRECTIONS)}
+                        directionsToLocation={directionsToLocation}
+                        directionsFromLocation={directionsFromLocation}
+                        onBack={() => navigateToView(currentLocation ? appViews.LOCATION_DETAILS : appViews.SEARCH)}
+                        isActive={true}
+                    />
                 );
-
             case appViews.DIRECTIONS:
-                return (
-                    <Sheet
-                        minimizedHeight={273}
-                        initialSnapPoint={snapPoints.FIT}
-                        ref={directionsSheetRef}
-                        key="DIRECTIONS"
+                return sheetLayout(
+                    { snapPoints: SNAP_POINTS_DEFAULT, detent: 'content', disableDrag: true },
+                    <Directions
+                        onSetSize={expandToMax(SNAP_POINTS_DEFAULT)}
                         isOpen={true}
-                    >
-                        <Directions
-                            onSetSize={size => directionsSheetRef.current?.setSnapPoint(size)}
-                            isOpen={true}
-                            onBack={() => pushAppView(appViews.WAYFINDING)}
-                            onRouteFinished={() => onRouteFinished()}
-                        />
-                    </Sheet>
+                        onBack={() => navigateToView(appViews.WAYFINDING)}
+                        onRouteFinished={() => { onRouteFinished(); navigateToView(appViews.SEARCH); }}
+                    />
                 );
-
             case appViews.CHAT:
                 return (
                     <ChatWindow
                         isVisible
-                        onClose={() => pushAppView(appViews.SEARCH)}
+                        onClose={() => navigateToView(appViews.SEARCH)}
                         onSearchResults={handleChatLocations}
                         onShowRoute={handleChatShowRoute}
                     />
                 );
-
             default:
                 return null;
         }
     }
 
-    return <div ref={bottomSheetRef} className="bottom-sheets">
-        <ContainerContext.Provider value={bottomSheetRef}>
-            {renderCurrentSheet()}
-        </ContainerContext.Provider>
-    </div>
+    return (
+        <div ref={setSheetMountPoint} className="bottom-sheets">
+            {renderSheet()}
+        </div>
+    );
 }
 
 export default BottomSheet;

@@ -7,7 +7,6 @@ import currentVenueNameState from '../../atoms/currentVenueNameState';
 import { useInitialChatMessage } from '../../hooks/useInitialChatMessage';
 import { useGemini } from '../../providers/GeminiProvider';
 import { snapPoints } from '../../constants/snapPoints';
-import { usePreventSwipe } from '../../hooks/usePreventSwipe';
 import ListItemLocation from '../WebComponentWrappers/ListItemLocation/ListItemLocation';
 import SearchField from '../WebComponentWrappers/Search/Search';
 import filteredLocationsState from '../../atoms/filteredLocationsState';
@@ -45,6 +44,7 @@ Search.propTypes = {
     categories: PropTypes.array,
     onSetSize: PropTypes.func,
     isOpen: PropTypes.bool,
+    isSheetExpanded: PropTypes.bool,
     onOpenChat: PropTypes.func
 };
 
@@ -58,7 +58,7 @@ Search.propTypes = {
  *
  * @returns
  */
-function Search({ onSetSize, isOpen, onOpenChat }) {
+function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
     const appConfig = useRecoilValue(appConfigState);
 
     const { t } = useTranslation();
@@ -84,8 +84,6 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
     const [showNotFoundMessage, setShowNotFoundMessage] = useState(false);
 
     const [selectedCategory, setSelectedCategory] = useRecoilState(selectedCategoryState);
-
-    const scrollableContentSwipePrevent = usePreventSwipe();
 
     const [hoveredLocation, setHoveredLocation] = useState();
 
@@ -148,7 +146,6 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
             setSelectedCategory(null);
             setSearchResults([]);
             setFilteredLocations([]);
-            setSize(snapPoints.FIT);
             setIsInputFieldInFocus(true);
 
             // If there's a search term and it's not just whitespace, re-trigger the search without category filter
@@ -235,9 +232,10 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
      */
     function onResults(locations, fitMapBounds = false) {
         const displayResults = locations.slice(0, MAX_RESULTS);
-
-        // Expand the sheet to occupy the entire screen
-        setSize(snapPoints.MAX);
+        const hadResults = searchResults.length > 0;
+        if (!hadResults || displayResults.length === 0) {
+            setSize(snapPoints.MAX);
+        }
 
         setSearchResults(displayResults);
         setFilteredLocations(displayResults);
@@ -336,6 +334,12 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
         if (!isNullOrUndefined(keyboardRef.current)) {
             keyboardRef.current.clearInputField();
         }
+    }
+
+    function searchInputFocused() {
+        searchFieldRef.current.getInputField();
+        setIsInputFieldInFocus(true);
+        handleSearchChanged();
     }
 
     /**
@@ -451,17 +455,9 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
      * Calculate the CSS for the container based on context.
      */
     function calculateContainerStyle() {
-        if (searchResults.length > 0) {
-            let maxHeight;
-            if (isDesktop) {
-                // On desktop-sized viewports, we want the container to have a max height of 60% of the Map Template.
-                maxHeight = document.querySelector('.mapsindoors-map').clientHeight * 0.6 + 'px';
-            } else {
-                // On mobile-sized viewports, take up all available space if needed.
-                maxHeight = '100%';
-            }
-
-            return { display: 'flex', flexDirection: 'column', maxHeight, overflow: 'hidden' };
+        if (searchResults.length > 0 && isDesktop) {
+            const maxHeight = document.querySelector('.mapsindoors-map').clientHeight * 0.8 + 'px';
+            return { display: 'flex', flexDirection: 'column', maxHeight, overflow: 'auto' };
         }
     }
 
@@ -477,35 +473,25 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
     }
 
     /*
-     * Monitors clicks to manage sheet size and input focus state
+     * Closes search when clicking outside the search component.
      */
     useEffect(() => {
-        const SEARCH_FOCUS_ELEMENTS = ['.search__info', '.search__back-button', '.categories', '.sheet__content'];
-
-        // We want to ignore: Floor Selector, View Mode Switch, My Position, View Selector, Mapbox zoom controls and Google Maps zoom controls
         const IGNORE_CLOSE_ELEMENTS = ['.mi-floor-selector', '.view-mode-switch', '.mi-my-position', '.view-selector__toggle-button', '.building-list', '.mapboxgl-ctrl-bottom-right', '.gmnoprint', '.language-selector-portal'];
 
-        const handleSearchFieldFocus = (event) => {
-            const clickedInsideSearchArea = SEARCH_FOCUS_ELEMENTS.some(selector =>
-                event.target.closest(selector)
+        const handleOutsideClick = (event) => {
+            const searchEl = searchRef.current;
+            const clickedInsideSearch = Boolean(
+                searchEl
+                && (searchEl.contains(event.target)
+                    || (typeof event.composedPath === 'function' && event.composedPath().includes(searchEl)))
             );
-
             const clickedInsideIgnoreArea = IGNORE_CLOSE_ELEMENTS.some(selector =>
                 event.target.closest(selector)
             );
 
-            const clickedInsideResults = event.target.closest('.search__results');
-
-            if (clickedInsideSearchArea) {
-                setSize(snapPoints.MAX);
-                requestAnimationFrameId.current = requestAnimationFrame(() => { // we use a requestAnimationFrame to ensure that the size change is applied before the focus (meaning that categories are rendered)
-                    setIsInputFieldInFocus(true);
-                    handleSearchChanged();
-                });
-            } else if (!clickedInsideResults && !clickedInsideIgnoreArea) {
+            if (!clickedInsideSearch && !clickedInsideIgnoreArea) {
                 setIsInputFieldInFocus(false);
                 setShowAskWithAiButton(false);
-                setSize(snapPoints.MIN);
                 setSelectedCategory(null);
                 setSearchResults([]);
                 setFilteredLocations([]);
@@ -514,15 +500,15 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
         };
 
         if (isOpen) {
-            requestAnimationFrameId.current = requestAnimationFrame(() => { // we use a requestAnimationFrame to ensure that the click is not registered too early (while other sheets are still "active")
-                document.addEventListener('click', handleSearchFieldFocus);
+            requestAnimationFrameId.current = requestAnimationFrame(() => {
+                document.addEventListener('click', handleOutsideClick);
             });
         } else {
-            document.removeEventListener('click', handleSearchFieldFocus);
+            document.removeEventListener('click', handleOutsideClick);
         }
 
         return () => {
-            document.removeEventListener('click', handleSearchFieldFocus);
+            document.removeEventListener('click', handleOutsideClick);
             if (requestAnimationFrameId.current) {
                 cancelAnimationFrame(requestAnimationFrameId.current);
             }
@@ -730,6 +716,7 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
                         placeholder={t('Search by name, category, building...')}
                         results={locations => onResults(locations)}
                         clicked={() => searchFieldClicked()}
+                        inputFocused={() => searchInputFocused()}
                         cleared={() => cleared()}
                         changed={() => handleSearchChanged()}
                         category={selectedCategory}
@@ -764,7 +751,7 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
 
             {/* Vertical list of Categories */}
             {/* Show full category list if (kiosk mode and showCategoriesUnderSearch is true) OR input is in focus, and only when searchResults are empty */}
-            {(shouldShowCategoriesUnderSearch() || isInputFieldInFocus) && !showNotFoundMessage && categories.length > 0 && searchResults.length === 0 && (
+            {(shouldShowCategoriesUnderSearch() || isInputFieldInFocus || isSheetExpanded) && !showNotFoundMessage && categories.length > 0 && searchResults.length === 0 && (
                 <Categories
                     onSetSize={onSetSize}
                     searchFieldRef={searchFieldRef}
@@ -780,7 +767,7 @@ function Search({ onSetSize, isOpen, onOpenChat }) {
 
             {/* When search results are found (category is selected or search term is used) */}
             {searchResults.length > 0 && (
-                <div className={`search__results prevent-scroll${isKioskContext ? ' search__results--kiosk' : ''}`} {...scrollableContentSwipePrevent}>
+                <div className={`search__results prevent-scroll${isKioskContext ? ' search__results--kiosk' : ''}`}>
 
                     {/* Subcategories should only show if a top level category is selected and if that top level category has any childKeys */}
                     {selectedCategory && (

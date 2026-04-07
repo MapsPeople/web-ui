@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.96.23] - 2026-04-07
+
+### Added
+
+- Refactored `BottomSheetNew` to use `react-modal-sheet`, replacing the custom `Sheet` component.
+- Added `useSnapState` hook to manage bottom sheet snap index, resetting automatically on view change.
+- Extracted the active step heading out of the scrollable steps list in `Directions` into a dedicated sticky `RouteInstructionsStepHeader` — the heading now stays fixed above the list as the user scrolls through steps, rather than scrolling away with them. The built-in header on `mi-route-instructions-step` is disabled accordingly.
+- Moved direction navigation buttons from `RouteInstructions` into the `Directions` component.
+
+### Changed
+
+- Centralized all view transitions through a `navigateToView` function in `BottomSheetNew`, co-locating per-view teardown and setup logic.
+- Added named snap point arrays for following views (`SNAP_POINTS_SEARCH`, `SNAP_POINTS_LOCATION_DETAILS`, `SNAP_POINTS_LOCATIONS_LIST`) with fixed collapsed heights.
+- `LanguageSelector` will now not render in Directions, similar to `VenueSelector`.
+- Increased drag handle size in the bottom sheet (width 28px → 32px, height `--spacing-xx-small` → `--spacing-x-small`).
+
 ## [1.96.22] - 2026-04-01
 
 ### Fixed

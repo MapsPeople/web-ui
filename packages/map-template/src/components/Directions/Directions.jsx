@@ -2,6 +2,8 @@ import { useEffect, useState, useRef } from 'react';
 import './Directions.scss';
 import { useTranslation } from 'react-i18next';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import ArrowRight from '../../assets/arrow-right.svg?react';
+import ArrowLeft from '../../assets/arrow-left.svg?react';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import travelModeState from '../../atoms/travelModeState';
 import QRCode from '../../assets/qrcode.svg?react';
@@ -29,6 +31,7 @@ import { ZoomLevelValues } from '../../constants/zoomLevelValues';
 import ShuttleBus from '../ShuttleBus/ShuttleBus';
 import shuttleBusOnState from '../../atoms/shuttleBusOnState';
 import appConfigState from '../../atoms/appConfigState';
+import RouteInstructionsStepHeader from '../WebComponentWrappers/RouteInstructionsStepHeader/RouteInstructionsStepHeader';
 
 let directionsRenderer;
 
@@ -36,8 +39,7 @@ Directions.propTypes = {
     isOpen: PropTypes.bool,
     onBack: PropTypes.func,
     onSetSize: PropTypes.func,
-    onRouteFinished: PropTypes.func,
-    snapPointSwipedByUser: PropTypes.string
+    onRouteFinished: PropTypes.func
 };
 
 /**
@@ -48,10 +50,9 @@ Directions.propTypes = {
  * @param {function} props.onBack - Callback that fires when the directions view is closed by the user.
  * @param {function} props.onSetSize - Callback that is fired when the component has loaded.
  * @param {function} props.onRouteFinished - Callback that fires when the route has finished.
- * @param {string} props.snapPointSwipedByUser - Changes value when user has swiped a Bottom sheet to a new snap point.
  *
  */
-function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipedByUser }) {
+function Directions({ isOpen, onBack, onSetSize, onRouteFinished }) {
     const { t } = useTranslation();
     const requestAnimationFrameId = useRef();
 
@@ -68,7 +69,9 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
 
     const directions = useRecoilValue(directionsResponseState);
 
-    const setActiveStep = useSetRecoilState(activeStepState);
+    const [activeStep, setActiveStep] = useRecoilState(activeStepState);
+
+    const [previous, setPrevious] = useState();
 
     const [substepsOpen, setSubstepsOpen] = useRecoilState(substepsToggledState);
 
@@ -244,6 +247,20 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
         }
     }
 
+    function nextStep() {
+        const steps = getRouteSteps();
+        setPrevious(steps[activeStep]);
+        setActiveStep(activeStep + 1);
+        onNext();
+    }
+
+    function previousStep() {
+        const steps = getRouteSteps();
+        setPrevious(steps[activeStep - 2]);
+        setActiveStep(activeStep - 1);
+        onPrevious();
+    }
+
     /**
      * Stop rendering directions on the map.
      */
@@ -259,7 +276,6 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
     function resetSubsteps() {
         setActiveStep(0);
         setSubstepsOpen(false);
-        setSize(snapPoints.FIT);
     }
 
     /**
@@ -311,7 +327,7 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
      */
     useEffect(() => {
         requestAnimationFrameId.current = requestAnimationFrame(() => {// we use a requestAnimationFrame to ensure that the component has been re-rendered with the collapsed or expanded sub steps before we set the size
-            substepsOpen ? setSize(snapPoints.MAX) : setSize(snapPoints.FIT);
+            if (substepsOpen) setSize(snapPoints.MAX);
         });
 
         return () => {
@@ -321,25 +337,23 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
         }
     }, [substepsOpen]);
 
-    /**
-     * When user swipes the bottom sheet to a new snap point.
-     */
-    useEffect(() => {
-        if (isOpen && snapPointSwipedByUser) {
-            setSubstepsOpen(snapPointSwipedByUser === snapPoints.MAX);
-        }
-    }, [isOpen, snapPointSwipedByUser]);
-
     return (
         <div className="directions" style={{ display: !isKioskContext ? 'grid' : 'block' }}>
-            <div className="directions__steps">
+            <div className="directions__header">
                 <div className="directions__minutes">{totalTime && <mi-time translations={JSON.stringify({ days: t('d'), hours: t('h'), minutes: t('min') })} seconds={totalTime} />}</div>
+                <RouteInstructionsStepHeader
+                    totalSteps={getRouteSteps()}
+                    activeStep={activeStep}
+                    previous={previous}
+                    originLocation={directions?.originLocation}
+                />
+            </div>
+            <div className="directions__steps">
                 <RouteInstructions
                     steps={getRouteSteps()}
+                    previous={previous}
                     originLocation={directions?.originLocation}
-                    onNextStep={() => onNext()}
-                    isOpen={isOpen}
-                    onPreviousStep={() => onPrevious()} >
+                    isOpen={isOpen}>
                 </RouteInstructions>
             </div>
             {isKioskContext &&
@@ -353,6 +367,23 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished, snapPointSwipe
                 </>
             }
             <div className="directions__actions">
+                {getRouteSteps().length > 0 &&
+                    <div className={`route-instructions__actions ${!isKioskContext ? '' : 'route-instructions__actions--kiosk'}`}>
+                        <button className={`route-instructions__button ${!isKioskContext ? '' : 'route-instructions__button--kiosk'}`}
+                            onClick={() => previousStep()}
+                            aria-label={t('Previous')}
+                            disabled={activeStep === 0}>
+                            <ArrowLeft />
+                        </button>
+                        <div className="route-instructions__overview">{t('StepYofX', { activeStep: activeStep + 1, totalSteps: getRouteSteps().length })}</div>
+                        <button className={`route-instructions__button ${!isKioskContext ? '' : 'route-instructions__button--kiosk'}`}
+                            onClick={() => nextStep()}
+                            aria-label={t('Next')}
+                            disabled={activeStep === getRouteSteps().length - 1}>
+                            <ArrowRight />
+                        </button>
+                    </div>
+                }
                 <div className="directions__details">
                     {directions?.destinationLocation &&
                         <div className="directions__info">

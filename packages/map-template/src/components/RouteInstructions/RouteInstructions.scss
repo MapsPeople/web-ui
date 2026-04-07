@@ -1,30 +1,7 @@
 .route-instructions {
     display: grid;
     grid-template-rows: 1fr min-content;
-
-    &__footer {
-        position: sticky;
-        bottom: 9rem;
-        background: white;
-        padding-bottom: var(--spacing-medium);
-
-        &::before {
-            content: '';
-            position: absolute;
-            pointer-events: none;
-            bottom: var(--spacing-xx-large);
-            left: 0;
-            right: 0;
-            height: var(--spacing-xx-large);
-            background: linear-gradient(rgba(255, 255, 255, 0), white);
-        }
-
-        &--kiosk {
-            &::before {
-                background: transparent;
-            }
-        }
-    }
+    min-height: 0;
 
     &__actions {
         display: grid;
@@ -60,7 +37,4 @@
         opacity: 0.3;
     }
 
-    mi-route-instructions-step {
-        height: 100%;
-    }
 }

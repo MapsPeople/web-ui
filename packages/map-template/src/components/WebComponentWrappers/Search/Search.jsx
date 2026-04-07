@@ -18,13 +18,14 @@ import PropTypes from 'prop-types';
  * @param {function} props.clicked - Function that is called when search field is clicked.
  * @param {function} props.cleared - Function that is called when search field is cleared.
  * @param {function} props.changed - Function that is called when value of the input field is changed.
+ * @param {function} props.inputFocused - Function that is called when the input field receives focus.
  * @param {string} props.category - If set, search will be performed for Locations having this category.
  * @param {boolean} props.preventFocus - If set to true, the search field will be disabled.
  * @param {boolean} props.google - Set to true to include results from Google Places autocomplete service.
  * @param {boolean} props.mapbox - Set to true to include results from Mapbox Places autocomplete service.
  */
 const SearchField = forwardRef(function SearchFieldComponent(props, ref) {
-    const { placeholder, mapsindoors, results, clicked, cleared, changed, category, google, mapbox, disabled = false } = props;
+    const { placeholder, mapsindoors, results, clicked, cleared, changed, inputFocused, category, google, mapbox, disabled = false } = props;
     const elementRef = useRef();
     const pendingDisplayText = useRef(null);
     const isComponentReady = useRef(false);
@@ -110,6 +111,7 @@ const SearchField = forwardRef(function SearchFieldComponent(props, ref) {
     useEffect(() => {
         const searchResultsHandler = customEvent => results(customEvent.detail);
         const onCleared = () => cleared();
+        const onFocused = () => inputFocused?.();
 
         const { current } = elementRef;
 
@@ -121,15 +123,17 @@ const SearchField = forwardRef(function SearchFieldComponent(props, ref) {
         current.addEventListener('click', clicked);
         current.addEventListener('cleared', onCleared);
         current.addEventListener('changed', changed);
+        current.addEventListener('focused', onFocused);
 
         return () => {
             current.removeEventListener('results', searchResultsHandler);
             current.removeEventListener('click', clicked);
             current.removeEventListener('cleared', onCleared);
             current.removeEventListener('changed', changed);
+            current.removeEventListener('focused', onFocused);
         }
 
-    }, [placeholder, mapsindoors, results, clicked, cleared, google, mapbox, changed]);
+    }, [placeholder, mapsindoors, results, clicked, cleared, inputFocused, google, mapbox, changed]);
 
     return <mi-search ref={elementRef}
         id-attribute="search"
@@ -152,6 +156,7 @@ SearchField.propTypes = {
     clicked: PropTypes.func,
     cleared: PropTypes.func,
     changed: PropTypes.func,
+    inputFocused: PropTypes.func,
     category: PropTypes.string,
     preventFocus: PropTypes.bool,
     google: PropTypes.bool,

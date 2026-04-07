@@ -927,6 +927,10 @@ export namespace Components {
          */
         "openSubsteps": () => Promise<void>;
         /**
+          * @default true
+         */
+        "showHeader": boolean;
+        /**
           * Indicates if it should show the toggle button.
           * @type {boolean}
           * @default true
@@ -946,6 +950,22 @@ export namespace Components {
           * @default navigator.language === 'en-US' ? UnitSystem.Imperial : UnitSystem.Metric
          */
         "unit": UnitSystem;
+    }
+    interface MiRouteInstructionsStepHeader {
+        "closeSubsteps": () => Promise<void>;
+        /**
+          * @default ''
+         */
+        "fromRouteContext": string;
+        "fromTransitStop": string;
+        "fromTravelMode": string;
+        "openSubsteps": () => Promise<void>;
+        /**
+          * @default true
+         */
+        "showToggleButton": boolean;
+        "step": string;
+        "translations": string;
     }
     interface MiRouteInstructionsStepLegacy {
         /**
@@ -1253,6 +1273,10 @@ export interface MiRouteInstructionsCustomEvent<T> extends CustomEvent<T> {
 export interface MiRouteInstructionsStepCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLMiRouteInstructionsStepElement;
+}
+export interface MiRouteInstructionsStepHeaderCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLMiRouteInstructionsStepHeaderElement;
 }
 export interface MiRouteInstructionsStepLegacyCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -1573,6 +1597,23 @@ declare global {
         prototype: HTMLMiRouteInstructionsStepElement;
         new (): HTMLMiRouteInstructionsStepElement;
     };
+    interface HTMLMiRouteInstructionsStepHeaderElementEventMap {
+        "substepsToggled": void;
+    }
+    interface HTMLMiRouteInstructionsStepHeaderElement extends Components.MiRouteInstructionsStepHeader, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLMiRouteInstructionsStepHeaderElementEventMap>(type: K, listener: (this: HTMLMiRouteInstructionsStepHeaderElement, ev: MiRouteInstructionsStepHeaderCustomEvent<HTMLMiRouteInstructionsStepHeaderElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLMiRouteInstructionsStepHeaderElementEventMap>(type: K, listener: (this: HTMLMiRouteInstructionsStepHeaderElement, ev: MiRouteInstructionsStepHeaderCustomEvent<HTMLMiRouteInstructionsStepHeaderElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLMiRouteInstructionsStepHeaderElement: {
+        prototype: HTMLMiRouteInstructionsStepHeaderElement;
+        new (): HTMLMiRouteInstructionsStepHeaderElement;
+    };
     interface HTMLMiRouteInstructionsStepLegacyElementEventMap {
         "stepClicked": object;
     }
@@ -1602,6 +1643,7 @@ declare global {
         "componentRendered": void;
         "shortInput": void;
         "changed": void;
+        "focused": void;
     }
     interface HTMLMiSearchElement extends Components.MiSearch, HTMLStencilElement {
         addEventListener<K extends keyof HTMLMiSearchElementEventMap>(type: K, listener: (this: HTMLMiSearchElement, ev: MiSearchCustomEvent<HTMLMiSearchElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -1710,6 +1752,7 @@ declare global {
         "mi-route-instructions-maneuver": HTMLMiRouteInstructionsManeuverElement;
         "mi-route-instructions-maneuver-legacy": HTMLMiRouteInstructionsManeuverLegacyElement;
         "mi-route-instructions-step": HTMLMiRouteInstructionsStepElement;
+        "mi-route-instructions-step-header": HTMLMiRouteInstructionsStepHeaderElement;
         "mi-route-instructions-step-legacy": HTMLMiRouteInstructionsStepLegacyElement;
         "mi-scroll-buttons": HTMLMiScrollButtonsElement;
         "mi-search": HTMLMiSearchElement;
@@ -2624,6 +2667,10 @@ declare namespace LocalJSX {
          */
         "onSubstepsToggled"?: (event: MiRouteInstructionsStepCustomEvent<void>) => void;
         /**
+          * @default true
+         */
+        "showHeader"?: boolean;
+        /**
           * Indicates if it should show the toggle button.
           * @type {boolean}
           * @default true
@@ -2643,6 +2690,21 @@ declare namespace LocalJSX {
           * @default navigator.language === 'en-US' ? UnitSystem.Imperial : UnitSystem.Metric
          */
         "unit"?: UnitSystem;
+    }
+    interface MiRouteInstructionsStepHeader {
+        /**
+          * @default ''
+         */
+        "fromRouteContext"?: string;
+        "fromTransitStop"?: string;
+        "fromTravelMode"?: string;
+        "onSubstepsToggled"?: (event: MiRouteInstructionsStepHeaderCustomEvent<void>) => void;
+        /**
+          * @default true
+         */
+        "showToggleButton"?: boolean;
+        "step"?: string;
+        "translations"?: string;
     }
     interface MiRouteInstructionsStepLegacy {
         /**
@@ -2783,6 +2845,10 @@ declare namespace LocalJSX {
           * Event emitted after every component rendering.
          */
         "onComponentRendered"?: (event: MiSearchCustomEvent<void>) => void;
+        /**
+          * Event emitted when the input field receives focus.
+         */
+        "onFocused"?: (event: MiSearchCustomEvent<void>) => void;
         /**
           * Event emitted when searching is complete.
          */
@@ -3089,6 +3155,15 @@ declare namespace LocalJSX {
         "fromTransitStop": string;
         "unit": UnitSystem;
         "showToggleButton": boolean;
+        "showHeader": boolean;
+        "translations": string;
+    }
+    interface MiRouteInstructionsStepHeaderAttributes {
+        "step": string;
+        "fromRouteContext": string;
+        "fromTravelMode": string;
+        "fromTransitStop": string;
+        "showToggleButton": boolean;
         "translations": string;
     }
     interface MiRouteInstructionsStepLegacyAttributes {
@@ -3179,6 +3254,7 @@ declare namespace LocalJSX {
         "mi-route-instructions-maneuver": Omit<MiRouteInstructionsManeuver, keyof MiRouteInstructionsManeuverAttributes> & { [K in keyof MiRouteInstructionsManeuver & keyof MiRouteInstructionsManeuverAttributes]?: MiRouteInstructionsManeuver[K] } & { [K in keyof MiRouteInstructionsManeuver & keyof MiRouteInstructionsManeuverAttributes as `attr:${K}`]?: MiRouteInstructionsManeuverAttributes[K] } & { [K in keyof MiRouteInstructionsManeuver & keyof MiRouteInstructionsManeuverAttributes as `prop:${K}`]?: MiRouteInstructionsManeuver[K] };
         "mi-route-instructions-maneuver-legacy": Omit<MiRouteInstructionsManeuverLegacy, keyof MiRouteInstructionsManeuverLegacyAttributes> & { [K in keyof MiRouteInstructionsManeuverLegacy & keyof MiRouteInstructionsManeuverLegacyAttributes]?: MiRouteInstructionsManeuverLegacy[K] } & { [K in keyof MiRouteInstructionsManeuverLegacy & keyof MiRouteInstructionsManeuverLegacyAttributes as `attr:${K}`]?: MiRouteInstructionsManeuverLegacyAttributes[K] } & { [K in keyof MiRouteInstructionsManeuverLegacy & keyof MiRouteInstructionsManeuverLegacyAttributes as `prop:${K}`]?: MiRouteInstructionsManeuverLegacy[K] };
         "mi-route-instructions-step": Omit<MiRouteInstructionsStep, keyof MiRouteInstructionsStepAttributes> & { [K in keyof MiRouteInstructionsStep & keyof MiRouteInstructionsStepAttributes]?: MiRouteInstructionsStep[K] } & { [K in keyof MiRouteInstructionsStep & keyof MiRouteInstructionsStepAttributes as `attr:${K}`]?: MiRouteInstructionsStepAttributes[K] } & { [K in keyof MiRouteInstructionsStep & keyof MiRouteInstructionsStepAttributes as `prop:${K}`]?: MiRouteInstructionsStep[K] };
+        "mi-route-instructions-step-header": Omit<MiRouteInstructionsStepHeader, keyof MiRouteInstructionsStepHeaderAttributes> & { [K in keyof MiRouteInstructionsStepHeader & keyof MiRouteInstructionsStepHeaderAttributes]?: MiRouteInstructionsStepHeader[K] } & { [K in keyof MiRouteInstructionsStepHeader & keyof MiRouteInstructionsStepHeaderAttributes as `attr:${K}`]?: MiRouteInstructionsStepHeaderAttributes[K] } & { [K in keyof MiRouteInstructionsStepHeader & keyof MiRouteInstructionsStepHeaderAttributes as `prop:${K}`]?: MiRouteInstructionsStepHeader[K] };
         "mi-route-instructions-step-legacy": Omit<MiRouteInstructionsStepLegacy, keyof MiRouteInstructionsStepLegacyAttributes> & { [K in keyof MiRouteInstructionsStepLegacy & keyof MiRouteInstructionsStepLegacyAttributes]?: MiRouteInstructionsStepLegacy[K] } & { [K in keyof MiRouteInstructionsStepLegacy & keyof MiRouteInstructionsStepLegacyAttributes as `attr:${K}`]?: MiRouteInstructionsStepLegacyAttributes[K] } & { [K in keyof MiRouteInstructionsStepLegacy & keyof MiRouteInstructionsStepLegacyAttributes as `prop:${K}`]?: MiRouteInstructionsStepLegacy[K] };
         "mi-scroll-buttons": Omit<MiScrollButtons, keyof MiScrollButtonsAttributes> & { [K in keyof MiScrollButtons & keyof MiScrollButtonsAttributes]?: MiScrollButtons[K] } & { [K in keyof MiScrollButtons & keyof MiScrollButtonsAttributes as `attr:${K}`]?: MiScrollButtonsAttributes[K] } & { [K in keyof MiScrollButtons & keyof MiScrollButtonsAttributes as `prop:${K}`]?: MiScrollButtons[K] };
         "mi-search": Omit<MiSearch, keyof MiSearchAttributes> & { [K in keyof MiSearch & keyof MiSearchAttributes]?: MiSearch[K] } & { [K in keyof MiSearch & keyof MiSearchAttributes as `attr:${K}`]?: MiSearchAttributes[K] } & { [K in keyof MiSearch & keyof MiSearchAttributes as `prop:${K}`]?: MiSearch[K] };
@@ -3222,6 +3298,7 @@ declare module "@stencil/core" {
             "mi-route-instructions-maneuver": LocalJSX.IntrinsicElements["mi-route-instructions-maneuver"] & JSXBase.HTMLAttributes<HTMLMiRouteInstructionsManeuverElement>;
             "mi-route-instructions-maneuver-legacy": LocalJSX.IntrinsicElements["mi-route-instructions-maneuver-legacy"] & JSXBase.HTMLAttributes<HTMLMiRouteInstructionsManeuverLegacyElement>;
             "mi-route-instructions-step": LocalJSX.IntrinsicElements["mi-route-instructions-step"] & JSXBase.HTMLAttributes<HTMLMiRouteInstructionsStepElement>;
+            "mi-route-instructions-step-header": LocalJSX.IntrinsicElements["mi-route-instructions-step-header"] & JSXBase.HTMLAttributes<HTMLMiRouteInstructionsStepHeaderElement>;
             "mi-route-instructions-step-legacy": LocalJSX.IntrinsicElements["mi-route-instructions-step-legacy"] & JSXBase.HTMLAttributes<HTMLMiRouteInstructionsStepLegacyElement>;
             "mi-scroll-buttons": LocalJSX.IntrinsicElements["mi-scroll-buttons"] & JSXBase.HTMLAttributes<HTMLMiScrollButtonsElement>;
             "mi-search": LocalJSX.IntrinsicElements["mi-search"] & JSXBase.HTMLAttributes<HTMLMiSearchElement>;

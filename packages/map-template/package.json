@@ -27,7 +27,6 @@
     "react-click-away-listener": "2.3.0",
     "react-dom": "^18.2.0",
     "react-i18next": "^13.5.0",
-    "react-swipeable": "^7.0.0",
     "react-transition-group": "^4.4.5",
     "recoil": "^0.7.7",
     "sass": "^1.97.3",
@@ -69,7 +68,9 @@
   "dependencies": {
     "@mapsindoors/components": "*",
     "@mapsindoors/css": "^3.0.0",
+    "motion": "^12.38.0",
     "react-markdown": "^10.1.0",
+    "react-modal-sheet": "^5.6.0",
     "remark-gfm": "^4.0.1"
   }
 }

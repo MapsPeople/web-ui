@@ -1,10 +1,10 @@
 @use '../../variables';
 
 .search {
-    padding: var(--spacing-medium);
+    padding: 0 var(--spacing-medium) var(--spacing-medium);
 
     @media (max-width: variables.$desktop-breakpoint) {
-        padding: var(--spacing-medium) var(--spacing-x-small) var(--spacing-medium) var(--spacing-x-small);
+        padding: 0 var(--spacing-x-small) var(--spacing-medium);
 
         mi-search input::placeholder {
             color: #737373;
@@ -48,6 +48,12 @@
         display: grid;
         grid-auto-flow: column;
         gap: var(--spacing-x-small);
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        background-color: var(--color-white-white);
+        padding-top: var(--spacing-medium);
+        padding-bottom: var(--spacing-x-small);
     }
 
     &__legend {

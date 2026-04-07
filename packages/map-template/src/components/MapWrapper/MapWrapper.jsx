@@ -351,7 +351,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
         {/* Pass isWayfindingOrDirections prop to ViewSelector to disable interactions while wayfinding or directions is active*/}
         {apiKey && mapType && <>
             <ViewSelector isViewSelectorVisible={isViewSelectorVisible} isViewSelectorDisabled={isWayfindingOrDirections} />
-            <LanguageSelector currentLanguage={currentLanguage} setLanguage={setLanguage} isVisible={isLanguageSelectorVisible} />
+            <LanguageSelector currentLanguage={currentLanguage} setLanguage={setLanguage} isVisible={isLanguageSelectorVisible && !isWayfindingOrDirections} />
             <ResetKioskViewButton />
         </>}
     </>)

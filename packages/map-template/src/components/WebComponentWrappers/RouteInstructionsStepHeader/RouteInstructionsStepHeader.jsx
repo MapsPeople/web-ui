@@ -6,32 +6,15 @@ import triggerSubstepsState from '../../../atoms/triggerSubstepsState';
 import { useIsKioskContext } from '../../../hooks/useIsKioskContext';
 import PropTypes from 'prop-types';
 
-/**
- * React wrapper around the custom element <mi-route-instructions-step>.
- *
- * @param {object} props
- * @param {object} translations - The text to be displayed on the instructions steps.
- * @param {array} totalSteps - The total steps to be rendered.
- * @param {number} activeStep - The current step to be shown.
- * @param {object} previous - The previous step.
- * @param {object} originLocation - The origin location when starting the directions.
- * @param {object} directions - The directions object.
- *
- */
-const RouteInstructionsStep = forwardRef(function RouteInstructionsStepComponent(props, ref) {
-    const { totalSteps, activeStep, previous, originLocation, directions } = props;
+const RouteInstructionsStepHeader = forwardRef(function RouteInstructionsStepHeaderComponent(props, ref) {
+    const { totalSteps, activeStep, previous, originLocation } = props;
     const elementRef = useRef();
 
     const { t } = useTranslation();
-
     const [substepsOpen, setSubstepsOpen] = useRecoilState(substepsToggledState);
     const setTriggerSubsteps = useSetRecoilState(triggerSubstepsState);
-
     const isKioskContext = useIsKioskContext();
 
-    /**
-     * Method that can be triggered on the element.
-     */
     useImperativeHandle(ref, () => ({
         openSubsteps() {
             elementRef.current.openSubsteps();
@@ -41,7 +24,6 @@ const RouteInstructionsStep = forwardRef(function RouteInstructionsStepComponent
         }
     }));
 
-    // Translations required for the mi-route-instructions-step component
     const translations = {
         walk: t('Walk'),
         bike: t('Bike'),
@@ -80,9 +62,6 @@ const RouteInstructionsStep = forwardRef(function RouteInstructionsStepComponent
 
     useEffect(() => {
         const { current } = elementRef;
-        if (current) {
-            current.showHeader = false;
-        }
 
         function onSubstepsToggled() {
             setTriggerSubsteps(true);
@@ -96,24 +75,21 @@ const RouteInstructionsStep = forwardRef(function RouteInstructionsStepComponent
         }
     }, [substepsOpen]);
 
-
-    return <mi-route-instructions-step
+    return <mi-route-instructions-step-header
         ref={elementRef}
         show-toggle-button={!isKioskContext}
         step={JSON.stringify(totalSteps[activeStep])}
         translations={JSON.stringify(translations)}
-        destination-location={directions?.destinationLocation.properties.name}
         from-travel-mode={previous?.travel_mode ?? ''}
         from-route-context={previous?.route_context ?? originLocation?.properties?.name ?? ''}>
-    </mi-route-instructions-step>
+    </mi-route-instructions-step-header>;
 });
 
-RouteInstructionsStep.propTypes = {
+RouteInstructionsStepHeader.propTypes = {
     totalSteps: PropTypes.array,
     activeStep: PropTypes.number,
     previous: PropTypes.object,
-    originLocation: PropTypes.object,
-    directions: PropTypes.object
+    originLocation: PropTypes.object
 };
 
-export default RouteInstructionsStep;
+export default RouteInstructionsStepHeader;

@@ -41,6 +41,11 @@ export class Search implements ComponentInterface {
     @Event() changed: EventEmitter<void>;
 
     /**
+     * Event emitted when the input field receives focus.
+     */
+    @Event() focused: EventEmitter<void>;
+
+    /**
      * Placeholder for the input field.
      */
     @Prop() placeholder: string = '';
@@ -433,6 +438,9 @@ export class Search implements ComponentInterface {
                     type="search"
                     ref={(el) => this.inputElement = el as HTMLInputElement}
                     onInput={(): void => this.inputChanged()}
+                    onFocus={(): void => {
+                        this.focused.emit();
+                    }}
                     placeholder={this.placeholder}
                     autocomplete="off"
                 />

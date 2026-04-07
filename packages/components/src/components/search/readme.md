@@ -243,6 +243,7 @@ A `triggerSearch` method can be called on the `<mi-search>` element to programat
 | `changed`           | Event emitted whenever the value of the input field has changed.     | `CustomEvent<void>`     |
 | `cleared`           | Event emitted when the search field is emptied.                      | `CustomEvent<void>`     |
 | `componentRendered` | Event emitted after every component rendering.                       | `CustomEvent<void>`     |
+| `focused`           | Event emitted when the input field receives focus.                   | `CustomEvent<void>`     |
 | `results`           | Event emitted when searching is complete.                            | `CustomEvent<object[]>` |
 | `shortInput`        | Event emitted whenever the search field contains only one character. | `CustomEvent<void>`     |
 

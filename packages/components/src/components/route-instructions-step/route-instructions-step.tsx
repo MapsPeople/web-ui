@@ -8,7 +8,8 @@ import { isInternetExplorer } from '../../utils/utils';
 @Component({
     tag: 'mi-route-instructions-step',
     styleUrl: 'route-instructions-step.scss',
-    shadow: true
+    scoped: true,
+    shadow: false
 })
 export class RouteInstructionsStep implements ComponentInterface {
 
@@ -18,6 +19,9 @@ export class RouteInstructionsStep implements ComponentInterface {
      */
     @Prop() step: string;
 
+    /**
+     * Parse step prop from JSON string.
+     */
     @Watch('step')
     parseStepProp(): void {
         if (this.step) {
@@ -73,16 +77,22 @@ export class RouteInstructionsStep implements ComponentInterface {
      */
     @Prop() showToggleButton: boolean = true;
 
+    @Prop() showHeader: boolean = true;
+
     /**
      * Object with translation strings as stringified JSON.
      */
     @Prop() translations: string;
+    /**
+     * Parse translations prop from JSON string.
+     */
     @Watch('translations')
     parseTranslationsProp(): void {
         if (this.translations) {
             this.translationsData = JSON.parse(this.translations);
         }
     }
+    /** Parsed translations data. */
     @State() translationsData: DirectionsTranslations;
 
     /**
@@ -141,7 +151,7 @@ export class RouteInstructionsStep implements ComponentInterface {
     /**
      * Emits stepClicked event (if click target is not related to an action).
      *
-     * @param event - Event.
+     * @param {Event} event - Event.
      */
     stepClickHandler(event): void {
         // Don't emit click event if clicked on elements that are actions to other things
@@ -311,10 +321,10 @@ export class RouteInstructionsStep implements ComponentInterface {
      */
     renderDrivingStep(): JSX.Element {
         return <div class="step" onClick={(e): void => this.stepClickHandler(e)}>
-            <div class="step__info">
+            {this.showHeader ? <div class="step__info">
                 <div part="step-heading" class="step__heading">{this.getStepHeading()}</div>
                 {this.renderToggleButton()}
-            </div>
+            </div> : null}
             {this.showSubsteps()}
         </div>;
     }
@@ -388,10 +398,10 @@ export class RouteInstructionsStep implements ComponentInterface {
         }
 
         return <div class="step" onClick={(e): void => this.stepClickHandler(e)}>
-            <div class="step__info">
+            {this.showHeader ? <div class="step__info">
                 <div part="step-heading" class="step__heading">{heading}</div>
                 {this.renderToggleButton()}
-            </div>
+            </div> : null}
             {this.showSubsteps()}
         </div>;
     }
@@ -421,10 +431,10 @@ export class RouteInstructionsStep implements ComponentInterface {
      */
     renderBicyclingStep(): JSX.Element {
         return <div class="step" onClick={(e): void => this.stepClickHandler(e)}>
-            <div class="step__info">
+            {this.showHeader ? <div class="step__info">
                 <div part="step-heading" class="step__heading">{this.getStepHeading()}</div>
                 {this.renderToggleButton()}
-            </div>
+            </div> : null}
             {this.showSubsteps()}
         </div>;
     }
@@ -436,10 +446,10 @@ export class RouteInstructionsStep implements ComponentInterface {
      */
     renderTransitStep(): JSX.Element {
         return <div class="step" onClick={(e): void => this.stepClickHandler(e)}>
-            <div class="step__info">
+            {this.showHeader ? <div class="step__info">
                 <h3 part="step-heading" class="step__heading">{this.stepData.travel_mode === 'TRANSIT' ? `${this.translationsData.rideTheBus}` : this.stepData?.instructions}</h3>
                 {this.renderToggleButton()}
-            </div>
+            </div> : null}
             {this.renderTravelMode()}
             <div part="step-description" class="step__description">
                 {this.stepData?.transit_information?.line?.short_name ?

@@ -1,0 +1,26 @@
+.sheetContainer {
+    position: relative;
+}
+
+.sheetHeader {
+    height: 0;
+    overflow: visible;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    z-index: 4;
+}
+
+.dragHandle {
+    position: absolute;
+    top: var(--spacing-xx-small);
+    width: 32px;
+    height: var(--spacing-x-small);
+    border-radius: var(--spacing-xx-small);
+    background-color: var(--color-gray-30);
+}
+
+.sheetContent {
+    background-color: var(--color-white-white);
+    overflow-y: auto;
+}
