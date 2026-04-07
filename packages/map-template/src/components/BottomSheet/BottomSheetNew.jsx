@@ -9,18 +9,18 @@
  * Imperative ref: `sheetRef.current.snapTo(index)` — documented in the library README as **Methods and properties** → `snapTo(index)` (https://github.com/Temzasse/react-modal-sheet#%EF%B8%8F-methods-and-properties).
  */
 import { useRef, useState, useEffect, useCallback } from 'react';
-import { useSnapState } from '../../hooks/useSnapState';
 import PropTypes from 'prop-types';
 import { Sheet } from 'react-modal-sheet';
 import { useRecoilState } from 'recoil';
 import { snapPoints } from '../../constants/snapPoints';
 import currentLocationState from '../../atoms/currentLocationState';
+import { useSnapState } from '../../hooks/useSnapState';
+import { useChatLocations, useChatDirections } from '../../hooks/useChat';
 import Search from '../Search/Search';
 import LocationDetails from '../LocationDetails/LocationDetails';
 import Wayfinding from '../Wayfinding/Wayfinding';
 import Directions from '../Directions/Directions';
 import ChatWindow from '../ChatWindow/ChatWindow';
-import { useChatLocations, useChatDirections } from '../../hooks/useChat';
 import './BottomSheetNew.scss';
 import styles from './BottomSheetNew.module.scss';
 
@@ -65,8 +65,8 @@ function BottomSheetNew({ directionsFromLocation, directionsToLocation, pushAppV
     const handleChatShowRoute = useChatDirections(pushAppView, appViews);
 
     /**
-     * Centralized navigation handler. Add per-view teardown or setup logic here as new views are introduced.
-     * Wrapping `pushAppView` here ensures side effects stay co-located with the view transition rather than scattered across callbacks.
+     * The single place to run logic before switching to a new view.
+     * Add a case here whenever a view transition requires setup or teardown — keeping that logic out of individual callbacks.
      *
      * @param {string} view - The target view key from `appViews`.
      */
