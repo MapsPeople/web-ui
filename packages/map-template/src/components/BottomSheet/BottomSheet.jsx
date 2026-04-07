@@ -24,8 +24,8 @@ import LocationsList from '../LocationsList/LocationsList';
 import Wayfinding from '../Wayfinding/Wayfinding';
 import Directions from '../Directions/Directions';
 import ChatWindow from '../ChatWindow/ChatWindow';
-import './BottomSheetNew.scss';
-import styles from './BottomSheetNew.module.scss';
+import './BottomSheet.scss';
+import styles from './BottomSheet.module.scss';
 
 /** Snap arrays: `0` = hidden, `1` = full height, middle values are px from bottom (library requires ascending order). */
 const SEARCH_COLLAPSED_HEIGHT_PX = 80;
@@ -39,7 +39,7 @@ const SNAP_POINTS_LOCATION_DETAILS = [0, LOCATION_DETAILS_COLLAPSED_HEIGHT_PX, 0
 /** Three-point sheet for LocationsList: closed → 200px → full. */
 const SNAP_POINTS_LOCATIONS_LIST = [0, 200, 1];
 
-BottomSheetNew.propTypes = {
+BottomSheet.propTypes = {
     directionsFromLocation: PropTypes.string,
     directionsToLocation: PropTypes.string,
     pushAppView: PropTypes.func.isRequired,
@@ -60,7 +60,7 @@ BottomSheetNew.propTypes = {
  * @param {function(): void} props.onRouteFinished - Called when an in-map route completes (e.g. directions done).
  * @returns {JSX.Element}
  */
-function BottomSheetNew({ directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews, onRouteFinished }) {
+function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews, onRouteFinished }) {
     const sheetRef = useRef(null);
     const [sheetMountPoint, setSheetMountPoint] = useState(null);
     const { handleSnap, isAtMaxSnap } = useSnapState(currentAppView);
@@ -275,4 +275,4 @@ function BottomSheetNew({ directionsFromLocation, directionsToLocation, pushAppV
     );
 }
 
-export default BottomSheetNew;
+export default BottomSheet;
