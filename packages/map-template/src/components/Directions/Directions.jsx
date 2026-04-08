@@ -151,7 +151,8 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished }) {
                 setMinZoom(null);
             });
         }
-
+        console.log(appConfig);
+        
         return () => {
             // Cleanup: stop rendering directions and reset minZoom when component unmounts or dependencies change
             if (directionsRenderer) {
@@ -362,7 +363,7 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished }) {
                     <div className="directions__kiosk">
                         <Accessibility onAccessibilityChanged={() => resetSubsteps()} />
                         {appConfig?.appSettings?.includeTransitSelection === 'true' && <ShuttleBus />}
-                        <button className="directions__qr-code" onClick={() => showQRCode()} aria-label={t('Scan QR code to view route on phone')}><QRCode />{t('Scan QR code')}</button>
+                        {(appConfig?.appSettings?.enableKioskQrCode === 'true' || appConfig?.appSettings?.enableKioskQrCode === undefined) && <button className="directions__qr-code" onClick={() => showQRCode()} aria-label={t('Scan QR code to view route on phone')}><QRCode />{t('Scan QR code')}</button>}
                     </div>
                 </>
             }
