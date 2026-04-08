@@ -151,7 +151,6 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished }) {
                 setMinZoom(null);
             });
         }
-        console.log(appConfig);
         
         return () => {
             // Cleanup: stop rendering directions and reset minZoom when component unmounts or dependencies change
