@@ -26,8 +26,6 @@ import { useIsDesktop } from '../../hooks/useIsDesktop';
 import showExternalIDsState from '../../atoms/showExternalIDsState';
 import PropTypes from 'prop-types';
 import baseLinkSelector from '../../selectors/baseLink';
-import mapTypeState from '../../atoms/mapTypeState';
-import { ZoomLevelValues } from '../../constants/zoomLevelValues';
 import ShuttleBus from '../ShuttleBus/ShuttleBus';
 import shuttleBusOnState from '../../atoms/shuttleBusOnState';
 import appConfigState from '../../atoms/appConfigState';
@@ -93,8 +91,6 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished }) {
 
     const currentLocation = useRecoilValue(currentLocationState);
 
-    const mapType = useRecoilValue(mapTypeState);
-
     const shuttleBusOn = useRecoilValue(shuttleBusOnState);
 
     const appConfig = useRecoilValue(appConfigState);
@@ -147,18 +143,15 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished }) {
                 } else {
                     setDestinationDisplayRule(mapsIndoorsInstance.getDisplayRule(directions.destinationLocation));
                 }
-
-                setMinZoom(null);
             });
         }
         
         return () => {
-            // Cleanup: stop rendering directions and reset minZoom when component unmounts or dependencies change
+            // Cleanup: stop rendering directions when component unmounts or dependencies change
             if (directionsRenderer) {
                 directionsRenderer.setRoute(null);
                 directionsRenderer = null;
             }
-            setMinZoom(ZoomLevelValues.minZoom);
         };
     }, [isOpen, directions, mapsIndoorsInstance, travelMode, shuttleBusOn]);
 
@@ -206,7 +199,6 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished }) {
     useEffect(() => {
         if (!isOpen && directionsRenderer) {
             stopRendering();
-            setMinZoom(ZoomLevelValues.minZoom);
         }
     }, [isOpen]);
 
@@ -276,22 +268,6 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished }) {
     function resetSubsteps() {
         setActiveStep(0);
         setSubstepsOpen(false);
-    }
-
-    /**
-     * Sets minZoom for a specific map provider.
-     *
-     * @param {number} zoomLevel
-     */
-    function setMinZoom(zoomLevel) {
-        const mapView = mapsIndoorsInstance?.getMapView?.();
-        const map = mapView?.getMap?.();
-        if (!mapsIndoorsInstance || !mapView || !map) return;
-        if (mapType === 'mapbox') {
-            map.setMinZoom(zoomLevel);
-        } else if (mapType === 'google') {
-            map.setOptions({ minZoom: zoomLevel });
-        }
     }
 
     /**
