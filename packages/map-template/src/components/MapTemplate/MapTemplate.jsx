@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef } from 'react';
+import { Fragment, useEffect, useLayoutEffect, useRef } from 'react';
 import { useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { defineCustomElements } from '@mapsindoors/components/dist/components/index.js';
@@ -180,7 +180,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [viewModeSwitchVisible, setViewModeSwitchVisible] = useState();
     const mapClickActionRef = useRef();
     const setWayfindingLocation = useSetRecoilState(wayfindingLocationState);
-    const qrCodeLink = useRecoilValue(qrCodeLinkState)
+    const [qrCodeLink, setQrCodeLink] = useRecoilState(qrCodeLinkState);
 
     const [showVenueSelector, setShowVenueSelector] = useState(true);
     const [showPositionControl, setShowPositionControl] = useState(true);
@@ -264,6 +264,12 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             }
         }
     }, [language, appConfig, currentLanguage, setCurrentLanguage]);
+
+    useLayoutEffect(() => {
+        if (isInactive) {
+            setQrCodeLink(null);
+        }
+    }, [isInactive, setQrCodeLink]);
 
     /*
      * If the app is inactive, run code to reset UI and state.
