@@ -26,10 +26,12 @@ import { useIsDesktop } from '../../hooks/useIsDesktop';
 import showExternalIDsState from '../../atoms/showExternalIDsState';
 import PropTypes from 'prop-types';
 import baseLinkSelector from '../../selectors/baseLink';
+import mapTypeState from '../../atoms/mapTypeState';
 import ShuttleBus from '../ShuttleBus/ShuttleBus';
 import shuttleBusOnState from '../../atoms/shuttleBusOnState';
 import appConfigState from '../../atoms/appConfigState';
 import RouteInstructionsStepHeader from '../WebComponentWrappers/RouteInstructionsStepHeader/RouteInstructionsStepHeader';
+import { ZoomLevelValues } from '../../constants/zoomLevelValues';
 
 let directionsRenderer;
 
@@ -95,6 +97,8 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished }) {
 
     const appConfig = useRecoilValue(appConfigState);
 
+    const mapType = useRecoilValue(mapTypeState);
+
     useEffect(() => {
         return () => {
             setDestinationDisplayRule(null);
@@ -143,6 +147,8 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished }) {
                 } else {
                     setDestinationDisplayRule(mapsIndoorsInstance.getDisplayRule(directions.destinationLocation));
                 }
+
+                setMinZoom(appConfig?.appSettings?.minZoom ?? ZoomLevelValues.minZoom);
             });
         }
         
@@ -152,8 +158,9 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished }) {
                 directionsRenderer.setRoute(null);
                 directionsRenderer = null;
             }
+            setMinZoom(appConfig?.appSettings?.minZoom ?? ZoomLevelValues.minZoom);
         };
-    }, [isOpen, directions, mapsIndoorsInstance, travelMode, shuttleBusOn]);
+    }, [isOpen, directions, mapsIndoorsInstance, travelMode, shuttleBusOn, appConfig]);
 
 
     /**
@@ -199,8 +206,9 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished }) {
     useEffect(() => {
         if (!isOpen && directionsRenderer) {
             stopRendering();
+            setMinZoom(appConfig?.appSettings?.minZoom ?? ZoomLevelValues.minZoom);
         }
-    }, [isOpen]);
+    }, [isOpen, appConfig]);
 
 
     /**
@@ -268,6 +276,22 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished }) {
     function resetSubsteps() {
         setActiveStep(0);
         setSubstepsOpen(false);
+    }
+
+    /**
+     * Sets minZoom for a specific map provider.
+     *
+     * @param {number} zoomLevel
+     */
+    function setMinZoom(zoomLevel) {
+        const mapView = mapsIndoorsInstance?.getMapView?.();
+        const map = mapView?.getMap?.();
+        if (!mapsIndoorsInstance || !mapView || !map) return;
+        if (mapType === 'mapbox') {
+            map.setMinZoom(zoomLevel);
+        } else if (mapType === 'google') {
+            map.setOptions({ minZoom: zoomLevel });
+        }
     }
 
     /**
