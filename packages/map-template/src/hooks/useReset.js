@@ -6,6 +6,7 @@ import hasFoundRouteState from '../atoms/hasFoundRouteState';
 import isLocationClickedState from '../atoms/isLocationClickedState';
 import notificationMessageState from '../atoms/notificationMessageState';
 import showQRCodeDialogState from '../atoms/showQRCodeDialogState';
+import qrCodeLinkState from '../atoms/qrCodeLinkState';
 import substepsToggledState from '../atoms/substepsToggledState';
 import travelModeState from '../atoms/travelModeState';
 import searchResultsState from '../atoms/searchResultsState';
@@ -34,6 +35,7 @@ export function useReset() {
     const isLocationClicked = useResetRecoilState(isLocationClickedState);
     const notificationMessage = useResetRecoilState(notificationMessageState);
     const showQRCodeDialog = useResetRecoilState(showQRCodeDialogState);
+    const qrCodeLink = useResetRecoilState(qrCodeLinkState);
     const substepsToggled = useResetRecoilState(substepsToggledState);
     const travelMode = useResetRecoilState(travelModeState);
     const searchResults = useResetRecoilState(searchResultsState);
@@ -44,6 +46,7 @@ export function useReset() {
     const userPosition = useResetRecoilState(userPositionState);
 
     return () => {
+        qrCodeLink();
         activeStep();
         currentLocation();
         directionsResponse();
