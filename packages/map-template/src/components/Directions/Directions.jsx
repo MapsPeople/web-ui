@@ -204,11 +204,22 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished }) {
      * Make sure directions stop rendering on the map when the Directions view is not active anymore.
      */
     useEffect(() => {
-        if (!isOpen && directionsRenderer) {
-            stopRendering();
-            setMinZoom(appConfig?.appSettings?.minZoom ?? ZoomLevelValues.minZoom);
+        if (!isOpen) {
+            if (isKioskContext) {
+                setQRCodeLink(null);
+            }
+            if (directionsRenderer) {
+                stopRendering();
+                setMinZoom(appConfig?.appSettings?.minZoom ?? ZoomLevelValues.minZoom);
+            }
         }
-    }, [isOpen, appConfig]);
+    }, [isOpen, appConfig, setQRCodeLink, isKioskContext]);
+
+    useEffect(() => {
+        if (isKioskContext && !directions) {
+            setQRCodeLink(null);
+        }
+    }, [directions, isKioskContext, setQRCodeLink]);
 
 
     /**
