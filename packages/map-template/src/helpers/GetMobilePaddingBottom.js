@@ -32,6 +32,9 @@ export default function getMobilePaddingBottom() {
 
 function getReactModalSheetVisibleHeight(container) {
     const mapContainer = document.querySelector('.mapsindoors-map');
+    if (!mapContainer || !container) {
+        return 0;
+    }
     const mapRect = mapContainer.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
     return Math.max(0, mapRect.bottom - containerRect.top);
