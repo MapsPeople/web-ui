@@ -10,14 +10,22 @@ export default function getMobilePaddingBottom() {
             return;
         }
 
-        const observer = new MutationObserver(() => {
+        const TIMEOUT_MS = 1500;
+        let observer;
+        const finalize = value => {
+            observer?.disconnect();
+            clearTimeout(timeoutId);
+            resolve(value);
+        };
+
+        observer = new MutationObserver(() => {
             const sheetContainer = document.querySelector('.react-modal-sheet-container');
             if (sheetContainer) {
-                observer.disconnect();
-                resolve(getReactModalSheetVisibleHeight(sheetContainer));
+                finalize(getReactModalSheetVisibleHeight(sheetContainer));
             }
         });
 
+        const timeoutId = window.setTimeout(() => finalize(0), TIMEOUT_MS);
         observer.observe(document, { attributes: false, childList: true, characterData: false, subtree: true });
     });
 }
