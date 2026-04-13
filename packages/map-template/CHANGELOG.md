@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.97.4] - 2026-04-13
+
+### Fixed
+
+- **Mobile padding**: `getMobilePaddingBottom` now resolves to `0` after 1500 ms if `.react-modal-sheet-container` never appears, preventing the Promise from hanging indefinitely. Observer and timeout are cleaned up exactly once via a shared `finalize` helper.
+- **Mobile padding**: `getReactModalSheetVisibleHeight` now returns `0` immediately when `.mapsindoors-map` is not present in the DOM, preventing a crash from calling `getBoundingClientRect()` on a null element.
+
 ## [1.97.3] - 2026-04-10
 
 ### Fixed
