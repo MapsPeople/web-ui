@@ -749,13 +749,27 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         }
 
         const preventContextMenu = (event) => {
+            event.stopPropagation();
             event.preventDefault();
         };
 
+        const preventSecondaryAction = (event) => {
+            if (event.button === 2) {
+                event.stopPropagation();
+                event.preventDefault();
+            }
+        };
+
         document.addEventListener('contextmenu', preventContextMenu, true);
+        document.addEventListener('mousedown', preventSecondaryAction, true);
+        document.addEventListener('pointerdown', preventSecondaryAction, true);
+        document.addEventListener('auxclick', preventSecondaryAction, true);
 
         return () => {
             document.removeEventListener('contextmenu', preventContextMenu, true);
+            document.removeEventListener('mousedown', preventSecondaryAction, true);
+            document.removeEventListener('pointerdown', preventSecondaryAction, true);
+            document.removeEventListener('auxclick', preventSecondaryAction, true);
         };
     }, [disableRightClick]);
 

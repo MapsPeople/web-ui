@@ -84,6 +84,13 @@
             -ms-user-select: none;
             user-select: none;
         }
+
+        button:disabled,
+        input:disabled,
+        select:disabled,
+        textarea:disabled {
+            pointer-events: none;
+        }
     }
 
     .mi-floor-selector__list {
