@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.97.5] - 2026-04-14
+
+### Added
+
+- **Kiosk right-click protection**: Added support for disabling right-click in kiosk mode via the App Config object using `appSettings.disableRightClick`. When enabled, the template prevents the browser context menu at runtime and disables text selection/touch callouts in the kiosk wrapper.
+
+### Fixed
+
+- **Kiosk right-click handling**: Added kiosk-level runtime event listeners for `contextmenu`, `mousedown`, `pointerdown`, and `auxclick` when `disableRightClick` is enabled, making right-click prevention more consistent across interactive elements and browsers.
+
 ## [1.97.4] - 2026-04-13
 
 ### Fixed

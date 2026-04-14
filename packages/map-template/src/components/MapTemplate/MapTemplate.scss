@@ -75,6 +75,24 @@
         }
     }
 
+    &--disable-right-click {
+        -webkit-touch-callout: none;
+
+        * {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        button:disabled,
+        input:disabled,
+        select:disabled,
+        textarea:disabled {
+            pointer-events: none;
+        }
+    }
+
     .mi-floor-selector__list {
         box-sizing: unset;
     }
