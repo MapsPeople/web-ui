@@ -9,7 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Right click can be now disabled via App Config object.
+- **Kiosk right-click protection**: Added support for disabling right-click in kiosk mode via the App Config object using `appSettings.disableRightClick`. When enabled, the template prevents the browser context menu at runtime and disables text selection/touch callouts in the kiosk wrapper.
+
+### Fixed
+
+- **Kiosk right-click handling**: Added kiosk-level runtime event listeners for `contextmenu`, `mousedown`, `pointerdown`, and `auxclick` when `disableRightClick` is enabled, making right-click prevention more consistent across interactive elements and browsers.
 
 ## [1.97.4] - 2026-04-13
 
