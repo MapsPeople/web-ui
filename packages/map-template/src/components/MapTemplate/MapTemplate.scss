@@ -75,6 +75,17 @@
         }
     }
 
+    &--disable-right-click {
+        -webkit-touch-callout: none;
+
+        * {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+    }
+
     .mi-floor-selector__list {
         box-sizing: unset;
     }

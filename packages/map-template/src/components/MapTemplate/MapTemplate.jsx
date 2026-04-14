@@ -227,6 +227,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     const mapType = useRecoilValue(mapTypeState);
     const isKiosk = useIsKioskContext();
+    const disableRightClick = isKiosk && (appConfig?.appSettings?.disableRightClick === true || appConfig?.appSettings?.disableRightClick === 'true');
 
     /**
      * Ensure that MapsIndoors Web SDK is available.
@@ -738,6 +739,26 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         }
     }, [useAppTitle, appConfig])
 
+    /*
+     * In kiosk mode, optionally block the browser context menu to reduce the
+     * chance of users navigating away from the application shell.
+     */
+    useEffect(() => {
+        if (!disableRightClick) {
+            return;
+        }
+
+        const preventContextMenu = (event) => {
+            event.preventDefault();
+        };
+
+        document.addEventListener('contextmenu', preventContextMenu, true);
+
+        return () => {
+            document.removeEventListener('contextmenu', preventContextMenu, true);
+        };
+    }, [disableRightClick]);
+
     /**
      * When map position is known while initializing the data,
      * set map to be ready.
@@ -825,6 +846,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             ${(venuesInSolution.length > 1 && showVenueSelector) ? '' : 'mapsindoors-map--hide-venue-selector'}
             ${showPositionControl ? 'mapsindoors-map--show-my-position' : 'mapsindoors-map--hide-my-position'}
             ${isKiosk ? 'mapsindoors-map--kiosk' : ''}
+            ${disableRightClick ? 'mapsindoors-map--disable-right-click' : ''}
             ${(currentAppView === appStates.CHAT && !isDesktop) ? 'mapsindoors-map--hide-map-controls' : ''}`}>
                 <Notification />
                 {!isMapReady && <SplashScreen />}
