@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useRecoilValue } from 'recoil';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
@@ -33,9 +33,11 @@ function ChatListItemLocation({ location, locationClicked, durationSeconds, onRo
     const iconSrc = displayRule?.icon?.src || displayRule?.icon || null;
     const durationLabel = formatWalkingDuration(durationSeconds, t);
 
-    if (locationInfoRef.current) {
-        locationInfoRef.current.location = location;
-    }
+    useEffect(() => {
+        if (locationInfoRef.current) {
+            locationInfoRef.current.location = location;
+        }
+    }, [location]);
 
     const handleCardClick = () => {
         if (!selectable) return;
