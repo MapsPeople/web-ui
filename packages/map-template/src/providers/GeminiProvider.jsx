@@ -9,9 +9,6 @@ const API_BASE_URL = 'http://localhost:4000';
 
 export function GeminiProvider({ children, enabled }) {
     const [isLoading, setIsLoading] = useState(false);
-    const [searchResults, setSearchResults] = useState([]);
-    const [directionsLocationIds, setDirectionsLocationIds] = useState(null);
-    const [distanceResults, setDistanceResults] = useState(null);
     const defaultPrompt = '';
 
     // Store session info - using refs to track current session without causing re-renders
@@ -62,45 +59,53 @@ export function GeminiProvider({ children, enabled }) {
         return sessionIdRef.current;
     }, []);
 
-    // Helper function to process function data and extract search results
+    // Helper function to process function data into the shape consumers need.
+    // Returns all per-response results so they can be delivered via onComplete
+    // rather than through provider-level state.
     const processFunctionData = useCallback((functionData) => {
-        let searchResultIds = [];
-        if (functionData) {
-            switch (functionData?.key) {
-                case 'single_location':
-                    searchResultIds = [functionData.value];
-                    break;
+        const result = {
+            searchResultIds: [],
+            directionsLocationIds: null,
+            distanceResults: null
+        };
 
-                case 'multiple_locations':
-                    searchResultIds = Array.isArray(functionData.value)
-                        ? functionData.value.filter(Boolean)
-                        : [];
-                    break;
+        if (!functionData) return result;
 
-                case 'directions': {
-                    const originLocationId = functionData.value?.originLocationId;
-                    const destinationLocationId = functionData.value?.destinationLocationId;
-                    if (originLocationId && destinationLocationId) {
-                        setDirectionsLocationIds({ originLocationId, destinationLocationId });
-                    }
-                    break;
+        switch (functionData?.key) {
+            case 'single_location':
+                result.searchResultIds = [functionData.value];
+                break;
+
+            case 'multiple_locations':
+                result.searchResultIds = Array.isArray(functionData.value)
+                    ? functionData.value.filter(Boolean)
+                    : [];
+                break;
+
+            case 'directions': {
+                const originLocationId = functionData.value?.originLocationId;
+                const destinationLocationId = functionData.value?.destinationLocationId;
+                if (originLocationId && destinationLocationId) {
+                    result.directionsLocationIds = { originLocationId, destinationLocationId };
                 }
-
-                case 'distances': {
-                    if (Array.isArray(functionData.value) && functionData.value.length) {
-                        setDistanceResults(functionData.value);
-                        searchResultIds = functionData.value
-                            .map(d => d?.destinationId)
-                            .filter(Boolean);
-                    }
-                    break;
-                }
-
-                default:
-                    break;
+                break;
             }
+
+            case 'distances': {
+                if (Array.isArray(functionData.value) && functionData.value.length) {
+                    result.distanceResults = functionData.value;
+                    result.searchResultIds = functionData.value
+                        .map(d => d?.destinationId)
+                        .filter(Boolean);
+                }
+                break;
+            }
+
+            default:
+                break;
         }
-        return searchResultIds;
+
+        return result;
     }, []);
 
     // Handle streaming response from /api/chat/stream endpoint
@@ -197,14 +202,17 @@ export function GeminiProvider({ children, enabled }) {
                 }
             }
 
-            // Process final function data (or clear stale search results)
-            const searchResultIds = lastFunctionData ? processFunctionData(lastFunctionData) : [];
-            console.log('Search result IDs:', searchResultIds);
-            setSearchResults(searchResultIds);
+            const processed = processFunctionData(lastFunctionData);
+            console.log('Search result IDs:', processed.searchResultIds);
 
-            // Call onComplete callback with final response
             if (onComplete) {
-                onComplete({ response: fullResponse, functionData: lastFunctionData });
+                onComplete({
+                    response: fullResponse,
+                    functionData: lastFunctionData,
+                    searchResultIds: processed.searchResultIds,
+                    directionsLocationIds: processed.directionsLocationIds,
+                    distanceResults: processed.distanceResults
+                });
             }
 
             return fullResponse;
@@ -235,17 +243,20 @@ export function GeminiProvider({ children, enabled }) {
 
         const { response, tools, functionData } = await messageRes.json();
 
-        // Extract search result IDs based on the function data
-        const searchResultIds = processFunctionData(functionData);
+        const processed = processFunctionData(functionData);
 
-        console.log('Search result IDs:', searchResultIds);
-        setSearchResults(searchResultIds);
-
+        console.log('Search result IDs:', processed.searchResultIds);
         console.log('Agent tool calls:\n' + JSON.stringify(tools, null, 2));
 
-        // Call onComplete callback if provided
         if (onComplete) {
-            onComplete({ response, tools, functionData });
+            onComplete({
+                response,
+                tools,
+                functionData,
+                searchResultIds: processed.searchResultIds,
+                directionsLocationIds: processed.directionsLocationIds,
+                distanceResults: processed.distanceResults
+            });
         }
 
         return response;
@@ -263,8 +274,6 @@ export function GeminiProvider({ children, enabled }) {
         }
 
         setIsLoading(true);
-        setDirectionsLocationIds(null);
-        setDistanceResults(null);
 
         try {
             console.log('Generating response for prompt:', prompt);
@@ -302,16 +311,6 @@ export function GeminiProvider({ children, enabled }) {
         }
     }, [ensureSession, enabled, handleStreamingResponse, handleNonStreamingResponse]);
 
-    // Function to clear directions data
-    const clearDirectionsLocationIds = useCallback(() => {
-        setDirectionsLocationIds(null);
-    }, []);
-
-    // Exposed so consumers can reset distance metadata after they're done with it.
-    const clearDistanceResults = useCallback(() => {
-        setDistanceResults(null);
-    }, []);
-
     // Cleanup: end session on unmount
     useEffect(() => {
         return () => {
@@ -330,11 +329,6 @@ export function GeminiProvider({ children, enabled }) {
         enabled,
         generateResponse: generateResponseWrapper,
         isLoading,
-        searchResults,
-        directionsLocationIds,
-        clearDirectionsLocationIds,
-        distanceResults,
-        clearDistanceResults,
         defaultPrompt
     };
 

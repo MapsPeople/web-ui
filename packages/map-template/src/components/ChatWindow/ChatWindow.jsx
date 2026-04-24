@@ -62,7 +62,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     const isMobileKeyboardVisible = keyboardHeight > 0;
 
     // Use Gemini provider
-    const { generateResponse, isLoading, searchResults, directionsLocationIds, distanceResults } = useGemini();
+    const { generateResponse, isLoading } = useGemini();
 
     // Use Recoil for chat history
     const [chatHistory, setChatHistory] = useRecoilState(chatHistoryState);
@@ -120,40 +120,6 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
             console.error('ChatWindow: Error fetching locations by IDs:', error);
         }
     }, []);
-
-    // Listen for search results from Gemini provider
-    useEffect(() => {
-        // Always notify parent of search results changes (including empty arrays to clear highlights)
-        if (onSearchResults) {
-            onSearchResults(searchResults);
-        }
-
-        // Only fetch location details if we have results
-        if (searchResults && searchResults.length > 0) {
-            console.log('ChatWindow: Received search results from provider:', searchResults);
-            fetchLocationsAndUpdateMessage(searchResults);
-        }
-    }, [searchResults, onSearchResults, fetchLocationsAndUpdateMessage]);
-
-    // Listen for directions location IDs from Gemini provider
-    useEffect(() => {
-        if (directionsLocationIds && directionsLocationIds.originLocationId && directionsLocationIds.destinationLocationId) {
-            console.log('ChatWindow: Received directions location IDs from provider:', directionsLocationIds);
-
-            // Update the latest server message with directions location IDs and route info
-            setChatHistory(prev => updateLatestServerMessage(prev, {
-                directionsLocationIds: directionsLocationIds,
-                canShowRoute: true,
-                routeDirections: directionsLocationIds
-            }));
-        }
-    }, [directionsLocationIds]);
-
-    useEffect(() => {
-        if (distanceResults && distanceResults.length > 0) {
-            setChatHistory(prev => updateLatestServerMessage(prev, { distanceResults }));
-        }
-    }, [distanceResults]);
 
     // Handle sending messages
     // messageText is required - from the ChatInput component
@@ -249,9 +215,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                     }
                 },
                 onComplete: (payload) => {
-                    // Check if completion payload contains an error
                     if (payload && payload.error) {
-                        // Update placeholder message with error response
                         const currentMessageId = currentResponseIdRef.current;
                         setChatHistory(prev => {
                             const updatedHistory = [...prev];
@@ -265,8 +229,29 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                             }
                             return updatedHistory;
                         });
+                    } else if (payload) {
+                        const { searchResultIds, directionsLocationIds, distanceResults } = payload;
+
+                        if (onSearchResults) {
+                            onSearchResults(searchResultIds || []);
+                        }
+
+                        if (directionsLocationIds) {
+                            setChatHistory(prev => updateLatestServerMessage(prev, {
+                                directionsLocationIds,
+                                canShowRoute: true,
+                                routeDirections: directionsLocationIds
+                            }));
+                        }
+
+                        if (distanceResults && distanceResults.length > 0) {
+                            setChatHistory(prev => updateLatestServerMessage(prev, { distanceResults }));
+                        }
+
+                        if (searchResultIds && searchResultIds.length > 0) {
+                            fetchLocationsAndUpdateMessage(searchResultIds);
+                        }
                     }
-                    // Streaming complete - function data is already processed by provider
                     setCurrentThought('');
                     currentResponseIdRef.current = null;
                 }
@@ -283,7 +268,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
             ]);
             setCurrentThought('');
         }
-    }, [isLoading, generateResponse, apiKey, userPosition, currentVenueName, venuesInSolution, locationShareConsent, usageConsentAccepted]);
+    }, [isLoading, generateResponse, apiKey, userPosition, currentVenueName, venuesInSolution, locationShareConsent, usageConsentAccepted, onSearchResults, fetchLocationsAndUpdateMessage]);
 
     // Send pending message after consent is decided
     useEffect(() => {
