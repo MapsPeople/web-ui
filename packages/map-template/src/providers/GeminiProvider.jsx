@@ -11,6 +11,7 @@ export function GeminiProvider({ children, enabled }) {
     const [isLoading, setIsLoading] = useState(false);
     const [searchResults, setSearchResults] = useState([]);
     const [directionsLocationIds, setDirectionsLocationIds] = useState(null);
+    const [distanceResults, setDistanceResults] = useState(null);
     const defaultPrompt = '';
 
     // Store session info - using refs to track current session without causing re-renders
@@ -84,6 +85,17 @@ export function GeminiProvider({ children, enabled }) {
                     }
                     break;
                 }
+
+                case 'distances': {
+                    if (Array.isArray(functionData.value) && functionData.value.length) {
+                        setDistanceResults(functionData.value);
+                        searchResultIds = functionData.value
+                            .map(d => d?.destinationId)
+                            .filter(Boolean);
+                    }
+                    break;
+                }
+
                 default:
                     break;
             }
@@ -252,6 +264,7 @@ export function GeminiProvider({ children, enabled }) {
 
         setIsLoading(true);
         setDirectionsLocationIds(null);
+        setDistanceResults(null);
 
         try {
             console.log('Generating response for prompt:', prompt);
@@ -294,6 +307,11 @@ export function GeminiProvider({ children, enabled }) {
         setDirectionsLocationIds(null);
     }, []);
 
+    // Exposed so consumers can reset distance metadata after they're done with it.
+    const clearDistanceResults = useCallback(() => {
+        setDistanceResults(null);
+    }, []);
+
     // Cleanup: end session on unmount
     useEffect(() => {
         return () => {
@@ -315,6 +333,8 @@ export function GeminiProvider({ children, enabled }) {
         searchResults,
         directionsLocationIds,
         clearDirectionsLocationIds,
+        distanceResults,
+        clearDistanceResults,
         defaultPrompt
     };
 

@@ -62,7 +62,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     const isMobileKeyboardVisible = keyboardHeight > 0;
 
     // Use Gemini provider
-    const { generateResponse, isLoading, searchResults, directionsLocationIds } = useGemini();
+    const { generateResponse, isLoading, searchResults, directionsLocationIds, distanceResults } = useGemini();
 
     // Use Recoil for chat history
     const [chatHistory, setChatHistory] = useRecoilState(chatHistoryState);
@@ -148,6 +148,12 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
             }));
         }
     }, [directionsLocationIds]);
+
+    useEffect(() => {
+        if (distanceResults && distanceResults.length > 0) {
+            setChatHistory(prev => updateLatestServerMessage(prev, { distanceResults }));
+        }
+    }, [distanceResults]);
 
     // Handle sending messages
     // messageText is required - from the ChatInput component

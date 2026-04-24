@@ -110,6 +110,8 @@ function ChatMessages({ chatHistory, isLoading, primaryColor, onShowRoute, curre
                         {message.locations && message.locations.length > 0 && (
                             <ChatSearchResults
                                 locations={message.locations}
+                                distanceResults={message.distanceResults}
+                                onShowRoute={onShowRoute}
                             />
                         )}
                         {message.type === 'server' && message.canShowRoute && message.routeDirections && onShowRoute && (

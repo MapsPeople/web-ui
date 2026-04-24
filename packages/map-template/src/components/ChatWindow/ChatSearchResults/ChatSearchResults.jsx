@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import './ChatSearchResults.scss';
 import PropTypes from 'prop-types';
-import ListItemLocation from '../../WebComponentWrappers/ListItemLocation/ListItemLocation';
+import ChatListItemLocation from '../ChatListItemLocation/ChatListItemLocation';
 import currentLocationState from '../../../atoms/currentLocationState';
 import mapsIndoorsInstanceState from '../../../atoms/mapsIndoorsInstanceState';
 import isLocationClickedState from '../../../atoms/isLocationClickedState';
@@ -18,11 +18,14 @@ const DEFAULT_LOCATIONS_TO_SHOW = 3;
  * within chat message responses from the AI assistant.
  *
  * @param {Object} props
- * @param {Array} props.locations - Array of location objects to display
+ * @param {Array} props.locations - Array of location objects to display.
+ * @param {Array} [props.distanceResults] - get_distances entries ({ destinationId, origin,
+ *   distance, duration }); matching locations render a route button when onShowRoute is set.
+ * @param {Function} [props.onShowRoute] - Invoked with { originLocationId, destinationLocationId }
+ *   on route-button click.
  */
-const ChatSearchResults = ({ locations }) => {
+const ChatSearchResults = ({ locations, distanceResults, onShowRoute }) => {
     const [isExpanded, setIsExpanded] = useState(false);
-    const [hoveredLocationId, setHoveredLocationId] = useState(null);
 
     // Recoil state for location handling
     const setCurrentLocation = useSetRecoilState(currentLocationState);
@@ -30,6 +33,12 @@ const ChatSearchResults = ({ locations }) => {
     const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const isDesktop = useIsDesktop();
+
+    // Declared before the early return so hook order stays consistent across renders.
+    const distanceEntryByLocationId = useMemo(() => {
+        if (!distanceResults?.length) return new Map();
+        return new Map(distanceResults.map(entry => [entry.destinationId, entry]));
+    }, [distanceResults]);
 
     // Don't render if no locations
     if (!locations || locations.length === 0) {
@@ -98,16 +107,22 @@ const ChatSearchResults = ({ locations }) => {
     return (
         <div className="chat-search-results">
             <div className="chat-search-results__locations">
-                {locationsToShow.map(location =>
-                    <ListItemLocation
-                        key={location.id}
-                        location={location}
-                        locationClicked={() => handleLocationClick(location)}
-                        isHovered={location?.id === hoveredLocationId}
-                        onMouseEnter={() => setHoveredLocationId(location.id)}
-                        onMouseLeave={() => setHoveredLocationId(null)}
-                    />
-                )}
+                {locationsToShow.map(location => {
+                    const distanceEntry = distanceEntryByLocationId.get(location.id);
+                    const canRoute = Boolean(distanceEntry && onShowRoute);
+                    return (
+                        <ChatListItemLocation
+                            key={location.id}
+                            location={location}
+                            locationClicked={() => handleLocationClick(location)}
+                            durationSeconds={distanceEntry?.duration}
+                            onRouteClick={canRoute ? () => onShowRoute({
+                                originLocationId: distanceEntry.origin,
+                                destinationLocationId: location.id
+                            }) : undefined}
+                        />
+                    );
+                })}
             </div>
 
             {shouldShowToggle && (
@@ -128,7 +143,9 @@ const ChatSearchResults = ({ locations }) => {
 ChatSearchResults.displayName = 'ChatSearchResults';
 
 ChatSearchResults.propTypes = {
-    locations: PropTypes.array.isRequired
+    locations: PropTypes.array.isRequired,
+    distanceResults: PropTypes.array,
+    onShowRoute: PropTypes.func
 };
 
 export default ChatSearchResults;
