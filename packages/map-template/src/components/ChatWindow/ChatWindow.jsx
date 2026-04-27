@@ -19,33 +19,6 @@ import LocationConsentPopup from './LocationConsentPopup/LocationConsentPopup';
 import UsageConsentOverlay from './UsageConsentOverlay/UsageConsentOverlay';
 import { useTranslation } from 'react-i18next';
 
-/**
- * Updates the latest server message in the messages array with the provided updates.
- * 
- * @param {Array} messages - The array of message objects
- * @param {Object} updates - The properties to update on the latest server message
- * @returns {Array} A new array with the updated message
- */
-function updateLatestServerMessage(messages, updates) {
-    const updatedMessages = [...messages];
-    // Find last server message index using reverse loop (ES5 compatible)
-    let lastServerIndex = -1;
-    for (let i = updatedMessages.length - 1; i >= 0; i--) {
-        if (updatedMessages[i].type === 'server') {
-            lastServerIndex = i;
-            break;
-        }
-    }
-
-    if (lastServerIndex !== -1) {
-        updatedMessages[lastServerIndex] = {
-            ...updatedMessages[lastServerIndex],
-            ...updates
-        };
-    }
-
-    return updatedMessages;
-}
 
 function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     const { t } = useTranslation();
@@ -239,21 +212,25 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                     } else if (payload) {
                         const { searchResultIds, directionsLocationIds, distanceResults } = payload;
 
-                        if (directionsLocationIds) {
-                            setChatHistory(prev => updateLatestServerMessage(prev, {
-                                directionsLocationIds,
-                                canShowRoute: true,
-                                routeDirections: directionsLocationIds
-                            }));
+                        if (directionsLocationIds || distanceResults?.length > 0) {
+                            const messageUpdates = {};
+                            if (directionsLocationIds) {
+                                messageUpdates.directionsLocationIds = directionsLocationIds;
+                                messageUpdates.canShowRoute = true;
+                                messageUpdates.routeDirections = directionsLocationIds;
+                            }
+                            if (distanceResults?.length > 0) {
+                                messageUpdates.distanceResults = distanceResults;
+                            }
+                            setChatHistory(prev => {
+                                const history = [...prev];
+                                const messageIndex = history.findIndex(m => m.id === responseId);
+                                if (messageIndex >= 0) history[messageIndex] = { ...history[messageIndex], ...messageUpdates };
+                                return history;
+                            });
                         }
 
-                        if (distanceResults && distanceResults.length > 0) {
-                            setChatHistory(prev => updateLatestServerMessage(prev, { distanceResults }));
-                        }
-
-                        const hasSearchResults = searchResultIds && searchResultIds.length > 0;
-
-                        if (hasSearchResults) {
+                        if (searchResultIds?.length > 0) {
                             fetchLocationsAndUpdateMessage(searchResultIds, responseId).then(locations => {
                                 onSearchResults?.(locations);
                             });

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useRecoilValue } from 'recoil';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
@@ -29,8 +29,10 @@ function ChatListItemLocation({ location, locationClicked, durationSeconds, onRo
     const locationInfoRef = useRef(null);
 
     const selectable = location?.properties?.locationSettings?.selectable !== false;
-    const displayRule = mapsIndoorsInstance?.getDisplayRule?.(location);
-    const iconSrc = displayRule?.icon?.src || displayRule?.icon || null;
+    const iconSrc = useMemo(() => {
+        const displayRule = mapsIndoorsInstance?.getDisplayRule?.(location);
+        return displayRule?.icon?.src || displayRule?.icon || null;
+    }, [mapsIndoorsInstance, location]);
     const durationLabel = formatWalkingDuration(durationSeconds, t);
 
     useEffect(() => {
