@@ -155,6 +155,8 @@ export const useChatDirections = (pushAppView, appViews) => {
             let originLocation = null;
             let originPoint;
 
+            const destinationPromise = window.mapsindoors.services.LocationsService.getLocation(directionIds.destinationLocationId);
+
             // Origin can be either:
             // - 'coordinates': A comma-separated string "lat,lng,floor" (e.g., "32.3604447,-97.7427429,0")
             // - 'locationId': An alphanumeric location ID (e.g., "c30bfe0600434a44b6cd6a5a")
@@ -183,7 +185,7 @@ export const useChatDirections = (pushAppView, appViews) => {
             }
 
             // Fetch destination location
-            const destinationLocation = await window.mapsindoors.services.LocationsService.getLocation(directionIds.destinationLocationId);
+            const destinationLocation = await destinationPromise;
 
             if (!destinationLocation?.geometry) {
                 console.error('useChatDirections: Failed to fetch destination location or missing geometry');
