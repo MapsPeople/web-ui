@@ -15,6 +15,7 @@ import getDesktopPaddingLeft from '../helpers/GetDesktopPaddingLeft';
 import getDesktopPaddingBottom from '../helpers/GetDesktopPaddingBottom';
 import fitMapBoundsToLocations from '../helpers/FitMapBoundsToLocations';
 import { useIsDesktop } from './useIsDesktop';
+import { useDirectionsRouteViewportFit } from './useDirectionsRouteViewportFit';
 
 // Returns bottom padding for map bounds: kiosk uses dynamic value, desktop sidebar needs none, mobile needs space for bottom sheet
 async function getBottomPadding(isDesktop, kioskLocation) {
@@ -139,6 +140,7 @@ export const useChatDirections = (pushAppView, appViews) => {
     const travelMode = useRecoilValue(travelModeState);
     const accessibilityOn = useRecoilValue(accessibilityOnState);
     const shuttleBusOn = useRecoilValue(shuttleBusOnState);
+    const fitDirectionsRouteToViewport = useDirectionsRouteViewportFit();
 
     const handleChatShowRoute = useCallback(async (directionIds) => {
         if (!directionIds || !directionIds.originLocationId || !directionIds.destinationLocationId) {
@@ -219,14 +221,14 @@ export const useChatDirections = (pushAppView, appViews) => {
                 // Navigate directly to DIRECTIONS view
                 pushAppView(appViews.DIRECTIONS);
 
-                return { directionsResult };
+                await fitDirectionsRouteToViewport(directionsResult);
             } else {
                 console.error('useChatDirections: Failed to calculate route');
             }
         } catch (error) {
             console.error('useChatDirections: Error fetching locations or calculating route:', error);
         }
-    }, [directionsService, travelMode, accessibilityOn, shuttleBusOn, setDirectionsResponse, setHasFoundRoute, pushAppView, appViews]);
+    }, [directionsService, travelMode, accessibilityOn, shuttleBusOn, setDirectionsResponse, setHasFoundRoute, pushAppView, appViews, fitDirectionsRouteToViewport]);
 
     return handleChatShowRoute;
 };

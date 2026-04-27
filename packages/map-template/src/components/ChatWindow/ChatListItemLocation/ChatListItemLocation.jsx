@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import mapsIndoorsInstanceState from '../../../atoms/mapsIndoorsInstanceState';
 import showExternalIDsState from '../../../atoms/showExternalIDsState';
-import { useDirectionsRouteViewportFit } from '../../../hooks/useDirectionsRouteViewportFit';
 import WalkIcon from '../../../assets/walk.svg?react';
 import DirectionsArrowIcon from '../../../assets/directions-arrow.svg?react';
 import './ChatListItemLocation.scss';
@@ -27,7 +26,6 @@ function ChatListItemLocation({ location, locationClicked, durationSeconds, onRo
     const { t } = useTranslation();
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const showExternalIDs = useRecoilValue(showExternalIDsState);
-    const fitDirectionsRouteToViewport = useDirectionsRouteViewportFit();
     const locationInfoRef = useRef(null);
 
     const selectable = location?.properties?.locationSettings?.selectable !== false;
@@ -59,13 +57,10 @@ function ChatListItemLocation({ location, locationClicked, durationSeconds, onRo
         mapsIndoorsInstance?.unhoverLocation?.(location);
     };
 
-    const handleRouteClick = async (event) => {
+    const handleRouteClick = (event) => {
         event.stopPropagation();
         mapsIndoorsInstance?.unhoverLocation?.();
-        const routePayload = await onRouteClick?.();
-        if (routePayload?.directionsResult) {
-            await fitDirectionsRouteToViewport(routePayload.directionsResult);
-        }
+        onRouteClick?.();
     };
 
     return (
