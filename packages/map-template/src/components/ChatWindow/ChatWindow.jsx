@@ -101,10 +101,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
         setUsageConsentAccepted(true);
     }, [setUsageConsentAccepted]);
 
-    // Fetches locations once per response, updates chat history, and returns
-    // the hydrated list so downstream consumers (map highlight, bounds fit)
-    // can reuse it without issuing a second round-trip.
-    const fetchLocationsAndUpdateMessage = useCallback(async (searchResultIds) => {
+    const fetchLocationsAndUpdateMessage = useCallback(async (searchResultIds, messageId) => {
         try {
             console.log('ChatWindow: Fetching full location objects for IDs:', searchResultIds);
             const promises = searchResultIds.map(id =>
@@ -116,7 +113,14 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                 .map(result => result.value);
             console.log('ChatWindow: Successfully fetched locations:', validLocations);
 
-            setChatHistory(prev => updateLatestServerMessage(prev, { locations: validLocations }));
+            setChatHistory(prev => {
+                const updatedHistory = [...prev];
+                const messageIndex = updatedHistory.findIndex(m => m.id === messageId);
+                if (messageIndex >= 0) {
+                    updatedHistory[messageIndex] = { ...updatedHistory[messageIndex], locations: validLocations };
+                }
+                return updatedHistory;
+            });
             return validLocations;
         } catch (error) {
             console.error('ChatWindow: Error fetching locations by IDs:', error);
@@ -250,7 +254,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                         const hasSearchResults = searchResultIds && searchResultIds.length > 0;
 
                         if (hasSearchResults) {
-                            fetchLocationsAndUpdateMessage(searchResultIds).then(locations => {
+                            fetchLocationsAndUpdateMessage(searchResultIds, responseId).then(locations => {
                                 onSearchResults?.(locations);
                             });
                         } else {
