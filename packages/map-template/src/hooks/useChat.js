@@ -218,6 +218,8 @@ export const useChatDirections = (pushAppView, appViews) => {
 
                 // Navigate directly to DIRECTIONS view
                 pushAppView(appViews.DIRECTIONS);
+
+                return { directionsResult };
             } else {
                 console.error('useChatDirections: Failed to calculate route');
             }
