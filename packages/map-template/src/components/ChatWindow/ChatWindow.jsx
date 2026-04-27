@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useCallback, useState } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 import { useGemini } from '../../providers/GeminiProvider';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import chatHistoryState from '../../atoms/chatHistoryState';
@@ -30,7 +30,6 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     const isDesktop = useIsDesktop();
     const chatWindowRef = useRef(null);
     const { getInitialMessage, clearInitialMessage } = useInitialChatMessage();
-    const [isAnimated, setIsAnimated] = useState(false);
     const keyboardHeight = useKeyboardHeight(isDesktop);
     const isMobileKeyboardVisible = keyboardHeight > 0;
 
@@ -280,13 +279,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     }, [isVisible, isLoading, usageConsentAccepted, getInitialMessage, clearInitialMessage, handleSendMessage]);
 
     // Animate the chat window when it becomes visible on mobile
-    useLayoutEffect(() => {
-        if (!isDesktop && isVisible) {
-            setIsAnimated(true);
-        } else {
-            setIsAnimated(false);
-        }
-    }, [isVisible, isDesktop]);
+    const isAnimated = !isDesktop && isVisible;
 
     /**
      * Get the layout classes for the ChatWindow component based on current state
