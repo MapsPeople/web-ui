@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Chat state consolidation**: Directions and distance result updates are merged into a single `setChatHistory` call, reducing unnecessary re-renders.
 - **`ListItemLocation` styling**: Minor layout and styling adjustments to keep the standard list item aligned with the new chat card.
 - **`useChatDirections`**: Destination location fetch is now initiated before awaiting the origin result, allowing the two lookups to overlap.
+- **`useChatDirections`**: After a route is calculated and the directions view is pushed, the map is now panned and zoomed to fit the full route geometry via the new `useDirectionsRouteViewportFit` hook (using desktop/kiosk/mobile-aware padding), so triggering a route from the chat automatically frames it on the map.
 
 ### Fixed
 
