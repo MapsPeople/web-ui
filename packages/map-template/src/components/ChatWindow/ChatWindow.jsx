@@ -101,7 +101,9 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
         setUsageConsentAccepted(true);
     }, [setUsageConsentAccepted]);
 
-    // Memoize the fetch locations function to prevent recreation on every render
+    // Fetches locations once per response, updates chat history, and returns
+    // the hydrated list so downstream consumers (map highlight, bounds fit)
+    // can reuse it without issuing a second round-trip.
     const fetchLocationsAndUpdateMessage = useCallback(async (searchResultIds) => {
         try {
             console.log('ChatWindow: Fetching full location objects for IDs:', searchResultIds);
@@ -114,10 +116,11 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                 .map(result => result.value);
             console.log('ChatWindow: Successfully fetched locations:', validLocations);
 
-            // Update the latest server message with location data
             setChatHistory(prev => updateLatestServerMessage(prev, { locations: validLocations }));
+            return validLocations;
         } catch (error) {
             console.error('ChatWindow: Error fetching locations by IDs:', error);
+            return [];
         }
     }, []);
 
@@ -232,10 +235,6 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                     } else if (payload) {
                         const { searchResultIds, directionsLocationIds, distanceResults } = payload;
 
-                        if (onSearchResults) {
-                            onSearchResults(searchResultIds || []);
-                        }
-
                         if (directionsLocationIds) {
                             setChatHistory(prev => updateLatestServerMessage(prev, {
                                 directionsLocationIds,
@@ -248,8 +247,14 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                             setChatHistory(prev => updateLatestServerMessage(prev, { distanceResults }));
                         }
 
-                        if (searchResultIds && searchResultIds.length > 0) {
-                            fetchLocationsAndUpdateMessage(searchResultIds);
+                        const hasSearchResults = searchResultIds && searchResultIds.length > 0;
+
+                        if (hasSearchResults) {
+                            fetchLocationsAndUpdateMessage(searchResultIds).then(locations => {
+                                onSearchResults?.(locations);
+                            });
+                        } else {
+                            onSearchResults?.([]);
                         }
                     }
                     setCurrentThought('');

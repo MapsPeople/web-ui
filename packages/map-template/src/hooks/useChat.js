@@ -35,11 +35,12 @@ async function getLeftPadding(isDesktop, kioskLocation) {
 }
 
 /**
- * Hook to handle chat search results by fetching Location objects from IDs
- * and setting them in filteredLocations state for highlighting on the map.
- * Also pans the map to fit the bounds of the locations.
+ * Hook to handle chat search results by setting the provided Location objects
+ * in filteredLocations state for highlighting on the map, and panning the map
+ * to fit their bounds. ChatWindow fetches the locations once and forwards the
+ * hydrated list here to avoid a second round-trip to LocationsService.
  *
- * @returns {function} handleChatLocations - Callback function to handle search results
+ * @returns {function} handleChatLocations - Callback accepting an array of Location objects
  */
 export const useChatLocations = () => {
     const setFilteredLocations = useSetRecoilState(filteredLocationsState);
@@ -48,33 +49,23 @@ export const useChatLocations = () => {
     const kioskLocation = useRecoilValue(kioskLocationState);
     const isDesktop = useIsDesktop();
 
-    const handleChatLocations = useCallback(async (locationIds) => {
-        if (!locationIds || locationIds.length === 0) {
+    const handleChatLocations = useCallback(async (locations) => {
+        if (!locations || locations.length === 0) {
             setFilteredLocations([]);
             return;
         }
 
         try {
-            const locationPromises = locationIds.map(id =>
-                window.mapsindoors.services.LocationsService.getLocation(id)
-            );
-            const locations = await Promise.all(locationPromises);
-            const validLocations = locations.filter(location => location !== null);
+            setFilteredLocations(locations);
 
-            // Set the locations in filteredLocations state
-            // MapWrapper will automatically watch this state and highlight the locations on the map
-            setFilteredLocations(validLocations);
-
-            // Pan the map to fit the bounds of the locations only if we have valid locations
-            if (validLocations.length > 0 && mapsIndoorsInstance) {
-                // Determine if we require to change the floor
-                changeFloorIfNeeded(validLocations, mapsIndoorsInstance);
+            if (mapsIndoorsInstance) {
+                changeFloorIfNeeded(locations, mapsIndoorsInstance);
 
                 const [bottomPadding, leftPadding] = await Promise.all([getBottomPadding(isDesktop, kioskLocation), getLeftPadding(isDesktop, kioskLocation)]);
-                await fitMapBoundsToLocations(validLocations, mapsIndoorsInstance, currentVenueName, bottomPadding, leftPadding);
+                await fitMapBoundsToLocations(locations, mapsIndoorsInstance, currentVenueName, bottomPadding, leftPadding);
             }
         } catch (error) {
-            console.error('useChatLocations: Error fetching locations:', error);
+            console.error('useChatLocations: Error handling locations:', error);
             setFilteredLocations([]);
         }
     }, [setFilteredLocations, mapsIndoorsInstance, currentVenueName, isDesktop, kioskLocation]);
