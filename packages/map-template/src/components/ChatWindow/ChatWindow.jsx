@@ -53,6 +53,9 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     // Track the current thought during streaming
     const [currentThought, setCurrentThought] = useState('');
 
+    // Deferred animation state: starts false, becomes true after isVisible so off-screen state is painted
+    const [isAnimated, setIsAnimated] = useState(false);
+
     // Keep responseId ref for streaming support - allows updating message text and metadata
     // as chunks arrive if we add progressive text streaming in the future
     const currentResponseIdRef = useRef(null);
@@ -278,8 +281,16 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
         }
     }, [isVisible, isLoading, usageConsentAccepted, getInitialMessage, clearInitialMessage, handleSendMessage]);
 
-    // Animate the chat window when it becomes visible on mobile
-    const isAnimated = !isDesktop && isVisible;
+    // Manage animation state for mobile: defer the animation class application so the off-screen state is painted first
+    useEffect(() => {
+        if (!isDesktop) {
+            if (isVisible) {
+                setIsAnimated(true);
+            } else {
+                setIsAnimated(false);
+            }
+        }
+    }, [isVisible, isDesktop]);
 
     /**
      * Get the layout classes for the ChatWindow component based on current state
