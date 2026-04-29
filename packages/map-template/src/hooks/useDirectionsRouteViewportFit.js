@@ -15,7 +15,7 @@ export function useDirectionsRouteViewportFit() {
         if (!mapsIndoorsInstance?.goTo || !directionsResult?.legs) return;
 
         const features = directionsResult.legs.flatMap(leg =>
-            (leg.steps ?? []).map(step => ({
+            (leg.steps ?? []).filter(step => step.geometry).map(step => ({
                 type: 'Feature',
                 geometry: step.geometry,
                 properties: {}
