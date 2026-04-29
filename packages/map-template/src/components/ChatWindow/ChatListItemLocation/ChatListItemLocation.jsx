@@ -66,31 +66,35 @@ function ChatListItemLocation({ location, locationClicked, durationSeconds, onRo
     return (
         <div
             className={`chat-list-item-location${selectable ? '' : ' chat-list-item-location--non-selectable'}`}
-            onClick={handleCardClick}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
-            role={selectable ? 'button' : undefined}
-            tabIndex={selectable ? 0 : -1}
         >
-            {iconSrc && (
-                <div className="chat-list-item-location__icon">
-                    <img src={iconSrc} alt="" />
-                </div>
-            )}
-            <div className="chat-list-item-location__body">
-                <div className="chat-list-item-location__title">{location.properties.name}</div>
-                <mi-location-info
-                    level={t('Level')}
-                    ref={locationInfoRef}
-                    show-external-id={showExternalIDs}
-                />
-                {durationLabel && (
-                    <div className="chat-list-item-location__duration">
-                        <WalkIcon aria-hidden="true" />
-                        <span>{durationLabel}</span>
+            <button
+                type="button"
+                className="chat-list-item-location__card-button"
+                onClick={handleCardClick}
+                tabIndex={selectable ? 0 : -1}
+            >
+                {iconSrc && (
+                    <div className="chat-list-item-location__icon">
+                        <img src={iconSrc} alt="" />
                     </div>
                 )}
-            </div>
+                <div className="chat-list-item-location__body">
+                    <div className="chat-list-item-location__title">{location.properties.name}</div>
+                    <mi-location-info
+                        level={t('Level')}
+                        ref={locationInfoRef}
+                        show-external-id={showExternalIDs}
+                    />
+                    {durationLabel && (
+                        <div className="chat-list-item-location__duration">
+                            <WalkIcon aria-hidden="true" />
+                            <span>{durationLabel}</span>
+                        </div>
+                    )}
+                </div>
+            </button>
             {onRouteClick && (
                 <button
                     type="button"

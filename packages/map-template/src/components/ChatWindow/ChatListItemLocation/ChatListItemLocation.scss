@@ -3,12 +3,10 @@
 .chat-list-item-location {
     display: flex;
     align-items: center;
-    gap: 1rem;
     padding: 1rem;
     background-color: var(--color-gray-10, var(--tailwind-colors-gray-50));
     border: 1px solid var(--tailwind-colors-gray-200);
     border-radius: var(--rounding-large);
-    cursor: pointer;
     transition: background-color 0.15s, border-color 0.15s;
 
     &:hover {
@@ -16,15 +14,32 @@
         border-color: var(--tailwind-colors-gray-300);
     }
 
-    &:focus-visible {
-        outline: 2px solid currentColor;
-        outline-offset: 2px;
-    }
-
     &--non-selectable {
         cursor: default;
         opacity: 0.5;
         pointer-events: none;
+    }
+
+    &__card-button {
+        flex: 1 1 auto;
+        min-width: 0;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        background: none;
+        border: none;
+        padding: 0;
+        margin: 0;
+        text-align: left;
+        cursor: pointer;
+        color: inherit;
+        font: inherit;
+
+        &:focus-visible {
+            outline: 2px solid currentColor;
+            outline-offset: 2px;
+            border-radius: var(--rounding-large);
+        }
     }
 
     &__icon {
