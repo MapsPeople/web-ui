@@ -32,6 +32,7 @@
 .chat-messages__message--server {
     padding: var(--spacing-x-small) var(--spacing-small);
     align-self: flex-start;
+    width: 90%;
     background-color: var(--color-gray-20);
     color: var(--color-black-black);
     line-height: 1.5;
