@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Added possibility to enable Directions steps movement via App Config object.
+- Fixed an issue when highlight badge would not disappear after the floor change.
 
 ## [1.97.6] - 2026-04-23
 
