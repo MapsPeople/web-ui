@@ -119,10 +119,14 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished }) {
             directionsRenderer = null;
             
             Promise.all([getBottomPadding(padding), getLeftPadding(padding)]).then(([bottomPadding, leftPadding]) => {
+                const disableKioskStepMove = appConfig?.appSettings?.disableKioskStepMove === 'true';
+                const disableDesktopStepMove = appConfig?.appSettings?.disableDesktopStepMove === 'true';
+                const shouldFitBounds = (isKioskContext && disableKioskStepMove) || (isDesktop && !disableDesktopStepMove);
+
                 directionsRenderer = new window.mapsindoors.directions.DirectionsRenderer({
                     mapsIndoors: mapsIndoorsInstance,
-                    fitBounds: (isKioskContext && appConfig?.appSettings?.disableKioskStepMove === 'true'),
-                    fitBoundsPadding: isKioskContext && appConfig?.appSettings?.disableKioskStepMove === 'true' ? undefined : {
+                    fitBounds: shouldFitBounds,
+                    fitBoundsPadding: shouldFitBounds ? undefined : {
                         top: padding,
                         bottom: bottomPadding,
                         left: leftPadding,
