@@ -175,23 +175,39 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
 
     /*
      * Dynamically filter or highlight location based on the "filteredLocations", "filteredLocationsByExternalIDs" and "hideNonMatches" property.
+     * Re-apply on floor_changed so highlight badges and filter state stay in sync with the visible floor (SDK does not refresh them automatically).
      */
     useEffect(() => {
-        if (!mapsIndoorsInstance) return;
-        const locations = filteredLocations || filteredLocationsByExternalIDs;
+        if (!mapsIndoorsInstance) return undefined;
 
-        if (currentLocation || !locations || locations.length === 0) {
-            mapsIndoorsInstance.highlight?.([]);
-            return;
-        }
+        const applyFilterOrHighlight = () => {
+            const locations = filteredLocations || filteredLocationsByExternalIDs;
 
-        const locationIds = locations ? locations.map(location => location.id) : [];
+            if (currentLocation || !locations || locations.length === 0) {
+                mapsIndoorsInstance.highlight?.([]);
+                return;
+            }
 
-        if (hideNonMatches || !mapsIndoorsInstance.highlight) {
-            mapsIndoorsInstance.filter(locationIds);
-        } else {
-            mapsIndoorsInstance.highlight(locationIds);
-        }
+            const locationIds = locations.map(location => location.id);
+
+            if (hideNonMatches || !mapsIndoorsInstance.highlight) {
+                mapsIndoorsInstance.filter(locationIds);
+            } else {
+                mapsIndoorsInstance.highlight(locationIds);
+            }
+        };
+
+        applyFilterOrHighlight();
+
+        const onFloorChanged = () => {
+            onTileStyleChanged(mapsIndoorsInstance);
+            applyFilterOrHighlight();
+        };
+
+        mapsIndoorsInstance.on('floor_changed', onFloorChanged);
+        return () => {
+            mapsIndoorsInstance.off('floor_changed', onFloorChanged);
+        };
     }, [filteredLocations, filteredLocationsByExternalIDs, mapsIndoorsInstance, hideNonMatches, currentLocation]);
 
     /*
@@ -256,8 +272,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
         miInstance.setDisplayRule(['MI_BUILDING_OUTLINE'], { visible: false });
 
         miInstance.on('click', location => onLocationClick(location));
-        miInstance.once('building_changed', () => onBuildingChanged(miInstance))
-        miInstance.on('floor_changed', () => onTileStyleChanged(miInstance));
+        miInstance.once('building_changed', () => onBuildingChanged(miInstance));
 
         setMapsIndoorsInstance(miInstance);
 
