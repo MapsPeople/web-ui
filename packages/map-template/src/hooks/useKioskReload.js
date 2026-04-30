@@ -4,6 +4,7 @@ import { useIsKioskContext } from './useIsKioskContext';
 import isMapReadyState from '../atoms/isMapReadyState';
 
 const DEFAULT_RELOAD_TIME = 600;
+const MIN_RELOAD_TIME = 300;
 
 export function useKioskReload(enabled, timerSeconds) {
     const isKiosk = useIsKioskContext();
@@ -14,7 +15,7 @@ export function useKioskReload(enabled, timerSeconds) {
             return;
         }
 
-        const timeout = timerSeconds ?? DEFAULT_RELOAD_TIME;
+        const timeout = Math.max(MIN_RELOAD_TIME, timerSeconds ?? DEFAULT_RELOAD_TIME);
         let timer;
 
         const handleUserEvent = () => {
