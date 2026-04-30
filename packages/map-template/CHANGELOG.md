@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.97.8] - 2026-04-30
+
+### Fixed
+
+- **Locations list scroll**: Restored scrolling in the locations list and made the list header sticky at the top while scrolling. Removed the unused `__scrollable` modifier and the redundant `overflow: auto` on `__list`.
+
 ## [1.97.7] - 2026-04-30
 
 ### Changed
