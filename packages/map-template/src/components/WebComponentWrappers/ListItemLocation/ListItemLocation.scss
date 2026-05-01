@@ -2,3 +2,43 @@
     pointer-events: none;
     opacity: .5;
 }
+
+.list-item-location {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    mi-list-item-location {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    &__route-button {
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        margin-right: 8px;
+        padding: 0;
+        border: none;
+        border-radius: 50%;
+        background: transparent;
+        color: currentColor;
+        cursor: pointer;
+
+        &:hover {
+            background: rgba(0, 0, 0, 0.06);
+        }
+
+        &:focus-visible {
+            outline: 2px solid currentColor;
+            outline-offset: 2px;
+        }
+
+        svg {
+            display: block;
+        }
+    }
+}

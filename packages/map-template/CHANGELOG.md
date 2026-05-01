@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.97.9] - 2026-05-01
+
+### Added
+
+- Added a new `directions-arrow` SVG asset.
+- **`ChatListItemLocation` component**: Ported the `mi-list-item-location` web component to a React component so it can be customized for the chat context, adding a per-item route button and a walking-distance label.
+- **Distance results support**: `ChatSearchResults` now consumes `get_distances` function data. Combined with the new `ChatListItemLocation`, this lets users trigger a route directly from a distance-annotated result returned by that tool.
+
+### Changed
+
+- **Gemini provider**: Refactored to process function data on `onComplete` rather than through three separate pieces of state (`searchResults`, `directionsLocationIds`, `distanceResults`). Consumers now receive all per-response results in a single payload.
+- **Chat location fetch**: `ChatWindow` fetches locations once per response and forwards the hydrated `Location[]` directly to `onSearchResults`. `useChat` now accepts the pre-fetched list instead of re-fetching by ID, removing a redundant round-trip to `LocationsService.getLocation` per result.
+- **Chat history updates**: Location, directions, and distance data are now applied to messages by `messageId` instead of always targeting the latest server message, preventing incorrect updates when multiple messages are in flight.
+- **Chat state consolidation**: Directions and distance result updates are merged into a single `setChatHistory` call, reducing unnecessary re-renders.
+- **`ListItemLocation` styling**: Minor layout and styling adjustments to keep the standard list item aligned with the new chat card.
+- **`useChatDirections`**: Destination location fetch is now initiated before awaiting the origin result, allowing the two lookups to overlap.
+- **`useChatDirections`**: After a route is calculated and the directions view is pushed, the map is now panned and zoomed to fit the full route geometry via the new `useDirectionsRouteViewportFit` hook (using desktop/kiosk/mobile-aware padding), so triggering a route from the chat automatically frames it on the map.
+
+### Fixed
+
+- **`ChatWindow` animation state**: Replaced `useState`/`useLayoutEffect` for `isAnimated` with a simple derived expression (`!isDesktop && isVisible`), removing an extra render cycle.
+
+### Removed
+
+- **CI**: Removed the `Release Components Docs` job from the release workflow as the GCS bucket it targeted no longer exists.
+
 ## [1.97.8] - 2026-04-30
 
 ### Fixed
