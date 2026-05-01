@@ -1,0 +1,113 @@
+const zhHant = {
+      // Common
+      'Close': '關閉',
+      'From': '從',
+      'To': '到',
+      'Distance': '距離',
+      'Estimated time': '預計時間',
+      'Level': '樓層',
+      'Search by name, category, building...': '依名稱、類別、建築物搜尋...',
+      'Show legend': '顯示圖例',
+      'Ask with AI': '詢問 AI',
+      'Nothing was found': '找不到任何結果',
+      'd': '天',
+      'h': '小時',
+      'min': '分鐘',
+      '< 1 min': '小於 1 分鐘',
+      '1 min': '1 分鐘',
+      '{{count}} mins': '{{count}} 分鐘',
+      'Walk': '步行',
+      'Bike': '騎車',
+      'Transit': '大眾運輸',
+      'Drive': '駕車',
+      'Start wayfinding': '開始導航',
+      // Location Details
+      'Read full description': '檢視完整描述',
+      // Locations list
+      'Locations': '位置',
+      'Directions not available': '導航不可用',
+      'Start directions': '開始導航',
+      // Route instructions
+      'Previous': '上一步',
+      'Next': '下一步',
+      'StepYofX': '第 {{activeStep}} 步，共 {{totalSteps}} 步',
+      // Route Instructions Step
+      'You have arrived': '您已抵達',
+      'Leave': '離開',
+      'Park': '停車',
+      'at': '於',
+      'Building': '建築',
+      'Venue': '場所',
+      'Take staircase to level': '走樓梯到',
+      'Take the ladder to level': '爬梯子到',
+      'Take elevator to level': '搭電梯到',
+      'Take escalator to level': '搭手扶梯到',
+      'Take wheelchair lift to level': '搭輪椅升降機到',
+      'Take wheelchair ramp to level': '走輪椅坡道到',
+      'Exit': '離開',
+      'Enter': '進入',
+      'stops': '站',
+      'and continue': '然後繼續',
+      'Continue straight ahead': '直行',
+      'Go left': '向左',
+      'Go sharp left': '向左急轉',
+      'Go slight left': '稍向左',
+      'Go right': '向右',
+      'Go sharp right': '向右急轉',
+      'Go slight right': '稍向右',
+      'Turn around': '迴轉',
+      // Wayfinding component
+      'Switch': '切換',
+      'Avoid stairs and escalators': '避開樓梯與手扶梯',
+      'Include bus transportation': '包含公車運輸',
+      'No route found': '找不到路線',
+      'My position': '我的位置',
+      'Go!': '出發！',
+      'Directions': '導航',
+      'Choose departure': '選擇出發地',
+      'Choose destination': '選擇目的地',
+      // Venue selector
+      'Venues': '場所',
+      'Select venue': '選擇場所',
+      'Current': '目前',
+      // QR code dialog
+      'Scan QR code': '掃描 QR 碼',
+      'Scan the QR code to see the route on your phone': '掃描 QR 碼以在手機上檢視路線',
+      'Done': '完成',
+      // Directions
+      'Cancel route': '取消路線',
+      'Finish route': '完成路線',
+      // Share location link
+      'Share': '分享',
+      'Copy link': '複製連結',
+      'QR Code': 'QR 碼',
+      // Opening Hours
+      'Open': '營業中',
+      'Closed': '已關閉',
+      'Expand opening hours': '展開營業時間',
+      'Collapse opening hours': '收合營業時間',
+      // View Selector
+      'Go to view': '定位至',
+      // Language Selector
+      'Select language': '選擇語言',
+      // Accessibility
+      'Increase text size to 200%': '將文字大小增加至 200%',
+      'Decrease text size to 100%': '將文字大小減少至 100%',
+      // Map Controls
+      'Zoom in': '放大',
+      'Zoom out': '縮小',
+      'Enter fullscreen': '進入全螢幕',
+      'Exit fullscreen': '退出全螢幕',
+      // Ask with AI - Usage Consent
+      'Usage consent title': 'Ask with AI - 使用須知',
+      'Usage consent message': 'Ask with AI 利用人工智慧（AI）協助您尋找地點並在此場所內導航。儘管我們力求準確，但 AI有時可能會出錯。請在出發前仔細核實重要資訊。',
+      'Usage consent accept': '我已了解',
+      'Usage consent decline': '拒絕',
+      'AI disclaimer': 'Ask with AI 可能會出錯。請在出發前仔細核實重要資訊。',
+      // Location Consent
+      'Location consent message':'為了提供個人化的路線指引並協助您發現附近的地點，Ask with AI 需要存取您的位置資訊。即使不提供位置資訊，聊天功能仍可使用，但您需要手動指定起點。',
+      'Location consent accept': '允許',
+      'Location consent decline': '拒絕',
+  };
+
+  export default zhHant;
