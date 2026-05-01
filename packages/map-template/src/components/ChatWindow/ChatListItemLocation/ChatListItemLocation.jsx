@@ -15,6 +15,14 @@ ChatListItemLocation.propTypes = {
     onRouteClick: PropTypes.func
 };
 
+/**
+ * Converts a duration in seconds into a human-readable walking time string.
+ * Returns null for invalid or missing input so callers can conditionally render.
+ *
+ * @param {number|null|undefined} seconds - Duration in seconds.
+ * @param {Function} t - i18next translation function.
+ * @returns {string|null} Formatted duration label, e.g. "< 1 min", "1 min", "5 mins".
+ */
 function formatWalkingDuration(seconds, t) {
     if (seconds == null || Number.isNaN(seconds)) return null;
     if (seconds < 60) return t('< 1 min');
@@ -22,6 +30,17 @@ function formatWalkingDuration(seconds, t) {
     return minutes === 1 ? t('1 min') : t('{{count}} mins', { count: minutes });
 }
 
+/**
+ * Renders a single location card inside the chat window result list.
+ * Shows the location icon, name, floor info, and optional walking duration.
+ * When an `onRouteClick` handler is provided, a "Get directions" button is also shown.
+ *
+ * @param {object}   props
+ * @param {object}   props.location          - MapsIndoors location object.
+ * @param {Function} [props.locationClicked] - Called when the card is clicked (selectable locations only).
+ * @param {number}   [props.durationSeconds] - Estimated walking time in seconds; omit to hide duration.
+ * @param {Function} [props.onRouteClick]    - Called when the directions button is clicked; omit to hide button.
+ */
 function ChatListItemLocation({ location, locationClicked, durationSeconds, onRouteClick }) {
     const { t } = useTranslation();
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
@@ -41,22 +60,31 @@ function ChatListItemLocation({ location, locationClicked, durationSeconds, onRo
         }
     }, [location]);
 
+    /** Selects the location and clears any hover state. No-op for non-selectable locations. */
     const handleCardClick = () => {
         if (!selectable) return;
         mapsIndoorsInstance?.unhoverLocation?.();
         locationClicked?.();
     };
 
+    /** Applies a hover highlight on the map marker when the cursor enters the card. */
     const handleMouseEnter = () => {
         if (!selectable) return;
         mapsIndoorsInstance?.hoverLocation?.(location);
     };
 
+    /** Removes the hover highlight from the map marker when the cursor leaves the card. */
     const handleMouseLeave = () => {
         if (!selectable) return;
         mapsIndoorsInstance?.unhoverLocation?.(location);
     };
 
+    /**
+     * Handles the "Get directions" button click.
+     * Stops propagation so the parent card click handler is not also triggered.
+     *
+     * @param {React.MouseEvent} event
+     */
     const handleRouteClick = (event) => {
         event.stopPropagation();
         mapsIndoorsInstance?.unhoverLocation?.();
