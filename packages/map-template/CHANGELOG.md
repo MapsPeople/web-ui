@@ -9,14 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Kiosk full page reload**: Added support for triggering a full page reload (`window.location.reload()`) after a period of inactivity in kiosk mode via the `enableKioskFullReload` prop or `appSettings.enableKioskFullReload` in the App Config.
+- **Kiosk full-page reload**: Added support for triggering a full-page reload (`window.location.reload()`) after a period of inactivity in kiosk mode via the `enableKioskFullReload` prop or `appSettings.enableKioskFullReload` in the App Config.
 - **Kiosk reload timer**: The inactivity duration before a full reload is configurable via the `kioskReloadTime` prop or `appSettings.kioskReloadTime` (in seconds, default 600).
 - **Kiosk reload precedence**: URL parameter takes precedence over prop, which takes precedence over App Config.
 - **Kiosk reload independence**: This timer runs independently from the existing UI state reset timeout.
 
 ### Fixed
 
-- **Kiosk map bounds race condition**: Stale `getLocation` promise callbacks no longer call `setFloor` after a newer `determineMapBounds` invocation has started, preventing a Mapbox terrain crash (`s2 is undefined`) that occurred intermittently after full page reloads.
+- **Kiosk map bounds race condition**: Stale `getLocation` promise callbacks no longer call `setFloor` after a newer `determineMapBounds` invocation has started, preventing a Mapbox terrain crash (`s2 is undefined`) that occurred intermittently after full-page reloads.
 - **Kiosk floor initialization**: `setFloor` calls that fail due to Mapbox terrain not being ready during early map load are now caught and skipped gracefully, allowing the next `determineMapBounds` call to retry once the map has stabilised.
 - **Mobile padding stale callbacks**: All `getMobilePaddingBottom` promise callbacks in `useMapBoundsDeterminer` now check the run key before calling `setMapPositionKnown` or `goTo`, preventing stale callbacks from a superseded run mutating map state on mobile.
 - **Kiosk reload config parsing**: `enableKioskFullReload` and `kioskReloadTime` from `appSettings` are now safely normalised — boolean and string values are both handled for the enabled flag, and non-finite or non-numeric reload times fall back to `undefined` instead of passing `NaN` to the timer.
