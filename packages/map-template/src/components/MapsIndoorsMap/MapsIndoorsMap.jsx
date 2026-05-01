@@ -186,7 +186,7 @@ function MapsIndoorsMap(props) {
             useAppTitle: getBooleanValue(props.supportsUrlParameters, defaultProps.useAppTitle, props.useAppTitle, useAppTitleQueryParameter),
             showMapMarkers: getBooleanValue(props.supportsUrlParameters, defaultProps.showMapMarkers, props.showMapMarkers, showMapMarkersQueryParameter),
             mapboxMapStyle: props.supportsUrlParameters && mapboxMapStyleQueryParameter ? mapboxMapStyleQueryParameter : props.mapboxMapStyle,
-            enableKioskFullReload: getBooleanValue(props.supportsUrlParameters, false, props.enableKioskFullReload, enableKioskFullReloadQueryParameter),
+            enableKioskFullReload: getBooleanValue(props.supportsUrlParameters, undefined, props.enableKioskFullReload, enableKioskFullReloadQueryParameter),
             kioskReloadTime: props.supportsUrlParameters && kioskReloadTimeQueryParameter ? kioskReloadTimeQueryParameter : props.kioskReloadTime,
         });
 
