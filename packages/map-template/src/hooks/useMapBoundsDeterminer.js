@@ -151,6 +151,7 @@ const useMapBoundsDeterminer = () => {
                                 });
                             } else {
                                 getMobilePaddingBottom().then(mobilePaddingBottom => {
+                                    if (determineMapBoundsKeyRef.current !== key) return;
                                     setMapPositionKnown(getCenterPoint().geometry);
                                     goTo(getCenterPoint().geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, getZoomLevel(startZoomLevel), currentPitch, bearing);
                                 });
@@ -175,6 +176,7 @@ const useMapBoundsDeterminer = () => {
                                 });
                             } else {
                                 getMobilePaddingBottom().then(mobilePaddingBottom => {
+                                    if (determineMapBoundsKeyRef.current !== key) return;
                                     setMapPositionKnown(location.geometry);
                                     goTo(location.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, startZoomLevel ? getZoomLevel(startZoomLevel) : undefined, currentPitch, bearing);
                                 });
@@ -193,6 +195,7 @@ const useMapBoundsDeterminer = () => {
                         goTo(currentVenue.geometry, mapsIndoorsInstance, 0, 0, getZoomLevel(startZoomLevel), currentPitch, bearing);
                     } else {
                         getMobilePaddingBottom().then(mobilePaddingBottom => {
+                            if (determineMapBoundsKeyRef.current !== key) return;
                             setMapPositionKnown(currentVenue.geometry);
                             goTo(currentVenue.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, getZoomLevel(startZoomLevel), currentPitch, bearing);
                         });
@@ -217,6 +220,7 @@ const useMapBoundsDeterminer = () => {
                             });
                         } else {
                             getMobilePaddingBottom().then(mobilePaddingBottom => {
+                                if (determineMapBoundsKeyRef.current !== key) return;
                                 setMapPositionKnown(getCenterPoint().geometry);
                                 goTo(getCenterPoint().geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, getZoomLevel(startZoomLevel), currentPitch, bearing);
                             });
@@ -232,6 +236,7 @@ const useMapBoundsDeterminer = () => {
                             });
                         } else {
                             getMobilePaddingBottom().then(mobilePaddingBottom => {
+                                if (determineMapBoundsKeyRef.current !== key) return;
                                 setMapPositionKnown(getCenterPoint().geometry);
                                 goTo(getCenterPoint().geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, getZoomLevel(startZoomLevel), currentPitch, bearing);
                             });
