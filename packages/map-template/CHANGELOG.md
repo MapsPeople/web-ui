@@ -19,6 +19,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Kiosk map bounds race condition**: Stale `getLocation` promise callbacks no longer call `setFloor` after a newer `determineMapBounds` invocation has started, preventing a Mapbox terrain crash (`s2 is undefined`) that occurred intermittently after full page reloads.
 - **Kiosk floor initialization**: `setFloor` calls that fail due to Mapbox terrain not being ready during early map load are now caught and skipped gracefully, allowing the next `determineMapBounds` call to retry once the map has stabilised.
 
+## [1.97.8] - 2026-04-30
+
+### Fixed
+
+- **Locations list scroll**: Restored scrolling in the locations list and made the list header sticky at the top while scrolling. Removed the unused `__scrollable` modifier and the redundant `overflow: auto` on `__list`.
+
+## [1.97.7] - 2026-04-30
+
+### Changed
+
+- Added possibility to enable Directions steps movement via App Config object.
+- Fixed an issue when highlight badge would not disappear after the floor change.
+
 ## [1.97.6] - 2026-04-23
 
 ### Changed
