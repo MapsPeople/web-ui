@@ -671,22 +671,17 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * React on changes to the enableKioskFullReload prop or appConfig. URL parameter takes precedence over prop, which takes precedence over appConfig.
      */
     useEffect(() => {
-        if (enableKioskFullReload !== undefined) {
-            setKioskFullReloadEnabled(enableKioskFullReload);
-        } else if (appConfig?.appSettings?.enableKioskFullReload !== undefined) {
-            setKioskFullReloadEnabled(appConfig.appSettings.enableKioskFullReload.trim().toLowerCase() === 'true');
-        }
+        const resolvedKioskReloadValue = enableKioskFullReload !== undefined ? enableKioskFullReload : appConfig?.appSettings?.enableKioskFullReload;
+        setKioskFullReloadEnabled(typeof resolvedKioskReloadValue === 'boolean' ? resolvedKioskReloadValue : typeof resolvedKioskReloadValue === 'string' ? resolvedKioskReloadValue.trim().toLowerCase() === 'true' : false);
     }, [enableKioskFullReload, appConfig]);
 
     /*
      * React on changes to the kioskReloadTime prop or appConfig. URL parameter takes precedence over prop, which takes precedence over appConfig.
      */
     useEffect(() => {
-        if (kioskReloadTime !== undefined) {
-            setKioskFullReloadTime(kioskReloadTime);
-        } else if (appConfig?.appSettings?.kioskReloadTime !== undefined) {
-            setKioskFullReloadTime(parseInt(appConfig.appSettings.kioskReloadTime));
-        }
+        const resolvedKioskReloadValue = kioskReloadTime !== undefined ? kioskReloadTime : appConfig?.appSettings?.kioskReloadTime;
+        const parsed = typeof resolvedKioskReloadValue === 'number' ? resolvedKioskReloadValue : typeof resolvedKioskReloadValue === 'string' ? parseInt(resolvedKioskReloadValue, 10) : undefined;
+        setKioskFullReloadTime(Number.isFinite(parsed) ? parsed : undefined);
     }, [kioskReloadTime, appConfig]);
 
     /*

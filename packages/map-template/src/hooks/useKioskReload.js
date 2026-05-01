@@ -15,7 +15,8 @@ export function useKioskReload(enabled, timerSeconds) {
             return;
         }
 
-        const timeout = Math.max(MIN_RELOAD_TIME, timerSeconds ?? DEFAULT_RELOAD_TIME);
+        const validSeconds = Number.isFinite(timerSeconds) && timerSeconds > 0 ? timerSeconds : DEFAULT_RELOAD_TIME;
+        const timeout = Math.max(MIN_RELOAD_TIME, validSeconds);
         let timer;
 
         const handleUserEvent = () => {
