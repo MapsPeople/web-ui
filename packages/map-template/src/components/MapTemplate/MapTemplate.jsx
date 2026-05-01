@@ -68,6 +68,7 @@ import ChatButton from '../ChatButton/ChatButton';
 import mapTypeState from '../../atoms/mapTypeState.js';
 import { mapTypes } from '../../constants/mapTypes.js';
 import { useIsKioskContext } from '../../hooks/useIsKioskContext.js';
+import { useKioskReload } from '../../hooks/useKioskReload.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -106,7 +107,9 @@ MapTemplate.propTypes = {
     useAppTitle: PropTypes.bool,
     showMapMarkers: PropTypes.bool,
     mapboxMapStyle: PropTypes.string,
-    devicePosition: PropTypes.object
+    devicePosition: PropTypes.object,
+    enableKioskFullReload: PropTypes.bool,
+    kioskReloadTime: PropTypes.number
 };
 
 /**
@@ -144,8 +147,10 @@ MapTemplate.propTypes = {
  * @param {boolean} [props.useAppTitle] - Specifies if the Map Template should set the document title as defined in the App Config. The default value is set to false.
  * @param {boolean} [props.showMapMarkers] - Specifies if the Map Template should show the base map providers Map Markers. The default value is set to true.
  * @param {string} [props.mapboxMapStyle] - Specifies the Mapbox Map Style to use. The default value is set to "mapbox://styles/mapbox/standard".
+ * @param {boolean} [props.enableKioskFullReload] - If true, the page will fully reload after a period of inactivity in kiosk mode. Can also be set in the MapsIndoors App Config as "enableKioskFullReload" under "appSettings".
+ * @param {number} [props.kioskReloadTime] - Number of seconds of inactivity before a full page reload is triggered in kiosk mode. Defaults to 600 (10 minutes). Can also be set in the MapsIndoors App Config as "kioskReloadTime" under "appSettings".
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations, center, useAppTitle, showMapMarkers, mapboxMapStyle, devicePosition }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations, center, useAppTitle, showMapMarkers, mapboxMapStyle, devicePosition, enableKioskFullReload, kioskReloadTime }) {
 
     const [userSelectedLanguage, setUserSelectedLanguage] = useState(false);
     const [mapOptions, setMapOptions] = useState({ brandingColor: primaryColor });
@@ -166,6 +171,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const setKioskOriginLocationId = useSetRecoilState(kioskOriginLocationIdState);
     const setTimeoutValue = useSetRecoilState(timeoutState);
     const isInactive = useInactive(); // Hook to detect if user is inactive. Used in combination with timeout prop to reset the Map Template to initial values after a specified time.
+    const [kioskFullReloadEnabled, setKioskFullReloadEnabled] = useState(false); // Resolved from enableKioskFullReload prop or appConfig.appSettings.enableKioskFullReload
+    const [kioskFullReloadTime, setKioskFullReloadTime] = useState(undefined); // Resolved from kioskReloadTime prop or appConfig.appSettings.kioskReloadTime (seconds, default 600)
+    useKioskReload(kioskFullReloadEnabled, kioskFullReloadTime); // Triggers window.location.reload() after inactivity in kiosk mode
     const setSupportsUrlParameters = useSetRecoilState(supportsUrlParametersState);
     const setUseKeyboard = useSetRecoilState(useKeyboardState);
     const setMiTransitionLevel = useSetRecoilState(miTransitionLevelState);
@@ -658,6 +666,23 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         setTimeoutValue(timeout);
     }, [timeout]);
+
+    /*
+     * React on changes to the enableKioskFullReload prop or appConfig. URL parameter takes precedence over prop, which takes precedence over appConfig.
+     */
+    useEffect(() => {
+        const resolvedKioskReloadValue = enableKioskFullReload !== undefined ? enableKioskFullReload : appConfig?.appSettings?.enableKioskFullReload;
+        setKioskFullReloadEnabled(typeof resolvedKioskReloadValue === 'boolean' ? resolvedKioskReloadValue : typeof resolvedKioskReloadValue === 'string' ? resolvedKioskReloadValue.trim().toLowerCase() === 'true' : false);
+    }, [enableKioskFullReload, appConfig]);
+
+    /*
+     * React on changes to the kioskReloadTime prop or appConfig. URL parameter takes precedence over prop, which takes precedence over appConfig.
+     */
+    useEffect(() => {
+        const resolvedKioskReloadValue = kioskReloadTime !== undefined ? kioskReloadTime : appConfig?.appSettings?.kioskReloadTime;
+        const parsed = typeof resolvedKioskReloadValue === 'number' ? resolvedKioskReloadValue : typeof resolvedKioskReloadValue === 'string' ? parseInt(resolvedKioskReloadValue, 10) : undefined;
+        setKioskFullReloadTime(Number.isFinite(parsed) ? parsed : undefined);
+    }, [kioskReloadTime, appConfig]);
 
     /*
      * React on changes in the supportsUrlParameters prop.

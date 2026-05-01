@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import getDesktopPaddingBottom from '../helpers/GetDesktopPaddingBottom';
 
@@ -60,6 +60,7 @@ const useMapBoundsDeterminer = () => {
     // Store kiosk location info for cleanup
     const [kioskOriginLocationInfo, setKioskOriginLocationInfo] = useState({ id: null, originalRule: null });
     const [originalMapCenter, setOriginalMapCenter] = useState(null);
+    const determineMapBoundsKeyRef = useRef(0);
 
     /**
      * If the app is inactive, run code to reset to initial map position.
@@ -82,6 +83,7 @@ const useMapBoundsDeterminer = () => {
      * determine where to make the map go to.
      */
     function determineMapBounds() {
+        const key = ++determineMapBoundsKeyRef.current;
         const currentVenue = venuesInSolution.find(venue => venue.name?.toLowerCase() === currentVenueName.toLowerCase());
 
         // If kioskOriginLocationId was set and is now removed, revert display rule
@@ -104,10 +106,16 @@ const useMapBoundsDeterminer = () => {
                 // When in Kiosk mode (which can only happen on desktop), the map is fitted to the bounds of the given Location with some bottom padding to accommodate
                 // for the bottom-centered modal. kioskOriginLocationId always takes precedence over center prop.
                 window.mapsindoors.services.LocationsService.getLocation(kioskOriginLocationId).then(kioskLocation => {
+                    if (determineMapBoundsKeyRef.current !== key) return;
                     if (kioskLocation) {
                         // Set the floor to the one that the Location belongs to.
                         const locationFloor = kioskLocation.properties.floor;
-                        mapsIndoorsInstance.setFloor(locationFloor);
+                        try {
+                            mapsIndoorsInstance.setFloor(locationFloor);
+                        } catch (e) {
+                            // Mapbox terrain may not be initialized yet during early map load (e.g. after a full page reload).
+                            return;
+                        }
 
                         // Save original display rule before changing
                         const displayRule = mapsIndoorsInstance.getDisplayRule(kioskLocation);
@@ -115,6 +123,7 @@ const useMapBoundsDeterminer = () => {
                         setKioskDisplayRule(kioskLocation);
 
                         getDesktopPaddingBottom().then(desktopPaddingBottom => {
+                            if (determineMapBoundsKeyRef.current !== key) return;
                             setMapPositionKnown(kioskLocation.geometry);
                             goTo(kioskLocation.geometry, mapsIndoorsInstance, desktopPaddingBottom, 0, startZoomLevel ? getZoomLevel(startZoomLevel) : undefined, currentPitch, bearing);
                         });
@@ -129,17 +138,20 @@ const useMapBoundsDeterminer = () => {
                 
                 if (!isNullOrUndefined(center)) {
                     window.mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
+                        if (determineMapBoundsKeyRef.current !== key) return;
                         if (location) {
                             const locationFloor = location.properties.floor;
                             mapsIndoorsInstance.setFloor(locationFloor);
                             // When locationId is defined and center prop is defined, set centerPoint to be center prop.
                             if (isDesktop) {
                                 getDesktopPaddingLeft().then(desktopPaddingLeft => {
+                                    if (determineMapBoundsKeyRef.current !== key) return;
                                     setMapPositionKnown(getCenterPoint().geometry);
                                     goTo(getCenterPoint().geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, getZoomLevel(startZoomLevel), currentPitch, bearing);
                                 });
                             } else {
                                 getMobilePaddingBottom().then(mobilePaddingBottom => {
+                                    if (determineMapBoundsKeyRef.current !== key) return;
                                     setMapPositionKnown(getCenterPoint().geometry);
                                     goTo(getCenterPoint().geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, getZoomLevel(startZoomLevel), currentPitch, bearing);
                                 });
@@ -150,6 +162,7 @@ const useMapBoundsDeterminer = () => {
                     // When a LocationID is set, the map is centered fitted to the bounds of the given Location with some padding,
                     // either bottom (on mobile to accommodate for the bottom sheet) or to the left (on desktop to accommodate for the modal).
                     window.mapsindoors.services.LocationsService.getLocation(locationId).then(location => {
+                        if (determineMapBoundsKeyRef.current !== key) return;
                         if (location) {
                             // Set the floor to the one that the Location belongs to.
                             const locationFloor = location.properties.floor;
@@ -157,11 +170,13 @@ const useMapBoundsDeterminer = () => {
 
                             if (isDesktop) {
                                 getDesktopPaddingLeft().then(desktopPaddingLeft => {
+                                    if (determineMapBoundsKeyRef.current !== key) return;
                                     setMapPositionKnown(location.geometry);
                                     goTo(location.geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, startZoomLevel ? getZoomLevel(startZoomLevel) : undefined, currentPitch, bearing);
                                 });
                             } else {
                                 getMobilePaddingBottom().then(mobilePaddingBottom => {
+                                    if (determineMapBoundsKeyRef.current !== key) return;
                                     setMapPositionKnown(location.geometry);
                                     goTo(location.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, startZoomLevel ? getZoomLevel(startZoomLevel) : undefined, currentPitch, bearing);
                                 });
@@ -180,6 +195,7 @@ const useMapBoundsDeterminer = () => {
                         goTo(currentVenue.geometry, mapsIndoorsInstance, 0, 0, getZoomLevel(startZoomLevel), currentPitch, bearing);
                     } else {
                         getMobilePaddingBottom().then(mobilePaddingBottom => {
+                            if (determineMapBoundsKeyRef.current !== key) return;
                             setMapPositionKnown(currentVenue.geometry);
                             goTo(currentVenue.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, getZoomLevel(startZoomLevel), currentPitch, bearing);
                         });
@@ -198,11 +214,13 @@ const useMapBoundsDeterminer = () => {
                         // If center prop is defined, but it does not intersects with any Venue, pan to value that is defined by center prop.
                         if (isDesktop) {
                             getDesktopPaddingLeft().then(desktopPaddingLeft => {
+                                if (determineMapBoundsKeyRef.current !== key) return;
                                 setMapPositionKnown(getCenterPoint().geometry);
                                 goTo(getCenterPoint().geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, getZoomLevel(startZoomLevel), currentPitch, bearing);
                             });
                         } else {
                             getMobilePaddingBottom().then(mobilePaddingBottom => {
+                                if (determineMapBoundsKeyRef.current !== key) return;
                                 setMapPositionKnown(getCenterPoint().geometry);
                                 goTo(getCenterPoint().geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, getZoomLevel(startZoomLevel), currentPitch, bearing);
                             });
@@ -212,11 +230,13 @@ const useMapBoundsDeterminer = () => {
                         // when map is ready, setCurrentVenueName to the Venue that center prop is intersecting with.
                         if (isDesktop) {
                             getDesktopPaddingLeft().then(desktopPaddingLeft => {
+                                if (determineMapBoundsKeyRef.current !== key) return;
                                 setMapPositionKnown(getCenterPoint().geometry);
                                 goTo(getCenterPoint().geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, getZoomLevel(startZoomLevel), currentPitch, bearing);
                             });
                         } else {
                             getMobilePaddingBottom().then(mobilePaddingBottom => {
+                                if (determineMapBoundsKeyRef.current !== key) return;
                                 setMapPositionKnown(getCenterPoint().geometry);
                                 goTo(getCenterPoint().geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, getZoomLevel(startZoomLevel), currentPitch, bearing);
                             });
