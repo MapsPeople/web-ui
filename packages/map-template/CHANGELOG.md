@@ -18,6 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Kiosk map bounds race condition**: Stale `getLocation` promise callbacks no longer call `setFloor` after a newer `determineMapBounds` invocation has started, preventing a Mapbox terrain crash (`s2 is undefined`) that occurred intermittently after full page reloads.
 - **Kiosk floor initialization**: `setFloor` calls that fail due to Mapbox terrain not being ready during early map load are now caught and skipped gracefully, allowing the next `determineMapBounds` call to retry once the map has stabilised.
+- **Mobile padding stale callbacks**: All `getMobilePaddingBottom` promise callbacks in `useMapBoundsDeterminer` now check the run key before calling `setMapPositionKnown` or `goTo`, preventing stale callbacks from a superseded run mutating map state on mobile.
+- **Kiosk reload config parsing**: `enableKioskFullReload` and `kioskReloadTime` from `appSettings` are now safely normalised — boolean and string values are both handled for the enabled flag, and non-finite or non-numeric reload times fall back to `undefined` instead of passing `NaN` to the timer.
+- **Kiosk reload timer safety**: `useKioskReload` now validates `timerSeconds` is a finite positive number before use, falling back to `DEFAULT_RELOAD_TIME` when the value is `NaN`, zero, or negative, preventing `setTimeout` from firing immediately.
 
 ## [1.97.8] - 2026-04-30
 
