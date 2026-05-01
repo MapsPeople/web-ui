@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.97.9] - Unreleased
+## [1.97.9] - 2026-05-01
 
 ### Added
 
@@ -26,6 +26,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - **`ChatWindow` animation state**: Replaced `useState`/`useLayoutEffect` for `isAnimated` with a simple derived expression (`!isDesktop && isVisible`), removing an extra render cycle.
+
+### Removed
+
+- **CI**: Removed the `Release Components Docs` job from the release workflow as the GCS bucket it targeted no longer exists.
 
 ## [1.97.8] - 2026-04-30
 
