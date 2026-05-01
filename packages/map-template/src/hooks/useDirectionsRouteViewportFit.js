@@ -6,6 +6,16 @@ import getDesktopPaddingBottom from '../helpers/GetDesktopPaddingBottom';
 import getMobilePaddingBottom from '../helpers/GetMobilePaddingBottom';
 import { useIsDesktop } from './useIsDesktop';
 
+/**
+ * Returns an async function that fits the map viewport to a directions result.
+ * Padding is computed dynamically based on viewport size, desktop/mobile breakpoint,
+ * and whether a kiosk location is active. The function is a no-op when the
+ * MapsIndoors instance is unavailable or the result contains no routable geometry.
+ *
+ * @returns {(directionsResult: object) => Promise<void>} Async function that accepts
+ *   a MapsIndoors directions result and calls `mapsIndoorsInstance.goTo` to fit all
+ *   route step geometries into view.
+ */
 export function useDirectionsRouteViewportFit() {
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const kioskLocation = useRecoilValue(kioskLocationState);
