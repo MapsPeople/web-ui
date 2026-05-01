@@ -3,9 +3,14 @@
 .locations-list {
     display: grid;
     grid-template-rows: 50px 1fr;
+    
 
-    &__header {
+      &__header {
         padding: var(--spacing-medium);
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        background-color: var(--color-white-white);
     }
 
     &__title {
@@ -26,13 +31,8 @@
     &__list {
         display: grid;
         gap: var(--spacing-x-small);
-        overflow: auto;
         grid-auto-rows: min-content;
         padding: var(--spacing-x-small);
-    }
-
-    &__scrollable {
-        overflow: auto;
     }
 
     @media (max-width: variables.$desktop-breakpoint) {
