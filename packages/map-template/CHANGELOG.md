@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed `enableKioskFullReload` from App Config being ignored when the prop was not explicitly set.
 
+### Changed
+
+- Removed unused `uuid` dev dependency.
+
 ## [1.97.10] - 2026-05-01
 
 ### Added
