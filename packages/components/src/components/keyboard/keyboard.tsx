@@ -145,7 +145,7 @@ export class Keyboard implements ComponentInterface {
             { layout: italianAlphabetic, languages: ['it', 'it-it'] },
             { layout: spanishAlphabetic, languages: ['es', 'es-es'] },
             { layout: dutchAlphabetic, languages: ['nl', 'nl-nl'] },
-            { layout: chineseAlphabetic, languages: ['zh', 'zh-CN'] },
+            { layout: chineseAlphabetic, languages: ['zh', 'zh-hans', 'zh-hant', 'zh-cn', 'zh-tw'] },
         ];
         const supportedLayout = supportedAlphabeticLayouts.find((layout): boolean => {
             return layout.languages.find((language): boolean => language === browserLanguage.toLowerCase()) ? true : false;

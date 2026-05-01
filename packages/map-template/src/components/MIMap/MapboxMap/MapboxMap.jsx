@@ -88,6 +88,7 @@ function MapboxMap({ accessToken, onInitialized, center, zoom, bounds, bearing, 
             bearing: bearing ?? 0,
             pitch: pitch ?? 0,
             useMapsIndoorsMapboxStyle: mapOptions?.mapboxMapStyle ? false : true,
+            localIdeographFontFamily: 'sans-serif',
             ...mapOptions
         };
 
