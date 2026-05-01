@@ -4,13 +4,15 @@ import mapsIndoorsInstanceState from '../../../atoms/mapsIndoorsInstanceState';
 import { useTranslation } from 'react-i18next';
 import './ListItemLocation.scss';
 import showExternalIDsState from '../../../atoms/showExternalIDsState';
+import DirectionsArrowIcon from '../../../assets/directions-arrow.svg?react';
 import PropTypes from 'prop-types';
 ListItemLocation.propTypes = {
     location: PropTypes.object,
     locationClicked: PropTypes.func,
     icon: PropTypes.string,
     isHovered: PropTypes.bool,
-    disableHover: PropTypes.bool
+    disableHover: PropTypes.bool,
+    onRouteClick: PropTypes.func
 };
 
 /**
@@ -22,8 +24,11 @@ ListItemLocation.propTypes = {
  * @param {string} icon - The icon to be shown in the list item location component.
  * @param {boolean} isHovered - Check if the location is hovered.
  * @param {boolean} disableHover - Disable hover functionality to prevent dual pins during routing.
+ * @param {function} [onRouteClick] - When provided, renders a compact route button beside the
+ *   list item. Invoked on click; click event is stopped from propagating so the underlying
+ *   `locationClicked` handler does not also fire. Leave undefined to hide the button.
  */
-function ListItemLocation({ location, locationClicked, icon, isHovered, disableHover }) {
+function ListItemLocation({ location, locationClicked, icon, isHovered, disableHover, onRouteClick }) {
     const { t } = useTranslation();
     const elementRef = useRef();
 
@@ -86,7 +91,27 @@ function ListItemLocation({ location, locationClicked, icon, isHovered, disableH
     }, [location, locationClicked, isHovered, disableHover]);
 
 
-    return <mi-list-item-location level={t('Level')} ref={elementRef} show-external-id={showExternalIDs} />
+    const handleRouteClick = (event) => {
+        event.stopPropagation();
+        onRouteClick?.();
+    };
+
+    return (
+        <div className="list-item-location">
+            <mi-list-item-location level={t('Level')} ref={elementRef} show-external-id={showExternalIDs} />
+            {onRouteClick && (
+                <button
+                    type="button"
+                    className="list-item-location__route-button"
+                    onClick={handleRouteClick}
+                    aria-label={t('Get directions')}
+                    title={t('Get directions')}
+                >
+                    <DirectionsArrowIcon aria-hidden="true" />
+                </button>
+            )}
+        </div>
+    );
 }
 
 export default ListItemLocation;

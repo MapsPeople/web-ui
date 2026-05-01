@@ -15,6 +15,7 @@ import getDesktopPaddingLeft from '../helpers/GetDesktopPaddingLeft';
 import getDesktopPaddingBottom from '../helpers/GetDesktopPaddingBottom';
 import fitMapBoundsToLocations from '../helpers/FitMapBoundsToLocations';
 import { useIsDesktop } from './useIsDesktop';
+import { useDirectionsRouteViewportFit } from './useDirectionsRouteViewportFit';
 
 // Returns bottom padding for map bounds: kiosk uses dynamic value, desktop sidebar needs none, mobile needs space for bottom sheet
 async function getBottomPadding(isDesktop, kioskLocation) {
@@ -35,11 +36,12 @@ async function getLeftPadding(isDesktop, kioskLocation) {
 }
 
 /**
- * Hook to handle chat search results by fetching Location objects from IDs
- * and setting them in filteredLocations state for highlighting on the map.
- * Also pans the map to fit the bounds of the locations.
+ * Hook to handle chat search results by setting the provided Location objects
+ * in filteredLocations state for highlighting on the map, and panning the map
+ * to fit their bounds. ChatWindow fetches the locations once and forwards the
+ * hydrated list here to avoid a second round-trip to LocationsService.
  *
- * @returns {function} handleChatLocations - Callback function to handle search results
+ * @returns {function} handleChatLocations - Callback accepting an array of Location objects
  */
 export const useChatLocations = () => {
     const setFilteredLocations = useSetRecoilState(filteredLocationsState);
@@ -48,33 +50,23 @@ export const useChatLocations = () => {
     const kioskLocation = useRecoilValue(kioskLocationState);
     const isDesktop = useIsDesktop();
 
-    const handleChatLocations = useCallback(async (locationIds) => {
-        if (!locationIds || locationIds.length === 0) {
+    const handleChatLocations = useCallback(async (locations) => {
+        if (!locations || locations.length === 0) {
             setFilteredLocations([]);
             return;
         }
 
         try {
-            const locationPromises = locationIds.map(id =>
-                window.mapsindoors.services.LocationsService.getLocation(id)
-            );
-            const locations = await Promise.all(locationPromises);
-            const validLocations = locations.filter(location => location !== null);
+            setFilteredLocations(locations);
 
-            // Set the locations in filteredLocations state
-            // MapWrapper will automatically watch this state and highlight the locations on the map
-            setFilteredLocations(validLocations);
-
-            // Pan the map to fit the bounds of the locations only if we have valid locations
-            if (validLocations.length > 0 && mapsIndoorsInstance) {
-                // Determine if we require to change the floor
-                changeFloorIfNeeded(validLocations, mapsIndoorsInstance);
+            if (mapsIndoorsInstance) {
+                changeFloorIfNeeded(locations, mapsIndoorsInstance);
 
                 const [bottomPadding, leftPadding] = await Promise.all([getBottomPadding(isDesktop, kioskLocation), getLeftPadding(isDesktop, kioskLocation)]);
-                await fitMapBoundsToLocations(validLocations, mapsIndoorsInstance, currentVenueName, bottomPadding, leftPadding);
+                await fitMapBoundsToLocations(locations, mapsIndoorsInstance, currentVenueName, bottomPadding, leftPadding);
             }
         } catch (error) {
-            console.error('useChatLocations: Error fetching locations:', error);
+            console.error('useChatLocations: Error handling locations:', error);
             setFilteredLocations([]);
         }
     }, [setFilteredLocations, mapsIndoorsInstance, currentVenueName, isDesktop, kioskLocation]);
@@ -148,6 +140,7 @@ export const useChatDirections = (pushAppView, appViews) => {
     const travelMode = useRecoilValue(travelModeState);
     const accessibilityOn = useRecoilValue(accessibilityOnState);
     const shuttleBusOn = useRecoilValue(shuttleBusOnState);
+    const fitDirectionsRouteToViewport = useDirectionsRouteViewportFit();
 
     const handleChatShowRoute = useCallback(async (directionIds) => {
         if (!directionIds || !directionIds.originLocationId || !directionIds.destinationLocationId) {
@@ -163,6 +156,8 @@ export const useChatDirections = (pushAppView, appViews) => {
             const originType = getOriginType(directionIds.originLocationId);
             let originLocation = null;
             let originPoint;
+
+            const destinationPromise = window.mapsindoors.services.LocationsService.getLocation(directionIds.destinationLocationId);
 
             // Origin can be either:
             // - 'coordinates': A comma-separated string "lat,lng,floor" (e.g., "32.3604447,-97.7427429,0")
@@ -192,7 +187,7 @@ export const useChatDirections = (pushAppView, appViews) => {
             }
 
             // Fetch destination location
-            const destinationLocation = await window.mapsindoors.services.LocationsService.getLocation(directionIds.destinationLocationId);
+            const destinationLocation = await destinationPromise;
 
             if (!destinationLocation?.geometry) {
                 console.error('useChatDirections: Failed to fetch destination location or missing geometry');
@@ -225,13 +220,15 @@ export const useChatDirections = (pushAppView, appViews) => {
 
                 // Navigate directly to DIRECTIONS view
                 pushAppView(appViews.DIRECTIONS);
+
+                await fitDirectionsRouteToViewport(directionsResult);
             } else {
                 console.error('useChatDirections: Failed to calculate route');
             }
         } catch (error) {
             console.error('useChatDirections: Error fetching locations or calculating route:', error);
         }
-    }, [directionsService, travelMode, accessibilityOn, shuttleBusOn, setDirectionsResponse, setHasFoundRoute, pushAppView, appViews]);
+    }, [directionsService, travelMode, accessibilityOn, shuttleBusOn, setDirectionsResponse, setHasFoundRoute, pushAppView, appViews, fitDirectionsRouteToViewport]);
 
     return handleChatShowRoute;
 };

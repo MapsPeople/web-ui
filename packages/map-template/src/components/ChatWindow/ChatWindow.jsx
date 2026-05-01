@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useCallback, useState } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 import { useGemini } from '../../providers/GeminiProvider';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import chatHistoryState from '../../atoms/chatHistoryState';
@@ -19,33 +19,6 @@ import LocationConsentPopup from './LocationConsentPopup/LocationConsentPopup';
 import UsageConsentOverlay from './UsageConsentOverlay/UsageConsentOverlay';
 import { useTranslation } from 'react-i18next';
 
-/**
- * Updates the latest server message in the messages array with the provided updates.
- * 
- * @param {Array} messages - The array of message objects
- * @param {Object} updates - The properties to update on the latest server message
- * @returns {Array} A new array with the updated message
- */
-function updateLatestServerMessage(messages, updates) {
-    const updatedMessages = [...messages];
-    // Find last server message index using reverse loop (ES5 compatible)
-    let lastServerIndex = -1;
-    for (let i = updatedMessages.length - 1; i >= 0; i--) {
-        if (updatedMessages[i].type === 'server') {
-            lastServerIndex = i;
-            break;
-        }
-    }
-
-    if (lastServerIndex !== -1) {
-        updatedMessages[lastServerIndex] = {
-            ...updatedMessages[lastServerIndex],
-            ...updates
-        };
-    }
-
-    return updatedMessages;
-}
 
 function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     const { t } = useTranslation();
@@ -57,12 +30,11 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     const isDesktop = useIsDesktop();
     const chatWindowRef = useRef(null);
     const { getInitialMessage, clearInitialMessage } = useInitialChatMessage();
-    const [isAnimated, setIsAnimated] = useState(false);
     const keyboardHeight = useKeyboardHeight(isDesktop);
     const isMobileKeyboardVisible = keyboardHeight > 0;
 
     // Use Gemini provider
-    const { generateResponse, isLoading, searchResults, directionsLocationIds } = useGemini();
+    const { generateResponse, isLoading } = useGemini();
 
     // Use Recoil for chat history
     const [chatHistory, setChatHistory] = useRecoilState(chatHistoryState);
@@ -80,6 +52,9 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
 
     // Track the current thought during streaming
     const [currentThought, setCurrentThought] = useState('');
+
+    // Deferred animation state: starts false, becomes true after isVisible so off-screen state is painted
+    const [isAnimated, setIsAnimated] = useState(false);
 
     // Keep responseId ref for streaming support - allows updating message text and metadata
     // as chunks arrive if we add progressive text streaming in the future
@@ -101,8 +76,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
         setUsageConsentAccepted(true);
     }, [setUsageConsentAccepted]);
 
-    // Memoize the fetch locations function to prevent recreation on every render
-    const fetchLocationsAndUpdateMessage = useCallback(async (searchResultIds) => {
+    const fetchLocationsAndUpdateMessage = useCallback(async (searchResultIds, messageId) => {
         try {
             console.log('ChatWindow: Fetching full location objects for IDs:', searchResultIds);
             const promises = searchResultIds.map(id =>
@@ -114,40 +88,20 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                 .map(result => result.value);
             console.log('ChatWindow: Successfully fetched locations:', validLocations);
 
-            // Update the latest server message with location data
-            setChatHistory(prev => updateLatestServerMessage(prev, { locations: validLocations }));
+            setChatHistory(prev => {
+                const updatedHistory = [...prev];
+                const messageIndex = updatedHistory.findIndex(m => m.id === messageId);
+                if (messageIndex >= 0) {
+                    updatedHistory[messageIndex] = { ...updatedHistory[messageIndex], locations: validLocations };
+                }
+                return updatedHistory;
+            });
+            return validLocations;
         } catch (error) {
             console.error('ChatWindow: Error fetching locations by IDs:', error);
+            return [];
         }
     }, []);
-
-    // Listen for search results from Gemini provider
-    useEffect(() => {
-        // Always notify parent of search results changes (including empty arrays to clear highlights)
-        if (onSearchResults) {
-            onSearchResults(searchResults);
-        }
-
-        // Only fetch location details if we have results
-        if (searchResults && searchResults.length > 0) {
-            console.log('ChatWindow: Received search results from provider:', searchResults);
-            fetchLocationsAndUpdateMessage(searchResults);
-        }
-    }, [searchResults, onSearchResults, fetchLocationsAndUpdateMessage]);
-
-    // Listen for directions location IDs from Gemini provider
-    useEffect(() => {
-        if (directionsLocationIds && directionsLocationIds.originLocationId && directionsLocationIds.destinationLocationId) {
-            console.log('ChatWindow: Received directions location IDs from provider:', directionsLocationIds);
-
-            // Update the latest server message with directions location IDs and route info
-            setChatHistory(prev => updateLatestServerMessage(prev, {
-                directionsLocationIds: directionsLocationIds,
-                canShowRoute: true,
-                routeDirections: directionsLocationIds
-            }));
-        }
-    }, [directionsLocationIds]);
 
     // Handle sending messages
     // messageText is required - from the ChatInput component
@@ -243,9 +197,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                     }
                 },
                 onComplete: (payload) => {
-                    // Check if completion payload contains an error
                     if (payload && payload.error) {
-                        // Update placeholder message with error response
                         const currentMessageId = currentResponseIdRef.current;
                         setChatHistory(prev => {
                             const updatedHistory = [...prev];
@@ -259,8 +211,35 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                             }
                             return updatedHistory;
                         });
+                    } else if (payload) {
+                        const { searchResultIds, directionsLocationIds, distanceResults } = payload;
+
+                        if (directionsLocationIds || distanceResults?.length > 0) {
+                            const messageUpdates = {};
+                            if (directionsLocationIds) {
+                                messageUpdates.directionsLocationIds = directionsLocationIds;
+                                messageUpdates.canShowRoute = true;
+                                messageUpdates.routeDirections = directionsLocationIds;
+                            }
+                            if (distanceResults?.length > 0) {
+                                messageUpdates.distanceResults = distanceResults;
+                            }
+                            setChatHistory(prev => {
+                                const history = [...prev];
+                                const messageIndex = history.findIndex(m => m.id === responseId);
+                                if (messageIndex >= 0) history[messageIndex] = { ...history[messageIndex], ...messageUpdates };
+                                return history;
+                            });
+                        }
+
+                        if (searchResultIds?.length > 0) {
+                            fetchLocationsAndUpdateMessage(searchResultIds, responseId).then(locations => {
+                                onSearchResults?.(locations);
+                            });
+                        } else {
+                            onSearchResults?.([]);
+                        }
                     }
-                    // Streaming complete - function data is already processed by provider
                     setCurrentThought('');
                     currentResponseIdRef.current = null;
                 }
@@ -277,7 +256,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
             ]);
             setCurrentThought('');
         }
-    }, [isLoading, generateResponse, apiKey, userPosition, currentVenueName, venuesInSolution, locationShareConsent, usageConsentAccepted]);
+    }, [isLoading, generateResponse, apiKey, userPosition, currentVenueName, venuesInSolution, locationShareConsent, usageConsentAccepted, onSearchResults, fetchLocationsAndUpdateMessage]);
 
     // Send pending message after consent is decided
     useEffect(() => {
@@ -302,12 +281,14 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
         }
     }, [isVisible, isLoading, usageConsentAccepted, getInitialMessage, clearInitialMessage, handleSendMessage]);
 
-    // Animate the chat window when it becomes visible on mobile
-    useLayoutEffect(() => {
-        if (!isDesktop && isVisible) {
-            setIsAnimated(true);
-        } else {
-            setIsAnimated(false);
+    // Manage animation state for mobile: defer the animation class application so the off-screen state is painted first
+    useEffect(() => {
+        if (!isDesktop) {
+            if (isVisible) {
+                setIsAnimated(true);
+            } else {
+                setIsAnimated(false);
+            }
         }
     }, [isVisible, isDesktop]);
 
