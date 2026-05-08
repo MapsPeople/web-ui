@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- Fixed a bug where portal-based controls (e.g. chat resume button) would not reappear after switching between mobile and desktop layouts, caused by `usePortalTarget` holding a stale reference to a detached DOM node.
+
+### Changed
+
+- The chat button now appears after typing 2 characters instead of 5, and slides in with an entrance animation.
+
 ## [1.97.11] - 2026-05-01
 
 ### Fixed
