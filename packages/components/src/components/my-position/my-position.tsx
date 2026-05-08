@@ -107,6 +107,7 @@ export class MyPositionComponent {
      * Stored to enable proper cleanup when component disconnects.
      */
     private floorChangedHandler: (() => void) | null = null;
+    private rotateEndHandler: (() => void) | null = null;
 
     /**
      * The position provider instance to use internally.
@@ -763,9 +764,10 @@ export class MyPositionComponent {
             }
         }
 
-        this.mapView.on('rotateend', () => {
+        this.rotateEndHandler = () => {
             this.setCompassStyle(this.mapView.getBearing());
-        });
+        };
+        this.mapView.on('rotateend', this.rotateEndHandler);
 
         // Listen for floor changes to update position marker opacity
         // When user manually changes floor via floor selector, update opacity based on position's floor
@@ -863,6 +865,12 @@ export class MyPositionComponent {
         if (this.mapsindoors && this.floorChangedHandler) {
             this.mapsindoors.off('floor_changed', this.floorChangedHandler);
             this.floorChangedHandler = null;
+        }
+
+        // Clean up rotateend listener
+        if (this.mapView && this.rotateEndHandler) {
+            this.mapView.off('rotateend', this.rotateEndHandler);
+            this.rotateEndHandler = null;
         }
     }
 
