@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.97.12] - 2026-05-06
+
+### Fixed
+
+- **`externalIDs` highlight on initial load**: Fixed a bug where locations matched by the `externalIDs` URL parameter / prop were not highlighted with dot badges on the map on first load. The highlight effect was running while the underlying map was still mid-transition (the initial `fitBounds` to the matched locations), and the SDK's `highlight()` badges were wiped by the subsequent map render. The effect is now gated on `isMapReady` and re-applies highlights on the underlying map's `idle` event — matching the same idle-wait pattern already used by the `selectLocation` flow.
+
 ## [1.97.11] - 2026-05-01
 
 ### Fixed
