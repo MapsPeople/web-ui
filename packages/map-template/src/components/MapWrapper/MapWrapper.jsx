@@ -177,9 +177,9 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
 
     /*
      * Dynamically filter or highlight location based on the "filteredLocations", "filteredLocationsByExternalIDs" and "hideNonMatches" property.
-     * Gated on isMapReady so we don't paint highlights before the initial viewState.update() / fitBounds is in motion. Re-applied on the underlying
-     * map's 'idle' event because setMapPositionKnown fires inside useMapBoundsDeterminer BEFORE the goTo animation finishes, so the SDK's highlight()
-     * call lands while the map is still mid-transition and the badges get wiped by the subsequent render (this is what caused MS-3809 — externalIDs
+     * Gated on isMapReady so we don't paint highlights before the initial viewState.update() / fitBounds is in motion. Applied on the underlying
+     * map's 'idle' event because setMapPositionKnown fires inside useMapBoundsDeterminer BEFORE the goTo animation finishes, so a synchronous
+     * highlight() call would land mid-transition and the badges would be wiped by the subsequent render (this is what caused MS-3809 — externalIDs
      * dots never appeared on first load). Same idle-wait pattern as the selectLocation flow at MapTemplate.jsx.
      * Re-apply on floor_changed so highlight badges and filter state stay in sync with the visible floor (SDK does not refresh them automatically).
      */
@@ -203,8 +203,6 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
             }
         };
 
-        applyFilterOrHighlight();
-
         const onFloorChanged = () => {
             onTileStyleChanged(mapsIndoorsInstance);
             applyFilterOrHighlight();
@@ -214,14 +212,11 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
         const map = mapsIndoorsInstance.getMap();
         let removeIdleListener;
         if (map) {
-            if (mapType === mapTypes.Mapbox && typeof map.once === 'function') {
-                map.once('idle', applyFilterOrHighlight);
+            if (mapType === mapTypes.Mapbox && typeof map.on === 'function') {
+                map.on('idle', applyFilterOrHighlight);
                 removeIdleListener = () => map.off?.('idle', applyFilterOrHighlight);
             } else if (mapType === mapTypes.Google && typeof map.addListener === 'function') {
-                const idleListener = map.addListener('idle', () => {
-                    idleListener.remove();
-                    applyFilterOrHighlight();
-                });
+                const idleListener = map.addListener('idle', applyFilterOrHighlight);
                 removeIdleListener = () => idleListener.remove();
             }
         }
