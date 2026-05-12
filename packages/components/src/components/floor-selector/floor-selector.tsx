@@ -32,6 +32,7 @@ export class FloorSelector {
     private currentFloorElement: HTMLElement;
     private maxListHeight: number = 224; // The floor-selector.scss: $max-list-height variable needs to be synced with this value
     private buildingChanging: boolean = false;
+    private pendingFloorChangedListener: (() => void) | null = null;
 
     private readonly floorChangedHandler = (): void => {
         this.currentFloor = this.mapsindoors.getFloor().toString();
@@ -45,14 +46,20 @@ export class FloorSelector {
         this.floors = [];
         const building = this.mapsindoors.getBuilding();
         if (building) {
-            const floorChangedListener = (): void => {
+            if (this.pendingFloorChangedListener) {
+                this.mapsindoors.removeListener('floor_changed', this.pendingFloorChangedListener);
+                this.pendingFloorChangedListener = null;
+            }
+            this.pendingFloorChangedListener = (): void => {
                 this.currentFloor = this.mapsindoors.getFloor().toString();
-                this.mapsindoors.removeListener('floor_changed', floorChangedListener);
+                this.mapsindoors.removeListener('floor_changed', this.pendingFloorChangedListener);
+                this.pendingFloorChangedListener = null;
             };
 
             if (this.mapsindoors.getFloor() === null || this.mapsindoors.getFloor() === undefined) {
-                this.mapsindoors.addListener('floor_changed', floorChangedListener);
+                this.mapsindoors.addListener('floor_changed', this.pendingFloorChangedListener);
             } else {
+                this.pendingFloorChangedListener = null;
                 this.currentFloor = this.mapsindoors.getFloor().toString();
             }
 
@@ -223,6 +230,10 @@ export class FloorSelector {
         if (!this.mapsindoors) return;
         this.mapsindoors.removeListener('floor_changed', this.floorChangedHandler);
         this.mapsindoors.removeListener('building_changed', this.buildingChangedHandler);
+        if (this.pendingFloorChangedListener) {
+            this.mapsindoors.removeListener('floor_changed', this.pendingFloorChangedListener);
+            this.pendingFloorChangedListener = null;
+        }
     }
 
     /**
