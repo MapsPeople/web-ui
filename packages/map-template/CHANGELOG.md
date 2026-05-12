@@ -15,6 +15,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - The chat button now appears after typing 2 characters instead of 5, and slides in with an entrance animation.
 
+## [1.97.12] - 2026-05-12
+
+### Security
+
+- Resolved npm audit vulnerabilities via `npm audit fix` (axios, brace-expansion, follow-redirects, picomatch, tar, uuid).
+
 ## [1.97.11] - 2026-05-01
 
 ### Fixed
