@@ -12,25 +12,17 @@ function usePortalTarget(selector) {
     const [portalElement, setPortalElement] = useState(() => document.querySelector(selector));
 
     useEffect(() => {
-        if (portalElement) return;
+        const updatePortalElement = () => {
+            const matchedElement = document.querySelector(selector);
+            setPortalElement(prev => prev === matchedElement ? prev : matchedElement);
+        };
 
-        const existingElement = document.querySelector(selector);
-        if (existingElement) {
-            setPortalElement(existingElement);
-            return;
-        }
+        updatePortalElement();
 
-        const observer = new MutationObserver(() => {
-            const addedElement = document.querySelector(selector);
-            if (addedElement) {
-                setPortalElement(addedElement);
-                observer.disconnect();
-            }
-        });
-
+        const observer = new MutationObserver(updatePortalElement);
         observer.observe(document.body, { childList: true, subtree: true });
         return () => observer.disconnect();
-    }, [selector, portalElement]);
+    }, [selector]);
 
     return portalElement;
 }

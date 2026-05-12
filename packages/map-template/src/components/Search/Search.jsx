@@ -304,8 +304,7 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
         if (searchFieldRef.current && isInputFieldInFocus) {
             const currentValue = searchFieldRef.current.getValue();
             const characterCount = currentValue ? currentValue.length : 0;
-            // Show button when character count is greater than 5
-            setShowAskWithAiButton(characterCount > 5);
+            setShowAskWithAiButton(characterCount > 2);
         } else {
             setShowAskWithAiButton(false);
         }
