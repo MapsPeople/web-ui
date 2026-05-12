@@ -64,13 +64,13 @@
         background-color: white;
     }
 
-    @keyframes askAiSlideIn {
+    @keyframes ask-ai-slide-in {
         from { opacity: 0; transform: translateY(-6px); }
         to   { opacity: 1; transform: translateY(0); }
     }
 
     &__ask-ai-button {
-        animation: askAiSlideIn 0.18s ease-out;
+        animation: ask-ai-slide-in 0.18s ease-out;
         margin-top: var(--spacing-small);
         padding: var(--spacing-small) var(--spacing-medium);
         width: 100%;
