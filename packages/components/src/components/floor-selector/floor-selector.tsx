@@ -72,6 +72,38 @@ export class FloorSelector {
         }
     };
 
+    private readonly floorChangedHandler = (): void => {
+        this.currentFloor = this.mapsindoors.getFloor().toString();
+    };
+
+    private readonly buildingChangedHandler = (): void => {
+        this.el.querySelectorAll('.mi-floor-selector__floor').forEach(el => {
+            el.getAnimations().forEach(anim => anim.cancel());
+        });
+        this.buildingChanging = true;
+        this.floors = [];
+        const building = this.mapsindoors.getBuilding();
+        if (building) {
+            const floorChangedListener = (): void => {
+                this.currentFloor = this.mapsindoors.getFloor().toString();
+                this.mapsindoors.removeListener('floor_changed', floorChangedListener);
+            };
+
+            if (this.mapsindoors.getFloor() === null || this.mapsindoors.getFloor() === undefined) {
+                this.mapsindoors.addListener('floor_changed', floorChangedListener);
+            } else {
+                this.currentFloor = this.mapsindoors.getFloor().toString();
+            }
+
+            Object.keys(building.floors)
+                .sort((a, b): any => (b as any) - (a as any))
+                .forEach(floor => {
+                    building.floors[floor].index = floor;
+                    this.floors.push(building.floors[floor]);
+                });
+        }
+    };
+
     /**
      * Scrolling the floorList element to the selected floor.
      */
@@ -230,10 +262,13 @@ export class FloorSelector {
         if (!this.mapsindoors) return;
         this.mapsindoors.removeListener('floor_changed', this.floorChangedHandler);
         this.mapsindoors.removeListener('building_changed', this.buildingChangedHandler);
+<<<<<<< HEAD
         if (this.pendingFloorChangedListener) {
             this.mapsindoors.removeListener('floor_changed', this.pendingFloorChangedListener);
             this.pendingFloorChangedListener = null;
         }
+=======
+>>>>>>> a7ac87dd (fix: resolve memory leaks in floor-selector and my-position components)
     }
 
     /**

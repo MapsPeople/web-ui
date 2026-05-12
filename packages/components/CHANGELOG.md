@@ -12,6 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **mi-floor-selector**: Fixed a memory leak where rapidly resizing the window could stack multiple `floor_changed` and `building_changed` listeners. Handlers are now stored as arrow class fields and cleaned up in `disconnectedCallback`.
 - **mi-my-position**: Fixed a memory leak where rapidly resizing the window could stack multiple `rotateend` listeners. Handler is now stored and cleaned up in `disconnectedCallback`.
 
+## [13.33.9] - 2026-05-12
+
+### Changed
+
+- **mi-keyboard**: Expanded Chinese language matching to include `zh-hans`, `zh-hant`, `zh-cn`, and `zh-tw` locale codes for the alphabetic layout.
+
 ## [13.33.8] - 2026-04-07
 
 ### Fixed

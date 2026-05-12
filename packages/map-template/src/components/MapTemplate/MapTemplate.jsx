@@ -133,7 +133,7 @@ MapTemplate.propTypes = {
  * @param {string} [props.gmMapId] - The Google Maps Map ID associated with a specific map style or feature.
  * @param {boolean} [props.useMapProviderModule] - Set to true if the Map Template should take MapsIndoors solution modules into consideration when determining what map type to use.
  * @param {string} [props.kioskOriginLocationId] - If running the Map Template as a kiosk (upcoming feature), provide the Location ID that represents the location of the kiosk.
- * @param {string} [props.language] - The language to show textual content in. Supported values are "en" for English, "da" for Danish, "de" for German, "fr" for French, "it" for Italian, "es" for Spanish, "nl" for Dutch and "zh" for Chinese. If the prop is not set, the language of the browser will be used (if it is one of the supported languages - otherwise it will default to English).
+ * @param {string} [props.language] - The language to show textual content in. Accepts full BCP-47 IETF language tags; the value is forwarded as-is to `window.mapsindoors.MapsIndoors.setLanguage`. Supported values: "en" (English), "da" (Danish), "de" (German), "fr" (French), "it" (Italian), "es" (Spanish), "nl" (Dutch), "zh-Hans" (Chinese Simplified), "zh-Hant" (Chinese Traditional). Legacy tags `zh`, `zh-CN`, `zh-TW` are accepted and normalized by the SDK to `zh-Hans` / `zh-Hant`. If the prop is not set, the language of the browser will be used (falling back to English when unsupported).
  * @param {boolean} [props.supportsUrlParameters] - Set to true if you want to support URL Parameters to configure the Map Template.
  * @param {boolean} [props.useKeyboard] - If running the Map Template as a kiosk, set this prop to true and it will prompt a keyboard.
  * @param {number} [props.timeout] - If you want the Map Template to reset map position and UI elements to the initial state after some time of inactivity, use this to specify the number of seconds of inactivity before resetting.
@@ -312,8 +312,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             const languageToUse = currentLanguage ?? language ?? appConfig?.appSettings?.language ?? navigator.language;
 
             // Set the language on the MapsIndoors SDK in order to get eg. Mapbox and Google directions in that language.
-            // The MapsIndoors data only accepts the first part of the IETF language string, hence the split.
-            window.mapsindoors.MapsIndoors.setLanguage(languageToUse.split('-')[0]);
+            window.mapsindoors.MapsIndoors.setLanguage(languageToUse);
 
             // If relevant, fetch venues, categories and the current location again to get them in the new language
             window.mapsindoors.services.LocationsService.once('update_completed', () => {
