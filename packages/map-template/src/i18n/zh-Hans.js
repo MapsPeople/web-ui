@@ -1,4 +1,4 @@
-const zh = {
+const zhHans = {
     // Common
     'Close': '关闭',
     'From': '从',
@@ -110,4 +110,4 @@ const zh = {
     'Location consent decline': '拒绝',
 };
 
-export default zh;
+export default zhHans;

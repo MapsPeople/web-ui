@@ -7,7 +7,8 @@ import fr from './fr.js';
 import it from './it.js';
 import es from './es.js';
 import nl from './nl.js';
-import zh from './zh.js';
+import zhHans from './zh-Hans.js';
+import zhHant from './zh-Hant.js';
 
 export default function initI18n(language) {
     i18n
@@ -35,12 +36,20 @@ export default function initI18n(language) {
                 nl: {
                     translation: nl
                 },
-                zh: {
-                    translation: zh
+                'zh-Hans': {
+                    translation: zhHans
+                },
+                'zh-Hant': {
+                    translation: zhHant
                 }
             },
             lng: language,
-            fallbackLng: 'en',
+            fallbackLng: {
+                'zh':    ['zh-Hans', 'en'],
+                'zh-CN': ['zh-Hans', 'en'],
+                'zh-TW': ['zh-Hant', 'en'],
+                default: ['en']
+            },
             interpolation: {
                 escapeValue: false // react already safes from xss => https://www.i18next.com/translation-function/interpolation#unescape
             }
@@ -56,4 +65,6 @@ export const supportedLanguages = [
     { code: 'es', label: 'Español' },
     { code: 'nl', label: 'Nederlands' },
     { code: 'zh', label: '中文' },
+    { code: 'zh-Hans', label: '简体中文' },
+    { code: 'zh-Hant', label: '繁體中文' },
 ];

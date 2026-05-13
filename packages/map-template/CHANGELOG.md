@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.98.0] - 2026-05-13
+
+### Added
+
+- Simplified Chinese (`zh-Hans`) and Traditional Chinese (`zh-Hant`) translations, replacing the previous generic `zh` locale. Fallback routing maps `zh` and `zh-CN` to Simplified and `zh-TW` to Traditional.
+- Set Mapbox `localIdeographFontFamily` to `sans-serif` so CJK glyphs render without requiring custom font sprites.
+- Pass the full IETF language tag (e.g. `zh-Hans`) to the MapsIndoors SDK instead of stripping to the primary subtag.
+
 ## [1.97.13] - 2026-05-12
 
 ### Fixed
