@@ -42,7 +42,6 @@ import ShareIcon from '../../assets/share.svg?react';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
 import apiKeyState from '../../atoms/apiKeyState';
 import kioskLocationState from '../../atoms/kioskLocationState';
-import supportsUrlParametersState from '../../atoms/supportsUrlParametersState';
 
 const searchFieldIdentifiers = {
     TO: 'TO',
@@ -130,7 +129,6 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const apiKey = useRecoilValue(apiKeyState);
     const kioskLocation = useRecoilValue(kioskLocationState);
-    const supportsUrlParameters = useRecoilValue(supportsUrlParametersState);
     const isDesktop = useIsDesktop();
 
     /**
@@ -546,7 +544,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                                 {t('Bike')}
                             </mi-dropdown-item>
                         </Dropdown>}
-                        {!kioskLocation && supportsUrlParameters && (
+                        {!kioskLocation && appConfig?.appSettings?.enableWayfindingShareButton === 'true' && (
                             <button
                                 className="wayfinding__share"
                                 onClick={() => shareRoute()}
