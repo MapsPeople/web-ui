@@ -193,6 +193,32 @@
         align-items: start;
     }
 
+    &__travel {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-x-small);
+    }
+
+    &__share {
+        border: 1px solid var(--color-gray-30);
+        background: var(--color-gray-10);
+        border-radius: var(--spacing-x-small);
+        width: 36px;
+        height: 36px;
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+
+        &:hover {
+            background-color: var(--tailwind-colors-gray-200);
+        }
+
+        svg {
+            width: 16px;
+            height: 16px;
+        }
+    }
+
     &__label {
         span {
             display: none;

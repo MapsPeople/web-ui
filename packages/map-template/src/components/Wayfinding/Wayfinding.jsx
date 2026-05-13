@@ -38,6 +38,11 @@ import PropTypes from 'prop-types';
 import wayfindingLocationState from '../../atoms/wayfindingLocation';
 import appConfigState from '../../atoms/appConfigState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
+import ShareIcon from '../../assets/share.svg?react';
+import { useIsDesktop } from '../../hooks/useIsDesktop';
+import apiKeyState from '../../atoms/apiKeyState';
+import kioskLocationState from '../../atoms/kioskLocationState';
+import supportsUrlParametersState from '../../atoms/supportsUrlParametersState';
 
 const searchFieldIdentifiers = {
     TO: 'TO',
@@ -123,6 +128,10 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
 
     const appConfig = useRecoilValue(appConfigState);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
+    const apiKey = useRecoilValue(apiKeyState);
+    const kioskLocation = useRecoilValue(kioskLocationState);
+    const supportsUrlParameters = useRecoilValue(supportsUrlParametersState);
+    const isDesktop = useIsDesktop();
 
     /**
      * Decorates location with data that is required for wayfinding to work.
@@ -351,6 +360,16 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         setShowMyPositionOption(false);
     }
 
+    function shareRoute() {
+        const base = `${window.location.origin}${window.location.pathname.replace(/\/$/, '')}`;
+        const url = `${base}?apiKey=${apiKey}&directionsFrom=${originLocation.id}&directionsTo=${destinationLocation.id}`;
+        if (!isDesktop && typeof navigator.share === 'function') {
+            navigator.share({ url });
+        } else {
+            navigator.clipboard.writeText(url);
+        }
+    }
+
     useEffect(() => {
         return () => {
             setSearchResults([]);
@@ -527,6 +546,16 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                                 {t('Bike')}
                             </mi-dropdown-item>
                         </Dropdown>}
+                        {!kioskLocation && supportsUrlParameters && (
+                            <button
+                                className="wayfinding__share"
+                                onClick={() => shareRoute()}
+                                title={t('Share')}
+                                aria-label={t('Share')}
+                            >
+                                <ShareIcon />
+                            </button>
+                        )}
                     </div>
                 </div>
                 <hr></hr>
