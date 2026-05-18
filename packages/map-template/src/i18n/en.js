@@ -82,6 +82,7 @@ const en = {
     'Share route': 'Share route',
     'Copy link': 'Copy link',
     'Link copied': 'Link copied',
+    'Could not share route': 'Could not share route',
     'QR Code': 'QR Code',
     // Opening Hours
     'Open': 'Open',

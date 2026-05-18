@@ -44,6 +44,11 @@ import kioskLocationState from '../../atoms/kioskLocationState';
 import supportsUrlParametersState from '../../atoms/supportsUrlParametersState';
 import notificationMessageState from '../../atoms/notificationMessageState';
 import useMediaQuery from '../../hooks/useMediaQuery';
+import {
+    buildRouteShareUrl,
+    shareRouteResults,
+    shareRouteWithFallback
+} from './shareRouteHelpers';
 
 const searchFieldIdentifiers = {
     TO: 'TO',
@@ -95,6 +100,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
 
     const toFieldRef = useRef();
     const fromFieldRef = useRef();
+    const sharingInProgressRef = useRef(false);
 
     const directionsService = useRecoilValue(directionsServiceState);
     const userPosition = useRecoilValue(userPositionState);
@@ -104,6 +110,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     const [wayfindingLocation, setWayfindingLocation] = useRecoilState(wayfindingLocationState);
 
     const [activeSearchField, setActiveSearchField] = useState();
+    const [isSharing, setIsSharing] = useState(false);
 
     /** Indicate if a route has been found */
     const setHasFoundRoute = useSetRecoilState(hasFoundRouteState);
@@ -285,7 +292,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         setHasFoundRoute(true);
         setHasGooglePlaces(false);
         showMyPositionOptionButton(searchFieldIdentifier);
-        
+
         // Don't clear selection pins here - keep destination visible until route is created
     }
 
@@ -365,12 +372,12 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     function closeWayfinding() {
         setOriginLocation();
         fromFieldRef.current?.setDisplayText('');
-        
+
         // Clear selection when routing dialog closes (SDK recommendation)
         if (mapsIndoorsInstance) {
             mapsIndoorsInstance.deselectLocation();
         }
-        
+
         onBack();
     }
 
@@ -384,59 +391,61 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         setShowMyPositionOption(false);
     }
 
-    /**
-     * Write the given URL to the clipboard and show a confirmation toast only
-     * after the write actually resolves. A rejection (cross-origin iframe
-     * without `clipboard-write`, denied permission, etc.) is swallowed so we
-     * don't surface a false success.
-     */
-    function copyToClipboardWithFeedback(url) {
-        navigator.clipboard.writeText(url).then(
-            () => setNotificationMessage({ text: t('Link copied'), type: 'success', sticky: false }),
-            () => { /* write rejected — do not show success */ }
-        );
+    function showCopiedMessage() {
+        setNotificationMessage({ text: t('Link copied'), type: 'success', sticky: false });
+    }
+
+    function showShareFailedMessage() {
+        setNotificationMessage({ text: t('Could not share route'), type: 'error', sticky: false });
     }
 
     /**
      * Share the current route. Routes to the native share sheet on touch
      * devices (`pointer: coarse`) and to clipboard copy on pointer-fine
-     * devices like desktops, even when `navigator.share` is available. Web
-     * Share rejections are discriminated: `AbortError` means the user
-     * cancelled and we leave the clipboard alone; any other rejection (e.g.
-     * Permissions Policy block in an iframe) falls back to clipboard.
+     * devices like desktops, even when `navigator.share` is available. Native
+     * share success and cancellation stay silent; native share failures fall
+     * back to clipboard copy. Clipboard copy success shows a notification, and
+     * terminal failures show an error notification.
      */
-    function shareRoute() {
-        const base = `${window.location.origin}${window.location.pathname.replace(/\/$/, '')}`;
-        const params = new URLSearchParams({
-            directionsFrom: originLocation.id,
-            directionsTo: destinationLocation.id
-        });
+    async function shareRoute() {
+        if (sharingInProgressRef.current) return;
 
-        if (apiKey) {
-            params.set('apiKey', apiKey);
-        }
+        sharingInProgressRef.current = true;
+        setIsSharing(true);
 
-        const url = `${base}?${params.toString()}`;
-
-        const originName = originLocation.properties?.name ?? '';
-        const destinationName = destinationLocation.properties?.name ?? '';
-        const sharePayload = {
-            title: t('Share route'),
-            text: originName && destinationName ? `${originName} → ${destinationName}` : undefined,
-            url,
-        };
-
-        if (canShare && prefersShareSheet) {
-            navigator.share(sharePayload).catch((err) => {
-                if (err?.name !== 'AbortError' && canCopy) {
-                    copyToClipboardWithFeedback(url);
-                }
+        try {
+            const base = `${window.location.origin}${window.location.pathname.replace(/\/$/, '')}`;
+            const url = buildRouteShareUrl({
+                base,
+                apiKey,
+                originId: originLocation.id,
+                destinationId: destinationLocation.id
             });
-        } else if (canCopy) {
-            copyToClipboardWithFeedback(url);
-        } else if (canShare) {
-            // No clipboard available — last resort, use the share sheet even on pointer-fine devices.
-            navigator.share(sharePayload).catch(() => {});
+
+            const originName = originLocation.properties?.name ?? '';
+            const destinationName = destinationLocation.properties?.name ?? '';
+            const sharePayload = {
+                title: t('Share route'),
+                text: originName && destinationName ? `${originName} → ${destinationName}` : undefined,
+                url,
+            };
+
+            const result = await shareRouteWithFallback({
+                share: navigator.share?.bind(navigator),
+                clipboard: navigator.clipboard,
+                prefersShareSheet,
+                sharePayload,
+                copyUrl: url
+            });
+
+            if (result === shareRouteResults.COPIED) {
+                showCopiedMessage();
+            } else if (result === shareRouteResults.FAILED) {
+                showShareFailedMessage();
+            }
+        } finally {
+            sharingInProgressRef.current = false;
+            setIsSharing(false);
         }
     }
 
@@ -626,6 +635,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                             <button
                                 className="wayfinding__share"
                                 onClick={() => shareRoute()}
+                                disabled={isSharing}
                                 aria-label={t('Share route')}
                             >
                                 <ShareIcon />

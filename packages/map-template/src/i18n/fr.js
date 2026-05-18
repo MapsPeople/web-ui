@@ -82,6 +82,7 @@ const fr = {
     'Share route': 'Partager l\'itinéraire',
     'Copy link': 'Copier le lien',
     'Link copied': 'Lien copié',
+    'Could not share route': 'Impossible de partager l\'itinéraire',
     'QR Code': 'Code QR',
     // Opening Hours
     'Open': 'Ouvert',

@@ -82,6 +82,7 @@ const nl = {
     'Share route': 'Route delen',
     'Copy link': 'Link kopiëren',
     'Link copied': 'Link gekopieerd',
+    'Could not share route': 'Kan route niet delen',
     'QR Code': 'QR code',
     // Opening Hours
     'Open': 'Open',

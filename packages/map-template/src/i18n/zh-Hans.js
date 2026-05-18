@@ -82,6 +82,7 @@ const zhHans = {
     'Share route': '分享路线',
     'Copy link': '复制链接',
     'Link copied': '链接已复制',
+    'Could not share route': '无法分享路线',
     'QR Code': '二维码',
     // Opening Hours
     'Open': '营业中',
