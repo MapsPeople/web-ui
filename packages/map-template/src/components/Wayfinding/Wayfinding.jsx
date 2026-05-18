@@ -407,7 +407,16 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
      */
     function shareRoute() {
         const base = `${window.location.origin}${window.location.pathname.replace(/\/$/, '')}`;
-        const url = `${base}?apiKey=${apiKey}&directionsFrom=${originLocation.id}&directionsTo=${destinationLocation.id}`;
+        const params = new URLSearchParams({
+            directionsFrom: originLocation.id,
+            directionsTo: destinationLocation.id
+        });
+
+        if (apiKey) {
+            params.set('apiKey', apiKey);
+        }
+
+        const url = `${base}?${params.toString()}`;
 
         if (canShare && prefersShareSheet) {
             navigator.share({ url }).catch((err) => {
