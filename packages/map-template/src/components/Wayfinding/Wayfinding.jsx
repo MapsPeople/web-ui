@@ -418,8 +418,16 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
 
         const url = `${base}?${params.toString()}`;
 
+        const originName = originLocation.properties?.name ?? '';
+        const destinationName = destinationLocation.properties?.name ?? '';
+        const sharePayload = {
+            title: t('Share route'),
+            text: originName && destinationName ? `${originName} → ${destinationName}` : undefined,
+            url,
+        };
+
         if (canShare && prefersShareSheet) {
-            navigator.share({ url }).catch((err) => {
+            navigator.share(sharePayload).catch((err) => {
                 if (err?.name !== 'AbortError' && canCopy) {
                     copyToClipboardWithFeedback(url);
                 }
@@ -428,7 +436,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
             copyToClipboardWithFeedback(url);
         } else if (canShare) {
             // No clipboard available — last resort, use the share sheet even on pointer-fine devices.
-            navigator.share({ url }).catch(() => {});
+            navigator.share(sharePayload).catch(() => {});
         }
     }
 
@@ -618,7 +626,6 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                             <button
                                 className="wayfinding__share"
                                 onClick={() => shareRoute()}
-                                title={t('Share route')}
                                 aria-label={t('Share route')}
                             >
                                 <ShareIcon />
