@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added a Share Route button to the Wayfinding panel. Triggers the native share sheet on mobile and copies the route link to the clipboard on desktop.
+- Added a Share Route button to the Wayfinding panel. Configurable via app settings, hidden when iframed, and falls back to copying the link when the native share sheet is unavailable.
 
 ## [1.98.1] - 2026-05-13
 
