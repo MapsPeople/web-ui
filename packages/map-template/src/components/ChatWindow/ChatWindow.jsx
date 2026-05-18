@@ -11,7 +11,7 @@ import primaryColorState from '../../atoms/primaryColorState';
 import apiKeyState from '../../atoms/apiKeyState';
 import userPositionState from '../../atoms/userPositionState';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
-import venuesInSolutionState from '../../atoms/venuesInSolutionState';
+import venueListState from '../../atoms/venueListState';
 import userLocationShareState from '../../atoms/userLocationShareState';
 import ChatMessages from './ChatMessages/ChatMessages';
 import ChatInput from './ChatInput/ChatInput';
@@ -26,7 +26,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     const apiKey = useRecoilValue(apiKeyState);
     const userPosition = useRecoilValue(userPositionState);
     const currentVenueName = useRecoilValue(currentVenueNameState);
-    const venuesInSolution = useRecoilValue(venuesInSolutionState);
+    const venueList = useRecoilValue(venueListState);
     const isDesktop = useIsDesktop();
     const chatWindowRef = useRef(null);
     const { getInitialMessage, clearInitialMessage } = useInitialChatMessage();
@@ -141,16 +141,14 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
 
         // Add venue info if available
         if (currentVenueName) {
-            const currentVenue = venuesInSolution.find(
-                venue => venue.name.toLowerCase() === currentVenueName.toLowerCase()
-            );
+            const currentVenueItem = venueList.find(v => v.name.toLowerCase() === currentVenueName.toLowerCase());
 
             extra.venue = {
                 name: currentVenueName
             };
 
-            if (currentVenue?.id) {
-                extra.venue.venueId = currentVenue.id;
+            if (currentVenueItem?.id) {
+                extra.venue.venueId = currentVenueItem.id;
             }
         }
 
@@ -256,7 +254,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
             ]);
             setCurrentThought('');
         }
-    }, [isLoading, generateResponse, apiKey, userPosition, currentVenueName, venuesInSolution, locationShareConsent, usageConsentAccepted, onSearchResults, fetchLocationsAndUpdateMessage]);
+    }, [isLoading, generateResponse, apiKey, userPosition, currentVenueName, venueList, locationShareConsent, usageConsentAccepted, onSearchResults, fetchLocationsAndUpdateMessage]);
 
     // Send pending message after consent is decided
     useEffect(() => {

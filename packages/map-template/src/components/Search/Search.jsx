@@ -33,7 +33,7 @@ import isLegendDialogVisibleState from '../../atoms/isLegendDialogVisibleState';
 import legendSortedFieldsSelector from '../../selectors/legendSortedFieldsSelector';
 import searchAllVenuesState from '../../atoms/searchAllVenues';
 import isNullOrUndefined from '../../helpers/isNullOrUndefined';
-import venuesInSolutionState from '../../atoms/venuesInSolutionState';
+import venueListState from '../../atoms/venueListState';
 import initialVenueNameState from '../../atoms/initialVenueNameState';
 import primaryColorState from '../../atoms/primaryColorState';
 import mapTypeState from '../../atoms/mapTypeState';
@@ -120,7 +120,7 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
 
     const searchAllVenues = useRecoilValue(searchAllVenuesState);
 
-    const venuesInSolution = useRecoilValue(venuesInSolutionState);
+    const venueList = useRecoilValue(venueListState);
 
     const initialVenueName = useRecoilValue(initialVenueNameState);
 
@@ -192,7 +192,7 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
         // Thus we need to find the venue name from the list of venues.
         window.mapsindoors.services.LocationsService.getLocations({
             categories: category,
-            venue: searchAllVenues ? undefined : venuesInSolution.find(venue => venue.name.toLowerCase() === currentVenueName.toLowerCase())?.name,
+            venue: searchAllVenues ? undefined : venueList.find(v => v.name.toLowerCase() === currentVenueName.toLowerCase())?.name,
         }).then(results => onResults(results, true));
     }
 
