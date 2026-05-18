@@ -6,16 +6,38 @@ export const shareRouteResults = {
 };
 
 export function buildRouteShareUrl({ base, apiKey, originId, destinationId }) {
-    const params = new URLSearchParams({
+    new URL(base);
+
+    const hashIndex = base.indexOf('#');
+    const hash = hashIndex === -1 ? '' : base.slice(hashIndex);
+    const baseBeforeHash = hashIndex === -1 ? base : base.slice(0, hashIndex);
+    const queryIndex = baseBeforeHash.indexOf('?');
+    const baseWithoutQuery = queryIndex === -1 ? baseBeforeHash : baseBeforeHash.slice(0, queryIndex);
+    const query = queryIndex === -1 ? '' : baseBeforeHash.slice(queryIndex + 1);
+    const routeParamNames = new Set(['directionsFrom', 'directionsTo', 'apiKey']);
+    const preservedParams = query
+        ? query.split('&').filter((param) => {
+            const key = param.split('=', 1)[0];
+            const decodedKey = new URLSearchParams(`${key}=`).keys().next().value;
+
+            return !routeParamNames.has(decodedKey);
+        })
+        : [];
+    const routeParams = new URLSearchParams({
         directionsFrom: originId,
         directionsTo: destinationId
     });
 
     if (apiKey) {
-        params.set('apiKey', apiKey);
+        routeParams.set('apiKey', apiKey);
     }
 
-    return `${base}?${params.toString()}`;
+    const routeQuery = routeParams.toString();
+    const nextQuery = preservedParams.length > 0
+        ? `${preservedParams.join('&')}&${routeQuery}`
+        : routeQuery;
+
+    return `${baseWithoutQuery}?${nextQuery}${hash}`;
 }
 
 async function copyRouteToClipboard(clipboard, copyUrl) {
