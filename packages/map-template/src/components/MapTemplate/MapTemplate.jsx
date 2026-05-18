@@ -17,6 +17,7 @@ import currentLocationState from '../../atoms/currentLocationState';
 import tileStyleState from '../../atoms/tileStyleState';
 import categoriesState from '../../atoms/categoriesState';
 import venuesInSolutionState from '../../atoms/venuesInSolutionState';
+import venueListState from '../../atoms/venueListState';
 import solutionState from '../../atoms/solutionState.js';
 import { useAppHistory } from '../../hooks/useAppHistory';
 import { useReset } from '../../hooks/useReset.js';
@@ -158,7 +159,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const setGmApiKey = useSetRecoilState(gmApiKeyState);
     const setMapboxAccessToken = useSetRecoilState(mapboxAccessTokenState);
     const [isMapReady, setMapReady] = useRecoilState(isMapReadyState);
-    const [venuesInSolution, setVenuesInSolution] = useRecoilState(venuesInSolutionState);
+    const setVenuesInSolution = useSetRecoilState(venuesInSolutionState);
+    const [venueList, setVenueList] = useRecoilState(venueListState);
     const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
     const categories = useRecoilValue(categoriesState);
     const setLocationId = useSetRecoilState(locationIdState);
@@ -320,13 +322,15 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                     updateCategories();
                 }
 
-                if (venuesInSolution.length > 0) {
-                    window.mapsindoors.services.VenuesService.getVenues().then(venuesResult => {
-                        venuesResult = venuesResult.map(venue => {
-                            venue.image = appConfig.venueImages[venue.name.toLowerCase()];
-                            return venue;
-                        });
-                        setVenuesInSolution(venuesResult);
+                if (venueList.length > 0) {
+                    window.mapsindoors.services.VenuesService.getVenueList().then(venueListResult => {
+                        const augmented = venueListResult.map(v => ({
+                            ...v,
+                            image: appConfig.venueImages?.[v.name.toLowerCase()]
+                        }));
+                        setVenueList(augmented);
+                        // Clear full venue objects so they are re-fetched on demand in the new language
+                        setVenuesInSolution([]);
                     });
                 }
 
@@ -358,26 +362,54 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             window.mapsindoors.MapsIndoors.setMapsIndoorsApiKey(apiKey);
 
             Promise.all([
-                // Fetch all Venues in the Solution
-                window.mapsindoors.services.VenuesService.getVenues(),
-                // Fetch the App Config belonging to the given API key. This is needed for checking access tokens and Venue images.
+                // When center prop is defined, full venue objects are needed for geometry intersection in useMapBoundsDeterminer.
+                // Otherwise fetch the lightweight list and load only the default venue's full object.
+                center
+                    ? window.mapsindoors.services.VenuesService.getVenues()
+                    : window.mapsindoors.services.VenuesService.getVenueList(),
                 window.mapsindoors.services.AppConfigService.getConfig().then(appConfigResult => {
-                    setAppConfig(appConfigResult); // We need this as early as possible
+                    setAppConfig(appConfigResult);
                     return appConfigResult;
                 }),
-                // Fetch solution info in order to see what modules are enabled
                 window.mapsindoors.services.SolutionsService.getSolution().then(solutionResult => {
                     setSolution(solutionResult);
                     return solutionResult;
                 }),
-                // Ensure a minimum waiting time of 1 second
                 new Promise(resolve => setTimeout(resolve, 1000))
-            ]).then(([venuesResult, appConfigResult]) => {
-                venuesResult = venuesResult.map(venue => {
-                    venue.image = appConfigResult.venueImages[venue.name.toLowerCase()];
-                    return venue;
-                });
-                setVenuesInSolution(venuesResult);
+            ]).then(async ([venueData, appConfigResult]) => {
+                if (center) {
+                    // Full Venue[] path — augment with images and populate both atoms
+                    venueData.forEach(v => { v.image = appConfigResult.venueImages?.[v.name.toLowerCase()]; });
+                    const lightList = venueData.map(v => ({
+                        id: v.id,
+                        name: v.name,
+                        displayName: v.venueInfo?.name || v.name,
+                        image: v.image
+                    }));
+                    setVenueList(lightList);
+                    setVenuesInSolution(venueData);
+                } else {
+                    // Lightweight path — augment list with images, fetch only the default venue in full
+                    const augmented = venueData.map(v => ({
+                        ...v,
+                        image: appConfigResult.venueImages?.[v.name.toLowerCase()]
+                    }));
+                    setVenueList(augmented);
+
+                    // Resolve default: venue prop → appConfig.appSettings.venue → first alphabetically
+                    const defaultName = venue
+                        ?? appConfigResult.appSettings?.venue
+                        ?? [...augmented].sort((a, b) => a.name.localeCompare(b.name))[0]?.name;
+                    const defaultItem = augmented.find(v => v.name.toLowerCase() === defaultName?.toLowerCase());
+
+                    if (defaultItem) {
+                        const defaultVenue = await window.mapsindoors.services.VenuesService.getVenue(defaultItem.id);
+                        if (defaultVenue) {
+                            defaultVenue.image = appConfigResult.venueImages?.[defaultVenue.name.toLowerCase()];
+                            setVenuesInSolution([defaultVenue]);
+                        }
+                    }
+                }
             });
             setMapReady(false);
         }
@@ -881,14 +913,14 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         <GeminiProvider enabled={appConfig?.appSettings?.enableChat === 'true'}>
             <div className={`mapsindoors-map
             ${currentAppView === appStates.DIRECTIONS ? 'mapsindoors-map--hide-elements' : 'mapsindoors-map--show-elements'}
-            ${(venuesInSolution.length > 1 && showVenueSelector) ? '' : 'mapsindoors-map--hide-venue-selector'}
+            ${(venueList.length > 1 && showVenueSelector) ? '' : 'mapsindoors-map--hide-venue-selector'}
             ${showPositionControl ? 'mapsindoors-map--show-my-position' : 'mapsindoors-map--hide-my-position'}
             ${isKiosk ? 'mapsindoors-map--kiosk' : ''}
             ${disableRightClick ? 'mapsindoors-map--disable-right-click' : ''}
             ${(currentAppView === appStates.CHAT && !isDesktop) ? 'mapsindoors-map--hide-map-controls' : ''}`}>
                 <Notification />
                 {!isMapReady && <SplashScreen />}
-                {venuesInSolution.length > 1 && showVenueSelector && <VenueSelector
+                {venueList.length > 1 && showVenueSelector && <VenueSelector
                     onOpen={() => pushAppView(appStates.VENUE_SELECTOR)}
                     onClose={() => goBack()}
                     active={currentAppView === appStates.VENUE_SELECTOR}
