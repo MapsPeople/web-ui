@@ -79,7 +79,9 @@ const fr = {
     'Finish route': 'Terminer l\'itinéraire',
     // Share location link
     'Share': 'Partager',
+    'Share route': 'Partager l\'itinéraire',
     'Copy link': 'Copier le lien',
+    'Link copied': 'Lien copié',
     'QR Code': 'Code QR',
     // Opening Hours
     'Open': 'Ouvert',

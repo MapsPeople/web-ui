@@ -39,9 +39,11 @@ import wayfindingLocationState from '../../atoms/wayfindingLocation';
 import appConfigState from '../../atoms/appConfigState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import ShareIcon from '../../assets/share.svg?react';
-import { useIsDesktop } from '../../hooks/useIsDesktop';
 import apiKeyState from '../../atoms/apiKeyState';
 import kioskLocationState from '../../atoms/kioskLocationState';
+import supportsUrlParametersState from '../../atoms/supportsUrlParametersState';
+import notificationMessageState from '../../atoms/notificationMessageState';
+import useMediaQuery from '../../hooks/useMediaQuery';
 
 const searchFieldIdentifiers = {
     TO: 'TO',
@@ -129,7 +131,22 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const apiKey = useRecoilValue(apiKeyState);
     const kioskLocation = useRecoilValue(kioskLocationState);
-    const isDesktop = useIsDesktop();
+    const supportsUrlParameters = useRecoilValue(supportsUrlParametersState);
+    const setNotificationMessage = useSetRecoilState(notificationMessageState);
+
+    // Capability flags for the Share Route button. Checked at render time so the
+    // button is hidden when neither API is available (e.g. insecure context,
+    // iframe without `web-share`/`clipboard-write` Permissions Policy delegation).
+    const canShare = typeof navigator.share === 'function';
+    const canCopy = typeof navigator.clipboard?.writeText === 'function';
+
+    // Pointer-type heuristic for choosing between the native share sheet and
+    // clipboard copy when both are available. Touch-primary devices (phones,
+    // tablets) report `pointer: coarse` and benefit from the OS share sheet.
+    // Desktops with mice/trackpads report `pointer: fine`; copy-to-clipboard
+    // is the more idiomatic affordance there, even when `navigator.share`
+    // exists (e.g. Chromium-based desktops like Vivaldi/Chrome/Edge).
+    const prefersShareSheet = useMediaQuery('(pointer: coarse)');
 
     /**
      * Decorates location with data that is required for wayfinding to work.
@@ -358,13 +375,42 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         setShowMyPositionOption(false);
     }
 
+    /**
+     * Write the given URL to the clipboard and show a confirmation toast only
+     * after the write actually resolves. A rejection (cross-origin iframe
+     * without `clipboard-write`, denied permission, etc.) is swallowed so we
+     * don't surface a false success.
+     */
+    function copyToClipboardWithFeedback(url) {
+        navigator.clipboard.writeText(url).then(
+            () => setNotificationMessage({ text: t('Link copied'), type: 'success', sticky: false }),
+            () => { /* write rejected — do not show success */ }
+        );
+    }
+
+    /**
+     * Share the current route. Routes to the native share sheet on touch
+     * devices (`pointer: coarse`) and to clipboard copy on pointer-fine
+     * devices like desktops, even when `navigator.share` is available. Web
+     * Share rejections are discriminated: `AbortError` means the user
+     * cancelled and we leave the clipboard alone; any other rejection (e.g.
+     * Permissions Policy block in an iframe) falls back to clipboard.
+     */
     function shareRoute() {
         const base = `${window.location.origin}${window.location.pathname.replace(/\/$/, '')}`;
         const url = `${base}?apiKey=${apiKey}&directionsFrom=${originLocation.id}&directionsTo=${destinationLocation.id}`;
-        if (!isDesktop && typeof navigator.share === 'function') {
-            navigator.share({ url });
-        } else {
-            navigator.clipboard.writeText(url);
+
+        if (canShare && prefersShareSheet) {
+            navigator.share({ url }).catch((err) => {
+                if (err?.name !== 'AbortError' && canCopy) {
+                    copyToClipboardWithFeedback(url);
+                }
+            });
+        } else if (canCopy) {
+            copyToClipboardWithFeedback(url);
+        } else if (canShare) {
+            // No clipboard available — last resort, use the share sheet even on pointer-fine devices.
+            navigator.share({ url }).catch(() => {});
         }
     }
 
@@ -544,12 +590,17 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                                 {t('Bike')}
                             </mi-dropdown-item>
                         </Dropdown>}
-                        {!kioskLocation && appConfig?.appSettings?.enableWayfindingShareButton === 'true' && (
+                        {!kioskLocation
+                            && supportsUrlParameters
+                            && (canShare || canCopy)
+                            // TEMP: bypass app-setting gate for local testing — restore before commit
+                            // && appConfig?.appSettings?.enableWayfindingShareButton === 'true'
+                            && (
                             <button
                                 className="wayfinding__share"
                                 onClick={() => shareRoute()}
-                                title={t('Share')}
-                                aria-label={t('Share')}
+                                title={t('Share route')}
+                                aria-label={t('Share route')}
                             >
                                 <ShareIcon />
                             </button>

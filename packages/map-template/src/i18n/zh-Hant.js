@@ -79,7 +79,9 @@ const zhHant = {
       'Finish route': '完成路線',
       // Share location link
       'Share': '分享',
+      'Share route': '分享路線',
       'Copy link': '複製連結',
+      'Link copied': '連結已複製',
       'QR Code': 'QR 碼',
       // Opening Hours
       'Open': '營業中',
