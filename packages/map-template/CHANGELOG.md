@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] - Unreleased
+
+### Added
+
+- `src/atoms/venueListState.js` — new Recoil atom holding `{ id, name, displayName }` per venue, populated at startup.
+
+### Changed
+
+- Venues are now loaded on demand: only identifiers and display names are fetched at startup, with full venue data fetched when a venue is selected.
+- Venue Selector visibility is now determined at startup without waiting for full venue data.
+- `venuesToSync` is updated to the active venue on switch, avoiding unnecessary location and floor syncing for unvisited venues.
+
+### Files changed
+
+- `src/components/MapTemplate/MapTemplate.jsx` — populates `venueListState` at startup; gates Venue Selector on `venueList.length` instead of `venuesInSolution.length`.
+- `src/hooks/useCurrentVenue.js` — fetches full venue objects on demand; manages `venuesToSync` when switching venues.
+- `src/components/VenueSelector/Venue/Venue.jsx` — renders `displayName` with fallback to `name`.
+
 ## [1.98.1] - 2026-05-13
 
 ### Added
