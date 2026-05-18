@@ -629,8 +629,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                             && !kioskLocation
                             && supportsUrlParameters
                             && (canShare || canCopy)
-                            // TEMP: bypass app-setting gate for local testing — restore before commit
-                            // && appConfig?.appSettings?.enableWayfindingShareButton === 'true'
+                            && appConfig?.appSettings?.enableWayfindingShareButton === 'true'
                             && (
                             <button
                                 className="wayfinding__share"
