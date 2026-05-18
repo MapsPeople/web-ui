@@ -1,30 +1,8 @@
-const fs = require('fs');
-const path = require('path');
-
-function loadShareRouteHelpers() {
-    const helperPath = path.join(__dirname, 'shareRouteHelpers.js');
-    const source = fs.readFileSync(helperPath, 'utf8');
-    const runnableSource = source
-        .replace('export const shareRouteResults =', 'const shareRouteResults =')
-        .replace('export function buildRouteShareUrl', 'function buildRouteShareUrl')
-        .replace('export async function shareRouteWithFallback', 'async function shareRouteWithFallback');
-
-    return new Function(
-        'URLSearchParams',
-        `${runnableSource}
-return {
+import {
     buildRouteShareUrl,
     shareRouteWithFallback,
     shareRouteResults
-};`
-    )(URLSearchParams);
-}
-
-const {
-    buildRouteShareUrl,
-    shareRouteWithFallback,
-    shareRouteResults
-} = loadShareRouteHelpers();
+} from './shareRouteHelpers';
 
 describe('buildRouteShareUrl', () => {
     it('encodes route share query parameters', () => {

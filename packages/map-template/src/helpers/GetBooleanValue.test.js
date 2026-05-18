@@ -12,8 +12,6 @@ describe('getBooleanValue', () => {
     });
     it('should return false when supportsUrlParameters is true and queryParameterValue is not "true"', () => {
         expect(getBooleanValue(true, true, true, 'something_else')).toBe(false);
-        expect(getBooleanValue(true, true, true, null)).toBe(false);
-        expect(getBooleanValue(true, true, true, undefined)).toBe(false);
     });
     // Test cases for when queryParameterValue is null or undefined
     it('should return propValue when queryParameterValue is null/undefined and propValue is a boolean', () => {
