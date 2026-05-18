@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import venuesInSolutionState from '../atoms/venuesInSolutionState';
 import currentVenueNameState from '../atoms/currentVenueNameState';
@@ -8,6 +8,7 @@ import categoriesState from '../atoms/categoriesState';
 import searchResultsState from '../atoms/searchResultsState';
 import searchInputState from '../atoms/searchInputState';
 import initialVenueNameState from '../atoms/initialVenueNameState';
+import venueListState from '../atoms/venueListState';
 
 /**
  * Hook to handle the current Venue in the app based on the venue prop or other ways to set the Venue.
@@ -19,22 +20,24 @@ import initialVenueNameState from '../atoms/initialVenueNameState';
 export const useCurrentVenue = () => {
 
     const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
-    const venuesInSolution = useRecoilValue(venuesInSolutionState);
+    const [venuesInSolution, setVenuesInSolution] = useRecoilState(venuesInSolutionState);
+    const venueList = useRecoilValue(venueListState);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const appConfig = useRecoilValue(appConfigState);
     const setCategories = useSetRecoilState(categoriesState);
     const setSearchResults = useSetRecoilState(searchResultsState);
     const searchInput = useRecoilValue(searchInputState);
     const [initialVenueName, setInitialVenueName] = useRecoilState(initialVenueNameState);
+    const syncedVenueIdRef = useRef(null);
     
     /*
      * Responsible for setting the Venue state whenever venueName changes (and all Venues in the Solution are loaded).
      */
     useEffect(() => {
-        if (!currentVenueName && venuesInSolution.length) {
-            setCurrentVenueName(getVenueToSet(venuesInSolution)?.name);
+        if (!currentVenueName && venueList.length) {
+            setCurrentVenueName(getVenueToSet()?.name);
         }
-    }, [currentVenueName, venuesInSolution]);
+    }, [currentVenueName, venueList]);
 
     /*
      * Make sure to store the initial venue for later use when eg. resetting.
@@ -53,12 +56,31 @@ export const useCurrentVenue = () => {
      *  - Clear search input field.
      */
     useEffect(() => {
-        if (mapsIndoorsInstance && venuesInSolution.length && currentVenueName && appConfig) {
-            mapsIndoorsInstance.setVenue(venuesInSolution.find(venue => venue.name.toLowerCase() === currentVenueName.toLowerCase()));
+        if (!mapsIndoorsInstance || !currentVenueName || !appConfig) return;
+
+        const fullVenue = venuesInSolution.find(v => v.name?.toLowerCase() === currentVenueName.toLowerCase());
+
+        if (fullVenue) {
+            if (syncedVenueIdRef.current && syncedVenueIdRef.current !== fullVenue.id) {
+                window.mapsindoors.MapsIndoors.removeVenuesToSync(syncedVenueIdRef.current);
+            }
+            window.mapsindoors.MapsIndoors.addVenuesToSync(fullVenue.id);
+            syncedVenueIdRef.current = fullVenue.id;
+            mapsIndoorsInstance.setVenue(fullVenue);
             updateCategories();
             setSearchResults([]);
-            if (searchInput) {
-                searchInput.value = '';
+            if (searchInput) searchInput.value = '';
+        } else if (venueList.length) {
+            // Full object not loaded yet — fetch on demand, add to state, re-trigger this effect
+            const venueEntry = venueList.find(v => v.name?.toLowerCase() === currentVenueName.toLowerCase());
+            if (venueEntry && !venuesInSolution.some(v => v.id === venueEntry.id)) {
+                window.mapsindoors.services.VenuesService.getVenue(venueEntry.id).then(venue => {
+                    if (venue) {
+                        setVenuesInSolution(prev => [...prev, venue]);
+                    } else {
+                        console.warn(`[useCurrentVenue] Failed to fetch venue for id: ${venueEntry.id}`);
+                    }
+                });
             }
         }
     }, [mapsIndoorsInstance, currentVenueName, venuesInSolution, appConfig]);
@@ -68,13 +90,10 @@ export const useCurrentVenue = () => {
      * Calculates which venue to set based on number of venues and alphabetic order.
      */
     const getVenueToSet = () => {
-        // If there's only one venue, early return with that.
-        if (venuesInSolution.length === 1) {
-            return venuesInSolution[0];
+        if (venueList.length === 1) {
+            return venueList[0];
         }
-
-        // Else take first venue sorted alphabetically
-        return [...venuesInSolution].sort(function (a, b) { return (a.venueInfo.name > b.venueInfo.name) ? 1 : ((b.venueInfo.name > a.venueInfo.name) ? -1 : 0); })[0];
+        return [...venueList].sort((a, b) => a.name.localeCompare(b.name))[0];
     };
 
     /**
@@ -97,7 +116,7 @@ export const useCurrentVenue = () => {
         // The venue parameter in the SDK's getLocations method is case sensitive.
         // So when the currentVenueName is set based on a Locations venue property, the casing may differ.
         // Thus we need to find the exact venue name.
-        const venueName = venuesInSolution.find(venue => venue.name.toLowerCase() === currentVenueName.toLowerCase())?.name;
+        const venueName = venueList.find(v => v.name.toLowerCase() === currentVenueName.toLowerCase())?.name;
         window.mapsindoors.services.LocationsService.getLocations({ venue: venueName }).then(locationsInVenue => {
             let uniqueCategories = new Map();
             for (const location of locationsInVenue) {
