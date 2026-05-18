@@ -79,7 +79,10 @@ const da = {
     'Finish route': 'Afslut ruten',
     // Share location link
     'Share': 'Del',
+    'Share route': 'Del rute',
     'Copy link': 'Kopiér link',
+    'Link copied': 'Link kopieret',
+    'Could not share route': 'Kunne ikke dele ruten',
     'QR Code': 'QR-kode',
     //Opening Hours
     'Open': 'Åben',

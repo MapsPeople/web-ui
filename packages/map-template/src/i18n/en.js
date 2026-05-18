@@ -79,7 +79,10 @@ const en = {
     'Finish route': 'Finish route',
     // Share location link
     'Share': 'Share',
+    'Share route': 'Share route',
     'Copy link': 'Copy link',
+    'Link copied': 'Link copied',
+    'Could not share route': 'Could not share route',
     'QR Code': 'QR Code',
     // Opening Hours
     'Open': 'Open',
