@@ -5,11 +5,52 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.97.12] - 2026-05-06
+## [1.98.4] - 2026-05-19
 
 ### Fixed
 
 - **`externalIDs` highlight on initial load**: Fixed a bug where locations matched by the `externalIDs` URL parameter / prop were not highlighted with dot badges on the map on first load. The highlight effect was running while the underlying map was still mid-transition (the initial `fitBounds` to the matched locations), and the SDK's `highlight()` badges were wiped by the subsequent map render. The effect is now gated on `isMapReady` and re-applies highlights on the underlying map's `idle` event — matching the same idle-wait pattern already used by the `selectLocation` flow.
+## [1.98.3] - 2026-05-19
+
+### Changed
+
+- Migrated Jest configuration to `.cjs` format with Babel transforms to resolve CommonJS/ESM compatibility issues. Removed legacy `Sheet.test.js` and extracted `bottomSheetSnapPoints` into a dedicated testable helper.
+
+## [1.98.2] - 2026-05-18
+
+### Added
+
+- Added a Share Route button to the Wayfinding panel. Configurable via app settings, hidden when iframed, and falls back to copying the link when the native share sheet is unavailable.
+
+## [1.98.1] - 2026-05-13
+
+### Added
+
+- Update to Web SDK 4.58.0.
+
+## [1.98.0] - 2026-05-13
+
+### Added
+
+- Simplified Chinese (`zh-Hans`) and Traditional Chinese (`zh-Hant`) translations, replacing the previous generic `zh` locale. Fallback routing maps `zh` and `zh-CN` to Simplified and `zh-TW` to Traditional.
+- Set Mapbox `localIdeographFontFamily` to `sans-serif` so CJK glyphs render without requiring custom font sprites.
+- Pass the full IETF language tag (e.g. `zh-Hans`) to the MapsIndoors SDK instead of stripping to the primary subtag.
+
+## [1.97.13] - 2026-05-12
+
+### Fixed
+
+- Fixed a bug where portal-based controls (e.g. chat resume button) would not reappear after switching between mobile and desktop layouts, caused by `usePortalTarget` holding a stale reference to a detached DOM node.
+
+### Changed
+
+- The chat button now appears after typing 2 characters instead of 5, and slides in with an entrance animation.
+
+## [1.97.12] - 2026-05-12
+
+### Security
+
+- Resolved npm audit vulnerabilities via `npm audit fix` (axios, brace-expansion, follow-redirects, picomatch, tar, uuid).
 
 ## [1.97.11] - 2026-05-01
 

@@ -61,8 +61,11 @@ export class Keyboard implements ComponentInterface {
     }
 
     /**
-     * The keyboard language to use. Supported values are "en" (English), "fr" (French), "de", (German) and "da" (Danish).
-     * If omitted, the browser language will be used. Defaults to English.
+     * The keyboard layout to use, identified by language tag. Supported values:
+     * "en" / "en-us" (English), "da" / "da-dk" (Danish), "de" / "de-de" (German),
+     * "fr" / "fr-fr" (French), "it" / "it-it" (Italian), "es" / "es-es" (Spanish),
+     * "nl" / "nl-nl" (Dutch), "zh" / "zh-hans" / "zh-hant" / "zh-cn" / "zh-tw" (Chinese).
+     * Matching is case-insensitive. If omitted, the browser language is used; falls back to English.
      */
     @Prop() language: string;
     @Watch('language')
@@ -145,7 +148,7 @@ export class Keyboard implements ComponentInterface {
             { layout: italianAlphabetic, languages: ['it', 'it-it'] },
             { layout: spanishAlphabetic, languages: ['es', 'es-es'] },
             { layout: dutchAlphabetic, languages: ['nl', 'nl-nl'] },
-            { layout: chineseAlphabetic, languages: ['zh', 'zh-CN'] },
+            { layout: chineseAlphabetic, languages: ['zh', 'zh-hans', 'zh-hant', 'zh-cn', 'zh-tw'] },
         ];
         const supportedLayout = supportedAlphabeticLayouts.find((layout): boolean => {
             return layout.languages.find((language): boolean => language === browserLanguage.toLowerCase()) ? true : false;

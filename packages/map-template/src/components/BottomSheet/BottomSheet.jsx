@@ -24,20 +24,14 @@ import LocationsList from '../LocationsList/LocationsList';
 import Wayfinding from '../Wayfinding/Wayfinding';
 import Directions from '../Directions/Directions';
 import ChatWindow from '../ChatWindow/ChatWindow';
+import {
+    SNAP_POINTS_DEFAULT,
+    SNAP_POINTS_SEARCH,
+    SNAP_POINTS_LOCATION_DETAILS,
+    SNAP_POINTS_LOCATIONS_LIST
+} from './bottomSheetSnapPoints';
 import './BottomSheet.scss';
 import styles from './BottomSheet.module.scss';
-
-/** Snap arrays: `0` = hidden, `1` = full height, middle values are px from bottom (library requires ascending order). */
-const SEARCH_COLLAPSED_HEIGHT_PX = 80;
-const LOCATION_DETAILS_COLLAPSED_HEIGHT_PX = 180;
-/** Two-point sheet: closed → full (see `computeSnapPoints` in react-modal-sheet). */
-const SNAP_POINTS_DEFAULT = [0, 1];
-/** Three-point sheet for Search: closed → 80px → full. */
-const SNAP_POINTS_SEARCH = [0, SEARCH_COLLAPSED_HEIGHT_PX, 1];
-/** Four-point sheet for LocationDetails: closed → 180px → half → full. */
-const SNAP_POINTS_LOCATION_DETAILS = [0, LOCATION_DETAILS_COLLAPSED_HEIGHT_PX, 0.5, 1];
-/** Three-point sheet for LocationsList: closed → 200px → full. */
-const SNAP_POINTS_LOCATIONS_LIST = [0, 200, 1];
 
 BottomSheet.propTypes = {
     directionsFromLocation: PropTypes.string,

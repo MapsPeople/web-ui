@@ -38,11 +38,32 @@ import PropTypes from 'prop-types';
 import wayfindingLocationState from '../../atoms/wayfindingLocation';
 import appConfigState from '../../atoms/appConfigState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
+import ShareIcon from '../../assets/share.svg?react';
+import apiKeyState from '../../atoms/apiKeyState';
+import kioskLocationState from '../../atoms/kioskLocationState';
+import supportsUrlParametersState from '../../atoms/supportsUrlParametersState';
+import notificationMessageState from '../../atoms/notificationMessageState';
+import useMediaQuery from '../../hooks/useMediaQuery';
+import {
+    buildRouteShareUrl,
+    shareRouteResults,
+    shareRouteWithFallback
+} from './shareRouteHelpers';
 
 const searchFieldIdentifiers = {
     TO: 'TO',
     FROM: 'FROM'
 };
+
+// The embedding context is fixed for the lifetime of this document; changing
+// from framed to top-level requires navigation/reload, so no React state is needed.
+const isEmbedded = (() => {
+    try {
+        return window.self !== window.top;
+    } catch {
+        return true;
+    }
+})();
 
 const externalLocationIcon = 'data:image/svg+xml,%3Csvg width=\'10\' height=\'10\' viewBox=\'0 0 14 20\' fill=\'none\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M7 0C3.13 0 0 3.13 0 7C0 12.25 7 20 7 20C7 20 14 12.25 14 7C14 3.13 10.87 0 7 0ZM7 9.5C5.62 9.5 4.5 8.38 4.5 7C4.5 5.62 5.62 4.5 7 4.5C8.38 4.5 9.5 5.62 9.5 7C9.5 8.38 8.38 9.5 7 9.5Z\' fill=\'black\' fill-opacity=\'0.88\'/%3E%3C/svg%3E%0A'
 
@@ -79,6 +100,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
 
     const toFieldRef = useRef();
     const fromFieldRef = useRef();
+    const sharingInProgressRef = useRef(false);
 
     const directionsService = useRecoilValue(directionsServiceState);
     const userPosition = useRecoilValue(userPositionState);
@@ -88,6 +110,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     const [wayfindingLocation, setWayfindingLocation] = useRecoilState(wayfindingLocationState);
 
     const [activeSearchField, setActiveSearchField] = useState();
+    const [isSharing, setIsSharing] = useState(false);
 
     /** Indicate if a route has been found */
     const setHasFoundRoute = useSetRecoilState(hasFoundRouteState);
@@ -123,6 +146,23 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
 
     const appConfig = useRecoilValue(appConfigState);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
+    const apiKey = useRecoilValue(apiKeyState);
+    const kioskLocation = useRecoilValue(kioskLocationState);
+    const supportsUrlParameters = useRecoilValue(supportsUrlParametersState);
+    const setNotificationMessage = useSetRecoilState(notificationMessageState);
+
+    // API availability checks only. Framed embeds are gated separately because
+    // browser Permissions Policy can still block share/copy at call time.
+    const canShare = typeof navigator.share === 'function';
+    const canCopy = typeof navigator.clipboard?.writeText === 'function';
+
+    // Pointer-type heuristic for choosing between the native share sheet and
+    // clipboard copy when both are available. Touch-primary devices (phones,
+    // tablets) report `pointer: coarse` and benefit from the OS share sheet.
+    // Desktops with mice/trackpads report `pointer: fine`; copy-to-clipboard
+    // is the more idiomatic affordance there, even when `navigator.share`
+    // exists (e.g. Chromium-based desktops like Vivaldi/Chrome/Edge).
+    const prefersShareSheet = useMediaQuery('(pointer: coarse)');
 
     /**
      * Decorates location with data that is required for wayfinding to work.
@@ -252,7 +292,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         setHasFoundRoute(true);
         setHasGooglePlaces(false);
         showMyPositionOptionButton(searchFieldIdentifier);
-        
+
         // Don't clear selection pins here - keep destination visible until route is created
     }
 
@@ -332,12 +372,12 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     function closeWayfinding() {
         setOriginLocation();
         fromFieldRef.current?.setDisplayText('');
-        
+
         // Clear selection when routing dialog closes (SDK recommendation)
         if (mapsIndoorsInstance) {
             mapsIndoorsInstance.deselectLocation();
         }
-        
+
         onBack();
     }
 
@@ -349,6 +389,64 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         setSearchTriggered(false);
         setHasGooglePlaces(false);
         setShowMyPositionOption(false);
+    }
+
+    function showCopiedMessage() {
+        setNotificationMessage({ text: t('Link copied'), type: 'success', sticky: false });
+    }
+
+    function showShareFailedMessage() {
+        setNotificationMessage({ text: t('Could not share route'), type: 'error', sticky: false });
+    }
+
+    /**
+     * Share the current route. Routes to the native share sheet on touch
+     * devices (`pointer: coarse`) and to clipboard copy on pointer-fine
+     * devices like desktops, even when `navigator.share` is available. Native
+     * share success and cancellation stay silent; native share failures fall
+     * back to clipboard copy. Clipboard copy success shows a notification, and
+     * terminal failures show an error notification.
+     */
+    async function shareRoute() {
+        if (sharingInProgressRef.current) return;
+
+        sharingInProgressRef.current = true;
+        setIsSharing(true);
+
+        try {
+            const base = `${window.location.origin}${window.location.pathname.replace(/\/$/, '')}`;
+            const url = buildRouteShareUrl({
+                base,
+                apiKey,
+                originId: originLocation.id,
+                destinationId: destinationLocation.id
+            });
+
+            const originName = originLocation.properties?.name ?? '';
+            const destinationName = destinationLocation.properties?.name ?? '';
+            const sharePayload = {
+                title: t('Share route'),
+                text: originName && destinationName ? `${originName} → ${destinationName}` : undefined,
+                url,
+            };
+
+            const result = await shareRouteWithFallback({
+                share: navigator.share?.bind(navigator),
+                clipboard: navigator.clipboard,
+                prefersShareSheet,
+                sharePayload,
+                copyUrl: url
+            });
+
+            if (result === shareRouteResults.COPIED) {
+                showCopiedMessage();
+            } else if (result === shareRouteResults.FAILED) {
+                showShareFailedMessage();
+            }
+        } finally {
+            sharingInProgressRef.current = false;
+            setIsSharing(false);
+        }
     }
 
     useEffect(() => {
@@ -527,6 +625,21 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                                 {t('Bike')}
                             </mi-dropdown-item>
                         </Dropdown>}
+                        {!isEmbedded
+                            && !kioskLocation
+                            && supportsUrlParameters
+                            && (canShare || canCopy)
+                            && appConfig?.appSettings?.enableWayfindingShareButton === 'true'
+                            && (
+                            <button
+                                className="wayfinding__share"
+                                onClick={() => shareRoute()}
+                                disabled={isSharing}
+                                aria-label={t('Share route')}
+                            >
+                                <ShareIcon />
+                            </button>
+                        )}
                     </div>
                 </div>
                 <hr></hr>

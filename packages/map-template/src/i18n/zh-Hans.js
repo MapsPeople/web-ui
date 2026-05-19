@@ -1,4 +1,4 @@
-const zh = {
+const zhHans = {
     // Common
     'Close': '关闭',
     'From': '从',
@@ -79,7 +79,10 @@ const zh = {
     'Finish route': '完成路线',
     // Share location link
     'Share': '分享',
+    'Share route': '分享路线',
     'Copy link': '复制链接',
+    'Link copied': '链接已复制',
+    'Could not share route': '无法分享路线',
     'QR Code': '二维码',
     // Opening Hours
     'Open': '营业中',
@@ -110,4 +113,4 @@ const zh = {
     'Location consent decline': '拒绝',
 };
 
-export default zh;
+export default zhHans;
