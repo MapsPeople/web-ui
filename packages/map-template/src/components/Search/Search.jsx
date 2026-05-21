@@ -106,8 +106,7 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
 
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const mapType = useRecoilValue(mapTypeState);
-
-    const setFilteredLocations = useSetRecoilState(filteredLocationsState);
+const setFilteredLocations = useSetRecoilState(filteredLocationsState);
 
     const setCurrentLocation = useSetRecoilState(currentLocationState);
 
@@ -410,8 +409,9 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
         // Set the current venue to be the selected location venue.
         const matchedVenue = findVenueForLocation(venueList, location);
 
-        // If the location belongs to a different venue, switch to it first and await
-        // the full venue load before proceeding with floor/navigation logic.
+        // If the location belongs to a different venue, switch to it first.
+        // Navigation is deferred until locations_changed fires, ensuring location data
+        // for the new venue is ready before goTo is called.
         if (matchedVenue && matchedVenue.name.toLowerCase() !== currentVenueName?.toLowerCase()) {
             const currentVenueItem = venueList.find(v => v.name.toLowerCase() === currentVenueName?.toLowerCase());
             if (currentVenueItem) {
@@ -422,12 +422,34 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
             // Pre-populate venuesInSolution so useCurrentVenue finds it immediately and skips a redundant fetch.
             if (fullVenue) {
                 setVenuesInSolution(prev => [...prev, fullVenue]);
-                await mapsIndoorsInstance.setVenue(fullVenue);
+                // Wait for location data to be ready, then for the map to settle before navigating.
+                mapsIndoorsInstance.once('locations_changed', () => {
+                    switch (mapType) {
+                        case mapTypes.Mapbox:
+                            // idle only fires on moveend — navigate immediately if already stationary.
+                            if (mapsIndoorsInstance.getMap().isMoving()) {
+                                mapsIndoorsInstance.getMapView().once('idle', () => navigateToLocation(location));
+                            } else {
+                                navigateToLocation(location);
+                            }
+                            break;
+                        default:
+                            // Google Maps fires idle regardless of movement.
+                            mapsIndoorsInstance.getMapView().once('idle', () => navigateToLocation(location));
+                            break;
+                    }
+                });
+                mapsIndoorsInstance.setVenue(fullVenue);
             }
             setCurrentVenueName(matchedVenue.name);
             setIsLocationClicked(true);
+            return;
         }
 
+        navigateToLocation(location);
+    }
+
+    function navigateToLocation(location) {
         const currentFloor = mapsIndoorsInstance.getFloor();
         const locationFloor = location.properties.floor;
 
@@ -436,15 +458,7 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
             // Register listener before setFloor — floor_changed fires
             // synchronously inside setFloor(), so it would be missed otherwise.
             mapsIndoorsInstance.once('floor_changed', () => {
-                const map = mapsIndoorsInstance.getMap();
-                if (mapType === mapTypes.Mapbox) {
-                    map.once('idle', () => setCurrentLocation(location));
-                } else if (mapType === mapTypes.Google) {
-                    const listener = map.addListener('idle', () => {
-                        listener.remove();
-                        setCurrentLocation(location);
-                    });
-                }
+                mapsIndoorsInstance.getMapView().once('idle', () => setCurrentLocation(location));
             });
             mapsIndoorsInstance.setFloor(locationFloor);
         } else {

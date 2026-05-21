@@ -4,7 +4,6 @@ import getDesktopPaddingBottom from '../helpers/GetDesktopPaddingBottom';
 
 // Recoil atoms
 import bearingState from '../atoms/bearingState';
-import categoriesState from '../atoms/categoriesState';
 import kioskOriginLocationIdState from '../atoms/kioskOriginLocationIdState';
 import locationIdState from '../atoms/locationIdState';
 import mapsIndoorsInstanceState from '../atoms/mapsIndoorsInstanceState';
@@ -44,7 +43,6 @@ const useMapBoundsDeterminer = () => {
     const isInactive = useInactive();
 
     const bearing = useRecoilValue(bearingState);
-    const categories = useRecoilValue(categoriesState);
     const kioskOriginLocationId = useRecoilValue(kioskOriginLocationIdState);
     const locationId = useRecoilValue(locationIdState);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
@@ -76,7 +74,7 @@ const useMapBoundsDeterminer = () => {
      */
     useEffect(() => {
         determineMapBounds();
-    }, [mapsIndoorsInstance, currentVenueName, venuesInSolution, locationId, kioskOriginLocationId, pitch, bearing, startZoomLevel, categories, center]);
+    }, [mapsIndoorsInstance, currentVenueName, venuesInSolution, locationId, kioskOriginLocationId, pitch, bearing, startZoomLevel, center]);
 
     /**
      * Based on the combination of the states for venueName, locationId & kioskOriginLocationId,
