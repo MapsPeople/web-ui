@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- Fixed an empty location details panel appearing instead of the wayfinding view when cancelling a route in kiosk mode with `directionsFrom`/`directionsTo` URL parameters.
+
 ## [1.98.4] - 2026-05-19
 
 ### Fixed
