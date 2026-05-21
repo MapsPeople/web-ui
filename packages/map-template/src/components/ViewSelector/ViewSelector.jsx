@@ -58,9 +58,9 @@ function ViewSelector({ isViewSelectorDisabled, isViewSelectorVisible }) {
     useEffect(() => {
         if (currentVenueName && venueList.length) {
             const item = venueList.find(v => v.name.toLowerCase() === currentVenueName.toLowerCase());
-            if (item?.id) {
-                setVenueId(item.id);
-            }
+            setVenueId(item?.id ?? null);
+        } else {
+            setVenueId(null);
         }
     }, [currentVenueName, venueList]);
 
