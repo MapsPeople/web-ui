@@ -421,7 +421,7 @@ const setFilteredLocations = useSetRecoilState(filteredLocationsState);
             const fullVenue = await window.mapsindoors.services.VenuesService.getVenue(matchedVenue.id);
             // Pre-populate venuesInSolution so useCurrentVenue finds it immediately and skips a redundant fetch.
             if (fullVenue) {
-                setVenuesInSolution(prev => [...prev, fullVenue]);
+                setVenuesInSolution(existingVenues => existingVenues.some(existingVenue => existingVenue.id === fullVenue.id) ? existingVenues : [...existingVenues, fullVenue]);
                 // Wait for location data to be ready, then for the map to settle before navigating.
                 mapsIndoorsInstance.once('locations_changed', () => {
                     switch (mapType) {
