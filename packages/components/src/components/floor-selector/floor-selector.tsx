@@ -224,6 +224,9 @@ export class FloorSelector {
         if (!this.mapsindoors) return;
         this.mapsindoors.addListener('building_changed', this.buildingChangedHandler);
         this.mapsindoors.addListener('floor_changed', this.floorChangedHandler);
+        if (this.mapsindoors.getBuilding()) {
+            this.buildingChangedHandler();
+        }
     }
 
     disconnectedCallback(): void {
