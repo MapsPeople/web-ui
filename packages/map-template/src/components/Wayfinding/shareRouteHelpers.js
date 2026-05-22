@@ -5,7 +5,7 @@ export const shareRouteResults = {
     FAILED: 'failed'
 };
 
-export function buildRouteShareUrl({ base, apiKey, originId, destinationId }) {
+export function buildRouteShareUrl({ base, apiKey, originId, destinationId, venue }) {
     new URL(base);
 
     const hashIndex = base.indexOf('#');
@@ -14,7 +14,7 @@ export function buildRouteShareUrl({ base, apiKey, originId, destinationId }) {
     const queryIndex = baseBeforeHash.indexOf('?');
     const baseWithoutQuery = queryIndex === -1 ? baseBeforeHash : baseBeforeHash.slice(0, queryIndex);
     const query = queryIndex === -1 ? '' : baseBeforeHash.slice(queryIndex + 1);
-    const routeParamNames = new Set(['directionsFrom', 'directionsTo', 'apiKey']);
+    const routeParamNames = new Set(['directionsFrom', 'directionsTo', 'apiKey', 'venue']);
     const preservedParams = query
         ? query.split('&').filter((param) => {
             const key = param.split('=', 1)[0];
@@ -30,6 +30,10 @@ export function buildRouteShareUrl({ base, apiKey, originId, destinationId }) {
 
     if (apiKey) {
         routeParams.set('apiKey', apiKey);
+    }
+
+    if (venue) {
+        routeParams.set('venue', venue);
     }
 
     const routeQuery = routeParams.toString();

@@ -71,6 +71,55 @@ describe('buildRouteShareUrl', () => {
         expect(url).toBe('https://example.com/map?x=1&&y=2&&directionsFrom=origin&directionsTo=destination');
     });
 
+    it('includes venue when provided', () => {
+        const url = buildRouteShareUrl({
+            base: 'https://example.com/map',
+            apiKey: 'api-key',
+            originId: 'origin',
+            destinationId: 'destination',
+            venue: 'BUILDINGB'
+        });
+
+        expect(url).toBe('https://example.com/map?directionsFrom=origin&directionsTo=destination&apiKey=api-key&venue=BUILDINGB');
+    });
+
+    it('omits venue when not provided', () => {
+        const url = buildRouteShareUrl({
+            base: 'https://example.com/map',
+            apiKey: 'api-key',
+            originId: 'origin',
+            destinationId: 'destination'
+        });
+
+        expect(new URL(url).searchParams.has('venue')).toBe(false);
+    });
+
+    it('replaces stale venue in base URL when a new venue is provided', () => {
+        const url = buildRouteShareUrl({
+            base: 'https://example.com/map?venue=OLDVENUE&floor=1',
+            apiKey: 'api-key',
+            originId: 'origin',
+            destinationId: 'destination',
+            venue: 'NEWVENUE'
+        });
+        const searchParams = new URL(url).searchParams;
+
+        expect(searchParams.get('venue')).toBe('NEWVENUE');
+        expect(searchParams.getAll('venue')).toHaveLength(1);
+        expect(searchParams.get('floor')).toBe('1');
+    });
+
+    it('drops stale venue from base URL when venue is not provided', () => {
+        const url = buildRouteShareUrl({
+            base: 'https://example.com/map?venue=OLDVENUE',
+            apiKey: 'api-key',
+            originId: 'origin',
+            destinationId: 'destination'
+        });
+
+        expect(new URL(url).searchParams.has('venue')).toBe(false);
+    });
+
     it('replaces stale directionsFrom/directionsTo/apiKey from base and removes stale apiKey when apiKey is undefined', () => {
         const url = buildRouteShareUrl({
             base: 'https://example.com/map?directionsFrom=stale-origin&directionsTo=stale-destination&apiKey=stale-key&floor=1',
