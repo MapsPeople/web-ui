@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **mi-floor-selector**: Fixed floors not rendering when the component is reconnected to the DOM while a building is already active. `connectedCallback` now calls `buildingChangedHandler` immediately when a building is present.
 - **mi-floor-selector**: Fixed a memory leak where rapidly resizing the window could stack multiple `floor_changed` and `building_changed` listeners. Handlers are now stored as arrow class fields and cleaned up in `disconnectedCallback`.
 - **mi-my-position**: Fixed a memory leak where rapidly resizing the window could stack multiple `rotateend` listeners. Handler is now stored and cleaned up in `disconnectedCallback`.
 

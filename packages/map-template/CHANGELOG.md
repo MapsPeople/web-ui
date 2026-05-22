@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- Fixed the shared route URL not including a `venue` parameter when the user navigated to a venue different from the default one.
+
 ## [1.98.5] - 2026-05-22
 
 ### Fixed
