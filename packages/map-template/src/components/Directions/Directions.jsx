@@ -133,7 +133,12 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished }) {
                         right: padding
                     }
                 });
-                directionsRenderer.setRoute(directions.directionsResult).then(() => {
+                directionsRenderer.setRoute(
+                    directions.directionsResult,
+                    new Map(),
+                    directions.originLocation?.id,
+                    directions.destinationLocation?.id
+                ).then(() => {
                     // Set the step index to be 0 in order to display the correct instruction on the map.
                     directionsRenderer.setStepIndex(0);
                     
