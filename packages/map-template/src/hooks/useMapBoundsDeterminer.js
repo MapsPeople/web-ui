@@ -14,6 +14,7 @@ import currentVenueNameState from '../atoms/currentVenueNameState';
 import venuesInSolutionState from '../atoms/venuesInSolutionState';
 import venueWasSelectedState from '../atoms/venueWasSelectedState';
 import isMapReadyState from '../atoms/isMapReadyState.js';
+import wayfindingOriginHighlightLocationState from '../atoms/wayfindingOriginHighlightLocationState';
 
 // Hooks
 import getMobilePaddingBottom from '../helpers/GetMobilePaddingBottom';
@@ -53,6 +54,7 @@ const useMapBoundsDeterminer = () => {
     const venuesInSolution = useRecoilValue(venuesInSolutionState);
     const currentPitch = useRecoilValue(currentPitchSelector);
     const venueWasSelected = useRecoilValue(venueWasSelectedState);
+    const wayfindingOriginHighlightLocation = useRecoilValue(wayfindingOriginHighlightLocationState);
     const [kioskLocationDisplayRuleWasChanged, setKioskLocationDisplayRuleWasChanged] = useState(false);
     const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
     const isMapReady = useRecoilState(isMapReadyState);
@@ -76,7 +78,7 @@ const useMapBoundsDeterminer = () => {
      */
     useEffect(() => {
         determineMapBounds();
-    }, [mapsIndoorsInstance, currentVenueName, locationId, kioskOriginLocationId, pitch, bearing, startZoomLevel, categories, center]);
+    }, [mapsIndoorsInstance, currentVenueName, locationId, kioskOriginLocationId, pitch, bearing, startZoomLevel, categories, center, wayfindingOriginHighlightLocation]);
 
     /**
      * Based on the combination of the states for venueName, locationId & kioskOriginLocationId,
@@ -182,6 +184,24 @@ const useMapBoundsDeterminer = () => {
                                 });
                             }
                         }
+                    });
+                }
+            } else if (wayfindingOriginHighlightLocation) {
+                const location = wayfindingOriginHighlightLocation;
+                if (location.properties.floor !== undefined) {
+                    mapsIndoorsInstance.setFloor(location.properties.floor);
+                }
+                if (isDesktop) {
+                    getDesktopPaddingLeft().then(desktopPaddingLeft => {
+                        if (determineMapBoundsKeyRef.current !== key) return;
+                        setMapPositionKnown(location.geometry);
+                        goTo(location.geometry, mapsIndoorsInstance, 0, desktopPaddingLeft, getZoomLevel(startZoomLevel), currentPitch, bearing);
+                    });
+                } else {
+                    getMobilePaddingBottom().then(mobilePaddingBottom => {
+                        if (determineMapBoundsKeyRef.current !== key) return;
+                        setMapPositionKnown(location.geometry);
+                        goTo(location.geometry, mapsIndoorsInstance, mobilePaddingBottom, 0, getZoomLevel(startZoomLevel), currentPitch, bearing);
                     });
                 }
             } else if (!locationId && originalMapCenter && mapsIndoorsInstance) {

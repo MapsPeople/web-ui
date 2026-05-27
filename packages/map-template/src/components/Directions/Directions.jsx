@@ -17,6 +17,7 @@ import getDesktopPaddingLeft from '../../helpers/GetDesktopPaddingLeft';
 import getMobilePaddingBottom from '../../helpers/GetMobilePaddingBottom';
 import getDesktopPaddingBottom from '../../helpers/GetDesktopPaddingBottom';
 import kioskLocationState from '../../atoms/kioskLocationState';
+import wayfindingOriginHighlightLocationState from '../../atoms/wayfindingOriginHighlightLocationState';
 import qrCodeLinkState from '../../atoms/qrCodeLinkState';
 import Accessibility from '../Accessibility/Accessibility';
 import isDestinationStepState from '../../atoms/isDestinationStepState';
@@ -76,6 +77,8 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished }) {
     const [substepsOpen, setSubstepsOpen] = useRecoilState(substepsToggledState);
 
     const kioskLocation = useRecoilValue(kioskLocationState);
+    
+    const wayfindingOriginHighlightLocation = useRecoilValue(wayfindingOriginHighlightLocationState);
 
     const isDesktop = useIsDesktop();
 
@@ -140,6 +143,9 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished }) {
                     // Clear selection pin to avoid dual pins - route pins will handle navigation
                     if (mapsIndoorsInstance) {
                         mapsIndoorsInstance.deselectLocation();
+                        if (wayfindingOriginHighlightLocation) {
+                            mapsIndoorsInstance.selectLocation(wayfindingOriginHighlightLocation);
+                        }
                     }
                 });
 
