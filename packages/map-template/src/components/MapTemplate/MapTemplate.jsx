@@ -640,7 +640,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 mapsIndoorsInstance.deselectLocation();
             }
         }
-    }, [currentLocation, wayfindingOriginHighlightLocation, mapsIndoorsInstance, isMapReady, mapType]);
+    }, [currentLocation, wayfindingOriginHighlightLocation, kioskOriginLocationId, mapsIndoorsInstance, isMapReady, mapType]);
 
     /**
      * React on changes to the app config.

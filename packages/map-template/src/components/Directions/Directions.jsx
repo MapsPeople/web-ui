@@ -170,7 +170,7 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished }) {
             }
             setMinZoom(appConfig?.appSettings?.minZoom ?? ZoomLevelValues.minZoom);
         };
-    }, [isOpen, directions, mapsIndoorsInstance, travelMode, shuttleBusOn, appConfig]);
+    }, [isOpen, directions, mapsIndoorsInstance, travelMode, shuttleBusOn, appConfig, wayfindingOriginHighlightLocation]);
 
 
     /**
