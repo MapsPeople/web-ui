@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Bumped MapsIndoors JS SDK from 4.58.0 to 4.58.2.
+- Bumped MapsIndoors JS SDK from 4.58.0 to 4.58.3.
 - Venues are now loaded on demand: only identifiers and display names are fetched at startup, with full venue data fetched when a venue is selected.
 - Venue Selector visibility is now determined at startup without waiting for full venue data.
 - `venuesToSync` is updated to the active venue on switch, avoiding unnecessary location and floor syncing for unvisited venues.
