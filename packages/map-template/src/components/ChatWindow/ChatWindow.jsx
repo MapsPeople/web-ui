@@ -141,7 +141,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
 
         // Add venue info if available
         if (currentVenueName) {
-            const currentVenueItem = venueList.find(venue => venu.name.toLowerCase() === currentVenueName.toLowerCase());
+            const currentVenueItem = venueList.find(venue => venue.name.toLowerCase() === currentVenueName.toLowerCase());
 
             extra.venue = {
                 name: currentVenueName
