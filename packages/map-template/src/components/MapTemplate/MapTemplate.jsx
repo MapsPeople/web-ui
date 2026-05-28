@@ -324,9 +324,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
                 if (venueList.length > 0) {
                     window.mapsindoors.services.VenuesService.getVenueList().then(venueListResult => {
-                        const augmented = venueListResult.map(v => ({
-                            ...v,
-                            image: appConfig.venueImages?.[v.name.toLowerCase()]
+                        const augmented = venueListResult.map(venue => ({
+                            ...venue,
+                            image: appConfig.venueImages?.[venue.name.toLowerCase()]
                         }));
                         setVenueList(augmented);
                         // Clear full venue objects so they are re-fetched on demand in the new language
@@ -379,20 +379,20 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             ]).then(async ([venueData, appConfigResult]) => {
                 if (center) {
                     // Full Venue[] path — augment with images and populate both atoms
-                    venueData.forEach(v => { v.image = appConfigResult.venueImages?.[v.name.toLowerCase()]; });
-                    const lightList = venueData.map(v => ({
-                        id: v.id,
-                        name: v.name,
-                        displayName: v.venueInfo?.name || v.name,
-                        image: v.image
+                    venueData.forEach(venue => { venue.image = appConfigResult.venueImages?.[venue.name.toLowerCase()]; });
+                    const lightList = venueData.map(venue => ({
+                        id: venue.id,
+                        name: venue.name,
+                        displayName: venue.venueInfo?.name || venue.name,
+                        image: venue.image
                     }));
                     setVenueList(lightList);
                     setVenuesInSolution(venueData);
                 } else {
                     // Lightweight path — augment list with images, fetch only the default venue in full
-                    const augmented = venueData.map(v => ({
-                        ...v,
-                        image: appConfigResult.venueImages?.[v.name.toLowerCase()]
+                    const augmented = venueData.map(venue => ({
+                        ...venue,
+                        image: appConfigResult.venueImages?.[venue.name.toLowerCase()]
                     }));
                     setVenueList(augmented);
 
@@ -400,7 +400,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                     const defaultName = venue
                         ?? appConfigResult.appSettings?.venue
                         ?? [...augmented].sort((a, b) => a.name.localeCompare(b.name))[0]?.name;
-                    const defaultItem = augmented.find(v => v.name.toLowerCase() === defaultName?.toLowerCase());
+                    const defaultItem = augmented.find(venue => venue.name.toLowerCase() === defaultName?.toLowerCase());
 
                     if (defaultItem) {
                         const defaultVenue = await window.mapsindoors.services.VenuesService.getVenue(defaultItem.id);

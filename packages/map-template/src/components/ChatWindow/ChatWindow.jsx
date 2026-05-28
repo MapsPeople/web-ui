@@ -141,7 +141,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
 
         // Add venue info if available
         if (currentVenueName) {
-            const currentVenueItem = venueList.find(v => v.name.toLowerCase() === currentVenueName.toLowerCase());
+            const currentVenueItem = venueList.find(venue => venu.name.toLowerCase() === currentVenueName.toLowerCase());
 
             extra.venue = {
                 name: currentVenueName
@@ -292,9 +292,9 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
 
     /**
      * Get the layout classes for the ChatWindow component based on current state
-     * 
+     *
      * @returns {string} Space-separated class names
-     * 
+     *
      * Desktop: Returns 'chat-window desktop'
      * Mobile without keyboard: Returns 'chat-window mobile' (with 'chat-window--visible' when animated)
      * Mobile with keyboard: Returns 'chat-window mobile chat-window--keyboard-visible' (with 'chat-window--visible' when animated)
@@ -322,7 +322,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
      * Get inline styles for the ChatWindow component based on current state
      * 
      * @returns {Object} Style object with CSS custom properties
-     * 
+     *
      * Always includes: '--chat-window-primary-color'
      * Mobile with keyboard: Also includes '--keyboard-height'
      */

@@ -209,7 +209,7 @@ const setFilteredLocations = useSetRecoilState(filteredLocationsState);
         // So when the currentVenueName is set based on a Locations venue property, the casing may differ.
         // Thus we need to find the venue name from the list of venues.
         const matchedVenueName = currentVenueName
-            ? venueList.find(v => v.name.toLowerCase() === currentVenueName.toLowerCase())?.name
+            ? venueList.find(venue => venue.name.toLowerCase() === currentVenueName.toLowerCase())?.name
             : undefined;
 
         if (!searchAllVenues && !matchedVenueName) {
@@ -413,7 +413,7 @@ const setFilteredLocations = useSetRecoilState(filteredLocationsState);
         // Navigation is deferred until locations_changed fires, ensuring location data
         // for the new venue is ready before goTo is called.
         if (matchedVenue && matchedVenue.name.toLowerCase() !== currentVenueName?.toLowerCase()) {
-            const currentVenueItem = venueList.find(v => v.name.toLowerCase() === currentVenueName?.toLowerCase());
+            const currentVenueItem = venueList.find(venue => venue.name.toLowerCase() === currentVenueName?.toLowerCase());
             if (currentVenueItem) {
                 window.mapsindoors.MapsIndoors.removeVenuesToSync(currentVenueItem.id);
             }
