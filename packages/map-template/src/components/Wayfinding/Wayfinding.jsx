@@ -42,6 +42,8 @@ import ShareIcon from '../../assets/share.svg?react';
 import apiKeyState from '../../atoms/apiKeyState';
 import kioskLocationState from '../../atoms/kioskLocationState';
 import supportsUrlParametersState from '../../atoms/supportsUrlParametersState';
+import currentVenueNameState from '../../atoms/currentVenueNameState';
+import initialVenueNameState from '../../atoms/initialVenueNameState';
 import notificationMessageState from '../../atoms/notificationMessageState';
 import useMediaQuery from '../../hooks/useMediaQuery';
 import {
@@ -149,6 +151,8 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     const apiKey = useRecoilValue(apiKeyState);
     const kioskLocation = useRecoilValue(kioskLocationState);
     const supportsUrlParameters = useRecoilValue(supportsUrlParametersState);
+    const currentVenueName = useRecoilValue(currentVenueNameState);
+    const initialVenueName = useRecoilValue(initialVenueNameState);
     const setNotificationMessage = useSetRecoilState(notificationMessageState);
 
     // API availability checks only. Framed embeds are gated separately because
@@ -419,7 +423,8 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                 base,
                 apiKey,
                 originId: originLocation.id,
-                destinationId: destinationLocation.id
+                destinationId: destinationLocation.id,
+                venue: currentVenueName !== initialVenueName ? currentVenueName : undefined
             });
 
             const originName = originLocation.properties?.name ?? '';

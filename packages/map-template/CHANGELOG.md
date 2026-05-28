@@ -30,6 +30,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `src/components/Search/Search.jsx` — fixes cross-venue location click: resolves venue from `properties.venue` or `properties.venueId`, awaits full venue load before navigation, defers `goTo` until `locations_changed` + map idle/stationary.
 - `src/hooks/useMapBoundsDeterminer.js` — removes unused `categories` dep that caused a spurious re-pan after venue switch.
 
+## [1.98.6] - 2026-05-28
+
+### Fixed
+
+- Fixed the shared route URL not including a `venue` parameter when the user navigated to a venue different from the default one.
+
 ## [1.98.5] - 2026-05-22
 
 ### Fixed
