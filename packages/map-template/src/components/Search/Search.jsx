@@ -106,7 +106,7 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
 
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const mapType = useRecoilValue(mapTypeState);
-const setFilteredLocations = useSetRecoilState(filteredLocationsState);
+    const setFilteredLocations = useSetRecoilState(filteredLocationsState);
 
     const setCurrentLocation = useSetRecoilState(currentLocationState);
 
