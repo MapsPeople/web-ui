@@ -21,6 +21,7 @@ import solutionState from '../../atoms/solutionState';
 import notificationMessageState from '../../atoms/notificationMessageState';
 import useMapBoundsDeterminer from '../../hooks/useMapBoundsDeterminer';
 import hideNonMatchesState from '../../atoms/hideNonMatchesState';
+import isMapReadyState from '../../atoms/isMapReadyState';
 import PropTypes from 'prop-types';
 import ViewSelector from '../ViewSelector/ViewSelector';
 import LanguageSelector from '../LanguageSelector/LanguageSelector.jsx';
@@ -87,6 +88,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
     const solution = useRecoilValue(solutionState);
     const setErrorMessage = useSetRecoilState(notificationMessageState);
     const hideNonMatches = useRecoilValue(hideNonMatchesState);
+    const isMapReady = useRecoilValue(isMapReadyState);
     const appConfig = useRecoilValue(appConfigState);
     const [isViewSelectorVisible, setIsViewSelectorVisible] = useState(false);
     const [isLanguageSelectorVisible, setIsLanguageSelectorVisible] = useState(false);
@@ -175,10 +177,14 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
 
     /*
      * Dynamically filter or highlight location based on the "filteredLocations", "filteredLocationsByExternalIDs" and "hideNonMatches" property.
+     * Gated on isMapReady so we don't paint highlights before the initial viewState.update() / fitBounds is in motion. Applied on the underlying
+     * map's 'idle' event because setMapPositionKnown fires inside useMapBoundsDeterminer BEFORE the goTo animation finishes, so a synchronous
+     * highlight() call would land mid-transition and the badges would be wiped by the subsequent render (this is what caused MS-3809 — externalIDs
+     * dots never appeared on first load). Same idle-wait pattern as the selectLocation flow at MapTemplate.jsx.
      * Re-apply on floor_changed so highlight badges and filter state stay in sync with the visible floor (SDK does not refresh them automatically).
      */
     useEffect(() => {
-        if (!mapsIndoorsInstance) return undefined;
+        if (!mapsIndoorsInstance || !isMapReady) return undefined;
 
         const applyFilterOrHighlight = () => {
             const locations = filteredLocations || filteredLocationsByExternalIDs;
@@ -197,18 +203,29 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
             }
         };
 
-        applyFilterOrHighlight();
-
         const onFloorChanged = () => {
             onTileStyleChanged(mapsIndoorsInstance);
             applyFilterOrHighlight();
         };
-
         mapsIndoorsInstance.on('floor_changed', onFloorChanged);
+
+        const map = mapsIndoorsInstance.getMap();
+        let removeIdleListener;
+        if (map) {
+            if (mapType === mapTypes.Mapbox && typeof map.on === 'function') {
+                map.on('idle', applyFilterOrHighlight);
+                removeIdleListener = () => map.off?.('idle', applyFilterOrHighlight);
+            } else if (mapType === mapTypes.Google && typeof map.addListener === 'function') {
+                const idleListener = map.addListener('idle', applyFilterOrHighlight);
+                removeIdleListener = () => idleListener.remove();
+            }
+        }
+
         return () => {
             mapsIndoorsInstance.off('floor_changed', onFloorChanged);
+            removeIdleListener?.();
         };
-    }, [filteredLocations, filteredLocationsByExternalIDs, mapsIndoorsInstance, hideNonMatches, currentLocation]);
+    }, [filteredLocations, filteredLocationsByExternalIDs, mapsIndoorsInstance, hideNonMatches, currentLocation, isMapReady, mapType]);
 
     /*
      * React to changes in bearing and pitch props and set them on the map if mapsIndoorsInstance exists.

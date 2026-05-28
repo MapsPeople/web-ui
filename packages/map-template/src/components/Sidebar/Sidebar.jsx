@@ -103,7 +103,7 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
      * Close the Directions page and navigate to the different pages based on the kioskLocation.
      */
     function closeDirections() {
-        if (kioskLocation) {
+        if (kioskLocation && currentLocation) {
             pushAppView(appViews.LOCATION_DETAILS)
         } else {
             pushAppView(appViews.WAYFINDING)

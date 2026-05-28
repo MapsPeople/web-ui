@@ -30,6 +30,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `src/components/Search/Search.jsx` — fixes cross-venue location click: resolves venue from `properties.venue` or `properties.venueId`, awaits full venue load before navigation, defers `goTo` until `locations_changed` + map idle/stationary.
 - `src/hooks/useMapBoundsDeterminer.js` — removes unused `categories` dep that caused a spurious re-pan after venue switch.
 
+## [1.98.5] - 2026-05-22
+
+### Fixed
+
+- Fixed an empty location details panel appearing instead of the wayfinding view when cancelling a route in kiosk mode with `directionsFrom`/`directionsTo` URL parameters.
+
+## [1.98.4] - 2026-05-19
+
+### Fixed
+
+- **`externalIDs` highlight on initial load**: Fixed a bug where locations matched by the `externalIDs` URL parameter / prop were not highlighted with dot badges on the map on first load. The highlight effect was running while the underlying map was still mid-transition (the initial `fitBounds` to the matched locations), and the SDK's `highlight()` badges were wiped by the subsequent map render. The effect is now gated on `isMapReady` and re-applies highlights on the underlying map's `idle` event — matching the same idle-wait pattern already used by the `selectLocation` flow.
+## [1.98.3] - 2026-05-19
+
+### Changed
+
+- Migrated Jest configuration to `.cjs` format with Babel transforms to resolve CommonJS/ESM compatibility issues. Removed legacy `Sheet.test.js` and extracted `bottomSheetSnapPoints` into a dedicated testable helper.
+
+## [1.98.2] - 2026-05-18
+
+### Added
+
+- Added a Share Route button to the Wayfinding panel. Configurable via app settings, hidden when iframed, and falls back to copying the link when the native share sheet is unavailable.
+
 ## [1.98.1] - 2026-05-13
 
 ### Added
