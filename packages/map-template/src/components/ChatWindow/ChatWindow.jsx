@@ -7,6 +7,8 @@ import { useIsDesktop } from '../../hooks/useIsDesktop';
 import { useKeyboardHeight } from '../../hooks/useKeyboardHeight';
 import PropTypes from 'prop-types';
 import './ChatWindow.scss';
+
+const DEBUG = import.meta.env.VITE_GEMINI_DEBUG === 'true';
 import primaryColorState from '../../atoms/primaryColorState';
 import apiKeyState from '../../atoms/apiKeyState';
 import userPositionState from '../../atoms/userPositionState';
@@ -78,7 +80,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
 
     const fetchLocationsAndUpdateMessage = useCallback(async (searchResultIds, messageId) => {
         try {
-            console.log('ChatWindow: Fetching full location objects for IDs:', searchResultIds);
+            DEBUG && console.log('ChatWindow: Fetching full location objects for IDs:', searchResultIds);
             const promises = searchResultIds.map(id =>
                 window.mapsindoors.services.LocationsService.getLocation(id)
             );
@@ -86,7 +88,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
             const validLocations = results
                 .filter(result => result.status === 'fulfilled' && result.value !== null)
                 .map(result => result.value);
-            console.log('ChatWindow: Successfully fetched locations:', validLocations);
+            DEBUG && console.log('ChatWindow: Successfully fetched locations:', validLocations);
 
             setChatHistory(prev => {
                 const updatedHistory = [...prev];

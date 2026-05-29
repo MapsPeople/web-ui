@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 // Create the context
 const GeminiContext = createContext();
 
-// API base URL - can be configured via environment variable or defaults to localhost:4000
 const API_BASE_URL = 'http://localhost:4000';
+const DEBUG = import.meta.env.VITE_GEMINI_DEBUG === 'true';
 
 export function GeminiProvider({ children, enabled }) {
     const [isLoading, setIsLoading] = useState(false);
@@ -189,7 +189,7 @@ export function GeminiProvider({ children, enabled }) {
 
                             // Log tool calls if present
                             if (chunk.log?.toolCalls) {
-                                console.log('Agent tool calls:\n' + JSON.stringify(chunk.log.toolCalls, null, 2));
+                                DEBUG && console.log('Agent tool calls:\n' + JSON.stringify(chunk.log.toolCalls, null, 2));
                             }
                         } catch (parseError) {
                             console.warn('Failed to parse streaming chunk:', jsonStr, parseError);
@@ -203,7 +203,7 @@ export function GeminiProvider({ children, enabled }) {
             }
 
             const processed = processFunctionData(lastFunctionData);
-            console.log('Search result IDs:', processed.searchResultIds);
+            DEBUG && console.log('Search result IDs:', processed.searchResultIds);
 
             if (onComplete) {
                 onComplete({
@@ -245,8 +245,8 @@ export function GeminiProvider({ children, enabled }) {
 
         const processed = processFunctionData(functionData);
 
-        console.log('Search result IDs:', processed.searchResultIds);
-        console.log('Agent tool calls:\n' + JSON.stringify(tools, null, 2));
+        DEBUG && console.log('Search result IDs:', processed.searchResultIds);
+        DEBUG && console.log('Agent tool calls:\n' + JSON.stringify(tools, null, 2));
 
         if (onComplete) {
             onComplete({
@@ -276,7 +276,7 @@ export function GeminiProvider({ children, enabled }) {
         setIsLoading(true);
 
         try {
-            console.log('Generating response for prompt:', prompt);
+            DEBUG && console.log('Generating response for prompt:', prompt);
 
             // Extract options
             const extra = options.extra || {};
