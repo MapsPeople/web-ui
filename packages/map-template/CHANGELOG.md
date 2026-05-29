@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] - Unreleased
+
+### Added
+
+- `src/atoms/venueListState.js` — new Recoil atom holding `{ id, name, displayName, image }` per venue, populated at startup.
+
+### Changed
+
+- Bumped MapsIndoors JS SDK from 4.58.0 to 4.58.3.
+- Venues are now loaded on demand: only identifiers and display names are fetched at startup, with full venue data fetched when a venue is selected.
+- Venue Selector visibility is now determined at startup without waiting for full venue data.
+- `venuesToSync` is updated to the active venue on switch, avoiding unnecessary location and floor syncing for unvisited venues.
+
+### Fixed
+
+- Clicking a search result from a different venue now correctly switches venue, pans to the location, and opens location details.
+
+### Files changed
+
+- `src/components/MapTemplate/MapTemplate.jsx` — populates `venueListState` at startup; gates Venue Selector on `venueList.length` instead of `venuesInSolution.length`.
+- `src/hooks/useCurrentVenue.js` — fetches full venue objects on demand; manages `venuesToSync` when switching venues.
+- `src/components/VenueSelector/Venue/Venue.jsx` — renders `displayName` with fallback to `name`.
+- `src/components/Search/Search.jsx` — fixes cross-venue location click: resolves venue from `properties.venue` or `properties.venueId`, awaits full venue load before navigation, defers `goTo` until `locations_changed` + map idle/stationary.
+- `src/hooks/useMapBoundsDeterminer.js` — removes unused `categories` dep that caused a spurious re-pan after venue switch.
+
 ## [1.98.6] - 2026-05-28
 
 ### Fixed

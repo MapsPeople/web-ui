@@ -6,6 +6,7 @@ import ViewSelectorIcon from '../../assets/view-selector.svg?react';
 import CloseIcon from '../../assets/close.svg?react';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
+import venueListState from '../../atoms/venueListState';
 import './ViewSelector.scss';
 import { useRecoilValue } from 'recoil';
 import { useTranslation } from 'react-i18next';
@@ -34,6 +35,7 @@ function ViewSelector({ isViewSelectorDisabled, isViewSelectorVisible }) {
     const isDesktop = useIsDesktop();
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const currentVenueName = useRecoilValue(currentVenueNameState);
+    const venueList = useRecoilValue(venueListState);
     const viewSelectorMountPoint = '.view-selector-portal';
     const portalContainer = usePortalTarget(viewSelectorMountPoint);
     const buildingListRef = useRef(null);
@@ -54,20 +56,13 @@ function ViewSelector({ isViewSelectorDisabled, isViewSelectorVisible }) {
 
     // Effect to fetch venueId when currentVenueName changes
     useEffect(() => {
-        if (mapsIndoorsInstance && currentVenueName) {
-            // Direct API call avoids stale data from mapsIndoorsInstance.getVenue() during venue transitions
-            window.mapsindoors.services.VenuesService.getVenues()
-                .then(venues => {
-                    // Find the venue with matching name
-                    const venue = venues.find(v =>
-                        v.name.toLowerCase() === currentVenueName.toLowerCase());
-
-                    if (venue?.id) {
-                        setVenueId(venue.id);
-                    }
-                });
+        if (currentVenueName && venueList.length) {
+            const item = venueList.find(v => v.name.toLowerCase() === currentVenueName.toLowerCase());
+            setVenueId(item?.id ?? null);
+        } else {
+            setVenueId(null);
         }
-    }, [mapsIndoorsInstance, currentVenueName]);
+    }, [currentVenueName, venueList]);
 
     // Effect to fetch buildings when venueId is available
     useEffect(() => {

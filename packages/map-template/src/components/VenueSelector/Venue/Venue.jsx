@@ -4,7 +4,12 @@ import './Venue.scss';
 import PropTypes from 'prop-types';
 
 Venue.propTypes = {
-    venue: PropTypes.object.isRequired,
+    venue: PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+        displayName: PropTypes.string,
+        image: PropTypes.string
+    }).isRequired,
     isCurrent: PropTypes.bool,
     onVenueClicked: PropTypes.func.isRequired
 };
@@ -42,7 +47,7 @@ function Venue({ venue, isCurrent, onVenueClicked }) {
     return <button className="venue" onClick={() => onVenueClicked()}>
         <div className="venue__image" style={style}></div>
         <div className="venue__content">
-            <div>{venue.venueInfo.name}</div>
+            <div>{venue.displayName || venue.name}</div>
             {isCurrent && <div className="venue__current">{t('Current')}</div>}
         </div>
     </button>

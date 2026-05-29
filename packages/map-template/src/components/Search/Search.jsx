@@ -33,12 +33,29 @@ import isLegendDialogVisibleState from '../../atoms/isLegendDialogVisibleState';
 import legendSortedFieldsSelector from '../../selectors/legendSortedFieldsSelector';
 import searchAllVenuesState from '../../atoms/searchAllVenues';
 import isNullOrUndefined from '../../helpers/isNullOrUndefined';
+import venueListState from '../../atoms/venueListState';
 import venuesInSolutionState from '../../atoms/venuesInSolutionState';
 import initialVenueNameState from '../../atoms/initialVenueNameState';
 import primaryColorState from '../../atoms/primaryColorState';
 import mapTypeState from '../../atoms/mapTypeState';
 import { mapTypes } from '../../constants/mapTypes';
 import PropTypes from 'prop-types';
+
+/**
+ * Finds a venue in the venue list matching a location's venue property or venueId.
+ * Checks both name and id to handle locations that carry either identifier.
+ *
+ * @param {Array} venueList
+ * @param {object} location
+ * @returns {object|undefined}
+ */
+function findVenueForLocation(venueList, location) {
+    const venueNameOrId = location.properties.venue || location.properties.venueId;
+    return venueList.find(venue =>
+        venue.name.toLowerCase() === venueNameOrId?.toLowerCase() ||
+        venue.id === venueNameOrId
+    );
+}
 
 Search.propTypes = {
     categories: PropTypes.array,
@@ -89,12 +106,13 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
 
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const mapType = useRecoilValue(mapTypeState);
-
     const setFilteredLocations = useSetRecoilState(filteredLocationsState);
 
     const setCurrentLocation = useSetRecoilState(currentLocationState);
 
     const setIsLocationClicked = useSetRecoilState(isLocationClickedState);
+
+    const setVenuesInSolution = useSetRecoilState(venuesInSolutionState);
 
     const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
 
@@ -120,7 +138,7 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
 
     const searchAllVenues = useRecoilValue(searchAllVenuesState);
 
-    const venuesInSolution = useRecoilValue(venuesInSolutionState);
+    const venueList = useRecoilValue(venueListState);
 
     const initialVenueName = useRecoilValue(initialVenueNameState);
 
@@ -190,9 +208,19 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
         // Regarding the venue name: The venue parameter in the SDK's getLocations method is case sensitive.
         // So when the currentVenueName is set based on a Locations venue property, the casing may differ.
         // Thus we need to find the venue name from the list of venues.
+        const matchedVenueName = currentVenueName
+            ? venueList.find(venue => venue.name.toLowerCase() === currentVenueName.toLowerCase())?.name
+            : undefined;
+
+        if (!searchAllVenues && !matchedVenueName) {
+            setSearchResults([]);
+            setFilteredLocations([]);
+            return;
+        }
+
         window.mapsindoors.services.LocationsService.getLocations({
             categories: category,
-            venue: searchAllVenues ? undefined : venuesInSolution.find(venue => venue.name.toLowerCase() === currentVenueName.toLowerCase())?.name,
+            venue: searchAllVenues ? undefined : matchedVenueName,
         }).then(results => onResults(results, true));
     }
 
@@ -377,29 +405,60 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
      *
      * @param {object} location
      */
-    function onLocationClicked(location) {
+    async function onLocationClicked(location) {
         // Set the current venue to be the selected location venue.
-        if (location.properties.venueId.toLowerCase() !== currentVenueName.toLowerCase()) {
-            setCurrentVenueName(location.properties.venueId);
+        const matchedVenue = findVenueForLocation(venueList, location);
+
+        // If the location belongs to a different venue, switch to it first.
+        // Navigation is deferred until locations_changed fires, ensuring location data
+        // for the new venue is ready before goTo is called.
+        if (matchedVenue && matchedVenue.name.toLowerCase() !== currentVenueName?.toLowerCase()) {
+            const currentVenueItem = venueList.find(venue => venue.name.toLowerCase() === currentVenueName?.toLowerCase());
+            if (currentVenueItem) {
+                window.mapsindoors.MapsIndoors.removeVenuesToSync(currentVenueItem.id);
+            }
+            window.mapsindoors.MapsIndoors.addVenuesToSync(matchedVenue.id);
+            const fullVenue = await window.mapsindoors.services.VenuesService.getVenue(matchedVenue.id);
+            // Pre-populate venuesInSolution so useCurrentVenue finds it immediately and skips a redundant fetch.
+            if (fullVenue) {
+                setVenuesInSolution(existingVenues => existingVenues.some(existingVenue => existingVenue.id === fullVenue.id) ? existingVenues : [...existingVenues, fullVenue]);
+                // Wait for location data to be ready, then for the map to settle before navigating.
+                mapsIndoorsInstance.once('locations_changed', () => {
+                    switch (mapType) {
+                        case mapTypes.Mapbox:
+                            // idle only fires on moveend — navigate immediately if already stationary.
+                            if (mapsIndoorsInstance.getMap().isMoving()) {
+                                mapsIndoorsInstance.getMapView().once('idle', () => navigateToLocation(location));
+                            } else {
+                                navigateToLocation(location);
+                            }
+                            break;
+                        default:
+                            // Google Maps fires idle regardless of movement.
+                            mapsIndoorsInstance.getMapView().once('idle', () => navigateToLocation(location));
+                            break;
+                    }
+                });
+                mapsIndoorsInstance.setVenue(fullVenue);
+            }
+            setCurrentVenueName(matchedVenue.name);
             setIsLocationClicked(true);
+            return;
         }
 
+        navigateToLocation(location);
+    }
+
+    function navigateToLocation(location) {
         const currentFloor = mapsIndoorsInstance.getFloor();
         const locationFloor = location.properties.floor;
 
+        // Navigate to the location's floor, then set it as the current location once the map is idle.
         if (locationFloor !== currentFloor) {
             // Register listener before setFloor — floor_changed fires
             // synchronously inside setFloor(), so it would be missed otherwise.
             mapsIndoorsInstance.once('floor_changed', () => {
-                const map = mapsIndoorsInstance.getMap();
-                if (mapType === mapTypes.Mapbox) {
-                    map.once('idle', () => setCurrentLocation(location));
-                } else if (mapType === mapTypes.Google) {
-                    const listener = map.addListener('idle', () => {
-                        listener.remove();
-                        setCurrentLocation(location);
-                    });
-                }
+                mapsIndoorsInstance.getMapView().once('idle', () => setCurrentLocation(location));
             });
             mapsIndoorsInstance.setFloor(locationFloor);
         } else {

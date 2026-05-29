@@ -5,7 +5,7 @@ import { CSSTransition } from 'react-transition-group';
 import './VenueSelector.scss';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { usePortalTarget } from '../../hooks/usePortalTarget';
-import venuesInSolutionState from '../../atoms/venuesInSolutionState';
+import venueListState from '../../atoms/venueListState';
 import BuildingIcon from '../../assets/building.svg?react';
 import CloseIcon from '../../assets/close.svg?react';
 import Venue from './Venue/Venue';
@@ -33,7 +33,7 @@ function VenueSelector({ onOpen, onClose, active }) {
     const { t } = useTranslation();
 
     const venueSelectorContentRef = useRef(null);
-    const venuesInSolution = useRecoilValue(venuesInSolutionState);
+    const venueList = useRecoilValue(venueListState);
     const setVenueWasSelected = useSetRecoilState(venueWasSelectedState);
 
     const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
@@ -100,7 +100,7 @@ function VenueSelector({ onOpen, onClose, active }) {
                         </button>
                     </div>
                     <div className="venue-selector__list">
-                        {venuesInSolution.map(venue => (
+                        {venueList.map(venue => (
                             <Venue
                                 key={venue.id}
                                 isCurrent={currentVenueName?.toLowerCase() === venue.name.toLowerCase()}
