@@ -5,13 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] - Unreleased
+## [1.99.0] - 2026-05-29
 
 ### Added
 
 - `src/atoms/venueListState.js` — new Recoil atom holding `{ id, name, displayName, image }` per venue, populated at startup.
 
 ### Changed
+
+- Debug `console.log` calls in `GeminiProvider` and `ChatWindow` are now gated behind the `VITE_GEMINI_DEBUG` environment variable.
 
 - Bumped MapsIndoors JS SDK from 4.58.0 to 4.58.3.
 - Venues are now loaded on demand: only identifiers and display names are fetched at startup, with full venue data fetched when a venue is selected.
