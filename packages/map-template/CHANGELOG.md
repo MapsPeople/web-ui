@@ -5,11 +5,43 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.98.7] - 2026-05-28
+## [1.99.2] - 2026-06-01
 
 ### Added
 
 - When `directionsFrom=<locationId>` is set in the URL (and `directionsTo` is not), the map now centres on the origin POI and highlights it with the standard `selectLocation()` red pin. The pin persists while a route is displayed and is cleared when the user changes the FROM field.
+## [1.99.1] - 2026-06-01
+
+### Fixed
+
+- Removed min-height: 435px from `wayfinding.css` on desktop views
+
+## [1.99.0] - 2026-05-29
+
+### Added
+
+- `src/atoms/venueListState.js` — new Recoil atom holding `{ id, name, displayName, image }` per venue, populated at startup.
+
+### Changed
+
+- Debug `console.log` calls in `GeminiProvider` and `ChatWindow` are now gated behind the `VITE_GEMINI_DEBUG` environment variable.
+
+- Bumped MapsIndoors JS SDK from 4.58.0 to 4.58.3.
+- Venues are now loaded on demand: only identifiers and display names are fetched at startup, with full venue data fetched when a venue is selected.
+- Venue Selector visibility is now determined at startup without waiting for full venue data.
+- `venuesToSync` is updated to the active venue on switch, avoiding unnecessary location and floor syncing for unvisited venues.
+
+### Fixed
+
+- Clicking a search result from a different venue now correctly switches venue, pans to the location, and opens location details.
+
+### Files changed
+
+- `src/components/MapTemplate/MapTemplate.jsx` — populates `venueListState` at startup; gates Venue Selector on `venueList.length` instead of `venuesInSolution.length`.
+- `src/hooks/useCurrentVenue.js` — fetches full venue objects on demand; manages `venuesToSync` when switching venues.
+- `src/components/VenueSelector/Venue/Venue.jsx` — renders `displayName` with fallback to `name`.
+- `src/components/Search/Search.jsx` — fixes cross-venue location click: resolves venue from `properties.venue` or `properties.venueId`, awaits full venue load before navigation, defers `goTo` until `locations_changed` + map idle/stationary.
+- `src/hooks/useMapBoundsDeterminer.js` — removes unused `categories` dep that caused a spurious re-pan after venue switch.
 
 ## [1.98.6] - 2026-05-28
 
@@ -28,6 +60,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - **`externalIDs` highlight on initial load**: Fixed a bug where locations matched by the `externalIDs` URL parameter / prop were not highlighted with dot badges on the map on first load. The highlight effect was running while the underlying map was still mid-transition (the initial `fitBounds` to the matched locations), and the SDK's `highlight()` badges were wiped by the subsequent map render. The effect is now gated on `isMapReady` and re-applies highlights on the underlying map's `idle` event — matching the same idle-wait pattern already used by the `selectLocation` flow.
+
 ## [1.98.3] - 2026-05-19
 
 ### Changed

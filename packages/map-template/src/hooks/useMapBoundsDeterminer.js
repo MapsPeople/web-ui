@@ -4,7 +4,6 @@ import getDesktopPaddingBottom from '../helpers/GetDesktopPaddingBottom';
 
 // Recoil atoms
 import bearingState from '../atoms/bearingState';
-import categoriesState from '../atoms/categoriesState';
 import kioskOriginLocationIdState from '../atoms/kioskOriginLocationIdState';
 import locationIdState from '../atoms/locationIdState';
 import mapsIndoorsInstanceState from '../atoms/mapsIndoorsInstanceState';
@@ -45,7 +44,6 @@ const useMapBoundsDeterminer = () => {
     const isInactive = useInactive();
 
     const bearing = useRecoilValue(bearingState);
-    const categories = useRecoilValue(categoriesState);
     const kioskOriginLocationId = useRecoilValue(kioskOriginLocationIdState);
     const locationId = useRecoilValue(locationIdState);
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
@@ -78,7 +76,7 @@ const useMapBoundsDeterminer = () => {
      */
     useEffect(() => {
         determineMapBounds();
-    }, [mapsIndoorsInstance, currentVenueName, locationId, kioskOriginLocationId, pitch, bearing, startZoomLevel, categories, center, wayfindingOriginHighlightLocation]);
+    }, [mapsIndoorsInstance, currentVenueName, venuesInSolution, locationId, kioskOriginLocationId, pitch, bearing, startZoomLevel, categories, center, wayfindingOriginHighlightLocation]);
 
     /**
      * Based on the combination of the states for venueName, locationId & kioskOriginLocationId,
@@ -86,7 +84,10 @@ const useMapBoundsDeterminer = () => {
      */
     function determineMapBounds() {
         const key = ++determineMapBoundsKeyRef.current;
-        const currentVenue = venuesInSolution.find(venue => venue.name?.toLowerCase() === currentVenueName.toLowerCase());
+        const currentVenue = venuesInSolution.find(venue =>
+            venue.name?.toLowerCase() === currentVenueName?.toLowerCase() ||
+            venue.venueInfo?.name?.toLowerCase() === currentVenueName?.toLowerCase()
+        );
 
         // If kioskOriginLocationId was set and is now removed, revert display rule
         if (!kioskOriginLocationId && kioskOriginLocationInfo.id && mapsIndoorsInstance && kioskLocationDisplayRuleWasChanged) {
@@ -222,6 +223,9 @@ const useMapBoundsDeterminer = () => {
                     }
                 } else {
                     // Returns Venue that intersects with center prop.
+                    // All venue geometries are available here because MapTemplate loads full venue objects
+                    // via getVenues() (instead of the lightweight getVenueList()) when the center prop is defined.
+                    // If center intersects a venue other than the default, that venue is auto-selected.
                     const intersectingVenueWithCenterPoint = venuesInSolution.find(venue => {
                         return turf.booleanIntersects(venue.geometry, getCenterPoint().geometry);
                     });

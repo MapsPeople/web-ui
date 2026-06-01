@@ -7,11 +7,13 @@ import { useIsDesktop } from '../../hooks/useIsDesktop';
 import { useKeyboardHeight } from '../../hooks/useKeyboardHeight';
 import PropTypes from 'prop-types';
 import './ChatWindow.scss';
+
+const DEBUG = import.meta.env.VITE_GEMINI_DEBUG === 'true';
 import primaryColorState from '../../atoms/primaryColorState';
 import apiKeyState from '../../atoms/apiKeyState';
 import userPositionState from '../../atoms/userPositionState';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
-import venuesInSolutionState from '../../atoms/venuesInSolutionState';
+import venueListState from '../../atoms/venueListState';
 import userLocationShareState from '../../atoms/userLocationShareState';
 import ChatMessages from './ChatMessages/ChatMessages';
 import ChatInput from './ChatInput/ChatInput';
@@ -26,7 +28,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     const apiKey = useRecoilValue(apiKeyState);
     const userPosition = useRecoilValue(userPositionState);
     const currentVenueName = useRecoilValue(currentVenueNameState);
-    const venuesInSolution = useRecoilValue(venuesInSolutionState);
+    const venueList = useRecoilValue(venueListState);
     const isDesktop = useIsDesktop();
     const chatWindowRef = useRef(null);
     const { getInitialMessage, clearInitialMessage } = useInitialChatMessage();
@@ -78,7 +80,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
 
     const fetchLocationsAndUpdateMessage = useCallback(async (searchResultIds, messageId) => {
         try {
-            console.log('ChatWindow: Fetching full location objects for IDs:', searchResultIds);
+            DEBUG && console.log('ChatWindow: Fetching full location objects for IDs:', searchResultIds);
             const promises = searchResultIds.map(id =>
                 window.mapsindoors.services.LocationsService.getLocation(id)
             );
@@ -86,7 +88,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
             const validLocations = results
                 .filter(result => result.status === 'fulfilled' && result.value !== null)
                 .map(result => result.value);
-            console.log('ChatWindow: Successfully fetched locations:', validLocations);
+            DEBUG && console.log('ChatWindow: Successfully fetched locations:', validLocations);
 
             setChatHistory(prev => {
                 const updatedHistory = [...prev];
@@ -141,16 +143,14 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
 
         // Add venue info if available
         if (currentVenueName) {
-            const currentVenue = venuesInSolution.find(
-                venue => venue.name.toLowerCase() === currentVenueName.toLowerCase()
-            );
+            const currentVenueItem = venueList.find(venue => venue.name.toLowerCase() === currentVenueName.toLowerCase());
 
             extra.venue = {
                 name: currentVenueName
             };
 
-            if (currentVenue?.id) {
-                extra.venue.venueId = currentVenue.id;
+            if (currentVenueItem?.id) {
+                extra.venue.venueId = currentVenueItem.id;
             }
         }
 
@@ -256,7 +256,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
             ]);
             setCurrentThought('');
         }
-    }, [isLoading, generateResponse, apiKey, userPosition, currentVenueName, venuesInSolution, locationShareConsent, usageConsentAccepted, onSearchResults, fetchLocationsAndUpdateMessage]);
+    }, [isLoading, generateResponse, apiKey, userPosition, currentVenueName, venueList, locationShareConsent, usageConsentAccepted, onSearchResults, fetchLocationsAndUpdateMessage]);
 
     // Send pending message after consent is decided
     useEffect(() => {
@@ -294,9 +294,9 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
 
     /**
      * Get the layout classes for the ChatWindow component based on current state
-     * 
+     *
      * @returns {string} Space-separated class names
-     * 
+     *
      * Desktop: Returns 'chat-window desktop'
      * Mobile without keyboard: Returns 'chat-window mobile' (with 'chat-window--visible' when animated)
      * Mobile with keyboard: Returns 'chat-window mobile chat-window--keyboard-visible' (with 'chat-window--visible' when animated)
@@ -324,7 +324,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
      * Get inline styles for the ChatWindow component based on current state
      * 
      * @returns {Object} Style object with CSS custom properties
-     * 
+     *
      * Always includes: '--chat-window-primary-color'
      * Mobile with keyboard: Also includes '--keyboard-height'
      */
