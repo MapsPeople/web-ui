@@ -574,6 +574,7 @@ export namespace Components {
         /**
           * The MapBox access token.
           * @type {string}
+          * @default ''
          */
         "accessToken": string;
         /**
@@ -652,6 +653,12 @@ export namespace Components {
           * @default ''
          */
         "miApiKey": string;
+        /**
+          * The minimum zoom level of the map.
+          * @type {number}
+          * @default 15
+         */
+        "minZoom": number;
         /**
           * Render the My Position Control as a Map Control at the given position.
           * @type {('top-left' | 'top-right' | 'bottom-left' | 'bottom-right')}
@@ -2348,6 +2355,7 @@ declare namespace LocalJSX {
         /**
           * The MapBox access token.
           * @type {string}
+          * @default ''
          */
         "accessToken"?: string;
         /**
@@ -2395,6 +2403,12 @@ declare namespace LocalJSX {
           * @default ''
          */
         "miApiKey"?: string;
+        /**
+          * The minimum zoom level of the map.
+          * @type {number}
+          * @default 15
+         */
+        "minZoom"?: number;
         /**
           * Render the My Position Control as a Map Control at the given position.
           * @type {('top-left' | 'top-right' | 'bottom-left' | 'bottom-right')}
@@ -3095,6 +3109,7 @@ declare namespace LocalJSX {
     }
     interface MiMapMapboxAttributes {
         "accessToken": string;
+        "minZoom": number;
         "miApiKey": string;
         "disableExternalLinks": boolean;
         "floorSelectorControlPosition": 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';

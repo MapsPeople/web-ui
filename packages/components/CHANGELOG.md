@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [13.35.0] - 2026-06-03
+
+### Added
+
+- **mi-map-mapbox**: Added `minZoom` prop (`min-zoom` attribute) to set the minimum zoom level when the map is created.
+
+### Changed
+
+- **mi-map-mapbox**: Pass `maxZoom`, `maxPitch`, and `minZoom` into Mapbox map view options at initialization.
+- **mi-map-mapbox**: Expanded JSDoc comments for props, `@Watch` handlers, and methods.
+- Updated the default MapsIndoors Web SDK URL from 4.52.0 to 4.58.3 (`mi-variables.ts`).
+
 ## [13.34.1] - 2026-05-28
 
 ### Fixed

@@ -16,15 +16,32 @@ export class MapMapbox implements ComponentInterface {
 
     /**
      * The MapBox access token.
+     *
      * @type {string}
+     * @default ''
      */
     @Prop() accessToken: string;
 
     /**
+     * The minimum zoom level of the map.
+     *
+     * @type {number}
+     * @default 15
+     */
+    @Prop() minZoom: number = 15;
+
+    /**
      * The MapsIndoors API key.
+     *
      * @type {string}
      */
     @Prop() miApiKey: string = '';
+
+    /**
+     * Set the MapsIndoors API key.
+     *
+     * @param {string} newApiKey
+     */
     @Watch('miApiKey')
     apiKeyChange(newApiKey): void {
         mapsindoors.MapsIndoors.setMapsIndoorsApiKey(newApiKey);
@@ -33,9 +50,17 @@ export class MapMapbox implements ComponentInterface {
     /**
      * Set to true to prevent external links on the map from opening.
      * This can be useful when running the map on a kiosk where you never want the browser to navigate away.
+     *
      * @type {boolean}
      */
     @Prop() disableExternalLinks: boolean = false;
+
+    /**
+     * Set to true to prevent external links on the map from opening.
+     * This can be useful when running the map on a kiosk where you never want the browser to navigate away.
+     *
+     * @param {boolean} shouldDisableLinks
+     */
     @Watch('disableExternalLinks')
     setExternalLinkBehavior(shouldDisableLinks: boolean): void {
         if (shouldDisableLinks === true) {
@@ -47,9 +72,16 @@ export class MapMapbox implements ComponentInterface {
 
     /**
      * Render the floor selector as a Map Control at the given position.
+     *
      * @type {('top-left' | 'top-right' | 'bottom-left' | 'bottom-right')}
      */
     @Prop() floorSelectorControlPosition: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+
+    /**
+     * Set the floor selector control position.
+     *
+     * @param {('top-left' | 'top-right' | 'bottom-left' | 'bottom-right')} newPosition
+     */
     @Watch('floorSelectorControlPosition')
     floorSelectorControlPositionChange(newPosition: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'): void {
         if (this.floorSelectorControl) {
@@ -59,9 +91,17 @@ export class MapMapbox implements ComponentInterface {
 
     /**
      * Set or get the current floor index shown on the map.
+     *
      * @type {string}
      */
     @Prop({ mutable: true, reflect: true }) floorIndex: string;
+
+    /**
+     * Set the floor index.
+     *
+     * @param {string} newFloor
+     * @param {string} oldFloor
+     */
     @Watch('floorIndex')
     floorIndexChange(newFloor, oldFloor): void {
         if (newFloor === null) {
@@ -75,9 +115,16 @@ export class MapMapbox implements ComponentInterface {
 
     /**
      * Render the My Position Control as a Map Control at the given position.
+     *
      * @type {('top-left' | 'top-right' | 'bottom-left' | 'bottom-right')}
      */
     @Prop() myPositionControlPosition: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+
+    /**
+     * Set the my position control position.
+     *
+     * @param {('top-left' | 'top-right' | 'bottom-left' | 'bottom-right')} newPosition
+     */
     @Watch('myPositionControlPosition')
     myPositionControlPositionChange(newPosition: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'): void {
         this.setMyPositionControl(newPosition);
@@ -86,6 +133,7 @@ export class MapMapbox implements ComponentInterface {
     /**
      * Styling of polygon highlight when a location is clicked.
      * Set it to null to turn off highlighting.
+     *
      * @type {object}
      */
     @Prop() polygonHighlightOptions = {
@@ -94,7 +142,7 @@ export class MapMapbox implements ComponentInterface {
         strokeWeight: 2,
         fillColor: '#EF6CCE',
         fillOpacity: 0.2
-    }
+    };
 
     /**
      * Styling of how the polyline looks when getting a route.
@@ -108,7 +156,13 @@ export class MapMapbox implements ComponentInterface {
         color: '#3071d9',
         opacity: 1,
         weight: 4
-    }
+    };
+
+    /**
+     * Set the polyline options.
+     *
+     * @param {object} newPolylineOptions
+     */
     @Watch('polylineOptions')
     polylineOptionsChange(newPolylineOptions): void {
         if (this.directionsRendererInstance) {
@@ -122,9 +176,17 @@ export class MapMapbox implements ComponentInterface {
 
     /**
      * Set or get the current zoom level of the map.
+     *
      * @type {string}
      */
     @Prop({ mutable: true, reflect: true }) zoom: string = '17';
+
+    /**
+     * Set the zoom.
+     *
+     * @param {string} newZoom
+     * @param {string} oldZoom
+     */
     @Watch('zoom')
     zoomChange(newZoom, oldZoom): void {
         if (newZoom !== oldZoom && newZoom !== this.mapboxInstance.getZoom()) {
@@ -137,9 +199,17 @@ export class MapMapbox implements ComponentInterface {
 
     /**
      * Set or get the max pitch of the map (0-85).
+     *
      * @type {number}
      */
     @Prop({ mutable: true, reflect: true }) maxPitch: number = 60;
+
+    /**
+     * Set the max pitch.
+     *
+     * @param {number} newPitch
+     * @param {number} oldPitch
+     */
     @Watch('maxPitch')
     maxPitchChange(newPitch, oldPitch): void {
         if (newPitch !== oldPitch && newPitch !== this.mapboxInstance.getMaxPitch()) {
@@ -152,9 +222,17 @@ export class MapMapbox implements ComponentInterface {
 
     /**
      * Set or get the max zoom level of the map.
+     *
      * @type {string}
      */
     @Prop({ mutable: true, reflect: true }) maxZoom: string = undefined;
+
+    /**
+     * Set the max zoom.
+     *
+     * @param {string} newZoom
+     * @param {string} oldZoom
+     */
     @Watch('maxZoom')
     maxZoomChange(newZoom, oldZoom): void {
         if (newZoom !== oldZoom && newZoom !== this.mapboxInstance.getMaxZoom()) {
@@ -167,9 +245,17 @@ export class MapMapbox implements ComponentInterface {
 
     /**
      * Set or get the bearing of the map.
+     *
      * @type {string}
      */
     @Prop({ mutable: true, reflect: true }) bearing: string = '0';
+
+    /**
+     * Set the bearing.
+     *
+     * @param {string} newBearing
+     * @param {string} oldBearing
+     */
     @Watch('bearing')
     bearingChange(newBearing, oldBearing): void {
         if (newBearing !== oldBearing && newBearing !== this.mapboxInstance.getBearing()) {
@@ -182,9 +268,17 @@ export class MapMapbox implements ComponentInterface {
 
     /**
      * Set or get the pitch (tilt) of the map. Measured in degrees (0-60).
+     *
      * @type {string}
      */
     @Prop({ mutable: true, reflect: true }) pitch: string = '0';
+
+    /**
+     * Set the pitch.
+     *
+     * @param {string} newPitch
+     * @param {string} oldPitch
+     */
     @Watch('pitch')
     pitchChange(newPitch, oldPitch): void {
         if (newPitch !== oldPitch && newPitch !== this.mapboxInstance.getPitch()) {
@@ -202,6 +296,7 @@ export class MapMapbox implements ComponentInterface {
 
     /**
      * Ready event emitted when the MapsIndoors has been initialized and is ready.
+     *
      * @event ready
      * @type {EventEmitter}
      */
@@ -209,6 +304,7 @@ export class MapMapbox implements ComponentInterface {
 
     /**
      * Get the map instance.
+     *
      * @returns {Promise<any>}
      */
     @Method()
@@ -218,6 +314,7 @@ export class MapMapbox implements ComponentInterface {
 
     /**
      * Get the MapsIndoors instance.
+     *
      * @returns {Promise<any>}
      */
     @Method()
@@ -227,6 +324,7 @@ export class MapMapbox implements ComponentInterface {
 
     /**
      * Get the MapsIndoors Directions Service Instance.
+     *
      * @returns {Promise<any>}
      */
     @Method()
@@ -236,6 +334,7 @@ export class MapMapbox implements ComponentInterface {
 
     /**
      * Get the MapsIndoors Directions Renderer Instance.
+     *
      * @returns {Promise<any>}
      */
     @Method()
@@ -245,6 +344,7 @@ export class MapMapbox implements ComponentInterface {
 
     /**
      * Highlight a MapsIndoors location. Only a single location can be highlighted at the time.
+     *
      * @param {Location} location
      * @returns {Promise<void>}
      */
@@ -275,6 +375,7 @@ export class MapMapbox implements ComponentInterface {
 
     /**
      * Clear existing MapsIndoors location highlight.
+     *
      * @returns {Promise<void>}
      */
     @Method()
@@ -301,6 +402,11 @@ export class MapMapbox implements ComponentInterface {
 
     highlightedLocationId: string;
 
+    /**
+     * Component did load.
+     *
+     * @returns {Promise<void>}
+     */
     async componentDidLoad(): Promise<void> {
         await this.insertMapBoxScript();
         await this.initializeMapsIndoorsSDK();
@@ -318,6 +424,11 @@ export class MapMapbox implements ComponentInterface {
         }
     }
 
+    /**
+     * Disconnected callback.
+     *
+     * @returns {void}
+     */
     disconnectedCallback(): void {
         this.mapsIndoorsInstance.deallocate();
         this.mapElement.remove();
@@ -326,8 +437,6 @@ export class MapMapbox implements ComponentInterface {
 
     /**
      * Inject script tag for Mapbox API onto the page.
-     *
-     * @returns {Promise<void>}
      */
     insertMapBoxScript(): Promise<void> {
         if (typeof (mapboxgl) === 'undefined') {
@@ -335,9 +444,9 @@ export class MapMapbox implements ComponentInterface {
                 const mapboxApiTag = document.createElement('script');
                 mapboxApiTag.setAttribute('type', 'text/javascript');
                 // When upgrading the version please remember to update url to the MapBox css in the render function.
-                mapboxApiTag.setAttribute('src', 'https://api.mapbox.com/mapbox-gl-js/v3.19.0/mapbox-gl.js');
+                mapboxApiTag.setAttribute('src', 'https://api.mapbox.com/mapbox-gl-js/v3.22.0/mapbox-gl.js');
                 document.body.appendChild(mapboxApiTag);
-                mapboxApiTag.onload = () => resolve();
+                mapboxApiTag.onload = (): void => resolve();
             });
         }
     }
@@ -374,6 +483,7 @@ export class MapMapbox implements ComponentInterface {
                 zoom: this.zoom,
                 maxZoom: this.maxZoom,
                 maxPitch: this.maxPitch,
+                minZoom: this.minZoom,
                 bearing: this.bearing,
                 pitch: this.pitch
             };
@@ -465,6 +575,7 @@ export class MapMapbox implements ComponentInterface {
 
     /**
      * Prevent external links from opening.
+     *
      * @param {MouseEvent} event
      */
     preventExternalLink(event: MouseEvent): void {
@@ -484,6 +595,7 @@ export class MapMapbox implements ComponentInterface {
 
     /**
      * Set, update or unset floor selector on the map.
+     *
      * @param {('top-left' | 'top-right' | 'bottom-left' | 'bottom-right')} controlPosition
      */
     setFloorSelectorControl(controlPosition: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'): void {
@@ -504,6 +616,7 @@ export class MapMapbox implements ComponentInterface {
 
     /**
      * Set, update or unset my position control on the map.
+     *
      * @param {('top-left' | 'top-right' | 'bottom-left' | 'bottom-right')} controlPosition
      */
     setMyPositionControl(controlPosition: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'): void {
@@ -522,10 +635,15 @@ export class MapMapbox implements ComponentInterface {
         }
     }
 
+    /**
+     * Render the component.
+     *
+     * @returns {JSX.Element}
+     */
     render(): JSX.Element {
         return (
             <Host>
-                <link href='https://api.mapbox.com/mapbox-gl-js/v3.19.0/mapbox-gl.css' rel='stylesheet' />
+                <link href='https://api.mapbox.com/mapbox-gl-js/v3.22.0/mapbox-gl.css' rel='stylesheet' />
                 <div ref={(el) => this.mapElement = el as HTMLDivElement}></div>
             </Host>
         );
