@@ -444,7 +444,7 @@ export class MapMapbox implements ComponentInterface {
                 const mapboxApiTag = document.createElement('script');
                 mapboxApiTag.setAttribute('type', 'text/javascript');
                 // When upgrading the version please remember to update url to the MapBox css in the render function.
-                mapboxApiTag.setAttribute('src', 'https://api.mapbox.com/mapbox-gl-js/v3.19.0/mapbox-gl.js');
+                mapboxApiTag.setAttribute('src', 'https://api.mapbox.com/mapbox-gl-js/v3.22.0/mapbox-gl.js');
                 document.body.appendChild(mapboxApiTag);
                 mapboxApiTag.onload = (): void => resolve();
             });
@@ -643,7 +643,7 @@ export class MapMapbox implements ComponentInterface {
     render(): JSX.Element {
         return (
             <Host>
-                <link href='https://api.mapbox.com/mapbox-gl-js/v3.19.0/mapbox-gl.css' rel='stylesheet' />
+                <link href='https://api.mapbox.com/mapbox-gl-js/v3.22.0/mapbox-gl.css' rel='stylesheet' />
                 <div ref={(el) => this.mapElement = el as HTMLDivElement}></div>
             </Host>
         );
