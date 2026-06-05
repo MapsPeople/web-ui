@@ -253,9 +253,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             const miSdkApiTag = document.createElement('script');
             miSdkApiTag.setAttribute('type', 'text/javascript');
             // Remember to update the root index.html with the same version / integrity
-            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.58.3/mapsindoors-4.58.3.js.gz');
-            miSdkApiTag.setAttribute('integrity', 'sha384-wxkops0RSQyw2iLEjgr5xSlAZehjrwGpzY3aEgzgxGh+ZhRUv8JaE0HARJwKpQWB');
-            miSdkApiTag.setAttribute('crossorigin', 'anonymous');
+            miSdkApiTag.setAttribute('src', 'http://localhost:3001/build/index.js');
+            // miSdkApiTag.setAttribute('integrity', 'sha384-qAQqQ3zsNje0mo3tkEXr7domqsvFzhH4JR4DxRrlFrTFRSlfydcyRX7qCHMQVFdC');
+            // miSdkApiTag.setAttribute('crossorigin', 'anonymous');
             document.body.appendChild(miSdkApiTag);
             miSdkApiTag.onload = () => {
                 resolve();
@@ -627,6 +627,22 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         setMiTransitionLevel(miTransitionLevel);
     }, [miTransitionLevel]);
+
+    /*
+     * Sync analytics context with the active UI variant and map provider.
+     * This lets SDK analytics differentiate shared events like selectLocation()
+     * between mobile, desktop and kiosk hosts.
+     */
+    useEffect(() => {
+        if (!mapsIndoorsInstance?.setAnalyticsContext) return;
+
+        const viewVariant = isKiosk ? 'kiosk' : isDesktop ? 'desktop' : 'mobile';
+        console.log(viewVariant);
+        
+        mapsIndoorsInstance.setAnalyticsContext({
+            viewVariant
+        });
+    }, [mapsIndoorsInstance, isKiosk, isDesktop, mapType]);
 
     /*
      * React on changes in the current location prop.
