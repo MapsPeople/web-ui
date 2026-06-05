@@ -58,6 +58,7 @@ import showExternalIDsState from '../../atoms/showExternalIDsState.js'
 import showRoadNamesState from '../../atoms/showRoadNamesState.js';
 import searchExternalLocationsState from '../../atoms/searchExternalLocationsState.js';
 import wayfindingLocationState from '../../atoms/wayfindingLocation.js';
+import wayfindingOriginHighlightLocationState from '../../atoms/wayfindingOriginHighlightLocationState.js';
 import isNullOrUndefined from '../../helpers/isNullOrUndefined.js';
 import centerState from '../../atoms/centerState.js';
 import PropTypes from 'prop-types';
@@ -190,6 +191,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [viewModeSwitchVisible, setViewModeSwitchVisible] = useState();
     const mapClickActionRef = useRef();
     const setWayfindingLocation = useSetRecoilState(wayfindingLocationState);
+    const [wayfindingOriginHighlightLocation, setWayfindingOriginHighlightLocation] = useRecoilState(wayfindingOriginHighlightLocationState);
     const [qrCodeLink, setQrCodeLink] = useRecoilState(qrCodeLinkState);
 
     const [showVenueSelector, setShowVenueSelector] = useState(true);
@@ -238,6 +240,19 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const mapType = useRecoilValue(mapTypeState);
     const isKiosk = useIsKioskContext();
     const disableRightClick = isKiosk && (appConfig?.appSettings?.disableRightClick === true || appConfig?.appSettings?.disableRightClick === 'true');
+
+    /**
+     * When ?directionsFrom resolves to a real Location AND there is no ?directionsTo
+     * AND the value isn't the USER_POSITION magic string, expose it as the wayfinding
+     * origin to highlight on initial load (zoom + selectLocation pin).
+     */
+    useEffect(() => {
+        const eligible = directionsFromLocation
+            && directionsFromLocation !== 'USER_POSITION_PENDING'
+            && !directionsTo
+            && directionsFrom !== 'USER_POSITION';
+        setWayfindingOriginHighlightLocation(eligible ? directionsFromLocation : null);
+    }, [directionsFromLocation, directionsTo, directionsFrom]);
 
     /**
      * Ensure that MapsIndoors Web SDK is available.
@@ -637,15 +652,19 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         if (!isMapReady) return;
 
-        if (currentLocation && currentLocation.id !== kioskOriginLocationId) {
+        const locationToSelect = currentLocation && currentLocation.id !== kioskOriginLocationId
+            ? currentLocation
+            : wayfindingOriginHighlightLocation;
+
+        if (locationToSelect) {
             if (mapsIndoorsInstance?.selectLocation) {
                 mapsIndoorsInstance.highlight?.([]);
 
                 const map = mapsIndoorsInstance.getMap();
                 if (mapType === mapTypes.Mapbox) {
-                    map.once('idle', () => mapsIndoorsInstance.selectLocation(currentLocation));
+                    map.once('idle', () => mapsIndoorsInstance.selectLocation(locationToSelect));
                 } else {
-                    mapsIndoorsInstance.selectLocation(currentLocation);
+                    mapsIndoorsInstance.selectLocation(locationToSelect);
                 }
             }
         } else {
@@ -653,7 +672,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 mapsIndoorsInstance.deselectLocation();
             }
         }
-    }, [currentLocation, mapsIndoorsInstance, isMapReady, mapType]);
+    }, [currentLocation, wayfindingOriginHighlightLocation, kioskOriginLocationId, mapsIndoorsInstance, isMapReady, mapType]);
 
     /**
      * React on changes to the app config.

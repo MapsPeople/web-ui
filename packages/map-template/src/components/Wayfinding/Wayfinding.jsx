@@ -36,6 +36,7 @@ import ShuttleBus from '../ShuttleBus/ShuttleBus';
 import searchExternalLocationsState from '../../atoms/searchExternalLocationsState';
 import PropTypes from 'prop-types';
 import wayfindingLocationState from '../../atoms/wayfindingLocation';
+import wayfindingOriginHighlightLocationState from '../../atoms/wayfindingOriginHighlightLocationState';
 import appConfigState from '../../atoms/appConfigState';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import ShareIcon from '../../assets/share.svg?react';
@@ -110,6 +111,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     const selectedMapType = useRecoilValue(mapTypeState);
     const primaryColor = useRecoilValue(primaryColorState);
     const [wayfindingLocation, setWayfindingLocation] = useRecoilState(wayfindingLocationState);
+    const [wayfindingOriginHighlightLocation, setWayfindingOriginHighlightLocation] = useRecoilState(wayfindingOriginHighlightLocationState);
 
     const [activeSearchField, setActiveSearchField] = useState();
     const [isSharing, setIsSharing] = useState(false);
@@ -484,6 +486,30 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         triggerRouteSearch();
         setWayfindingLocation(null); // will re-trigger another run with early exit but necessary in order to be able to re-click already clicked locations on the map
     }, [wayfindingLocation]);
+
+    /**
+     * The wayfinding-origin highlight tracks the QR-code POI from ?directionsFrom.
+     * Clear it once the user picks (or clears) a different origin — the FROM field
+     * is no longer pointing at the highlighted POI.
+     *
+     * The ref guards against the initial undefined state of `originLocation`: on
+     * mount, `originLocation` is undefined while `wayfindingOriginHighlightLocation`
+     * is already set by the URL. The auto-fill effect below populates `originLocation`
+     * a tick later. Without the ref the clear would fire on the first render and wipe
+     * the highlight before the pin renders.
+     */
+    const originMatchedHighlightRef = useRef(false);
+    useEffect(() => {
+        if (!wayfindingOriginHighlightLocation) {
+            originMatchedHighlightRef.current = false;
+            return;
+        }
+        if (originLocation?.id === wayfindingOriginHighlightLocation.id) {
+            originMatchedHighlightRef.current = true;
+        } else if (originMatchedHighlightRef.current) {
+            setWayfindingOriginHighlightLocation(null);
+        }
+    }, [originLocation, wayfindingOriginHighlightLocation]);
 
     useEffect(() => {
         let originLocationWasSet = false;

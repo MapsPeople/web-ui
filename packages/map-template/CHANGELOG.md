@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.99.2] - 2026-06-01
+
+### Added
+
+- When `directionsFrom=<locationId>` is set in the URL (and `directionsTo` is not), the map now centres on the origin POI and highlights it with the standard `selectLocation()` red pin. The pin persists while a route is displayed and is cleared when the user changes the FROM field.
 ## [1.99.1] - 2026-06-01
 
 ### Fixed
