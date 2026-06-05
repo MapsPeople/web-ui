@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [13.36.1] - 2026-06-04
+
+### Fixed
+
+- **mi-my-position**: Fixed FOLLOW mode being unreachable with a fast-streaming custom position provider. Incoming positions no longer reset the `CENTERED` state back to `KNOWN`, so a user can click `CENTERED` → `FOLLOW`.
+
 ## [13.35.0] - 2026-06-03
 
 ### Added
