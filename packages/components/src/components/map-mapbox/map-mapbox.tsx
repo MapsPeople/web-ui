@@ -487,8 +487,12 @@ export class MapMapbox implements ComponentInterface {
                 bearing: this.bearing,
                 pitch: this.pitch
             };
-            const mapViewInstance = new mapsindoors.mapView.MapboxView(mapViewOptions);
+            const mapViewInstance = new mapsindoors.mapView.MapboxV3View(mapViewOptions);
             this.mapboxInstance = mapViewInstance.getMap();
+
+            if (mapViewInstance) {
+                mapViewInstance.setExtrudedBuildingsVisibility(0);
+            }
 
             this.mapsIndoorsInstance = new mapsindoors.MapsIndoors({
                 mapView: mapViewInstance,
