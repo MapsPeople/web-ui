@@ -207,8 +207,17 @@ export class MyPositionComponent {
             } else if (this.positionState === PositionStateTypes.POSITION_UNKNOWN || this.positionState === PositionStateTypes.POSITION_REQUESTING) {
                 // Auto-enter FOLLOW mode only on first position (from UNKNOWN or REQUESTING)
                 this.setPositionState(PositionStateTypes.POSITION_FOLLOW);
-            } else if (this.positionState !== PositionStateTypes.POSITION_UNTRACKED && this.positionState !== PositionStateTypes.POSITION_FOLLOW) {
-                // For other states, transition to KNOWN
+            /**
+             * For other states, transition to KNOWN.
+             * CENTERED is preserved so that with a fast-streaming customPositionProvider
+             * the user can still click CENTERED -> FOLLOW; the legitimate CENTERED -> KNOWN
+             * transition is handled by resetPositionState on user_interaction.
+             */
+            } else if (
+                this.positionState !== PositionStateTypes.POSITION_UNTRACKED
+                && this.positionState !== PositionStateTypes.POSITION_FOLLOW
+                && this.positionState !== PositionStateTypes.POSITION_CENTERED
+            ) {
                 this.setPositionState(PositionStateTypes.POSITION_KNOWN);
             }
 
