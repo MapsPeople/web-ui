@@ -76,7 +76,7 @@ const useMapBoundsDeterminer = () => {
      */
     useEffect(() => {
         determineMapBounds();
-    }, [mapsIndoorsInstance, currentVenueName, venuesInSolution, locationId, kioskOriginLocationId, pitch, bearing, startZoomLevel, categories, center, wayfindingOriginHighlightLocation]);
+    }, [mapsIndoorsInstance, currentVenueName, venuesInSolution, locationId, kioskOriginLocationId, pitch, bearing, startZoomLevel, center, wayfindingOriginHighlightLocation]);
 
     /**
      * Based on the combination of the states for venueName, locationId & kioskOriginLocationId,
