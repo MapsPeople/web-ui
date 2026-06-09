@@ -463,7 +463,7 @@ export namespace Components {
         /**
           * @description The word used for "Level" when showing level info. When not passed, falls back to a localized default resolved from the current MapsIndoors SDK language (e.g. "楼层" for `zh-Hans`, "Etage" for `de`/`da`).
          */
-        "level": string;
+        "level"?: string;
         /**
           * @description Location object.
          */
