@@ -63,7 +63,7 @@ If false, the component will not show the location's floor name. The attribute i
 
 | Property         | Attribute          | Description | Type      | Default     |
 | ---------------- | ------------------ | ----------- | --------- | ----------- |
-| `level`          | `level`            |             | `string`  | `'Level'`   |
+| `level`          | `level`            |             | `string`  | `undefined` |
 | `location`       | `location`         |             | `any`     | `undefined` |
 | `showExternalId` | `show-external-id` |             | `boolean` | `true`      |
 | `showFloor`      | `show-floor`       |             | `boolean` | `true`      |

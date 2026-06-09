@@ -1,4 +1,5 @@
 import { Component, ComponentInterface, Prop, JSX } from '@stencil/core';
+import { getLevelDefault } from '../../utils/levelDefaults';
 
 @Component({
     tag: 'mi-location-info',
@@ -13,9 +14,19 @@ export class LocationInfo implements ComponentInterface {
     @Prop() location;
 
     /**
-     * @description The word used for "Level" when showing level info. Default is "Level".
+     * @description The word used for "Level" when showing level info. When not
+     * passed, falls back to a localized default resolved from the current
+     * MapsIndoors SDK language (e.g. "楼层" for `zh-Hans`, "Etage" for `de`/`da`).
      */
-    @Prop() level: string = 'Level';
+    @Prop() level?: string;
+
+    /**
+     * Resolves the effective level word: the explicit `level` prop when provided,
+     * otherwise the SDK-language-aware default from `getLevelDefault()`.
+     */
+    private get effectiveLevel(): string {
+        return this.level ?? getLevelDefault();
+    }
 
     /**
      * @description Whether to show the External ID.
@@ -41,7 +52,7 @@ export class LocationInfo implements ComponentInterface {
         }
         // Floor name
         if (this.location.properties.floorName && this.showFloor) {
-            details.push(`${this.level} ${this.location.properties.floorName}`);
+            details.push(`${this.effectiveLevel} ${this.location.properties.floorName}`);
         }
         // Building
         if (this.location.properties.building) {
