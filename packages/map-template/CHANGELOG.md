@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- Categories are now fetched using the venue id instead of the venue name, preventing requests with an incorrect venue identifier when names differ in casing.
+
 ## [1.99.3] - 2026-06-09
 
 ### Fixed
