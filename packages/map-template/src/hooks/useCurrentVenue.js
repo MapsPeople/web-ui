@@ -116,8 +116,12 @@ export const useCurrentVenue = () => {
         // The venue parameter in the SDK's getLocations method is case sensitive.
         // So when the currentVenueName is set based on a Locations venue property, the casing may differ.
         // Thus we look up the venue case-insensitively and prefer its id, which is not subject to casing issues.
-        const venueEntry = venueList.find(v => v.name.toLowerCase() === currentVenueName.toLowerCase());
-        const venueIdentifier = venueEntry?.id ?? venueEntry?.name;
+        if (!currentVenueName) {
+            setCategories([]);
+            return;
+        }
+        const venueEntry = venueList.find(v => v.name?.toLowerCase() === currentVenueName.toLowerCase());
+        const venueIdentifier = venueEntry?.id ?? venueEntry?.name ?? currentVenueName;
         window.mapsindoors.services.LocationsService.getLocations({ venue: venueIdentifier }).then(locationsInVenue => {
             let uniqueCategories = new Map();
             for (const location of locationsInVenue) {
