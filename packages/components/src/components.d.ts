@@ -396,8 +396,7 @@ export namespace Components {
          */
         "iconBadgeValue": string;
         /**
-          * @description The word used for "Level" when showing level info. Default is "Level".
-          * @default 'Level'
+          * @description The word used for "Level" when showing level info. When not passed, the nested `mi-location-info` resolves a localized default from the current MapsIndoors SDK language.
          */
         "level": string;
         /**
@@ -462,10 +461,9 @@ export namespace Components {
     }
     interface MiLocationInfo {
         /**
-          * @description The word used for "Level" when showing level info. Default is "Level".
-          * @default 'Level'
+          * @description The word used for "Level" when showing level info. When not passed, falls back to a localized default resolved from the current MapsIndoors SDK language (e.g. "楼层" for `zh-Hans`, "Etage" for `de`/`da`).
          */
-        "level": string;
+        "level"?: string;
         /**
           * @description Location object.
          */
@@ -2170,8 +2168,7 @@ declare namespace LocalJSX {
          */
         "iconBadgeValue"?: string;
         /**
-          * @description The word used for "Level" when showing level info. Default is "Level".
-          * @default 'Level'
+          * @description The word used for "Level" when showing level info. When not passed, the nested `mi-location-info` resolves a localized default from the current MapsIndoors SDK language.
          */
         "level"?: string;
         /**
@@ -2268,8 +2265,7 @@ declare namespace LocalJSX {
     }
     interface MiLocationInfo {
         /**
-          * @description The word used for "Level" when showing level info. Default is "Level".
-          * @default 'Level'
+          * @description The word used for "Level" when showing level info. When not passed, falls back to a localized default resolved from the current MapsIndoors SDK language (e.g. "楼层" for `zh-Hans`, "Etage" for `de`/`da`).
          */
         "level"?: string;
         /**
