@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.99.4] - 2026-06-16
+
+### Fixed
+
+- Updated to Web SDK v4.58.5
+- Set up `setAnalyticsContext` for collecting viewVariant property.
+
 ## [1.99.3] - 2026-06-09
 
 ### Fixed
