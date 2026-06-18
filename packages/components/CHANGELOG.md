@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [13.36.4] - 2026-06-18
+
+### Changed
+
+- Moved build and development tools (ESLint, Jest, Sass, Stencil plugins, Puppeteer, Eleventy) from `dependencies` to `devDependencies`.
+
 ## [13.36.3] - 2026-06-09
 
 ### Fixed
