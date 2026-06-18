@@ -189,9 +189,6 @@ const useMapBoundsDeterminer = () => {
                 }
             } else if (wayfindingOriginHighlightLocation) {
                 const location = wayfindingOriginHighlightLocation;
-                if (location.properties.floor !== undefined) {
-                    mapsIndoorsInstance.setFloor(location.properties.floor);
-                }
                 if (isDesktop) {
                     getDesktopPaddingLeft().then(desktopPaddingLeft => {
                         if (determineMapBoundsKeyRef.current !== key) return;
