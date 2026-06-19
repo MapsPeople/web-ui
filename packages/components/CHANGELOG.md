@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Moved build and development tools (ESLint, Jest, Sass, Stencil plugins, Puppeteer, Eleventy) from `dependencies` to `devDependencies`.
+-  Moved runtime packages (Google Maps loader/types and utility libraries) from `devDependencies` to `dependencies`.
 
 ## [13.36.3] - 2026-06-09
 
