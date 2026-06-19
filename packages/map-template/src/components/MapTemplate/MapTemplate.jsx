@@ -302,7 +302,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             mapsIndoorsInstance.addListener('building_changed', onChange);
             mapsIndoorsInstance.addListener('floor_changed', onChange);
             apply();
-        })();
+        })().catch(error => {
+            detach();
+            console.warn('directionsFrom: failed to sync origin venue/building/floor', error);
+        });
 
         return () => { cancelled = true; detach(); };
     }, [mapsIndoorsInstance, wayfindingOriginHighlightLocation]);
