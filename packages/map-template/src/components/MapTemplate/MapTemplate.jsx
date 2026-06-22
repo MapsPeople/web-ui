@@ -54,6 +54,7 @@ import categoryState from '../../atoms/categoryState.js';
 import hideNonMatchesState from '../../atoms/hideNonMatchesState.js';
 import appConfigState from '../../atoms/appConfigState.js';
 import { useCurrentVenue } from '../../hooks/useCurrentVenue.js';
+import { useSyncToLocationContext } from '../../hooks/useSyncToLocationContext.js';
 import showExternalIDsState from '../../atoms/showExternalIDsState.js'
 import showRoadNamesState from '../../atoms/showRoadNamesState.js';
 import searchExternalLocationsState from '../../atoms/searchExternalLocationsState.js';
@@ -255,60 +256,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [directionsFromLocation, directionsTo, directionsFrom]);
 
     /**
-     * directionsFrom origin: drive the SDK to the origin's Venue → Building → Floor.
+     * Centre the SDK's Venue/Building/Floor on the directionsFrom origin so the map AND the floor
+     * selector land on it — the origin may live in a non-default Venue/Building. 
      */
-    useEffect(() => {
-        const loc = wayfindingOriginHighlightLocation;
-        if (!mapsIndoorsInstance || !loc) return;
-        const targetFloor = loc.properties.floor;
-        let cancelled = false;
-        let detach = () => {};
-
-        (async () => {
-            const services = window.mapsindoors.services;
-            const venues = await services.VenuesService.getVenues();
-            if (cancelled) return;
-            const venue = venues.find(v =>
-                v.id === loc.properties.venueId
-                || v.name === loc.properties.venueId
-                || v.venueInfo?.name === loc.properties.venue);
-            if (!venue) return;
-            setCurrentVenueName(venue.name);
-            const buildings = await services.VenuesService.getBuildings(venue.id);
-            if (cancelled) return;
-            const building = buildings.find(b =>
-                b.id === loc.properties.buildingId || b.buildingInfo?.name === loc.properties.building);
-
-            const settled = () =>
-                mapsIndoorsInstance.getVenue()?.id === venue.id
-                && (!building || mapsIndoorsInstance.getBuilding()?.id === building.id)
-                && (targetFloor === undefined || mapsIndoorsInstance.getFloor() === targetFloor);
-
-            const apply = () => {
-                if (mapsIndoorsInstance.getVenue()?.id !== venue.id) mapsIndoorsInstance.setVenue(venue);
-                if (building && mapsIndoorsInstance.getBuilding()?.id !== building.id) mapsIndoorsInstance.setBuilding(building);
-                if (targetFloor !== undefined && mapsIndoorsInstance.getFloor() !== targetFloor) mapsIndoorsInstance.setFloor(targetFloor);
-            };
-
-            const onChange = () => {
-                if (cancelled || settled()) return detach();
-                apply();
-            };
-
-            detach = () => {
-                mapsIndoorsInstance.removeListener('building_changed', onChange);
-                mapsIndoorsInstance.removeListener('floor_changed', onChange);
-            };
-            mapsIndoorsInstance.addListener('building_changed', onChange);
-            mapsIndoorsInstance.addListener('floor_changed', onChange);
-            apply();
-        })().catch(error => {
-            detach();
-            console.warn('directionsFrom: failed to sync origin venue/building/floor', error);
-        });
-
-        return () => { cancelled = true; detach(); };
-    }, [mapsIndoorsInstance, wayfindingOriginHighlightLocation]);
+    useSyncToLocationContext(wayfindingOriginHighlightLocation, setCurrentVenueName);
 
     /**
      * Ensure that MapsIndoors Web SDK is available.
