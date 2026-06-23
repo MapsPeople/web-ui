@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.99.6] - 2026-06-18
+
+### Fixed
+
+- `directionsFrom` now selects the origin Location's venue and building before setting its floor, so the map and the floor selector reliably land on the origin's floor.
+
 ## [1.99.5] - 2026-06-16
 
 ### Fixed

@@ -54,6 +54,7 @@ import categoryState from '../../atoms/categoryState.js';
 import hideNonMatchesState from '../../atoms/hideNonMatchesState.js';
 import appConfigState from '../../atoms/appConfigState.js';
 import { useCurrentVenue } from '../../hooks/useCurrentVenue.js';
+import { useSyncToLocationContext } from '../../hooks/useSyncToLocationContext.js';
 import showExternalIDsState from '../../atoms/showExternalIDsState.js'
 import showRoadNamesState from '../../atoms/showRoadNamesState.js';
 import searchExternalLocationsState from '../../atoms/searchExternalLocationsState.js';
@@ -253,6 +254,12 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             && directionsFrom !== 'USER_POSITION';
         setWayfindingOriginHighlightLocation(eligible ? directionsFromLocation : null);
     }, [directionsFromLocation, directionsTo, directionsFrom]);
+
+    /**
+     * Centre the SDK's Venue/Building/Floor on the directionsFrom origin so the map AND the floor
+     * selector land on it — the origin may live in a non-default Venue/Building. 
+     */
+    useSyncToLocationContext(wayfindingOriginHighlightLocation, setCurrentVenueName);
 
     /**
      * Ensure that MapsIndoors Web SDK is available.
