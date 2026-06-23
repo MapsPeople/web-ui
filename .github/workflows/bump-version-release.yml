@@ -234,6 +234,43 @@ jobs:
         if: steps.changed-files-map-template.outputs.any_changed == 'true'
         run: npm -w @mapsindoors/map-template publish --access public
 
+  components-docs-release:
+    name: Release Components Docs
+    needs: components-release-npm
+    runs-on: ubuntu-latest
+    if: ${{needs.components-release-npm.outputs.has_files_changed}} == 'true'
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: refs/heads/main
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 22.x
+
+      - run: npm ci
+
+      - run: CI= npx lerna run build && cd packages/components && npm run build && npm run docs.build
+
+      - name: "Authenticate on Google Cloud Storage"
+        uses: google-github-actions/auth@v1
+        with:
+          service_account: ${{ secrets.GCP_SA_EMAIL }}
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: "Set up Cloud SDK"
+        uses: "google-github-actions/setup-gcloud@v1"
+
+      - run: gsutil -m rsync -d -c -r packages/components/docs gs://mi-components-documentation
+
+      - run: gsutil -m setmeta -h "Cache-Control:public, max-age=0"
+          gs://mi-components-documentation/**/*.html
+      - run: gsutil -m setmeta -h "Cache-Control:public, max-age=0"
+          gs://mi-components-documentation/**/*.js
+      - run: gsutil -m setmeta -h "Cache-Control:public, max-age=0"
+          gs://mi-components-documentation/**/*.css
+
   # Using jsDelivr as the CDN, it will cache even @latest for up to 7 days. Specific versions are cached for up to a year, so we need to purge the CDN manually.
   purge-jsdelivr-cache:
     name: Purge jsDelivr cache
