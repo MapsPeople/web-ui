@@ -71,6 +71,7 @@ import mapTypeState from '../../atoms/mapTypeState.js';
 import { mapTypes } from '../../constants/mapTypes.js';
 import { useIsKioskContext } from '../../hooks/useIsKioskContext.js';
 import { useKioskReload } from '../../hooks/useKioskReload.js';
+import { syncAnalyticsViewVariant } from '../../helpers/syncAnalyticsViewVariant.js';
 
 // Define the Custom Elements from our components package.
 defineCustomElements();
@@ -311,6 +312,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      */
     useEffect(() => {
         initializeMapsIndoorsSDK().then(() => {
+            // Set viewVariant before any SDK service calls so bootstrap analytics
+            // (SDK_LOADED, MAPSINDOORS_INSTANTIATED, MAP_INSTANTIATED) are tagged correctly.
+            syncAnalyticsViewVariant(kioskOriginLocationId, isDesktop);
             setMapsindoorsSDKAvailable(true);
         });
 
@@ -643,19 +647,15 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [miTransitionLevel]);
 
     /*
-     * Sync analytics context with the active UI variant and map provider.
-     * This lets SDK analytics differentiate shared events like selectLocation()
-     * between mobile, desktop and kiosk hosts.
+     * Sync analytics context with the active UI variant.
+     * Uses kioskOriginLocationId (available immediately) instead of the async kiosk Location fetch.
+     * useLayoutEffect runs before service/effect hooks that fire analytics on SDK init.
      */
-    useEffect(() => {
-        if (!mapsIndoorsInstance?.setAnalyticsContext) return;
+    useLayoutEffect(() => {
+        if (!mapsindoorsSDKAvailable) return;
 
-        const viewVariant = isKiosk ? 'kiosk' : isDesktop ? 'desktop' : 'mobile';
-        
-        mapsIndoorsInstance.setAnalyticsContext({
-            viewVariant
-        });
-    }, [mapsIndoorsInstance, isKiosk, isDesktop, mapType]);
+        syncAnalyticsViewVariant(kioskOriginLocationId, isDesktop, mapsIndoorsInstance);
+    }, [mapsindoorsSDKAvailable, kioskOriginLocationId, isDesktop, mapsIndoorsInstance]);
 
     /*
      * React on changes in the current location prop.
