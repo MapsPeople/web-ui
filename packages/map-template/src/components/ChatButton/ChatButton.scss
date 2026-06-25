@@ -22,7 +22,7 @@ $desktop-breakpoint: 992px;
         border: 1px solid var(--tailwind-colors-gray-200);
     }
 
-    &:focus {
+    &:focus:not(:focus-visible) {
         outline: none;
     }
 
