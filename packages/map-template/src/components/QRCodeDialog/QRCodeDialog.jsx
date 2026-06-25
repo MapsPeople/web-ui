@@ -26,7 +26,9 @@ function QRCodeDialog() {
 
         QRCode.toDataURL(QRCodeLink, options)
             .then((dataUrl) => {
-                elementRef.current.src = dataUrl;
+                if (elementRef.current) {
+                    elementRef.current.src = dataUrl;
+                }
             });
     }, [primaryColor, QRCodeLink]);
 

@@ -27,7 +27,7 @@ export function InactivityWarning() {
             >
                 <div className={styles.dialog}>
                     <h2 id="inactivity-title">{t('Session expiring')}</h2>
-                    <p id="inactivity-desc">
+                    <p id="inactivity-desc" aria-live="polite" aria-atomic="true">
                         {t('Your session will reset in {{seconds}} seconds.', { seconds })}
                     </p>
                     <button

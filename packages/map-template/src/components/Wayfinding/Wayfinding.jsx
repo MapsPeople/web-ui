@@ -616,7 +616,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                     </label>
                 </fieldset>
             </div>
-            {!hasFoundRoute && <p className="wayfinding__error" role="alert" aria-live="assertive">{t('No route found')}</p>}
+            {!hasFoundRoute && <p className="wayfinding__error" role="status" aria-live="polite">{t('No route found')}</p>}
             {!hasSearchResults && !showMyPositionOption && <p className="wayfinding__error" role="status" aria-live="polite">{t('Nothing was found')}</p>}
             {userPosition && showMyPositionOption && <button type="button" className="wayfinding__use-current-position" onClick={() => selectMyPosition()}>
                 <CompassArrow />
