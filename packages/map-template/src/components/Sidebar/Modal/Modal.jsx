@@ -55,7 +55,6 @@ function Modal({ children, isOpen, onClose }) {
                 className={`modal ${isOpen ? 'modal--open' : ''} ${fullHeight ? 'modal--full' : ''} ${kioskLocation ? 'modal--kiosk' : ''}`}
                 role="dialog"
                 aria-modal="true"
-                onKeyDown={isOpen && onClose ? e => e.key === 'Escape' && onClose() : undefined}
             >
                 <div ref={contentRef} className="modal__content">
                     {children}
