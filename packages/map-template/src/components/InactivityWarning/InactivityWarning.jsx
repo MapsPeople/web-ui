@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import FocusTrap from 'focus-trap-react';
+import { FocusTrap } from 'focus-trap-react';
 import { useTranslation } from 'react-i18next';
 import styles from './InactivityWarning.module.scss';
 
@@ -30,7 +30,10 @@ export function InactivityWarning() {
                     <p id="inactivity-desc">
                         {t('Your session will reset in {{seconds}} seconds.', { seconds })}
                     </p>
-                    <button className={styles.stayButton}>
+                    <button
+                        className={styles.stayButton}
+                        onClick={() => window.dispatchEvent(new PointerEvent('pointerup'))}
+                    >
                         {t('Stay')}
                     </button>
                 </div>
