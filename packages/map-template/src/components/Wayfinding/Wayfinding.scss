@@ -260,3 +260,9 @@
         width: calc(100% - 48px);
     }
 }
+
+@media (prefers-reduced-motion: reduce) {
+    .wayfinding__use-current-position {
+        transition: none;
+    }
+}

@@ -182,3 +182,11 @@
     }
 }
 
+@media (prefers-reduced-motion: reduce) {
+    .chat-input__wrapper,
+    .chat-input__send-button,
+    .chat-input__button {
+        transition: none;
+    }
+}
+

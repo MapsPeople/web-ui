@@ -56,3 +56,8 @@ $desktop-breakpoint: 992px;
     }
 }
 
+@media (prefers-reduced-motion: reduce) {
+    .chat-button {
+        transition: none;
+    }
+}

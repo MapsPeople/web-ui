@@ -120,3 +120,10 @@
         border: 0;
     }
 }
+
+@media (prefers-reduced-motion: reduce) {
+    .search__ask-ai-button {
+        animation: none;
+        transition: none;
+    }
+}

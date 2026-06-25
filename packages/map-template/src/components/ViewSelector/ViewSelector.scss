@@ -163,3 +163,10 @@
         }
     }
 }
+
+@media (prefers-reduced-motion: reduce) {
+    .view-selector__toggle-button,
+    .building-list__item {
+        transition: none;
+    }
+}

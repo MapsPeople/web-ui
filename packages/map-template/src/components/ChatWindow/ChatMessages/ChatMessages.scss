@@ -151,3 +151,10 @@
     max-width: 80%;
 }
 
+@media (prefers-reduced-motion: reduce) {
+    .chat-messages__loading-dot,
+    .chat-messages__show-route-button {
+        animation: none;
+        transition: none;
+    }
+}
