@@ -397,7 +397,7 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished }) {
                             disabled={activeStep === 0}>
                             <ArrowLeft />
                         </button>
-                        <div className="route-instructions__overview">{t('StepYofX', { activeStep: activeStep + 1, totalSteps: getRouteSteps().length })}</div>
+                        <div className="route-instructions__overview" role="status" aria-live="polite" aria-atomic="true">{t('StepYofX', { activeStep: activeStep + 1, totalSteps: getRouteSteps().length })}</div>
                         <button className={`route-instructions__button ${!isKioskContext ? '' : 'route-instructions__button--kiosk'}`}
                             onClick={() => nextStep()}
                             aria-label={t('Next')}

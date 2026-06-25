@@ -821,7 +821,7 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
             )}
 
             {/* Message shown if no search results were found or if the ask with AI button is shown */}
-            {!showAskWithAiButton && showNotFoundMessage && <p className="search__error"> {t('Nothing was found')}</p>}
+            {!showAskWithAiButton && showNotFoundMessage && <p className="search__error" role="status" aria-live="polite"> {t('Nothing was found')}</p>}
 
             {/* When search results are found (category is selected or search term is used) */}
             {searchResults.length > 0 && (
