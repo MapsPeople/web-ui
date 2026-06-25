@@ -24,6 +24,7 @@ import isDestinationStepState from '../../atoms/isDestinationStepState';
 import primaryColorState from '../../atoms/primaryColorState';
 import { useIsKioskContext } from '../../hooks/useIsKioskContext';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
+import { useReturnFocus } from '../../hooks/useReturnFocus';
 import showExternalIDsState from '../../atoms/showExternalIDsState';
 import PropTypes from 'prop-types';
 import baseLinkSelector from '../../selectors/baseLink';
@@ -55,6 +56,7 @@ Directions.propTypes = {
  */
 function Directions({ isOpen, onBack, onSetSize, onRouteFinished }) {
     const { t } = useTranslation();
+    useReturnFocus(isOpen);
     const requestAnimationFrameId = useRef();
 
     // Holds the MapsIndoors DisplayRule for the destination

@@ -15,6 +15,7 @@ import kioskLocationState from '../../atoms/kioskLocationState';
 import accessibilityOnState from '../../atoms/accessibilityOnState';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
 import showExternalIDsState from '../../atoms/showExternalIDsState';
+import { useReturnFocus } from '../../hooks/useReturnFocus';
 import useOutsideMapsIndoorsDataClick from '../../hooks/useOutsideMapsIndoorsDataClick';
 import OpeningHours from './OpeningHours/OpeningHours';
 import PropTypes from 'prop-types';
@@ -53,6 +54,7 @@ LocationDetails.propTypes = {
  */
 function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirections, isOpen }) {
     const { t } = useTranslation();
+    useReturnFocus(isOpen);
 
     const locationInfoElement = useRef(null);
     const locationDetailsContainerRef = useRef(null);
