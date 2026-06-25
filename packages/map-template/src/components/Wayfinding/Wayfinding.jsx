@@ -579,7 +579,8 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                     aria-label="Close">
                     <CloseIcon />
                 </button>
-                <div className="wayfinding__locations">
+                <fieldset className="wayfinding__locations">
+                    <legend className="wayfinding__sr-only">{t('Route')}</legend>
                     <label className="wayfinding__label">
                         <span>{t('Choose departure')}</span>
                         <SearchField
@@ -613,7 +614,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                             changed={() => onInputChanged(searchFieldIdentifiers.TO)}
                         />
                     </label>
-                </div>
+                </fieldset>
             </div>
             {!hasFoundRoute && <p className="wayfinding__error">{t('No route found')}</p>}
             {!hasSearchResults && !showMyPositionOption && <p className="wayfinding__error">{t('Nothing was found')}</p>}
