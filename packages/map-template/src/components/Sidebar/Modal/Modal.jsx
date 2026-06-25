@@ -3,12 +3,10 @@ import { useRecoilValue } from 'recoil';
 import './Modal.scss';
 import kioskLocationState from '../../../atoms/kioskLocationState';
 import PropTypes from 'prop-types';
-import { FocusTrap } from 'focus-trap-react';
 
 Modal.propTypes = {
     children: PropTypes.node,
-    isOpen: PropTypes.bool,
-    onClose: PropTypes.func
+    isOpen: PropTypes.bool
 };
 
 /**
@@ -21,7 +19,7 @@ Modal.propTypes = {
  * @param {React.ReactNode} props.children - The content to be displayed inside the modal.
  * @param {boolean} props.isOpen - If the modal is open (visible) or not.
  */
-function Modal({ children, isOpen, onClose }) {
+function Modal({ children, isOpen }) {
 
     /** Boolean for controlling the "full" CSS class modifier */
     const [fullHeight, setFullHeight] = useState(false);
@@ -51,18 +49,13 @@ function Modal({ children, isOpen, onClose }) {
     }, [contentRef]);
 
     return (
-        <FocusTrap active={isOpen} focusTrapOptions={{ onDeactivate: onClose ?? (() => {}), fallbackFocus: () => modalRef.current }}>
-            <div ref={modalRef}
-                tabIndex="-1"
-                className={`modal ${isOpen ? 'modal--open' : ''} ${fullHeight ? 'modal--full' : ''} ${kioskLocation ? 'modal--kiosk' : ''}`}
-                role="dialog"
-                aria-modal="true"
-            >
-                <div ref={contentRef} className="modal__content">
-                    {children}
-                </div>
+        <div ref={modalRef}
+            className={`modal ${isOpen ? 'modal--open' : ''} ${fullHeight ? 'modal--full' : ''} ${kioskLocation ? 'modal--kiosk' : ''}`}
+        >
+            <div ref={contentRef} className="modal__content">
+                {children}
             </div>
-        </FocusTrap>
+        </div>
     )
 }
 
