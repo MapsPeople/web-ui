@@ -5,6 +5,7 @@ import './QRCodeDialog.scss';
 import qrCodeLinkState from '../../atoms/qrCodeLinkState';
 import primaryColorState from '../../atoms/primaryColorState';
 import QRCode from 'qrcode';
+import FocusTrap from 'focus-trap-react';
 
 /**
  * Based on the qrCodeLinkState show a QR code dialog.
@@ -31,11 +32,19 @@ function QRCodeDialog() {
 
     return (<>
         <div className="background"></div>
-        <div className="qr-code">
-            <img alt={t('QR code to view route on your phone')} className="qr-code__image" ref={elementRef} />
-            <p>{t('Scan the QR code to see the route on your phone')}</p>
-            <button className="qr-code__button" style={{ background: primaryColor }} onClick={() => setQRCodeLink(null)}>{t('Done')}</button>
-        </div>
+        <FocusTrap focusTrapOptions={{ onDeactivate: () => setQRCodeLink(null), clickOutsideDeactivates: true }}>
+            <div
+                className="qr-code"
+                role="dialog"
+                aria-modal="true"
+                aria-label={t('QR code dialog')}
+                onKeyDown={e => e.key === 'Escape' && setQRCodeLink(null)}
+            >
+                <img alt={t('QR code to view route on your phone')} className="qr-code__image" ref={elementRef} />
+                <p>{t('Scan the QR code to see the route on your phone')}</p>
+                <button className="qr-code__button" style={{ background: primaryColor }} onClick={() => setQRCodeLink(null)}>{t('Done')}</button>
+            </div>
+        </FocusTrap>
     </>
     )
 }
