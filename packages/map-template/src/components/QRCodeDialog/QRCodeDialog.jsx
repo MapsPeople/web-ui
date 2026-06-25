@@ -38,7 +38,6 @@ function QRCodeDialog() {
                 role="dialog"
                 aria-modal="true"
                 aria-label={t('QR code dialog')}
-                onKeyDown={e => e.key === 'Escape' && setQRCodeLink(null)}
             >
                 <img alt={t('QR code to view route on your phone')} className="qr-code__image" ref={elementRef} />
                 <p>{t('Scan the QR code to see the route on your phone')}</p>

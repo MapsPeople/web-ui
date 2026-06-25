@@ -852,18 +852,20 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
      * WCAG 2.4.2: Update document title when the primary view changes.
      */
     useEffect(() => {
-        const viewTitles = {
-            [appStates.SEARCH]: t('Search'),
-            [appStates.LOCATION_DETAILS]: t('Location Details'),
-            [appStates.DIRECTIONS]: t('Directions'),
-            [appStates.WAYFINDING]: t('Wayfinding'),
-            [appStates.CHAT]: t('AI Assistant'),
-        };
-        const viewTitle = viewTitles[currentAppView];
-        if (viewTitle) {
-            document.title = `${viewTitle} — MapsIndoors`;
+        if (!useAppTitle) {
+            const viewTitles = {
+                [appStates.SEARCH]: t('Search'),
+                [appStates.LOCATION_DETAILS]: t('Location Details'),
+                [appStates.DIRECTIONS]: t('Directions'),
+                [appStates.WAYFINDING]: t('Wayfinding'),
+                [appStates.CHAT]: t('AI Assistant'),
+            };
+            const viewTitle = viewTitles[currentAppView];
+            if (viewTitle) {
+                document.title = `${viewTitle} — MapsIndoors`;
+            }
         }
-    }, [currentAppView, t]);
+    }, [currentAppView, t, useAppTitle]);
 
     /*
      * In kiosk mode, optionally block the browser context menu to reduce the

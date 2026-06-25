@@ -53,6 +53,7 @@ export function useInactive() {
         window.addEventListener('keydown', handleUserEvent);
         window.addEventListener('touchstart', handleUserEvent);
         window.addEventListener('wheel', handleUserEvent);
+        window.addEventListener('pointerup', handleUserEvent);
 
         return () => {
             window.removeEventListener('mousemove', handleUserEvent);
@@ -61,6 +62,7 @@ export function useInactive() {
             window.removeEventListener('keydown', handleUserEvent);
             window.removeEventListener('touchstart', handleUserEvent);
             window.removeEventListener('wheel', handleUserEvent);
+            window.removeEventListener('pointerup', handleUserEvent);
             window.clearTimeout(warningTimer);
             window.clearTimeout(inactiveTimer);
         };

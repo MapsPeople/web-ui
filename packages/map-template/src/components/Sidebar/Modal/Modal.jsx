@@ -50,7 +50,7 @@ function Modal({ children, isOpen, onClose }) {
     }, [contentRef]);
 
     return (
-        <FocusTrap active={isOpen} focusTrapOptions={{ onDeactivate: onClose ?? (() => {}), clickOutsideDeactivates: true, allowOutsideClick: true }}>
+        <FocusTrap active={isOpen} focusTrapOptions={{ onDeactivate: onClose ?? (() => {}) }}>
             <div ref={modalRef}
                 className={`modal ${isOpen ? 'modal--open' : ''} ${fullHeight ? 'modal--full' : ''} ${kioskLocation ? 'modal--kiosk' : ''}`}
                 role="dialog"

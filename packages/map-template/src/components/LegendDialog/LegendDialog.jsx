@@ -65,7 +65,6 @@ function LegendDialog() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="legend-dialog-title"
-            onKeyDown={e => e.key === 'Escape' && setShowLegendDialog(false)}
         >
             <h2 id="legend-dialog-title" className="legend__title">{t('Legend')}</h2>
             {legendSections.length > 0 &&

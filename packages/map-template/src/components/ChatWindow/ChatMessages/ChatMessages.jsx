@@ -124,7 +124,7 @@ function ChatMessages({ chatHistory, isLoading, primaryColor, onShowRoute, curre
                                     style={{ backgroundColor: primaryColor }}
                                     onClick={() => onShowRoute && onShowRoute(message.routeDirections)}
                                 >
-                                    Show Route
+                                    {t('Show Route')}
                                 </button>
                             </div>
                         )}
@@ -140,12 +140,12 @@ function ChatMessages({ chatHistory, isLoading, primaryColor, onShowRoute, curre
         <div ref={chatMessagesRef} className="chat-messages">
             {chatMessages}
             {isLoading && (
-                <div className="chat-messages__message chat-messages__message--loading" role="status" aria-label="AI is responding">
+                <div className="chat-messages__message chat-messages__message--loading" role="status" aria-label={t('AI is responding')}>
                     <span className="chat-messages__loading-dot" aria-hidden="true"></span>
                     <span className="chat-messages__loading-dot" aria-hidden="true"></span>
                     <span className="chat-messages__loading-dot" aria-hidden="true"></span>
                     <span className="chat-messages__thinking-text">
-                        {currentThought || 'Thinking'}
+                        {currentThought || t('Thinking')}
                     </span>
                 </div>
             )}
