@@ -9,6 +9,7 @@
     z-index: var(--z-index-modal);
     display: grid;
     width: 500px;
+    max-width: 100%;
 
     &__background {
         z-index: var(--z-index-spinner);
@@ -90,7 +91,7 @@
 
     .scroll-buttons {
         position: fixed;
-        left: 520px;
+        left: min(520px, calc(100vw - 40px));
         bottom: 0;
     }
 }

@@ -93,7 +93,7 @@
             font-size: var(--font-size-small);
             color: var(--color-gray-70);
             line-height: 1.5;
-            overflow-y: hidden;
+            overflow-y: auto;
             max-height: 4rem; /* corresponding to approx. 3 lines of description text, scales with font size */
         }
 

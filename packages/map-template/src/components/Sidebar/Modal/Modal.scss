@@ -4,6 +4,7 @@ $desktop-breakpoint: 992px;
     position: absolute;
     z-index: var(--z-index-overlay);
     width: 568px;
+    max-width: 100%;
     left: var(--spacing-medium);
     top: var(--spacing-medium);
     border-radius: var(--spacing-x-small);
