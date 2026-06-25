@@ -9,6 +9,8 @@ $transition-timing-function: ease;
 $align-offset: 2px;
 
 .venue-selector {
+    max-width: 100%;
+
     &__content {
         position: absolute;
         background-color: white;
