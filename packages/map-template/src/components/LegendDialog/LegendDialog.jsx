@@ -6,7 +6,7 @@ import isLegendDialogVisibleState from '../../atoms/isLegendDialogVisibleState';
 import { useTranslation } from 'react-i18next';
 import { useIsKioskContext } from '../../hooks/useIsKioskContext';
 import legendSortedFieldsSelector from '../../selectors/legendSortedFieldsSelector';
-import FocusTrap from 'focus-trap-react';
+import { FocusTrap } from 'focus-trap-react';
 
 /**
  * Handle the Legend dialog.

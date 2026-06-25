@@ -3,7 +3,7 @@ import { useRecoilValue } from 'recoil';
 import './Modal.scss';
 import kioskLocationState from '../../../atoms/kioskLocationState';
 import PropTypes from 'prop-types';
-import FocusTrap from 'focus-trap-react';
+import { FocusTrap } from 'focus-trap-react';
 
 Modal.propTypes = {
     children: PropTypes.node,
@@ -53,8 +53,8 @@ function Modal({ children, isOpen, onClose }) {
         <FocusTrap active={isOpen} focusTrapOptions={{ onDeactivate: onClose ?? (() => {}), clickOutsideDeactivates: true, allowOutsideClick: true }}>
             <div ref={modalRef}
                 className={`modal ${isOpen ? 'modal--open' : ''} ${fullHeight ? 'modal--full' : ''} ${kioskLocation ? 'modal--kiosk' : ''}`}
-                role={isOpen ? 'dialog' : undefined}
-                aria-modal={isOpen ? 'true' : undefined}
+                role="dialog"
+                aria-modal="true"
                 onKeyDown={isOpen && onClose ? e => e.key === 'Escape' && onClose() : undefined}
             >
                 <div ref={contentRef} className="modal__content">

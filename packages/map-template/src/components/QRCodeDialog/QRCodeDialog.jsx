@@ -5,7 +5,7 @@ import './QRCodeDialog.scss';
 import qrCodeLinkState from '../../atoms/qrCodeLinkState';
 import primaryColorState from '../../atoms/primaryColorState';
 import QRCode from 'qrcode';
-import FocusTrap from 'focus-trap-react';
+import { FocusTrap } from 'focus-trap-react';
 
 /**
  * Based on the qrCodeLinkState show a QR code dialog.
