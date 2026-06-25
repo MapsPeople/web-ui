@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { defineCustomElements } from '@mapsindoors/components/dist/components/index.js';
 import i18n from 'i18next';
+import { useTranslation } from 'react-i18next';
 import initI18n from '../../i18n/initialize.js';
 import './MapTemplate.scss';
 import { mapClickActions } from '../../constants/mapClickActions.js';
@@ -156,6 +157,7 @@ MapTemplate.propTypes = {
  */
 function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations, center, useAppTitle, showMapMarkers, mapboxMapStyle, devicePosition, enableKioskFullReload, kioskReloadTime }) {
 
+    const { t } = useTranslation();
     const [userSelectedLanguage, setUserSelectedLanguage] = useState(false);
     const [mapOptions, setMapOptions] = useState({ brandingColor: primaryColor });
     const setApiKey = useSetRecoilState(apiKeyState);
@@ -834,6 +836,33 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             document.title = appConfig.appSettings.title;
         }
     }, [useAppTitle, appConfig])
+
+    /*
+     * WCAG 3.1.1: Update document lang attribute when the active language changes.
+     */
+    useEffect(() => {
+        const lang = currentLanguage ?? language;
+        if (lang) {
+            document.documentElement.lang = lang;
+        }
+    }, [currentLanguage, language]);
+
+    /*
+     * WCAG 2.4.2: Update document title when the primary view changes.
+     */
+    useEffect(() => {
+        const viewTitles = {
+            [appStates.SEARCH]: t('Search'),
+            [appStates.LOCATION_DETAILS]: t('Location Details'),
+            [appStates.DIRECTIONS]: t('Directions'),
+            [appStates.WAYFINDING]: t('Wayfinding'),
+            [appStates.CHAT]: t('AI Assistant'),
+        };
+        const viewTitle = viewTitles[currentAppView];
+        if (viewTitle) {
+            document.title = `${viewTitle} — MapsIndoors`;
+        }
+    }, [currentAppView, t]);
 
     /*
      * In kiosk mode, optionally block the browser context menu to reduce the
