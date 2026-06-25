@@ -48,7 +48,7 @@
     &__header {
         position: sticky;
         top: 0;
-        z-index: 10000;
+        z-index: var(--z-index-sticky, 100);
         background: var(--color-white-white);
 
         &::after {
@@ -159,6 +159,7 @@
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
         touch-action: pan-y;
+        scroll-padding-top: 56px;
     }
 
     &__actions {
