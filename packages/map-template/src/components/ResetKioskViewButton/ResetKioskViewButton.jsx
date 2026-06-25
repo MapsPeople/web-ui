@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
 import ResetKioskViewIcon from '../../assets/reset-kiosk-view.svg?react';
 import './ResetKioskViewButton.scss';
 import { useIsKioskContext } from '../../hooks/useIsKioskContext';
@@ -18,6 +19,7 @@ import getDesktopPaddingLeft from '../../helpers/GetDesktopPaddingLeft';
  * Positioned above zoom controls using portal system
  */
 function ResetKioskViewButton() {
+    const { t } = useTranslation();
     const portalContainer = usePortalTarget('.reset-view-portal');
     const isKiosk = useIsKioskContext();
     const kioskOriginLocationId = useRecoilValue(kioskOriginLocationIdState);
@@ -136,8 +138,8 @@ function ResetKioskViewButton() {
         <button 
             className="reset-kiosk-view-button"
             onClick={resetMapPosition}
-            title="Reset to initial kiosk view"
-            aria-label="Reset to initial kiosk view"
+            title={t('Reset to initial kiosk view')}
+            aria-label={t('Reset to initial kiosk view')}
         >
             <ResetKioskViewIcon />
         </button>,

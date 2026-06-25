@@ -1,6 +1,7 @@
 import { createPortal } from 'react-dom';
 import { useRecoilValue } from 'recoil';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import chatHistoryState from '../../atoms/chatHistoryState';
 import primaryColorState from '../../atoms/primaryColorState';
 import ChatButtonIcon from '../../assets/chat-icon.svg?react';
@@ -18,6 +19,7 @@ ChatButton.propTypes = {
  * Positioned in map controls using portal system
  */
 function ChatButton({ pushAppView, currentAppView, appViews }) {
+    const { t } = useTranslation();
     const portalContainer = usePortalTarget('.chat-button-portal');
     const chatHistory = useRecoilValue(chatHistoryState);
     const primaryColor = useRecoilValue(primaryColorState);
@@ -46,8 +48,8 @@ function ChatButton({ pushAppView, currentAppView, appViews }) {
         <button 
             className="chat-button"
             onClick={handleOpenChat}
-            title="Open chat"
-            aria-label="Open chat"
+            title={t('Open chat')}
+            aria-label={t('Open chat')}
             type="button"
             style={{ '--chat-button-primary-color': primaryColor }}
         >

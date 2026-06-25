@@ -106,11 +106,11 @@ function ViewSelector({ isViewSelectorDisabled, isViewSelectorVisible }) {
             }
         }
 
-        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener('pointerup', handleClickOutside);
 
         // Clean up
         return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('pointerup', handleClickOutside);
         };
     }, [isExpanded, isDesktop]);
 

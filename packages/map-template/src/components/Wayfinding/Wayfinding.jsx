@@ -576,7 +576,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                 <h2 className="wayfinding__title">{t('Directions')}</h2>
                 <button className="wayfinding__close"
                     onClick={() => closeWayfinding()}
-                    aria-label="Close">
+                    aria-label={t('Close')}>
                     <CloseIcon />
                 </button>
                 <fieldset className="wayfinding__locations">
