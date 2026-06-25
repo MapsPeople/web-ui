@@ -39,6 +39,13 @@
         }
     }
 
+    &__title {
+        font-size: var(--font-size-large);
+        font-weight: var(--font-weight-xx-large);
+        color: var(--color-gray-90);
+        margin: 0 0 var(--spacing-medium);
+    }
+
     &__heading {
         font-size: var(--spacing-x-large);
         font-weight: var(--font-weight-xx-large);

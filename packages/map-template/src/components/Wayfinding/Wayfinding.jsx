@@ -573,7 +573,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     return (
         <div className="wayfinding" ref={wayfindingRef}>
             <div className="wayfinding__directions">
-                <div className="wayfinding__title">{t('Directions')}</div>
+                <h2 className="wayfinding__title">{t('Directions')}</h2>
                 <button className="wayfinding__close"
                     onClick={() => closeWayfinding()}
                     aria-label="Close">

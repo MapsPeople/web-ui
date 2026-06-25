@@ -58,6 +58,7 @@ function LegendDialog() {
     return (<>
         <div className="legend__background"></div>
         <div className="legend" ref={legendModalRef}>
+            <h2 className="legend__title">{t('Legend')}</h2>
             {legendSections.length > 0 &&
                 <div className={`legend__sections ${isLegendScrollable ? 'legend__sections--scrollable' : ''}`}
                     ref={legendSectionsRef}
