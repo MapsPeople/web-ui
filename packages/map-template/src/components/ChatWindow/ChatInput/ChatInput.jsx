@@ -1,5 +1,5 @@
 import { useRef, useCallback, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import i18n from 'i18next';
 import ChatModeIcon from '../../../assets/chat-mode-icon.svg?react';
 import CloseIcon from '../../../assets/close.svg?react';
 import SendIcon from '../../../assets/send.svg?react';
@@ -8,7 +8,6 @@ import PropTypes from 'prop-types';
 import './ChatInput.scss';
 
 function ChatInput({ onSendMessage, isLoading, onClose, disabled, primaryColor }) {
-    const { t } = useTranslation();
     const inputRef = useRef(null);
     const [inputValue, setInputValue] = useState('');
     const isDesktop = useIsDesktop();
@@ -61,7 +60,7 @@ function ChatInput({ onSendMessage, isLoading, onClose, disabled, primaryColor }
                     onKeyDown={handleKeyDown}
                     placeholder="Ask or search about anything"
                     className="chat-input__textarea"
-                    aria-label={t('Chat message')}
+                    aria-label={i18n.t('Chat message')}
                     rows={1}
                     disabled={disabled}
                 />
@@ -72,7 +71,7 @@ function ChatInput({ onSendMessage, isLoading, onClose, disabled, primaryColor }
                         disabled={!inputValue.trim() || isLoading || disabled}
                         className="chat-input__send-button"
                         style={{ backgroundColor: inputValue.trim() && !isLoading && !disabled ? primaryColor : undefined }}
-                        aria-label={t('Send message')}
+                        aria-label={i18n.t('Send message')}
                     >
                         <SendIcon />
                     </button>
@@ -83,7 +82,7 @@ function ChatInput({ onSendMessage, isLoading, onClose, disabled, primaryColor }
                 type="button"
                 onClick={disabled ? undefined : onClose}
                 className={`chat-input__close-button${disabled ? ' chat-input__close-button--disabled' : ''}`}
-                aria-label={t('Close chat')}
+                aria-label={i18n.t('Close chat')}
                 tabIndex={disabled ? -1 : 0}
             >
                 <CloseIcon />
