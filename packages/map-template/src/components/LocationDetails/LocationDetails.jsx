@@ -387,7 +387,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
                     onScroll={e => setScrollIndicators(e)}
                     className="location-details__details-content">
                     {/* Location image */}
-                    {location.properties.imageURL && <img ref={locationImageRef} alt="" src={location.properties.imageURL} className="location-details__image" />}
+                    {location.properties.imageURL && <img ref={locationImageRef} alt={location.properties.name} src={location.properties.imageURL} className="location-details__image" />}
 
                     {/* Location categories */}
                     {Object.keys(location.properties.categories).length > 0 && <p className="location-details__categories">

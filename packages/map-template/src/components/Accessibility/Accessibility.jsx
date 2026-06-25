@@ -32,12 +32,14 @@ function Accessibility({ onAccessibilityChanged }) {
     }
 
     return <div className="accessibility">
-        <input className="mi-toggle"
-            type="checkbox"
-            checked={accessibilityOn}
-            onChange={event => handleAccessibilityChanged(event)}
-            style={{ backgroundColor: accessibilityOn ? primaryColor : '' }} />
-        <div>{t('Avoid stairs and escalators')}</div>
+        <label className="accessibility__label">
+            <input className="mi-toggle"
+                type="checkbox"
+                checked={accessibilityOn}
+                onChange={event => handleAccessibilityChanged(event)}
+                style={{ backgroundColor: accessibilityOn ? primaryColor : '' }} />
+            {t('Avoid stairs and escalators')}
+        </label>
     </div>
 }
 
