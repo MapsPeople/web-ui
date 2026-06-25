@@ -73,6 +73,7 @@ import mapTypeState from '../../atoms/mapTypeState.js';
 import { mapTypes } from '../../constants/mapTypes.js';
 import { useIsKioskContext } from '../../hooks/useIsKioskContext.js';
 import { useKioskReload } from '../../hooks/useKioskReload.js';
+import { InactivityWarning } from '../InactivityWarning/InactivityWarning';
 import { syncAnalyticsViewVariant } from '../../helpers/syncAnalyticsViewVariant.js';
 
 // Define the Custom Elements from our components package.
@@ -177,7 +178,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const setKioskLocation = useSetRecoilState(kioskLocationState);
     const setKioskOriginLocationId = useSetRecoilState(kioskOriginLocationIdState);
     const setTimeoutValue = useSetRecoilState(timeoutState);
-    const isInactive = useInactive(); // Hook to detect if user is inactive. Used in combination with timeout prop to reset the Map Template to initial values after a specified time.
+    const { isInactive, isWarning: isInactivityWarning } = useInactive(); // Hook to detect if user is inactive. Used in combination with timeout prop to reset the Map Template to initial values after a specified time.
     const [kioskFullReloadEnabled, setKioskFullReloadEnabled] = useState(false); // Resolved from enableKioskFullReload prop or appConfig.appSettings.enableKioskFullReload
     const [kioskFullReloadTime, setKioskFullReloadTime] = useState(undefined); // Resolved from kioskReloadTime prop or appConfig.appSettings.kioskReloadTime (seconds, default 600)
     useKioskReload(kioskFullReloadEnabled, kioskFullReloadTime); // Triggers window.location.reload() after inactivity in kiosk mode
@@ -1042,6 +1043,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                     }}
                     devicePosition={devicePosition}
                 />
+                {isInactivityWarning && !isInactive && <InactivityWarning />}
             </div>
         </GeminiProvider>
     );

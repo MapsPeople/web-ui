@@ -1,0 +1,41 @@
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: var(--z-index-top, 999999);
+}
+
+.dialog {
+    background: white;
+    border-radius: 8px;
+    padding: var(--spacing-large);
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+}
+
+.stayButton {
+    margin-top: var(--spacing-medium);
+    padding: var(--spacing-small) var(--spacing-large);
+    background: var(--color-primary, #0066cc);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    min-width: 44px;
+    min-height: 44px;
+
+    &:focus-visible {
+        outline: 2px solid #0066cc;
+        outline-offset: 2px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .overlay {
+        transition: none;
+    }
+}
