@@ -66,6 +66,7 @@
         padding-bottom: 0.75rem;
         position: relative;
         z-index: 1;
+        scroll-padding-top: 56px;
         /* Hide scrollbar */
         scrollbar-width: none;
         &::-webkit-scrollbar {
@@ -93,7 +94,7 @@
             font-size: var(--font-size-small);
             color: var(--color-gray-70);
             line-height: 1.5;
-            overflow-y: hidden;
+            overflow-y: auto;
             max-height: 4rem; /* corresponding to approx. 3 lines of description text, scales with font size */
         }
 
@@ -183,6 +184,9 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         max-width: 100%;
+        font-size: var(--font-size-small);
+        font-weight: var(--font-weight-large);
+        margin: 0;
     }
 
     &__content {

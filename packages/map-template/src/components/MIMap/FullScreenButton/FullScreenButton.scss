@@ -36,3 +36,9 @@
         display: block;
     }
 }
+
+@media (prefers-reduced-motion: reduce) {
+    .fullscreen-button {
+        transition: none;
+    }
+}

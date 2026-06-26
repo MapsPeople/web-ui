@@ -43,3 +43,10 @@
         }
     }
 }
+
+@media (prefers-reduced-motion: reduce) {
+    .chat-search-results,
+    .chat-search-results__toggle-button {
+        transition: none;
+    }
+}

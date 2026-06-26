@@ -158,3 +158,10 @@
     }
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .language-selector__toggle-button,
+  .language-selector__item {
+    transition: none;
+  }
+}

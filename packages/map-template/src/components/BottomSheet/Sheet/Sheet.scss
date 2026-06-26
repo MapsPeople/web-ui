@@ -51,3 +51,9 @@
         }
     }
 }
+
+@media (prefers-reduced-motion: reduce) {
+    .sheet {
+        transition: none;
+    }
+}

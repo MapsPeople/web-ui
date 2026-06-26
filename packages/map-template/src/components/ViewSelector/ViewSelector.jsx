@@ -106,11 +106,11 @@ function ViewSelector({ isViewSelectorDisabled, isViewSelectorVisible }) {
             }
         }
 
-        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener('pointerup', handleClickOutside);
 
         // Clean up
         return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('pointerup', handleClickOutside);
         };
     }, [isExpanded, isDesktop]);
 
@@ -123,7 +123,7 @@ function ViewSelector({ isViewSelectorDisabled, isViewSelectorVisible }) {
      * Toggle button component that expands or collapses the building list.
      */
     const ToggleButton = () => (
-        <button ref={toggleButtonRef} className="view-selector__toggle-button" onClick={() => setIsExpanded(!isExpanded)} disabled={isViewSelectorDisabled}>
+        <button ref={toggleButtonRef} className="view-selector__toggle-button" onClick={() => setIsExpanded(!isExpanded)} disabled={isViewSelectorDisabled} aria-label={t('Toggle view selector')}>
             <ViewSelectorIcon />
         </button>
     );

@@ -43,3 +43,8 @@
     }
 }
 
+@media (prefers-reduced-motion: reduce) {
+    .text-size-button {
+        transition: none;
+    }
+}

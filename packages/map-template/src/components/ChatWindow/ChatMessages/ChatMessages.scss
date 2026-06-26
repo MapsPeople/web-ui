@@ -25,7 +25,7 @@
     padding: var(--spacing-x-small) var(--spacing-medium);
     align-self: flex-end;
     background-color: var(--chat-window-primary-color, #e6f7ff);
-    color: var(--color-white-white);
+    color: var(--chat-window-primary-text-color, #1a1a1a);
     line-height: 1.5;
 }
 
@@ -151,3 +151,10 @@
     max-width: 80%;
 }
 
+@media (prefers-reduced-motion: reduce) {
+    .chat-messages__loading-dot,
+    .chat-messages__show-route-button {
+        animation: none;
+        transition: none;
+    }
+}

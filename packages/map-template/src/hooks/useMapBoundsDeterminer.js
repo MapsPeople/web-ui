@@ -41,7 +41,7 @@ const useMapBoundsDeterminer = () => {
     const [mapPositionKnown, setMapPositionKnown] = useState(false);
 
     const isDesktop = useIsDesktop();
-    const isInactive = useInactive();
+    const { isInactive } = useInactive();
 
     const bearing = useRecoilValue(bearingState);
     const kioskOriginLocationId = useRecoilValue(kioskOriginLocationIdState);

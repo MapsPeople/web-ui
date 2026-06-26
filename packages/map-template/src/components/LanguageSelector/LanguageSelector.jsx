@@ -19,6 +19,7 @@ import './LanguageSelector.scss';
  * @returns {JSX.Element} The rendered toggle button.
  */
 function ToggleButton({ toggleButtonRef, isExpanded, setIsExpanded }) {
+    const { t } = useTranslation();
     return (
         <button
             ref={toggleButtonRef}
@@ -26,7 +27,7 @@ function ToggleButton({ toggleButtonRef, isExpanded, setIsExpanded }) {
             onClick={() => setIsExpanded((prev) => !prev)}
             aria-haspopup="listbox"
             aria-expanded={isExpanded}
-            aria-label="Select language"
+            aria-label={t('Select language')}
         >
             <LanguageSelectorIcon />
         </button>
@@ -97,8 +98,8 @@ function LanguageSelector({ currentLanguage, setLanguage, isVisible }) {
                 setIsExpanded(false);
             }
         }
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
+        document.addEventListener('pointerup', handleClickOutside);
+        return () => document.removeEventListener('pointerup', handleClickOutside);
     }, [isExpanded, isDesktop]);
 
     // Early return if not visible
@@ -131,7 +132,7 @@ function LanguageSelector({ currentLanguage, setLanguage, isVisible }) {
                         <div className="language-selector-overlay__backdrop" onClick={() => setIsExpanded(false)}></div>
                         <div className="language-selector__container">
                             <div className="language-selector-overlay__header">
-                                <button className="language-selector-overlay__exit-button" onClick={() => setIsExpanded(false)} aria-label="Close language selector">
+                                <button className="language-selector-overlay__exit-button" onClick={() => setIsExpanded(false)} aria-label={t('Close language selector')}>
                                     ×
                                 </button>
                                 <span>{t('Select language')}</span>

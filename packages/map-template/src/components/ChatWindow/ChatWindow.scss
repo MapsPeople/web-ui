@@ -74,3 +74,9 @@
     z-index: 2;
     background-color: var(--color-white-white);
 }
+
+@media (prefers-reduced-motion: reduce) {
+    .chat-window.mobile {
+        transition: none;
+    }
+}

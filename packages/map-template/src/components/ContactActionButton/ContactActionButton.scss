@@ -39,3 +39,9 @@
         font-size: var(--font-size-medium);
     }
 }
+
+@media (prefers-reduced-motion: reduce) {
+    .contact-action-button {
+        transition: none;
+    }
+}

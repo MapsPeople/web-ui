@@ -33,6 +33,7 @@
         gap: var(--spacing-x-small);
         grid-auto-rows: min-content;
         padding: var(--spacing-x-small);
+        scroll-padding-top: 56px;
     }
 
     @media (max-width: variables.$desktop-breakpoint) {

@@ -24,6 +24,7 @@ import isDestinationStepState from '../../atoms/isDestinationStepState';
 import primaryColorState from '../../atoms/primaryColorState';
 import { useIsKioskContext } from '../../hooks/useIsKioskContext';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
+import { useReturnFocus } from '../../hooks/useReturnFocus';
 import showExternalIDsState from '../../atoms/showExternalIDsState';
 import PropTypes from 'prop-types';
 import baseLinkSelector from '../../selectors/baseLink';
@@ -55,6 +56,7 @@ Directions.propTypes = {
  */
 function Directions({ isOpen, onBack, onSetSize, onRouteFinished }) {
     const { t } = useTranslation();
+    useReturnFocus(isOpen);
     const requestAnimationFrameId = useRef();
 
     // Holds the MapsIndoors DisplayRule for the destination
@@ -360,6 +362,7 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished }) {
 
     return (
         <div className="directions" style={{ display: !isKioskContext ? 'grid' : 'block' }}>
+            <h2 className="directions__sr-heading">{t('Directions')}</h2>
             <div className="directions__header">
                 <div className="directions__minutes">{totalTime && <mi-time translations={JSON.stringify({ days: t('d'), hours: t('h'), minutes: t('min') })} seconds={totalTime} />}</div>
                 <RouteInstructionsStepHeader
@@ -396,7 +399,7 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished }) {
                             disabled={activeStep === 0}>
                             <ArrowLeft />
                         </button>
-                        <div className="route-instructions__overview">{t('StepYofX', { activeStep: activeStep + 1, totalSteps: getRouteSteps().length })}</div>
+                        <div className="route-instructions__overview" role="status" aria-live="polite" aria-atomic="true">{t('StepYofX', { activeStep: activeStep + 1, totalSteps: getRouteSteps().length })}</div>
                         <button className={`route-instructions__button ${!isKioskContext ? '' : 'route-instructions__button--kiosk'}`}
                             onClick={() => nextStep()}
                             aria-label={t('Next')}

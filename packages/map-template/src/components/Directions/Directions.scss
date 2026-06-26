@@ -7,6 +7,18 @@
     min-height: 0;
     height: 100%;
 
+    &__sr-heading {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+
     &__details {
         padding: var(--spacing-medium) 0;
     }
@@ -36,7 +48,7 @@
     &__header {
         position: sticky;
         top: 0;
-        z-index: 10000;
+        z-index: var(--z-index-sticky, 100);
         background: var(--color-white-white);
 
         &::after {
@@ -147,6 +159,7 @@
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
         touch-action: pan-y;
+        scroll-padding-top: 56px;
     }
 
     &__actions {
