@@ -6,6 +6,7 @@ module.exports = {
     },
     moduleNameMapper: {
         '\\.(css|scss|sass)$': 'identity-obj-proxy',
+        '\\.svg\\?react$': '<rootDir>/jest.svgComponentMock.cjs',
         '\\.(jpg|jpeg|png|gif|svg)$': '<rootDir>/jest.fileMock.cjs'
     },
     testPathIgnorePatterns: ['/node_modules/', '/build/', '/dist/']

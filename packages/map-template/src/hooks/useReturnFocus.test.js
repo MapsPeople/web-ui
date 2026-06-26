@@ -1,19 +1,23 @@
-// Test the return focus contract:
-test('useReturnFocus returns focus to trigger element on deactivate', () => {
-  const button = document.createElement('button');
-  document.body.appendChild(button);
-  button.focus();
+import { renderHook, act } from '@testing-library/react';
+import { useReturnFocus } from './useReturnFocus';
 
-  // Simulate saving + restoring focus
-  const savedElement = document.activeElement;
-  const input = document.createElement('input');
-  document.body.appendChild(input);
-  input.focus();
-  expect(document.activeElement).toBe(input);
+test('useReturnFocus returns focus to the element that was active when isOpen became true', () => {
+    const trigger = document.createElement('button');
+    document.body.appendChild(trigger);
+    trigger.focus();
 
-  savedElement.focus();
-  expect(document.activeElement).toBe(button);
+    const { rerender } = renderHook(({ isOpen }) => useReturnFocus(isOpen), {
+        initialProps: { isOpen: true },
+    });
 
-  document.body.removeChild(button);
-  document.body.removeChild(input);
+    const other = document.createElement('input');
+    document.body.appendChild(other);
+    other.focus();
+    expect(document.activeElement).toBe(other);
+
+    act(() => rerender({ isOpen: false }));
+    expect(document.activeElement).toBe(trigger);
+
+    document.body.removeChild(trigger);
+    document.body.removeChild(other);
 });

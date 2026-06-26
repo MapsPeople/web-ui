@@ -1,19 +1,16 @@
 import { render } from '@testing-library/react';
-import { toHaveNoViolations } from 'jest-axe';
+import { axe, toHaveNoViolations } from 'jest-axe';
+import { RecoilRoot } from 'recoil';
+import Accessibility from './Accessibility';
 
 expect.extend(toHaveNoViolations);
 
-test('Accessibility component checkboxes all have associated labels', () => {
-  const { getAllByRole } = render(
-    <form>
-      <label>
-        <input type="checkbox" />
-        Avoid stairs and escalators
-      </label>
-    </form>
-  );
-  const checkboxes = getAllByRole('checkbox');
-  checkboxes.forEach(cb => {
-    expect(cb).toHaveAccessibleName();
-  });
+test('Accessibility has no axe violations', async () => {
+    const { container } = render(
+        <RecoilRoot>
+            <Accessibility />
+        </RecoilRoot>
+    );
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
 });

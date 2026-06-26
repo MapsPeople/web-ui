@@ -1,13 +1,34 @@
-import { act } from '@testing-library/react';
+import { renderHook, act } from '@testing-library/react';
+import { RecoilRoot } from 'recoil';
+import { useInactive } from './useInactive';
+import isMapReadyState from '../atoms/isMapReadyState';
+import timeoutState from '../atoms/timoutState';
 
-test('useInactive emits warning before firing isInactive', () => {
-  jest.useFakeTimers();
+function wrapper({ children }) {
+    return (
+        <RecoilRoot initializeState={(snap) => {
+            snap.set(isMapReadyState, true);
+            snap.set(timeoutState, 120);
+        }}>
+            {children}
+        </RecoilRoot>
+    );
+}
 
-  // This tests the shape of the hook's return value.
-  // The actual hook integration is validated manually.
-  const warning = { isWarning: false, isInactive: false };
-  act(() => { warning.isWarning = true; });
-  expect(warning.isWarning).toBe(true);
+test('useInactive emits isWarning before isInactive', () => {
+    jest.useFakeTimers();
 
-  jest.useRealTimers();
+    const { result } = renderHook(() => useInactive(), { wrapper });
+
+    expect(result.current.isWarning).toBe(false);
+    expect(result.current.isInactive).toBe(false);
+
+    act(() => jest.advanceTimersByTime(60_000));
+    expect(result.current.isWarning).toBe(true);
+    expect(result.current.isInactive).toBe(false);
+
+    act(() => jest.advanceTimersByTime(60_000));
+    expect(result.current.isInactive).toBe(true);
+
+    jest.useRealTimers();
 });

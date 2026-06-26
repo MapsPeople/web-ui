@@ -1,14 +1,19 @@
 import { render } from '@testing-library/react';
-import { toHaveNoViolations } from 'jest-axe';
+import { axe, toHaveNoViolations } from 'jest-axe';
+import { RecoilRoot } from 'recoil';
+import LocationDetails from './LocationDetails';
+
+jest.mock('../../hooks/useOutsideMapsIndoorsDataClick', () => () => false);
+jest.mock('focus-trap-react', () => ({ FocusTrap: ({ children }) => children }));
 
 expect.extend(toHaveNoViolations);
 
-test('LocationDetails renders a heading for the location name', () => {
-  const { getByRole } = render(
-    <div>
-      {/* Minimal stub — replace with actual component when env is available */}
-      <h2>Test Location</h2>
-    </div>
-  );
-  expect(getByRole('heading', { level: 2 })).toBeInTheDocument();
+test('LocationDetails has no axe violations when no location is selected', async () => {
+    const { container } = render(
+        <RecoilRoot>
+            <LocationDetails isOpen={false} />
+        </RecoilRoot>
+    );
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
 });

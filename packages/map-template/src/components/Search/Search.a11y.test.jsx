@@ -1,8 +1,19 @@
 import { render } from '@testing-library/react';
+import { axe, toHaveNoViolations } from 'jest-axe';
+import { RecoilRoot } from 'recoil';
+import Search from './Search';
 
-test('Search error message is in a live region', () => {
-  const { getByRole } = render(
-    <p role="status" aria-live="polite">Nothing was found</p>
-  );
-  expect(getByRole('status')).toBeInTheDocument();
+jest.mock('../../providers/GeminiProvider', () => ({ useGemini: () => ({ isGeminiEnabled: false }) }));
+jest.mock('../../hooks/useInitialChatMessage', () => ({ useInitialChatMessage: () => '' }));
+
+expect.extend(toHaveNoViolations);
+
+test('Search has no axe violations in empty state', async () => {
+    const { container } = render(
+        <RecoilRoot>
+            <Search isOpen={false} />
+        </RecoilRoot>
+    );
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
 });

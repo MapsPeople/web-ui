@@ -53,6 +53,7 @@
     "build-for-npm": "node releaseTools/buildForNpm.mjs",
     "serve": "vite preview",
     "test": "jest",
+    "test:a11y": "jest --testPathPattern=\"\\.a11y\\.test\\.|hooks/useInactive|hooks/useReturnFocus\"",
     "release": "sh ./release.sh",
     "deploy-to-gcloud": "sh ./deploy-to-gcloud.sh",
     "lint": "eslint . --ext .js,.jsx --fix"
