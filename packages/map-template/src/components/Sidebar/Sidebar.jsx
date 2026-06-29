@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import currentLocationState from '../../atoms/currentLocationState';
 import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
@@ -12,6 +12,7 @@ import ChatWindow from '../ChatWindow/ChatWindow';
 import locationIdState from '../../atoms/locationIdState';
 import kioskLocationState from '../../atoms/kioskLocationState';
 import { useChatLocations, useChatDirections } from '../../hooks/useChat';
+import { useEscapeToClose } from '../../hooks/useEscapeToClose';
 import PropTypes from 'prop-types';
 
 Sidebar.propTypes = {
@@ -110,6 +111,16 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
         }
     }
 
+
+    // Maps each closeable app view to the action triggered when the user presses Escape.
+    const escapeHandlers = useMemo(() => ({
+        [appViews.LOCATION_DETAILS]: () => closeLocationDetails(),
+        [appViews.EXTERNALIDS]:      () => closeLocationsList(),
+        [appViews.WAYFINDING]:       () => pushAppView(currentLocation ? appViews.LOCATION_DETAILS : appViews.SEARCH),
+        [appViews.DIRECTIONS]:       () => closeDirections(),
+        [appViews.CHAT]:             () => pushAppView(appViews.SEARCH),
+    }), [currentLocation, currentAppView]);
+    useEscapeToClose(currentAppView, escapeHandlers);
 
     const pages = [
         <Modal isOpen={currentAppView === appViews.SEARCH} key="SEARCH">
