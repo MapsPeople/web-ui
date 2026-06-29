@@ -111,6 +111,10 @@ const zhHans = {
     'Location consent message': '为了提供个性化的路线指引并帮助您发现附近的地点，Ask with AI 需要访问您的位置信息。即使不提供位置信息，聊天功能仍然可用，但您需要手动指定起点。',
     'Location consent accept': '允许',
     'Location consent decline': '拒绝',
+    // Inactivity Warning
+    'Still here?': '您还在吗？',
+    'This screen will reset in {{seconds}} seconds.': '此屏幕将在 {{seconds}} 秒后重置。',
+    'Stay': '留在此处',
 };
 
 export default zhHans;
