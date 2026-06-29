@@ -26,9 +26,9 @@ export function InactivityWarning() {
                 className={styles.overlay}
             >
                 <div className={styles.dialog}>
-                    <h2 id="inactivity-title">{t('Session expiring')}</h2>
+                    <h2 id="inactivity-title">{t('Still here?')}</h2>
                     <p id="inactivity-desc" aria-live="polite" aria-atomic="true">
-                        {t('Your session will reset in {{seconds}} seconds.', { seconds })}
+                        {t('This screen will reset in {{seconds}} seconds.', { seconds })}
                     </p>
                     <button
                         className={styles.stayButton}

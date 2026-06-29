@@ -176,10 +176,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const setKioskLocation = useSetRecoilState(kioskLocationState);
     const setKioskOriginLocationId = useSetRecoilState(kioskOriginLocationIdState);
     const setTimeoutValue = useSetRecoilState(timeoutState);
-    const { isInactive, isWarning: isInactivityWarning } = useInactive(); // Hook to detect if user is inactive. Used in combination with timeout prop to reset the Map Template to initial values after a specified time.
+    const { isInactive } = useInactive(); // Hook to detect if user is inactive. Used in combination with timeout prop to reset the Map Template to initial values after a specified time.
     const [kioskFullReloadEnabled, setKioskFullReloadEnabled] = useState(false); // Resolved from enableKioskFullReload prop or appConfig.appSettings.enableKioskFullReload
     const [kioskFullReloadTime, setKioskFullReloadTime] = useState(undefined); // Resolved from kioskReloadTime prop or appConfig.appSettings.kioskReloadTime (seconds, default 600)
-    useKioskReload(kioskFullReloadEnabled, kioskFullReloadTime); // Triggers window.location.reload() after inactivity in kiosk mode
+    const { isWarning: isInactivityWarning } = useKioskReload(kioskFullReloadEnabled, kioskFullReloadTime); // Triggers window.location.reload() after inactivity in kiosk mode
     const setSupportsUrlParameters = useSetRecoilState(supportsUrlParametersState);
     const setUseKeyboard = useSetRecoilState(useKeyboardState);
     const setMiTransitionLevel = useSetRecoilState(miTransitionLevelState);

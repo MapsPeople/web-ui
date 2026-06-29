@@ -15,19 +15,14 @@ function wrapper({ children }) {
     );
 }
 
-test('useInactive emits isWarning before isInactive', () => {
+test('useInactive sets isInactive after timeout', () => {
     jest.useFakeTimers();
 
     const { result } = renderHook(() => useInactive(), { wrapper });
 
-    expect(result.current.isWarning).toBe(false);
     expect(result.current.isInactive).toBe(false);
 
-    act(() => jest.advanceTimersByTime(60_000));
-    expect(result.current.isWarning).toBe(true);
-    expect(result.current.isInactive).toBe(false);
-
-    act(() => jest.advanceTimersByTime(60_000));
+    act(() => jest.advanceTimersByTime(120_000));
     expect(result.current.isInactive).toBe(true);
 
     jest.useRealTimers();
