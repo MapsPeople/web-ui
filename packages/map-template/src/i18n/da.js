@@ -114,8 +114,10 @@ const da = {
     'Location consent decline': 'Afvis',
     // Inactivity Warning
     'Still here?': 'Er du stadig her?',
-    'This screen will reset in {{seconds}} seconds.': 'Denne skærm nulstilles om {{seconds}} sekunder.',
-    'Stay': 'Bliv her',
+    'We\'ll return to the home screen and clear your search in': 'Vi vender tilbage til startskærmen og rydder din søgning om',
+    'Keep browsing': 'Fortsæt søgning',
+    'Start over': 'Start forfra',
+    'Touch the map anywhere to stay': 'Tryk på kortet for at blive',
 };
 
 export default da;

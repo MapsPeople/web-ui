@@ -114,8 +114,10 @@ const it = {
     'Location consent decline': 'Rifiuta',
     // Inactivity Warning
     'Still here?': 'Sei ancora qui?',
-    'This screen will reset in {{seconds}} seconds.': 'Questo schermo si ripristinerà tra {{seconds}} secondi.',
-    'Stay': 'Rimani',
+    'We\'ll return to the home screen and clear your search in': 'Torneremo alla schermata iniziale e cancelleremo la tua ricerca tra',
+    'Keep browsing': 'Continua a navigare',
+    'Start over': 'Ricomincia',
+    'Touch the map anywhere to stay': 'Tocca la mappa per restare',
 };
 
 export default it;

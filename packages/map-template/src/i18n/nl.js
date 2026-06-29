@@ -114,8 +114,10 @@ const nl = {
     'Location consent decline': 'Weigeren',
     // Inactivity Warning
     'Still here?': 'Bent u er nog?',
-    'This screen will reset in {{seconds}} seconds.': 'Dit scherm wordt over {{seconds}} seconden opnieuw ingesteld.',
-    'Stay': 'Blijven',
+    'We\'ll return to the home screen and clear your search in': 'We keren terug naar het startscherm en wissen uw zoekopdracht over',
+    'Keep browsing': 'Blijf zoeken',
+    'Start over': 'Opnieuw beginnen',
+    'Touch the map anywhere to stay': 'Raak de kaart aan om te blijven',
 };
 
 export default nl;

@@ -113,8 +113,10 @@ const zhHans = {
     'Location consent decline': '拒绝',
     // Inactivity Warning
     'Still here?': '您还在吗？',
-    'This screen will reset in {{seconds}} seconds.': '此屏幕将在 {{seconds}} 秒后重置。',
-    'Stay': '留在此处',
+    'We\'ll return to the home screen and clear your search in': '将在以下时间后返回主屏幕并清除搜索记录：',
+    'Keep browsing': '继续浏览',
+    'Start over': '重新开始',
+    'Touch the map anywhere to stay': '触摸地图任意位置以继续',
 };
 
 export default zhHans;

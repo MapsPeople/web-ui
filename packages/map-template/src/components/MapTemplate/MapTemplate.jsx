@@ -1043,7 +1043,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                     }}
                     devicePosition={devicePosition}
                 />
-                {isInactivityWarning && !isInactive && <InactivityWarning />}
+                {isInactivityWarning && !isInactive && <InactivityWarning onStartOver={resetStateAndUI} />}
             </div>
         </GeminiProvider>
     );

@@ -113,8 +113,10 @@ const zhHant = {
       'Location consent decline': '拒絕',
       // Inactivity Warning
       'Still here?': '您還在嗎？',
-      'This screen will reset in {{seconds}} seconds.': '此畫面將在 {{seconds}} 秒後重設。',
-      'Stay': '繼續使用',
+      'We\'ll return to the home screen and clear your search in': '將在以下時間後返回主畫面並清除搜尋記錄：',
+      'Keep browsing': '繼續瀏覽',
+      'Start over': '重新開始',
+      'Touch the map anywhere to stay': '觸碰地圖任意位置以繼續',
   };
 
   export default zhHant;

@@ -114,8 +114,10 @@ const de = {
     'Location consent decline': 'Ablehnen',
     // Inactivity Warning
     'Still here?': 'Sind Sie noch da?',
-    'This screen will reset in {{seconds}} seconds.': 'Dieser Bildschirm wird in {{seconds}} Sekunden zurückgesetzt.',
-    'Stay': 'Hier bleiben',
+    'We\'ll return to the home screen and clear your search in': 'Wir kehren zum Startbildschirm zurück und löschen Ihre Suche in',
+    'Keep browsing': 'Weiter stöbern',
+    'Start over': 'Neu starten',
+    'Touch the map anywhere to stay': 'Karte berühren, um zu bleiben',
 };
 
 export default de;
