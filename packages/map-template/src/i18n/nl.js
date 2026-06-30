@@ -108,6 +108,10 @@ const nl = {
     'Usage consent accept': 'Ik begrijp het',
     'Usage consent decline': 'Weigeren',
     'AI disclaimer': 'Ask with AI kan fouten maken. Controleer belangrijke details voordat je op weg gaat.',
+    // Session limit
+    'Session limit approaching': 'Sessielimiet bijna bereikt',
+    'Session limit reached': 'Sessielimiet bereikt',
+    'Start new session': 'Nieuwe sessie starten',
     // Location Consent
     'Location consent message': 'Om gepersonaliseerde routebeschrijvingen te bieden en je te helpen ontdekken wat er in de buurt is, wil Ask with AI toegang tot je locatie. De chat werkt nog steeds zonder je locatie te kennen, maar je zult dan een startpunt moeten opgeven.',
     'Location consent accept': 'Toestaan',

@@ -108,6 +108,10 @@ const da = {
     'Usage consent accept': 'Jeg forstår',
     'Usage consent decline': 'Afvis',
     'AI disclaimer': 'Ask with AI kan begå fejl. Dobbelttjek vigtige detaljer, inden du begiver dig af sted.',
+    // Session limit
+    'Session limit approaching': 'Sessionsgrænsen nærmer sig',
+    'Session limit reached': 'Sessionsgrænsen er nået',
+    'Start new session': 'Start ny session',
     // Location Consent
     'Location consent message': 'For at give personlige rutevejledninger og hjælpe dig med at opdage, hvad der er i nærheden, vil Ask with AI gerne have adgang til din placering. Chatten fungerer stadig uden at kende din placering, men i stedet skal du angive et startpunkt.',
     'Location consent accept': 'Tillad',

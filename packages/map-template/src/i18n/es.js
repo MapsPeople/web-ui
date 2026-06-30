@@ -108,6 +108,10 @@ const es = {
     'Usage consent accept': 'Entendido',
     'Usage consent decline': 'Rechazar',
     'AI disclaimer': 'Ask with AI puede cometer errores. Verifica los detalles importantes antes de ponerte en camino.',
+    // Session limit
+    'Session limit approaching': 'Límite de sesión próximo',
+    'Session limit reached': 'Límite de sesión alcanzado',
+    'Start new session': 'Iniciar nueva sesión',
     // Location Consent
     'Location consent message': 'Para ofrecer indicaciones personalizadas y ayudarte a descubrir lo que hay cerca, Ask with AI necesita acceder a tu ubicación. El chat seguirá funcionando sin conocer tu ubicación, pero tendrás que especificar un punto de partida.',
     'Location consent accept': 'Permitir',
