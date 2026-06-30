@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { createPortal } from 'react-dom';
+import i18n from 'i18next';
 import ResetKioskViewIcon from '../../assets/reset-kiosk-view.svg?react';
 import './ResetKioskViewButton.scss';
 import { useIsKioskContext } from '../../hooks/useIsKioskContext';
@@ -136,8 +137,8 @@ function ResetKioskViewButton() {
         <button 
             className="reset-kiosk-view-button"
             onClick={resetMapPosition}
-            title="Reset to initial kiosk view"
-            aria-label="Reset to initial kiosk view"
+            title={i18n.t('Reset to initial kiosk view')}
+            aria-label={i18n.t('Reset to initial kiosk view')}
         >
             <ResetKioskViewIcon />
         </button>,

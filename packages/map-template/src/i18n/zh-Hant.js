@@ -111,6 +111,12 @@ const zhHant = {
       'Location consent message':'為了提供個人化的路線指引並協助您發現附近的地點，Ask with AI 需要存取您的位置資訊。即使不提供位置資訊，聊天功能仍可使用，但您需要手動指定起點。',
       'Location consent accept': '允許',
       'Location consent decline': '拒絕',
+      // Inactivity Warning
+      'Still here?': '您還在嗎？',
+      'We\'ll return to the home screen and clear your search in': '將在以下時間後返回主畫面並清除搜尋記錄：',
+      'Keep browsing': '繼續瀏覽',
+      'Start over': '重新開始',
+      'Touch the map anywhere to stay': '觸碰地圖任意位置以繼續',
   };
 
   export default zhHant;

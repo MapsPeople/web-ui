@@ -1,6 +1,7 @@
 import { createPortal } from 'react-dom';
 import { useRecoilValue } from 'recoil';
 import PropTypes from 'prop-types';
+import i18n from 'i18next';
 import chatHistoryState from '../../atoms/chatHistoryState';
 import primaryColorState from '../../atoms/primaryColorState';
 import ChatButtonIcon from '../../assets/chat-icon.svg?react';
@@ -46,8 +47,8 @@ function ChatButton({ pushAppView, currentAppView, appViews }) {
         <button 
             className="chat-button"
             onClick={handleOpenChat}
-            title="Open chat"
-            aria-label="Open chat"
+            title={i18n.t('Open chat')}
+            aria-label={i18n.t('Open chat')}
             type="button"
             style={{ '--chat-button-primary-color': primaryColor }}
         >

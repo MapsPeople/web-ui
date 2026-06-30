@@ -15,6 +15,7 @@ import kioskLocationState from '../../atoms/kioskLocationState';
 import accessibilityOnState from '../../atoms/accessibilityOnState';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
 import showExternalIDsState from '../../atoms/showExternalIDsState';
+import { useReturnFocus } from '../../hooks/useReturnFocus';
 import useOutsideMapsIndoorsDataClick from '../../hooks/useOutsideMapsIndoorsDataClick';
 import OpeningHours from './OpeningHours/OpeningHours';
 import PropTypes from 'prop-types';
@@ -53,6 +54,7 @@ LocationDetails.propTypes = {
  */
 function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirections, isOpen }) {
     const { t } = useTranslation();
+    useReturnFocus(isOpen);
 
     const locationInfoElement = useRef(null);
     const locationDetailsContainerRef = useRef(null);
@@ -343,9 +345,9 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
                         {locationDisplayRule && <img alt="" src={locationDisplayRule.icon.src ? locationDisplayRule.icon.src : locationDisplayRule.icon} />}
                     </div>
                     <div className="location-info__content">
-                        <div className="location-info__name">
+                        <h2 className="location-info__name">
                             {location.properties.name}
-                        </div>
+                        </h2>
                         <mi-location-info level={t('Level')} ref={locationInfoElement} show-external-id={showExternalIDs} show-floor={showFloor} />
                     </div>
                     <div className="location-info__actions">
@@ -387,7 +389,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
                     onScroll={e => setScrollIndicators(e)}
                     className="location-details__details-content">
                     {/* Location image */}
-                    {location.properties.imageURL && <img ref={locationImageRef} alt="" src={location.properties.imageURL} className="location-details__image" />}
+                    {location.properties.imageURL && <img ref={locationImageRef} alt={location.properties.name} src={location.properties.imageURL} className="location-details__image" />}
 
                     {/* Location categories */}
                     {Object.keys(location.properties.categories).length > 0 && <p className="location-details__categories">

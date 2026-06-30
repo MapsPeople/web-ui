@@ -111,6 +111,12 @@ const zhHans = {
     'Location consent message': '为了提供个性化的路线指引并帮助您发现附近的地点，Ask with AI 需要访问您的位置信息。即使不提供位置信息，聊天功能仍然可用，但您需要手动指定起点。',
     'Location consent accept': '允许',
     'Location consent decline': '拒绝',
+    // Inactivity Warning
+    'Still here?': '您还在吗？',
+    'We\'ll return to the home screen and clear your search in': '将在以下时间后返回主屏幕并清除搜索记录：',
+    'Keep browsing': '继续浏览',
+    'Start over': '重新开始',
+    'Touch the map anywhere to stay': '触摸地图任意位置以继续',
 };
 
 export default zhHans;

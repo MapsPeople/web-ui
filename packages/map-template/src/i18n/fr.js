@@ -112,6 +112,12 @@ const fr = {
     'Location consent message': 'Pour fournir des itinéraires personnalisés et vous aider à découvrir ce qui se trouve à proximité, Ask with AI souhaite accéder à votre position. Le chat fonctionnera toujours sans connaître votre position, mais vous devrez spécifier un point de départ.',
     'Location consent accept': 'Autoriser',
     'Location consent decline': 'Refuser',
+    // Inactivity Warning
+    'Still here?': 'Vous êtes toujours là ?',
+    'We\'ll return to the home screen and clear your search in': 'Nous reviendrons à l\'écran d\'accueil et effacerons votre recherche dans',
+    'Keep browsing': 'Continuer à naviguer',
+    'Start over': 'Recommencer',
+    'Touch the map anywhere to stay': 'Touchez la carte pour rester',
 };
 
 export default fr;

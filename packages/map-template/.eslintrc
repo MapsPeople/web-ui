@@ -38,6 +38,7 @@
         "build/*", // Ignore build directory
         "node_modules/*", // Ignore node_modules
         "dist/*", // Ignore dist directory
-        "../*" // Ignore other packages
+        "../*", // Ignore other packages
+        "tests/*" // Ignore tests directory
     ]
 }

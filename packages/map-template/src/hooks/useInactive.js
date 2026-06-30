@@ -8,7 +8,7 @@ import timeoutState from '../atoms/timoutState';
  *
  * Heavily inspired by useIdle from https://www.npmjs.com/package/@uidotdev/usehooks
  *
- * @returns {boolean}
+ * @returns {{ isInactive: boolean }}
  */
 export function useInactive() {
     const [isInactive, setIsInactive] = useState(false);
@@ -21,20 +21,16 @@ export function useInactive() {
             return;
         }
 
-        let timer;
+        const timeoutMs = timeout * 1000;
+        let inactiveTimer;
 
         const handleUserEvent = () => {
             setIsInactive(false);
-
-            window.clearTimeout(timer);
-            timer = window.setTimeout(handleTimeout, timeout*1000);
+            window.clearTimeout(inactiveTimer);
+            inactiveTimer = window.setTimeout(() => setIsInactive(true), timeoutMs);
         };
 
-        const handleTimeout = () => {
-            setIsInactive(true);
-        };
-
-        timer = window.setTimeout(handleTimeout, timeout*1000);
+        inactiveTimer = window.setTimeout(() => setIsInactive(true), timeoutMs);
 
         window.addEventListener('mousemove', handleUserEvent);
         window.addEventListener('mousedown', handleUserEvent);
@@ -42,6 +38,7 @@ export function useInactive() {
         window.addEventListener('keydown', handleUserEvent);
         window.addEventListener('touchstart', handleUserEvent);
         window.addEventListener('wheel', handleUserEvent);
+        window.addEventListener('pointerup', handleUserEvent);
 
         return () => {
             window.removeEventListener('mousemove', handleUserEvent);
@@ -50,9 +47,10 @@ export function useInactive() {
             window.removeEventListener('keydown', handleUserEvent);
             window.removeEventListener('touchstart', handleUserEvent);
             window.removeEventListener('wheel', handleUserEvent);
-            window.clearTimeout(timer);
+            window.removeEventListener('pointerup', handleUserEvent);
+            window.clearTimeout(inactiveTimer);
         };
     }, [timeout, isMapReady]);
 
-    return isInactive;
+    return { isInactive };
 }

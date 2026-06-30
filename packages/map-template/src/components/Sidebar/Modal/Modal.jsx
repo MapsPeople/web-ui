@@ -33,8 +33,9 @@ function Modal({ children, isOpen }) {
      * If the height of the content is bigger than the height of the modal, the fullHeight should be set.
      */
     useEffect(() => {
-        if (!contentRef) return;
+        if (!contentRef.current) return;
         const observer = new MutationObserver(() => {
+            if (!contentRef.current) return;
             const contentHeight = contentRef.current.clientHeight;
             const modalHeight = modalRef.current?.clientHeight;
             setFullHeight(contentHeight > modalHeight);
@@ -47,13 +48,15 @@ function Modal({ children, isOpen }) {
         }
     }, [contentRef]);
 
-    return <div ref={modalRef}
-        className={`modal ${isOpen ? 'modal--open' : ''} ${fullHeight ? 'modal--full' : ''} ${kioskLocation ? 'modal--kiosk' : ''}`}
-    >
-        <div ref={contentRef} className="modal__content">
-            {children}
+    return (
+        <div ref={modalRef}
+            className={`modal ${isOpen ? 'modal--open' : ''} ${fullHeight ? 'modal--full' : ''} ${kioskLocation ? 'modal--kiosk' : ''}`}
+        >
+            <div ref={contentRef} className="modal__content">
+                {children}
+            </div>
         </div>
-    </div>
+    )
 }
 
 export default Modal;

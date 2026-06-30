@@ -59,3 +59,10 @@
         transform: translateY(0);
     }
 }
+
+@media (prefers-reduced-motion: reduce) {
+    .splash-screen__loader,
+    .splash-screen__container {
+        animation: none;
+    }
+}

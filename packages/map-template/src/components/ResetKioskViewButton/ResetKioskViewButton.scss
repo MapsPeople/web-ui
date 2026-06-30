@@ -30,3 +30,13 @@
         pointer-events: none;
     }
 }
+
+@media (prefers-reduced-motion: reduce) {
+    .reset-kiosk-view-button {
+        transition: none;
+
+        &:active {
+            transform: none;
+        }
+    }
+}

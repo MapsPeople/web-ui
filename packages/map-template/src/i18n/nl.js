@@ -112,6 +112,12 @@ const nl = {
     'Location consent message': 'Om gepersonaliseerde routebeschrijvingen te bieden en je te helpen ontdekken wat er in de buurt is, wil Ask with AI toegang tot je locatie. De chat werkt nog steeds zonder je locatie te kennen, maar je zult dan een startpunt moeten opgeven.',
     'Location consent accept': 'Toestaan',
     'Location consent decline': 'Weigeren',
+    // Inactivity Warning
+    'Still here?': 'Bent u er nog?',
+    'We\'ll return to the home screen and clear your search in': 'We keren terug naar het startscherm en wissen uw zoekopdracht over',
+    'Keep browsing': 'Blijf zoeken',
+    'Start over': 'Opnieuw beginnen',
+    'Touch the map anywhere to stay': 'Raak de kaart aan om te blijven',
 };
 
 export default nl;

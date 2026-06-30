@@ -6,6 +6,7 @@ import isLegendDialogVisibleState from '../../atoms/isLegendDialogVisibleState';
 import { useTranslation } from 'react-i18next';
 import { useIsKioskContext } from '../../hooks/useIsKioskContext';
 import legendSortedFieldsSelector from '../../selectors/legendSortedFieldsSelector';
+import { FocusTrap } from 'focus-trap-react';
 
 /**
  * Handle the Legend dialog.
@@ -57,7 +58,15 @@ function LegendDialog() {
 
     return (<>
         <div className="legend__background"></div>
-        <div className="legend" ref={legendModalRef}>
+        <FocusTrap focusTrapOptions={{ onDeactivate: () => setShowLegendDialog(false), clickOutsideDeactivates: true }}>
+        <div
+            className="legend"
+            ref={legendModalRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="legend-dialog-title"
+        >
+            <h2 id="legend-dialog-title" className="legend__title">{t('Legend')}</h2>
             {legendSections.length > 0 &&
                 <div className={`legend__sections ${isLegendScrollable ? 'legend__sections--scrollable' : ''}`}
                     ref={legendSectionsRef}
@@ -76,9 +85,8 @@ function LegendDialog() {
                 </div>
             }
         </div>
-
-    </>
-    )
+        </FocusTrap>
+    </>)
 }
 
 export default LegendDialog;

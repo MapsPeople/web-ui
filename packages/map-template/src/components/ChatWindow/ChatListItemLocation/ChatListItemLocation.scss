@@ -120,3 +120,9 @@
         }
     }
 }
+
+@media (prefers-reduced-motion: reduce) {
+    .chat-list-item-location {
+        transition: none;
+    }
+}

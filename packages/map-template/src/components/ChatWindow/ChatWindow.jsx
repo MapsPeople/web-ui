@@ -20,10 +20,12 @@ import ChatInput from './ChatInput/ChatInput';
 import LocationConsentPopup from './LocationConsentPopup/LocationConsentPopup';
 import UsageConsentOverlay from './UsageConsentOverlay/UsageConsentOverlay';
 import { useTranslation } from 'react-i18next';
+import { useReturnFocus } from '../../hooks/useReturnFocus';
 
 
 function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     const { t } = useTranslation();
+    useReturnFocus(isVisible);
     const primaryColor = useRecoilValue(primaryColorState);
     const apiKey = useRecoilValue(apiKeyState);
     const userPosition = useRecoilValue(userPositionState);

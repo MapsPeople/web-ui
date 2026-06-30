@@ -72,6 +72,7 @@ import mapTypeState from '../../atoms/mapTypeState.js';
 import { mapTypes } from '../../constants/mapTypes.js';
 import { useIsKioskContext } from '../../hooks/useIsKioskContext.js';
 import { useKioskReload } from '../../hooks/useKioskReload.js';
+import { InactivityWarning } from '../InactivityWarning/InactivityWarning';
 import { syncAnalyticsViewVariant } from '../../helpers/syncAnalyticsViewVariant.js';
 
 // Define the Custom Elements from our components package.
@@ -175,10 +176,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const setKioskLocation = useSetRecoilState(kioskLocationState);
     const setKioskOriginLocationId = useSetRecoilState(kioskOriginLocationIdState);
     const setTimeoutValue = useSetRecoilState(timeoutState);
-    const isInactive = useInactive(); // Hook to detect if user is inactive. Used in combination with timeout prop to reset the Map Template to initial values after a specified time.
+    const { isInactive } = useInactive(); // Hook to detect if user is inactive. Used in combination with timeout prop to reset the Map Template to initial values after a specified time.
     const [kioskFullReloadEnabled, setKioskFullReloadEnabled] = useState(false); // Resolved from enableKioskFullReload prop or appConfig.appSettings.enableKioskFullReload
     const [kioskFullReloadTime, setKioskFullReloadTime] = useState(undefined); // Resolved from kioskReloadTime prop or appConfig.appSettings.kioskReloadTime (seconds, default 600)
-    useKioskReload(kioskFullReloadEnabled, kioskFullReloadTime); // Triggers window.location.reload() after inactivity in kiosk mode
+    const { isWarning: isInactivityWarning } = useKioskReload(kioskFullReloadEnabled, kioskFullReloadTime); // Triggers window.location.reload() after inactivity in kiosk mode
     const setSupportsUrlParameters = useSetRecoilState(supportsUrlParametersState);
     const setUseKeyboard = useSetRecoilState(useKeyboardState);
     const setMiTransitionLevel = useSetRecoilState(miTransitionLevelState);
@@ -836,6 +837,35 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, [useAppTitle, appConfig])
 
     /*
+     * WCAG 3.1.1: Update document lang attribute when the active language changes.
+     */
+    useEffect(() => {
+        const lang = currentLanguage ?? language;
+        if (lang) {
+            document.documentElement.lang = lang;
+        }
+    }, [currentLanguage, language]);
+
+    /*
+     * WCAG 2.4.2: Update document title when the primary view changes.
+     */
+    useEffect(() => {
+        if (!useAppTitle) {
+            const viewTitles = {
+                [appStates.SEARCH]: i18n.t('Search'),
+                [appStates.LOCATION_DETAILS]: i18n.t('Location Details'),
+                [appStates.DIRECTIONS]: i18n.t('Directions'),
+                [appStates.WAYFINDING]: i18n.t('Wayfinding'),
+                [appStates.CHAT]: i18n.t('AI Assistant'),
+            };
+            const viewTitle = viewTitles[currentAppView];
+            if (viewTitle) {
+                document.title = `${viewTitle} — MapsIndoors`;
+            }
+        }
+    }, [currentAppView, useAppTitle]);
+
+    /*
      * In kiosk mode, optionally block the browser context menu to reduce the
      * chance of users navigating away from the application shell.
      */
@@ -1013,6 +1043,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                     }}
                     devicePosition={devicePosition}
                 />
+                {isInactivityWarning && !isInactive && <InactivityWarning onStartOver={resetStateAndUI} />}
             </div>
         </GeminiProvider>
     );

@@ -49,3 +49,8 @@
     }
 }
 
+@media (prefers-reduced-motion: reduce) {
+    .map-zoom-control__button {
+        transition: none;
+    }
+}

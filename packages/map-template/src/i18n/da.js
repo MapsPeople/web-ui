@@ -112,6 +112,12 @@ const da = {
     'Location consent message': 'For at give personlige rutevejledninger og hjælpe dig med at opdage, hvad der er i nærheden, vil Ask with AI gerne have adgang til din placering. Chatten fungerer stadig uden at kende din placering, men i stedet skal du angive et startpunkt.',
     'Location consent accept': 'Tillad',
     'Location consent decline': 'Afvis',
+    // Inactivity Warning
+    'Still here?': 'Er du stadig her?',
+    'We\'ll return to the home screen and clear your search in': 'Vi vender tilbage til startskærmen og rydder din søgning om',
+    'Keep browsing': 'Fortsæt søgning',
+    'Start over': 'Start forfra',
+    'Touch the map anywhere to stay': 'Tryk på kortet for at blive',
 };
 
 export default da;

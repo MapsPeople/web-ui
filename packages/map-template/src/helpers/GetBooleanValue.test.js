@@ -1,4 +1,4 @@
-import getBooleanValue from "./GetBooleanValue";
+import getBooleanValue from './GetBooleanValue';
 
 describe('getBooleanValue', () => {
     // Test cases for supportsUrlParameters === true

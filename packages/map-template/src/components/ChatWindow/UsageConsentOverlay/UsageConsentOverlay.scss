@@ -99,3 +99,9 @@
     box-shadow: none;
     border: none;
 }
+
+@media (prefers-reduced-motion: reduce) {
+    .usage-consent-overlay__button {
+        transition: none;
+    }
+}
