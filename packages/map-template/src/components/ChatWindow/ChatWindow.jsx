@@ -36,7 +36,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     const isMobileKeyboardVisible = keyboardHeight > 0;
 
     // Use Gemini provider
-    const { generateResponse, isLoading } = useGemini();
+    const { generateResponse, isLoading, sessionStatus, resetSession } = useGemini();
 
     // Use Recoil for chat history
     const [chatHistory, setChatHistory] = useRecoilState(chatHistoryState);
@@ -72,6 +72,11 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     const handleConsentDecline = useCallback(() => {
         setLocationShareConsent('denied');
     }, [setLocationShareConsent]);
+
+    const handleResetSession = useCallback(() => {
+        resetSession();
+        setChatHistory([]);
+    }, [resetSession, setChatHistory]);
 
     const handleDisclaimerAccept = useCallback(() => {
         sessionStorage.setItem('chatUsageConsentAccepted', 'true');
@@ -354,6 +359,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                 isLoading={isLoading}
                 onClose={onClose}
                 disabled={!usageConsentAccepted}
+                inputDisabled={sessionStatus === 'exhausted'}
                 primaryColor={primaryColor}
             />
             {!usageConsentAccepted ? (
@@ -365,6 +371,12 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                             onAccept={handleConsentAccept}
                             onDecline={handleConsentDecline}
                         />
+                    )}
+                    {sessionStatus !== 'active' && (
+                        <div className="chat-window__token-warning">
+                            <span>{t('Session limit approaching')}</span>
+                            <button onClick={handleResetSession}>{t('Start new session')}</button>
+                        </div>
                     )}
                     <ChatMessages
                         chatHistory={chatHistory.filter(message => message.type !== 'server' || message.text)} // Filter out empty server messages
