@@ -6,19 +6,19 @@ import { useIsDesktop } from '../../../hooks/useIsDesktop';
 import PropTypes from 'prop-types';
 import './ChatInput.scss';
 
-function ChatInput({ onSendMessage, isLoading, onClose, disabled, primaryColor }) {
+function ChatInput({ onSendMessage, isLoading, onClose, disabled, inputDisabled, primaryColor }) {
     const inputRef = useRef(null);
     const [inputValue, setInputValue] = useState('');
     const isDesktop = useIsDesktop();
 
     // Auto-focus input on mount only on desktop and when not disabled
     useEffect(() => {
-        if (inputRef.current && isDesktop && !disabled) {
+        if (inputRef.current && isDesktop && !disabled && !inputDisabled) {
             requestAnimationFrame(() => {
                 inputRef.current?.focus();
             });
         }
-    }, [isDesktop, disabled]);
+    }, [isDesktop, disabled, inputDisabled]);
 
     // Handle sending message from input
     const handleSend = useCallback(() => {
@@ -50,7 +50,7 @@ function ChatInput({ onSendMessage, isLoading, onClose, disabled, primaryColor }
 
     return (
         <div className="chat-input">
-            <div className={`chat-input__wrapper${disabled ? ' chat-input__wrapper--disabled' : ''}`}>
+            <div className={`chat-input__wrapper${disabled || inputDisabled ? ' chat-input__wrapper--disabled' : ''}`}>
                 <ChatModeIcon className="chat-input__icon" />
                 <textarea
                     ref={inputRef}
@@ -61,15 +61,15 @@ function ChatInput({ onSendMessage, isLoading, onClose, disabled, primaryColor }
                     className="chat-input__textarea"
                     aria-label="Chat message"
                     rows={1}
-                    disabled={disabled}
+                    disabled={disabled || inputDisabled}
                 />
                 {!isDesktop && (
                     <button
                         type="button"
                         onClick={handleSend}
-                        disabled={!inputValue.trim() || isLoading || disabled}
+                        disabled={!inputValue.trim() || isLoading || disabled || inputDisabled}
                         className="chat-input__send-button"
-                        style={{ backgroundColor: inputValue.trim() && !isLoading && !disabled ? primaryColor : undefined }}
+                        style={{ backgroundColor: inputValue.trim() && !isLoading && !disabled && !inputDisabled ? primaryColor : undefined }}
                         aria-label="Send message"
                     >
                         <SendIcon />
@@ -95,6 +95,7 @@ ChatInput.propTypes = {
     isLoading: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     disabled: PropTypes.bool,
+    inputDisabled: PropTypes.bool,
     primaryColor: PropTypes.string
 };
 
