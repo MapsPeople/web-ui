@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Inactivity warning dialog (`InactivityWarning`) shown 60 seconds before the kiosk full-reload fires. The dialog traps keyboard focus, announces the countdown via `aria-live`, and provides a "Stay" button to cancel the reset — addressing WCAG 2.1 SC 2.2.1 (Timing Adjustable) for keyboard and screen reader users.
+- Translations for the inactivity warning dialog in all supported languages (DA, DE, ES, FR, IT, NL, ZH-Hans, ZH-Hant).
+- Semantic `h2` headings added to all major panels (Search, Location Details, Directions, etc.) for screen reader navigation.
+- `aria-live` regions added to all status, error, loading, and "nothing found" messages so assistive technologies announce dynamic content changes.
+- `jest-axe` installed and baseline accessibility tests added for ChatButton, InactivityWarning, ResetKioskViewButton, and Wayfinding components.
+
+### Fixed
+
+- Focus trap and Escape-key dismiss added to all modal dialogs.
+- Focus is now restored to the trigger element when panels and modals close.
+- Missing `alt` text and `aria-label` attributes added to all images and icon-only buttons.
+- Wayfinding checkbox labels are now programmatically associated, and the origin/destination inputs are grouped in a `fieldset`.
+- Pressing Escape now closes the active panel (Location Details, Wayfinding, Directions, External IDs list, Chat) and returns focus to the element that opened it, satisfying WCAG 2.1 SC 2.1.2 (No Keyboard Trap).
+- `document.lang` is updated on locale change and `document.title` updates on view change for screen reader context.
+- `focus-visible` styles restored on `ChatInput` textarea and `ChatButton`.
+- Contrast failure fixed in the ChatMessages user message bubble.
+- `prefers-reduced-motion` guards added to all CSS animations and transitions.
+- Fixed-width reflow and line-height text spacing violations corrected (WCAG 1.4.4, 1.4.12).
+- All `aria-label` strings wrapped in `t()` for translation support; `i18n.t()` used instead of `useTranslation` hook in portal-based and non-component contexts to avoid hooks-order violations.
+- The inactivity warning countdown is now derived from `kioskReloadTime` rather than the separate `timeout` prop, so a single prop governs both the warning and the full reload.
+
 ## [1.99.7] - 2026-06-24
 
 ### Fixed
