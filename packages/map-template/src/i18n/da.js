@@ -111,6 +111,7 @@ const da = {
     // Session limit
     'Session limit approaching': 'Sessionsgrænsen nærmer sig',
     'Session limit reached': 'Sessionsgrænsen er nået',
+    'Session limit message': 'Din session har nået sin token-grænse. Start en ny session for at fortsætte.',
     'Start new session': 'Start ny session',
     // Location Consent
     'Location consent message': 'For at give personlige rutevejledninger og hjælpe dig med at opdage, hvad der er i nærheden, vil Ask with AI gerne have adgang til din placering. Chatten fungerer stadig uden at kende din placering, men i stedet skal du angive et startpunkt.',

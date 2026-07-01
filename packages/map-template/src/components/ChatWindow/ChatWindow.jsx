@@ -210,7 +210,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                             if (messageIndex >= 0) {
                                 updatedHistory[messageIndex] = {
                                     ...updatedHistory[messageIndex],
-                                    text: payload.response || 'An error occurred',
+                                    text: payload.response === 'SESSION_LIMIT_MESSAGE' ? t('Session limit message') : (payload.response || t('An error occurred')),
                                     error: true
                                 };
                             }

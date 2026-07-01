@@ -111,6 +111,7 @@ const nl = {
     // Session limit
     'Session limit approaching': 'Sessielimiet bijna bereikt',
     'Session limit reached': 'Sessielimiet bereikt',
+    'Session limit message': 'Je sessie heeft de tokenlimiet bereikt. Start een nieuwe sessie om verder te gaan.',
     'Start new session': 'Nieuwe sessie starten',
     // Location Consent
     'Location consent message': 'Om gepersonaliseerde routebeschrijvingen te bieden en je te helpen ontdekken wat er in de buurt is, wil Ask with AI toegang tot je locatie. De chat werkt nog steeds zonder je locatie te kennen, maar je zult dan een startpunt moeten opgeven.',

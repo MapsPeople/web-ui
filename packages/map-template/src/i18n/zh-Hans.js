@@ -110,6 +110,7 @@ const zhHans = {
     // Session limit
     'Session limit approaching': '即将达到会话限制',
     'Session limit reached': '已达到会话限制',
+    'Session limit message': '本次会话已达到长度上限。请开始新会话以继续。',
     'Start new session': '开始新会话',
     // Location Consent
     'Location consent message': '为了提供个性化的路线指引并帮助您发现附近的地点，Ask with AI 需要访问您的位置信息。即使不提供位置信息，聊天功能仍然可用，但您需要手动指定起点。',

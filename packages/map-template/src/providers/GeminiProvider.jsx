@@ -324,7 +324,7 @@ export function GeminiProvider({ children, enabled }) {
         } catch (error) {
             if (error?.message === 'SESSION_TOKEN_LIMIT_EXCEEDED') {
                 setSessionStatus('exhausted');
-                const limitMessage = 'Your session has reached its token limit. Please start a new session to continue.';
+                const limitMessage = 'SESSION_LIMIT_MESSAGE';
                 if (options.onComplete) {
                     options.onComplete({ response: limitMessage, error });
                 }

@@ -111,6 +111,7 @@ const fr = {
     // Session limit
     'Session limit approaching': 'Limite de session bientôt atteinte',
     'Session limit reached': 'Limite de session atteinte',
+    'Session limit message': 'Votre session a atteint sa limite. Veuillez démarrer une nouvelle session pour continuer.',
     'Start new session': 'Démarrer une nouvelle session',
     // Location Consent
     'Location consent message': 'Pour fournir des itinéraires personnalisés et vous aider à découvrir ce qui se trouve à proximité, Ask with AI souhaite accéder à votre position. Le chat fonctionnera toujours sans connaître votre position, mais vous devrez spécifier un point de départ.',

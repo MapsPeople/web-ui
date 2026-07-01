@@ -111,6 +111,7 @@ const en = {
     // Session limit
     'Session limit approaching': 'Session limit approaching',
     'Session limit reached': 'Session limit reached',
+    'Session limit message': 'Your session has reached its token limit. Please start a new session to continue.',
     'Start new session': 'Start new session',
     // Location Consent
     'Location consent message': 'To provide personalized directions and help you discover what\'s nearby, Ask with AI would like to access your location. The chat will still work without knowing your location, but instead you\'ll need to specify a start point.',
