@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Per-session token limit: `sessionStatus` enum (`'active' | 'warning' | 'exhausted'`) in `GeminiProvider` with a `resetSession` callback
 - Warning banner in `ChatWindow` when the session is approaching or at its limit, with a "Start new session" button
 - `inputDisabled` prop on `ChatInput` — locks textarea and send button independently from the close button
+- i18n translations for all session limit strings (`Session limit approaching`, `Session limit reached`, `Session limit message`, `Start new session`) across all 9 supported languages
 
 ## [1.99.7] - 2026-06-24
 
