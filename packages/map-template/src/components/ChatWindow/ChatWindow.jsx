@@ -36,7 +36,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     const isMobileKeyboardVisible = keyboardHeight > 0;
 
     // Use Gemini provider
-    const { generateResponse, isLoading } = useGemini();
+    const { generateResponse, isLoading, sessionStatus, resetSession } = useGemini();
 
     // Use Recoil for chat history
     const [chatHistory, setChatHistory] = useRecoilState(chatHistoryState);
@@ -72,6 +72,11 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     const handleConsentDecline = useCallback(() => {
         setLocationShareConsent('denied');
     }, [setLocationShareConsent]);
+
+    const handleResetSession = useCallback(() => {
+        resetSession();
+        setChatHistory([]);
+    }, [resetSession, setChatHistory]);
 
     const handleDisclaimerAccept = useCallback(() => {
         sessionStorage.setItem('chatUsageConsentAccepted', 'true');
@@ -205,7 +210,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                             if (messageIndex >= 0) {
                                 updatedHistory[messageIndex] = {
                                     ...updatedHistory[messageIndex],
-                                    text: payload.response || 'An error occurred',
+                                    text: payload.response === 'SESSION_LIMIT_MESSAGE' ? t('Session limit message') : (payload.response || t('An error occurred')),
                                     error: true
                                 };
                             }
@@ -354,6 +359,7 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                 isLoading={isLoading}
                 onClose={onClose}
                 disabled={!usageConsentAccepted}
+                inputDisabled={sessionStatus === 'exhausted'}
                 primaryColor={primaryColor}
             />
             {!usageConsentAccepted ? (
@@ -365,6 +371,14 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                             onAccept={handleConsentAccept}
                             onDecline={handleConsentDecline}
                         />
+                    )}
+                    {sessionStatus !== 'active' && (
+                        <div className="chat-window__token-warning" role="alert" aria-live="polite">
+                            <span>{sessionStatus === 'exhausted'
+                                ? t('Session limit reached')
+                                : t('Session limit approaching')}</span>
+                            <button onClick={handleResetSession}>{t('Start new session')}</button>
+                        </div>
                     )}
                     <ChatMessages
                         chatHistory={chatHistory.filter(message => message.type !== 'server' || message.text)} // Filter out empty server messages

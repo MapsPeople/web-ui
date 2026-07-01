@@ -9,11 +9,25 @@ const DEBUG = import.meta.env.VITE_GEMINI_DEBUG === 'true';
 
 export function GeminiProvider({ children, enabled }) {
     const [isLoading, setIsLoading] = useState(false);
+    const [sessionStatus, setSessionStatus] = useState('active'); // 'active' | 'warning' | 'exhausted'
     const defaultPrompt = '';
 
     // Store session info - using refs to track current session without causing re-renders
     const sessionIdRef = useRef(null);
     const currentApiKeyRef = useRef(null);
+
+    const resetSession = useCallback(async () => {
+        if (sessionIdRef.current) {
+            try {
+                await fetch(`${API_BASE_URL}/api/chat/end/${sessionIdRef.current}`, { method: 'DELETE' });
+            } catch (error) {
+                console.warn('Error ending session on reset:', error);
+            }
+            sessionIdRef.current = null;
+            currentApiKeyRef.current = null;
+        }
+        setSessionStatus('active');
+    }, []);
 
     // Helper function to create or get session
     const ensureSession = useCallback(async (apiKey) => {
@@ -23,6 +37,8 @@ export function GeminiProvider({ children, enabled }) {
             currentApiKeyRef.current !== apiKey;
 
         if (needsNewSession) {
+            setSessionStatus('active');
+
             // If we have an old session, clean it up first
             if (sessionIdRef.current) {
                 try {
@@ -139,6 +155,7 @@ export function GeminiProvider({ children, enabled }) {
             let fullResponse = '';
             let lastFunctionData = null;
 
+            let streamTokenLimitWarning = false;
             let reading = true;
             while (reading) {
                 const { done, value } = await reader.read();
@@ -171,6 +188,12 @@ export function GeminiProvider({ children, enabled }) {
                         try {
                             const chunk = JSON.parse(jsonStr);
 
+                            // Handle server warning signals without passing them to onUpdate
+                            if (chunk.warning === 'SESSION_TOKEN_LIMIT_APPROACHING') {
+                                streamTokenLimitWarning = true;
+                                continue;
+                            }
+
                             // Update consumer with the flag and text
                             if (onUpdate) {
                                 onUpdate({
@@ -202,6 +225,8 @@ export function GeminiProvider({ children, enabled }) {
                 }
             }
 
+            if (streamTokenLimitWarning) setSessionStatus('warning');
+
             const processed = processFunctionData(lastFunctionData);
             DEBUG && console.log('Search result IDs:', processed.searchResultIds);
 
@@ -211,7 +236,7 @@ export function GeminiProvider({ children, enabled }) {
                     functionData: lastFunctionData,
                     searchResultIds: processed.searchResultIds,
                     directionsLocationIds: processed.directionsLocationIds,
-                    distanceResults: processed.distanceResults
+                    distanceResults: processed.distanceResults,
                 });
             }
 
@@ -241,7 +266,9 @@ export function GeminiProvider({ children, enabled }) {
             throw new Error(errorData.error || `HTTP error! status: ${messageRes.status}`);
         }
 
-        const { response, tools, functionData } = await messageRes.json();
+        const { response, tools, functionData, warning } = await messageRes.json();
+
+        if (warning === 'SESSION_TOKEN_LIMIT_APPROACHING') setSessionStatus('warning');
 
         const processed = processFunctionData(functionData);
 
@@ -255,7 +282,7 @@ export function GeminiProvider({ children, enabled }) {
                 functionData,
                 searchResultIds: processed.searchResultIds,
                 directionsLocationIds: processed.directionsLocationIds,
-                distanceResults: processed.distanceResults
+                distanceResults: processed.distanceResults,
             });
         }
 
@@ -295,11 +322,21 @@ export function GeminiProvider({ children, enabled }) {
 
             return await handleNonStreamingResponse(sessionId, prompt, extra, onComplete);
         } catch (error) {
+            if (error?.message === 'SESSION_TOKEN_LIMIT_EXCEEDED') {
+                setSessionStatus('exhausted');
+                const limitMessage = 'SESSION_LIMIT_MESSAGE';
+                if (options.onComplete) {
+                    options.onComplete({ response: limitMessage, error });
+                }
+                return limitMessage;
+            }
+
             console.error('Error generating response:', error);
             if (error instanceof Error) {
                 console.error('Error message:', error.message);
                 console.error('Error stack:', error.stack);
             }
+
             const errorMessage = 'I\'m sorry, I encountered an error processing your request. Please try again later.';
             // Call onComplete with error if provided
             if (options.onComplete) {
@@ -329,7 +366,9 @@ export function GeminiProvider({ children, enabled }) {
         enabled,
         generateResponse: generateResponseWrapper,
         isLoading,
-        defaultPrompt
+        defaultPrompt,
+        sessionStatus,
+        resetSession
     };
 
     return (
