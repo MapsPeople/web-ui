@@ -108,6 +108,11 @@ const de = {
     'Usage consent accept': 'Ich verstehe',
     'Usage consent decline': 'Ablehnen',
     'AI disclaimer': 'Ask with AI kann Fehler machen. Überprüfen Sie wichtige Details, bevor Sie losgehen.',
+    // Session limit
+    'Session limit approaching': 'Sitzungslimit fast erreicht',
+    'Session limit reached': 'Sitzungslimit erreicht',
+    'Session limit message': 'Das Token-Limit Ihrer Sitzung wurde erreicht. Bitte starten Sie eine neue Sitzung, um fortzufahren.',
+    'Start new session': 'Neue Sitzung starten',
     // Location Consent
     'Location consent message': 'Um personalisierte Wegbeschreibungen bereitzustellen und Ihnen zu helfen, Orte in der Nähe zu entdecken, möchte Ask with AI auf Ihren Standort zugreifen. Der Chat funktioniert auch ohne Ihren Standort, aber Sie müssen dann einen Startpunkt angeben.',
     'Location consent accept': 'Erlauben',

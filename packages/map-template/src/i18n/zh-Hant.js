@@ -107,6 +107,11 @@ const zhHant = {
       'Usage consent accept': '我已了解',
       'Usage consent decline': '拒絕',
       'AI disclaimer': 'Ask with AI 可能會出錯。請在出發前仔細核實重要資訊。',
+      // Session limit
+      'Session limit approaching': '即將達到工作階段上限',
+      'Session limit reached': '已達到工作階段上限',
+      'Session limit message': '您的對話已達到長度上限。請開始新的工作階段以繼續。',
+      'Start new session': '開始新的工作階段',
       // Location Consent
       'Location consent message':'為了提供個人化的路線指引並協助您發現附近的地點，Ask with AI 需要存取您的位置資訊。即使不提供位置資訊，聊天功能仍可使用，但您需要手動指定起點。',
       'Location consent accept': '允許',
