@@ -1,5 +1,6 @@
 import { createContext, useContext, useCallback, useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { processFunctionData } from './processFunctionData';
 
 // Create the context
 const GeminiContext = createContext();
@@ -78,51 +79,7 @@ export function GeminiProvider({ children, enabled }) {
     // Helper function to process function data into the shape consumers need.
     // Returns all per-response results so they can be delivered via onComplete
     // rather than through provider-level state.
-    const processFunctionData = useCallback((functionData) => {
-        const result = {
-            searchResultIds: [],
-            directionsLocationIds: null,
-            distanceResults: null
-        };
-
-        if (!functionData) return result;
-
-        switch (functionData?.key) {
-            case 'single_location':
-                result.searchResultIds = [functionData.value];
-                break;
-
-            case 'multiple_locations':
-                result.searchResultIds = Array.isArray(functionData.value)
-                    ? functionData.value.filter(Boolean)
-                    : [];
-                break;
-
-            case 'directions': {
-                const originLocationId = functionData.value?.originLocationId;
-                const destinationLocationId = functionData.value?.destinationLocationId;
-                if (originLocationId && destinationLocationId) {
-                    result.directionsLocationIds = { originLocationId, destinationLocationId };
-                }
-                break;
-            }
-
-            case 'distances': {
-                if (Array.isArray(functionData.value) && functionData.value.length) {
-                    result.distanceResults = functionData.value;
-                    result.searchResultIds = functionData.value
-                        .map(d => d?.destinationId)
-                        .filter(Boolean);
-                }
-                break;
-            }
-
-            default:
-                break;
-        }
-
-        return result;
-    }, []);
+    const processFunctionDataCallback = useCallback((functionData) => processFunctionData(functionData), []);
 
     // Handle streaming response from /api/chat/stream endpoint
     const handleStreamingResponse = useCallback(async (sessionId, prompt, extra, callbacks) => {
@@ -227,7 +184,7 @@ export function GeminiProvider({ children, enabled }) {
 
             if (streamTokenLimitWarning) setSessionStatus('warning');
 
-            const processed = processFunctionData(lastFunctionData);
+            const processed = processFunctionDataCallback(lastFunctionData);
             DEBUG && console.log('Search result IDs:', processed.searchResultIds);
 
             if (onComplete) {
@@ -245,7 +202,7 @@ export function GeminiProvider({ children, enabled }) {
             console.error('Error in streaming response:', error);
             throw error;
         }
-    }, [processFunctionData]);
+    }, [processFunctionDataCallback]);
 
     // Handle non-streaming API response
     const handleNonStreamingResponse = useCallback(async (sessionId, prompt, extra, onComplete) => {
@@ -270,7 +227,7 @@ export function GeminiProvider({ children, enabled }) {
 
         if (warning === 'SESSION_TOKEN_LIMIT_APPROACHING') setSessionStatus('warning');
 
-        const processed = processFunctionData(functionData);
+        const processed = processFunctionDataCallback(functionData);
 
         DEBUG && console.log('Search result IDs:', processed.searchResultIds);
         DEBUG && console.log('Agent tool calls:\n' + JSON.stringify(tools, null, 2));
@@ -287,7 +244,7 @@ export function GeminiProvider({ children, enabled }) {
         }
 
         return response;
-    }, [processFunctionData]);
+    }, [processFunctionDataCallback]);
 
     // Wrapper function to generate a response using the Gemini service
     // Supports optional callbacks for streaming and intermediate data

@@ -194,12 +194,11 @@ export const useChatDirections = (pushAppView, appViews) => {
                 return;
             }
 
-            // Calculate the route
             const directionsResult = await directionsService.getRoute({
                 origin: originPoint,
                 destination: getLocationPoint(destinationLocation),
                 travelMode: travelMode,
-                avoidStairs: accessibilityOn,
+                avoidStairs: directionIds.avoidStairs ?? accessibilityOn,
                 excludeHighwayTypes: shuttleBusOn ? [] : ['busway']
             });
 
