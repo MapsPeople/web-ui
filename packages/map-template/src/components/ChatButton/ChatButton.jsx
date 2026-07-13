@@ -47,7 +47,7 @@ function ChatButton({ pushAppView, currentAppView, appViews }) {
         <button 
             className="chat-button"
             onClick={handleOpenChat}
-            title="Open chat"
+            title={i18n.t('Open chat')}
             aria-label={i18n.t('Open chat')}
             type="button"
             style={{ '--chat-button-primary-color': primaryColor }}

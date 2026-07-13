@@ -138,7 +138,7 @@ function ResetKioskViewButton() {
         <button 
             className="reset-kiosk-view-button"
             onClick={resetMapPosition}
-            title="Reset to initial kiosk view"
+            title={t('Reset to initial kiosk view')}
             aria-label={t('Reset to initial kiosk view')}
         >
             <ResetKioskViewIcon />

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
 import './ViewModeSwitch.scss';
-import i18n from 'i18next';
+import { useTranslation } from 'react-i18next';
 import isNullOrUndefined from '../../../../helpers/isNullOrUndefined';
 import { usePortalTarget } from '../../../../hooks/usePortalTarget';
 import Light2D from '../../../../assets/2d-light.svg?react';
@@ -36,7 +36,7 @@ ViewModeSwitch.propTypes = {
  * @param {string} [props.show2DModelsIn3D] - Object that contains the app settings
  */
 function ViewModeSwitch({ mapView, pitch, reset, activeColor = '#005655', show2DModelsIn3D }) {
-
+    const { t } = useTranslation();
     const [viewMode, setViewMode] = useState(ViewModes.initial3D);
     const portalTarget = usePortalTarget('.viewmode-switch-portal');
 
@@ -109,7 +109,7 @@ function ViewModeSwitch({ mapView, pitch, reset, activeColor = '#005655', show2D
             <button className="view-mode-switch__button"
                 onClick={() => setViewMode(ViewModes.clicked2D)}
                 style={{ backgroundColor: viewMode === ViewModes.clicked2D ? activeColor : 'white' }}
-                aria-label={i18n.t('Switch to 2D view')}
+                aria-label={t('Switch to 2D view')}
                 aria-pressed={viewMode === ViewModes.clicked2D}
             >
                 {viewMode === ViewModes.clicked2D ? <Light2D aria-hidden="true" /> : <Dark2D aria-hidden="true" />}
@@ -117,7 +117,7 @@ function ViewModeSwitch({ mapView, pitch, reset, activeColor = '#005655', show2D
             <button className="view-mode-switch__button"
                 onClick={() => setViewMode(ViewModes.clicked3D)}
                 style={{ backgroundColor: [ViewModes.initial3D, ViewModes.clicked3D].includes(viewMode) ? activeColor : 'white' }}
-                aria-label={i18n.t('Switch to 3D view')}
+                aria-label={t('Switch to 3D view')}
                 aria-pressed={[ViewModes.initial3D, ViewModes.clicked3D].includes(viewMode)}
             >
                 {[ViewModes.initial3D, ViewModes.clicked3D].includes(viewMode) ? <Light3D aria-hidden="true" /> : <Dark3D aria-hidden="true" />}
