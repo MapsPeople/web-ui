@@ -71,6 +71,8 @@ const nl = {
     'Current': 'Huidige',
     // QR code dialog
     'Scan QR code': 'QR-code scannen',
+    'QR code dialog': 'QR-codedialoogvenster',
+    'Scan QR code to view route on phone': 'Scan de QR-code om de route op je telefoon te bekijken',
     'Scan the QR code to see the route on your phone': 'Scan de QR-code om de route op jouw telefoon te bekijken',
     'Done': 'Klaar',
     // Directions
@@ -90,9 +92,11 @@ const nl = {
     'Collapse opening hours': 'Openingsuren inklappen',
     // View Selector
     'Go to view': 'Toon locatie',
-    'Close view selector': 'Sluiten weergavekiezer',
+    'Toggle view selector': 'Weergaveselector in-/uitschakelen',
+    'Close view selector': 'Weergaveselector sluiten',
     // Language Selector
     'Select language': 'Selecteer taal',
+    'Close language selector': 'Taalselector sluiten',
     // Accessibility
     'Increase text size to 200%': 'Tekstgrootte verhogen naar 200%',
     'Decrease text size to 100%': 'Tekstgrootte verlagen naar 100%',
@@ -101,9 +105,16 @@ const nl = {
     'Zoom out': 'Uitzoomen',
     'Enter fullscreen': 'Volledig scherm',
     'Exit fullscreen': 'Volledig scherm afsluiten',
+    'Switch to 2D view': 'Overschakelen naar 2D-weergave',
+    'Switch to 3D view': 'Overschakelen naar 3D-weergave',
+    'Reset to initial kiosk view': 'Terugzetten naar oorspronkelijke kioskweergave',
     // Ask with AI
     'Ask with AI': 'Vraag met AI',
     'AI is responding': 'AI antwoordt',
+    'Open chat': 'Chat openen',
+    'Close chat': 'Chat sluiten',
+    'Chat message': 'Chatbericht',
+    'Send message': 'Bericht verzenden',
     // Ask with AI - Usage Consent
     'Usage consent title': 'Ask with AI - Toestemming voor gebruik',
     'Usage consent message': 'Ask with AI helpt je plaatsen te vinden en te navigeren in deze locatie met behulp van Kunstmatige Intelligentie (AI). Hoewel we streven naar nauwkeurigheid, kan de AI soms fouten maken. Controleer belangrijke details voordat je op weg gaat.',

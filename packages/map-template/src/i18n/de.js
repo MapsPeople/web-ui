@@ -71,6 +71,8 @@ const de = {
     'Current': 'Aktuell',
     // QR code dialog
     'Scan QR code': 'QR-Code scannen',
+    'QR code dialog': 'QR-Code-Dialog',
+    'Scan QR code to view route on phone': 'QR-Code scannen, um die Route auf dem Telefon anzuzeigen',
     'Scan the QR code to see the route on your phone': 'Scannen Sie den QR-Code, um die Route auf Ihrem Smartphone anzuzeigen',
     'Done': 'Schließen',
     // Directions
@@ -90,9 +92,11 @@ const de = {
     'Collapse opening hours': 'Öffnungszeiten reduzieren',
     // View Selector
     'Go to view': 'Ansicht wechseln',
+    'Toggle view selector': 'Ansichtsauswahl umschalten',
     'Close view selector': 'Ansichtsauswahl schließen',
     // Language Selector
     'Select language': 'Sprache auswählen',
+    'Close language selector': 'Sprachauswahl schließen',
     // Accessibility
     'Increase text size to 200%': 'Textgröße auf 200% erhöhen',
     'Decrease text size to 100%': 'Textgröße auf 100% verringern',
@@ -101,9 +105,16 @@ const de = {
     'Zoom out': 'Verkleinern',
     'Enter fullscreen': 'Vollbild',
     'Exit fullscreen': 'Vollbild beenden',
+    'Switch to 2D view': 'Zur 2D-Ansicht wechseln',
+    'Switch to 3D view': 'Zur 3D-Ansicht wechseln',
+    'Reset to initial kiosk view': 'Auf ursprüngliche Kiosk-Ansicht zurücksetzen',
     // Ask with AI
     'Ask with AI': 'Mit KI fragen',
     'AI is responding': 'KI antwortet',
+    'Open chat': 'Chat öffnen',
+    'Close chat': 'Chat schließen',
+    'Chat message': 'Chatnachricht',
+    'Send message': 'Nachricht senden',
     // Ask with AI - Usage Consent
     'Usage consent title': 'Ask with AI - Nutzungszustimmung',
     'Usage consent message': 'Ask with AI hilft Ihnen, Orte zu finden und sich in diesem Gebäude mithilfe von Künstlicher Intelligenz (KI) zurechtzufinden. Obwohl wir nach Genauigkeit streben, kann die KI manchmal Fehler machen. Bitte überprüfen Sie wichtige Details, bevor Sie losgehen.',

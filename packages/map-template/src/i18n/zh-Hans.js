@@ -71,6 +71,8 @@ const zhHans = {
     'Current': '当前',
     // QR code dialog
     'Scan QR code': '扫描二维码',
+    'QR code dialog': '二维码对话框',
+    'Scan QR code to view route on phone': '扫描二维码以在手机上查看路线',
     'Scan the QR code to see the route on your phone': '扫描二维码在手机上查看路线',
     'Done': '完成',
     // Directions
@@ -90,8 +92,11 @@ const zhHans = {
     'Collapse opening hours': '收起营业时间',
     // View Selector
     'Go to view': '定位到',
+    'Toggle view selector': '切换视图选择器',
+    'Close view selector': '关闭视图选择器',
     // Language Selector
     'Select language': '选择语言',
+    'Close language selector': '关闭语言选择器',
     // Accessibility
     'Increase text size to 200%': '将文本大小增加到 200%',
     'Decrease text size to 100%': '将文本大小减少到 100%',
@@ -100,9 +105,16 @@ const zhHans = {
     'Zoom out': '缩小',
     'Enter fullscreen': '进入全屏',
     'Exit fullscreen': '退出全屏',
+    'Switch to 2D view': '切换到 2D 视图',
+    'Switch to 3D view': '切换到 3D 视图',
+    'Reset to initial kiosk view': '重置为初始自助服务终端视图',
     // Ask with AI
     'Ask with AI': '询问 AI',
     'AI is responding': 'AI 正在回复',
+    'Open chat': '打开聊天',
+    'Close chat': '关闭聊天',
+    'Chat message': '聊天消息',
+    'Send message': '发送消息',
     // Ask with AI - Usage Consent
     'Usage consent title': 'Ask with AI - 使用须知',
     'Usage consent message': 'Ask with AI 利用人工智能（AI）帮助您查找地点并在此场所内导航。尽管我们力求准确，但 AI 有时可能会出错。请在出发前仔细核实重要信息。',

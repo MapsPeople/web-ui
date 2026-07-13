@@ -71,6 +71,8 @@ const fr = {
     'Current': 'Actuel',
     // QR code dialog
     'Scan QR code': 'Scanne le code QR',
+    'QR code dialog': 'Boîte de dialogue du code QR',
+    'Scan QR code to view route on phone': 'Scannez le code QR pour voir l\'itinéraire sur le téléphone',
     'Scan the QR code to see the route on your phone': 'Scannez le code QR pour voir l\'itinéraire sur votre téléphone',
     'Done': 'Fini',
     // Directions
@@ -90,9 +92,11 @@ const fr = {
     'Collapse opening hours': 'Réduire les heures d\'ouverture',
     // View Selector
     'Go to view': 'Afficher le plan',
+    'Toggle view selector': 'Basculer le sélecteur de vue',
     'Close view selector': 'Fermer le sélecteur de vue',
     // Language Selector
     'Select language': 'Sélectionner langue',
+    'Close language selector': 'Fermer le sélecteur de langue',
     // Accessibility
     'Increase text size to 200%': 'Augmenter la taille du texte à 200%',
     'Decrease text size to 100%': 'Réduire la taille du texte à 100%',
@@ -101,9 +105,16 @@ const fr = {
     'Zoom out': 'Zoom arrière',
     'Enter fullscreen': 'Plein écran',
     'Exit fullscreen': 'Quitter le plein écran',
+    'Switch to 2D view': 'Passer à la vue 2D',
+    'Switch to 3D view': 'Passer à la vue 3D',
+    'Reset to initial kiosk view': 'Réinitialiser à la vue initiale de la borne',
     // Ask with AI
     'Ask with AI': 'Demander à l\'IA',
     'AI is responding': 'L\'IA répond',
+    'Open chat': 'Ouvrir le chat',
+    'Close chat': 'Fermer le chat',
+    'Chat message': 'Message de chat',
+    'Send message': 'Envoyer le message',
     // Ask with AI - Usage Consent
     'Usage consent title': 'Ask with AI - Consentement d\'utilisation',
     'Usage consent message': 'Ask with AI vous aide à trouver des lieux et à vous orienter dans ce site grâce à l\'Intelligence Artificielle (IA). Bien que nous nous efforcions d\'être précis, l\'IA peut parfois se tromper. Veuillez vérifier les détails importants avant de vous mettre en route.',
