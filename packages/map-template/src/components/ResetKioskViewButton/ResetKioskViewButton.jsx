@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
 import ResetKioskViewIcon from '../../assets/reset-kiosk-view.svg?react';
 import './ResetKioskViewButton.scss';
 import { useIsKioskContext } from '../../hooks/useIsKioskContext';
@@ -25,6 +26,7 @@ function ResetKioskViewButton() {
     const currentVenueName = useRecoilValue(currentVenueNameState);
     const kioskLocation = useRecoilValue(kioskLocationState);
     const isDesktop = useIsDesktop();
+    const { t } = useTranslation();
 
     /**
      * Resets the map position to the kiosk origin location.
@@ -137,7 +139,7 @@ function ResetKioskViewButton() {
             className="reset-kiosk-view-button"
             onClick={resetMapPosition}
             title="Reset to initial kiosk view"
-            aria-label="Reset to initial kiosk view"
+            aria-label={t('Reset to initial kiosk view')}
         >
             <ResetKioskViewIcon />
         </button>,

@@ -188,7 +188,8 @@ function OpeningHours({ openingHours, isMondayFirstDayOfTheWeek = true, onExpand
                 className="contact-action-button contact-action-button--opening-hours"
                 onClick={handleExpand}
                 aria-label={t(isExpanded ? 'Collapse opening hours' : 'Expand opening hours')}
-                aria-expanded={isExpanded}>
+                aria-expanded={isExpanded}
+                aria-controls="opening-hours-panel">
                 <div className="contact-action-button__icon-wrapper">
                     <ClockIcon />
                 </div>
@@ -203,7 +204,7 @@ function OpeningHours({ openingHours, isMondayFirstDayOfTheWeek = true, onExpand
             </button>
 
             {isExpanded && (
-                <ul className="opening-hours__list">
+                <ul id="opening-hours-panel" className="opening-hours__list">
                     {weekdays.map((day) => {
                         const hours = getOpeningHoursForDay(day);
                         return (

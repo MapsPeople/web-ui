@@ -576,7 +576,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                 <div className="wayfinding__title">{t('Directions')}</div>
                 <button className="wayfinding__close"
                     onClick={() => closeWayfinding()}
-                    aria-label="Close">
+                    aria-label={t('Close')}>
                     <CloseIcon />
                 </button>
                 <div className="wayfinding__locations">
@@ -615,8 +615,8 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                     </label>
                 </div>
             </div>
-            {!hasFoundRoute && <p className="wayfinding__error">{t('No route found')}</p>}
-            {!hasSearchResults && !showMyPositionOption && <p className="wayfinding__error">{t('Nothing was found')}</p>}
+            {!hasFoundRoute && <p className="wayfinding__error" role="status" aria-live="polite">{t('No route found')}</p>}
+            {!hasSearchResults && !showMyPositionOption && <p className="wayfinding__error" role="status" aria-live="polite">{t('Nothing was found')}</p>}
             {userPosition && showMyPositionOption && <button type="button" className="wayfinding__use-current-position" onClick={() => selectMyPosition()}>
                 <CompassArrow />
                 {t('My position')}
@@ -674,7 +674,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                     </div>
                 </div>
                 <hr></hr>
-                <div className="wayfinding__info">
+                <div className="wayfinding__info" role="status" aria-live="polite" aria-atomic="true">
                     <div className="wayfinding__distance">
                         {travelMode === travelModes.WALKING && <WalkingIcon />}
                         {travelMode === travelModes.DRIVING && <DriveIcon />}
