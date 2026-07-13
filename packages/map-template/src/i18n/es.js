@@ -8,7 +8,6 @@ const es = {
     'Level': 'Nivel',
     'Search by name, category, building...': 'Busca por nombre, categoría, edificio...',
     'Show legend': 'Mostrar leyenda',
-    'Ask with AI': 'Preguntar con IA',
     'Nothing was found': 'No se encontró nada',
     'd': 'd',
     'h': 'h',
@@ -102,6 +101,9 @@ const es = {
     'Zoom out': 'Alejar',
     'Enter fullscreen': 'Pantalla completa',
     'Exit fullscreen': 'Salir de pantalla completa',
+    // Ask with AI
+    'Ask with AI': 'Preguntar con IA',
+    'AI is responding': 'La IA está respondiendo',
     // Ask with AI - Usage Consent
     'Usage consent title': 'Ask with AI - Consentimiento de uso',
     'Usage consent message': 'Ask with AI te ayuda a encontrar lugares y navegar por este recinto utilizando Inteligencia Artificial (IA). Aunque nos esforzamos por ser precisos, la IA a veces puede cometer errores. Por favor, verifica los detalles importantes antes de ponerte en camino.',

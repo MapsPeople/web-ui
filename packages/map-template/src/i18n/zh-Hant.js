@@ -8,7 +8,6 @@ const zhHant = {
       'Level': '樓層',
       'Search by name, category, building...': '依名稱、類別、建築物搜尋...',
       'Show legend': '顯示圖例',
-      'Ask with AI': '詢問 AI',
       'Nothing was found': '找不到任何結果',
       'd': '天',
       'h': '小時',
@@ -101,6 +100,9 @@ const zhHant = {
       'Zoom out': '縮小',
       'Enter fullscreen': '進入全螢幕',
       'Exit fullscreen': '退出全螢幕',
+      // Ask with AI
+      'Ask with AI': '詢問 AI',
+      'AI is responding': 'AI 正在回覆',
       // Ask with AI - Usage Consent
       'Usage consent title': 'Ask with AI - 使用須知',
       'Usage consent message': 'Ask with AI 利用人工智慧（AI）協助您尋找地點並在此場所內導航。儘管我們力求準確，但 AI有時可能會出錯。請在出發前仔細核實重要資訊。',

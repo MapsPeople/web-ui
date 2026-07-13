@@ -8,7 +8,6 @@ const it = {
     'Level': 'Piano',
     'Search by name, category, building...': 'Cerca per nome, categoria, edificio...',
     'Show legend': 'Mostra legenda',
-    'Ask with AI': 'Chiedi all\'IA',
     'Nothing was found': 'Non è stato trovato nulla',
     'd': 'g',
     'h': 'o',
@@ -102,6 +101,9 @@ const it = {
     'Zoom out': 'Riduci',
     'Enter fullscreen': 'Schermo intero',
     'Exit fullscreen': 'Esci da schermo intero',
+    // Ask with AI
+    'Ask with AI': 'Chiedi all\'IA',
+    'AI is responding': 'L\'IA sta rispondendo',
     // Ask with AI - Usage Consent
     'Usage consent title': 'Ask with AI - Consenso all\'utilizzo',
     'Usage consent message': 'Ask with AI ti aiuta a trovare luoghi e a orientarti in questa struttura utilizzando l\'Intelligenza Artificiale (IA). Sebbene ci impegniamo per garantire la precisione, l\'IA potrebbe talvolta commettere errori. Ti preghiamo di verificare i dettagli importanti prima di metterti in cammino.',

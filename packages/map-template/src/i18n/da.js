@@ -8,7 +8,6 @@ const da = {
     'Level': 'Etage',
     'Search by name, category, building...': 'Søg efter navn, kategori, bygning...',
     'Show legend': 'Vis forklaring',
-    'Ask with AI': 'Spørg med AI',
     'Nothing was found': 'Intet fundet',
     'd': 'd',
     'h': 't',
@@ -102,6 +101,9 @@ const da = {
     'Zoom out': 'Zoom ud',
     'Enter fullscreen': 'Gå til fuld skærm',
     'Exit fullscreen': 'Afslut fuld skærm',
+    // Ask with AI
+    'Ask with AI': 'Spørg med AI',
+    'AI is responding': 'AI svarer',
     // Ask with AI - Usage Consent
     'Usage consent title': 'Ask with AI - Samtykkeerklæring',
     'Usage consent message': 'Ask with AI hjælper dig med at finde steder og navigere på dette sted ved hjælp af Kunstig Intelligens (AI). Selvom vi stræber efter nøjagtighed, kan AI\'en til tider tage fejl. Dobbelttjek venligst vigtige detaljer, inden du begiver dig af sted.',
