@@ -211,12 +211,16 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
 
         const map = mapsIndoorsInstance.getMap();
         let removeIdleListener;
+        applyFilterOrHighlight();
         if (map) {
-            if (mapType === mapTypes.Mapbox && typeof map.on === 'function') {
-                map.on('idle', applyFilterOrHighlight);
+            if (mapType === mapTypes.Mapbox && typeof map.once === 'function') {
+                map.once('idle', applyFilterOrHighlight);
                 removeIdleListener = () => map.off?.('idle', applyFilterOrHighlight);
             } else if (mapType === mapTypes.Google && typeof map.addListener === 'function') {
-                const idleListener = map.addListener('idle', applyFilterOrHighlight);
+                const idleListener = map.addListener('idle', () => {
+                    idleListener.remove();
+                    applyFilterOrHighlight();
+                });
                 removeIdleListener = () => idleListener.remove();
             }
         }
