@@ -8,7 +8,7 @@ const da = {
     'Level': 'Etage',
     'Search by name, category, building...': 'Søg efter navn, kategori, bygning...',
     'Show legend': 'Vis forklaring',
-    'Ask with AI': 'Spørg med AI',
+    'Legend': 'Forklaring',
     'Nothing was found': 'Intet fundet',
     'd': 'd',
     'h': 't',
@@ -72,6 +72,8 @@ const da = {
     'Current': 'Valgt',
     // QR code dialog
     'Scan QR code': 'Scan QR-kode',
+    'QR code dialog': 'QR-kode-dialog',
+    'Scan QR code to view route on phone': 'Scan QR-koden for at se ruten på telefonen',
     'Scan the QR code to see the route on your phone': 'Scan QR-koden for at se ruten på din mobil',
     'Done': 'Afslut',
     // Directions
@@ -91,9 +93,11 @@ const da = {
     'Collapse opening hours': 'Skjul åbningstider',
     // View Selector
     'Go to view': 'Vis lokation',
+    'Toggle view selector': 'Slå visningsvælger til/fra',
     'Close view selector': 'Luk visningsvælger',
     // Language Selector
     'Select language': 'Vælg sprog',
+    'Close language selector': 'Luk sprogvælger',
     // Accessibility
     'Increase text size to 200%': 'Forøg tekststørrelse til 200%',
     'Decrease text size to 100%': 'Formindsk tekststørrelse til 100%',
@@ -102,6 +106,16 @@ const da = {
     'Zoom out': 'Zoom ud',
     'Enter fullscreen': 'Gå til fuld skærm',
     'Exit fullscreen': 'Afslut fuld skærm',
+    'Switch to 2D view': 'Skift til 2D-visning',
+    'Switch to 3D view': 'Skift til 3D-visning',
+    'Reset to initial kiosk view': 'Nulstil til oprindelig kioskvisning',
+    // Ask with AI
+    'Ask with AI': 'Spørg med AI',
+    'AI is responding': 'AI svarer',
+    'Open chat': 'Åbn chat',
+    'Close chat': 'Luk chat',
+    'Chat message': 'Chatbesked',
+    'Send message': 'Send besked',
     // Ask with AI - Usage Consent
     'Usage consent title': 'Ask with AI - Samtykkeerklæring',
     'Usage consent message': 'Ask with AI hjælper dig med at finde steder og navigere på dette sted ved hjælp af Kunstig Intelligens (AI). Selvom vi stræber efter nøjagtighed, kan AI\'en til tider tage fejl. Dobbelttjek venligst vigtige detaljer, inden du begiver dig af sted.',

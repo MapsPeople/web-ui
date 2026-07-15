@@ -11,6 +11,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Filter/highlight in `MapWrapper` no longer re-applies on every map `idle` event. The persistent `idle` listener called the SDK's `highlight()`/`filter()` on each idle, which rewrites a GeoJSON source (`setData`) and forces a render that settles into another `idle` — a self-sustaining loop that pinned CPU/GPU at ~100% even on an idle map. It now applies once (immediately, plus a one-shot `idle` to cover the initial `fitBounds`/`goTo` transition), which still preserves the highlight-timing fix (highlights applied mid-transition were previously wiped on first load).
 
+## [1.99.11] - 2026-07-15
+
+### Added
+
+- `aria-label` attributes on all interactive controls (chat open/close/send, 2D/3D view switch, view selector toggle, language selector close, QR code dialog, kiosk reset button) using i18n keys across all 9 supported languages
+- `aria-live` and `role="status"` on dynamic regions (search/wayfinding error messages, route step counter, AI loading indicator)
+- `aria-hidden="true"` on decorative SVG icons in ViewModeSwitch
+- `aria-pressed` on 2D/3D toggle buttons to convey pressed state to screen readers
+- `role="dialog"`, `aria-modal="true"`, and `aria-labelledby` on LegendDialog and QRCodeDialog
+- `aria-controls` wired between the opening hours toggle button and its panel (`id="opening-hours-panel"`)
+- i18n translations for all new aria-label keys across all 9 supported languages (da, de, es, fr, it, nl, zh-Hans, zh-Hant)
+
 ## [1.99.10] - 2026-07-08
 
 ### Added

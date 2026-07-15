@@ -2,6 +2,7 @@ import { useRef, useLayoutEffect, useState, useCallback } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import ChatSearchResults from '../ChatSearchResults/ChatSearchResults';
 import './ChatMessages.scss';
 
@@ -29,6 +30,7 @@ function hasMoreContent(text) {
 }
 
 function ChatMessages({ chatHistory, isLoading, primaryColor, onShowRoute, currentThought }) {
+    const { t } = useTranslation();
     const chatMessagesRef = useRef(null);
     // Set of expanded message IDs — presence means expanded, absence means collapsed.
     const [expandedMessages, setExpandedMessages] = useState(new Set());
@@ -92,7 +94,7 @@ function ChatMessages({ chatHistory, isLoading, primaryColor, onShowRoute, curre
         const isTruncatable = message.type === 'server' && hasMoreContent(message.text);
 
         return (
-            <div key={message.id} className={`chat-messages__message chat-messages__message--${message.type}`}>
+            <div key={message.id} className={`chat-messages__message chat-messages__message--${message.type}`} {...(message.error && { role: 'alert', 'aria-live': 'assertive' })}>
                 {message.type === 'server' ? (
                     <>
                         <ReactMarkdown remarkPlugins={isTruncatable && !isExpanded ? [remarkTruncate, remarkGfm] : [remarkGfm]}>
@@ -138,10 +140,10 @@ function ChatMessages({ chatHistory, isLoading, primaryColor, onShowRoute, curre
         <div ref={chatMessagesRef} className="chat-messages">
             {chatMessages}
             {isLoading && (
-                <div className="chat-messages__message chat-messages__message--loading">
-                    <span className="chat-messages__loading-dot"></span>
-                    <span className="chat-messages__loading-dot"></span>
-                    <span className="chat-messages__loading-dot"></span>
+                <div className="chat-messages__message chat-messages__message--loading" role="status" aria-label={t('AI is responding')}>
+                    <span className="chat-messages__loading-dot" aria-hidden="true"></span>
+                    <span className="chat-messages__loading-dot" aria-hidden="true"></span>
+                    <span className="chat-messages__loading-dot" aria-hidden="true"></span>
                     <span className="chat-messages__thinking-text">
                         {currentThought || 'Thinking'}
                     </span>

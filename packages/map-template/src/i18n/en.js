@@ -8,7 +8,7 @@ const en = {
     'Level': 'Level',
     'Search by name, category, building...': 'Search by name, category, building...',
     'Show legend': 'Show legend',
-    'Ask with AI': 'Ask with AI',
+    'Legend': 'Legend',
     'Nothing was found': 'Nothing was found',
     'd': 'd',
     'h': 'h',
@@ -72,6 +72,8 @@ const en = {
     'Current': 'Current',
     // QR code dialog
     'Scan QR code': 'Scan QR code',
+    'QR code dialog': 'QR code dialog',
+    'Scan QR code to view route on phone': 'Scan QR code to view route on phone',
     'Scan the QR code to see the route on your phone': 'Scan the QR code to see the route on your phone',
     'Done': 'Done',
     // Directions
@@ -91,9 +93,11 @@ const en = {
     'Collapse opening hours': 'Collapse opening hours',
     // View Selector
     'Go to view': 'Go to view',
+    'Toggle view selector': 'Toggle view selector',
     'Close view selector': 'Close view selector',
     // Language Selector
     'Select language': 'Select language',
+    'Close language selector': 'Close language selector',
     // Accessibility
     'Increase text size to 200%': 'Increase text size to 200%',
     'Decrease text size to 100%': 'Decrease text size to 100%',
@@ -102,6 +106,16 @@ const en = {
     'Zoom out': 'Zoom out',
     'Enter fullscreen': 'Enter fullscreen',
     'Exit fullscreen': 'Exit fullscreen',
+    'Switch to 2D view': 'Switch to 2D view',
+    'Switch to 3D view': 'Switch to 3D view',
+    'Reset to initial kiosk view': 'Reset to initial kiosk view',
+    // Ask with AI
+    'Ask with AI': 'Ask with AI',
+    'AI is responding': 'AI is responding',
+    'Open chat': 'Open chat',
+    'Close chat': 'Close chat',
+    'Chat message': 'Chat message',
+    'Send message': 'Send message',
     // Ask with AI - Usage Consent
     'Usage consent title': 'Ask with AI - Usage Consent',
     'Usage consent message': 'Ask with AI helps you find places and navigate this venue using Artificial Intelligence (AI). While we strive for accuracy, the AI may sometimes get things wrong. Please double-check important details before heading out.',
