@@ -8,7 +8,7 @@ const zhHant = {
       'Level': '樓層',
       'Search by name, category, building...': '依名稱、類別、建築物搜尋...',
       'Show legend': '顯示圖例',
-      'Ask with AI': '詢問 AI',
+      'Legend': '圖例',
       'Nothing was found': '找不到任何結果',
       'd': '天',
       'h': '小時',
@@ -72,6 +72,8 @@ const zhHant = {
       'Current': '目前',
       // QR code dialog
       'Scan QR code': '掃描 QR 碼',
+      'QR code dialog': 'QR 碼對話方塊',
+      'Scan QR code to view route on phone': '掃描 QR 碼以在手機上檢視路線',
       'Scan the QR code to see the route on your phone': '掃描 QR 碼以在手機上檢視路線',
       'Done': '完成',
       // Directions
@@ -91,8 +93,11 @@ const zhHant = {
       'Collapse opening hours': '收合營業時間',
       // View Selector
       'Go to view': '定位至',
+      'Toggle view selector': '切換檢視選擇器',
+      'Close view selector': '關閉檢視選擇器',
       // Language Selector
       'Select language': '選擇語言',
+      'Close language selector': '關閉語言選擇器',
       // Accessibility
       'Increase text size to 200%': '將文字大小增加至 200%',
       'Decrease text size to 100%': '將文字大小減少至 100%',
@@ -101,6 +106,16 @@ const zhHant = {
       'Zoom out': '縮小',
       'Enter fullscreen': '進入全螢幕',
       'Exit fullscreen': '退出全螢幕',
+      'Switch to 2D view': '切換至 2D 檢視',
+      'Switch to 3D view': '切換至 3D 檢視',
+      'Reset to initial kiosk view': '重設為初始自助服務機檢視',
+      // Ask with AI
+      'Ask with AI': '詢問 AI',
+      'AI is responding': 'AI 正在回覆',
+      'Open chat': '開啟聊天',
+      'Close chat': '關閉聊天',
+      'Chat message': '聊天訊息',
+      'Send message': '傳送訊息',
       // Ask with AI - Usage Consent
       'Usage consent title': 'Ask with AI - 使用須知',
       'Usage consent message': 'Ask with AI 利用人工智慧（AI）協助您尋找地點並在此場所內導航。儘管我們力求準確，但 AI有時可能會出錯。請在出發前仔細核實重要資訊。',

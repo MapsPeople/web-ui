@@ -31,7 +31,12 @@ function QRCodeDialog() {
 
     return (<>
         <div className="background"></div>
-        <div className="qr-code">
+        <div
+            className="qr-code"
+            role="dialog"
+            aria-modal="true"
+            aria-label={t('QR code dialog')}
+        >
             <img alt="" className="qr-code__image" ref={elementRef} />
             <p>{t('Scan the QR code to see the route on your phone')}</p>
             <button className="qr-code__button" style={{ background: primaryColor }} onClick={() => setQRCodeLink(null)}>{t('Done')}</button>

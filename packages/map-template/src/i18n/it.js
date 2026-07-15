@@ -8,7 +8,7 @@ const it = {
     'Level': 'Piano',
     'Search by name, category, building...': 'Cerca per nome, categoria, edificio...',
     'Show legend': 'Mostra legenda',
-    'Ask with AI': 'Chiedi all\'IA',
+    'Legend': 'Legenda',
     'Nothing was found': 'Non è stato trovato nulla',
     'd': 'g',
     'h': 'o',
@@ -72,6 +72,8 @@ const it = {
     'Current': 'Attuale',
     // QR code dialog
     'Scan QR code': 'Scansiona il codice QR',
+    'QR code dialog': 'Finestra di dialogo del codice QR',
+    'Scan QR code to view route on phone': 'Scansiona il codice QR per vedere il percorso sul telefono',
     'Scan the QR code to see the route on your phone': 'Scansiona il codice QR per vedere il percorso sul tuo telefono',
     'Done': 'Fatto',
     // Directions
@@ -91,9 +93,11 @@ const it = {
     'Collapse opening hours': 'Comprimi orari di apertura',
     // View Selector
     'Go to view': 'Mostra posizione',
+    'Toggle view selector': 'Attiva/disattiva selettore vista',
     'Close view selector': 'Chiudi selettore vista',
     // Language Selector
     'Select language': 'Seleziona lingua',
+    'Close language selector': 'Chiudi selettore lingua',
     // Accessibility
     'Increase text size to 200%': 'Aumenta la dimensione del testo al 200%',
     'Decrease text size to 100%': 'Riduci la dimensione del testo al 100%',
@@ -102,6 +106,16 @@ const it = {
     'Zoom out': 'Riduci',
     'Enter fullscreen': 'Schermo intero',
     'Exit fullscreen': 'Esci da schermo intero',
+    'Switch to 2D view': 'Passa alla vista 2D',
+    'Switch to 3D view': 'Passa alla vista 3D',
+    'Reset to initial kiosk view': 'Ripristina la vista iniziale del chiosco',
+    // Ask with AI
+    'Ask with AI': 'Chiedi all\'IA',
+    'AI is responding': 'L\'IA sta rispondendo',
+    'Open chat': 'Apri chat',
+    'Close chat': 'Chiudi chat',
+    'Chat message': 'Messaggio di chat',
+    'Send message': 'Invia messaggio',
     // Ask with AI - Usage Consent
     'Usage consent title': 'Ask with AI - Consenso all\'utilizzo',
     'Usage consent message': 'Ask with AI ti aiuta a trovare luoghi e a orientarti in questa struttura utilizzando l\'Intelligenza Artificiale (IA). Sebbene ci impegniamo per garantire la precisione, l\'IA potrebbe talvolta commettere errori. Ti preghiamo di verificare i dettagli importanti prima di metterti in cammino.',
