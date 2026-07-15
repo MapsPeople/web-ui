@@ -8,6 +8,7 @@ const es = {
     'Level': 'Nivel',
     'Search by name, category, building...': 'Busca por nombre, categoría, edificio...',
     'Show legend': 'Mostrar leyenda',
+    'Legend': 'Leyenda',
     'Nothing was found': 'No se encontró nada',
     'd': 'd',
     'h': 'h',

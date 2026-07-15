@@ -8,6 +8,7 @@ const zhHant = {
       'Level': '樓層',
       'Search by name, category, building...': '依名稱、類別、建築物搜尋...',
       'Show legend': '顯示圖例',
+      'Legend': '圖例',
       'Nothing was found': '找不到任何結果',
       'd': '天',
       'h': '小時',
