@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Filter/highlight in `MapWrapper` no longer re-applies on every map `idle` event. The persistent `idle` listener called the SDK's `highlight()`/`filter()` on each idle, which rewrites a GeoJSON source (`setData`) and forces a render that settles into another `idle` — a self-sustaining loop that pinned CPU/GPU at ~100% even on an idle map. It now applies once (immediately, plus a one-shot `idle` to cover the initial `fitBounds`/`goTo` transition), which still preserves the highlight-timing fix (highlights applied mid-transition were previously wiped on first load).
+- Filter/highlight in `MapWrapper` no longer re-applies on every map `idle` event.
 
 ## [1.99.11] - 2026-07-15
 
