@@ -826,6 +826,7 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
             {/* When search results are found (category is selected or search term is used) */}
             {searchResults.length > 0 && (
                 <div className={`search__results prevent-scroll${isKioskContext ? ' search__results--kiosk' : ''}`}>
+                    <h2 className="search__sr-heading">{t('Search results')}</h2>
 
                     {/* Subcategories should only show if a top level category is selected and if that top level category has any childKeys */}
                     {selectedCategory && (

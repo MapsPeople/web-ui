@@ -10,6 +10,7 @@ const it = {
     'Show legend': 'Mostra legenda',
     'Legend': 'Legenda',
     'Nothing was found': 'Non è stato trovato nulla',
+    'Search results': 'Risultati della ricerca',
     'd': 'g',
     'h': 'o',
     'min': 'min',

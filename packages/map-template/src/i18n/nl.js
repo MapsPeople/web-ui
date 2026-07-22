@@ -10,6 +10,7 @@ const nl = {
     'Show legend': 'Legende weergeven',
     'Legend': 'Legende',
     'Nothing was found': 'Er is niets gevonden',
+    'Search results': 'Zoekresultaten',
     'd': 'd',
     'h': 'u',
     'min': 'min',

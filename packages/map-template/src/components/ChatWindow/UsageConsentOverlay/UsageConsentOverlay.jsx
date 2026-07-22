@@ -13,9 +13,9 @@ function UsageConsentOverlay({ onAccept, onDecline }) {
     return (
         <div className="usage-consent-overlay">
             <div className="usage-consent-overlay__card">
-                <h3 className="usage-consent-overlay__title">
+                <h2 className="usage-consent-overlay__title">
                     {t('Usage consent title')}
-                </h3>
+                </h2>
                 <p className="usage-consent-overlay__message">
                     {t('Usage consent message')}
                 </p>

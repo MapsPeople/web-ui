@@ -10,6 +10,7 @@ const da = {
     'Show legend': 'Vis forklaring',
     'Legend': 'Forklaring',
     'Nothing was found': 'Intet fundet',
+    'Search results': 'Søgeresultater',
     'd': 'd',
     'h': 't',
     'min': 'min',
