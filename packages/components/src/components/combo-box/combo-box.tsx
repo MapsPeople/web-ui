@@ -88,6 +88,15 @@ export class ComboBox {
     @Prop() filterable = false;
 
     /**
+     * When set, the item's `value` is also matched by the filter input, in addition to its
+     * displayed text. Lets callers filter by hidden data (e.g. an id) without it appearing
+     * in the input or list.
+     *
+     * @type {boolean}
+     */
+    @Prop() includeValueInFilter = false;
+
+    /**
      * Gets the selected items.
      *
      * @type {Array<HTMLMiDropdownItemElement>}
@@ -397,7 +406,13 @@ export class ComboBox {
     filter(): HTMLMiDropdownItemElement[] {
         if (this.filterElement) {
             const inputQuery: string = this.filterElement.value;
-            const miDropdownItemTexts: string[] = this.items.map(item => (item.text || item.innerText));
+            // When includeValueInFilter is set, append the item's `value` to the searchable text so
+            // callers can match on hidden data (e.g. an id) without it showing in the input/list.
+            const searchText = (item: HTMLMiDropdownItemElement): string => {
+                const text = item.text || item.innerText;
+                return this.includeValueInFilter ? `${text} ${item.value}` : text;
+            };
+            const miDropdownItemTexts: string[] = this.items.map(searchText);
             const numberOfItemsDisplayed = this.currentItems.length;
 
             if (inputQuery === '') {
@@ -411,7 +426,7 @@ export class ComboBox {
                 threshold: -10000
             };
             const fuzzyResults = fuzzysort.go(inputQuery, miDropdownItemTexts, searchResultsOptions);
-            const filteredItems = fuzzyResults.map(result => this.items.find(item => (item.text || item.innerText) === result.target));
+            const filteredItems = fuzzyResults.map(result => this.items.find(item => searchText(item) === result.target));
 
             this.currentItems = filteredItems;
 

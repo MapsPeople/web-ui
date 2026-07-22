@@ -38,6 +38,10 @@ export namespace Components {
          */
         "excludefromall": boolean;
         /**
+          * Optional extra text used for filtering only; not displayed. Falls back to `text`/innerText when unset.
+         */
+        "searchable": string;
+        /**
           * @default false
          */
         "selected": boolean;
@@ -1783,6 +1787,10 @@ declare namespace LocalJSX {
          */
         "excludefromall"?: boolean;
         /**
+          * Optional extra text used for filtering only; not displayed. Falls back to `text`/innerText when unset.
+         */
+        "searchable"?: string;
+        /**
           * @default false
          */
         "selected"?: boolean;
@@ -2997,6 +3005,7 @@ declare namespace LocalJSX {
         "excludefromall": boolean;
         "value": string;
         "text": string;
+        "searchable": string;
     }
     interface MiChipAttributes {
         "icon": string;
