@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **mi-combo-box**: Added `includeValueInFilter` prop (`include-value-in-filter` attribute). When set, the filter input also matches against each item's `value`, in addition to its displayed text, letting callers filter by hidden data (e.g. an id) without it appearing in the input or list. Defaults to `false`, so existing combo boxes are unaffected.
+- **mi-combo-box**: Added `includeValueInFilter` prop (`include-value-in-filter` attribute). When set, the filter input also matches against each item's `value`. Defaults to `false`, so existing combo boxes are unaffected.
 
 ## [13.36.4] - 2026-06-18
 
