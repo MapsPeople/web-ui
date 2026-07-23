@@ -65,6 +65,7 @@ const zhHans = {
     'My position': '我的位置',
     'Go!': '出发！',
     'Directions': '导航',
+    'Route': '路线',
     'Choose departure': '选择出发地',
     'Choose destination': '选择目的地',
     // Venue selector
