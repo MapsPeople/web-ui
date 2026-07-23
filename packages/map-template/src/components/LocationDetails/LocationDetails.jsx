@@ -343,9 +343,9 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
                         {locationDisplayRule && <img alt="" src={locationDisplayRule.icon.src ? locationDisplayRule.icon.src : locationDisplayRule.icon} />}
                     </div>
                     <div className="location-info__content">
-                        <div className="location-info__name">
+                        <h2 className="location-info__name">
                             {location.properties.name}
-                        </div>
+                        </h2>
                         <mi-location-info level={t('Level')} ref={locationInfoElement} show-external-id={showExternalIDs} show-floor={showFloor} />
                     </div>
                     <div className="location-info__actions">

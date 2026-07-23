@@ -10,6 +10,7 @@ const de = {
     'Show legend': 'Legende anzeigen',
     'Legend': 'Legende',
     'Nothing was found': 'Keine Suchtreffer',
+    'Search results': 'Suchergebnisse',
     'd': 'd',
     'h': 'h',
     'min': 'min',

@@ -107,4 +107,8 @@
             display: none;
         }
     }
+
+    &__sr-heading {
+        @include variables.sr-only;
+    }
 }

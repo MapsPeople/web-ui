@@ -183,6 +183,9 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         max-width: 100%;
+        font-size: var(--font-size-small);
+        font-weight: var(--font-weight-large);
+        margin: 0;
     }
 
     &__content {
