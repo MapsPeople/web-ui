@@ -65,6 +65,7 @@ const en = {
     'My position': 'My position',
     'Go!': 'Go!',
     'Directions': 'Directions',
+    'Route': 'Route',
     'Choose departure': 'Choose departure',
     'Choose destination': 'Choose destination',
     // Venue selector

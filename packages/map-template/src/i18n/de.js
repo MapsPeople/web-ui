@@ -65,6 +65,7 @@ const de = {
     'My position': 'Meine Position',
     'Go!': 'Los!',
     'Directions': 'Wegbeschreibung',
+    'Route': 'Route',
     'Choose departure': 'Startpunkt wählen',
     'Choose destination': 'Ziel wählen',
     // Venue selector

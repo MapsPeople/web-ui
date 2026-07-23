@@ -65,6 +65,7 @@ const zhHant = {
       'My position': '我的位置',
       'Go!': '出發！',
       'Directions': '導航',
+      'Route': '路線',
       'Choose departure': '選擇出發地',
       'Choose destination': '選擇目的地',
       // Venue selector
