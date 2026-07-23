@@ -12,14 +12,13 @@ Set the `title` attribute to add extra information about an item.
 
 ## Properties
 
-| Property         | Attribute        | Description                                                                                            | Type      | Default     |
-| ---------------- | ---------------- | ------------------------------------------------------------------------------------------------------ | --------- | ----------- |
-| `disabled`       | `disabled`       |                                                                                                        | `boolean` | `false`     |
-| `excludefromall` | `excludefromall` |                                                                                                        | `boolean` | `false`     |
-| `searchable`     | `searchable`     | Optional extra text used for filtering only; not displayed. Falls back to `text`/innerText when unset. | `string`  | `undefined` |
-| `selected`       | `selected`       |                                                                                                        | `boolean` | `false`     |
-| `text`           | `text`           |                                                                                                        | `string`  | `undefined` |
-| `value`          | `value`          |                                                                                                        | `string`  | `undefined` |
+| Property         | Attribute        | Description | Type      | Default     |
+| ---------------- | ---------------- | ----------- | --------- | ----------- |
+| `disabled`       | `disabled`       |             | `boolean` | `false`     |
+| `excludefromall` | `excludefromall` |             | `boolean` | `false`     |
+| `selected`       | `selected`       |             | `boolean` | `false`     |
+| `text`           | `text`           |             | `string`  | `undefined` |
+| `value`          | `value`          |             | `string`  | `undefined` |
 
 
 ----------------------------------------------

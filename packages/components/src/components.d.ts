@@ -38,10 +38,6 @@ export namespace Components {
          */
         "excludefromall": boolean;
         /**
-          * Optional extra text used for filtering only; not displayed. Falls back to `text`/innerText when unset.
-         */
-        "searchable": string;
-        /**
           * @default false
          */
         "selected": boolean;
@@ -142,6 +138,12 @@ export namespace Components {
           * @default false
          */
         "filterable": boolean;
+        /**
+          * When set, the item's `value` is also matched by the filter input, in addition to its displayed text. Lets callers filter by hidden data (e.g. an id) without it appearing in the input or list.
+          * @type {boolean}
+          * @default false
+         */
+        "includeValueInFilter": boolean;
         /**
           * Gets or sets the list items.
           * @type {Array<HTMLMiDropdownItemElement>}
@@ -1787,10 +1789,6 @@ declare namespace LocalJSX {
          */
         "excludefromall"?: boolean;
         /**
-          * Optional extra text used for filtering only; not displayed. Falls back to `text`/innerText when unset.
-         */
-        "searchable"?: string;
-        /**
           * @default false
          */
         "selected"?: boolean;
@@ -1897,6 +1895,12 @@ declare namespace LocalJSX {
           * @default false
          */
         "filterable"?: boolean;
+        /**
+          * When set, the item's `value` is also matched by the filter input, in addition to its displayed text. Lets callers filter by hidden data (e.g. an id) without it appearing in the input or list.
+          * @type {boolean}
+          * @default false
+         */
+        "includeValueInFilter"?: boolean;
         /**
           * Gets or sets the list items.
           * @type {Array<HTMLMiDropdownItemElement>}
@@ -3005,7 +3009,6 @@ declare namespace LocalJSX {
         "excludefromall": boolean;
         "value": string;
         "text": string;
-        "searchable": string;
     }
     interface MiChipAttributes {
         "icon": string;
@@ -3027,6 +3030,7 @@ declare namespace LocalJSX {
         "open": boolean;
         "itemsOrder": SortOrder;
         "filterable": boolean;
+        "includeValueInFilter": boolean;
         "noResultsMessage": string;
         "disabled": boolean;
     }
