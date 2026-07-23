@@ -360,6 +360,7 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished }) {
 
     return (
         <div className="directions" style={{ display: !isKioskContext ? 'grid' : 'block' }}>
+            <h2 className="directions__sr-heading">{t('Directions')}</h2>
             <div className="directions__header">
                 <div className="directions__minutes">{totalTime && <mi-time translations={JSON.stringify({ days: t('d'), hours: t('h'), minutes: t('min') })} seconds={totalTime} />}</div>
                 <RouteInstructionsStepHeader

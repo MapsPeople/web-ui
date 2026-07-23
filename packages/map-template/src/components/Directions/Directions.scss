@@ -11,6 +11,10 @@
         padding: var(--spacing-medium) 0;
     }
 
+    &__sr-heading {
+        @include variables.sr-only;
+    }
+
     &__cancel,
     &__finish {
         background-color: var(--tailwind-colors-gray-100);
