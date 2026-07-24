@@ -12,6 +12,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Major panels now expose semantic `h2` headings for screen reader navigation (Search results, Directions, Wayfinding, Location Details, Usage Consent)
 - Screen-reader-only heading styles now use `clip-path` instead of deprecated `clip`, shared via an `sr-only` SCSS mixin
 
+### Fixed
+
+- ChatInput and ChatButton focus rings use `:focus-visible`
+- User chat bubble fallback background uses `#005655` so white text keeps sufficient contrast
+- Global `prefers-reduced-motion` rule in `MapTemplate.scss` disables CSS animations and transitions (included in published bundles)
+- Fixed-width panels use `max-width: 100%` for reflow; scroll containers use `scroll-padding-top` so sticky headers do not obscure focused content
+
 ## [1.99.12] - 2026-07-15
 
 ### Fixed
