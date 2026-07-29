@@ -1,0 +1,32 @@
+@use '../../variables';
+
+.chat-loading-fallback {
+    display: grid;
+    place-items: center;
+    min-height: 200px;
+
+    &__spinner {
+        width: var(--spacing-xxx-large);
+        height: var(--spacing-xxx-large);
+        border: 8px solid #00565533;
+        border-left-color: var(--chat-window-primary-color, #005655);
+        border-radius: 50%;
+        animation: chat-loading-spinner 1s infinite linear;
+    }
+
+    @media (max-width: variables.$desktop-breakpoint - 1) {
+        position: absolute;
+        inset: auto var(--spacing-x-small) var(--spacing-x-small);
+        height: 40vh;
+        min-height: 0;
+        border-radius: var(--rounding-large);
+        background: var(--color-white-white);
+        pointer-events: all;
+    }
+}
+
+@keyframes chat-loading-spinner {
+    to {
+        rotate: 360deg;
+    }
+}

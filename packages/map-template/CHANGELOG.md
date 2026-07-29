@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Major panels now expose semantic `h2` headings for screen reader navigation (Search results, Directions, Wayfinding, Location Details, Usage Consent)
 - Screen-reader-only heading styles now use `clip-path` instead of deprecated `clip`, shared via an `sr-only` SCSS mixin
+- `ChatWindow` is now code-split with `React.lazy` in both `Sidebar` and `BottomSheet`, keeping the chat bundle (and its Gemini dependencies) out of the initial load until the chat view is opened
+- `Sidebar` only mounts `ChatWindow` while the chat view is active, instead of keeping it mounted inside a closed `Modal`
+
+### Added
+
+- `ChatLoadingFallback` — a spinner shown as the `Suspense` fallback while the chat bundle loads, positioned as an overlay on mobile and centred in the sidebar on desktop
 
 ## [1.99.12] - 2026-07-15
 

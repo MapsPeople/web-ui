@@ -8,7 +8,7 @@
  * Compound API: `Sheet`, `Sheet.Container`, `Sheet.Header`, `Sheet.Content`, `Sheet.Backdrop`.
  * Imperative ref: `sheetRef.current.snapTo(index)` — documented in the library README as **Methods and properties** → `snapTo(index)` (https://github.com/Temzasse/react-modal-sheet#%EF%B8%8F-methods-and-properties).
  */
-import { useRef, useState, useEffect, useCallback } from 'react';
+import { lazy, Suspense, useRef, useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Sheet } from 'react-modal-sheet';
 import { useRecoilState, useSetRecoilState } from 'recoil';
@@ -23,7 +23,6 @@ import LocationDetails from '../LocationDetails/LocationDetails';
 import LocationsList from '../LocationsList/LocationsList';
 import Wayfinding from '../Wayfinding/Wayfinding';
 import Directions from '../Directions/Directions';
-import ChatWindow from '../ChatWindow/ChatWindow';
 import {
     SNAP_POINTS_DEFAULT,
     SNAP_POINTS_SEARCH,
@@ -32,6 +31,9 @@ import {
 } from './bottomSheetSnapPoints';
 import './BottomSheet.scss';
 import styles from './BottomSheet.module.scss';
+import ChatLoadingFallback from '../ChatWindow/ChatLoadingFallback';
+
+const ChatWindow = lazy(() => import('../ChatWindow/ChatWindow'));
 
 BottomSheet.propTypes = {
     directionsFromLocation: PropTypes.string,
@@ -250,12 +252,14 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
                 );
             case appViews.CHAT:
                 return (
-                    <ChatWindow
-                        isVisible
-                        onClose={() => navigateToView(appViews.SEARCH)}
-                        onSearchResults={handleChatLocations}
-                        onShowRoute={handleChatShowRoute}
-                    />
+                    <Suspense fallback={<ChatLoadingFallback />}>
+                        <ChatWindow
+                            isVisible
+                            onClose={() => navigateToView(appViews.SEARCH)}
+                            onSearchResults={handleChatLocations}
+                            onShowRoute={handleChatShowRoute}
+                        />
+                    </Suspense>
                 );
             default:
                 return null;
