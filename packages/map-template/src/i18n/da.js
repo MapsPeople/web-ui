@@ -65,6 +65,7 @@ const da = {
     'My position': 'Min position',
     'Go!': 'Go!',
     'Directions': 'Rutevejledning',
+    'Route': 'Rute',
     'Choose departure': 'Vælg startpunkt',
     'Choose destination': 'Vælg destination',
     // Venue selector

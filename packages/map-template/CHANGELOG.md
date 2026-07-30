@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Major panels now expose semantic `h2` headings for screen reader navigation (Search results, Directions, Wayfinding, Location Details, Usage Consent)
 - Screen-reader-only heading styles now use `clip-path` instead of deprecated `clip`, shared via an `sr-only` SCSS mixin
+- Accessibility toggle text is associated via a `<label>`; Wayfinding departure/destination inputs are grouped in a `<fieldset>` with a screen-reader-only legend
 
 ## [1.99.12] - 2026-07-15
 
