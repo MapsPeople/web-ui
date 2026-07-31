@@ -9,6 +9,8 @@ $transition-timing-function: ease;
 $align-offset: 2px;
 
 .venue-selector {
+    max-width: 100%;
+
     &__content {
         position: absolute;
         background-color: white;
@@ -128,6 +130,7 @@ $align-offset: 2px;
     @media (min-width: variables.$desktop-breakpoint) {
         &__content {
             width: 568px;
+            max-width: 100%;
             right: var(--spacing-small);
             bottom: var(--spacing-large);
             top: var(--spacing-small);

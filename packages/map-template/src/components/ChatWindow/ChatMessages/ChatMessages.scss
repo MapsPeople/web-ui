@@ -24,7 +24,7 @@
 .chat-messages__message--user {
     padding: var(--spacing-x-small) var(--spacing-medium);
     align-self: flex-end;
-    background-color: var(--chat-window-primary-color, #e6f7ff);
+    background-color: var(--chat-window-primary-color, #005655);
     color: var(--color-white-white);
     line-height: 1.5;
 }
@@ -150,4 +150,3 @@
 .chat-window.desktop .chat-messages__message--loading {
     max-width: 80%;
 }
-

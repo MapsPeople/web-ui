@@ -1,9 +1,9 @@
-$desktop-breakpoint: 992px;
 
 .modal {
     position: absolute;
     z-index: var(--z-index-overlay);
     width: 568px;
+    max-width: calc(100% - 2 * var(--spacing-medium));
     left: var(--spacing-medium);
     top: var(--spacing-medium);
     border-radius: var(--spacing-x-small);
