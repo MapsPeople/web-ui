@@ -22,12 +22,12 @@ $desktop-breakpoint: 992px;
         border: 1px solid var(--tailwind-colors-gray-200);
     }
 
-    &:focus {
+    &:focus:not(:focus-visible) {
         outline: none;
     }
 
     &:focus-visible {
-        outline: 2px solid var(--chat-button-primary-color, #007bff);
+        outline: 2px solid var(--mi-focus-ring-color);
         outline-offset: 2px;
     }
 }
@@ -55,4 +55,3 @@ $desktop-breakpoint: 992px;
         }
     }
 }
-

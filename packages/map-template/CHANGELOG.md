@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- Focus ring colour is centralised in a single `--mi-focus-ring-color` custom property on `.mapsindoors-map`, so it can be themed in one place. ChatButton no longer derives its focus ring from `--chat-button-primary-color`, making it consistent with the adjacent chat controls
+- Sticky-header scroll padding is shared via a `$sticky-header-height` SCSS variable instead of being repeated as a literal in each scrollable panel
+
+### Fixed
+
+- ChatInput and ChatButton focus rings use `:focus-visible`
+- User chat bubble fallback background uses `#005655` so white text keeps sufficient contrast
+- `prefers-reduced-motion` rule in `MapTemplate.scss` disables CSS animations and transitions (included in published bundles), scoped to `.mapsindoors-map` and its descendants so embedding host pages keep their own motion behaviour
+- Fixed-width panels use `max-width: 100%` for reflow; scroll containers use `scroll-padding-top` so sticky headers do not obscure focused content
+- Sidebar modal width accounts for its horizontal inset (`max-width: calc(100% - 2 * var(--spacing-medium))`), so it no longer overflows the right edge when map-template is embedded in a container narrower than 584px
+
 ## [1.99.14] - 2026-07-30
 
 ### Fixed
