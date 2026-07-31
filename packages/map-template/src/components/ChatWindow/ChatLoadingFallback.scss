@@ -8,7 +8,7 @@
     &__spinner {
         width: var(--spacing-xxx-large);
         height: var(--spacing-xxx-large);
-        border: 8px solid #00565533;
+        border: 8px solid color-mix(in srgb, var(--chat-window-primary-color, #005655) 20%, transparent);
         border-left-color: var(--chat-window-primary-color, #005655);
         border-radius: 50%;
         animation: chat-loading-spinner 1s infinite linear;
