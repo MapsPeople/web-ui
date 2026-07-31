@@ -1,6 +1,6 @@
 const nl = {
     // Common
-    'Close': 'Sluit',
+    'Close': 'Sluiten',
     'From': 'Van',
     'To': 'Naar',
     'Distance': 'Afstand',
@@ -133,6 +133,10 @@ const nl = {
     'Location consent message': 'Om gepersonaliseerde routebeschrijvingen te bieden en je te helpen ontdekken wat er in de buurt is, wil Ask with AI toegang tot je locatie. De chat werkt nog steeds zonder je locatie te kennen, maar je zult dan een startpunt moeten opgeven.',
     'Location consent accept': 'Toestaan',
     'Location consent decline': 'Weigeren',
+    // Chunk loading errors
+    'Chat load error title': 'We konden de chat niet laden',
+    'Map load error title': 'We konden de kaart niet laden',
+    'Reload': 'Opnieuw laden',
 };
 
 export default nl;

@@ -1,6 +1,6 @@
 const es = {
     // Common
-    'Close': 'Cerca',
+    'Close': 'Cerrar',
     'From': 'Desde',
     'To': 'A',
     'Distance': 'Distancia',
@@ -133,6 +133,10 @@ const es = {
     'Location consent message': 'Para ofrecer indicaciones personalizadas y ayudarte a descubrir lo que hay cerca, Ask with AI necesita acceder a tu ubicación. El chat seguirá funcionando sin conocer tu ubicación, pero tendrás que especificar un punto de partida.',
     'Location consent accept': 'Permitir',
     'Location consent decline': 'Rechazar',
+    // Chunk loading errors
+    'Chat load error title': 'No hemos podido cargar el chat',
+    'Map load error title': 'No hemos podido cargar el mapa',
+    'Reload': 'Recargar',
 };
 
 export default es;
