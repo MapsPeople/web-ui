@@ -13,6 +13,8 @@ import kioskLocationState from '../../atoms/kioskLocationState';
 import { useChatLocations, useChatDirections } from '../../hooks/useChat';
 import PropTypes from 'prop-types';
 import ChatLoadingFallback from '../ChatWindow/ChatLoadingFallback';
+import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
+import LoadErrorFallback from '../ErrorBoundary/LoadErrorFallback';
 
 const ChatWindow = lazy(() => import('../ChatWindow/ChatWindow'));
 
@@ -152,14 +154,16 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
             />
         </Modal>,
         <Modal isOpen={currentAppView === appViews.CHAT} key="CHAT">
-            {currentAppView === appViews.CHAT && <Suspense fallback={<ChatLoadingFallback />}>
-                <ChatWindow
-                    isVisible
-                    onClose={() => pushAppView(appViews.SEARCH)}
-                    onSearchResults={handleChatLocations}
-                    onShowRoute={handleChatShowRoute}
-                />
-            </Suspense>}
+            {currentAppView === appViews.CHAT && <ErrorBoundary name="Chat" fallback={<LoadErrorFallback titleKey="Chat load error title" variant="chat" onClose={() => pushAppView(appViews.SEARCH)} />}>
+                <Suspense fallback={<ChatLoadingFallback />}>
+                    <ChatWindow
+                        isVisible
+                        onClose={() => pushAppView(appViews.SEARCH)}
+                        onSearchResults={handleChatLocations}
+                        onShowRoute={handleChatShowRoute}
+                    />
+                </Suspense>
+            </ErrorBoundary>}
         </Modal>
     ];
 

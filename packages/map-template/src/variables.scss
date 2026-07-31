@@ -2,6 +2,25 @@ $desktop-breakpoint: 992px;
 
 $sticky-header-height: 56px;
 
+// Chrome for the states shown in place of the chat window - while its bundle loads, and
+// if that bundle fails to load. On mobile the sheet is not mounted yet, so the state has
+// to float as an overlay; on desktop it sits inside the sidebar modal.
+@mixin chat-fallback-panel {
+    display: grid;
+    place-items: center;
+    min-height: 200px;
+
+    @media (max-width: $desktop-breakpoint - 1) {
+        position: absolute;
+        inset: auto var(--spacing-x-small) var(--spacing-x-small);
+        height: 40vh;
+        min-height: 0;
+        border-radius: var(--rounding-large);
+        background: var(--color-white-white);
+        pointer-events: all;
+    }
+}
+
 @mixin sr-only {
     position: absolute;
     width: 1px;

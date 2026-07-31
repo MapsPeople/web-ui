@@ -133,6 +133,10 @@ const zhHans = {
     'Location consent message': '为了提供个性化的路线指引并帮助您发现附近的地点，Ask with AI 需要访问您的位置信息。即使不提供位置信息，聊天功能仍然可用，但您需要手动指定起点。',
     'Location consent accept': '允许',
     'Location consent decline': '拒绝',
+    // Chunk loading errors
+    'Chat load error title': '聊天暂时无法加载',
+    'Map load error title': '地图暂时无法加载',
+    'Reload': '重新加载',
 };
 
 export default zhHans;

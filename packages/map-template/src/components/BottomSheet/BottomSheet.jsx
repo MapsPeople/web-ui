@@ -32,6 +32,8 @@ import {
 import './BottomSheet.scss';
 import styles from './BottomSheet.module.scss';
 import ChatLoadingFallback from '../ChatWindow/ChatLoadingFallback';
+import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
+import LoadErrorFallback from '../ErrorBoundary/LoadErrorFallback';
 
 const ChatWindow = lazy(() => import('../ChatWindow/ChatWindow'));
 
@@ -252,14 +254,16 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
                 );
             case appViews.CHAT:
                 return (
-                    <Suspense fallback={<ChatLoadingFallback />}>
-                        <ChatWindow
-                            isVisible
-                            onClose={() => navigateToView(appViews.SEARCH)}
-                            onSearchResults={handleChatLocations}
-                            onShowRoute={handleChatShowRoute}
-                        />
-                    </Suspense>
+                    <ErrorBoundary name="Chat" fallback={<LoadErrorFallback titleKey="Chat load error title" variant="chat" onClose={() => navigateToView(appViews.SEARCH)} />}>
+                        <Suspense fallback={<ChatLoadingFallback />}>
+                            <ChatWindow
+                                isVisible
+                                onClose={() => navigateToView(appViews.SEARCH)}
+                                onSearchResults={handleChatLocations}
+                                onShowRoute={handleChatShowRoute}
+                            />
+                        </Suspense>
+                    </ErrorBoundary>
                 );
             default:
                 return null;

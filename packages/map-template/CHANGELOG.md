@@ -17,6 +17,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - `ChatLoadingFallback` — a spinner shown as the `Suspense` fallback while the chat bundle loads, positioned as an overlay on mobile and centred in the sidebar on desktop
+- `ErrorBoundary` — wraps the lazily loaded chat window and the two lazily loaded map engines in `MIMap`, so a chunk that fails to load (typically a tab left open across a redeploy) no longer unmounts the whole Map Template
+- `LoadErrorFallback` — the state shown when a lazily loaded bundle cannot be fetched, styled after `UsageConsentOverlay`. Chat offers Close (keeping the current map state) alongside Reload; a failed map engine offers Reload and covers the splash screen, which would otherwise wait for a map that never arrives
+- `chat-fallback-panel` SCSS mixin in `variables.scss`, shared by the chat loading and chat error states
+- i18n translations for `Chat load error title`, `Map load error title` and `Reload` across all 9 supported languages
+- `ErrorBoundary` logs a diagnostic alongside the error: whether the message looks like a failed bundle fetch (reloading helps) or a genuine render error (it will not), whether the browser was online, and the React component stack
 
 ### Fixed
 
