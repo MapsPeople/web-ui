@@ -1,5 +1,7 @@
 $desktop-breakpoint: 992px;
 
+$sticky-header-height: 56px;
+
 @mixin sr-only {
     position: absolute;
     width: 1px;

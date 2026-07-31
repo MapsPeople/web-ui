@@ -66,7 +66,7 @@
         padding-bottom: 0.75rem;
         position: relative;
         z-index: 1;
-        scroll-padding-top: 56px;
+        scroll-padding-top: variables.$sticky-header-height;
         /* Hide scrollbar */
         scrollbar-width: none;
         &::-webkit-scrollbar {

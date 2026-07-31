@@ -151,7 +151,7 @@
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
         touch-action: pan-y;
-        scroll-padding-top: 56px;
+        scroll-padding-top: variables.$sticky-header-height;
     }
 
     &__actions {
