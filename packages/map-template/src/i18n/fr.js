@@ -65,6 +65,7 @@ const fr = {
     'My position': 'Ma position',
     'Go!': 'C\'est parti!',
     'Directions': 'Instructions',
+    'Route': 'Itinéraire',
     'Choose departure': 'Choisir le départ',
     'Choose destination': 'Choisir la destination',
     // Venue selector

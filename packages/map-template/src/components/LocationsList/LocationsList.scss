@@ -3,7 +3,7 @@
 .locations-list {
     display: grid;
     grid-template-rows: 50px 1fr;
-    
+    min-height: 0;
 
       &__header {
         padding: var(--spacing-medium);
@@ -26,6 +26,12 @@
         right: var(--spacing-x-small);
         background: none;
         border: none;
+    }
+
+    &__scrollable {
+        overflow: auto;
+        min-height: 0;
+        scroll-padding-top: variables.$sticky-header-height;
     }
 
     &__list {

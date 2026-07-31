@@ -65,6 +65,7 @@ const nl = {
     'My position': 'Mijn positie',
     'Go!': 'Gaan!',
     'Directions': 'Richtingen',
+    'Route': 'Route',
     'Choose departure': 'Kies vertrek',
     'Choose destination': 'Kies bestemming',
     // Venue selector

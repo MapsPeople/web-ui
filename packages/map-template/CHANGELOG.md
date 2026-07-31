@@ -9,14 +9,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Major panels now expose semantic `h2` headings for screen reader navigation (Search results, Directions, Wayfinding, Location Details, Usage Consent)
-- Screen-reader-only heading styles now use `clip-path` instead of deprecated `clip`, shared via an `sr-only` SCSS mixin
+- Focus ring colour is centralised in a single `--mi-focus-ring-color` custom property on `.mapsindoors-map`, so it can be themed in one place. ChatButton no longer derives its focus ring from `--chat-button-primary-color`, making it consistent with the adjacent chat controls
+- Sticky-header scroll padding is shared via a `$sticky-header-height` SCSS variable instead of being repeated as a literal in each scrollable panel
 - `ChatWindow` is now code-split with `React.lazy` in both `Sidebar` and `BottomSheet`, keeping the chat bundle (and its Gemini dependencies) out of the initial load until the chat view is opened
 - `Sidebar` only mounts `ChatWindow` while the chat view is active, instead of keeping it mounted inside a closed `Modal`
 
 ### Added
 
 - `ChatLoadingFallback` — a spinner shown as the `Suspense` fallback while the chat bundle loads, positioned as an overlay on mobile and centred in the sidebar on desktop
+
+### Fixed
+
+- ChatInput and ChatButton focus rings use `:focus-visible`
+- User chat bubble fallback background uses `#005655` so white text keeps sufficient contrast
+- `prefers-reduced-motion` rule in `MapTemplate.scss` disables CSS animations and transitions (included in published bundles), scoped to `.mapsindoors-map` and its descendants so embedding host pages keep their own motion behaviour
+- Fixed-width panels use `max-width: 100%` for reflow; scroll containers use `scroll-padding-top` so sticky headers do not obscure focused content
+- A custom `mapboxMapStyle` is now applied at map initialization instead of being swapped in with `setStyle` afterwards, avoiding a brief flash of the default MapsIndoors style
+- Sidebar modal width accounts for its horizontal inset (`max-width: calc(100% - 2 * var(--spacing-medium))`), so it no longer overflows the right edge when map-template is embedded in a container narrower than 584px
+
+## [1.99.14] - 2026-07-30
+
+### Fixed
+
+- Updated to Web SDK v4.59.0
+
+### Changed
+
+- Major panels now expose semantic `h2` headings for screen reader navigation (Search results, Directions, Wayfinding, Location Details, Usage Consent)
+- Screen-reader-only heading styles now use `clip-path` instead of deprecated `clip`, shared via an `sr-only` SCSS mixin
+- Accessibility toggle text is associated via a `<label>`; Wayfinding departure/destination inputs are grouped in a `<fieldset>` with a screen-reader-only legend
 
 ## [1.99.12] - 2026-07-15
 
