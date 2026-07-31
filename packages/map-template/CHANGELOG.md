@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - User chat bubble fallback background uses `#005655` so white text keeps sufficient contrast
 - `prefers-reduced-motion` rule in `MapTemplate.scss` disables CSS animations and transitions (included in published bundles), scoped to `.mapsindoors-map` and its descendants so embedding host pages keep their own motion behaviour
 - Fixed-width panels use `max-width: 100%` for reflow; scroll containers use `scroll-padding-top` so sticky headers do not obscure focused content
+- A custom `mapboxMapStyle` is now applied at map initialization instead of being swapped in with `setStyle` afterwards, avoiding a brief flash of the default MapsIndoors style
 - Sidebar modal width accounts for its horizontal inset (`max-width: calc(100% - 2 * var(--spacing-medium))`), so it no longer overflows the right edge when map-template is embedded in a container narrower than 584px
 
 ## [1.99.14] - 2026-07-30
@@ -31,10 +32,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Major panels now expose semantic `h2` headings for screen reader navigation (Search results, Directions, Wayfinding, Location Details, Usage Consent)
 - Screen-reader-only heading styles now use `clip-path` instead of deprecated `clip`, shared via an `sr-only` SCSS mixin
 - Accessibility toggle text is associated via a `<label>`; Wayfinding departure/destination inputs are grouped in a `<fieldset>` with a screen-reader-only legend
-
-### Fixed
-
-- A custom `mapboxMapStyle` is now applied at map initialization instead of being swapped in with `setStyle` afterwards, avoiding a brief flash of the default MapsIndoors style
 
 ## [1.99.12] - 2026-07-15
 
