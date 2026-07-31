@@ -13,6 +13,9 @@
 }
 
 .mapsindoors-map {
+    // Single source of truth for keyboard focus rings.
+    --mi-focus-ring-color: #0066cc;
+
     position: relative;
     width: 100%;
     height: 100%;
