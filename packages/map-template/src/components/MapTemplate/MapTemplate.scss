@@ -2,9 +2,10 @@
 @import '@mapsindoors/css/toggle.css';
 
 @media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
+    .mapsindoors-map,
+    .mapsindoors-map *,
+    .mapsindoors-map *::before,
+    .mapsindoors-map *::after {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
