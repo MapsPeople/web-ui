@@ -410,7 +410,7 @@ export class ComboBox {
             // callers can match on hidden data (e.g. an id) without it showing in the input/list.
             const searchText = (item: HTMLMiDropdownItemElement): string => {
                 const text = item.text || item.innerText;
-                return this.includeValueInFilter ? `${text} ${item.value}` : text;
+                return this.includeValueInFilter && item.value ? `${text} ${item.value}` : text;
             };
             const miDropdownItemTexts: string[] = this.items.map(searchText);
             const numberOfItemsDisplayed = this.currentItems.length;
