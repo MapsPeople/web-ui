@@ -139,6 +139,12 @@ export namespace Components {
          */
         "filterable": boolean;
         /**
+          * When set, the item's `value` is also matched by the filter input, in addition to its displayed text. Lets callers filter by hidden data (e.g. an id) without it appearing in the input or list.
+          * @type {boolean}
+          * @default false
+         */
+        "includeValueInFilter": boolean;
+        /**
           * Gets or sets the list items.
           * @type {Array<HTMLMiDropdownItemElement>}
           * @returns 
@@ -1890,6 +1896,12 @@ declare namespace LocalJSX {
          */
         "filterable"?: boolean;
         /**
+          * When set, the item's `value` is also matched by the filter input, in addition to its displayed text. Lets callers filter by hidden data (e.g. an id) without it appearing in the input or list.
+          * @type {boolean}
+          * @default false
+         */
+        "includeValueInFilter"?: boolean;
+        /**
           * Gets or sets the list items.
           * @type {Array<HTMLMiDropdownItemElement>}
           * @returns 
@@ -3018,6 +3030,7 @@ declare namespace LocalJSX {
         "open": boolean;
         "itemsOrder": SortOrder;
         "filterable": boolean;
+        "includeValueInFilter": boolean;
         "noResultsMessage": string;
         "disabled": boolean;
     }
