@@ -134,6 +134,7 @@ const zhHant = {
       'Location consent accept': '允許',
       'Location consent decline': '拒絕',
       // Chunk loading errors
+      'Loading chat': '正在載入聊天',
       'Chat load error title': '聊天暫時無法載入',
       'Map load error title': '地圖暫時無法載入',
       'Reload': '重新載入',

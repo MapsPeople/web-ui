@@ -134,6 +134,7 @@ const nl = {
     'Location consent accept': 'Toestaan',
     'Location consent decline': 'Weigeren',
     // Chunk loading errors
+    'Loading chat': 'Chat wordt geladen',
     'Chat load error title': 'We konden de chat niet laden',
     'Map load error title': 'We konden de kaart niet laden',
     'Reload': 'Opnieuw laden',

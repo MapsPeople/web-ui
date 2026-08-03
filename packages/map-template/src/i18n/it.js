@@ -134,6 +134,7 @@ const it = {
     'Location consent accept': 'Consenti',
     'Location consent decline': 'Rifiuta',
     // Chunk loading errors
+    'Loading chat': 'Caricamento della chat',
     'Chat load error title': 'Non siamo riusciti a caricare la chat',
     'Map load error title': 'Non siamo riusciti a caricare la mappa',
     'Reload': 'Ricarica',

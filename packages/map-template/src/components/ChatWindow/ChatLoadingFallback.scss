@@ -3,6 +3,10 @@
 .chat-loading-fallback {
     @include variables.chat-fallback-panel;
 
+    &__sr-only {
+        @include variables.sr-only;
+    }
+
     &__spinner {
         width: var(--spacing-xxx-large);
         height: var(--spacing-xxx-large);

@@ -134,6 +134,7 @@ const da = {
     'Location consent accept': 'Tillad',
     'Location consent decline': 'Afvis',
     // Chunk loading errors
+    'Loading chat': 'Indlæser chatten',
     'Chat load error title': 'Vi kunne ikke indlæse chatten',
     'Map load error title': 'Vi kunne ikke indlæse kortet',
     'Reload': 'Genindlæs',
