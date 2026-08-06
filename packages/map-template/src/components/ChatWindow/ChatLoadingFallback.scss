@@ -1,0 +1,24 @@
+@use '../../variables';
+
+.chat-loading-fallback {
+    @include variables.chat-fallback-panel;
+
+    &__sr-only {
+        @include variables.sr-only;
+    }
+
+    &__spinner {
+        width: var(--spacing-xxx-large);
+        height: var(--spacing-xxx-large);
+        border: 8px solid color-mix(in srgb, var(--chat-window-primary-color, #005655) 20%, transparent);
+        border-left-color: var(--chat-window-primary-color, #005655);
+        border-radius: 50%;
+        animation: chat-loading-spinner 1s infinite linear;
+    }
+}
+
+@keyframes chat-loading-spinner {
+    to {
+        rotate: 360deg;
+    }
+}

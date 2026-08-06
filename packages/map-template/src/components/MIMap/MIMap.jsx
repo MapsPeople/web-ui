@@ -4,6 +4,8 @@ import MapControls from './MapControls/MapControls';
 import { defineCustomElements } from '@mapsindoors/components/dist/components/index.js';
 import './MIMap.scss';
 import { mapTypes } from '../../constants/mapTypes';
+import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
+import LoadErrorFallback from '../ErrorBoundary/LoadErrorFallback';
 
 // Lazy load Mapbox and Google Maps components
 const MapboxMap = lazy(() => import('./MapboxMap/MapboxMap'));
@@ -145,38 +147,42 @@ function MIMap({ apiKey, mapType, gmApiKey, mapboxAccessToken, center, zoom, bou
 
     return <>
         {mapType === mapTypes.Google && (
-            <Suspense>
-                <GoogleMapsMap
-                    mapsIndoorsInstance={mapsIndoorsInstance}
-                    apiKey={gmApiKey}
-                    onInitialized={onMapViewInitialized}
-                    center={center}
-                    zoom={zoom}
-                    mapOptions={mapOptions}
-                    heading={bearing}
-                    tilt={pitch}
-                    bounds={bounds}
-                    gmMapId={gmMapId}
-                />
-            </Suspense>
+            <ErrorBoundary name="Google Maps view" fallback={<LoadErrorFallback titleKey="Map load error title" variant="map" />}>
+                <Suspense>
+                    <GoogleMapsMap
+                        mapsIndoorsInstance={mapsIndoorsInstance}
+                        apiKey={gmApiKey}
+                        onInitialized={onMapViewInitialized}
+                        center={center}
+                        zoom={zoom}
+                        mapOptions={mapOptions}
+                        heading={bearing}
+                        tilt={pitch}
+                        bounds={bounds}
+                        gmMapId={gmMapId}
+                    />
+                </Suspense>
+            </ErrorBoundary>
         )}
         {mapType === mapTypes.Mapbox && (
-            <Suspense>
-                <MapboxMap
-                    mapsIndoorsInstance={mapsIndoorsInstance}
-                    accessToken={mapboxAccessToken}
-                    onInitialized={onMapViewInitialized}
-                    center={center}
-                    zoom={zoom}
-                    mapOptions={mapOptions}
-                    bearing={bearing}
-                    pitch={pitch}
-                    bounds={bounds}
-                    resetViewMode={resetUICounter}
-                    viewModeSwitchVisible={viewModeSwitchVisible}
-                    appConfig={appConfig}
-                />
-            </Suspense>
+            <ErrorBoundary name="Mapbox view" fallback={<LoadErrorFallback titleKey="Map load error title" variant="map" />}>
+                <Suspense>
+                    <MapboxMap
+                        mapsIndoorsInstance={mapsIndoorsInstance}
+                        accessToken={mapboxAccessToken}
+                        onInitialized={onMapViewInitialized}
+                        center={center}
+                        zoom={zoom}
+                        mapOptions={mapOptions}
+                        bearing={bearing}
+                        pitch={pitch}
+                        bounds={bounds}
+                        resetViewMode={resetUICounter}
+                        viewModeSwitchVisible={viewModeSwitchVisible}
+                        appConfig={appConfig}
+                    />
+                </Suspense>
+            </ErrorBoundary>
         )}
         {mapsIndoorsInstance && mapViewInstance && mapType && (
             <MapControls

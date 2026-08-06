@@ -5,12 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.99.15] - 2026-08-06
 
 ### Changed
 
 - Focus ring colour is centralised in a single `--mi-focus-ring-color` custom property on `.mapsindoors-map`, so it can be themed in one place. ChatButton no longer derives its focus ring from `--chat-button-primary-color`, making it consistent with the adjacent chat controls
 - Sticky-header scroll padding is shared via a `$sticky-header-height` SCSS variable instead of being repeated as a literal in each scrollable panel
+- `ChatWindow` is now code-split with `React.lazy` in both `Sidebar` and `BottomSheet`, keeping the chat bundle (and its Gemini dependencies) out of the initial load until the chat view is opened
+- `Sidebar` only mounts `ChatWindow` while the chat view is active, instead of keeping it mounted inside a closed `Modal`
+
+### Added
+
+- `ChatLoadingFallback` — a spinner shown as the `Suspense` fallback while the chat bundle loads, positioned as an overlay on mobile and centred in the sidebar on desktop
+- `ErrorBoundary` — wraps the lazily loaded chat window and the two lazily loaded map engines in `MIMap`, so a chunk that fails to load (typically a tab left open across a redeploy) no longer unmounts the whole Map Template
+- `LoadErrorFallback` — the state shown when a lazily loaded bundle cannot be fetched, styled after `UsageConsentOverlay`. Chat offers Close (keeping the current map state) alongside Reload; a failed map engine offers Reload and covers the splash screen, which would otherwise wait for a map that never arrives
+- `chat-fallback-panel` SCSS mixin in `variables.scss`, shared by the chat loading and chat error states
+- i18n translations for `Loading chat`, `Chat load error title`, `Map load error title` and `Reload` across all 9 supported languages. `ChatLoadingFallback` announces the localised `Loading chat` label to screen readers instead of a hardcoded English `aria-label`
+- `ErrorBoundary` logs a diagnostic alongside the error: whether the message looks like a failed bundle fetch (reloading helps) or a genuine render error (it will not), whether the browser was online, and the React component stack
 
 ### Fixed
 
@@ -19,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `prefers-reduced-motion` rule in `MapTemplate.scss` disables CSS animations and transitions (included in published bundles), scoped to `.mapsindoors-map` and its descendants so embedding host pages keep their own motion behaviour
 - Fixed-width panels use `max-width: 100%` for reflow; scroll containers use `scroll-padding-top` so sticky headers do not obscure focused content
 - A custom `mapboxMapStyle` is now applied at map initialization instead of being swapped in with `setStyle` afterwards, avoiding a brief flash of the default MapsIndoors style
+- Spanish and Dutch translations of `Close` use the verb form (`Cerrar`, `Sluiten`) instead of `Cerca` and `Sluit`
 - Sidebar modal width accounts for its horizontal inset (`max-width: calc(100% - 2 * var(--spacing-medium))`), so it no longer overflows the right edge when map-template is embedded in a container narrower than 584px
 
 ## [1.99.14] - 2026-07-30

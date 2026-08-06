@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import currentLocationState from '../../atoms/currentLocationState';
 import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
@@ -8,11 +8,15 @@ import Wayfinding from '../Wayfinding/Wayfinding';
 import Directions from '../Directions/Directions';
 import Search from '../Search/Search';
 import LocationsList from '../LocationsList/LocationsList';
-import ChatWindow from '../ChatWindow/ChatWindow';
 import locationIdState from '../../atoms/locationIdState';
 import kioskLocationState from '../../atoms/kioskLocationState';
 import { useChatLocations, useChatDirections } from '../../hooks/useChat';
 import PropTypes from 'prop-types';
+import ChatLoadingFallback from '../ChatWindow/ChatLoadingFallback';
+import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
+import LoadErrorFallback from '../ErrorBoundary/LoadErrorFallback';
+
+const ChatWindow = lazy(() => import('../ChatWindow/ChatWindow'));
 
 Sidebar.propTypes = {
     directionsFromLocation: PropTypes.string,
@@ -113,8 +117,8 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
 
     const pages = [
         <Modal isOpen={currentAppView === appViews.SEARCH} key="SEARCH">
-            <Search 
-                isOpen={currentAppView === appViews.SEARCH} 
+            <Search
+                isOpen={currentAppView === appViews.SEARCH}
                 onOpenChat={() => pushAppView(appViews.CHAT)}
             />
         </Modal>,
@@ -150,12 +154,16 @@ function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, cu
             />
         </Modal>,
         <Modal isOpen={currentAppView === appViews.CHAT} key="CHAT">
-            <ChatWindow
-                isVisible={currentAppView === appViews.CHAT}
-                onClose={() => pushAppView(appViews.SEARCH)}
-                onSearchResults={handleChatLocations}
-                onShowRoute={handleChatShowRoute}
-            />
+            {currentAppView === appViews.CHAT && <ErrorBoundary name="Chat" fallback={<LoadErrorFallback titleKey="Chat load error title" variant="chat" onClose={() => pushAppView(appViews.SEARCH)} />}>
+                <Suspense fallback={<ChatLoadingFallback />}>
+                    <ChatWindow
+                        isVisible
+                        onClose={() => pushAppView(appViews.SEARCH)}
+                        onSearchResults={handleChatLocations}
+                        onShowRoute={handleChatShowRoute}
+                    />
+                </Suspense>
+            </ErrorBoundary>}
         </Modal>
     ];
 

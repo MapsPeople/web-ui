@@ -133,6 +133,11 @@ const fr = {
     'Location consent message': 'Pour fournir des itinéraires personnalisés et vous aider à découvrir ce qui se trouve à proximité, Ask with AI souhaite accéder à votre position. Le chat fonctionnera toujours sans connaître votre position, mais vous devrez spécifier un point de départ.',
     'Location consent accept': 'Autoriser',
     'Location consent decline': 'Refuser',
+    // Chunk loading errors
+    'Loading chat': 'Chargement du chat',
+    'Chat load error title': 'Nous n\'avons pas pu charger le chat',
+    'Map load error title': 'Nous n\'avons pas pu charger la carte',
+    'Reload': 'Recharger',
 };
 
 export default fr;

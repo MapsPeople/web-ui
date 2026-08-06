@@ -133,6 +133,11 @@ const de = {
     'Location consent message': 'Um personalisierte Wegbeschreibungen bereitzustellen und Ihnen zu helfen, Orte in der Nähe zu entdecken, möchte Ask with AI auf Ihren Standort zugreifen. Der Chat funktioniert auch ohne Ihren Standort, aber Sie müssen dann einen Startpunkt angeben.',
     'Location consent accept': 'Erlauben',
     'Location consent decline': 'Ablehnen',
+    // Chunk loading errors
+    'Loading chat': 'Chat wird geladen',
+    'Chat load error title': 'Wir konnten den Chat leider nicht laden',
+    'Map load error title': 'Wir konnten die Karte leider nicht laden',
+    'Reload': 'Neu laden',
 };
 
 export default de;
