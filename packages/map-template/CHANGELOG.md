@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.99.19] - 2026-08-11
+
+### Added
+
+- Language selector entries for `ja`, `ko`, `ru`, `tl`, `ht`, `ceb`, `pon`, `pt-PT` and `ase`, matching the content languages that can be enabled on solutions
+- UI translation files for `ja`, `ko`, `ru`, `tl`, `ht`, `ceb` and `pt-PT`, so the interface chrome renders in those languages alongside the map content. A generic `pt` browser language falls back to `pt-PT` (mirroring the `zh` → `zh-Hans` fallback). `pon` (no reliable translation source — needs a human translator) and `ase` (ASL has no written form) intentionally fall back to English
+
 ## [1.99.16] - 2026-08-10
 
 ### Fixed
