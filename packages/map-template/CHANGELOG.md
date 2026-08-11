@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Updated to Web SDK v4.59.1
+- Updated Mapbox GL JS to v3.28.1
 
 ## [1.99.15] - 2026-08-06
 
