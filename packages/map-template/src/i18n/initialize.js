@@ -9,6 +9,13 @@ import es from './es.js';
 import nl from './nl.js';
 import zhHans from './zh-Hans.js';
 import zhHant from './zh-Hant.js';
+import ja from './ja.js';
+import ko from './ko.js';
+import ru from './ru.js';
+import tl from './tl.js';
+import ht from './ht.js';
+import ceb from './ceb.js';
+import ptPT from './pt-PT.js';
 
 export default function initI18n(language) {
     i18n
@@ -41,6 +48,27 @@ export default function initI18n(language) {
                 },
                 'zh-Hant': {
                     translation: zhHant
+                },
+                ja: {
+                    translation: ja
+                },
+                ko: {
+                    translation: ko
+                },
+                ru: {
+                    translation: ru
+                },
+                tl: {
+                    translation: tl
+                },
+                ht: {
+                    translation: ht
+                },
+                ceb: {
+                    translation: ceb
+                },
+                'pt-PT': {
+                    translation: ptPT
                 }
             },
             lng: language,
@@ -48,6 +76,7 @@ export default function initI18n(language) {
                 'zh':    ['zh-Hans', 'en'],
                 'zh-CN': ['zh-Hans', 'en'],
                 'zh-TW': ['zh-Hant', 'en'],
+                'pt':    ['pt-PT', 'en'],
                 default: ['en']
             },
             interpolation: {
@@ -67,4 +96,13 @@ export const supportedLanguages = [
     { code: 'zh', label: '中文' },
     { code: 'zh-Hans', label: '简体中文' },
     { code: 'zh-Hant', label: '繁體中文' },
+    { code: 'ja', label: '日本語' },
+    { code: 'ko', label: '한국어' },
+    { code: 'ru', label: 'Русский' },
+    { code: 'tl', label: 'Tagalog' },
+    { code: 'ht', label: 'Kreyòl ayisyen' },
+    { code: 'ceb', label: 'Cebuano' },
+    { code: 'pon', label: 'Pohnpeian' },
+    { code: 'pt-PT', label: 'Português (Portugal)' },
+    { code: 'ase', label: 'American Sign Language' },
 ];
