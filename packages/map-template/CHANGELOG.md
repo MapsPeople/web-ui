@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- `Modal` no longer throws `TypeError: Cannot read properties of null` when its `MutationObserver` delivers a record after unmount. React detaches refs during the synchronous commit while the effect cleanup that disconnects the observer runs in the later passive flush, so crossing the desktop breakpoint (which unmounts `Sidebar` and all six modals) could hit a nulled ref. The pre-existing guard checked the ref object rather than its `current` value, so it never fired
+
 ## [1.99.19] - 2026-08-11
 
 ### Added
