@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- `Modal` no longer throws when its `MutationObserver` fires after unmount, which could happen when crossing the desktop breakpoint unmounted `Sidebar`
+- `Modal` no longer throws when its `MutationObserver` fires after unmount, which could happen when the desktop breakpoint caused `Sidebar` to unmount.
 
 ## [1.99.19] - 2026-08-11
 
