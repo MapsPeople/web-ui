@@ -133,6 +133,14 @@ const da = {
     'Location consent message': 'For at give personlige rutevejledninger og hjælpe dig med at opdage, hvad der er i nærheden, vil Ask with AI gerne have adgang til din placering. Chatten fungerer stadig uden at kende din placering, men i stedet skal du angive et startpunkt.',
     'Location consent accept': 'Tillad',
     'Location consent decline': 'Afvis',
+    // Map loading
+    'Loading map': 'Indlæser kortet',
+    'Fetching locations': 'Henter lokationer',
+    'Building map': 'Opbygger kortet',
+    'Loading 2D models': 'Indlæser 2D-modeller',
+    'Loading 3D models': 'Indlæser 3D-modeller',
+    'Adding locations to the map': 'Lægger lokationer på kortet',
+    'Map ready': 'Kortet er klar',
     // Chunk loading errors
     'Loading chat': 'Indlæser chatten',
     'Chat load error title': 'Vi kunne ikke indlæse chatten',

@@ -133,6 +133,14 @@ const ht = {
     'Location consent message': 'Pou bay direksyon pèsonalize epi ede w dekouvri sa ki toupre w, Mande AI ta renmen jwenn aksè nan lokalizasyon ou. Chat la ap toujou mache san li pa konnen kote w ye, men w ap bezwen presize yon pwen depa.',
     'Location consent accept': 'Otorize',
     'Location consent decline': 'Refize',
+    // Map loading
+    'Loading map': 'Kat la ap chaje',
+    'Fetching locations': 'Ap chèche kote yo',
+    'Building map': 'Ap bati kat la',
+    'Loading 2D models': 'Modèl 2D yo ap chaje',
+    'Loading 3D models': 'Modèl 3D yo ap chaje',
+    'Adding locations to the map': 'Ap mete kote yo sou kat la',
+    'Map ready': 'Kat la pare',
     // Chunk loading errors
     'Loading chat': 'Chat la ap chaje',
     'Chat load error title': 'Nou pa t kapab chaje chat la',

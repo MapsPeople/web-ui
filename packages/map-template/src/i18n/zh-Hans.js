@@ -133,6 +133,14 @@ const zhHans = {
     'Location consent message': '为了提供个性化的路线指引并帮助您发现附近的地点，Ask with AI 需要访问您的位置信息。即使不提供位置信息，聊天功能仍然可用，但您需要手动指定起点。',
     'Location consent accept': '允许',
     'Location consent decline': '拒绝',
+    // Map loading
+    'Loading map': '正在加载地图',
+    'Fetching locations': '正在获取地点',
+    'Building map': '正在构建地图',
+    'Loading 2D models': '正在加载 2D 模型',
+    'Loading 3D models': '正在加载 3D 模型',
+    'Adding locations to the map': '正在将地点添加到地图',
+    'Map ready': '地图已就绪',
     // Chunk loading errors
     'Loading chat': '正在加载聊天',
     'Chat load error title': '聊天暂时无法加载',

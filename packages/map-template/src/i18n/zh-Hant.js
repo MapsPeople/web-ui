@@ -133,6 +133,14 @@ const zhHant = {
       'Location consent message':'為了提供個人化的路線指引並協助您發現附近的地點，Ask with AI 需要存取您的位置資訊。即使不提供位置資訊，聊天功能仍可使用，但您需要手動指定起點。',
       'Location consent accept': '允許',
       'Location consent decline': '拒絕',
+      // Map loading
+      'Loading map': '正在載入地圖',
+      'Fetching locations': '正在取得地點',
+      'Building map': '正在建立地圖',
+      'Loading 2D models': '正在載入 2D 模型',
+      'Loading 3D models': '正在載入 3D 模型',
+      'Adding locations to the map': '正在將地點加到地圖上',
+      'Map ready': '地圖已就緒',
       // Chunk loading errors
       'Loading chat': '正在載入聊天',
       'Chat load error title': '聊天暫時無法載入',

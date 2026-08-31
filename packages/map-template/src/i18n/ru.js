@@ -133,6 +133,14 @@ const ru = {
     'Location consent message': 'Чтобы предлагать персонализированные маршруты и показывать, что находится рядом, функции «Спросить ИИ» нужен доступ к вашему местоположению. Чат работает и без него, но тогда вам придётся указать начальную точку вручную.',
     'Location consent accept': 'Разрешить',
     'Location consent decline': 'Отклонить',
+    // Map loading
+    'Loading map': 'Загрузка карты',
+    'Fetching locations': 'Получение локаций',
+    'Building map': 'Построение карты',
+    'Loading 2D models': 'Загрузка 2D-моделей',
+    'Loading 3D models': 'Загрузка 3D-моделей',
+    'Adding locations to the map': 'Добавление локаций на карту',
+    'Map ready': 'Карта готова',
     // Chunk loading errors
     'Loading chat': 'Загрузка чата',
     'Chat load error title': 'Не удалось загрузить чат',

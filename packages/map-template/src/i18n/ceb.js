@@ -133,6 +133,14 @@ const ceb = {
     'Location consent message': 'Aron makahatag og personalized nga direksyon ug matabangan ka sa pagdiskubre kon unsay anaa sa duol, gusto sa Pangutana gamit ang AI nga ma-access ang imong lokasyon. Molihok gihapon ang chat bisan wala niini ang imong lokasyon, apan kinahanglan nimong itudlo ang sugdanang punto.',
     'Location consent accept': 'Tugoti',
     'Location consent decline': 'Balibari',
+    // Map loading
+    'Loading map': 'Gikarga ang mapa',
+    'Fetching locations': 'Gikuha ang mga lokasyon',
+    'Building map': 'Gibuhat ang mapa',
+    'Loading 2D models': 'Gikarga ang 2D nga mga modelo',
+    'Loading 3D models': 'Gikarga ang 3D nga mga modelo',
+    'Adding locations to the map': 'Gibutang ang mga lokasyon sa mapa',
+    'Map ready': 'Andam na ang mapa',
     // Chunk loading errors
     'Loading chat': 'Gikarga ang chat',
     'Chat load error title': 'Wala namo makarga ang chat',
