@@ -55,7 +55,7 @@ function SplashScreen({ phase = 'initializing', progress = 0, isFading = false, 
                         style={{ backgroundColor: `${primaryColor}33` }}
                     >
                         <div
-                            className="splash-screen__progress-bar"
+                            className={`splash-screen__progress-bar${phase !== 'complete' ? ' splash-screen__progress-bar--active' : ''}`}
                             style={{
                                 width: `${percent}%`,
                                 backgroundColor: primaryColor

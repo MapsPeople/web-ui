@@ -51,9 +51,24 @@
     }
 
     &__progress-bar {
+        position: relative;
+        overflow: hidden;
         height: 100%;
         border-radius: 999px;
         transition: width 0.35s ease;
+
+        &--active::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                105deg,
+                transparent 30%,
+                rgb(255 255 255 / 45%) 50%,
+                transparent 70%
+            );
+            animation: splash-screen-bar-shine 1.6s ease-in-out infinite;
+        }
     }
 
     &__status {
@@ -109,5 +124,22 @@
     to {
         transform: translateY(0);
         opacity: 1;
+    }
+}
+
+@keyframes splash-screen-bar-shine {
+    from {
+        transform: translateX(-100%);
+    }
+
+    to {
+        transform: translateX(100%);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .splash-screen__container,
+    .splash-screen__progress-bar--active::after {
+        animation: none;
     }
 }
