@@ -30,6 +30,12 @@ export function useMapLoadingProgress({ mapsindoorsSDKAvailable, appConfig }) {
     const [isFading, setIsFading] = useState(false);
     const sdkReportsProgress = useRef(false);
     const wasMapReady = useRef(false);
+    const hasCompleted = useRef(false);
+
+    const markComplete = () => {
+        hasCompleted.current = true;
+        setProgress({ phase: 'complete', progress: 1 });
+    };
 
     const rememberPhase = phase => {
         if (!phase) {
@@ -66,8 +72,14 @@ export function useMapLoadingProgress({ mapsindoorsSDKAvailable, appConfig }) {
             if (!payload?.phase) {
                 return;
             }
+            if (hasCompleted.current && payload.phase !== 'complete') {
+                return;
+            }
             sdkReportsProgress.current = true;
             rememberPhase(payload.phase);
+            if (payload.phase === 'complete') {
+                hasCompleted.current = true;
+            }
             setProgress(payload);
         };
 
@@ -112,7 +124,7 @@ export function useMapLoadingProgress({ mapsindoorsSDKAvailable, appConfig }) {
 
         const timeoutId = setTimeout(() => {
             if (!sdkReportsProgress.current) {
-                setProgress({ phase: 'complete', progress: 1 });
+                markComplete();
             }
         }, FALLBACK_COMPLETE_AFTER_MAP_READY_MS);
 
@@ -121,7 +133,9 @@ export function useMapLoadingProgress({ mapsindoorsSDKAvailable, appConfig }) {
 
     useEffect(() => {
         const timeoutId = setTimeout(() => {
-            setProgress(current => current.phase === 'complete' ? current : { phase: 'complete', progress: 1 });
+            if (!hasCompleted.current) {
+                markComplete();
+            }
         }, HARD_TIMEOUT_MS);
 
         return () => clearTimeout(timeoutId);
@@ -130,6 +144,7 @@ export function useMapLoadingProgress({ mapsindoorsSDKAvailable, appConfig }) {
     useEffect(() => {
         if (!isMapReady && wasMapReady.current) {
             sdkReportsProgress.current = false;
+            hasCompleted.current = false;
             setShowSplash(true);
             setIsFading(false);
             setSeenPhases(new Set(['initializing']));

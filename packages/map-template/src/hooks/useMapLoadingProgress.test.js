@@ -104,4 +104,33 @@ describe('useMapLoadingProgress', () => {
         expect(result.current.showSplash).toBe(false);
         jest.useRealTimers();
     });
+
+    test('ignores late loading_progress after the hard timeout so the splash still hides', () => {
+        jest.useFakeTimers();
+        const instance = createSdkInstance({ phase: 'fetching_locations', progress: 0.35 });
+        const { result } = renderHook(
+            () => useMapLoadingProgress({ mapsindoorsSDKAvailable: true, appConfig: {} }),
+            { wrapper: wrapperWith(instance) }
+        );
+
+        act(() => {
+            jest.advanceTimersByTime(60000);
+        });
+
+        expect(result.current.phase).toBe('complete');
+        expect(result.current.isFading).toBe(true);
+
+        act(() => {
+            instance.emit('loading_progress', { phase: 'applying_to_map', progress: 0.95 });
+        });
+
+        expect(result.current.phase).toBe('complete');
+
+        act(() => {
+            jest.advanceTimersByTime(400);
+        });
+
+        expect(result.current.showSplash).toBe(false);
+        jest.useRealTimers();
+    });
 });
