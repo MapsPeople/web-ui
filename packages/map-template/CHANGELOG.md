@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - The splash screen stays up until locations have been fetched and painted on the map, and shows which load stage is in progress.
 
+## [1.99.22] - 2026-09-02
+
+### Changed
+
+- Updated the MapsIndoors Web SDK to version 4.60.0.
+
 ## [1.99.21] - 2026-08-28
 
 ### Changed
