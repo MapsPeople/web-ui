@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
-import { RecoilRoot } from 'recoil';
+import { RecoilRoot, useSetRecoilState } from 'recoil';
 import { useMapLoadingProgress } from './useMapLoadingProgress';
 import mapsIndoorsInstanceState from '../atoms/mapsIndoorsInstanceState';
 import isMapReadyState from '../atoms/isMapReadyState';
@@ -32,6 +32,25 @@ function wrapperWith(instance, isMapReady = false) {
                 set(mapsIndoorsInstanceState, instance);
                 set(isMapReadyState, isMapReady);
             }}>
+                {children}
+            </RecoilRoot>
+        );
+    };
+}
+
+function wrapperWithReadyControls(instance, controls, isMapReady = false) {
+    function ReadyControls() {
+        controls.setReady = useSetRecoilState(isMapReadyState);
+        return null;
+    }
+
+    return function Wrapper({ children }) {
+        return (
+            <RecoilRoot initializeState={({ set }) => {
+                set(mapsIndoorsInstanceState, instance);
+                set(isMapReadyState, isMapReady);
+            }}>
+                <ReadyControls />
                 {children}
             </RecoilRoot>
         );
@@ -122,6 +141,126 @@ describe('useMapLoadingProgress', () => {
 
         act(() => {
             instance.emit('loading_progress', { phase: 'applying_to_map', progress: 0.95 });
+        });
+
+        expect(result.current.phase).toBe('complete');
+
+        act(() => {
+            jest.advanceTimersByTime(400);
+        });
+
+        expect(result.current.showSplash).toBe(false);
+        jest.useRealTimers();
+    });
+
+    test('re-arms the hard timeout after a map reset before and after 60s', () => {
+        jest.useFakeTimers();
+        const instance = createSdkInstance({ phase: 'fetching_locations', progress: 0.35 });
+        const controls = {};
+        const { result } = renderHook(
+            () => useMapLoadingProgress({ mapsindoorsSDKAvailable: true, appConfig: {} }),
+            { wrapper: wrapperWithReadyControls(instance, controls) }
+        );
+
+        act(() => {
+            jest.advanceTimersByTime(50000);
+        });
+
+        expect(result.current.showSplash).toBe(true);
+        expect(result.current.phase).toBe('fetching_locations');
+
+        act(() => {
+            controls.setReady(true);
+        });
+        act(() => {
+            controls.setReady(false);
+        });
+
+        expect(result.current.showSplash).toBe(true);
+        expect(result.current.phase).toBe('initializing');
+
+        act(() => {
+            instance.emit('loading_progress', { phase: 'fetching_locations', progress: 0.4 });
+        });
+
+        act(() => {
+            jest.advanceTimersByTime(10000);
+        });
+
+        expect(result.current.phase).not.toBe('complete');
+        expect(result.current.showSplash).toBe(true);
+
+        act(() => {
+            jest.advanceTimersByTime(50000);
+        });
+
+        expect(result.current.phase).toBe('complete');
+
+        act(() => {
+            jest.advanceTimersByTime(400);
+        });
+
+        expect(result.current.showSplash).toBe(false);
+
+        act(() => {
+            controls.setReady(true);
+        });
+        act(() => {
+            controls.setReady(false);
+        });
+
+        expect(result.current.showSplash).toBe(true);
+
+        act(() => {
+            instance.emit('loading_progress', { phase: 'applying_to_map', progress: 0.9 });
+        });
+
+        act(() => {
+            jest.advanceTimersByTime(59999);
+        });
+
+        expect(result.current.phase).toBe('applying_to_map');
+        expect(result.current.showSplash).toBe(true);
+
+        act(() => {
+            jest.advanceTimersByTime(1);
+        });
+
+        expect(result.current.phase).toBe('complete');
+
+        act(() => {
+            jest.advanceTimersByTime(400);
+        });
+
+        expect(result.current.showSplash).toBe(false);
+        jest.useRealTimers();
+    });
+
+    test('keeps the map-ready fallback after a reset when the SDK does not report progress', () => {
+        jest.useFakeTimers();
+        const instance = createSdkInstance({ phase: 'fetching_locations', progress: 0.35 });
+        const controls = {};
+        const { result } = renderHook(
+            () => useMapLoadingProgress({ mapsindoorsSDKAvailable: true, appConfig: {} }),
+            { wrapper: wrapperWithReadyControls(instance, controls) }
+        );
+
+        act(() => {
+            controls.setReady(true);
+        });
+        act(() => {
+            controls.setReady(false);
+        });
+
+        expect(result.current.phase).toBe('initializing');
+        expect(result.current.showSplash).toBe(true);
+
+        act(() => {
+            controls.setReady(true);
+        });
+
+        act(() => {
+            jest.advanceTimersByTime(2500);
         });
 
         expect(result.current.phase).toBe('complete');

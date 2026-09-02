@@ -14,7 +14,8 @@ const HARD_TIMEOUT_MS = 60000;
  * Before the MapsIndoors instance exists, synthesizes early "initializing" progress from
  * script and config load. If the SDK has no progress events (older builds), falls back to
  * hiding the splash a short time after the camera is ready. A 60s hard timeout always
- * hides the splash if `content_ready` never arrives.
+ * hides the splash if `content_ready` never arrives. The timer restarts on each
+ * loading session (including after a map reset).
  *
  * @param {Object} options
  * @param {boolean} options.mapsindoorsSDKAvailable
@@ -31,6 +32,7 @@ export function useMapLoadingProgress({ mapsindoorsSDKAvailable, appConfig }) {
     const sdkReportsProgress = useRef(false);
     const wasMapReady = useRef(false);
     const hasCompleted = useRef(false);
+    const [loadingSession, setLoadingSession] = useState(0);
 
     const markComplete = () => {
         hasCompleted.current = true;
@@ -139,7 +141,7 @@ export function useMapLoadingProgress({ mapsindoorsSDKAvailable, appConfig }) {
         }, HARD_TIMEOUT_MS);
 
         return () => clearTimeout(timeoutId);
-    }, []);
+    }, [loadingSession]);
 
     useEffect(() => {
         if (!isMapReady && wasMapReady.current) {
@@ -149,6 +151,7 @@ export function useMapLoadingProgress({ mapsindoorsSDKAvailable, appConfig }) {
             setIsFading(false);
             setSeenPhases(new Set(['initializing']));
             setProgress(INITIAL_PROGRESS);
+            setLoadingSession(session => session + 1);
         }
         wasMapReady.current = isMapReady;
     }, [isMapReady]);
