@@ -80,4 +80,28 @@ describe('useMapLoadingProgress', () => {
         expect(result.current.showSplash).toBe(false);
         jest.useRealTimers();
     });
+
+    test('hides the splash after 60s if content_ready never arrives', () => {
+        jest.useFakeTimers();
+        const instance = createSdkInstance({ phase: 'fetching_locations', progress: 0.35 });
+        const { result } = renderHook(
+            () => useMapLoadingProgress({ mapsindoorsSDKAvailable: true, appConfig: {} }),
+            { wrapper: wrapperWith(instance) }
+        );
+
+        expect(result.current.showSplash).toBe(true);
+
+        act(() => {
+            jest.advanceTimersByTime(60000);
+        });
+
+        expect(result.current.phase).toBe('complete');
+
+        act(() => {
+            jest.advanceTimersByTime(400);
+        });
+
+        expect(result.current.showSplash).toBe(false);
+        jest.useRealTimers();
+    });
 });

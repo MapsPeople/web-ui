@@ -282,7 +282,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             miSdkApiTag.setAttribute('type', 'text/javascript');
             // Remember to update the root index.html with the same version / integrity
             miSdkApiTag.setAttribute('src', 'http://localhost:3001/build/index.js');
-            // miSdkApiTag.setAttribute('integrity', 'sha384-Tzu1HA15zCxWXZLJdq+CXWHSy4utTjfvJaG/NyDaYPhIoD+JY8w5FxLoxjltI77M');
+            // miSdkApiTag.setAttribute('integrity', 'sha384-sUA6qZewK8JAcCBFt/IcL3P3GAlswbF8h6d7lZjYMKdg2EGdiCGv00TO6JUMktyS');
             // miSdkApiTag.setAttribute('crossorigin', 'anonymous');
             document.body.appendChild(miSdkApiTag);
             miSdkApiTag.onload = () => {

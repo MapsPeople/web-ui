@@ -5,6 +5,7 @@ import isMapReadyState from '../atoms/isMapReadyState';
 
 const INITIAL_PROGRESS = { phase: 'initializing', progress: 0.08 };
 const FALLBACK_COMPLETE_AFTER_MAP_READY_MS = 2500;
+const HARD_TIMEOUT_MS = 60000;
 
 /**
  * Tracks staged map-content loading for the splash screen.
@@ -12,7 +13,8 @@ const FALLBACK_COMPLETE_AFTER_MAP_READY_MS = 2500;
  * Prefers SDK `loading_progress` / `content_ready` when the local Web SDK emits them.
  * Before the MapsIndoors instance exists, synthesizes early "initializing" progress from
  * script and config load. If the SDK has no progress events (older builds), falls back to
- * hiding the splash a short time after the camera is ready.
+ * hiding the splash a short time after the camera is ready. A 60s hard timeout always
+ * hides the splash if `content_ready` never arrives.
  *
  * @param {Object} options
  * @param {boolean} options.mapsindoorsSDKAvailable
@@ -116,6 +118,14 @@ export function useMapLoadingProgress({ mapsindoorsSDKAvailable, appConfig }) {
 
         return () => clearTimeout(timeoutId);
     }, [isMapReady]);
+
+    useEffect(() => {
+        const timeoutId = setTimeout(() => {
+            setProgress(current => current.phase === 'complete' ? current : { phase: 'complete', progress: 1 });
+        }, HARD_TIMEOUT_MS);
+
+        return () => clearTimeout(timeoutId);
+    }, []);
 
     useEffect(() => {
         if (!isMapReady && wasMapReady.current) {
