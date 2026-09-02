@@ -12,7 +12,7 @@
         @include variables.chat-fallback-panel;
     }
 
-    // The splash screen sits at --z-index-top and stays up until the map reports ready,
+    // The splash screen sits at --z-index-top and stays up until map content is ready,
     // which never happens when the map engine fails to load - so this has to cover it.
     &--map {
         position: absolute;

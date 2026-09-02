@@ -133,6 +133,14 @@ const ko = {
     'Location consent message': '맞춤형 길 안내와 주변 정보 제공을 위해 AI에게 질문이 회원님의 위치 정보를 사용하려고 합니다. 위치 정보 없이도 채팅은 작동하지만, 이 경우 출발 지점을 직접 지정해야 합니다.',
     'Location consent accept': '허용',
     'Location consent decline': '거부',
+    // Map loading
+    'Loading map': '지도를 불러오는 중',
+    'Fetching locations': '위치를 가져오는 중',
+    'Building map': '지도를 구성하는 중',
+    'Loading 2D models': '2D 모델을 불러오는 중',
+    'Loading 3D models': '3D 모델을 불러오는 중',
+    'Adding locations to the map': '위치를 지도에 추가하는 중',
+    'Map ready': '지도 준비 완료',
     // Chunk loading errors
     'Loading chat': '채팅 불러오는 중',
     'Chat load error title': '채팅을 불러오지 못했습니다',

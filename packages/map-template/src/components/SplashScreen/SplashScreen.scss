@@ -1,15 +1,23 @@
 .splash-screen {
-    will-change: transform, rotate;
     display: grid;
     width: 100%;
     height: 100%;
     position: absolute;
     z-index: var(--z-index-top);
     background-color: var(--brand-colors-white-100);
+    opacity: 1;
+    transition: opacity 0.4s ease;
+
+    &--fading {
+        opacity: 0;
+        pointer-events: none;
+    }
 
     &__logo {
         width: 100%;
-        max-height: 100%;
+        max-width: 180px;
+        max-height: 120px;
+        object-fit: contain;
         visibility: hidden;
 
         // This class is used to show the logo only when the logo is known. Otherwise we would risk a broken image placeholder.
@@ -18,44 +26,120 @@
         }
     }
 
-    &__loader {
-        width: var(--spacing-xxx-large);
-        height: var(--spacing-xxx-large);
-        border-radius: 50%;
-        position: relative;
-        animation: loader 1s infinite linear;
-    }
-
     &__container {
         display: grid;
         justify-self: center;
-        grid-auto-flow: row;
-        grid-auto-rows: 300px min-content;
         align-content: center;
-        grid-template-columns: 300px;
         justify-items: center;
+        width: min(320px, calc(100% - 2 * var(--spacing-medium)));
+        gap: var(--spacing-large);
+        animation: splash-screen-slide-in 0.6s ease;
+    }
+
+    &__progress {
+        display: grid;
+        width: 100%;
+        gap: var(--spacing-small);
+        justify-items: center;
+    }
+
+    &__progress-track {
+        width: 100%;
+        height: 4px;
+        border-radius: 999px;
+        overflow: hidden;
+    }
+
+    &__progress-bar {
+        position: relative;
+        overflow: hidden;
+        height: 100%;
+        border-radius: 999px;
+        transition: width 0.35s ease;
+
+        &--active::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                105deg,
+                transparent 30%,
+                rgb(255 255 255 / 45%) 50%,
+                transparent 70%
+            );
+            animation: splash-screen-bar-shine 1.6s ease-in-out infinite;
+        }
+    }
+
+    &__status {
+        margin: 0;
+        font-size: var(--font-size-small);
+        font-weight: var(--font-weight-medium);
+        color: var(--color-gray-70, #5c5c5c);
+        text-align: center;
+    }
+
+    &__stages {
+        display: grid;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        gap: var(--spacing-x-small);
+    }
+
+    &__stage {
+        display: grid;
+        grid-template-columns: 1.25rem 1fr;
         align-items: center;
-        gap: var(--spacing-xxx-large);
-        animation: slideIn 1s;
+        gap: var(--spacing-x-small);
+        font-size: var(--font-size-small);
+        color: var(--color-gray-50, #8a8a8a);
+    }
+
+    &__stage--done {
+        color: var(--color-gray-70, #5c5c5c);
+    }
+
+    &__stage--current {
+        font-weight: var(--font-weight-medium);
+    }
+
+    &__stage-marker {
+        display: grid;
+        place-items: center;
+        width: 1.25rem;
+        height: 1.25rem;
+        font-size: 0.7rem;
+        line-height: 1;
     }
 }
 
-@keyframes loader {
-    0% {
-        rotate: 0deg;
-    }
-
-    100% {
-        rotate: 360deg;
-    }
-}
-
-@keyframes slideIn {
+@keyframes splash-screen-slide-in {
     from {
-        transform: translateY(100%);
+        transform: translateY(24px);
+        opacity: 0;
     }
 
     to {
         transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes splash-screen-bar-shine {
+    from {
+        transform: translateX(-100%);
+    }
+
+    to {
+        transform: translateX(100%);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .splash-screen__container,
+    .splash-screen__progress-bar--active::after {
+        animation: none;
     }
 }

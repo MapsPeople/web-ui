@@ -133,6 +133,14 @@ const tl = {
     'Location consent message': 'Para makapagbigay ng personalized na direksyon at matulungan kang tuklasin kung ano ang nasa malapit, gustong i-access ng Magtanong gamit ang AI ang iyong lokasyon. Gagana pa rin ang chat kahit hindi alam ang iyong lokasyon, pero kakailanganin mong tukuyin ang panimulang punto.',
     'Location consent accept': 'Payagan',
     'Location consent decline': 'Tanggihan',
+    // Map loading
+    'Loading map': 'Nilo-load ang mapa',
+    'Fetching locations': 'Kinukuha ang mga lokasyon',
+    'Building map': 'Binubuo ang mapa',
+    'Loading 2D models': 'Nilo-load ang mga 2D model',
+    'Loading 3D models': 'Nilo-load ang mga 3D model',
+    'Adding locations to the map': 'Inilalagay ang mga lokasyon sa mapa',
+    'Map ready': 'Handa na ang mapa',
     // Chunk loading errors
     'Loading chat': 'Nilo-load ang chat',
     'Chat load error title': 'Hindi ma-load ang chat',

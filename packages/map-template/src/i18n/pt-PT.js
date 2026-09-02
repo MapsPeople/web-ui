@@ -133,6 +133,14 @@ const ptPT = {
     'Location consent message': 'Para fornecer direções personalizadas e ajudá-lo a descobrir o que está por perto, a funcionalidade Perguntar com IA gostaria de aceder à sua localização. O chat continua a funcionar sem a sua localização, mas nesse caso terá de indicar um ponto de partida.',
     'Location consent accept': 'Permitir',
     'Location consent decline': 'Recusar',
+    // Map loading
+    'Loading map': 'A carregar o mapa',
+    'Fetching locations': 'A obter localizações',
+    'Building map': 'A construir o mapa',
+    'Loading 2D models': 'A carregar modelos 2D',
+    'Loading 3D models': 'A carregar modelos 3D',
+    'Adding locations to the map': 'A adicionar localizações ao mapa',
+    'Map ready': 'Mapa pronto',
     // Chunk loading errors
     'Loading chat': 'A carregar o chat',
     'Chat load error title': 'Não foi possível carregar o chat',

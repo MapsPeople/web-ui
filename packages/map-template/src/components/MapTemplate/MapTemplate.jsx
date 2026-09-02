@@ -20,6 +20,7 @@ import venuesInSolutionState from '../../atoms/venuesInSolutionState';
 import venueListState from '../../atoms/venueListState';
 import solutionState from '../../atoms/solutionState.js';
 import { useAppHistory } from '../../hooks/useAppHistory';
+import { useMapLoadingProgress } from '../../hooks/useMapLoadingProgress';
 import { useReset } from '../../hooks/useReset.js';
 import Sidebar from '../Sidebar/Sidebar';
 import useLocationForWayfinding from '../../hooks/useLocationForWayfinding';
@@ -228,6 +229,10 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     // Indicate if the MapsIndoors JavaScript SDK is available.
     const [mapsindoorsSDKAvailable, setMapsindoorsSDKAvailable] = useState(false);
+    const { phase: loadingPhase, progress: loadingProgress, seenPhases, showSplash, isFading } = useMapLoadingProgress({
+        mapsindoorsSDKAvailable,
+        appConfig
+    });
 
     const showLegendDialog = useRecoilValue(isLegendDialogVisibleState);
 
@@ -276,8 +281,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             const miSdkApiTag = document.createElement('script');
             miSdkApiTag.setAttribute('type', 'text/javascript');
             // Remember to update the root index.html with the same version / integrity
-            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.60.0/mapsindoors-4.60.0.js.gz');
-            miSdkApiTag.setAttribute('integrity', 'sha384-sUA6qZewK8JAcCBFt/IcL3P3GAlswbF8h6d7lZjYMKdg2EGdiCGv00TO6JUMktyS');
+            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.61.0/mapsindoors-4.61.0.js.gz');
+            miSdkApiTag.setAttribute('integrity', 'sha384-dAmZojCmyWgpiW968HHWqy0nkdyxQCdmgHdJgKmXse+0NVkuE4gW06TBYQ6MM2Ns');
             miSdkApiTag.setAttribute('crossorigin', 'anonymous');
             document.body.appendChild(miSdkApiTag);
             miSdkApiTag.onload = () => {
@@ -959,7 +964,12 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             ${disableRightClick ? 'mapsindoors-map--disable-right-click' : ''}
             ${(currentAppView === appStates.CHAT && !isDesktop) ? 'mapsindoors-map--hide-map-controls' : ''}`}>
                 <Notification />
-                {!isMapReady && <SplashScreen />}
+                {showSplash && <SplashScreen
+                    phase={loadingPhase}
+                    progress={loadingProgress}
+                    seenPhases={seenPhases}
+                    isFading={isFading}
+                />}
                 {venueList.length > 1 && showVenueSelector && <VenueSelector
                     onOpen={() => pushAppView(appStates.VENUE_SELECTOR)}
                     onClose={() => goBack()}

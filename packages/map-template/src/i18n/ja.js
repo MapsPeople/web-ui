@@ -133,6 +133,14 @@ const ja = {
     'Location consent message': 'パーソナライズされたルート案内や周辺情報の提供のため、AIに質問はあなたの位置情報へのアクセスを求めています。位置情報がなくてもチャットは利用できますが、その場合は出発地点を指定する必要があります。',
     'Location consent accept': '許可',
     'Location consent decline': '同意しない',
+    // Map loading
+    'Loading map': 'マップを読み込み中',
+    'Fetching locations': 'ロケーションを取得中',
+    'Building map': 'マップを構築中',
+    'Loading 2D models': '2Dモデルを読み込み中',
+    'Loading 3D models': '3Dモデルを読み込み中',
+    'Adding locations to the map': 'ロケーションをマップに追加中',
+    'Map ready': 'マップの準備完了',
     // Chunk loading errors
     'Loading chat': 'チャットを読み込み中',
     'Chat load error title': 'チャットを読み込めませんでした',

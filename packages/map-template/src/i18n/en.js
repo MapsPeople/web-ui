@@ -133,6 +133,14 @@ const en = {
     'Location consent message': 'To provide personalized directions and help you discover what\'s nearby, Ask with AI would like to access your location. The chat will still work without knowing your location, but instead you\'ll need to specify a start point.',
     'Location consent accept': 'Allow',
     'Location consent decline': 'Decline',
+    // Map loading
+    'Loading map': 'Loading map',
+    'Fetching locations': 'Fetching locations',
+    'Building map': 'Building map',
+    'Loading 2D models': 'Loading 2D models',
+    'Loading 3D models': 'Loading 3D models',
+    'Adding locations to the map': 'Adding locations to the map',
+    'Map ready': 'Map ready',
     // Chunk loading errors
     'Loading chat': 'Loading chat',
     'Chat load error title': 'We couldn\'t load the chat',

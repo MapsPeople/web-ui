@@ -133,6 +133,14 @@ const nl = {
     'Location consent message': 'Om gepersonaliseerde routebeschrijvingen te bieden en je te helpen ontdekken wat er in de buurt is, wil Ask with AI toegang tot je locatie. De chat werkt nog steeds zonder je locatie te kennen, maar je zult dan een startpunt moeten opgeven.',
     'Location consent accept': 'Toestaan',
     'Location consent decline': 'Weigeren',
+    // Map loading
+    'Loading map': 'Kaart laden',
+    'Fetching locations': 'Locaties ophalen',
+    'Building map': 'Kaart opbouwen',
+    'Loading 2D models': '2D-modellen laden',
+    'Loading 3D models': '3D-modellen laden',
+    'Adding locations to the map': 'Locaties op de kaart plaatsen',
+    'Map ready': 'Kaart gereed',
     // Chunk loading errors
     'Loading chat': 'Chat wordt geladen',
     'Chat load error title': 'We konden de chat niet laden',
