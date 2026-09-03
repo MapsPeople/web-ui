@@ -22,14 +22,13 @@ const HARD_TIMEOUT_MS = 60000;
  * @param {Object} options
  * @param {boolean} options.mapsindoorsSDKAvailable
  * @param {Object} [options.appConfig]
- * @returns {{ phase: string, progress: number, seenPhases: Set<string>, showSplash: boolean, isFading: boolean }}
+ * @returns {{ phase: string, progress: number, showSplash: boolean, isFading: boolean }}
  */
 export function useMapLoadingProgress({ mapsindoorsSDKAvailable, appConfig }) {
     const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
     const isMapReady = useRecoilValue(isMapReadyState);
     const loadError = useRecoilValue(notificationMessageState);
     const [progress, setProgress] = useState(INITIAL_PROGRESS);
-    const [seenPhases, setSeenPhases] = useState(() => new Set(['initializing']));
     const [showSplash, setShowSplash] = useState(true);
     const [isFading, setIsFading] = useState(false);
     const sdkReportsProgress = useRef(false);
@@ -40,20 +39,6 @@ export function useMapLoadingProgress({ mapsindoorsSDKAvailable, appConfig }) {
     const markComplete = () => {
         hasCompleted.current = true;
         setProgress({ phase: 'complete', progress: 1 });
-    };
-
-    const rememberPhase = phase => {
-        if (!phase) {
-            return;
-        }
-        setSeenPhases(current => {
-            if (current.has(phase)) {
-                return current;
-            }
-            const next = new Set(current);
-            next.add(phase);
-            return next;
-        });
     };
 
     useEffect(() => {
@@ -81,7 +66,6 @@ export function useMapLoadingProgress({ mapsindoorsSDKAvailable, appConfig }) {
                 return;
             }
             sdkReportsProgress.current = true;
-            rememberPhase(payload.phase);
             if (payload.phase === 'complete') {
                 hasCompleted.current = true;
             }
@@ -114,7 +98,6 @@ export function useMapLoadingProgress({ mapsindoorsSDKAvailable, appConfig }) {
             if (sdkReportsProgress.current) {
                 return;
             }
-            rememberPhase('fetching_locations');
             setProgress(current => current.progress >= 0.45 ? current : { phase: 'fetching_locations', progress: 0.45 });
         };
 
@@ -165,7 +148,6 @@ export function useMapLoadingProgress({ mapsindoorsSDKAvailable, appConfig }) {
             hasCompleted.current = false;
             setShowSplash(true);
             setIsFading(false);
-            setSeenPhases(new Set(['initializing']));
             setProgress(INITIAL_PROGRESS);
             setLoadingSession(session => session + 1);
         }
@@ -190,5 +172,5 @@ export function useMapLoadingProgress({ mapsindoorsSDKAvailable, appConfig }) {
         return () => clearTimeout(timeoutId);
     }, [progress.phase, showSplash]);
 
-    return { ...progress, seenPhases, showSplash, isFading };
+    return { ...progress, showSplash, isFading };
 }

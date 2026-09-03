@@ -75,7 +75,6 @@ describe('useMapLoadingProgress', () => {
         });
 
         expect(result.current.phase).toBe('loading_3d_models');
-        expect(result.current.seenPhases.has('loading_3d_models')).toBe(true);
     });
 
     test('hides the splash after content_ready', () => {
