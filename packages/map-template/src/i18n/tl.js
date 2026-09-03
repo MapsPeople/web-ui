@@ -134,12 +134,12 @@ const tl = {
     'Location consent accept': 'Payagan',
     'Location consent decline': 'Tanggihan',
     // Map loading
-    'Loading map': 'Nilo-load ang mapa',
-    'Fetching locations': 'Kinukuha ang mga lokasyon',
-    'Building map': 'Binubuo ang mapa',
-    'Loading 2D models': 'Nilo-load ang mga 2D model',
-    'Loading 3D models': 'Nilo-load ang mga 3D model',
-    'Adding locations to the map': 'Inilalagay ang mga lokasyon sa mapa',
+    'Preparing your map': 'Inihahanda ang iyong mapa',
+    'Finding places': 'Hinahanap ang mga lugar',
+    'Drawing the map': 'Iginuguhit ang mapa',
+    'Adding 2D models': 'Idinadagdag ang mga 2D model',
+    'Adding 3D models': 'Idinadagdag ang mga 3D model',
+    'Adding locations': 'Idinadagdag ang mga lokasyon',
     'Map ready': 'Handa na ang mapa',
     // Chunk loading errors
     'Loading chat': 'Nilo-load ang chat',

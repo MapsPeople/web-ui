@@ -134,12 +134,12 @@ const ptPT = {
     'Location consent accept': 'Permitir',
     'Location consent decline': 'Recusar',
     // Map loading
-    'Loading map': 'A carregar o mapa',
-    'Fetching locations': 'A obter localizações',
-    'Building map': 'A construir o mapa',
-    'Loading 2D models': 'A carregar modelos 2D',
-    'Loading 3D models': 'A carregar modelos 3D',
-    'Adding locations to the map': 'A adicionar localizações ao mapa',
+    'Preparing your map': 'A preparar o seu mapa',
+    'Finding places': 'A procurar lugares',
+    'Drawing the map': 'A desenhar o mapa',
+    'Adding 2D models': 'A adicionar modelos 2D',
+    'Adding 3D models': 'A adicionar modelos 3D',
+    'Adding locations': 'A adicionar localizações',
     'Map ready': 'Mapa pronto',
     // Chunk loading errors
     'Loading chat': 'A carregar o chat',

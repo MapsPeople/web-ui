@@ -134,12 +134,12 @@ const zhHant = {
       'Location consent accept': '允許',
       'Location consent decline': '拒絕',
       // Map loading
-      'Loading map': '正在載入地圖',
-      'Fetching locations': '正在取得地點',
-      'Building map': '正在建立地圖',
-      'Loading 2D models': '正在載入 2D 模型',
-      'Loading 3D models': '正在載入 3D 模型',
-      'Adding locations to the map': '正在將地點加到地圖上',
+      'Preparing your map': '正在準備地圖',
+      'Finding places': '正在尋找地點',
+      'Drawing the map': '正在繪製地圖',
+      'Adding 2D models': '正在新增 2D 模型',
+      'Adding 3D models': '正在新增 3D 模型',
+      'Adding locations': '正在新增地點',
       'Map ready': '地圖已就緒',
       // Chunk loading errors
       'Loading chat': '正在載入聊天',

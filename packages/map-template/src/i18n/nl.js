@@ -134,12 +134,12 @@ const nl = {
     'Location consent accept': 'Toestaan',
     'Location consent decline': 'Weigeren',
     // Map loading
-    'Loading map': 'Kaart laden',
-    'Fetching locations': 'Locaties ophalen',
-    'Building map': 'Kaart opbouwen',
-    'Loading 2D models': '2D-modellen laden',
-    'Loading 3D models': '3D-modellen laden',
-    'Adding locations to the map': 'Locaties op de kaart plaatsen',
+    'Preparing your map': 'Je kaart voorbereiden',
+    'Finding places': 'Plaatsen zoeken',
+    'Drawing the map': 'De kaart tekenen',
+    'Adding 2D models': '2D-modellen toevoegen',
+    'Adding 3D models': '3D-modellen toevoegen',
+    'Adding locations': 'Locaties toevoegen',
     'Map ready': 'Kaart gereed',
     // Chunk loading errors
     'Loading chat': 'Chat wordt geladen',

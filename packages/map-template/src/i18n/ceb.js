@@ -134,12 +134,12 @@ const ceb = {
     'Location consent accept': 'Tugoti',
     'Location consent decline': 'Balibari',
     // Map loading
-    'Loading map': 'Gikarga ang mapa',
-    'Fetching locations': 'Gikuha ang mga lokasyon',
-    'Building map': 'Gibuhat ang mapa',
-    'Loading 2D models': 'Gikarga ang 2D nga mga modelo',
-    'Loading 3D models': 'Gikarga ang 3D nga mga modelo',
-    'Adding locations to the map': 'Gibutang ang mga lokasyon sa mapa',
+    'Preparing your map': 'Giandam ang imong mapa',
+    'Finding places': 'Pangitaon ang mga dapit',
+    'Drawing the map': 'Gidrowing ang mapa',
+    'Adding 2D models': 'Gidugang ang 2D nga mga modelo',
+    'Adding 3D models': 'Gidugang ang 3D nga mga modelo',
+    'Adding locations': 'Gidugang ang mga lokasyon',
     'Map ready': 'Andam na ang mapa',
     // Chunk loading errors
     'Loading chat': 'Gikarga ang chat',
