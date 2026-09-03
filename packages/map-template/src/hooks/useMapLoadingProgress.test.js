@@ -3,6 +3,7 @@ import { RecoilRoot, useSetRecoilState } from 'recoil';
 import { useMapLoadingProgress } from './useMapLoadingProgress';
 import mapsIndoorsInstanceState from '../atoms/mapsIndoorsInstanceState';
 import isMapReadyState from '../atoms/isMapReadyState';
+import notificationMessageState from '../atoms/notificationMessageState';
 
 function createSdkInstance(initialProgress = { phase: 'fetching_locations', progress: 0.35 }) {
     const listeners = new Map();
@@ -271,5 +272,44 @@ describe('useMapLoadingProgress', () => {
 
         expect(result.current.showSplash).toBe(false);
         jest.useRealTimers();
+    });
+
+    test('hides the splash as soon as a map load error is reported', () => {
+        const instance = createSdkInstance({ phase: 'fetching_locations', progress: 0.35 });
+        const controls = {};
+
+        function ErrorControls() {
+            controls.setError = useSetRecoilState(notificationMessageState);
+            return null;
+        }
+
+        function Wrapper({ children }) {
+            return (
+                <RecoilRoot initializeState={({ set }) => {
+                    set(mapsIndoorsInstanceState, instance);
+                    set(isMapReadyState, false);
+                }}>
+                    <ErrorControls />
+                    {children}
+                </RecoilRoot>
+            );
+        }
+
+        const { result } = renderHook(
+            () => useMapLoadingProgress({ mapsindoorsSDKAvailable: true, appConfig: {} }),
+            { wrapper: Wrapper }
+        );
+
+        expect(result.current.showSplash).toBe(true);
+
+        act(() => {
+            controls.setError({
+                text: 'Please provide a Mapbox Access Token or Google Maps API key to show a map.',
+                type: 'error'
+            });
+        });
+
+        expect(result.current.showSplash).toBe(false);
+        expect(result.current.isFading).toBe(false);
     });
 });
