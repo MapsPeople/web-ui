@@ -134,12 +134,12 @@ const ru = {
     'Location consent accept': 'Разрешить',
     'Location consent decline': 'Отклонить',
     // Map loading
-    'Loading map': 'Загрузка карты',
-    'Fetching locations': 'Получение локаций',
-    'Building map': 'Построение карты',
-    'Loading 2D models': 'Загрузка 2D-моделей',
-    'Loading 3D models': 'Загрузка 3D-моделей',
-    'Adding locations to the map': 'Добавление локаций на карту',
+    'Preparing your map': 'Подготовка карты',
+    'Finding places': 'Поиск мест',
+    'Drawing the map': 'Отрисовка карты',
+    'Adding 2D models': 'Добавление 2D-моделей',
+    'Adding 3D models': 'Добавление 3D-моделей',
+    'Adding locations': 'Добавление локаций',
     'Map ready': 'Карта готова',
     // Chunk loading errors
     'Loading chat': 'Загрузка чата',

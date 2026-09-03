@@ -134,12 +134,12 @@ const en = {
     'Location consent accept': 'Allow',
     'Location consent decline': 'Decline',
     // Map loading
-    'Loading map': 'Loading map',
-    'Fetching locations': 'Fetching locations',
-    'Building map': 'Building map',
-    'Loading 2D models': 'Loading 2D models',
-    'Loading 3D models': 'Loading 3D models',
-    'Adding locations to the map': 'Adding locations to the map',
+    'Preparing your map': 'Preparing your map',
+    'Finding places': 'Finding places',
+    'Drawing the map': 'Drawing the map',
+    'Adding 2D models': 'Adding 2D models',
+    'Adding 3D models': 'Adding 3D models',
+    'Adding locations': 'Adding locations',
     'Map ready': 'Map ready',
     // Chunk loading errors
     'Loading chat': 'Loading chat',

@@ -134,12 +134,12 @@ const ko = {
     'Location consent accept': '허용',
     'Location consent decline': '거부',
     // Map loading
-    'Loading map': '지도를 불러오는 중',
-    'Fetching locations': '위치를 가져오는 중',
-    'Building map': '지도를 구성하는 중',
-    'Loading 2D models': '2D 모델을 불러오는 중',
-    'Loading 3D models': '3D 모델을 불러오는 중',
-    'Adding locations to the map': '위치를 지도에 추가하는 중',
+    'Preparing your map': '지도를 준비하는 중',
+    'Finding places': '장소를 찾는 중',
+    'Drawing the map': '지도를 그리는 중',
+    'Adding 2D models': '2D 모델을 추가하는 중',
+    'Adding 3D models': '3D 모델을 추가하는 중',
+    'Adding locations': '위치를 추가하는 중',
     'Map ready': '지도 준비 완료',
     // Chunk loading errors
     'Loading chat': '채팅 불러오는 중',

@@ -134,12 +134,12 @@ const de = {
     'Location consent accept': 'Erlauben',
     'Location consent decline': 'Ablehnen',
     // Map loading
-    'Loading map': 'Karte wird geladen',
-    'Fetching locations': 'Standorte werden geladen',
-    'Building map': 'Karte wird aufgebaut',
-    'Loading 2D models': '2D-Modelle werden geladen',
-    'Loading 3D models': '3D-Modelle werden geladen',
-    'Adding locations to the map': 'Standorte werden auf die Karte gesetzt',
+    'Preparing your map': 'Karte wird vorbereitet',
+    'Finding places': 'Orte werden gesucht',
+    'Drawing the map': 'Karte wird gezeichnet',
+    'Adding 2D models': '2D-Modelle werden hinzugefügt',
+    'Adding 3D models': '3D-Modelle werden hinzugefügt',
+    'Adding locations': 'Standorte werden hinzugefügt',
     'Map ready': 'Karte ist bereit',
     // Chunk loading errors
     'Loading chat': 'Chat wird geladen',

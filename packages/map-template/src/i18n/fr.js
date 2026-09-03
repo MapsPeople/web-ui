@@ -134,12 +134,12 @@ const fr = {
     'Location consent accept': 'Autoriser',
     'Location consent decline': 'Refuser',
     // Map loading
-    'Loading map': 'Chargement de la carte',
-    'Fetching locations': 'Chargement des emplacements',
-    'Building map': 'Construction de la carte',
-    'Loading 2D models': 'Chargement des modèles 2D',
-    'Loading 3D models': 'Chargement des modèles 3D',
-    'Adding locations to the map': 'Ajout des emplacements sur la carte',
+    'Preparing your map': 'Préparation de votre carte',
+    'Finding places': 'Recherche des lieux',
+    'Drawing the map': 'Dessin de la carte',
+    'Adding 2D models': 'Ajout des modèles 2D',
+    'Adding 3D models': 'Ajout des modèles 3D',
+    'Adding locations': 'Ajout des emplacements',
     'Map ready': 'Carte prête',
     // Chunk loading errors
     'Loading chat': 'Chargement du chat',

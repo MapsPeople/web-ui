@@ -134,12 +134,12 @@ const ja = {
     'Location consent accept': '許可',
     'Location consent decline': '同意しない',
     // Map loading
-    'Loading map': 'マップを読み込み中',
-    'Fetching locations': 'ロケーションを取得中',
-    'Building map': 'マップを構築中',
-    'Loading 2D models': '2Dモデルを読み込み中',
-    'Loading 3D models': '3Dモデルを読み込み中',
-    'Adding locations to the map': 'ロケーションをマップに追加中',
+    'Preparing your map': 'マップを準備中',
+    'Finding places': '場所を探しています',
+    'Drawing the map': 'マップを描画中',
+    'Adding 2D models': '2Dモデルを追加中',
+    'Adding 3D models': '3Dモデルを追加中',
+    'Adding locations': 'ロケーションを追加中',
     'Map ready': 'マップの準備完了',
     // Chunk loading errors
     'Loading chat': 'チャットを読み込み中',

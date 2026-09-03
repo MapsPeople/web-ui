@@ -134,12 +134,12 @@ const zhHans = {
     'Location consent accept': '允许',
     'Location consent decline': '拒绝',
     // Map loading
-    'Loading map': '正在加载地图',
-    'Fetching locations': '正在获取地点',
-    'Building map': '正在构建地图',
-    'Loading 2D models': '正在加载 2D 模型',
-    'Loading 3D models': '正在加载 3D 模型',
-    'Adding locations to the map': '正在将地点添加到地图',
+    'Preparing your map': '正在准备地图',
+    'Finding places': '正在查找地点',
+    'Drawing the map': '正在绘制地图',
+    'Adding 2D models': '正在添加 2D 模型',
+    'Adding 3D models': '正在添加 3D 模型',
+    'Adding locations': '正在添加地点',
     'Map ready': '地图已就绪',
     // Chunk loading errors
     'Loading chat': '正在加载聊天',

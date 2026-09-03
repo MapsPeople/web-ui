@@ -7,7 +7,7 @@ import initI18n from '../../i18n/initialize.js';
 import './MapTemplate.scss';
 import { mapClickActions } from '../../constants/mapClickActions.js';
 import MapWrapper from '../MapWrapper/MapWrapper';
-import SplashScreen from '../SplashScreen/SplashScreen';
+import SplashScreenContainer from '../SplashScreen/SplashScreenContainer';
 import VenueSelector from '../VenueSelector/VenueSelector';
 import BottomSheet from '../BottomSheet/BottomSheet';
 import apiKeyState from '../../atoms/apiKeyState';
@@ -20,7 +20,6 @@ import venuesInSolutionState from '../../atoms/venuesInSolutionState';
 import venueListState from '../../atoms/venueListState';
 import solutionState from '../../atoms/solutionState.js';
 import { useAppHistory } from '../../hooks/useAppHistory';
-import { useMapLoadingProgress } from '../../hooks/useMapLoadingProgress';
 import { useReset } from '../../hooks/useReset.js';
 import Sidebar from '../Sidebar/Sidebar';
 import useLocationForWayfinding from '../../hooks/useLocationForWayfinding';
@@ -229,10 +228,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     // Indicate if the MapsIndoors JavaScript SDK is available.
     const [mapsindoorsSDKAvailable, setMapsindoorsSDKAvailable] = useState(false);
-    const { phase: loadingPhase, progress: loadingProgress, seenPhases, showSplash, isFading } = useMapLoadingProgress({
-        mapsindoorsSDKAvailable,
-        appConfig
-    });
 
     const showLegendDialog = useRecoilValue(isLegendDialogVisibleState);
 
@@ -964,12 +959,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             ${disableRightClick ? 'mapsindoors-map--disable-right-click' : ''}
             ${(currentAppView === appStates.CHAT && !isDesktop) ? 'mapsindoors-map--hide-map-controls' : ''}`}>
                 <Notification />
-                {showSplash && <SplashScreen
-                    phase={loadingPhase}
-                    progress={loadingProgress}
-                    seenPhases={seenPhases}
-                    isFading={isFading}
-                />}
+                <SplashScreenContainer mapsindoorsSDKAvailable={mapsindoorsSDKAvailable} />
                 {venueList.length > 1 && showVenueSelector && <VenueSelector
                     onOpen={() => pushAppView(appStates.VENUE_SELECTOR)}
                     onClose={() => goBack()}

@@ -134,12 +134,12 @@ const it = {
     'Location consent accept': 'Consenti',
     'Location consent decline': 'Rifiuta',
     // Map loading
-    'Loading map': 'Caricamento della mappa',
-    'Fetching locations': 'Recupero delle posizioni',
-    'Building map': 'Creazione della mappa',
-    'Loading 2D models': 'Caricamento dei modelli 2D',
-    'Loading 3D models': 'Caricamento dei modelli 3D',
-    'Adding locations to the map': 'Aggiunta delle posizioni alla mappa',
+    'Preparing your map': 'Preparazione della mappa',
+    'Finding places': 'Ricerca dei luoghi',
+    'Drawing the map': 'Disegno della mappa',
+    'Adding 2D models': 'Aggiunta dei modelli 2D',
+    'Adding 3D models': 'Aggiunta dei modelli 3D',
+    'Adding locations': 'Aggiunta delle posizioni',
     'Map ready': 'Mappa pronta',
     // Chunk loading errors
     'Loading chat': 'Caricamento della chat',

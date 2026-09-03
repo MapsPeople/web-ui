@@ -134,12 +134,12 @@ const ht = {
     'Location consent accept': 'Otorize',
     'Location consent decline': 'Refize',
     // Map loading
-    'Loading map': 'Kat la ap chaje',
-    'Fetching locations': 'Ap chèche kote yo',
-    'Building map': 'Ap bati kat la',
-    'Loading 2D models': 'Modèl 2D yo ap chaje',
-    'Loading 3D models': 'Modèl 3D yo ap chaje',
-    'Adding locations to the map': 'Ap mete kote yo sou kat la',
+    'Preparing your map': 'N ap prepare kat ou a',
+    'Finding places': 'N ap chèche kote yo',
+    'Drawing the map': 'N ap desine kat la',
+    'Adding 2D models': 'N ap ajoute modèl 2D yo',
+    'Adding 3D models': 'N ap ajoute modèl 3D yo',
+    'Adding locations': 'N ap ajoute kote yo',
     'Map ready': 'Kat la pare',
     // Chunk loading errors
     'Loading chat': 'Chat la ap chaje',

@@ -134,12 +134,12 @@ const da = {
     'Location consent accept': 'Tillad',
     'Location consent decline': 'Afvis',
     // Map loading
-    'Loading map': 'Indlæser kortet',
-    'Fetching locations': 'Henter lokationer',
-    'Building map': 'Opbygger kortet',
-    'Loading 2D models': 'Indlæser 2D-modeller',
-    'Loading 3D models': 'Indlæser 3D-modeller',
-    'Adding locations to the map': 'Lægger lokationer på kortet',
+    'Preparing your map': 'Forbereder dit kort',
+    'Finding places': 'Finder steder',
+    'Drawing the map': 'Tegner kortet',
+    'Adding 2D models': 'Tilføjer 2D-modeller',
+    'Adding 3D models': 'Tilføjer 3D-modeller',
+    'Adding locations': 'Tilføjer steder',
     'Map ready': 'Kortet er klar',
     // Chunk loading errors
     'Loading chat': 'Indlæser chatten',
