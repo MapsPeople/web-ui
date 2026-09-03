@@ -229,7 +229,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     // Indicate if the MapsIndoors JavaScript SDK is available.
     const [mapsindoorsSDKAvailable, setMapsindoorsSDKAvailable] = useState(false);
-    const { phase: loadingPhase, progress: loadingProgress, seenPhases, showSplash, isFading } = useMapLoadingProgress({
+    const { phase: loadingPhase, progress: loadingProgress, showSplash, isFading } = useMapLoadingProgress({
         mapsindoorsSDKAvailable,
         appConfig
     });
@@ -967,7 +967,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                 {showSplash && <SplashScreen
                     phase={loadingPhase}
                     progress={loadingProgress}
-                    seenPhases={seenPhases}
                     isFading={isFading}
                 />}
                 {venueList.length > 1 && showVenueSelector && <VenueSelector

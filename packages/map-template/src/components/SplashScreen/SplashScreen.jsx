@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
 import PropTypes from 'prop-types';
 import primaryColorState from '../../atoms/primaryColorState';
@@ -6,35 +5,27 @@ import logoState from '../../atoms/logoState';
 import { useOptionalTranslation } from '../../hooks/useOptionalTranslation';
 import './SplashScreen.scss';
 
-const STAGES = [
-    { phase: 'initializing', labelKey: 'Loading map' },
-    { phase: 'fetching_locations', labelKey: 'Fetching locations' },
-    { phase: 'building_geometry', labelKey: 'Building map' },
-    { phase: 'loading_2d_models', labelKey: 'Loading 2D models', optional: true },
-    { phase: 'loading_3d_models', labelKey: 'Loading 3D models', optional: true },
-    { phase: 'applying_to_map', labelKey: 'Adding locations to the map' }
-];
-
-const PHASE_ORDER = STAGES.map(stage => stage.phase);
+const STAGE_LABELS = {
+    initializing: 'Preparing your map',
+    fetching_locations: 'Finding places',
+    building_geometry: 'Drawing the map',
+    loading_2d_models: 'Adding 2D models',
+    loading_3d_models: 'Adding 3D models',
+    applying_to_map: 'Adding locations',
+    complete: 'Map ready'
+};
 
 /**
  * Initial loading overlay. Shows the solution logo, a determinate progress bar, and the
- * current SDK load stage so large solutions do not appear as an empty map.
+ * current load stage so large solutions do not appear as an empty map.
  */
-function SplashScreen({ phase = 'initializing', progress = 0, isFading = false, seenPhases }) {
+function SplashScreen({ phase = 'initializing', progress = 0, isFading = false }) {
     const primaryColor = useRecoilValue(primaryColorState);
     const logo = useRecoilValue(logoState);
     const t = useOptionalTranslation();
 
-    const currentStageIndex = Math.max(0, PHASE_ORDER.indexOf(phase));
     const percent = Math.round(Math.min(1, Math.max(0, progress)) * 100);
-    const currentLabelKey = phase === 'complete'
-        ? 'Map ready'
-        : (STAGES.find(stage => stage.phase === phase)?.labelKey ?? 'Loading map');
-
-    const visibleStages = useMemo(() => {
-        return STAGES.filter(stage => !stage.optional || seenPhases?.has(stage.phase));
-    }, [seenPhases]);
+    const currentLabelKey = STAGE_LABELS[phase] ?? STAGE_LABELS.initializing;
 
     return (
         <div
@@ -69,25 +60,6 @@ function SplashScreen({ phase = 'initializing', progress = 0, isFading = false, 
                     </div>
                     <p className="splash-screen__status">{t(currentLabelKey)}</p>
                 </div>
-                <ol className="splash-screen__stages">
-                    {visibleStages.map((stage, index) => {
-                        const stageIndex = PHASE_ORDER.indexOf(stage.phase);
-                        const isDone = phase === 'complete' || stageIndex < currentStageIndex;
-                        const isCurrent = phase !== 'complete' && stage.phase === phase;
-                        return (
-                            <li
-                                key={stage.phase}
-                                className={`splash-screen__stage${isDone ? ' splash-screen__stage--done' : ''}${isCurrent ? ' splash-screen__stage--current' : ''}`}
-                                style={isCurrent ? { color: primaryColor } : undefined}
-                            >
-                                <span className="splash-screen__stage-marker" aria-hidden="true">
-                                    {isDone ? '✓' : index + 1}
-                                </span>
-                                {t(stage.labelKey)}
-                            </li>
-                        );
-                    })}
-                </ol>
             </div>
         </div>
     );
@@ -96,8 +68,7 @@ function SplashScreen({ phase = 'initializing', progress = 0, isFading = false, 
 SplashScreen.propTypes = {
     phase: PropTypes.string,
     progress: PropTypes.number,
-    isFading: PropTypes.bool,
-    seenPhases: PropTypes.instanceOf(Set)
+    isFading: PropTypes.bool
 };
 
 export default SplashScreen;
