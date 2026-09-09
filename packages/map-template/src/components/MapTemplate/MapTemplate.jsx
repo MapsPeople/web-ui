@@ -68,8 +68,6 @@ import { useOnRouteFinished } from '../../hooks/useOnRouteFinished.js';
 import notificationMessageState from '../../atoms/notificationMessageState.js';
 import { GeminiProvider } from '../../providers/GeminiProvider';
 import ChatButton from '../ChatButton/ChatButton';
-import mapTypeState from '../../atoms/mapTypeState.js';
-import { mapTypes } from '../../constants/mapTypes.js';
 import { useIsKioskContext } from '../../hooks/useIsKioskContext.js';
 import { useKioskReload } from '../../hooks/useKioskReload.js';
 import { syncAnalyticsViewVariant } from '../../helpers/syncAnalyticsViewVariant.js';
@@ -239,7 +237,6 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const finishRoute = useOnRouteFinished();
     const setErrorMessage = useSetRecoilState(notificationMessageState);
 
-    const mapType = useRecoilValue(mapTypeState);
     const isKiosk = useIsKioskContext();
     const disableRightClick = isKiosk && (appConfig?.appSettings?.disableRightClick === true || appConfig?.appSettings?.disableRightClick === 'true');
 
@@ -667,8 +664,9 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     /*
      * React on changes in the current location prop.
      * Apply location selection if the current location exists and is not the same as the kioskOriginLocationId.
-     * Gated behind isMapReady to ensure selectLocation() is called AFTER the initial viewState.update(),
-     * preventing the selection pin from being baked into the main source (where deselectLocation can't clear it).
+     * Gated behind isMapReady so the first select happens after the initial viewState.update().
+     * Do not wait for Mapbox `idle` — on a 3D floor that event is held until models finish loading,
+     * which delayed the pin by several seconds and stacked stale listeners (two pins).
      */
     useEffect(() => {
         if (!isMapReady) return;
@@ -680,20 +678,12 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
         if (locationToSelect) {
             if (mapsIndoorsInstance?.selectLocation) {
                 mapsIndoorsInstance.highlight?.([]);
-
-                const map = mapsIndoorsInstance.getMap();
-                if (mapType === mapTypes.Mapbox) {
-                    map.once('idle', () => mapsIndoorsInstance.selectLocation(locationToSelect));
-                } else {
-                    mapsIndoorsInstance.selectLocation(locationToSelect);
-                }
+                mapsIndoorsInstance.selectLocation(locationToSelect);
             }
-        } else {
-            if (mapsIndoorsInstance?.deselectLocation) {
-                mapsIndoorsInstance.deselectLocation();
-            }
+        } else if (mapsIndoorsInstance?.deselectLocation) {
+            mapsIndoorsInstance.deselectLocation();
         }
-    }, [currentLocation, wayfindingOriginHighlightLocation, kioskOriginLocationId, mapsIndoorsInstance, isMapReady, mapType]);
+    }, [currentLocation, wayfindingOriginHighlightLocation, kioskOriginLocationId, mapsIndoorsInstance, isMapReady]);
 
     /**
      * React on changes to the app config.
