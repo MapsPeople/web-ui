@@ -390,6 +390,7 @@ export class MapMapbox implements ComponentInterface {
 
     // Map and MapsIndoors instances
     mapboxInstance;
+    mapViewInstance;
     mapsIndoorsInstance;
 
     // Map Controls
@@ -487,11 +488,11 @@ export class MapMapbox implements ComponentInterface {
                 bearing: this.bearing,
                 pitch: this.pitch
             };
-            const mapViewInstance = new mapsindoors.mapView.MapboxView(mapViewOptions);
-            this.mapboxInstance = mapViewInstance.getMap();
+            this.mapViewInstance = new mapsindoors.mapView.MapboxV3View(mapViewOptions);
+            this.mapboxInstance = this.mapViewInstance.getMap();
 
             this.mapsIndoorsInstance = new mapsindoors.MapsIndoors({
-                mapView: mapViewInstance,
+                mapView: this.mapViewInstance,
                 labelOptions: {
                     pixelOffset: { width: 0, height: 14 },
                     style: {
