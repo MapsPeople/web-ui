@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [13.37.0] - 2026-09-10
+
+### Added
+
+- **mi-map-mapbox**: Switched from `MapboxView` to `MapboxV3View`.
+- **mi-map-mapbox**: Added `showMapMarkers` prop (`show-map-markers` attribute) to toggle Mapbox Standard basemap POI, transit, and place labels. Defaults to `false`.
+- **mi-map-mapbox**: Added `buildingsOpacity` prop (`buildings-opacity` attribute) to set Mapbox Standard extruded building opacity. Defaults to `0`.
+
 ## [13.36.6] - 2026-08-11
 
 ### Changed

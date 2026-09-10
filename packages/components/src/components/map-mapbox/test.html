@@ -27,6 +27,10 @@
 
     <button onclick="previousLeg()">Previous Leg</button>
     <button onclick="nextLeg()">Next Leg</button>
+    <label>
+        <input type="checkbox" id="show-map-markers" onchange="toggleMapMarkers(this.checked)">
+        Show map markers
+    </label>
 
     <script>
         let miDirectionsServiceInstance;
@@ -66,6 +70,10 @@
 
             miDirectionsServiceInstance.getRoute(routeParams)
                 .then(directionsResult => miDirectionsRendererInstance.setRoute(directionsResult));
+        }
+
+        function toggleMapMarkers(showMapMarkers) {
+            miMapMapBox.showMapMarkers = showMapMarkers;
         }
 
         function nextLeg() {

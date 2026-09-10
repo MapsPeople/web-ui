@@ -588,6 +588,12 @@ export namespace Components {
          */
         "bearing": string;
         /**
+          * Opacity of Mapbox Standard extruded buildings (0-1).
+          * @type {number}
+          * @default 0
+         */
+        "buildingsOpacity": number;
+        /**
           * Clear existing MapsIndoors location highlight.
           * @returns
          */
@@ -686,6 +692,12 @@ export namespace Components {
           * @default {         color: '#3071d9',         opacity: 1,         weight: 4     }
          */
         "polylineOptions": { color: string, weight: number, opacity: number };
+        /**
+          * Specifies if the Mapbox basemap point-of-interest, transit, and place labels are shown.
+          * @type {boolean}
+          * @default false
+         */
+        "showMapMarkers": boolean;
         /**
           * Set or get the current zoom level of the map.
           * @type {string}
@@ -2373,6 +2385,12 @@ declare namespace LocalJSX {
          */
         "bearing"?: string;
         /**
+          * Opacity of Mapbox Standard extruded buildings (0-1).
+          * @type {number}
+          * @default 0
+         */
+        "buildingsOpacity"?: number;
+        /**
           * Set to true to prevent external links on the map from opening. This can be useful when running the map on a kiosk where you never want the browser to navigate away.
           * @type {boolean}
           * @default false
@@ -2446,6 +2464,12 @@ declare namespace LocalJSX {
           * @default {         color: '#3071d9',         opacity: 1,         weight: 4     }
          */
         "polylineOptions"?: { color: string, weight: number, opacity: number };
+        /**
+          * Specifies if the Mapbox basemap point-of-interest, transit, and place labels are shown.
+          * @type {boolean}
+          * @default false
+         */
+        "showMapMarkers"?: boolean;
         /**
           * Set or get the current zoom level of the map.
           * @type {string}
@@ -3121,6 +3145,8 @@ declare namespace LocalJSX {
         "minZoom": number;
         "miApiKey": string;
         "disableExternalLinks": boolean;
+        "showMapMarkers": boolean;
+        "buildingsOpacity": number;
         "floorSelectorControlPosition": 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
         "floorIndex": string;
         "myPositionControlPosition": 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
