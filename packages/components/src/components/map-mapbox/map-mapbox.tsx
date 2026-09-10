@@ -89,6 +89,22 @@ export class MapMapbox implements ComponentInterface {
     }
 
     /**
+     * Opacity of Mapbox Standard extruded buildings (0-1).
+     *
+     * @type {number}
+     * @default 0
+     */
+    @Prop() buildingsOpacity: number = 0;
+
+    /**
+     * Set the opacity of Mapbox Standard extruded buildings.
+     */
+    @Watch('buildingsOpacity')
+    buildingsOpacityChange(): void {
+        this.applyBasemapConfig();
+    }
+
+    /**
      * Render the floor selector as a Map Control at the given position.
      *
      * @type {('top-left' | 'top-right' | 'bottom-left' | 'bottom-right')}
@@ -603,7 +619,7 @@ export class MapMapbox implements ComponentInterface {
     }
 
     /**
-     * Apply Mapbox Standard basemap config for labels.
+     * Apply Mapbox Standard basemap config for labels and extruded buildings.
      */
     applyBasemapConfig(): void {
         if (!this.mapboxInstance?.setConfigProperty) {
@@ -618,8 +634,54 @@ export class MapMapbox implements ComponentInterface {
             this.mapboxInstance.setConfigProperty('basemap', 'showPointOfInterestLabels', this.showMapMarkers);
             this.mapboxInstance.setConfigProperty('basemap', 'showTransitLabels', this.showMapMarkers);
             this.mapboxInstance.setConfigProperty('basemap', 'showPlaceLabels', this.showMapMarkers);
+            this.setBuildingsOpacityConfigProperty(Number(this.buildingsOpacity), this.mapboxInstance);
+            this.syncExtrudedBuildingsVisibility();
         } catch {
             // The current style does not support Mapbox Standard basemap config.
+        }
+    }
+
+    /**
+     * Sets Mapbox' buildings opacity. A check is applied to not fire 'setConfigProperty' all the time, which would cause low performance.
+     *
+     * @param {number} opacityValue
+     * @param {*} map
+     */
+    setBuildingsOpacityConfigProperty(opacityValue: number, map): void {
+        if (isNaN(opacityValue)) {
+            return;
+        }
+
+        if (!map.getStyle().imports) {
+            return;
+        }
+
+        const currentOpacity = map.getConfigProperty('basemap', 'buildingsOpacity');
+        if (currentOpacity !== opacityValue) {
+            map.setConfigProperty('basemap', 'buildingsOpacity', opacityValue);
+        }
+    }
+
+    /**
+     * Keep MapboxV3View from restoring building opacity on zoom.
+     * When opacity is 0, hide extruded buildings so the SDK leaves them at 0.
+     */
+    syncExtrudedBuildingsVisibility(): void {
+        const extrudedBuildings = this.mapViewInstance?.FeatureType?.EXTRUDEDBUILDINGS;
+        if (!this.mapViewInstance?.hideFeatures || !extrudedBuildings) {
+            return;
+        }
+
+        const hiddenFeatures = typeof this.mapViewInstance.getHiddenFeatures === 'function'
+            ? this.mapViewInstance.getHiddenFeatures() ?? []
+            : [];
+        const shouldHide = Number(this.buildingsOpacity) === 0;
+        const isHidden = hiddenFeatures.includes(extrudedBuildings);
+
+        if (shouldHide && !isHidden) {
+            this.mapViewInstance.hideFeatures([...hiddenFeatures, extrudedBuildings]);
+        } else if (!shouldHide && isHidden) {
+            this.mapViewInstance.hideFeatures(hiddenFeatures.filter((feature) => feature !== extrudedBuildings));
         }
     }
 

@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **mi-map-mapbox**: Switched from `MapboxView` to `MapboxV3View`.
 - **mi-map-mapbox**: Added `showMapMarkers` prop (`show-map-markers` attribute) to toggle Mapbox Standard basemap POI, transit, and place labels. Defaults to `false`.
+- **mi-map-mapbox**: Added `buildingsOpacity` prop (`buildings-opacity` attribute) to set Mapbox Standard extruded building opacity. Defaults to `0`.
 
 ## [13.36.6] - 2026-08-11
 

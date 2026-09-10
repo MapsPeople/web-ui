@@ -588,6 +588,12 @@ export namespace Components {
          */
         "bearing": string;
         /**
+          * Opacity of Mapbox Standard extruded buildings (0-1).
+          * @type {number}
+          * @default 0
+         */
+        "buildingsOpacity": number;
+        /**
           * Clear existing MapsIndoors location highlight.
           * @returns
          */
@@ -2379,6 +2385,12 @@ declare namespace LocalJSX {
          */
         "bearing"?: string;
         /**
+          * Opacity of Mapbox Standard extruded buildings (0-1).
+          * @type {number}
+          * @default 0
+         */
+        "buildingsOpacity"?: number;
+        /**
           * Set to true to prevent external links on the map from opening. This can be useful when running the map on a kiosk where you never want the browser to navigate away.
           * @type {boolean}
           * @default false
@@ -3134,6 +3146,7 @@ declare namespace LocalJSX {
         "miApiKey": string;
         "disableExternalLinks": boolean;
         "showMapMarkers": boolean;
+        "buildingsOpacity": number;
         "floorSelectorControlPosition": 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
         "floorIndex": string;
         "myPositionControlPosition": 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';

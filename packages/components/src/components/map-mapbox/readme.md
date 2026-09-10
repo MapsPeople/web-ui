@@ -139,6 +139,10 @@ A `disableExternalLinks` attribute is available on the `<mi-map-mapbox>` element
 
 A `showMapMarkers` attribute is available on the `<mi-map-mapbox>` element, which can be set to `true` to show Mapbox Standard basemap point-of-interest, transit, and place labels. Defaults to `false`.
 
+## `buildingsOpacity` attribute
+
+A `buildingsOpacity` attribute is available on the `<mi-map-mapbox>` element, which can be used to set the opacity of Mapbox Standard extruded buildings (0-1). Defaults to `0`.
+
 ## `floorSelectorControlPosition` attribute
 
 A `floorSelectorControlPosition` attribute is available on the `<mi-map-mapbox>` element, which can be used to control where and if the Floor Selector should be rendered.
