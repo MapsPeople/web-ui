@@ -687,6 +687,12 @@ export namespace Components {
          */
         "polylineOptions": { color: string, weight: number, opacity: number };
         /**
+          * Specifies if the Mapbox basemap point-of-interest, transit, and place labels are shown.
+          * @type {boolean}
+          * @default false
+         */
+        "showMapMarkers": boolean;
+        /**
           * Set or get the current zoom level of the map.
           * @type {string}
           * @default '17'
@@ -2447,6 +2453,12 @@ declare namespace LocalJSX {
          */
         "polylineOptions"?: { color: string, weight: number, opacity: number };
         /**
+          * Specifies if the Mapbox basemap point-of-interest, transit, and place labels are shown.
+          * @type {boolean}
+          * @default false
+         */
+        "showMapMarkers"?: boolean;
+        /**
           * Set or get the current zoom level of the map.
           * @type {string}
           * @default '17'
@@ -3121,6 +3133,7 @@ declare namespace LocalJSX {
         "minZoom": number;
         "miApiKey": string;
         "disableExternalLinks": boolean;
+        "showMapMarkers": boolean;
         "floorSelectorControlPosition": 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
         "floorIndex": string;
         "myPositionControlPosition": 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';

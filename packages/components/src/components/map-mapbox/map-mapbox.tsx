@@ -71,6 +71,24 @@ export class MapMapbox implements ComponentInterface {
     }
 
     /**
+     * Specifies if the Mapbox basemap point-of-interest, transit, and place labels are shown.
+     *
+     * @type {boolean}
+     * @default false
+     */
+    @Prop() showMapMarkers: boolean = false;
+
+    /**
+     * Toggle Mapbox Standard style labels for POIs, transit, and places.
+     *
+     * @param {boolean} showMapMarkers
+     */
+    @Watch('showMapMarkers')
+    showMapMarkersChange(): void {
+        this.applyBasemapConfig();
+    }
+
+    /**
      * Render the floor selector as a Map Control at the given position.
      *
      * @type {('top-left' | 'top-right' | 'bottom-left' | 'bottom-right')}
@@ -486,10 +504,19 @@ export class MapMapbox implements ComponentInterface {
                 maxPitch: this.maxPitch,
                 minZoom: this.minZoom,
                 bearing: this.bearing,
-                pitch: this.pitch
+                pitch: this.pitch,
+                showMapMarkers: this.showMapMarkers
             };
             this.mapViewInstance = new mapsindoors.mapView.MapboxV3View(mapViewOptions);
             this.mapboxInstance = this.mapViewInstance.getMap();
+
+            this.mapboxInstance.on('style.load', () => {
+                this.applyBasemapConfig();
+            });
+
+            if (typeof this.mapboxInstance.isStyleLoaded === 'function' && this.mapboxInstance.isStyleLoaded()) {
+                this.applyBasemapConfig();
+            }
 
             this.mapsIndoorsInstance = new mapsindoors.MapsIndoors({
                 mapView: this.mapViewInstance,
@@ -515,6 +542,7 @@ export class MapMapbox implements ComponentInterface {
 
                 this.initializeDirectionsService();
                 this.initializeDirectionsRenderer();
+                this.applyBasemapConfig();
 
                 this.mapsIndoorsReady.emit();
                 resolve();
@@ -572,6 +600,27 @@ export class MapMapbox implements ComponentInterface {
         this.mapboxInstance.on('rotateend', () => {
             this.bearing = this.mapboxInstance.getBearing().toString();
         });
+    }
+
+    /**
+     * Apply Mapbox Standard basemap config for labels.
+     */
+    applyBasemapConfig(): void {
+        if (!this.mapboxInstance?.setConfigProperty) {
+            return;
+        }
+
+        if (!this.mapboxInstance.getStyle?.()?.imports) {
+            return;
+        }
+
+        try {
+            this.mapboxInstance.setConfigProperty('basemap', 'showPointOfInterestLabels', this.showMapMarkers);
+            this.mapboxInstance.setConfigProperty('basemap', 'showTransitLabels', this.showMapMarkers);
+            this.mapboxInstance.setConfigProperty('basemap', 'showPlaceLabels', this.showMapMarkers);
+        } catch {
+            // The current style does not support Mapbox Standard basemap config.
+        }
     }
 
     /**
