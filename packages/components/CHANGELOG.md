@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [13.37.1] - 2026-09-22
+
+### Changed
+
+- **map-mapbox**: Updated Mapbox GL JS CDN version from v3.28.1 to v3.31.0.
+
 ## [13.37.0] - 2026-09-10
 
 ### Added
