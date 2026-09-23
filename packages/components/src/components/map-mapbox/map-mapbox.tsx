@@ -626,6 +626,13 @@ export class MapMapbox implements ComponentInterface {
             return;
         }
 
+        // Bail out while the style is still loading. getStyle() below throws
+        // "Style is not done loading" until it has finished (the optional chaining does not catch
+        // that throw). The persistent 'style.load' handler re-runs this once the style is ready.
+        if (typeof this.mapboxInstance.isStyleLoaded === 'function' && !this.mapboxInstance.isStyleLoaded()) {
+            return;
+        }
+
         if (!this.mapboxInstance.getStyle?.()?.imports) {
             return;
         }
