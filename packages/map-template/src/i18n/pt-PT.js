@@ -62,6 +62,7 @@ const ptPT = {
     'Avoid stairs and escalators': 'Evitar escadas e escadas rolantes',
     'Include bus transportation': 'Incluir transporte de autocarro',
     'No route found': 'Nenhum percurso encontrado',
+    'Updating route': 'A atualizar o percurso',
     'My position': 'A minha posição',
     'Go!': 'Ir!',
     'Directions': 'Direções',

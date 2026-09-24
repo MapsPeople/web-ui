@@ -62,6 +62,7 @@ const nl = {
     'Avoid stairs and escalators': 'Vermijd trappen en roltrappen',
     'Include bus transportation': 'Busvervoer opnemen',
     'No route found': 'Geen route gevonden',
+    'Updating route': 'Route bijwerken',
     'My position': 'Mijn positie',
     'Go!': 'Gaan!',
     'Directions': 'Richtingen',

@@ -62,6 +62,7 @@ const ru = {
     'Avoid stairs and escalators': 'Избегать лестниц и эскалаторов',
     'Include bus transportation': 'Учитывать автобусы',
     'No route found': 'Маршрут не найден',
+    'Updating route': 'Обновление маршрута',
     'My position': 'Моё местоположение',
     'Go!': 'Вперёд!',
     'Directions': 'Навигация',

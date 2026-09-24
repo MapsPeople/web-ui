@@ -62,6 +62,7 @@ const zhHans = {
     'Avoid stairs and escalators': '避开楼梯和扶梯',
     'Include bus transportation': '包含公交交通',
     'No route found': '未找到路线',
+    'Updating route': '正在更新路线',
     'My position': '我的位置',
     'Go!': '出发！',
     'Directions': '导航',

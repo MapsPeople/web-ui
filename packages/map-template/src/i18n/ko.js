@@ -62,6 +62,7 @@ const ko = {
     'Avoid stairs and escalators': '계단과 에스컬레이터 피하기',
     'Include bus transportation': '버스 이용 포함',
     'No route found': '경로를 찾을 수 없습니다',
+    'Updating route': '경로를 업데이트하는 중',
     'My position': '내 위치',
     'Go!': '출발!',
     'Directions': '길 안내',

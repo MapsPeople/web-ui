@@ -62,6 +62,7 @@ const it = {
     'Avoid stairs and escalators': 'Evita scale e scale mobili',
     'Include bus transportation': 'Includi trasporto in autobus',
     'No route found': 'Nessun percorso trovato',
+    'Updating route': 'Aggiornamento del percorso',
     'My position': 'La mia posizione',
     'Go!': 'Vai!',
     'Directions': 'Indicazioni',

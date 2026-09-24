@@ -62,6 +62,7 @@ const ht = {
     'Avoid stairs and escalators': 'Evite eskalye ak eskalatè',
     'Include bus transportation': 'Mete transpò bis ladan',
     'No route found': 'Nou pa jwenn okenn wout',
+    'Updating route': 'Ap mete ajou wout la',
     'My position': 'Pozisyon mwen',
     'Go!': 'Ale!',
     'Directions': 'Direksyon',

@@ -62,6 +62,7 @@ const ceb = {
     'Avoid stairs and escalators': 'Likayi ang hagdanan ug escalator',
     'Include bus transportation': 'Iapil ang bus',
     'No route found': 'Walay nakit-ang ruta',
+    'Updating route': 'Gi-update ang rota',
     'My position': 'Akong nahimutangan',
     'Go!': 'Larga!',
     'Directions': 'Direksyon',

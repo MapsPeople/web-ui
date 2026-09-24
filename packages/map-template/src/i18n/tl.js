@@ -62,6 +62,7 @@ const tl = {
     'Avoid stairs and escalators': 'Iwasan ang hagdan at escalator',
     'Include bus transportation': 'Isama ang bus',
     'No route found': 'Walang nahanap na ruta',
+    'Updating route': 'Ina-update ang ruta',
     'My position': 'Aking lokasyon',
     'Go!': 'Simulan!',
     'Directions': 'Direksyon',
