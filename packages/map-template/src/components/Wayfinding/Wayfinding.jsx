@@ -31,6 +31,7 @@ import distanceUnitSystemSelector from '../../selectors/distanceUnitSystemSelect
 import useDirectionsInfo from '../../hooks/useDirectionsInfo';
 import hasFoundRouteState from '../../atoms/hasFoundRouteState';
 import accessibilityOnState from '../../atoms/accessibilityOnState';
+import directionsLoadingState from '../../atoms/directionsLoadingState';
 import Accessibility from '../Accessibility/Accessibility';
 import ShuttleBus from '../ShuttleBus/ShuttleBus';
 import searchExternalLocationsState from '../../atoms/searchExternalLocationsState';
@@ -132,6 +133,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     const [originLocation, setOriginLocation] = useState();
 
     const accessibilityOn = useRecoilValue(accessibilityOnState);
+    const directionsLoading = useRecoilValue(directionsLoadingState);
 
     const [hasGooglePlaces, setHasGooglePlaces] = useState(false);
 
@@ -637,6 +639,12 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                     </div>
                 </div>}
             {!searchTriggered && !showMyPositionOption && hasFoundRoute && !hasGooglePlaces && originLocation && destinationLocation && <div className={'wayfinding__details'} ref={detailsRef}>
+                {directionsLoading &&
+                    <div className="wayfinding__loading" role="status" aria-live="polite">
+                        <mi-spinner></mi-spinner>
+                        <span className="wayfinding__sr-only">{t('Updating route')}</span>
+                    </div>
+                }
                 <div className="wayfinding__settings">
                     <div className="wayfinding__toggles">
                         <Accessibility />
