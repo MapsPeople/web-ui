@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [13.37.2] - 2026-09-23
+
+### Fixed
+
+- **mi-map-mapbox**: Fixed intermittent `Style is not done loading` error thrown by `applyBasemapConfig` when the basemap config was applied (via the `ready` event or the `showMapMarkers`/`buildingsOpacity` watchers) before the Mapbox style had finished loading. The config is now only applied once `isStyleLoaded()` is true, and re-applied on `style.load`.
+
 ## [13.37.1] - 2026-09-22
 
 ### Changed
