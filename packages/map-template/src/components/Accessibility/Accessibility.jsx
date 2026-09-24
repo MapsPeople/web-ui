@@ -10,7 +10,9 @@ Accessibility.propTypes = {
 };
 
 /**
- * Accessibility component which uses the mi-toggle and displays an info tooltip.
+ * Accessibility toggle. Stairs and escalator icons sit beside the switch so the
+ * control is recognizable without reading the label. A slash is drawn across
+ * the icons while the option is on.
  * @param {function} props.onAccessibilityChanged - Callback that fires when the accessibility has changed.
  *
  */
@@ -31,14 +33,22 @@ function Accessibility({ onAccessibilityChanged }) {
         }
     }
 
-    return <div className="accessibility">
+    return <div className={`accessibility${accessibilityOn ? ' accessibility--on' : ''}`}>
         <label className="accessibility__label">
             <input className="mi-toggle"
                 type="checkbox"
                 checked={accessibilityOn}
                 onChange={event => handleAccessibilityChanged(event)}
                 style={{ backgroundColor: accessibilityOn ? primaryColor : '' }} />
-            {t('Avoid stairs and escalators')}
+            <span className="accessibility__icons" aria-hidden="true">
+                <span className="accessibility__icon">
+                    <mi-icon icon-name="stairs"></mi-icon>
+                </span>
+                <span className="accessibility__icon">
+                    <mi-icon icon-name="escalator"></mi-icon>
+                </span>
+            </span>
+            <span className="accessibility__text">{t('Avoid stairs and escalators')}</span>
         </label>
     </div>
 }
