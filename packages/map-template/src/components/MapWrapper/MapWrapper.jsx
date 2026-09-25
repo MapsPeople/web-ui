@@ -238,7 +238,6 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
         if (mapsIndoorsInstance) {
             const numericPitch = parseFloat(pitch);
             const numericBearing = parseFloat(bearing);
-            console.log(numericPitch, numericBearing);
             
             if (!isNaN(numericPitch)) {
                 mapsIndoorsInstance.getMapView().tilt(numericPitch);
