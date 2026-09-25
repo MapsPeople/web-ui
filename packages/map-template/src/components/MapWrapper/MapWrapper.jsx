@@ -236,11 +236,14 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
      */
     useEffect(() => {
         if (mapsIndoorsInstance) {
-            if (!isNaN(parseInt(pitch))) {
-                mapsIndoorsInstance.getMapView().tilt(parseInt(pitch));
+            const numericPitch = parseFloat(pitch);
+            const numericBearing = parseFloat(bearing);
+            
+            if (!isNaN(numericPitch)) {
+                mapsIndoorsInstance.getMapView().tilt(numericPitch);
             }
-            if (!isNaN(parseInt(bearing))) {
-                mapsIndoorsInstance.getMapView().rotate(parseInt(bearing));
+            if (!isNaN(numericBearing)) {
+                mapsIndoorsInstance.getMapView().rotate(numericBearing);
             }
         }
     }, [bearing, pitch, mapsIndoorsInstance]);
