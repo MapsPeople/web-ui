@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.99.31] - 2026-09-25
+
+### Added
+
+- Stairs and escalator icons beside the "Avoid stairs and escalators" toggle. A slash is drawn across the icons while the option is on.
+- A loading spinner over the directions panel and the wayfinding details while a route is being calculated, including the first request and later changes such as the accessibility toggle.
+
+### Changed
+
+- When no route is found, the accessibility toggle stays available so a change can calculate a new route. "No route found" replaces the distance and Go button until a route exists.
+
+## [1.99.30] - 2026-09-25
+
+### Fixed
+
+- Improved data rendering performance.
+
 ## [1.99.29] - 2026-09-25
 
 ### Fixed
