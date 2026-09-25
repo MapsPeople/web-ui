@@ -62,6 +62,7 @@ const en = {
     'Avoid stairs and escalators': 'Avoid stairs and escalators',
     'Include bus transportation': 'Include bus transportation',
     'No route found': 'No route found',
+    'Updating route': 'Updating route',
     'My position': 'My position',
     'Go!': 'Go!',
     'Directions': 'Directions',

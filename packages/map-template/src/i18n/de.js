@@ -62,6 +62,7 @@ const de = {
     'Avoid stairs and escalators': 'Treppen und Rolltreppen vermeiden',
     'Include bus transportation': 'Busverkehr einbeziehen',
     'No route found': 'Keine Route gefunden',
+    'Updating route': 'Route wird aktualisiert',
     'My position': 'Meine Position',
     'Go!': 'Los!',
     'Directions': 'Wegbeschreibung',

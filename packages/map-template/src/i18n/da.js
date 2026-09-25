@@ -62,6 +62,7 @@ const da = {
     'Avoid stairs and escalators': 'Undgå trapper og rulletrapper',
     'Include bus transportation': 'Inkluder bus transport',
     'No route found': 'Ingen rute fundet',
+    'Updating route': 'Opdaterer ruten',
     'My position': 'Min position',
     'Go!': 'Go!',
     'Directions': 'Rutevejledning',

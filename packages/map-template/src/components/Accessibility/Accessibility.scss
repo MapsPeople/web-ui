@@ -2,9 +2,50 @@
     width: fit-content;
 
     &__label {
-        display: grid;
-        grid-auto-flow: column;
+        display: flex;
+        flex-wrap: wrap;
         gap: var(--spacing-x-small);
         align-items: center;
+    }
+
+    &__text {
+        min-width: 0;
+    }
+
+    &__icons {
+        display: grid;
+        grid-auto-flow: column;
+        gap: var(--spacing-xx-small);
+        align-items: center;
+    }
+
+    &__icon {
+        position: relative;
+        display: grid;
+        width: 28px;
+        height: 28px;
+
+        mi-icon {
+            display: block;
+            width: 100%;
+            height: 100%;
+            background-color: currentColor;
+        }
+    }
+
+    // Slash the icons while stairs and escalators are being avoided.
+    // A light outline keeps the mark visible where it crosses the glyph.
+    &--on &__icon::after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        top: -2px;
+        width: 2px;
+        height: calc(100% + 4px);
+        border-radius: 1px;
+        background: currentColor;
+        box-shadow: -1px 0 0 var(--color-white-white, #fff), 1px 0 0 var(--color-white-white, #fff);
+        transform: translateX(-50%) rotate(-45deg);
+        pointer-events: none;
     }
 }

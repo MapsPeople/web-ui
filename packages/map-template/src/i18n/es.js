@@ -62,6 +62,7 @@ const es = {
     'Avoid stairs and escalators': 'Evitar escaleras y escaleras mecánicas',
     'Include bus transportation': 'Incluir transporte en autobús',
     'No route found': 'No se encontró ninguna ruta',
+    'Updating route': 'Actualizando la ruta',
     'My position': 'Mi posición',
     'Go!': '¡Ir!',
     'Directions': 'Instrucciones',

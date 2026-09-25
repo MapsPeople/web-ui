@@ -9,6 +9,7 @@ import travelModeState from '../../atoms/travelModeState';
 import QRCode from '../../assets/qrcode.svg?react';
 import RouteInstructions from '../RouteInstructions/RouteInstructions';
 import directionsResponseState from '../../atoms/directionsResponseState';
+import directionsLoadingState from '../../atoms/directionsLoadingState';
 import activeStepState from '../../atoms/activeStep';
 import { snapPoints } from '../../constants/snapPoints';
 import substepsToggledState from '../../atoms/substepsToggledState';
@@ -69,6 +70,8 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished }) {
     const travelMode = useRecoilValue(travelModeState);
 
     const directions = useRecoilValue(directionsResponseState);
+
+    const directionsLoading = useRecoilValue(directionsLoadingState);
 
     const [activeStep, setActiveStep] = useRecoilState(activeStepState);
 
@@ -360,6 +363,12 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished }) {
 
     return (
         <div className="directions" style={{ display: !isKioskContext ? 'grid' : 'block' }}>
+            {directionsLoading &&
+                <div className="directions__loading" role="status" aria-live="polite">
+                    <mi-spinner></mi-spinner>
+                    <span className="directions__sr-heading">{t('Updating route')}</span>
+                </div>
+            }
             <h2 className="directions__sr-heading">{t('Directions')}</h2>
             <div className="directions__header">
                 <div className="directions__minutes">{totalTime && <mi-time translations={JSON.stringify({ days: t('d'), hours: t('h'), minutes: t('min') })} seconds={totalTime} />}</div>

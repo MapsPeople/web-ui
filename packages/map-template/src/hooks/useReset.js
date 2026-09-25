@@ -2,6 +2,7 @@ import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 import activeStepState from '../atoms/activeStep';
 import currentLocationState from '../atoms/currentLocationState';
 import directionsResponseState from '../atoms/directionsResponseState';
+import directionsLoadingState from '../atoms/directionsLoadingState';
 import hasFoundRouteState from '../atoms/hasFoundRouteState';
 import isLocationClickedState from '../atoms/isLocationClickedState';
 import notificationMessageState from '../atoms/notificationMessageState';
@@ -31,6 +32,7 @@ export function useReset() {
     const activeStep = useResetRecoilState(activeStepState);
     const currentLocation = useResetRecoilState(currentLocationState);
     const directionsResponse = useResetRecoilState(directionsResponseState);
+    const directionsLoading = useResetRecoilState(directionsLoadingState);
     const hasFoundRoute = useResetRecoilState(hasFoundRouteState);
     const isLocationClicked = useResetRecoilState(isLocationClickedState);
     const notificationMessage = useResetRecoilState(notificationMessageState);
@@ -50,6 +52,7 @@ export function useReset() {
         activeStep();
         currentLocation();
         directionsResponse();
+        directionsLoading();
         hasFoundRoute();
         isLocationClicked();
         notificationMessage();

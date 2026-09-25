@@ -62,6 +62,7 @@ const ja = {
     'Avoid stairs and escalators': '階段・エスカレーターを避ける',
     'Include bus transportation': 'バスを利用する',
     'No route found': 'ルートが見つかりません',
+    'Updating route': 'ルートを更新しています',
     'My position': '現在地',
     'Go!': '開始',
     'Directions': 'ルート案内',

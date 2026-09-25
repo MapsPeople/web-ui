@@ -62,6 +62,7 @@ const zhHant = {
       'Avoid stairs and escalators': '避開樓梯與手扶梯',
       'Include bus transportation': '包含公車運輸',
       'No route found': '找不到路線',
+      'Updating route': '正在更新路線',
       'My position': '我的位置',
       'Go!': '出發！',
       'Directions': '導航',

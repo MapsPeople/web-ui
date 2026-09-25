@@ -81,7 +81,22 @@
     }
 
     &__details {
+        position: relative;
         padding: var(--spacing-large) var(--spacing-medium) var(--spacing-medium) var(--spacing-medium);
+    }
+
+    &__loading {
+        position: absolute;
+        inset: 0;
+        z-index: calc(var(--z-index-sticky, 100) + 1);
+        display: grid;
+        place-items: center;
+        background: color-mix(in srgb, var(--color-white-white) 78%, transparent);
+        pointer-events: auto;
+
+        mi-spinner {
+            display: block;
+        }
     }
 
     &__results {

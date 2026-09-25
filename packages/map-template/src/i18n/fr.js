@@ -62,6 +62,7 @@ const fr = {
     'Avoid stairs and escalators': 'Éviter les escaliers et les escalators',
     'Include bus transportation': 'Inclure le transport en bus',
     'No route found': 'Aucun itinéraire trouvé',
+    'Updating route': 'Mise à jour de l\'itinéraire',
     'My position': 'Ma position',
     'Go!': 'C\'est parti!',
     'Directions': 'Instructions',
