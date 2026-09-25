@@ -572,6 +572,8 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
         }
     }, [currentLocation]);
 
+    const showRouteDetails = !searchTriggered && !showMyPositionOption && !hasGooglePlaces && originLocation && destinationLocation;
+
     return (
         <div className="wayfinding" ref={wayfindingRef}>
             <div className="wayfinding__directions">
@@ -618,7 +620,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                     </label>
                 </fieldset>
             </div>
-            {!hasFoundRoute && <p className="wayfinding__error" role="status" aria-live="polite">{t('No route found')}</p>}
+            {!hasFoundRoute && !showRouteDetails && <p className="wayfinding__error" role="status" aria-live="polite">{t('No route found')}</p>}
             {!hasSearchResults && !showMyPositionOption && <p className="wayfinding__error" role="status" aria-live="polite">{t('Nothing was found')}</p>}
             {userPosition && showMyPositionOption && <button type="button" className="wayfinding__use-current-position" onClick={() => selectMyPosition()}>
                 <CompassArrow />
@@ -638,7 +640,7 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                         {hasGooglePlaces && <img className="wayfinding__google" alt="Powered by Google" src={GooglePlaces} />}
                     </div>
                 </div>}
-            {!searchTriggered && !showMyPositionOption && hasFoundRoute && !hasGooglePlaces && originLocation && destinationLocation && <div className={'wayfinding__details'} ref={detailsRef}>
+            {showRouteDetails && <div className={'wayfinding__details'} ref={detailsRef}>
                 {directionsLoading &&
                     <div className="wayfinding__loading" role="status" aria-live="polite">
                         <mi-spinner></mi-spinner>
@@ -682,6 +684,8 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                         )}
                     </div>
                 </div>
+                {hasFoundRoute ?
+                <>
                 <hr></hr>
                 <div className="wayfinding__info" role="status" aria-live="polite" aria-atomic="true">
                     <div className="wayfinding__distance">
@@ -700,6 +704,8 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
                 <button className="wayfinding__button" style={{ background: primaryColor }} onClick={() => onStartDirections()} disabled={!areDirectionsReady}>
                     {t('Go!')}
                 </button>
+                </>
+                : !directionsLoading && <p className="wayfinding__error" role="status" aria-live="polite">{t('No route found')}</p>}
             </div>}
         </div>
     )
