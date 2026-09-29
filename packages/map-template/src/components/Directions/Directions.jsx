@@ -361,6 +361,9 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished }) {
         }
     }, [substepsOpen]);
 
+    const routeSteps = getRouteSteps();
+    const hasMultipleSteps = routeSteps.length > 1;
+
     return (
         <div className="directions" style={{ display: !isKioskContext ? 'grid' : 'block' }}>
             {directionsLoading &&
@@ -398,21 +401,25 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished }) {
                 </>
             }
             <div className="directions__actions">
-                {getRouteSteps().length > 0 &&
-                    <div className={`route-instructions__actions ${!isKioskContext ? '' : 'route-instructions__actions--kiosk'}`}>
-                        <button className={`route-instructions__button ${!isKioskContext ? '' : 'route-instructions__button--kiosk'}`}
-                            onClick={() => previousStep()}
-                            aria-label={t('Previous')}
-                            disabled={activeStep === 0}>
-                            <ArrowLeft />
-                        </button>
-                        <div className="route-instructions__overview" role="status" aria-live="polite" aria-atomic="true">{t('StepYofX', { activeStep: activeStep + 1, totalSteps: getRouteSteps().length })}</div>
-                        <button className={`route-instructions__button ${!isKioskContext ? '' : 'route-instructions__button--kiosk'}`}
-                            onClick={() => nextStep()}
-                            aria-label={t('Next')}
-                            disabled={activeStep === getRouteSteps().length - 1}>
-                            <ArrowRight />
-                        </button>
+                {routeSteps.length > 0 &&
+                    <div className={['route-instructions__actions', isKioskContext && 'route-instructions__actions--kiosk', !hasMultipleSteps && 'route-instructions__actions--single'].filter(Boolean).join(' ')}>
+                        {hasMultipleSteps &&
+                            <button className={`route-instructions__button ${!isKioskContext ? '' : 'route-instructions__button--kiosk'}`}
+                                onClick={() => previousStep()}
+                                aria-label={t('Previous')}
+                                disabled={activeStep === 0}>
+                                <ArrowLeft />
+                            </button>
+                        }
+                        <div className="route-instructions__overview" role="status" aria-live="polite" aria-atomic="true">{t('StepYofX', { activeStep: activeStep + 1, totalSteps: routeSteps.length })}</div>
+                        {hasMultipleSteps &&
+                            <button className={`route-instructions__button ${!isKioskContext ? '' : 'route-instructions__button--kiosk'}`}
+                                onClick={() => nextStep()}
+                                aria-label={t('Next')}
+                                disabled={activeStep === routeSteps.length - 1}>
+                                <ArrowRight />
+                            </button>
+                        }
                     </div>
                 }
                 <div className="directions__details">
