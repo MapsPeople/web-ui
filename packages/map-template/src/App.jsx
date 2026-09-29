@@ -1,5 +1,8 @@
 import './App.css';
 import MapsIndoorsMap from './components/MapsIndoorsMap/MapsIndoorsMap';
+import configureMapsIndoorsApiUrls from './helpers/configureMapsIndoorsApiUrls';
+
+configureMapsIndoorsApiUrls(import.meta.env.VITE_MAPSINDOORS_API_URLS);
 
 function App() {
     return (

@@ -46,6 +46,16 @@ mapsIndoorsMapElement.externalIDs = externalIDsArray;
 
 Use query parameters to configure the Web Component by setting the `supports-url-parameter` attribute to `true`.
 
+### Local backend development
+
+When running the Map Template against a local MapsIndoors backend, set `VITE_MAPSINDOORS_API_URLS` before starting Vite:
+
+```bash
+VITE_MAPSINDOORS_API_URLS=http://localhost:5099 npm run start
+```
+
+The value is written to the MapsIndoors SDK API URL override used by the browser session. Leave it unset for the hosted production backend.
+
 ## Using just the browser
 
 ```html
