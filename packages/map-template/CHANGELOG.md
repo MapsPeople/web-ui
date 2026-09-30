@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Updated the MapsIndoors Web SDK to version 4.61.3.
 
+### Fixed
+
+- Step arrows stay hidden when a route has only one step. They appear when there is more than one step.
+
 ## [1.99.31] - 2026-09-25
 
 ### Added

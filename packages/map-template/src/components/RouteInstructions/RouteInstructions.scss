@@ -8,6 +8,10 @@
         grid-auto-flow: column;
         justify-content: space-between;
         align-items: center;
+
+        &--single {
+            justify-content: center;
+        }
     }
 
     &__overview {
