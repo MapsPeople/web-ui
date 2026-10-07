@@ -535,13 +535,7 @@ export class MapMapbox implements ComponentInterface {
             }
 
             this.mapsIndoorsInstance = new mapsindoors.MapsIndoors({
-                mapView: this.mapViewInstance,
-                labelOptions: {
-                    pixelOffset: { width: 0, height: 14 },
-                    style: {
-                        fontSize: '11px'
-                    }
-                }
+                mapView: this.mapViewInstance
             });
 
             // Add zoom and rotation controls

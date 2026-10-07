@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [13.38.0] - 2026-10-07
+
+### Fixed
+
+- **mi-map-mapbox**: Floating labels no longer disappear next to their icon when a larger text size is set in the CMS. The CMS label positions Top, Left and Right now work too.
+
+### Changed
+
+- **mi-map-mapbox**: Labels now use the text size and position set in the CMS. Before, the component always drew labels at 11px and pushed them 14px down, whatever the CMS said. Labels are now 12px by default (was 11px) and sit slightly further from their icon. This also applies to flat labels, and to graphic labels when hovered.
+
 ## [13.37.3] - 2026-10-02
 
 ### Changed

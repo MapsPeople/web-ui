@@ -30,3 +30,29 @@ describe('mi-map-mapbox applyBasemapConfig', () => {
         expect(configured).toContain('showPointOfInterestLabels');
     });
 });
+
+describe('mi-map-mapbox setupMap', () => {
+    afterEach(() => {
+        delete (globalThis as any).mapsindoors;
+        delete (globalThis as any).mapboxgl;
+    });
+
+    it('does not override the CMS label display rules with labelOptions (MS-4006)', () => {
+        const mapsIndoorsOptions: object[] = [];
+        const map = { on: (): void => undefined, isStyleLoaded: (): boolean => false, addControl: (): void => undefined };
+        // Plain functions called with `new` return these objects; 'ready' never fires in this test.
+        (globalThis as any).mapsindoors = {
+            mapView: { MapboxV3View: function (): object { return { getMap: (): object => map }; } },
+            MapsIndoors: function (options: object): object {
+                mapsIndoorsOptions.push(options);
+                return { on: (): void => undefined };
+            },
+        };
+        (globalThis as any).mapboxgl = { NavigationControl: class {} };
+
+        void new MapMapbox().setupMap();
+
+        expect(mapsIndoorsOptions).toHaveLength(1);
+        expect(mapsIndoorsOptions[0]).not.toHaveProperty('labelOptions');
+    });
+});
