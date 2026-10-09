@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [13.37.5] - 2026-10-09
+
+### Changed
+
+- **mi-my-position**: Replaced the AGPL `ua-parser-js` dependency with `@ua-parser-js/pro-enterprise`. Compass follow still appears only for phones and tablets. Location and center-on-me are unchanged.
+
 ## [13.37.4] - 2026-10-07
 
 ### Fixed
