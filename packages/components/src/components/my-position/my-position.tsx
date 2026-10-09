@@ -1,5 +1,5 @@
 import { Component, Host, JSX, Prop, Event, EventEmitter, State, h, Method } from '@stencil/core';
-import { UAParser, IDevice } from 'ua-parser-js';
+import { UAParser } from '@ua-parser-js/pro-enterprise';
 import merge from 'deepmerge';
 import { GeoLocationProvider as PositionProvider } from './GeoLocationProvider';
 import { IPositionProvider, MapsIndoorsPosition } from '../../types/position-provider.interface';
@@ -737,7 +737,7 @@ export class MyPositionComponent {
             return;
         }
 
-        const deviceType: IDevice['type'] = this.parser.getDevice().type;
+        const deviceType = this.parser.getDevice().type;
         this.canBeTracked = (
             typeof window.DeviceOrientationEvent === 'function' &&
             (deviceType === UAParser.DEVICE.MOBILE || deviceType === UAParser.DEVICE.TABLET) &&
