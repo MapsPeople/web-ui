@@ -35,13 +35,13 @@
         "@mapsindoors/typescript-interfaces": "^2.1.2",
         "@types/geojson": "^7946.0.16",
         "@types/google.maps": "^3.58.1",
+        "@ua-parser-js/pro-enterprise": "^2.0.10",
         "date-fns": "^2.29.3",
         "debounce-decorator": "^1.0.6",
         "deepmerge": "^4.3.1",
         "fuzzysort": "^2.0.4",
         "normalize-text": "^2.6.0",
-        "simple-keyboard": "^3.8.58",
-        "ua-parser-js": "^2.0.3"
+        "simple-keyboard": "^3.8.58"
     },
     "devDependencies": {
         "@11ty/eleventy": "^3.1.0",
