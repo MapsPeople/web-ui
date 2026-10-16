@@ -114,5 +114,51 @@ describe('mi-list-item-location', () => {
         });
     });
 
+    describe('icon prop', () => {
+        const dataUrl = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';
+        const mapsIndoorsUrl = 'https://image.mapsindoors.com/icon.png';
+
+        const renderedSrc = (page): string => page.body.querySelector('img').getAttribute('src');
+
+        const renderWithObjectFitSupport = async (props: Partial<HTMLMiListItemLocationElement>) => {
+            const page = await newSpecPage({
+                components: [ListItemLocation],
+                html: '',
+                supportsShadowDom: false
+            });
+            Object.defineProperty(page.doc.documentElement.style, 'objectFit', { value: '', configurable: true });
+            const element = page.doc.createElement('mi-list-item-location');
+            Object.assign(element, props);
+            page.body.appendChild(element);
+            await page.waitForChanges();
+            return { page, element };
+        };
+
+        it('renders a string URL with MapsIndoors image query parameters', async (): Promise<void> => {
+            const { page } = await renderWithObjectFitSupport({ location: locationItem, icon: mapsIndoorsUrl });
+
+            expect(renderedSrc(page)).toBe(`${mapsIndoorsUrl}?width=48&height=48&fitMode=cover`);
+        });
+
+        it('renders the src of an image element icon unchanged', async (): Promise<void> => {
+            const iconImage = document.createElement('img');
+            iconImage.src = dataUrl;
+            const { page } = await renderWithObjectFitSupport({ location: locationItem, icon: iconImage });
+
+            expect(renderedSrc(page)).toBe(dataUrl);
+        });
+
+        it('re-renders when icon changes from a string URL to an image element', async (): Promise<void> => {
+            const iconImage = document.createElement('img');
+            iconImage.src = dataUrl;
+            const { page, element } = await renderWithObjectFitSupport({ location: locationItem, icon: mapsIndoorsUrl });
+            expect(renderedSrc(page)).toBe(`${mapsIndoorsUrl}?width=48&height=48&fitMode=cover`);
+
+            element.icon = iconImage;
+            await page.waitForChanges();
+
+            expect(renderedSrc(page)).toBe(dataUrl);
+        });
+    });
 
 });

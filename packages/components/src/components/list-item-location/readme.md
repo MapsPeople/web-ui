@@ -83,7 +83,7 @@ A `listItemDidRender` event is emitted from the `<mi-list-item-location>` elemen
 
 | Property         | Attribute          | Description                      | Type                                       | Default     |
 | ---------------- | ------------------ | -------------------------------- | ------------------------------------------ | ----------- |
-| `icon`           | `icon`             |                                  | `string`                                   | `undefined` |
+| `icon`           | `icon`             |                                  | `HTMLImageElement \| string`               | `undefined` |
 | `iconBadge`      | `icon-badge`       |                                  | `string`                                   | `undefined` |
 | `iconBadgeValue` | `icon-badge-value` |                                  | `string`                                   | `undefined` |
 | `level`          | `level`            |                                  | `string`                                   | `undefined` |

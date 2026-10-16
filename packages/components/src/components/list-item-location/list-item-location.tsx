@@ -29,10 +29,10 @@ export class ListItemLocation {
     @Prop() unit: UnitSystem;
 
     /**
-     * @description Optional URL to icon to render for the Location. If not set, imageURL on the Location data will be used.
-     * @type {string}
+     * @description Optional URL or image element to render as icon for the Location. If not set, imageURL on the Location data will be used.
+     * @type {string | HTMLImageElement}
      */
-    @Prop() icon: string;
+    @Prop() icon: string | HTMLImageElement;
 
     /**
      * @description The word used for "Level" when showing level info. When not
@@ -43,7 +43,7 @@ export class ListItemLocation {
 
     @Watch('icon')
     iconChanged(): void {
-        this.iconURLToRender = this.icon ? this.icon : this.location?.properties.imageURL;
+        this.iconURLToRender = this.getIconURL() ?? this.location?.properties.imageURL;
         this.updateBadge();
     }
     /**
@@ -100,7 +100,7 @@ export class ListItemLocation {
      * Called once just after the component is first connected to the DOM.
      */
     componentWillLoad(): void {
-        this.iconURLToRender = this.icon ? this.icon : this.location?.properties.imageURL;
+        this.iconURLToRender = this.getIconURL() ?? this.location?.properties.imageURL;
         this.updateBadge();
     }
 
@@ -119,6 +119,14 @@ export class ListItemLocation {
         if (this.imageElement && 'objectFit' in document.documentElement.style === false) {
             this.objectFitImage(this.imageElement);
         }
+    }
+
+    /**
+     * @description Get the URL of the icon prop, whether given as a URL or an image element.
+     * @returns {string | undefined}
+     */
+    getIconURL(): string | undefined {
+        return this.icon instanceof HTMLImageElement ? this.icon.src || undefined : this.icon || undefined;
     }
 
     /**
@@ -146,7 +154,7 @@ export class ListItemLocation {
     applyBadgeToIcon(): void {
         let originalIconScale;
 
-        this.iconURLToRender = this.icon ? this.icon : this.location.properties.imageURL;
+        this.iconURLToRender = this.getIconURL() ?? this.location.properties.imageURL;
 
         const iconURL = appendMapsIndoorsImageQueryParameters(this.iconURLToRender, this.iconDisplaySize);
         this.getImageFromUrl(iconURL).then(image => {
