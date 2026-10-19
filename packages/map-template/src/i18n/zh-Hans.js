@@ -11,6 +11,7 @@ const zhHans = {
     'Legend': '图例',
     'Nothing was found': '未找到任何结果',
     'Search results': '搜索结果',
+    'Show more results': '显示更多结果',
     'd': '天',
     'h': '小时',
     'min': '分钟',

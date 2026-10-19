@@ -33,6 +33,7 @@ import isLegendDialogVisibleState from '../../atoms/isLegendDialogVisibleState';
 import legendSortedFieldsSelector from '../../selectors/legendSortedFieldsSelector';
 import searchAllVenuesState from '../../atoms/searchAllVenues';
 import isNullOrUndefined from '../../helpers/isNullOrUndefined';
+import getResultsBatch, { RESULTS_BATCH_SIZE } from '../../helpers/getResultsBatch';
 import venueListState from '../../atoms/venueListState';
 import venuesInSolutionState from '../../atoms/venuesInSolutionState';
 import initialVenueNameState from '../../atoms/initialVenueNameState';
@@ -82,6 +83,7 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
 
     const searchRef = useRef();
     const scrollButtonsRef = useRef();
+    const searchResultsRef = useRef();
     const requestAnimationFrameId = useRef();
 
     /** Referencing the search field */
@@ -90,8 +92,7 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
     /** Referencing the keyboard element */
     const keyboardRef = useRef();
 
-    /** Maximum number of search results to show */
-    const MAX_RESULTS = 100;
+    const [revealedResults, setRevealedResults] = useState({ locations: [], count: 0, sortAlphabetically: false, fitMapBounds: false });
     const [searchResults, setSearchResults] = useRecoilState(searchResultsState);
     const categories = useRecoilValue(categoriesState);
     const primaryColor = useRecoilValue(primaryColorState);
@@ -236,30 +237,15 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
     }
 
     /**
-     * Sort search results alphabetically if configured to do so and a category is selected.
-     *
-     * @param {Array} results - Array of search results
-     * @returns {Array} Sorted or original array based on configuration
-     */
-    function getSortedSearchResults(results) {
-        if (selectedCategory) {
-            return [...results].sort((a, b) => {
-                return (a.properties?.name || '')
-                    .localeCompare(b.properties?.name || '', undefined, { numeric: true });
-            })
-        }
-
-        return results;
-    }
-
-    /**
      * Handle search results from the search field.
      *
      * @param {array} locations - An array of MapsIndoors Location objects.
      * @param {boolean} fitMapBounds - If the map bounds should be adjusted to fit the locations.
      */
     function onResults(locations, fitMapBounds = false) {
-        const displayResults = locations.slice(0, MAX_RESULTS);
+        const sortAlphabetically = fitMapBounds || !!selectedCategory;
+        const displayResults = getResultsBatch(locations, RESULTS_BATCH_SIZE, sortAlphabetically);
+        setRevealedResults({ locations, count: RESULTS_BATCH_SIZE, sortAlphabetically, fitMapBounds });
         const hadResults = searchResults.length > 0;
         if (!hadResults || displayResults.length === 0) {
             setSize(snapPoints.MAX);
@@ -270,7 +256,7 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
         setShowNotFoundMessage(displayResults.length === 0);
 
         if (locations && fitMapBounds) {
-            fitMapBoundsToLocations(locations);
+            fitMapBoundsToLocations(displayResults);
         }
 
         // Handles updates to scroll buttons when the category changes.
@@ -285,6 +271,28 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
         }
     }
 
+    /**
+     * Reveal the next batch of search results in the list and on the map.
+     */
+    function showMoreResults() {
+        const count = revealedResults.count + RESULTS_BATCH_SIZE;
+        const displayResults = getResultsBatch(revealedResults.locations, count, revealedResults.sortAlphabetically);
+        setRevealedResults({ ...revealedResults, count });
+        setSearchResults(displayResults);
+        setFilteredLocations(displayResults);
+
+        if (revealedResults.fitMapBounds) {
+            fitMapBoundsToLocations(displayResults);
+        }
+
+        if (isKioskContext) {
+            requestAnimationFrame(() => scrollButtonsRef.current?.updateScrollButtons());
+        }
+
+        if (displayResults.length >= revealedResults.locations.length) {
+            requestAnimationFrame(() => searchResultsRef.current?.focus());
+        }
+    }
 
     /**
      * Adjusts the map view to fit the bounds of the provided locations.
@@ -825,7 +833,7 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
 
             {/* When search results are found (category is selected or search term is used) */}
             {searchResults.length > 0 && (
-                <div className={`search__results prevent-scroll${isKioskContext ? ' search__results--kiosk' : ''}`}>
+                <div ref={searchResultsRef} tabIndex={-1} className={`search__results prevent-scroll${isKioskContext ? ' search__results--kiosk' : ''}`}>
                     <h2 className="search__sr-heading">{t('Search results')}</h2>
 
                     {/* Subcategories should only show if a top level category is selected and if that top level category has any childKeys */}
@@ -842,13 +850,19 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
                     )}
 
                     {/* Show locations when there are any searchResults */}
-                    {getSortedSearchResults(searchResults).map(location =>
+                    {searchResults.map(location =>
                         <ListItemLocation
                             key={location.id}
                             location={location}
                             locationClicked={() => onLocationClicked(location)}
                             isHovered={location?.id === hoveredLocation?.id}
                         />
+                    )}
+
+                    {searchResults.length < revealedResults.locations.length && (
+                        <button type="button" className="search__show-more" onClick={showMoreResults}>
+                            {t('Show more results')}
+                        </button>
                     )}
                 </div>
             )}

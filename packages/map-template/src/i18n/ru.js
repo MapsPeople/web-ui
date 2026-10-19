@@ -11,6 +11,7 @@ const ru = {
     'Legend': 'Легенда',
     'Nothing was found': 'Ничего не найдено',
     'Search results': 'Результаты поиска',
+    'Show more results': 'Показать больше результатов',
     'd': 'д',
     'h': 'ч',
     'min': 'мин',

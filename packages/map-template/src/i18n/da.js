@@ -11,6 +11,7 @@ const da = {
     'Legend': 'Forklaring',
     'Nothing was found': 'Intet fundet',
     'Search results': 'Søgeresultater',
+    'Show more results': 'Vis flere resultater',
     'd': 'd',
     'h': 't',
     'min': 'min',

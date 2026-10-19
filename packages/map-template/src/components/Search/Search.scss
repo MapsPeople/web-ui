@@ -23,6 +23,10 @@
         margin-top: 0.5rem;
         border-radius: var(--rounding-large);
 
+        &:focus {
+            outline: none;
+        }
+
         > * {
             height: fit-content; /* fixing issue on mobile Safari causing them to bee too large in case of just one search result */
         }
@@ -99,6 +103,35 @@
 
         &:active {
             opacity: 0.8;
+        }
+    }
+
+    &__show-more {
+        flex-shrink: 0;
+        width: 100%;
+        padding: var(--spacing-small) var(--spacing-medium);
+        background: var(--tailwind-colors-white);
+        border: 1px solid #E6E6E6;
+        border-radius: var(--rounding-large);
+        color: var(--color-gray-70);
+        cursor: pointer;
+        font-size: var(--font-size-small);
+        font-weight: var(--font-weight-medium);
+        transition: background-color 0.2s, border-color 0.2s;
+
+        &:hover {
+            background-color: var(--tailwind-colors-gray-50);
+            border-color: var(--tailwind-colors-gray-200);
+            color: var(--color-black-black);
+        }
+
+        &:active {
+            background-color: var(--tailwind-colors-gray-100);
+        }
+
+        &:focus-visible {
+            outline: 2px solid currentColor;
+            outline-offset: 2px;
         }
     }
 
