@@ -11,6 +11,7 @@ const ht = {
     'Legend': 'Lejand',
     'Nothing was found': 'Nou pa jwenn anyen',
     'Search results': 'Rezilta rechèch yo',
+    'Show more results': 'Montre plis rezilta',
     'd': 'j',
     'h': 'è',
     'min': 'min',

@@ -11,6 +11,7 @@ const ptPT = {
     'Legend': 'Legenda',
     'Nothing was found': 'Não foi encontrado nada',
     'Search results': 'Resultados da pesquisa',
+    'Show more results': 'Mostrar mais resultados',
     'd': 'd',
     'h': 'h',
     'min': 'min',
