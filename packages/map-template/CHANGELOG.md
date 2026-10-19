@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.99.36] - 2026-10-19
+
+### Added
+
+- Search results are shown in batches of 100. A "Show more results" button at the end of the list reveals the next 100 in the list and on the map. Previously, results beyond the first 100 were not shown.
+
+### Changed
+
+- Category search results are sorted alphabetically across the full result set, not only the first 100.
+- When a category is selected, the map fits to the revealed results and re-fits each time more results are shown.
+
 ## [1.99.35] - 2026-10-16
 
 ### Fixed
@@ -250,6 +261,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - When `directionsFrom=<locationId>` is set in the URL (and `directionsTo` is not), the map now centres on the origin POI and highlights it with the standard `selectLocation()` red pin. The pin persists while a route is displayed and is cleared when the user changes the FROM field.
+
 ## [1.99.1] - 2026-06-01
 
 ### Fixed
@@ -617,11 +629,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.96.4] - 2026-03-09
 
 ### Changed
+
 - Include source maps to the built web components in `map-template`
 
 ## [1.96.3] - 2026-03-09
 
 ### Changed
+
 - Changed script fetching from preload to script defer
 
 ## [1.96.2] - 2026-03-06
@@ -635,20 +649,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.96.1] - 2026-03-06
 
 ### Added
+
 - Full screen button (desktop only). Configurable via App Config `enableFullScreenButton` under `appSettings`. Can also be excluded via `excludeFromUI`.
 
 ## [1.96.0] - 2026-03-05
 
 ### Fixed
+
 - Chat window AI usage consent overlay reappearing when navigating to the route view and back
 
 ## [1.95.10] - 2026-03-05
 
 ### Changed
+
 - Reduced minimum splash screen wait time from 3 seconds to 1 second during map initialization
 - Added `<link rel="preload">` for the MapsIndoors SDK script in `index.html` so the browser begins fetching it during HTML parsing, before JavaScript executes
 - Fixed removing locations highlight when clicking outside the MapsIndoors data.
-
 
 ## [1.95.9] - 2026-03-05
 
@@ -1215,7 +1231,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Implemented a Language Selector. 
+- Implemented a Language Selector.
 - Language Selector visibility is configurable through the App Config object.
 
 ## [1.79.6] - 2025-06-26
@@ -2411,4 +2427,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Closing button not being clickable on the Directions page.
 - Resizing of the sheet/modal when no categories are set.
-
