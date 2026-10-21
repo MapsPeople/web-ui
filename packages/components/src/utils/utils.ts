@@ -74,3 +74,28 @@ export function appendMapsIndoorsImageQueryParameters(imageURL: string, iconDisp
 
     return url.toString();
 }
+
+export const LAT_LNG_PATTERN = /^(-?\d+(\.\d+)?),\s*(-?\d+(\.\d+)?)$/;
+
+/**
+ * Get the point external search providers should bias results towards.
+ * Prefers userPosition (longitude,latitude) and falls back to miNear (latitude,longitude).
+ *
+ * @export
+ * @param {string} [userPosition]
+ * @param {string} [miNear]
+ * @returns {({ lat: number; lng: number } | undefined)}
+ */
+export function getBiasPoint(userPosition?: string, miNear?: string): { lat: number; lng: number } | undefined {
+    const userPositionMatch = userPosition && LAT_LNG_PATTERN.exec(userPosition.trim());
+    if (userPositionMatch) {
+        return { lat: parseFloat(userPositionMatch[3]), lng: parseFloat(userPositionMatch[1]) };
+    }
+
+    const nearMatch = miNear && LAT_LNG_PATTERN.exec(miNear.trim());
+    if (nearMatch) {
+        return { lat: parseFloat(nearMatch[1]), lng: parseFloat(nearMatch[3]) };
+    }
+
+    return undefined;
+}
