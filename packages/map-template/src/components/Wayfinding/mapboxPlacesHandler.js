@@ -1,3 +1,5 @@
+import getMapboxPlacesSessionToken, { resetMapboxPlacesSessionToken } from '../../utils/getMapboxPlacesSessionToken';
+
 /**
  * Handle Mapbox places and add geometry with type and coordinates.
  *
@@ -6,7 +8,7 @@
  * @param {string} mapboxSessionToken
  */
 function addMapboxPlaceGeometry(location, mapboxAccessToken) {
-    const  mapboxPlacesSessionToken =  sessionStorage.getItem('mapboxPlacesSessionToken');
+    const mapboxPlacesSessionToken = getMapboxPlacesSessionToken();
 
     return new Promise((resolve, reject) => {
         const url = `https://api.mapbox.com/search/searchbox/v1/retrieve/${location.id}?session_token=${mapboxPlacesSessionToken}&access_token=${mapboxAccessToken}`;
@@ -24,6 +26,7 @@ function addMapboxPlaceGeometry(location, mapboxAccessToken) {
                     type: 'Point',
                     coordinates: [result.features[0].geometry.coordinates[0], result.features[0].geometry.coordinates[1]]
                 }
+                resetMapboxPlacesSessionToken();
                 resolve(location);
             })
             .catch(() => {
