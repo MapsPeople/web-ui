@@ -31,7 +31,7 @@ describe('useMapsPeopleLogoLink', () => {
         renderHook(() => useMapsPeopleLogoLink(true, {}));
         const logo = createLogo();
 
-        await new Promise(resolve => setTimeout(resolve, 0));
+        await new Promise((resolve) => setTimeout(resolve, 0));
 
         expect(logo.getAttribute('role')).toBe('link');
         fireEvent.click(logo);
@@ -83,5 +83,66 @@ describe('useMapsPeopleLogoLink', () => {
         expect(logo.getAttribute('aria-label')).toBeNull();
         expect(logo.style.cursor).toBe('');
         expect(window.open).not.toHaveBeenCalled();
+    });
+
+    describe('observer lifecycle', () => {
+        const createInstance = (mapView) => {
+            const handlers = {};
+            return {
+                handlers,
+                getMapView: () => mapView,
+                once: jest.fn((event, handler) => {
+                    handlers[event] = handler;
+                }),
+                off: jest.fn(),
+            };
+        };
+
+        it('disconnects the observer on instance ready when the map view is ready and no logo exists', async () => {
+            const disconnect = jest.spyOn(MutationObserver.prototype, 'disconnect');
+            const instance = createInstance({ isReady: true });
+            renderHook(() => useMapsPeopleLogoLink(true, instance));
+
+            instance.handlers.ready();
+            expect(disconnect).toHaveBeenCalled();
+
+            const logo = createLogo();
+            await new Promise((resolve) => setTimeout(resolve, 0));
+            expect(logo.getAttribute('role')).toBeNull();
+            disconnect.mockRestore();
+        });
+
+        it('waits for the map view ready when it is not ready yet', () => {
+            const mapViewHandlers = {};
+            const mapView = {
+                isReady: false,
+                once: jest.fn((event, handler) => {
+                    mapViewHandlers[event] = handler;
+                }),
+                off: jest.fn(),
+            };
+            const instance = createInstance(mapView);
+            const disconnect = jest.spyOn(MutationObserver.prototype, 'disconnect');
+            renderHook(() => useMapsPeopleLogoLink(true, instance));
+
+            instance.handlers.ready();
+            expect(mapView.once).toHaveBeenCalledWith('ready', expect.any(Function));
+            expect(disconnect).not.toHaveBeenCalled();
+
+            mapViewHandlers.ready();
+            expect(disconnect).toHaveBeenCalled();
+            disconnect.mockRestore();
+        });
+
+        it('removes the ready listeners on unmount', () => {
+            const mapView = { isReady: false, once: jest.fn(), off: jest.fn() };
+            const instance = createInstance(mapView);
+            const { unmount } = renderHook(() => useMapsPeopleLogoLink(true, instance));
+
+            unmount();
+
+            expect(instance.off).toHaveBeenCalledWith('ready', instance.once.mock.calls[0][1]);
+            expect(mapView.off).toHaveBeenCalledWith('ready', expect.any(Function));
+        });
     });
 });

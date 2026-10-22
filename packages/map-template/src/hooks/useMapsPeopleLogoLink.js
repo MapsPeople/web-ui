@@ -43,15 +43,35 @@ export function useMapsPeopleLogoLink(enabled, mapsIndoorsInstance) {
             }
         });
 
+        const finish = () => {
+            const logo = document.getElementById(LOGO_ID);
+            if (logo) {
+                bindLogo(logo);
+            }
+            observer.disconnect();
+        };
+
+        const onInstanceReady = () => {
+            const mapView = mapsIndoorsInstance?.getMapView?.();
+            if (mapView?.isReady) {
+                finish();
+            } else {
+                mapView?.once?.('ready', finish);
+            }
+        };
+
         const existingLogo = document.getElementById(LOGO_ID);
         if (existingLogo) {
             bindLogo(existingLogo);
         } else {
             observer.observe(document.body, { childList: true, subtree: true });
+            mapsIndoorsInstance?.once?.('ready', onInstanceReady);
         }
 
         return () => {
             observer.disconnect();
+            mapsIndoorsInstance?.off?.('ready', onInstanceReady);
+            mapsIndoorsInstance?.getMapView?.()?.off?.('ready', finish);
             const logo = document.getElementById(LOGO_ID);
             if (logo) {
                 unbindLogo(logo);
