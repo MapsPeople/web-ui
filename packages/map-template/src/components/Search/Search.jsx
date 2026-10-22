@@ -243,7 +243,7 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
      * @param {boolean} fitMapBounds - If the map bounds should be adjusted to fit the locations.
      */
     function onResults(locations, fitMapBounds = false) {
-        const sortAlphabetically = fitMapBounds || !!selectedCategory;
+        const sortAlphabetically = fitMapBounds;
         const displayResults = getResultsBatch(locations, RESULTS_BATCH_SIZE, sortAlphabetically);
         setRevealedResults({ locations, count: RESULTS_BATCH_SIZE, sortAlphabetically, fitMapBounds });
         const hadResults = searchResults.length > 0;
