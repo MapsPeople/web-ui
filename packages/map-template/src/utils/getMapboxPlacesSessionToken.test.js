@@ -1,4 +1,4 @@
-import getMapboxPlacesSessionToken, { resetMapboxPlacesSessionToken } from './getMapboxPlacesSessionToken';
+import getMapboxPlacesSessionToken, { resetMapboxPlacesSessionToken, subscribeToMapboxPlacesSessionToken } from './getMapboxPlacesSessionToken';
 
 describe('getMapboxPlacesSessionToken', () => {
     beforeEach(() => {
@@ -30,6 +30,31 @@ describe('getMapboxPlacesSessionToken', () => {
 
         expect(() => resetMapboxPlacesSessionToken()).not.toThrow();
         expect(getMapboxPlacesSessionToken()).not.toBe(token);
+    });
+
+    it('notifies subscribers on reset and stops after unsubscribe', () => {
+        const listener = jest.fn();
+        const unsubscribe = subscribeToMapboxPlacesSessionToken(listener);
+
+        resetMapboxPlacesSessionToken();
+        expect(listener).toHaveBeenCalledTimes(1);
+
+        unsubscribe();
+        resetMapboxPlacesSessionToken();
+        expect(listener).toHaveBeenCalledTimes(1);
+    });
+
+    it('exposes the new token to subscribers when notified', () => {
+        const firstToken = getMapboxPlacesSessionToken();
+        const seenTokens = [];
+        const unsubscribe = subscribeToMapboxPlacesSessionToken(() => seenTokens.push(getMapboxPlacesSessionToken()));
+
+        resetMapboxPlacesSessionToken();
+        unsubscribe();
+
+        expect(seenTokens).toHaveLength(1);
+        expect(seenTokens[0]).not.toBe(firstToken);
+        expect(getMapboxPlacesSessionToken()).toBe(seenTokens[0]);
     });
 
     it('returns a UUID-shaped token when crypto.randomUUID is undefined', () => {

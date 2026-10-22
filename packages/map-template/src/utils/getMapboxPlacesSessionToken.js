@@ -1,6 +1,10 @@
+import { useSyncExternalStore } from 'react';
+
 const STORAGE_KEY = 'mapboxPlacesSessionToken';
 
 const fallbackStore = { token: undefined };
+
+const listeners = new Set();
 
 /**
  * Generate a UUID v4 string.
@@ -34,6 +38,15 @@ function readStoredToken() {
     }
 }
 
+function storeToken(token) {
+    try {
+        sessionStorage.setItem(STORAGE_KEY, token);
+        fallbackStore.token = undefined;
+    } catch (error) {
+        fallbackStore.token = token;
+    }
+}
+
 /**
  * Get the Mapbox Places session token for this browser session, creating and storing one if missing.
  *
@@ -46,28 +59,40 @@ function getMapboxPlacesSessionToken() {
     }
 
     const token = fallbackStore.token || generateToken();
-
-    try {
-        sessionStorage.setItem(STORAGE_KEY, token);
-        fallbackStore.token = undefined;
-    } catch (error) {
-        fallbackStore.token = token;
-    }
+    storeToken(token);
 
     return token;
 }
 
 /**
- * Remove the stored Mapbox Places session token so the next search starts a new session.
+ * Subscribe to session token resets.
+ *
+ * @param {() => void} listener
+ * @returns {() => void} Unsubscribe function.
+ */
+export function subscribeToMapboxPlacesSessionToken(listener) {
+    listeners.add(listener);
+    return () => {
+        listeners.delete(listener);
+    };
+}
+
+/**
+ * Replace the Mapbox Places session token with a new one so the next search starts a new session, and notify subscribers.
  */
 export function resetMapboxPlacesSessionToken() {
     fallbackStore.token = undefined;
+    storeToken(generateToken());
+    Array.from(listeners, listener => listener());
+}
 
-    try {
-        sessionStorage.removeItem(STORAGE_KEY);
-    } catch (error) {
-        return;
-    }
+/**
+ * React hook returning the current Mapbox Places session token, re-rendering when it is reset.
+ *
+ * @returns {string}
+ */
+export function useMapboxPlacesSessionToken() {
+    return useSyncExternalStore(subscribeToMapboxPlacesSessionToken, getMapboxPlacesSessionToken);
 }
 
 export default getMapboxPlacesSessionToken;

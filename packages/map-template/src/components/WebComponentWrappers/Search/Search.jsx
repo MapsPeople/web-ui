@@ -6,7 +6,7 @@ import languageState from '../../../atoms/languageState';
 import searchInputState from '../../../atoms/searchInputState';
 import currentVenueNameState from '../../../atoms/currentVenueNameState';
 import searchAllVenuesState from '../../../atoms/searchAllVenues';
-import getMapboxPlacesSessionToken from '../../../utils/getMapboxPlacesSessionToken';
+import { useMapboxPlacesSessionToken } from '../../../utils/getMapboxPlacesSessionToken';
 import PropTypes from 'prop-types';
 
 /**
@@ -36,7 +36,7 @@ const SearchField = forwardRef(function SearchFieldComponent(props, ref) {
 
     const setSearchInput = useSetRecoilState(searchInputState)
 
-    const mapboxPlacesSessionToken = getMapboxPlacesSessionToken();
+    const mapboxPlacesSessionToken = useMapboxPlacesSessionToken();
 
     const userPositionCoordinates = {
         longitude: userPosition?.coords.longitude,

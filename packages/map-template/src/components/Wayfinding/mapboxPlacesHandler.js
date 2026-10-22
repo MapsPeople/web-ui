@@ -5,7 +5,6 @@ import getMapboxPlacesSessionToken, { resetMapboxPlacesSessionToken } from '../.
  *
  * @param {Object} location
  * @param {string} mapboxAccessToken
- * @param {string} mapboxSessionToken
  */
 function addMapboxPlaceGeometry(location, mapboxAccessToken) {
     const mapboxPlacesSessionToken = getMapboxPlacesSessionToken();
