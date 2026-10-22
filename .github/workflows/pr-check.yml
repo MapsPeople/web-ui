@@ -7,7 +7,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: pr-check-${{ github.event.pull_request.number }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
@@ -23,6 +23,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
+        id: install
         run: npm ci
 
       - name: Build
@@ -32,17 +33,21 @@ jobs:
         run: test -z "$(git status --porcelain)" || { git status --porcelain; git diff; exit 1; }
 
       - name: Test map-template
+        if: ${{ !cancelled() && steps.install.conclusion == 'success' }}
         working-directory: packages/map-template
         run: npx jest
 
       - name: Test components
+        if: ${{ !cancelled() && steps.install.conclusion == 'success' }}
         working-directory: packages/components
         run: npx stencil test --spec
 
       - name: Lint map-template
+        if: ${{ !cancelled() && steps.install.conclusion == 'success' }}
         working-directory: packages/map-template
         run: npx eslint . --ext .js,.jsx
 
       - name: Lint components
+        if: ${{ !cancelled() && steps.install.conclusion == 'success' }}
         working-directory: packages/components
         run: npx eslint src --ext .ts,.tsx
