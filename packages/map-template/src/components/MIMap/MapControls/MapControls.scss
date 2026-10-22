@@ -1,3 +1,5 @@
+@use '../../../variables';
+
 // Base styles for map controls
 %control-container {
     position: absolute;
@@ -60,7 +62,7 @@
 
     &.map-controls-right-bottom {
         top: auto;
-        bottom: calc(6 * var(--spacing-medium));
+        bottom: calc(variables.$search-sheet-collapsed-height + var(--spacing-x-small) + 30px + var(--spacing-x-small));
         right: var(--spacing-medium);
     }
 }
