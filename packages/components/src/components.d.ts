@@ -457,7 +457,7 @@ export namespace Components {
         "stopHour": number;
         /**
           * Translations object for translatable strings.
-          * @default {         book: 'Book',         cancel: 'Cancel',         booked: 'Booked'     }
+          * @default {             book: 'Book',             cancel: 'Cancel',             booked: 'Booked'         }
          */
         "translations": {
         book: string;
@@ -794,7 +794,7 @@ export namespace Components {
         /**
           * Set active step to populate it with an "active" class. Defaults to legIndex 0 and stepIndex 0.
           * @type {{ legIndex: number, stepIndex: number }}
-          * @default {         legIndex: 0,         stepIndex: 0     }
+          * @default {             legIndex: 0,             stepIndex: 0         }
          */
         "activeStep": { legIndex: number, stepIndex: number };
         /**
@@ -2279,7 +2279,7 @@ declare namespace LocalJSX {
         "stopHour"?: number;
         /**
           * Translations object for translatable strings.
-          * @default {         book: 'Book',         cancel: 'Cancel',         booked: 'Booked'     }
+          * @default {             book: 'Book',             cancel: 'Cancel',             booked: 'Booked'         }
          */
         "translations"?: {
         book: string;
@@ -2546,7 +2546,7 @@ declare namespace LocalJSX {
         /**
           * Set active step to populate it with an "active" class. Defaults to legIndex 0 and stepIndex 0.
           * @type {{ legIndex: number, stepIndex: number }}
-          * @default {         legIndex: 0,         stepIndex: 0     }
+          * @default {             legIndex: 0,             stepIndex: 0         }
          */
         "activeStep"?: { legIndex: number, stepIndex: number };
         /**

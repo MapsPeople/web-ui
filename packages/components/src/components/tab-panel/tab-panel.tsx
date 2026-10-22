@@ -8,7 +8,7 @@ import { Component, h, Method, State } from '@stencil/core';
 export class TabPanel {
 
     @State()
-    isActive: boolean = false;
+        isActive: boolean = false;
 
     @Method()
     async active(active?: boolean) {

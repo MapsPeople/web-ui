@@ -50,10 +50,10 @@ export class LocationBooking implements ComponentInterface {
         cancel: string;
         booked: string;
     } = {
-        book: 'Book',
-        cancel: 'Cancel',
-        booked: 'Booked'
-    };
+            book: 'Book',
+            cancel: 'Cancel',
+            booked: 'Booked'
+        };
 
     /**
      * How many time slots to show going forward in time. Default to 4.
