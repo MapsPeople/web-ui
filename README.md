@@ -67,10 +67,10 @@ flowchart LR
 
 ### Shipping several Pull Requests together
 
-1. Create the release branch from `main`. Pick the version from the PR labels: `release/1.99.36` for patches, `release/1.100.0` if any PR is `minor`.
+1. Create the release branch from `main`. Pick the version from the highest PR label: bump the patch number if all PRs are `patch`, the minor number if any PR is `minor`, and the major number if any PR is `major`.
 2. Change the base of each Pull Request to `release/x.x.x` and rebase it onto the release branch.
 3. Merge each Pull Request into the release branch, **only once it is approved**. The release branch has no branch protection, so GitHub will not stop you from merging an unapproved Pull Request.
-4. Open a Pull Request from `release/x.x.x` to `main`. Its title must follow Conventional Commits, e.g. `chore(release): 1.99.36`.
+4. Open a Pull Request from `release/x.x.x` to `main`. Its title must follow Conventional Commits, e.g. `chore(release): x.x.x`.
 5. On the release branch, run `npm i && npx lerna run build` from the repo root. If anything changed in `packages/components`, also run `npm run build` inside `packages/components`.
 6. Update the `CHANGELOG` of every package the release changes (`map-template`, `components`) with one entry for the new version and date, combining the entries from each merged Pull Request. Rename any `[Unreleased]` section to the version and date.
 7. Push the changes to `release/x.x.x` and ask a maintainer for a final look before merging to `main`.
