@@ -11,6 +11,7 @@ const tl = {
     'Legend': 'Legend',
     'Nothing was found': 'Walang nahanap',
     'Search results': 'Mga resulta ng paghahanap',
+    'Show more results': 'Magpakita ng higit pang resulta',
     'd': 'd',
     'h': 'h',
     'min': 'min',

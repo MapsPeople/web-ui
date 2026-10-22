@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.99.36] - 2026-10-19
+
+### Added
+
+- Search results are shown in batches of 100. A "Show more results" button at the end of the list reveals the next 100 in the list and on the map. Previously, results beyond the first 100 were not shown.
+
+### Changed
+
+- Category search results are sorted alphabetically across the full result set, not only the first 100.
+- When a category is selected, the map fits to the revealed results and re-fits each time more results are shown.
+
 ## [1.99.35] - 2026-10-16
 
 ### Fixed

@@ -11,6 +11,7 @@ const zhHant = {
       'Legend': '圖例',
       'Nothing was found': '找不到任何結果',
       'Search results': '搜尋結果',
+      'Show more results': '顯示更多結果',
       'd': '天',
       'h': '小時',
       'min': '分鐘',

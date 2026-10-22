@@ -11,6 +11,7 @@ const ko = {
     'Legend': '범례',
     'Nothing was found': '검색 결과가 없습니다',
     'Search results': '검색 결과',
+    'Show more results': '결과 더 보기',
     'd': '일',
     'h': '시간',
     'min': '분',
