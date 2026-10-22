@@ -1,17 +1,26 @@
-import midtIcon from '@mapsindoors/midt/tokens/icon.json';
-import { Component, Event, EventEmitter, h, Host, JSX, Prop, State, Watch } from '@stencil/core';
-import { appendMapsIndoorsImageQueryParameters } from '../../utils/utils';
-import { UnitSystem } from './../../enums/unit-system.enum';
+import midtIcon from "@mapsindoors/midt/tokens/icon.json";
+import {
+    Component,
+    Event,
+    EventEmitter,
+    h,
+    Host,
+    JSX,
+    Prop,
+    State,
+    Watch,
+} from "@stencil/core";
+import { appendMapsIndoorsImageQueryParameters } from "../../utils/utils";
+import { UnitSystem } from "./../../enums/unit-system.enum";
 
 declare const mapsindoors;
 
 @Component({
-    tag: 'mi-list-item-location',
-    styleUrl: 'list-item-location.scss',
-    shadow: true
+    tag: "mi-list-item-location",
+    styleUrl: "list-item-location.scss",
+    shadow: true,
 })
 export class ListItemLocation {
-
     /**
      * @description Location object.
      */
@@ -41,9 +50,10 @@ export class ListItemLocation {
      */
     @Prop() level: string;
 
-    @Watch('icon')
+    @Watch("icon")
     iconChanged(): void {
-        this.iconURLToRender = this.getIconURL() ?? this.location?.properties.imageURL;
+        this.iconURLToRender =
+            this.getIconURL() ?? this.location?.properties.imageURL;
         this.updateBadge();
     }
     /**
@@ -52,7 +62,7 @@ export class ListItemLocation {
      */
     @Prop() iconBadge: string;
 
-    @Watch('iconBadge')
+    @Watch("iconBadge")
     iconBadgeChanged(): void {
         this.updateBadge();
     }
@@ -63,7 +73,7 @@ export class ListItemLocation {
      */
     @Prop() iconBadgeValue: string;
 
-    @Watch('iconBadgeValue')
+    @Watch("iconBadgeValue")
     iconBadgeValueChanged(): void {
         this.updateBadge();
     }
@@ -100,7 +110,8 @@ export class ListItemLocation {
      * Called once just after the component is first connected to the DOM.
      */
     componentWillLoad(): void {
-        this.iconURLToRender = this.getIconURL() ?? this.location?.properties.imageURL;
+        this.iconURLToRender =
+            this.getIconURL() ?? this.location?.properties.imageURL;
         this.updateBadge();
     }
 
@@ -116,7 +127,10 @@ export class ListItemLocation {
         this.listItemDidRender.emit();
 
         // IE fallback for 'object-fit' css property
-        if (this.imageElement && 'objectFit' in document.documentElement.style === false) {
+        if (
+            this.imageElement &&
+            "objectFit" in document.documentElement.style === false
+        ) {
             this.objectFitImage(this.imageElement);
         }
     }
@@ -125,8 +139,10 @@ export class ListItemLocation {
      * @description Get the URL of the icon prop, whether given as a URL or an image element.
      * @returns {string | undefined}
      */
-    getIconURL(): string | undefined {
-        return this.icon instanceof HTMLImageElement ? this.icon.src || undefined : this.icon || undefined;
+    private getIconURL(): string | undefined {
+        return this.icon instanceof HTMLImageElement
+            ? this.icon.src || undefined
+            : this.icon || undefined;
     }
 
     /**
@@ -143,7 +159,10 @@ export class ListItemLocation {
      * @param {HTMLImageElement} image
      */
     objectFitImage(image: HTMLImageElement): void {
-        image.setAttribute('style', `background: no-repeat center center url("${this.iconURLToRender}"); background-size: cover;`);
+        image.setAttribute(
+            "style",
+            `background: no-repeat center center url("${this.iconURLToRender}"); background-size: cover;`,
+        );
         image.src = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='${image.width}' height='${image.height}'%3E%3C/svg%3E`;
     }
 
@@ -154,40 +173,54 @@ export class ListItemLocation {
     applyBadgeToIcon(): void {
         let originalIconScale;
 
-        this.iconURLToRender = this.getIconURL() ?? this.location.properties.imageURL;
+        this.iconURLToRender =
+            this.getIconURL() ?? this.location.properties.imageURL;
 
-        const iconURL = appendMapsIndoorsImageQueryParameters(this.iconURLToRender, this.iconDisplaySize);
-        this.getImageFromUrl(iconURL).then(image => {
-            originalIconScale = image.width / 24;
-            switch (this.iconBadge.toLowerCase()) {
-                case 'availability':
-                    if (this.iconBadgeValue === 'true') {
-                        return mapsindoors.BadgeRenderer.AvailableBadge.overlay(image);
-                    } else if (this.iconBadgeValue === 'false') {
-                        return mapsindoors.BadgeRenderer.UnavailableBadge.overlay(image);
-                    }
-                    break;
+        const iconURL = appendMapsIndoorsImageQueryParameters(
+            this.iconURLToRender,
+            this.iconDisplaySize,
+        );
+        this.getImageFromUrl(iconURL)
+            .then((image) => {
+                originalIconScale = image.width / 24;
+                switch (this.iconBadge.toLowerCase()) {
+                    case "availability":
+                        if (this.iconBadgeValue === "true") {
+                            return mapsindoors.BadgeRenderer.AvailableBadge.overlay(
+                                image,
+                            );
+                        } else if (this.iconBadgeValue === "false") {
+                            return mapsindoors.BadgeRenderer.UnavailableBadge.overlay(
+                                image,
+                            );
+                        }
+                        break;
 
-                case 'occupancy':
-                    return mapsindoors.BadgeRenderer.TextBadge.overlay(image, {
-                        text: this.iconBadgeValue.toString()
-                    });
-            }
-        }).then(badgedImage => {
-            if (badgedImage) {
-                this.iconURLToRender = badgedImage.src;
+                    case "occupancy":
+                        return mapsindoors.BadgeRenderer.TextBadge.overlay(
+                            image,
+                            {
+                                text: this.iconBadgeValue.toString(),
+                            },
+                        );
+                }
+            })
+            .then((badgedImage) => {
+                if (badgedImage) {
+                    this.iconURLToRender = badgedImage.src;
 
-                // Badged image must be moved so the original image aligns with other.
-                const translateIcon = (badgedImage.width - 24) / -2;
-                this.iconAttributes = {
-                    style: {
-                        transform: 'translateX(' + translateIcon + 'px)',
-                        width: badgedImage.width / originalIconScale + 'px',
-                        height: badgedImage.height / originalIconScale + 'px'
-                    }
-                };
-            }
-        });
+                    // Badged image must be moved so the original image aligns with other.
+                    const translateIcon = (badgedImage.width - 24) / -2;
+                    this.iconAttributes = {
+                        style: {
+                            transform: "translateX(" + translateIcon + "px)",
+                            width: badgedImage.width / originalIconScale + "px",
+                            height:
+                                badgedImage.height / originalIconScale + "px",
+                        },
+                    };
+                }
+            });
     }
 
     /**
@@ -198,9 +231,9 @@ export class ListItemLocation {
      */
     async getImageFromUrl(url): Promise<any> {
         return fetch(url)
-            .then(res => res.blob())
-            .then(blob => URL.createObjectURL(blob))
-            .then(objUrl => {
+            .then((res) => res.blob())
+            .then((blob) => URL.createObjectURL(blob))
+            .then((objUrl) => {
                 return new Promise((resolve) => {
                     const image = new Image();
                     image.width = this.iconDisplaySize;
@@ -219,17 +252,32 @@ export class ListItemLocation {
      * @returns {JSX.Element}
      */
     render(): JSX.Element {
-        return this.location && (
-            <Host role="listitem" onClick={() => this.locationClickedHandler(this.location)}>
-                {this.iconURLToRender ? this.renderIcon() : null}
+        return (
+            this.location && (
+                <Host
+                    role="listitem"
+                    onClick={() => this.locationClickedHandler(this.location)}
+                >
+                    {this.iconURLToRender ? this.renderIcon() : null}
 
-                <div class="details">
-                    <p class="details-title">{this.location.properties.name}</p>
-                    <mi-location-info level={this.level} ref={(el) => this.infoElement = el as HTMLMiLocationInfoElement} showExternalId={this.showExternalId}></mi-location-info>
-                </div>
+                    <div class="details">
+                        <p class="details-title">
+                            {this.location.properties.name}
+                        </p>
+                        <mi-location-info
+                            level={this.level}
+                            ref={(el) =>
+                                (this.infoElement =
+                                    el as HTMLMiLocationInfoElement)
+                            }
+                            showExternalId={this.showExternalId}
+                        ></mi-location-info>
+                    </div>
 
-                {typeof this.location.properties.geodesicDistance === 'number' && this.renderDistance()}
-            </Host>
+                    {typeof this.location.properties.geodesicDistance ===
+                        "number" && this.renderDistance()}
+                </Host>
+            )
         );
     }
 
@@ -238,10 +286,17 @@ export class ListItemLocation {
      * @returns {JSX.Element}
      */
     renderIcon(): JSX.Element {
-        const iconURL = appendMapsIndoorsImageQueryParameters(this.iconURLToRender, this.iconDisplaySize);
+        const iconURL = appendMapsIndoorsImageQueryParameters(
+            this.iconURLToRender,
+            this.iconDisplaySize,
+        );
         return (
             <div class="img-container">
-                <img {...this.iconAttributes} ref={(el) => this.imageElement = el as HTMLImageElement} src={iconURL} />
+                <img
+                    {...this.iconAttributes}
+                    ref={(el) => (this.imageElement = el as HTMLImageElement)}
+                    src={iconURL}
+                />
             </div>
         );
     }
@@ -253,7 +308,10 @@ export class ListItemLocation {
     renderDistance(): JSX.Element {
         return (
             <div class="distance">
-                <mi-distance meters={this.location.properties.geodesicDistance} unit={this.unit}></mi-distance>
+                <mi-distance
+                    meters={this.location.properties.geodesicDistance}
+                    unit={this.unit}
+                ></mi-distance>
             </div>
         );
     }
