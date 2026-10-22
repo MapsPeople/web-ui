@@ -39,3 +39,40 @@ If your contribution to this repository doesn't follow these standards, it might
 When creating a new Pull Request, you must give it a label of `major`, `minor` or `patch` depending on the nature of the code. You can read more about it on the link mentioned above on `Semantic Versioning`.
 
 When the Pull Request has been approved, the `CHANGELOG` file must be updated. If multiple projects have been worked on, the `CHANGELOG` for each project needs to be updated. For now, the label applies for all the projects that have been worked on (i.e. work has been done on both the `Map Template` and the `Components` folder, and the label is `minor`, then the `CHANGELOG` for both projects need to be updated with a minor change.)
+
+## Release flow
+
+Most Pull Requests are merged straight into `main` once approved. Use a `release/x.x.x` branch only when several Pull Requests need to ship together in one release.
+
+Either way, every release must update the `CHANGELOG` of each package it changes (`packages/map-template/CHANGELOG.md`, `packages/components/CHANGELOG.md`) with an entry for the new version and date. It must also be built before it is merged:
+
+```zsh
+$ npm i && npx lerna run build
+$ cd packages/components && npm run build   # only if packages/components changed
+```
+
+`dist` is not committed, but the build regenerates files that are: `packages/components/src/components.d.ts`, each component's `readme.md`, and `packages/midt/build/`. If the build changes any of them, commit them.
+
+For a single Pull Request, do all of this on that Pull Request's branch before it is merged.
+
+```mermaid
+flowchart LR
+    S[Single PR approved] -->|build + CHANGELOG| M[main]
+    PR1[PR #1 approved] --> R[release/x.x.x]
+    PR2[PR #2 approved] --> R
+    R -->|build + CHANGELOG| RPR[PR release/x.x.x → main]
+    RPR -->|final review| M
+    M -->|CI bumps versions + publishes| NPM[npm]
+```
+
+### Shipping several Pull Requests together
+
+1. Create the release branch from `main`. Pick the version from the PR labels: `release/1.99.36` for patches, `release/1.100.0` if any PR is `minor`.
+2. Change the base of each Pull Request to `release/x.x.x` and rebase it onto the release branch.
+3. Merge each Pull Request into the release branch, **only once it is approved**. The release branch has no branch protection, so GitHub will not stop you from merging an unapproved Pull Request.
+4. Open a Pull Request from `release/x.x.x` to `main`. Its title must follow Conventional Commits, e.g. `chore(release): 1.99.36`.
+5. On the release branch, run `npm i && npx lerna run build` from the repo root. If anything changed in `packages/components`, also run `npm run build` inside `packages/components`.
+6. Update the `CHANGELOG` of every package the release changes (`map-template`, `components`) with one entry for the new version and date, combining the entries from each merged Pull Request. Rename any `[Unreleased]` section to the version and date.
+7. Push the changes to `release/x.x.x` and ask a maintainer for a final look before merging to `main`.
+
+Do not bump the versions in `package.json` by hand. CI does this after the release Pull Request is merged.
