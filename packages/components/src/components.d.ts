@@ -9,6 +9,7 @@ import { SortOrder } from "./enums/sort-order.enum";
 import { UnitSystem } from "./enums/unit-system.enum";
 import { Location } from "@mapsindoors/typescript-interfaces";
 import { LocationBookingDuration } from "./enums/location-booking-duration.enum";
+import { LocationBookingTranslations } from "./components/location-booking/location-booking";
 import { IPositionProvider, MapsIndoorsPosition } from "./types/position-provider.interface";
 import { NotificationPosition } from "./enums/notification-position.enum";
 import { NotificationMessage } from "./types/notification-message.interface";
@@ -20,6 +21,7 @@ export { SortOrder } from "./enums/sort-order.enum";
 export { UnitSystem } from "./enums/unit-system.enum";
 export { Location } from "@mapsindoors/typescript-interfaces";
 export { LocationBookingDuration } from "./enums/location-booking-duration.enum";
+export { LocationBookingTranslations } from "./components/location-booking/location-booking";
 export { IPositionProvider, MapsIndoorsPosition } from "./types/position-provider.interface";
 export { NotificationPosition } from "./enums/notification-position.enum";
 export { NotificationMessage } from "./types/notification-message.interface";
@@ -457,13 +459,9 @@ export namespace Components {
         "stopHour": number;
         /**
           * Translations object for translatable strings.
-          * @default {             book: 'Book',             cancel: 'Cancel',             booked: 'Booked'         }
+          * @default {         book: 'Book',         cancel: 'Cancel',         booked: 'Booked'     }
          */
-        "translations": {
-        book: string;
-        cancel: string;
-        booked: string;
-    };
+        "translations": LocationBookingTranslations;
     }
     interface MiLocationInfo {
         /**
@@ -794,7 +792,7 @@ export namespace Components {
         /**
           * Set active step to populate it with an "active" class. Defaults to legIndex 0 and stepIndex 0.
           * @type {{ legIndex: number, stepIndex: number }}
-          * @default {             legIndex: 0,             stepIndex: 0         }
+          * @default {         legIndex: 0,         stepIndex: 0     }
          */
         "activeStep": { legIndex: number, stepIndex: number };
         /**
@@ -2279,13 +2277,9 @@ declare namespace LocalJSX {
         "stopHour"?: number;
         /**
           * Translations object for translatable strings.
-          * @default {             book: 'Book',             cancel: 'Cancel',             booked: 'Booked'         }
+          * @default {         book: 'Book',         cancel: 'Cancel',         booked: 'Booked'     }
          */
-        "translations"?: {
-        book: string;
-        cancel: string;
-        booked: string;
-    };
+        "translations"?: LocationBookingTranslations;
     }
     interface MiLocationInfo {
         /**
@@ -2546,7 +2540,7 @@ declare namespace LocalJSX {
         /**
           * Set active step to populate it with an "active" class. Defaults to legIndex 0 and stepIndex 0.
           * @type {{ legIndex: number, stepIndex: number }}
-          * @default {             legIndex: 0,             stepIndex: 0         }
+          * @default {         legIndex: 0,         stepIndex: 0     }
          */
         "activeStep"?: { legIndex: number, stepIndex: number };
         /**

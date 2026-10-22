@@ -11,6 +11,12 @@ import { LocationBookingDuration } from './../../enums/location-booking-duration
 
 declare const mapsindoors;
 
+export interface LocationBookingTranslations {
+    book: string;
+    cancel: string;
+    booked: string;
+}
+
 @Component({
     tag: 'mi-location-booking',
     styleUrl: 'location-booking.scss',
@@ -45,15 +51,11 @@ export class LocationBooking implements ComponentInterface {
     /**
      * Translations object for translatable strings.
      */
-    @Prop() translations: {
-        book: string;
-        cancel: string;
-        booked: string;
-    } = {
-            book: 'Book',
-            cancel: 'Cancel',
-            booked: 'Booked'
-        };
+    @Prop() translations: LocationBookingTranslations = {
+        book: 'Book',
+        cancel: 'Cancel',
+        booked: 'Booked'
+    };
 
     /**
      * How many time slots to show going forward in time. Default to 4.
