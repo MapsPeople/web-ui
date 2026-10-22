@@ -71,10 +71,21 @@ function ResetKioskViewButton() {
         const map = mapsIndoorsInstance.getMap();
         const center = turf.center(kioskLocation.geometry).geometry.coordinates;
 
-        map.panTo({ lat: center[1], lng: center[0] });
-        mapsIndoorsInstance.getMapView().tilt(Number(currentPitch) || 0);
-        mapsIndoorsInstance.getMapView().rotate(Number(bearing) || 0);
-        mapsIndoorsInstance.setZoom(Number(startZoomLevel));
+        const numericZoom = Number(startZoomLevel);
+        const numericHeading = Number(bearing) || 0;
+        const numericTilt = Number(currentPitch) || 0;
+        const googleCenter = { lat: center[1], lng: center[0] };
+
+        if (typeof map.moveCamera === 'function') {
+            map.moveCamera({ center: googleCenter, zoom: numericZoom, heading: numericHeading, tilt: numericTilt });
+            return;
+        }
+
+        const mapView = mapsIndoorsInstance.getMapView();
+        mapView.setCenter(googleCenter);
+        mapView.tilt(numericTilt);
+        mapView.rotate(numericHeading);
+        mapsIndoorsInstance.setZoom(numericZoom);
     }
 
     /**
