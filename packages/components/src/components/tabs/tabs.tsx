@@ -28,7 +28,7 @@ export class Tabs {
     componentWillRender() {
         const tabs = this.el.querySelectorAll('mi-tab');
 
-        this.tabs = Array.from(tabs).reduce((tabs, tab, index) => {
+        this.tabs = Array.from(tabs).reduce((tabs, tab) => {
             const content = Array.from(this.el.getElementsByTagName('mi-tab-panel')).find(el => el.id === tab.tabFor);
 
             if (content) {
