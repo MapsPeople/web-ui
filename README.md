@@ -44,7 +44,7 @@ When the Pull Request has been approved, the `CHANGELOG` file must be updated. I
 
 Most Pull Requests are merged straight into `main` once approved. Use a `release/x.x.x` branch only when several Pull Requests need to ship together in one release.
 
-Either way, every release must update the `CHANGELOG` of each package it changes (`packages/map-template/CHANGELOG.md`, `packages/components/CHANGELOG.md`) with an entry for the new version and date. It must also be built before it is merged:
+Either way, every release must update the `CHANGELOG` of each package it changes (`packages/map-template/CHANGELOG.md`, `packages/components/CHANGELOG.md`) with an entry for the new version and date. It must also be built before it is merged (from the web-ui root folder level):
 
 ```zsh
 $ npm i && npx lerna run build
