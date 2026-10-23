@@ -11,6 +11,7 @@ const ceb = {
     'Legend': 'Legend',
     'Nothing was found': 'Walay nakit-an',
     'Search results': 'Mga resulta sa pagpangita',
+    'Show more results': 'Ipakita ang dugang nga mga resulta',
     'd': 'd',
     'h': 'h',
     'min': 'min',

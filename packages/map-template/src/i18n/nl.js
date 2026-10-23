@@ -11,6 +11,7 @@ const nl = {
     'Legend': 'Legende',
     'Nothing was found': 'Er is niets gevonden',
     'Search results': 'Zoekresultaten',
+    'Show more results': 'Meer resultaten weergeven',
     'd': 'd',
     'h': 'u',
     'min': 'min',

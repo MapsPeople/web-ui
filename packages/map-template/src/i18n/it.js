@@ -11,6 +11,7 @@ const it = {
     'Legend': 'Legenda',
     'Nothing was found': 'Non è stato trovato nulla',
     'Search results': 'Risultati della ricerca',
+    'Show more results': 'Mostra altri risultati',
     'd': 'g',
     'h': 'o',
     'min': 'min',
