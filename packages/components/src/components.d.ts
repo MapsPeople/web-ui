@@ -387,10 +387,10 @@ export namespace Components {
     }
     interface MiListItemLocation {
         /**
-          * @description Optional URL to icon to render for the Location. If not set, imageURL on the Location data will be used.
-          * @type {string}
+          * @description Optional URL or image element to render as icon for the Location. If not set, imageURL on the Location data will be used.
+          * @type {string | HTMLImageElement}
          */
-        "icon": string;
+        "icon": string | HTMLImageElement;
         /**
           * @description Add a badge to the location icon of the type given as value.
           * @type {string}
@@ -2177,10 +2177,10 @@ declare namespace LocalJSX {
     }
     interface MiListItemLocation {
         /**
-          * @description Optional URL to icon to render for the Location. If not set, imageURL on the Location data will be used.
-          * @type {string}
+          * @description Optional URL or image element to render as icon for the Location. If not set, imageURL on the Location data will be used.
+          * @type {string | HTMLImageElement}
          */
-        "icon"?: string;
+        "icon"?: string | HTMLImageElement;
         /**
           * @description Add a badge to the location icon of the type given as value.
           * @type {string}
@@ -3113,7 +3113,7 @@ declare namespace LocalJSX {
         "location": string;
         "showExternalId": boolean;
         "unit": UnitSystem;
-        "icon": string;
+        "icon": string | HTMLImageElement;
         "level": string;
         "iconBadge": string;
         "iconBadgeValue": string;
