@@ -1,4 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
+import PropTypes from 'prop-types';
 import { RecoilRoot, useSetRecoilState } from 'recoil';
 import { useMapLoadingProgress } from './useMapLoadingProgress';
 import mapsIndoorsInstanceState from '../atoms/mapsIndoorsInstanceState';
@@ -27,7 +28,7 @@ function createSdkInstance(initialProgress = { phase: 'fetching_locations', prog
 }
 
 function wrapperWith(instance, isMapReady = false) {
-    return function Wrapper({ children }) {
+    function Wrapper({ children }) {
         return (
             <RecoilRoot initializeState={({ set }) => {
                 set(mapsIndoorsInstanceState, instance);
@@ -36,7 +37,13 @@ function wrapperWith(instance, isMapReady = false) {
                 {children}
             </RecoilRoot>
         );
+    }
+
+    Wrapper.propTypes = {
+        children: PropTypes.node
     };
+
+    return Wrapper;
 }
 
 function wrapperWithReadyControls(instance, controls, isMapReady = false) {
@@ -45,7 +52,7 @@ function wrapperWithReadyControls(instance, controls, isMapReady = false) {
         return null;
     }
 
-    return function Wrapper({ children }) {
+    function Wrapper({ children }) {
         return (
             <RecoilRoot initializeState={({ set }) => {
                 set(mapsIndoorsInstanceState, instance);
@@ -55,7 +62,13 @@ function wrapperWithReadyControls(instance, controls, isMapReady = false) {
                 {children}
             </RecoilRoot>
         );
+    }
+
+    Wrapper.propTypes = {
+        children: PropTypes.node
     };
+
+    return Wrapper;
 }
 
 describe('useMapLoadingProgress', () => {
@@ -293,6 +306,10 @@ describe('useMapLoadingProgress', () => {
                 </RecoilRoot>
             );
         }
+
+        Wrapper.propTypes = {
+            children: PropTypes.node
+        };
 
         const { result } = renderHook(
             () => useMapLoadingProgress({ mapsindoorsSDKAvailable: true, appConfig: {} }),

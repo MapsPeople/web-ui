@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.99.36] - 2026-10-23
+
+### Added
+
+- Search results are shown in batches of 100. A "Show more results" button at the end of the list reveals the next 100 in the list and on the map. Previously, results beyond the first 100 were not shown.
+- The MapsPeople logo on the map opens https://www.mapspeople.com/ in a new tab when clicked or activated with Enter. The link is disabled in Kiosk mode. On mobile, the logo and chat button are moved above the collapsed bottom sheet so the logo is visible.
+
+### Changed
+
+- Category search results are sorted alphabetically across the full result set, not only the first 100.
+- When a category is selected, the map fits to the revealed results and re-fits each time more results are shown.
+
+### Fixed
+
+- The Kiosk reset button returns the map to the configured start view (kiosk floor, `startZoomLevel`, pitch and bearing) instead of zooming in close to the kiosk location and keeping the current rotation and tilt.
+- Wayfinding external search (Mapbox and Google Places) is biased towards the map center when the device position is unknown, so results near the venue are shown. Mapbox search requests now send a valid session token.
+- Locations with a Live Data badge show their badged icon in the search results list instead of an empty icon.
+
 ## [1.99.35] - 2026-10-16
 
 ### Fixed

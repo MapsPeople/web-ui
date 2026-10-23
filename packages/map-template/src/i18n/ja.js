@@ -11,6 +11,7 @@ const ja = {
     'Legend': '凡例',
     'Nothing was found': '見つかりませんでした',
     'Search results': '検索結果',
+    'Show more results': 'さらに結果を表示',
     'd': '日',
     'h': '時間',
     'min': '分',
