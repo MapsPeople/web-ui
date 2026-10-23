@@ -333,7 +333,7 @@ export default useMapBoundsDeterminer;
  * @param {number} pitch - Map pitch (tilt).
  * @param {number} bearing - Mp bearing (rotation) in degrees from north.
  */
-function goTo(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLevel, pitch, bearing) {
+export function goTo(geometry, mapsIndoorsInstance, paddingBottom, paddingLeft, zoomLevel, pitch, bearing) {
     // If zoom level is undefined or default, use goTo() function that also fits bounds.
     // Otherwise, set center to be a center point of a given geometry with a specified zoom level.
     const numericPitch = Number(pitch);
