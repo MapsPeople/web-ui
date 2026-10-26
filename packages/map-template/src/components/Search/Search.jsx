@@ -109,7 +109,7 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
     const mapType = useRecoilValue(mapTypeState);
     const setFilteredLocations = useSetRecoilState(filteredLocationsState);
 
-    const setCurrentLocation = useSetRecoilState(currentLocationState);
+    const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
 
     const setIsLocationClicked = useSetRecoilState(isLocationClickedState);
 
@@ -150,6 +150,12 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
     const skipHighlightRef = useRef(false);
 
     const selectedCategoriesArray = useRef([]);
+
+    const categoryLocationsRef = useRef([]);
+
+    const requestedCategoryRef = useRef(null);
+
+    const isNavigatingToLocationRef = useRef(false);
 
     const [childKeys, setChildKeys] = useState([]);
 
@@ -205,6 +211,8 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
             setFilteredLocations([]);
         }
         setSelectedCategory(category)
+        categoryLocationsRef.current = [];
+        requestedCategoryRef.current = category;
 
         // Regarding the venue name: The venue parameter in the SDK's getLocations method is case sensitive.
         // So when the currentVenueName is set based on a Locations venue property, the casing may differ.
@@ -222,7 +230,12 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
         window.mapsindoors.services.LocationsService.getLocations({
             categories: category,
             venue: searchAllVenues ? undefined : matchedVenueName,
-        }).then(results => onResults(results, true));
+        }).then(results => {
+            if (requestedCategoryRef.current === category) {
+                categoryLocationsRef.current = results;
+            }
+            onResults(results, true);
+        });
     }
 
     /**
@@ -297,10 +310,12 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
     /**
      * Adjusts the map view to fit the bounds of the provided locations.
      * It will filter out Locations that are not on the current floor or not part of the current venue.
+     * Optionally, it will also filter out Locations that are not part of the current building.
      *
      * @param {Array} locations - An array of Location objects to fit within the map bounds.
+     * @param {boolean} restrictToCurrentBuilding - If only Locations in the current building should be included.
      */
-    function fitMapBoundsToLocations(locations) {
+    function fitMapBoundsToLocations(locations, restrictToCurrentBuilding = false) {
         if (!mapsIndoorsInstance.goTo) return; // Early exit to prevent crashes if using an older version of the MapsIndoors JS SDK. The goTo method was introduced in version 4.38.0.
 
         const currentFloorIndex = mapsIndoorsInstance.getFloor();
@@ -314,6 +329,9 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
 
                 // Filter out locations that are not part of the current venue. Including those when fitting to bounds could cause the map to zoom out too much.
                 .filter(location => location.properties.venueId.toLowerCase() === currentVenueName.toLowerCase())
+
+                // Filter out locations that are not part of the current building, when requested.
+                .filter(location => !restrictToCurrentBuilding || location.properties.buildingId === mapsIndoorsInstance.getBuilding()?.id)
 
                 // Map the locations to GeoJSON features.
                 .map(location => ({
@@ -468,7 +486,12 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
             mapsIndoorsInstance.once('floor_changed', () => {
                 mapsIndoorsInstance.getMapView().once('idle', () => setCurrentLocation(location));
             });
-            mapsIndoorsInstance.setFloor(locationFloor);
+            isNavigatingToLocationRef.current = true;
+            try {
+                mapsIndoorsInstance.setFloor(locationFloor);
+            } finally {
+                isNavigatingToLocationRef.current = false;
+            }
         } else {
             setCurrentLocation(location);
         }
@@ -681,8 +704,29 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
     useEffect(() => {
         if (selectedCategory) {
             getFilteredLocations(selectedCategory);
+        } else {
+            categoryLocationsRef.current = [];
+            requestedCategoryRef.current = null;
         }
     }, [selectedCategory]);
+
+    /*
+     * When the floor changes while a category is selected and no Location is open,
+     * refit the map to the category Locations in the current building to keep the building from changing.
+     */
+    useEffect(() => {
+        if (!isOpen || !mapsIndoorsInstance || !selectedCategory || currentLocation) return;
+
+        const onFloorChanged = () => {
+            if (isNavigatingToLocationRef.current) return;
+            fitMapBoundsToLocations(categoryLocationsRef.current, true);
+        };
+
+        mapsIndoorsInstance.on('floor_changed', onFloorChanged);
+        return () => {
+            mapsIndoorsInstance.off('floor_changed', onFloorChanged);
+        }
+    }, [isOpen, mapsIndoorsInstance, selectedCategory, currentLocation, currentVenueName]);
 
     /*
      * Get the legend sections and determine
