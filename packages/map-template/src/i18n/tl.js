@@ -89,6 +89,7 @@ const tl = {
     'Copy link': 'Kopyahin ang link',
     'Link copied': 'Nakopya ang link',
     'Could not share route': 'Hindi maibahagi ang ruta',
+    'Could not copy link': 'Hindi makopya ang link',
     'QR Code': 'QR Code',
     // Opening Hours
     'Open': 'Bukas',

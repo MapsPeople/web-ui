@@ -89,6 +89,7 @@ const ceb = {
     'Copy link': 'Kopyaha ang link',
     'Link copied': 'Nakopya ang link',
     'Could not share route': 'Wala maipaambit ang ruta',
+    'Could not copy link': 'Wala makopya ang link',
     'QR Code': 'QR Code',
     // Opening Hours
     'Open': 'Abli',

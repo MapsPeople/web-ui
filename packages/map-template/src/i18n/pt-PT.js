@@ -89,6 +89,7 @@ const ptPT = {
     'Copy link': 'Copiar ligação',
     'Link copied': 'Ligação copiada',
     'Could not share route': 'Não foi possível partilhar o percurso',
+    'Could not copy link': 'Não foi possível copiar a ligação',
     'QR Code': 'Código QR',
     // Opening Hours
     'Open': 'Aberto',

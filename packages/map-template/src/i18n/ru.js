@@ -89,6 +89,7 @@ const ru = {
     'Copy link': 'Копировать ссылку',
     'Link copied': 'Ссылка скопирована',
     'Could not share route': 'Не удалось поделиться маршрутом',
+    'Could not copy link': 'Не удалось скопировать ссылку',
     'QR Code': 'QR-код',
     // Opening Hours
     'Open': 'Открыто',

@@ -89,6 +89,7 @@ const ko = {
     'Copy link': '링크 복사',
     'Link copied': '링크가 복사되었습니다',
     'Could not share route': '경로를 공유할 수 없습니다',
+    'Could not copy link': '링크를 복사할 수 없습니다',
     'QR Code': 'QR 코드',
     // Opening Hours
     'Open': '영업 중',
