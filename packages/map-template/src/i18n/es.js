@@ -89,6 +89,7 @@ const es = {
     'Copy link': 'Copiar link',
     'Link copied': 'Link copiado',
     'Could not share route': 'No se pudo compartir la ruta',
+    'Could not copy link': 'No se pudo copiar el link',
     'QR Code': 'Código QR',
     // Opening Hours
     'Open': 'Abierto',

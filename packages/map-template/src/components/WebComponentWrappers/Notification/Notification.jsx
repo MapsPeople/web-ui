@@ -14,10 +14,9 @@ function Notification() {
 
     useEffect(() => {
         elementRef.current?.classList.add('notification'); // Due to difficulties adding class names onto the Web Component, we do it like this.
+        elementRef.current.clearAll();
         if (notificationMessage) {
             elementRef.current.push(notificationMessage.text, notificationMessage.type, notificationMessage.sticky ?? true);
-        } else {
-            elementRef.current.clearAll();
         }
     }, [notificationMessage]);
 

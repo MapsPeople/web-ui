@@ -89,6 +89,7 @@ const ja = {
     'Copy link': 'リンクをコピー',
     'Link copied': 'リンクをコピーしました',
     'Could not share route': 'ルートを共有できませんでした',
+    'Could not copy link': 'リンクをコピーできませんでした',
     'QR Code': 'QRコード',
     // Opening Hours
     'Open': '営業中',

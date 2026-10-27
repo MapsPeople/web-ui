@@ -89,6 +89,7 @@ const zhHant = {
       'Copy link': '複製連結',
       'Link copied': '連結已複製',
       'Could not share route': '無法分享路線',
+      'Could not copy link': '無法複製連結',
       'QR Code': 'QR 碼',
       // Opening Hours
       'Open': '營業中',
