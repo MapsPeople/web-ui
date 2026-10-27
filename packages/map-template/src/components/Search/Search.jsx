@@ -33,6 +33,7 @@ import isLegendDialogVisibleState from '../../atoms/isLegendDialogVisibleState';
 import legendSortedFieldsSelector from '../../selectors/legendSortedFieldsSelector';
 import searchAllVenuesState from '../../atoms/searchAllVenues';
 import isNullOrUndefined from '../../helpers/isNullOrUndefined';
+import getResultsBatch, { RESULTS_BATCH_SIZE } from '../../helpers/getResultsBatch';
 import venueListState from '../../atoms/venueListState';
 import venuesInSolutionState from '../../atoms/venuesInSolutionState';
 import initialVenueNameState from '../../atoms/initialVenueNameState';
@@ -82,6 +83,7 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
 
     const searchRef = useRef();
     const scrollButtonsRef = useRef();
+    const searchResultsRef = useRef();
     const requestAnimationFrameId = useRef();
 
     /** Referencing the search field */
@@ -90,8 +92,7 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
     /** Referencing the keyboard element */
     const keyboardRef = useRef();
 
-    /** Maximum number of search results to show */
-    const MAX_RESULTS = 100;
+    const [revealedResults, setRevealedResults] = useState({ locations: [], count: 0, sortAlphabetically: false, fitMapBounds: false });
     const [searchResults, setSearchResults] = useRecoilState(searchResultsState);
     const categories = useRecoilValue(categoriesState);
     const primaryColor = useRecoilValue(primaryColorState);
@@ -108,7 +109,7 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
     const mapType = useRecoilValue(mapTypeState);
     const setFilteredLocations = useSetRecoilState(filteredLocationsState);
 
-    const setCurrentLocation = useSetRecoilState(currentLocationState);
+    const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
 
     const setIsLocationClicked = useSetRecoilState(isLocationClickedState);
 
@@ -149,6 +150,12 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
     const skipHighlightRef = useRef(false);
 
     const selectedCategoriesArray = useRef([]);
+
+    const categoryLocationsRef = useRef([]);
+
+    const requestedCategoryRef = useRef(null);
+
+    const isNavigatingToLocationRef = useRef(false);
 
     const [childKeys, setChildKeys] = useState([]);
 
@@ -204,6 +211,8 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
             setFilteredLocations([]);
         }
         setSelectedCategory(category)
+        categoryLocationsRef.current = [];
+        requestedCategoryRef.current = category;
 
         // Regarding the venue name: The venue parameter in the SDK's getLocations method is case sensitive.
         // So when the currentVenueName is set based on a Locations venue property, the casing may differ.
@@ -221,7 +230,12 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
         window.mapsindoors.services.LocationsService.getLocations({
             categories: category,
             venue: searchAllVenues ? undefined : matchedVenueName,
-        }).then(results => onResults(results, true));
+        }).then(results => {
+            if (requestedCategoryRef.current === category) {
+                categoryLocationsRef.current = results;
+            }
+            onResults(results, true);
+        });
     }
 
     /**
@@ -236,30 +250,15 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
     }
 
     /**
-     * Sort search results alphabetically if configured to do so and a category is selected.
-     *
-     * @param {Array} results - Array of search results
-     * @returns {Array} Sorted or original array based on configuration
-     */
-    function getSortedSearchResults(results) {
-        if (selectedCategory) {
-            return [...results].sort((a, b) => {
-                return (a.properties?.name || '')
-                    .localeCompare(b.properties?.name || '', undefined, { numeric: true });
-            })
-        }
-
-        return results;
-    }
-
-    /**
      * Handle search results from the search field.
      *
      * @param {array} locations - An array of MapsIndoors Location objects.
      * @param {boolean} fitMapBounds - If the map bounds should be adjusted to fit the locations.
      */
     function onResults(locations, fitMapBounds = false) {
-        const displayResults = locations.slice(0, MAX_RESULTS);
+        const sortAlphabetically = fitMapBounds;
+        const displayResults = getResultsBatch(locations, RESULTS_BATCH_SIZE, sortAlphabetically);
+        setRevealedResults({ locations, count: RESULTS_BATCH_SIZE, sortAlphabetically, fitMapBounds });
         const hadResults = searchResults.length > 0;
         if (!hadResults || displayResults.length === 0) {
             setSize(snapPoints.MAX);
@@ -270,7 +269,7 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
         setShowNotFoundMessage(displayResults.length === 0);
 
         if (locations && fitMapBounds) {
-            fitMapBoundsToLocations(locations);
+            fitMapBoundsToLocations(displayResults);
         }
 
         // Handles updates to scroll buttons when the category changes.
@@ -285,14 +284,38 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
         }
     }
 
+    /**
+     * Reveal the next batch of search results in the list and on the map.
+     */
+    function showMoreResults() {
+        const count = revealedResults.count + RESULTS_BATCH_SIZE;
+        const displayResults = getResultsBatch(revealedResults.locations, count, revealedResults.sortAlphabetically);
+        setRevealedResults({ ...revealedResults, count });
+        setSearchResults(displayResults);
+        setFilteredLocations(displayResults);
+
+        if (revealedResults.fitMapBounds) {
+            fitMapBoundsToLocations(displayResults);
+        }
+
+        if (isKioskContext) {
+            requestAnimationFrame(() => scrollButtonsRef.current?.updateScrollButtons());
+        }
+
+        if (displayResults.length >= revealedResults.locations.length) {
+            requestAnimationFrame(() => searchResultsRef.current?.focus());
+        }
+    }
 
     /**
      * Adjusts the map view to fit the bounds of the provided locations.
      * It will filter out Locations that are not on the current floor or not part of the current venue.
+     * Optionally, it will also filter out Locations that are not part of the current building.
      *
      * @param {Array} locations - An array of Location objects to fit within the map bounds.
+     * @param {boolean} restrictToCurrentBuilding - If only Locations in the current building should be included.
      */
-    function fitMapBoundsToLocations(locations) {
+    function fitMapBoundsToLocations(locations, restrictToCurrentBuilding = false) {
         if (!mapsIndoorsInstance.goTo) return; // Early exit to prevent crashes if using an older version of the MapsIndoors JS SDK. The goTo method was introduced in version 4.38.0.
 
         const currentFloorIndex = mapsIndoorsInstance.getFloor();
@@ -306,6 +329,9 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
 
                 // Filter out locations that are not part of the current venue. Including those when fitting to bounds could cause the map to zoom out too much.
                 .filter(location => location.properties.venueId.toLowerCase() === currentVenueName.toLowerCase())
+
+                // Filter out locations that are not part of the current building, when requested.
+                .filter(location => !restrictToCurrentBuilding || location.properties.buildingId === mapsIndoorsInstance.getBuilding()?.id)
 
                 // Map the locations to GeoJSON features.
                 .map(location => ({
@@ -460,7 +486,12 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
             mapsIndoorsInstance.once('floor_changed', () => {
                 mapsIndoorsInstance.getMapView().once('idle', () => setCurrentLocation(location));
             });
-            mapsIndoorsInstance.setFloor(locationFloor);
+            isNavigatingToLocationRef.current = true;
+            try {
+                mapsIndoorsInstance.setFloor(locationFloor);
+            } finally {
+                isNavigatingToLocationRef.current = false;
+            }
         } else {
             setCurrentLocation(location);
         }
@@ -673,8 +704,29 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
     useEffect(() => {
         if (selectedCategory) {
             getFilteredLocations(selectedCategory);
+        } else {
+            categoryLocationsRef.current = [];
+            requestedCategoryRef.current = null;
         }
     }, [selectedCategory]);
+
+    /*
+     * When the floor changes while a category is selected and no Location is open,
+     * refit the map to the category Locations in the current building to keep the building from changing.
+     */
+    useEffect(() => {
+        if (!isOpen || !mapsIndoorsInstance || !selectedCategory || currentLocation) return;
+
+        const onFloorChanged = () => {
+            if (isNavigatingToLocationRef.current) return;
+            fitMapBoundsToLocations(categoryLocationsRef.current, true);
+        };
+
+        mapsIndoorsInstance.on('floor_changed', onFloorChanged);
+        return () => {
+            mapsIndoorsInstance.off('floor_changed', onFloorChanged);
+        }
+    }, [isOpen, mapsIndoorsInstance, selectedCategory, currentLocation, currentVenueName]);
 
     /*
      * Get the legend sections and determine
@@ -825,7 +877,7 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
 
             {/* When search results are found (category is selected or search term is used) */}
             {searchResults.length > 0 && (
-                <div className={`search__results prevent-scroll${isKioskContext ? ' search__results--kiosk' : ''}`}>
+                <div ref={searchResultsRef} tabIndex={-1} className={`search__results prevent-scroll${isKioskContext ? ' search__results--kiosk' : ''}`}>
                     <h2 className="search__sr-heading">{t('Search results')}</h2>
 
                     {/* Subcategories should only show if a top level category is selected and if that top level category has any childKeys */}
@@ -842,13 +894,19 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
                     )}
 
                     {/* Show locations when there are any searchResults */}
-                    {getSortedSearchResults(searchResults).map(location =>
+                    {searchResults.map(location =>
                         <ListItemLocation
                             key={location.id}
                             location={location}
                             locationClicked={() => onLocationClicked(location)}
                             isHovered={location?.id === hoveredLocation?.id}
                         />
+                    )}
+
+                    {searchResults.length < revealedResults.locations.length && (
+                        <button type="button" className="search__show-more" onClick={showMoreResults}>
+                            {t('Show more results')}
+                        </button>
                     )}
                 </div>
             )}

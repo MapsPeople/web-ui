@@ -11,6 +11,7 @@ const ptPT = {
     'Legend': 'Legenda',
     'Nothing was found': 'Não foi encontrado nada',
     'Search results': 'Resultados da pesquisa',
+    'Show more results': 'Mostrar mais resultados',
     'd': 'd',
     'h': 'h',
     'min': 'min',
@@ -88,6 +89,7 @@ const ptPT = {
     'Copy link': 'Copiar ligação',
     'Link copied': 'Ligação copiada',
     'Could not share route': 'Não foi possível partilhar o percurso',
+    'Could not copy link': 'Não foi possível copiar a ligação',
     'QR Code': 'Código QR',
     // Opening Hours
     'Open': 'Aberto',

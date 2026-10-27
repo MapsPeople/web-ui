@@ -11,6 +11,7 @@ const ceb = {
     'Legend': 'Legend',
     'Nothing was found': 'Walay nakit-an',
     'Search results': 'Mga resulta sa pagpangita',
+    'Show more results': 'Ipakita ang dugang nga mga resulta',
     'd': 'd',
     'h': 'h',
     'min': 'min',
@@ -88,6 +89,7 @@ const ceb = {
     'Copy link': 'Kopyaha ang link',
     'Link copied': 'Nakopya ang link',
     'Could not share route': 'Wala maipaambit ang ruta',
+    'Could not copy link': 'Wala makopya ang link',
     'QR Code': 'QR Code',
     // Opening Hours
     'Open': 'Abli',

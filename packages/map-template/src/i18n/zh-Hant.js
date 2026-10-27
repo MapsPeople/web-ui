@@ -11,6 +11,7 @@ const zhHant = {
       'Legend': '圖例',
       'Nothing was found': '找不到任何結果',
       'Search results': '搜尋結果',
+      'Show more results': '顯示更多結果',
       'd': '天',
       'h': '小時',
       'min': '分鐘',
@@ -88,6 +89,7 @@ const zhHant = {
       'Copy link': '複製連結',
       'Link copied': '連結已複製',
       'Could not share route': '無法分享路線',
+      'Could not copy link': '無法複製連結',
       'QR Code': 'QR 碼',
       // Opening Hours
       'Open': '營業中',

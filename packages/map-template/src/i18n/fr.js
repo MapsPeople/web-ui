@@ -11,6 +11,7 @@ const fr = {
     'Legend': 'Légende',
     'Nothing was found': 'Rien n\'a été trouvé',
     'Search results': 'Résultats de recherche',
+    'Show more results': 'Afficher plus de résultats',
     'd': 'd',
     'h': 'h',
     'min': 'min',
@@ -88,6 +89,7 @@ const fr = {
     'Copy link': 'Copier le lien',
     'Link copied': 'Lien copié',
     'Could not share route': 'Impossible de partager l\'itinéraire',
+    'Could not copy link': 'Impossible de copier le lien',
     'QR Code': 'Code QR',
     // Opening Hours
     'Open': 'Ouvert',

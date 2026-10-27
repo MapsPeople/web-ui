@@ -11,6 +11,7 @@ const zhHans = {
     'Legend': '图例',
     'Nothing was found': '未找到任何结果',
     'Search results': '搜索结果',
+    'Show more results': '显示更多结果',
     'd': '天',
     'h': '小时',
     'min': '分钟',
@@ -88,6 +89,7 @@ const zhHans = {
     'Copy link': '复制链接',
     'Link copied': '链接已复制',
     'Could not share route': '无法分享路线',
+    'Could not copy link': '无法复制链接',
     'QR Code': '二维码',
     // Opening Hours
     'Open': '营业中',

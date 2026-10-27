@@ -11,6 +11,7 @@ const ru = {
     'Legend': 'Легенда',
     'Nothing was found': 'Ничего не найдено',
     'Search results': 'Результаты поиска',
+    'Show more results': 'Показать больше результатов',
     'd': 'д',
     'h': 'ч',
     'min': 'мин',
@@ -88,6 +89,7 @@ const ru = {
     'Copy link': 'Копировать ссылку',
     'Link copied': 'Ссылка скопирована',
     'Could not share route': 'Не удалось поделиться маршрутом',
+    'Could not copy link': 'Не удалось скопировать ссылку',
     'QR Code': 'QR-код',
     // Opening Hours
     'Open': 'Открыто',

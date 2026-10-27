@@ -11,6 +11,7 @@ const tl = {
     'Legend': 'Legend',
     'Nothing was found': 'Walang nahanap',
     'Search results': 'Mga resulta ng paghahanap',
+    'Show more results': 'Magpakita ng higit pang resulta',
     'd': 'd',
     'h': 'h',
     'min': 'min',
@@ -88,6 +89,7 @@ const tl = {
     'Copy link': 'Kopyahin ang link',
     'Link copied': 'Nakopya ang link',
     'Could not share route': 'Hindi maibahagi ang ruta',
+    'Could not copy link': 'Hindi makopya ang link',
     'QR Code': 'QR Code',
     // Opening Hours
     'Open': 'Bukas',

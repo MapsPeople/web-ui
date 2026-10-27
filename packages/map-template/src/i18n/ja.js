@@ -11,6 +11,7 @@ const ja = {
     'Legend': '凡例',
     'Nothing was found': '見つかりませんでした',
     'Search results': '検索結果',
+    'Show more results': 'さらに結果を表示',
     'd': '日',
     'h': '時間',
     'min': '分',
@@ -88,6 +89,7 @@ const ja = {
     'Copy link': 'リンクをコピー',
     'Link copied': 'リンクをコピーしました',
     'Could not share route': 'ルートを共有できませんでした',
+    'Could not copy link': 'リンクをコピーできませんでした',
     'QR Code': 'QRコード',
     // Opening Hours
     'Open': '営業中',

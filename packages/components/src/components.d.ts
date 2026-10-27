@@ -9,6 +9,7 @@ import { SortOrder } from "./enums/sort-order.enum";
 import { UnitSystem } from "./enums/unit-system.enum";
 import { Location } from "@mapsindoors/typescript-interfaces";
 import { LocationBookingDuration } from "./enums/location-booking-duration.enum";
+import { LocationBookingTranslations } from "./components/location-booking/location-booking";
 import { IPositionProvider, MapsIndoorsPosition } from "./types/position-provider.interface";
 import { NotificationPosition } from "./enums/notification-position.enum";
 import { NotificationMessage } from "./types/notification-message.interface";
@@ -20,6 +21,7 @@ export { SortOrder } from "./enums/sort-order.enum";
 export { UnitSystem } from "./enums/unit-system.enum";
 export { Location } from "@mapsindoors/typescript-interfaces";
 export { LocationBookingDuration } from "./enums/location-booking-duration.enum";
+export { LocationBookingTranslations } from "./components/location-booking/location-booking";
 export { IPositionProvider, MapsIndoorsPosition } from "./types/position-provider.interface";
 export { NotificationPosition } from "./enums/notification-position.enum";
 export { NotificationMessage } from "./types/notification-message.interface";
@@ -387,10 +389,10 @@ export namespace Components {
     }
     interface MiListItemLocation {
         /**
-          * @description Optional URL to icon to render for the Location. If not set, imageURL on the Location data will be used.
-          * @type {string}
+          * @description Optional URL or image element to render as icon for the Location. If not set, imageURL on the Location data will be used.
+          * @type {string | HTMLImageElement}
          */
-        "icon": string;
+        "icon": string | HTMLImageElement;
         /**
           * @description Add a badge to the location icon of the type given as value.
           * @type {string}
@@ -459,11 +461,7 @@ export namespace Components {
           * Translations object for translatable strings.
           * @default {         book: 'Book',         cancel: 'Cancel',         booked: 'Booked'     }
          */
-        "translations": {
-        book: string;
-        cancel: string;
-        booked: string;
-    };
+        "translations": LocationBookingTranslations;
     }
     interface MiLocationInfo {
         /**
@@ -2177,10 +2175,10 @@ declare namespace LocalJSX {
     }
     interface MiListItemLocation {
         /**
-          * @description Optional URL to icon to render for the Location. If not set, imageURL on the Location data will be used.
-          * @type {string}
+          * @description Optional URL or image element to render as icon for the Location. If not set, imageURL on the Location data will be used.
+          * @type {string | HTMLImageElement}
          */
-        "icon"?: string;
+        "icon"?: string | HTMLImageElement;
         /**
           * @description Add a badge to the location icon of the type given as value.
           * @type {string}
@@ -2281,11 +2279,7 @@ declare namespace LocalJSX {
           * Translations object for translatable strings.
           * @default {         book: 'Book',         cancel: 'Cancel',         booked: 'Booked'     }
          */
-        "translations"?: {
-        book: string;
-        cancel: string;
-        booked: string;
-    };
+        "translations"?: LocationBookingTranslations;
     }
     interface MiLocationInfo {
         /**
@@ -3113,7 +3107,7 @@ declare namespace LocalJSX {
         "location": string;
         "showExternalId": boolean;
         "unit": UnitSystem;
-        "icon": string;
+        "icon": string | HTMLImageElement;
         "level": string;
         "iconBadge": string;
         "iconBadgeValue": string;
