@@ -579,8 +579,9 @@ export class ComboBox {
 
         const MAX_HEIGHT = 580;
         const MARGIN = 12;
-        const fitsViewport = clientWidth > listElementRect.width
-            && !(hostElementRect.right - listElementRect.width < 0 && listElementRect.right > clientWidth);
+        const fits = (width: number, right: number): boolean => clientWidth > width
+            && !(hostElementRect.right - width < 0 && right > clientWidth);
+        const measuredFits = fits(listElementRect.width, listElementRect.right);
 
         // Keep the measured width only while a typed filter would otherwise
         // shrink the panel. Plain combo boxes still size to the visible rows.
@@ -590,21 +591,37 @@ export class ComboBox {
             this.lockedListWidth = null;
             this.listElement.style.width = null;
             this.listElement.style.boxSizing = null;
-        } else if (fitsViewport && !this.lockedListWidth && this.listElement.offsetWidth > 0) {
+        } else if (measuredFits && !this.lockedListWidth && this.listElement.offsetWidth > 0) {
             this.lockedListWidth = `${this.listElement.offsetWidth}px`;
         }
 
-        if (this.open && this.lockedListWidth && fitsViewport) {
-            this.listElement.style.boxSizing = 'border-box';
-            this.listElement.style.width = this.lockedListWidth;
+        // Place the list at the width that will actually be painted. A cached
+        // width is kept when the viewport gets too narrow, but it is not
+        // restored until that width fits again.
+        let layoutWidth = listElementRect.width;
+        let layoutRight = listElementRect.right;
+
+        if (this.open && this.lockedListWidth && measuredFits) {
+            const lockedWidth = parseFloat(this.lockedListWidth);
+            const lockedRight = hostElementRect.left + lockedWidth;
+
+            if (fits(lockedWidth, lockedRight)) {
+                this.listElement.style.boxSizing = 'border-box';
+                this.listElement.style.width = this.lockedListWidth;
+                layoutWidth = lockedWidth;
+                layoutRight = lockedRight;
+            } else {
+                this.listElement.style.width = null;
+                this.listElement.style.boxSizing = null;
+            }
         }
 
-        if (!fitsViewport) {
+        if (!fits(layoutWidth, layoutRight)) {
             this.listElement.style.right = `${MARGIN}px`;
             this.listElement.style.left = `${MARGIN}px`;
             this.listElement.style.minWidth = 'unset';
             this.listElement.style.width = null;
-        } else if (listElementRect.right > clientWidth) {
+        } else if (layoutRight > clientWidth) {
             this.listElement.style.left = 'unset';
             this.listElement.style.right = `${clientWidth - hostElementRect.right}px`;
         } else {
