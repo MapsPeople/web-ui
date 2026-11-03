@@ -72,7 +72,7 @@ The translation object should have translation for the following properties:
 | `show`         | `show`          | How many time slots to show going forward in time. Default to 4.             | `number`                                                         | `4`                                                                                |
 | `startHour`    | `start-hour`    | No bookings will be allowed before this hour. Default value is 8.            | `number`                                                         | `8`                                                                                |
 | `stopHour`     | `stop-hour`     | No bookings will be allowed within and after this hour. Default value is 18. | `number`                                                         | `18`                                                                               |
-| `translations` | --              | Translations object for translatable strings.                                | `{ book: string; cancel: string; booked: string; }`              | `{         book: 'Book',         cancel: 'Cancel',         booked: 'Booked'     }` |
+| `translations` | --              | Translations object for translatable strings.                                | `LocationBookingTranslations`                                    | `{         book: 'Book',         cancel: 'Cancel',         booked: 'Booked'     }` |
 
 
 ## Events

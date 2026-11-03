@@ -11,6 +11,7 @@ const nl = {
     'Legend': 'Legende',
     'Nothing was found': 'Er is niets gevonden',
     'Search results': 'Zoekresultaten',
+    'Show more results': 'Meer resultaten weergeven',
     'd': 'd',
     'h': 'u',
     'min': 'min',
@@ -88,6 +89,7 @@ const nl = {
     'Copy link': 'Link kopiëren',
     'Link copied': 'Link gekopieerd',
     'Could not share route': 'Kan route niet delen',
+    'Could not copy link': 'Kan link niet kopiëren',
     'QR Code': 'QR code',
     // Opening Hours
     'Open': 'Open',

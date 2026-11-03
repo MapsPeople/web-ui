@@ -11,6 +11,7 @@ const en = {
     'Legend': 'Legend',
     'Nothing was found': 'Nothing was found',
     'Search results': 'Search results',
+    'Show more results': 'Show more results',
     'd': 'd',
     'h': 'h',
     'min': 'min',
@@ -88,6 +89,7 @@ const en = {
     'Copy link': 'Copy link',
     'Link copied': 'Link copied',
     'Could not share route': 'Could not share route',
+    'Could not copy link': 'Could not copy link',
     'QR Code': 'QR Code',
     // Opening Hours
     'Open': 'Open',

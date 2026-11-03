@@ -1,6 +1,7 @@
 import { Component, ComponentInterface, Host, h, Watch, Event, EventEmitter } from '@stencil/core';
 import { JSX, Prop, Method } from '@stencil/core/internal';
 import Debounce from 'debounce-decorator';
+import { LAT_LNG_PATTERN, getBiasPoint } from '../../utils/utils';
 
 declare const google;
 declare const mapsindoors;
@@ -310,7 +311,7 @@ export class Search implements ComponentInterface {
         let miNear;
         if (this.miNear) {
             miNear = this.miNear;
-            if (/^(-?\d+(\.\d+)?),\s*(-?\d+(\.\d+)?)$/.test(this.miNear)) {
+            if (LAT_LNG_PATTERN.test(this.miNear)) {
                 const near = this.miNear.split(',');
                 miNear = { lat: parseFloat(near[0]), lng: parseFloat(near[1]) };
             }
@@ -357,6 +358,11 @@ export class Search implements ComponentInterface {
                 params.componentRestrictions = { country: this.gmCountryCode };
             }
 
+            const biasPoint = getBiasPoint(this.userPosition, this.miNear);
+            if (biasPoint) {
+                params.locationBias = biasPoint;
+            }
+
             this.googleAutocompleteService.getPlacePredictions(params, (results): void => {
                 const places: object[] = (results || []).map((result): object => ({
                     id: result.place_id,
@@ -387,8 +393,9 @@ export class Search implements ComponentInterface {
                     const language = this.language.split('-')[0]; // Mapbox seemingly only supports the primary language subtag.
                     let url = `https://api.mapbox.com/search/searchbox/v1/suggest?q=${query}&session_token=${this.sessionToken}&access_token=${mapboxgl.accessToken}&language=${language}`;
 
-                    if (this.userPosition) {
-                        url = url.concat(`&proximity=${this.userPosition}`);
+                    const biasPoint = getBiasPoint(this.userPosition, this.miNear);
+                    if (biasPoint) {
+                        url = url.concat(`&proximity=${biasPoint.lng},${biasPoint.lat}`);
                     }
 
                     fetch(url)

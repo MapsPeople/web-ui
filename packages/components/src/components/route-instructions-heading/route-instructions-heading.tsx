@@ -58,7 +58,7 @@ export class RouteInstructionsHeading implements ComponentInterface {
         transit: 'Transit',
         car: 'Car',
         driving: 'Driving'
-    }
+    };
 
     /**
      * Get travel mode as a string. Eg. "Walking", "Driving", "Transit", "Bicycling".

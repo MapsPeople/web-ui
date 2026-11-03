@@ -1,3 +1,5 @@
+@use '../../variables';
+
 @import '@mapsindoors/midt/build/css/mapsindoors-map-variables.css';
 @import '@mapsindoors/css/toggle.css';
 
@@ -120,6 +122,12 @@
 
     #mi_map_logo {
         z-index: var(--z-index-dropdown) !important;
+    }
+}
+
+@media (max-width: variables.$desktop-breakpoint - 1) {
+    #mi_map_logo {
+        bottom: calc(variables.$search-sheet-collapsed-height + var(--spacing-x-small)) !important;
     }
 }
 

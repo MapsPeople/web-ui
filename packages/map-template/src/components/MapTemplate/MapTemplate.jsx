@@ -70,6 +70,7 @@ import { GeminiProvider } from '../../providers/GeminiProvider';
 import ChatButton from '../ChatButton/ChatButton';
 import { useIsKioskContext } from '../../hooks/useIsKioskContext.js';
 import { useKioskReload } from '../../hooks/useKioskReload.js';
+import { useMapsPeopleLogoLink } from '../../hooks/useMapsPeopleLogoLink.js';
 import { syncAnalyticsViewVariant } from '../../helpers/syncAnalyticsViewVariant.js';
 
 // Define the Custom Elements from our components package.
@@ -238,6 +239,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const setErrorMessage = useSetRecoilState(notificationMessageState);
 
     const isKiosk = useIsKioskContext();
+    useMapsPeopleLogoLink(!isKiosk, mapsIndoorsInstance);
     const disableRightClick = isKiosk && (appConfig?.appSettings?.disableRightClick === true || appConfig?.appSettings?.disableRightClick === 'true');
 
     /**

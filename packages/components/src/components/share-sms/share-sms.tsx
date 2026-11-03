@@ -133,7 +133,7 @@ export class ShareSms implements ComponentInterface {
         )
             .then(() => this.successfullySent.emit())
             .catch((err: string) => this.unsuccessfullySent.emit(err));
-    }
+    };
 
     /**
      * Update form validity.

@@ -11,6 +11,7 @@ const ht = {
     'Legend': 'Lejand',
     'Nothing was found': 'Nou pa jwenn anyen',
     'Search results': 'Rezilta rechèch yo',
+    'Show more results': 'Montre plis rezilta',
     'd': 'j',
     'h': 'è',
     'min': 'min',
@@ -88,6 +89,7 @@ const ht = {
     'Copy link': 'Kopye lyen an',
     'Link copied': 'Lyen an kopye',
     'Could not share route': 'Nou pa t kapab pataje wout la',
+    'Could not copy link': 'Nou pa t kapab kopye lyen an',
     'QR Code': 'Kòd QR',
     // Opening Hours
     'Open': 'Ouvè',

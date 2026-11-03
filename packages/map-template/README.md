@@ -44,7 +44,7 @@ const mapsIndoorsMapElement = document.querySelector('mapsindoors-map')
 mapsIndoorsMapElement.externalIDs = externalIDsArray;
 ```
 
-Use query parameters to configure the Web Component by setting the `supports-url-parameter` attribute to `true`.
+Use query parameters to configure the Web Component by setting the `supports-url-parameters` attribute to `true`.
 
 ## Using just the browser
 
@@ -78,7 +78,7 @@ Use query parameters to configure the Web Component by setting the `supports-url
 ```
 
 Add attributes to the Web Component as needed (see supported properties below).
-Use query parameters to configure the Web Component by setting the `supports-url-parameter` attribute to `true`.
+Use query parameters to configure the Web Component by setting the `supports-url-parameters` attribute to `true`.
 
 ## React component: Installation and usage
 
@@ -122,7 +122,7 @@ Note that when using the React component, the properties should conform to JSX p
 |`app-user-roles`|`appUserRoles`|`array`|A list of App User Roles to apply when loading data. Used like so: `appUserRoles={["App User Role"]}`|
 |`directions-from`|`directionsFrom`|`string`|Set a MapsIndoors Location ID to be used as origin to instantly show directions. |
 |`directions-to`|`directionsTo`|`string`|Set a MapsIndoors Location ID to be used as destination to instantly show directions. |
-|`external-IDs`|`etxternalIDs`|`array`|Array of external IDs which filters the map and shows a list of locations. Because of the way browsers work, you can not use External IDs with the `,`, `&`, `#` and `+`, character in them, as they are interpreted by the browser in a particular way. |
+|`external-IDs`|`externalIDs`|`array`|Array of external IDs which filters the map and shows a list of locations. Because of the way browsers work, you can not use External IDs with the `,`, `&`, `#` and `+`, character in them, as they are interpreted by the browser in a particular way. |
 |`tile-style`|`tileStyle`|`string`|Name of Tile Style to display on the map. |
 |`start-zoom-level`|`startZoomLevel`|`number`|The initial zoom level of the map. |
 |`supports-url-parameters`|`supportsUrlParameters`|`bool`|Indicates if the Map Template supports URL parameters. |
@@ -149,9 +149,28 @@ Note that when using the React component, the properties should conform to JSX p
 
 The Map Template supports using query parameters for all the properties provided by the MapsIndoorsMap component if the `supportsUrlParameters` property is set to true.
 
+### Building the URL
+
+Query parameters are added to the end of the Map Template URL:
+
+- Put `?` before the **first** parameter.
+- Put `&` between **every following** parameter.
+
+How the URL starts depends on whether you load your solution with an App alias or an API key:
+
+| You use | Example URL |
+|---|---|
+| App alias in the path (MapsIndoors hosted Map Template) | `https://map.mapsindoors.com/yourAlias?language=zh&venue=yourVenueName` |
+| API key as a query parameter | `https://map.mapsindoors.com/?apiKey=yourApiKey&language=zh&venue=yourVenueName` |
+
+**Note!** When you use an App alias in the path, there is no `apiKey=` parameter, so the first parameter you add must start with `?`:
+
+- ✅ `https://map.mapsindoors.com/yourAlias?language=zh`
+- ❌ `https://map.mapsindoors.com/yourAlias&language=zh` (the map will not load)
+
 The supported query parameters are the following:
 
-1. `apiKey` - Used like this `apiKey=yourApiKey`. If no apiKey is provided, the app will default to `mapspeople3d`.
+1. `apiKey` - Used like this `apiKey=yourApiKey`. Accepts both an API key and an App alias. If no apiKey is provided, the app will default to `mapspeople3d`.
 2. `venue` - Used like this `venue=yourVenueName` - the Venue property is case sensitive. If no venue is provided, the app will select the first venue from the solution in alphabetical order.
 3. `locationId` - Used like this `locationId=yourLocationId`
 4. `primaryColor` - Used like this `primaryColor=000000`. **Note!** You need to provide a hex color value, without the `#`, due to the hashtag being a reserved symbol that has a predefined purpose in a query string. If no primary color is provided, the app will default to the MapsPeople brand color.

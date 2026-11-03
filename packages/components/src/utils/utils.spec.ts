@@ -1,4 +1,4 @@
-import { format, isNumber } from './utils';
+import { format, getBiasPoint, isNumber } from './utils';
 
 describe('format', () => {
     it('returns empty string for no names defined', () => {
@@ -35,5 +35,31 @@ describe('isNumber', () => {
     });
     it('returns true for "def789"', () => {
         expect(isNumber("def789")).toBe(false);
+    });
+});
+
+describe('getBiasPoint', () => {
+    it('uses userPosition as longitude,latitude', () => {
+        expect(getBiasPoint('12.5,55.7', undefined)).toEqual({ lat: 55.7, lng: 12.5 });
+    });
+
+    it('uses miNear as latitude,longitude when userPosition is not set', () => {
+        expect(getBiasPoint(undefined, '52.36,13.5')).toEqual({ lat: 52.36, lng: 13.5 });
+    });
+
+    it('prefers userPosition over miNear', () => {
+        expect(getBiasPoint('12.5,55.7', '52.36,13.5')).toEqual({ lat: 55.7, lng: 12.5 });
+    });
+
+    it('returns undefined when neither is set', () => {
+        expect(getBiasPoint(undefined, undefined)).toBeUndefined();
+    });
+
+    it('returns undefined when miNear is not a coordinate', () => {
+        expect(getBiasPoint(undefined, 'venue:abc')).toBeUndefined();
+    });
+
+    it('handles whitespace after the comma', () => {
+        expect(getBiasPoint(undefined, '52.36, 13.5')).toEqual({ lat: 52.36, lng: 13.5 });
     });
 });

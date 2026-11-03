@@ -110,7 +110,7 @@ export class MapGooglemaps implements ComponentInterface {
         strokeWeight: 2,
         fillColor: '#EF6CCE',
         fillOpacity: 0.2
-    }
+    };
 
     /**
      * Set the component language. Default set to English (en). Will not react to changes.
@@ -129,7 +129,7 @@ export class MapGooglemaps implements ComponentInterface {
         color: '#3071d9',
         opacity: 1,
         weight: 4
-    }
+    };
     @Watch('polylineOptions')
     polylineOptionsChange(newPolylineOptions): void {
         if (this.directionsRendererInstance) {
@@ -389,7 +389,7 @@ export class MapGooglemaps implements ComponentInterface {
     /**
      * Show the floor selector.
      */
-     showFloorSelector(): void {
+    showFloorSelector(): void {
         this.setFloorSelectorControl(this.floorSelectorControlPosition);
     }
 

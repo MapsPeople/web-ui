@@ -12,6 +12,7 @@ import ShareIcon from '../../../assets/share.svg?react';
 import qrCodeLinkState from '../../../atoms/qrCodeLinkState';
 import kioskLocationState from '../../../atoms/kioskLocationState';
 import supportsUrlParametersState from '../../../atoms/supportsUrlParametersState';
+import notificationMessageState from '../../../atoms/notificationMessageState';
 
 ShareLocationLink.propTypes = {
     location: PropTypes.object.isRequired,
@@ -37,6 +38,7 @@ function ShareLocationLink({ location, buttonClassName }) {
     const kioskLocation = useRecoilValue(kioskLocationState);
 
     const setQrCodeLink = useSetRecoilState(qrCodeLinkState);
+    const setNotificationMessage = useSetRecoilState(notificationMessageState);
 
     const isDesktop = useIsDesktop();
 
@@ -65,9 +67,14 @@ function ShareLocationLink({ location, buttonClassName }) {
     /**
      * Copy the link to the clipboard.
      */
-    const copyLink = () => {
-        navigator.clipboard.writeText(locationShareLink);
+    const copyLink = async () => {
         setShareDialogueIsOpen(false);
+        try {
+            await navigator.clipboard.writeText(locationShareLink);
+            setNotificationMessage({ text: t('Link copied'), type: 'success', sticky: false });
+        } catch {
+            setNotificationMessage({ text: t('Could not copy link'), type: 'error', sticky: false });
+        }
     };
 
     /**

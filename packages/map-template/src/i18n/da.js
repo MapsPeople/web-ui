@@ -11,6 +11,7 @@ const da = {
     'Legend': 'Forklaring',
     'Nothing was found': 'Intet fundet',
     'Search results': 'Søgeresultater',
+    'Show more results': 'Vis flere resultater',
     'd': 'd',
     'h': 't',
     'min': 'min',
@@ -88,6 +89,7 @@ const da = {
     'Copy link': 'Kopiér link',
     'Link copied': 'Link kopieret',
     'Could not share route': 'Kunne ikke dele ruten',
+    'Could not copy link': 'Kunne ikke kopiere linket',
     'QR Code': 'QR-kode',
     //Opening Hours
     'Open': 'Åben',

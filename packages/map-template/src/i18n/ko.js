@@ -11,6 +11,7 @@ const ko = {
     'Legend': '범례',
     'Nothing was found': '검색 결과가 없습니다',
     'Search results': '검색 결과',
+    'Show more results': '결과 더 보기',
     'd': '일',
     'h': '시간',
     'min': '분',
@@ -88,6 +89,7 @@ const ko = {
     'Copy link': '링크 복사',
     'Link copied': '링크가 복사되었습니다',
     'Could not share route': '경로를 공유할 수 없습니다',
+    'Could not copy link': '링크를 복사할 수 없습니다',
     'QR Code': 'QR 코드',
     // Opening Hours
     'Open': '영업 중',

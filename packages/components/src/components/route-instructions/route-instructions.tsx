@@ -29,11 +29,10 @@ export class RouteInstructions implements ComponentInterface {
      * Set active step to populate it with an "active" class. Defaults to legIndex 0 and stepIndex 0.
      * @type {{ legIndex: number, stepIndex: number }}
      */
-    @Prop({ mutable: true, reflect: true })
-    activeStep: { legIndex: number, stepIndex: number } = {
+    @Prop({ mutable: true, reflect: true }) activeStep: { legIndex: number, stepIndex: number } = {
         legIndex: 0,
         stepIndex: 0
-    }
+    };
 
     /**
      * Set imperial or metric as default unit system.
@@ -59,7 +58,7 @@ export class RouteInstructions implements ComponentInterface {
      *
      * @type {RouteTravelMode} 'walking', 'bicycling', 'transit', 'driving'.
      */
-    @Prop() travelMode: RouteTravelMode = RouteTravelMode.Walking
+    @Prop() travelMode: RouteTravelMode = RouteTravelMode.Walking;
 
     /**
      * If the origin location is a MapsIndoors location, provide it to have the instructions present it.

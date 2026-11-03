@@ -2,6 +2,9 @@ $desktop-breakpoint: 992px;
 
 $sticky-header-height: 56px;
 
+// Must match SEARCH_COLLAPSED_HEIGHT_PX
+$search-sheet-collapsed-height: 80px;
+
 // Chrome for the states shown in place of the chat window - while its bundle loads, and
 // if that bundle fails to load. On mobile the sheet is not mounted yet, so the state has
 // to float as an overlay; on desktop it sits inside the sidebar modal.
