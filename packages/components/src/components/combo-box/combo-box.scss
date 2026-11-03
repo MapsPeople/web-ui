@@ -36,9 +36,20 @@ combo-box-item {
         display: flex;
     }
 
-    svg {
+    // Only the disclosure arrow flips. Optional item icons stay upright.
+    .input__svg {
         transform: rotate(180deg);
     }
+}
+
+:host(.open.has-icon) .input__svg {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+:host(.has-icon) .input__svg {
+    right: 14px;
+    top: calc(50% + 1px);
+    transform: translateY(-50%);
 }
 
 .input {
@@ -67,6 +78,33 @@ combo-box-item {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+
+    &--with-icon {
+        // width: 100% is content-box, so extra left padding would grow the field
+        // past the host and into the next control.
+        box-sizing: border-box;
+        padding-left: 40px;
+    }
+
+    &__icon {
+        position: absolute;
+        z-index: 1;
+        left: 10px;
+        // The name sits on the text baseline, a pixel below the box center.
+        top: calc(50% + 1px);
+        transform: translateY(-50%);
+        display: inline-flex;
+        align-items: center;
+        line-height: 0;
+        cursor: pointer;
+
+        svg {
+            width: 20px;
+            height: 20px;
+            display: block;
+            pointer-events: none;
+        }
+    }
 
     &__svg {
         margin-left: auto;
@@ -170,6 +208,35 @@ combo-box-item {
             align-items: center;
             gap: variables.$spacing-x-small;
         }
+
+        &--with-icon {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: variables.$spacing-x-small;
+        }
+    }
+
+    &__icon {
+        display: inline-flex;
+        align-items: center;
+        flex-shrink: 0;
+        line-height: 0;
+
+        svg {
+            width: 20px;
+            height: 20px;
+            display: block;
+            pointer-events: none;
+            // Same baseline offset as the closed field.
+            transform: translateY(1px);
+        }
+    }
+
+    &__text {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     &__checkbox {

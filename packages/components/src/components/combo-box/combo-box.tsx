@@ -1,6 +1,7 @@
 import { Component, Element, Event, EventEmitter, h, Host, JSX, Prop, State, Watch, Listen } from '@stencil/core';
 import fuzzysort from 'fuzzysort';
 import { SortOrder } from '../../enums/sort-order.enum';
+import { readComboBoxItemIcon } from './combo-box-icon';
 
 enum KeyCode {
     ArrowDown = 'ArrowDown',
@@ -459,11 +460,13 @@ export class ComboBox {
             </ul>
         );
 
+        const selectedIcon = readComboBoxItemIcon(this.selected?.[0]);
+
         return (
-            <Host class={{ 'open': this.open }}>
+            <Host class={{ 'open': this.open, 'has-icon': !!selectedIcon }}>
                 <input
                     type="text"
-                    class="input"
+                    class={{ 'input': true, 'input--with-icon': !!selectedIcon }}
                     onFocus={(event) => this.onClickExists(event)}
                     ref={(el) => this.filterElement = el as HTMLInputElement}
                     onInput={() => this.filter()}
@@ -471,6 +474,19 @@ export class ComboBox {
                     value={this.selected[0]?.text}
                 >
                 </input>
+                {selectedIcon &&
+                    <span
+                        class="input__icon"
+                        title={selectedIcon.label}
+                        role="img"
+                        aria-label={selectedIcon.label}
+                        innerHTML={selectedIcon.html}
+                        onMouseDown={(event: MouseEvent) => {
+                            event.preventDefault();
+                            this.filterElement?.focus();
+                        }}
+                    ></span>
+                }
                 <svg role='button' class="input__svg" part="icon-down-arrow" width="12" height="6" viewBox="0 0 18 10" xmlns="http://www.w3.org/2000/svg" onClick={() => this.toggleContentWindow()}>
                     <path d="M9.37165 9.58706C9.17303 9.80775 8.82697 9.80775 8.62835 9.58706L0.751035 0.834484C0.46145 0.512722 0.689796 7.73699e-08 1.12268 1.25924e-07L16.8773 1.89302e-06C17.3102 1.94157e-06 17.5386 0.512723 17.249 0.834484L9.37165 9.58706Z" />
                 </svg>
@@ -508,8 +524,16 @@ export class ComboBox {
         let itemText: HTMLElement;
         const itemTooltipInfo: string = (item.getAttribute('title') || item.text || item.innerText);
 
-        if (item.innerText.length > 0) {
+        const icon = readComboBoxItemIcon(item);
+        const richText = (item.innerText || '').trim();
+
+        if (richText.length > 0) {
             itemText = <div class="label__item label__item--from-inner-html" innerHTML={item.innerHTML}></div>;
+        } else if (icon) {
+            itemText = <div class="label__item label__item--with-icon">
+                <span class="label__icon" title={icon.label} role="img" aria-label={icon.label} innerHTML={icon.html}></span>
+                <span class="label__text">{item.text}</span>
+            </div>;
         } else {
             itemText = <div class="label__item" innerHTML={item.text}></div>;
         }
