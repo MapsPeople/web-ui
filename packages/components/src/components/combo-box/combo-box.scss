@@ -98,7 +98,8 @@ combo-box-item {
         line-height: 0;
         cursor: pointer;
 
-        svg {
+        svg,
+        img {
             width: 20px;
             height: 20px;
             display: block;
@@ -223,7 +224,8 @@ combo-box-item {
         flex-shrink: 0;
         line-height: 0;
 
-        svg {
+        svg,
+        img {
             width: 20px;
             height: 20px;
             display: block;
