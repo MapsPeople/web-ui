@@ -127,6 +127,11 @@ export class ComboBox {
     isFilterSelectionDisabled = false;
 
     /**
+     * Width of the list when it opened. Filtering must not resize it.
+     */
+    private lockedListWidth: string = null;
+
+    /**
      * Flag to control the mouseover event on the items. The event is disabled when using the arrow keys to navigate the list.
      */
     isMouseOverEventDisabled = false;
@@ -574,11 +579,31 @@ export class ComboBox {
 
         const MAX_HEIGHT = 580;
         const MARGIN = 12;
+        const fitsViewport = clientWidth > listElementRect.width
+            && !(hostElementRect.right - listElementRect.width < 0 && listElementRect.right > clientWidth);
 
-        if (clientWidth <= listElementRect.width || (hostElementRect.right - listElementRect.width < 0 && listElementRect.right > clientWidth)) {
+        // Keep the measured width only while a typed filter would otherwise
+        // shrink the panel. Plain combo boxes still size to the visible rows.
+        const lockListWidth = this.hostElement.classList.contains('has-icon');
+
+        if (!this.open || !lockListWidth) {
+            this.lockedListWidth = null;
+            this.listElement.style.width = null;
+            this.listElement.style.boxSizing = null;
+        } else if (fitsViewport && !this.lockedListWidth && this.listElement.offsetWidth > 0) {
+            this.lockedListWidth = `${this.listElement.offsetWidth}px`;
+        }
+
+        if (this.open && this.lockedListWidth && fitsViewport) {
+            this.listElement.style.boxSizing = 'border-box';
+            this.listElement.style.width = this.lockedListWidth;
+        }
+
+        if (!fitsViewport) {
             this.listElement.style.right = `${MARGIN}px`;
             this.listElement.style.left = `${MARGIN}px`;
             this.listElement.style.minWidth = 'unset';
+            this.listElement.style.width = null;
         } else if (listElementRect.right > clientWidth) {
             this.listElement.style.left = 'unset';
             this.listElement.style.right = `${clientWidth - hostElementRect.right}px`;
