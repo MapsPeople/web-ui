@@ -29,3 +29,26 @@ export function readComboBoxItemIcon(item: ParentNode | null | undefined): Combo
         label: icon.getAttribute('title') || icon.getAttribute('aria-label') || ''
     };
 }
+
+/**
+ * Text outside the optional icon. SVG title and text inside the icon marker
+ * must not count, or the item renders without its label.
+ *
+ * @param {ParentNode | null | undefined} item
+ * @returns {string}
+ */
+export function readComboBoxItemRichText(item: ParentNode | null | undefined): string {
+    if (!item || !('innerText' in item)) {
+        return '';
+    }
+
+    const element = item as HTMLElement;
+    const icon = element.querySelector(`.${comboBoxItemIconClass}`);
+    if (!icon) {
+        return (element.innerText || '').trim();
+    }
+
+    const copy = element.cloneNode(true) as HTMLElement;
+    copy.querySelectorAll(`.${comboBoxItemIconClass}`).forEach((node) => node.remove());
+    return (copy.innerText || '').trim();
+}

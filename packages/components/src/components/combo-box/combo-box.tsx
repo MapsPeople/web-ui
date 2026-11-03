@@ -1,7 +1,7 @@
 import { Component, Element, Event, EventEmitter, h, Host, JSX, Prop, State, Watch, Listen } from '@stencil/core';
 import fuzzysort from 'fuzzysort';
 import { SortOrder } from '../../enums/sort-order.enum';
-import { readComboBoxItemIcon } from './combo-box-icon';
+import { readComboBoxItemIcon, readComboBoxItemRichText } from './combo-box-icon';
 
 enum KeyCode {
     ArrowDown = 'ArrowDown',
@@ -530,7 +530,7 @@ export class ComboBox {
         const itemTooltipInfo: string = (item.getAttribute('title') || item.text || item.innerText);
 
         const icon = readComboBoxItemIcon(item);
-        const richText = (item.innerText || '').trim();
+        const richText = readComboBoxItemRichText(item);
 
         if (richText.length > 0) {
             itemText = <div class="label__item label__item--from-inner-html" innerHTML={item.innerHTML}></div>;
