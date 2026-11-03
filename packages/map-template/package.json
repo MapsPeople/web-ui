@@ -53,6 +53,7 @@
     "test": "jest",
     "release": "sh ./release.sh",
     "deploy-to-gcloud": "sh ./deploy-to-gcloud.sh",
+    "deploy-dev-shell": "./deploy-dev-shell.sh",
     "lint": "eslint . --ext .js,.jsx --fix"
   },
   "browserslist": {

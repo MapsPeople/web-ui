@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MapsIndoors</title>
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#005655">
+    <script src="https://app.mapsindoors.com/mapsindoors/js/sdk/dev/4.62.0/mapsindoors-4.62.0.js.gz" integrity="sha384-REPLACE_WITH_DEV_SRI_HASH" crossorigin="anonymous"></script>
+    <script type="module"
+        src="https://cdn.jsdelivr.net/npm/@mapsindoors/map-template@stable/dist/mapsindoors-webcomponent.es.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        mapsindoors-map {
+            display: block;
+            width: 100vw;
+            height: 100dvh;
+        }
+    </style>
+</head>
+
+<body>
+    <mapsindoors-map
+        use-app-title="true"
+        supports-url-parameters=true></mapsindoors-map>
+</body>
+
+</html>
