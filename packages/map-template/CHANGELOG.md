@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- The chat shows a "Session limit almost reached" banner in orange once the AI service reports that the session has 10% of its token limit left (`SESSION_TOKEN_LIMIT_CRITICAL`). The "Session limit approaching" banner from 75% is unchanged.
+
 ## [1.99.36] - 2026-10-27
 
 ### Added
