@@ -128,7 +128,7 @@ const de = {
     'Usage consent decline': 'Ablehnen',
     'AI disclaimer': 'Ask with AI kann Fehler machen. Überprüfen Sie wichtige Details, bevor Sie losgehen.',
     // Session limit
-    'Session limit approaching': 'Sitzungslimit fast erreicht',
+    'Session limit approaching': 'Sitzungslimit bald erreicht',
     'Session limit almost reached': 'Sitzungslimit fast erreicht',
     'Session limit reached': 'Sitzungslimit erreicht',
     'Session limit message': 'Das Token-Limit Ihrer Sitzung wurde erreicht. Bitte starten Sie eine neue Sitzung, um fortzufahren.',
