@@ -96,6 +96,11 @@
     }
 }
 
+.chat-window__token-warning--critical {
+    background-color: #fff3e0;
+    border-top-color: #fb8c00;
+}
+
 .chat-window__disclaimer {
     margin: 0;
     padding: var(--spacing-x-small) var(--spacing-small);
