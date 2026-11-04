@@ -8,9 +8,15 @@ const GeminiContext = createContext();
 const API_BASE_URL = 'http://localhost:4000';
 const DEBUG = import.meta.env.VITE_GEMINI_DEBUG === 'true';
 
+// Server token limit warnings: APPROACHING from 75% used, CRITICAL from 90%
+const TOKEN_WARNING_STATUS = {
+    SESSION_TOKEN_LIMIT_APPROACHING: 'warning',
+    SESSION_TOKEN_LIMIT_CRITICAL: 'critical'
+};
+
 export function GeminiProvider({ children, enabled }) {
     const [isLoading, setIsLoading] = useState(false);
-    const [sessionStatus, setSessionStatus] = useState('active'); // 'active' | 'warning' | 'exhausted'
+    const [sessionStatus, setSessionStatus] = useState('active'); // 'active' | 'warning' | 'critical' | 'exhausted'
     const defaultPrompt = '';
 
     // Store session info - using refs to track current session without causing re-renders
@@ -112,7 +118,7 @@ export function GeminiProvider({ children, enabled }) {
             let fullResponse = '';
             let lastFunctionData = null;
 
-            let streamTokenLimitWarning = false;
+            let streamTokenLimitWarning;
             let reading = true;
             while (reading) {
                 const { done, value } = await reader.read();
@@ -146,8 +152,8 @@ export function GeminiProvider({ children, enabled }) {
                             const chunk = JSON.parse(jsonStr);
 
                             // Handle server warning signals without passing them to onUpdate
-                            if (chunk.warning === 'SESSION_TOKEN_LIMIT_APPROACHING') {
-                                streamTokenLimitWarning = true;
+                            if (TOKEN_WARNING_STATUS[chunk.warning]) {
+                                streamTokenLimitWarning = chunk.warning;
                                 continue;
                             }
 
@@ -182,7 +188,7 @@ export function GeminiProvider({ children, enabled }) {
                 }
             }
 
-            if (streamTokenLimitWarning) setSessionStatus('warning');
+            if (streamTokenLimitWarning) setSessionStatus(TOKEN_WARNING_STATUS[streamTokenLimitWarning]);
 
             const processed = processFunctionDataCallback(lastFunctionData);
             DEBUG && console.log('Search result IDs:', processed.searchResultIds);
@@ -225,7 +231,7 @@ export function GeminiProvider({ children, enabled }) {
 
         const { response, tools, functionData, warning } = await messageRes.json();
 
-        if (warning === 'SESSION_TOKEN_LIMIT_APPROACHING') setSessionStatus('warning');
+        if (TOKEN_WARNING_STATUS[warning]) setSessionStatus(TOKEN_WARNING_STATUS[warning]);
 
         const processed = processFunctionDataCallback(functionData);
 
