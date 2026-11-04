@@ -129,6 +129,7 @@ const ptPT = {
     'AI disclaimer': 'A funcionalidade Perguntar com IA pode cometer erros. Confirme os detalhes importantes antes de partir.',
     // Session limit
     'Session limit approaching': 'A aproximar-se do limite da sessão',
+    'Session limit almost reached': 'Limite da sessão quase atingido',
     'Session limit reached': 'Limite da sessão atingido',
     'Session limit message': 'A sua sessão atingiu o limite de tokens. Inicie uma nova sessão para continuar.',
     'Start new session': 'Iniciar nova sessão',

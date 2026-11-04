@@ -129,6 +129,7 @@ const da = {
     'AI disclaimer': 'Ask with AI kan begå fejl. Dobbelttjek vigtige detaljer, inden du begiver dig af sted.',
     // Session limit
     'Session limit approaching': 'Sessionsgrænsen nærmer sig',
+    'Session limit almost reached': 'Sessionsgrænsen er næsten nået',
     'Session limit reached': 'Sessionsgrænsen er nået',
     'Session limit message': 'Din session har nået sin token-grænse. Start en ny session for at fortsætte.',
     'Start new session': 'Start ny session',

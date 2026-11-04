@@ -129,6 +129,7 @@ const nl = {
     'AI disclaimer': 'Ask with AI kan fouten maken. Controleer belangrijke details voordat je op weg gaat.',
     // Session limit
     'Session limit approaching': 'Sessielimiet bijna bereikt',
+    'Session limit almost reached': 'Sessielimiet bijna bereikt',
     'Session limit reached': 'Sessielimiet bereikt',
     'Session limit message': 'Je sessie heeft de tokenlimiet bereikt. Start een nieuwe sessie om verder te gaan.',
     'Start new session': 'Nieuwe sessie starten',

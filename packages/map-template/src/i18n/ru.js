@@ -129,6 +129,7 @@ const ru = {
     'AI disclaimer': 'Функция «Спросить ИИ» может ошибаться. Проверяйте важные детали перед выходом.',
     // Session limit
     'Session limit approaching': 'Приближается лимит сессии',
+    'Session limit almost reached': 'Лимит сессии почти исчерпан',
     'Session limit reached': 'Достигнут лимит сессии',
     'Session limit message': 'Ваша сессия достигла лимита токенов. Начните новую сессию, чтобы продолжить.',
     'Start new session': 'Начать новую сессию',

@@ -129,6 +129,7 @@ const ht = {
     'AI disclaimer': 'Mande AI ka fè erè. Verifye detay enpòtan yo anvan ou pati.',
     // Session limit
     'Session limit approaching': 'Sesyon an prèske rive nan limit li',
+    'Session limit almost reached': 'Sesyon an prèske rive nan limit li',
     'Session limit reached': 'Sesyon an rive nan limit li',
     'Session limit message': 'Sesyon ou an rive nan limit token li. Tanpri kòmanse yon nouvo sesyon pou kontinye.',
     'Start new session': 'Kòmanse yon nouvo sesyon',

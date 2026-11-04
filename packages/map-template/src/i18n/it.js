@@ -129,6 +129,7 @@ const it = {
     'AI disclaimer': 'Ask with AI potrebbe commettere errori. Verifica i dettagli importanti prima di metterti in cammino.',
     // Session limit
     'Session limit approaching': 'Limite della sessione quasi raggiunto',
+    'Session limit almost reached': 'Limite della sessione quasi raggiunto',
     'Session limit reached': 'Limite della sessione raggiunto',
     'Session limit message': 'La tua sessione ha raggiunto il limite di token. Avvia una nuova sessione per continuare.',
     'Start new session': 'Avvia una nuova sessione',

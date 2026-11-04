@@ -129,6 +129,7 @@ const ko = {
     'AI disclaimer': 'AI에게 질문은 실수를 할 수 있습니다. 이동 전에 중요한 정보를 다시 확인해 주세요.',
     // Session limit
     'Session limit approaching': '세션 한도에 근접했습니다',
+    'Session limit almost reached': '세션 한도에 거의 도달했습니다',
     'Session limit reached': '세션 한도에 도달했습니다',
     'Session limit message': '세션이 토큰 한도에 도달했습니다. 계속하려면 새 세션을 시작해 주세요.',
     'Start new session': '새 세션 시작',

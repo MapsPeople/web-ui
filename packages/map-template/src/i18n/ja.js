@@ -129,6 +129,7 @@ const ja = {
     'AI disclaimer': 'AIに質問は間違えることがあります。お出かけ前に重要な情報をご確認ください。',
     // Session limit
     'Session limit approaching': 'セッション上限が近づいています',
+    'Session limit almost reached': 'セッション上限にまもなく達します',
     'Session limit reached': 'セッション上限に達しました',
     'Session limit message': 'このセッションはトークンの上限に達しました。続けるには新しいセッションを開始してください。',
     'Start new session': '新しいセッションを開始',
