@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [13.37.8] - 2026-11-04
+
+### Added
+
+- **mi-combo-box**: Items can show an optional leading icon. Put a `.combo-box-item__icon` element inside a `combo-box-item` (an `svg` or an image; its `title` is the tooltip). The icon appears beside that item and, when the item is selected, inside the closed field. Items without the marker are unchanged. Image icons are the same size as inline icons. While the user filters, an icon combo box keeps the width it opened at instead of shrinking to the visible rows.
+
 ## [13.37.7] - 2026-10-27
 
 ### Fixed

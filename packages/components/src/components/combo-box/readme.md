@@ -34,6 +34,16 @@ Working examples:
         <combo-box-item value="10" text="Item #10"></combo-box-item>
 </mi-combo-box>
 
+Optional icon: put a `.combo-box-item__icon` element inside an item. The icon is shown beside that item and, when the item is selected, inside the closed field. Items without it are unchanged. The icon element should contain only the graphic (an `svg`); its `title` is the tooltip.
+
+```html
+<combo-box-item value="develop" text="Development">
+    <span class="combo-box-item__icon" title="Development">
+        <svg viewBox="0 0 24 24"><path fill="#4b5563" d="..."></path></svg>
+    </span>
+</combo-box-item>
+```
+
 Example usage:
 
 ```html
