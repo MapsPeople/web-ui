@@ -33,6 +33,9 @@ jobs:
       - name: Check for stale generated files
         run: test -z "$(git status --porcelain)" || { git status --porcelain; git diff; exit 1; }
 
+      - name: Check dev shell SDK version
+        run: packages/map-template/scripts/check-dev-shell-sdk-version.sh
+
       - name: Test map-template
         if: ${{ !cancelled() && steps.install.conclusion == 'success' }}
         working-directory: packages/map-template
