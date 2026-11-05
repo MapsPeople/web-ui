@@ -129,6 +129,7 @@ const en = {
     'AI disclaimer': 'Ask with AI may make mistakes. Double-check important details before heading out.',
     // Session limit
     'Session limit approaching': 'Session limit approaching',
+    'Session limit almost reached': 'Session limit almost reached',
     'Session limit reached': 'Session limit reached',
     'Session limit message': 'Your session has reached its token limit. Please start a new session to continue.',
     'Start new session': 'Start new session',

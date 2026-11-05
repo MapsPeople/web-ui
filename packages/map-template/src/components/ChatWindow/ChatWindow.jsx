@@ -373,10 +373,11 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
                         />
                     )}
                     {sessionStatus !== 'active' && (
-                        <div className="chat-window__token-warning" role="alert" aria-live="polite">
-                            <span>{sessionStatus === 'exhausted'
-                                ? t('Session limit reached')
-                                : t('Session limit approaching')}</span>
+                        <div className={`chat-window__token-warning chat-window__token-warning--${sessionStatus}`} role="alert" aria-live="polite">
+                            <span>{{
+                                exhausted: t('Session limit reached'),
+                                critical: t('Session limit almost reached')
+                            }[sessionStatus] ?? t('Session limit approaching')}</span>
                             <button onClick={handleResetSession}>{t('Start new session')}</button>
                         </div>
                     )}

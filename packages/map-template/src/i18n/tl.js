@@ -129,6 +129,7 @@ const tl = {
     'AI disclaimer': 'Maaaring magkamali ang Magtanong gamit ang AI. I-double-check ang mahahalagang detalye bago umalis.',
     // Session limit
     'Session limit approaching': 'Malapit na sa limitasyon ang session',
+    'Session limit almost reached': 'Halos maabot na ang limitasyon ng session',
     'Session limit reached': 'Naabot na ang limitasyon ng session',
     'Session limit message': 'Naabot na ng iyong session ang token limit nito. Magsimula ng bagong session para magpatuloy.',
     'Start new session': 'Magsimula ng bagong session',

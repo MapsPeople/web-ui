@@ -129,6 +129,7 @@ const zhHans = {
     'AI disclaimer': 'Ask with AI 可能会出错。请在出发前仔细核实重要信息。',
     // Session limit
     'Session limit approaching': '即将达到会话限制',
+    'Session limit almost reached': '几乎已达到会话限制',
     'Session limit reached': '已达到会话限制',
     'Session limit message': '本次会话已达到长度上限。请开始新会话以继续。',
     'Start new session': '开始新会话',

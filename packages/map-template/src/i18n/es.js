@@ -128,7 +128,8 @@ const es = {
     'Usage consent decline': 'Rechazar',
     'AI disclaimer': 'Ask with AI puede cometer errores. Verifica los detalles importantes antes de ponerte en camino.',
     // Session limit
-    'Session limit approaching': 'Límite de sesión casi alcanzado',
+    'Session limit approaching': 'Límite de sesión próximo',
+    'Session limit almost reached': 'Límite de sesión casi alcanzado',
     'Session limit reached': 'Límite de sesión alcanzado',
     'Session limit message': 'Tu sesión ha alcanzado su límite de tokens. Inicia una nueva sesión para continuar.',
     'Start new session': 'Iniciar nueva sesión',

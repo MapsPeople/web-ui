@@ -129,6 +129,7 @@ const fr = {
     'AI disclaimer': 'Ask with AI peut faire des erreurs. Vérifiez les détails importants avant de vous mettre en route.',
     // Session limit
     'Session limit approaching': 'Limite de session bientôt atteinte',
+    'Session limit almost reached': 'Limite de session presque atteinte',
     'Session limit reached': 'Limite de session atteinte',
     'Session limit message': 'Votre session a atteint sa limite. Veuillez démarrer une nouvelle session pour continuer.',
     'Start new session': 'Démarrer une nouvelle session',

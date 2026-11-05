@@ -128,7 +128,8 @@ const ceb = {
     'Usage consent decline': 'Balibari',
     'AI disclaimer': 'Mahimong masayop ang Pangutana gamit ang AI. Susiha pag-usab ang importanteng mga detalye una ka molarga.',
     // Session limit
-    'Session limit approaching': 'Hapit na maabot ang limitasyon sa session',
+    'Session limit approaching': 'Nagkaduol na ang limitasyon sa session',
+    'Session limit almost reached': 'Hapit na maabot ang limitasyon sa session',
     'Session limit reached': 'Naabot na ang limitasyon sa session',
     'Session limit message': 'Naabot na sa imong session ang token limit niini. Palihog pagsugod og bag-ong session aron makapadayon.',
     'Start new session': 'Pagsugod og bag-ong session',
