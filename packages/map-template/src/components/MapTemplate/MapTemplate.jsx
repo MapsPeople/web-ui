@@ -68,6 +68,7 @@ import { useOnRouteFinished } from '../../hooks/useOnRouteFinished.js';
 import notificationMessageState from '../../atoms/notificationMessageState.js';
 import { GeminiProvider } from '../../providers/GeminiProvider';
 import ChatButton from '../ChatButton/ChatButton';
+import RoleSelector from '../RoleSelector/RoleSelector';
 import { useIsKioskContext } from '../../hooks/useIsKioskContext.js';
 import { useKioskReload } from '../../hooks/useKioskReload.js';
 import { useMapsPeopleLogoLink } from '../../hooks/useMapsPeopleLogoLink.js';
@@ -112,7 +113,8 @@ MapTemplate.propTypes = {
     mapboxMapStyle: PropTypes.string,
     devicePosition: PropTypes.object,
     enableKioskFullReload: PropTypes.bool,
-    kioskReloadTime: PropTypes.number
+    kioskReloadTime: PropTypes.number,
+    roleSelector: PropTypes.bool
 };
 
 /**
@@ -152,8 +154,9 @@ MapTemplate.propTypes = {
  * @param {string} [props.mapboxMapStyle] - Specifies the Mapbox Map Style to use. The default value is set to "mapbox://styles/mapbox/standard".
  * @param {boolean} [props.enableKioskFullReload] - If true, the page will fully reload after a period of inactivity in kiosk mode. Can also be set in the MapsIndoors App Config as "enableKioskFullReload" under "appSettings".
  * @param {number} [props.kioskReloadTime] - Number of seconds of inactivity before a full page reload is triggered in kiosk mode. Defaults to 600 (10 minutes). Can also be set in the MapsIndoors App Config as "kioskReloadTime" under "appSettings".
+ * @param {boolean} [props.roleSelector] - Set to true to show a dropdown on the map for switching between the App User Roles of the solution, to see the map as each role sees it. Meant for previewing and testing. The default value is false.
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations, center, useAppTitle, showMapMarkers, mapboxMapStyle, devicePosition, enableKioskFullReload, kioskReloadTime }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations, center, useAppTitle, showMapMarkers, mapboxMapStyle, devicePosition, enableKioskFullReload, kioskReloadTime, roleSelector }) {
 
     const [userSelectedLanguage, setUserSelectedLanguage] = useState(false);
     const [mapOptions, setMapOptions] = useState({ brandingColor: primaryColor });
@@ -1005,6 +1008,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                     }}
                     devicePosition={devicePosition}
                 />
+                <RoleSelector isVisible={roleSelector} appUserRoles={appUserRoles} />
             </div>
         </GeminiProvider>
     );

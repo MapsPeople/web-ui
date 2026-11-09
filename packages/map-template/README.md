@@ -144,6 +144,7 @@ Note that when using the React component, the properties should conform to JSX p
 |`center`|`center`|`string`|Specifies the coordinates where the map should load, represented as latitude and longitude values separated by a comma. If the specified coordinates intersect with a Venue, that Venue will be set as the current Venue. |
 |`use-app-title`|`useAppTitle`|`boolean`| Specifies if the Map Template should set the document title as defined in the App Config. |
 |`show-map-markers`|`showMapMarkers`|`boolean`| Specifies if the base map-specific markers are shown or not. |
+|`role-selector`|`roleSelector`|`boolean`| Set to true to show a dropdown on the map for switching between the App User Roles of the solution, to see the map as each role sees it. Meant for previewing and testing. The default value is false. |
 
 ## Using Query Parameters
 
@@ -201,6 +202,7 @@ The supported query parameters are the following:
 29. `center` - Specifies the coordinates where the map should load, represented as latitude and longitude values separated by a comma. If the specified coordinates intersect with a Venue, that Venue will be set as the current Venue.
 30. `useAppTitle` - Specifies if the Map Template should set the document title as defined in the App Config.
 31. `showMapMarkers` - Specifies if the base map-specific markers are shown or not.
+32. `roleSelector` - Set to "true" to show a dropdown on the map for switching between the App User Roles of the solution. Can be combined with `appUserRoles` to preselect a role.
 
 **Note!** All the query parameters need to be separated with the `&` symbol, without any spaces in between.
 **Note!** When using parameters such as `directionsTo`, `directionsFrom`, `locationId`, `externalIDs`, and `tileStyle` make sure you are using the correct `apiKey` parameter to which they belong.
