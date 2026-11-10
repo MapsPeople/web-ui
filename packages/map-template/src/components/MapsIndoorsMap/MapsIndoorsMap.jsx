@@ -40,8 +40,7 @@ MapsIndoorsMap.propTypes = {
     mapboxMapStyle: PropTypes.string,
     devicePosition: PropTypes.object,
     enableKioskFullReload: PropTypes.bool,
-    kioskReloadTime: PropTypes.number,
-    roleSelector: PropTypes.bool
+    kioskReloadTime: PropTypes.number
 };
 
 /**
@@ -82,7 +81,6 @@ MapsIndoorsMap.propTypes = {
  * @param {string} [props.mapboxMapStyle] - Specifies the Mapbox Map Style to use. The default value is set to "mapbox://styles/mapbox/standard".
  * @param {boolean} [props.enableKioskFullReload] - If true, the page will fully reload after a period of inactivity in kiosk mode.
  * @param {number} [props.kioskReloadTime] - Number of seconds of inactivity before a full page reload is triggered in kiosk mode. Defaults to 600 (10 minutes).
- * @param {boolean} [props.roleSelector] - Set to true to show a dropdown on the map for switching between the App User Roles of the solution, to see the map as each role sees it. Meant for previewing and testing. The default value is false.
  */
 function MapsIndoorsMap(props) {
 
@@ -105,8 +103,7 @@ function MapsIndoorsMap(props) {
             searchExternalLocations: true,
             showExternalIDs: false,
             hideNonMatches: false,
-            useAppTitle: false,
-            roleSelector: false
+            useAppTitle: false
         };
 
         const apiKeyQueryParameter = queryStringParams.get('apiKey');
@@ -143,7 +140,6 @@ function MapsIndoorsMap(props) {
         const showMapMarkersQueryParameter = queryStringParams.get('showMapMarkers');
         const mapboxMapStyleQueryParameter = queryStringParams.get('mapboxMapStyle');
         const enableKioskFullReloadQueryParameter = queryStringParams.get('enableKioskFullReload');
-        const roleSelectorQueryParameter = queryStringParams.get('roleSelector');
         const kioskReloadTimeQueryParameter = Number(queryStringParams.get('kioskReloadTime'));
         // Set the initial props on the Map Template component.
 
@@ -192,7 +188,6 @@ function MapsIndoorsMap(props) {
             mapboxMapStyle: props.supportsUrlParameters && mapboxMapStyleQueryParameter ? mapboxMapStyleQueryParameter : props.mapboxMapStyle,
             enableKioskFullReload: getBooleanValue(props.supportsUrlParameters, undefined, props.enableKioskFullReload, enableKioskFullReloadQueryParameter),
             kioskReloadTime: props.supportsUrlParameters && kioskReloadTimeQueryParameter ? kioskReloadTimeQueryParameter : props.kioskReloadTime,
-            roleSelector: getBooleanValue(props.supportsUrlParameters, defaultProps.roleSelector, props.roleSelector, roleSelectorQueryParameter),
         });
 
     }, [props]);

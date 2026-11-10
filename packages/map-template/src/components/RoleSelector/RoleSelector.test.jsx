@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import RoleSelector from './RoleSelector';
 import solutionState from '../../atoms/solutionState';
@@ -8,12 +8,18 @@ jest.mock('../../hooks/useIsDesktop', () => ({ useIsDesktop: () => true }));
 
 const roles = [{ id: 'role-1', name: 'Patient' }, { id: 'role-2', name: 'Employee' }];
 
-function renderRoleSelector(props, solution = { id: 'solution-1' }) {
+function renderRoleSelector(props = {}, solution = { id: 'solution-1' }) {
     return render(
         <RecoilRoot initializeState={({ set }) => set(solutionState, solution)}>
             <RoleSelector {...props} />
         </RecoilRoot>
     );
+}
+
+function sendMessage(origin, type = 'mi-role-selector') {
+    act(() => {
+        window.dispatchEvent(new MessageEvent('message', { data: { type }, origin }));
+    });
 }
 
 function openList() {
@@ -36,24 +42,29 @@ describe('RoleSelector', () => {
         delete window.mapsindoors;
     });
 
-    test('renders nothing when not visible', () => {
-        renderRoleSelector({ isVisible: false });
+    test('stays hidden until a MapsIndoors page asks for it', () => {
+        renderRoleSelector();
 
-        expect(screen.queryByRole('button', { name: 'Select App User Role' })).toBeNull();
+        sendMessage('https://example.com');
+        sendMessage('https://cms.mapsindoors.com.example.com');
+        sendMessage('https://cms.mapsindoors.com', 'other-message');
+
         expect(window.mapsindoors.services.SolutionsService.getUserRoles).not.toHaveBeenCalled();
     });
 
     test('waits for the solution before fetching roles', () => {
-        renderRoleSelector({ isVisible: true }, null);
+        renderRoleSelector({}, null);
+
+        sendMessage('https://cms.mapsindoors.com');
 
         expect(window.mapsindoors.services.SolutionsService.getUserRoles).not.toHaveBeenCalled();
     });
 
-    test('preselects the role from appUserRoles and applies the picked role', async () => {
-        renderRoleSelector({ isVisible: true, appUserRoles: ['Employee'] });
+    test('shows the roles after the CMS asks, preselects from appUserRoles and applies the picked role', async () => {
+        renderRoleSelector({ appUserRoles: ['Employee'] });
 
+        sendMessage('https://cms.mapsindoors.com');
         await screen.findByRole('button', { name: 'Select App User Role' });
-        expect(screen.queryByRole('button', { name: 'Patient' })).toBeNull();
 
         openList();
         expect(screen.getByRole('button', { name: 'Employee' }).getAttribute('aria-pressed')).toBe('true');

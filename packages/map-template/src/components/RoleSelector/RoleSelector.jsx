@@ -9,21 +9,24 @@ import UserIcon from '../../assets/user.svg?react';
 // Same look as the language selector, so it reuses its styles.
 import '../LanguageSelector/LanguageSelector.scss';
 
+// Pages on mapsindoors.com (the CMS) and local development may enable the role selector.
+const ALLOWED_ORIGIN = /^(https:\/\/([a-z0-9-]+\.)+mapsindoors\.com|http:\/\/(localhost|127\.0\.0\.1)(:\d+)?)$/;
+
 RoleSelector.propTypes = {
-    isVisible: PropTypes.bool,
     appUserRoles: PropTypes.arrayOf(PropTypes.string)
 };
 
 /**
  * Button with a list that switches the active App User Role, so the map shows what that role can see and access.
- * Renders nothing unless isVisible is true and the solution has App User Roles.
+ * Only shown when a MapsIndoors page that embeds the map (the CMS View tab) asks for it,
+ * and only when the solution has App User Roles.
  *
  * @param {Object} props
- * @param {boolean} [props.isVisible] - Set to true to show the button.
  * @param {string[]} [props.appUserRoles] - Role names applied on load. The first match is preselected.
  * @returns {JSX.Element|null}
  */
-function RoleSelector({ isVisible, appUserRoles }) {
+function RoleSelector({ appUserRoles }) {
+    const [isVisible, setIsVisible] = useState(false);
     const [roles, setRoles] = useState([]);
     const [selectedRoleId, setSelectedRoleId] = useState('');
     const [isExpanded, setIsExpanded] = useState(false);
@@ -32,6 +35,20 @@ function RoleSelector({ isVisible, appUserRoles }) {
     const portalContainer = usePortalTarget('.role-selector-portal');
     const solution = useRecoilValue(solutionState);
     const isDesktop = useIsDesktop();
+
+    // Tell the embedding page the map is ready, and show the selector if it answers from an allowed origin.
+    useEffect(() => {
+        function onMessage(event) {
+            if (event.data?.type === 'mi-role-selector' && ALLOWED_ORIGIN.test(event.origin)) {
+                setIsVisible(true);
+            }
+        }
+        window.addEventListener('message', onMessage);
+        if (window.parent !== window) {
+            window.parent.postMessage({ type: 'mi-map-ready' }, '*');
+        }
+        return () => window.removeEventListener('message', onMessage);
+    }, []);
 
     useEffect(() => {
         // Wait for the solution: it is loaded after the API key is set, which the roles request needs.

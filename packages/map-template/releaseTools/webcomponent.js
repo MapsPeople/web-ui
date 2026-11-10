@@ -16,7 +16,6 @@ const WebMapsIndoorsMap = r2wc(MapsIndoorsMap, {
         primaryColor: 'string',
         logo: 'string',
         appUserRoles: 'string',
-        roleSelector: 'boolean',
         directionsFrom: 'string',
         directionsTo: 'string',
         externalIDs: 'json',
