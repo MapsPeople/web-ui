@@ -113,7 +113,7 @@ function ChatListItemLocation({ location, locationClicked, durationSeconds, onRo
                     <mi-location-info
                         level={t('Level')}
                         ref={locationInfoRef}
-                        show-external-id={showExternalIDs}
+                        show-external-id={String(showExternalIDs)}
                     />
                     {durationLabel && (
                         <div className="chat-list-item-location__duration">

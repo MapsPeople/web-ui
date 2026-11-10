@@ -346,7 +346,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
                         <h2 className="location-info__name">
                             {location.properties.name}
                         </h2>
-                        <mi-location-info level={t('Level')} ref={locationInfoElement} show-external-id={showExternalIDs} show-floor={showFloor} />
+                        <mi-location-info level={t('Level')} ref={locationInfoElement} show-external-id={String(showExternalIDs)} show-floor={String(showFloor)} />
                     </div>
                     <div className="location-info__actions">
                         <ShareLocationLink buttonClassName="location-info__button" location={location} />

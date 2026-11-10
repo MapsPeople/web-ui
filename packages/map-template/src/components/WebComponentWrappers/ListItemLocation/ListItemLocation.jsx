@@ -98,7 +98,7 @@ function ListItemLocation({ location, locationClicked, icon, isHovered, disableH
 
     return (
         <div className="list-item-location">
-            <mi-list-item-location level={t('Level')} ref={elementRef} show-external-id={showExternalIDs} />
+            <mi-list-item-location level={t('Level')} ref={elementRef} show-external-id={String(showExternalIDs)} />
             {onRouteClick && (
                 <button
                     type="button"

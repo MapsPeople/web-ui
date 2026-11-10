@@ -433,7 +433,7 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished }) {
                                 <div className="directions__name">
                                     {directions?.destinationLocation.properties.name}
                                 </div>
-                                <mi-location-info ref={destinationInfoElement} show-external-id={showExternalIDs} />
+                                <mi-location-info ref={destinationInfoElement} show-external-id={String(showExternalIDs)} />
                             </div>
                         </div>
                     }

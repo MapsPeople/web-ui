@@ -77,7 +77,7 @@ const RouteInstructionsStepHeader = forwardRef(function RouteInstructionsStepHea
 
     return <mi-route-instructions-step-header
         ref={elementRef}
-        show-toggle-button={!isKioskContext}
+        show-toggle-button={String(!isKioskContext)}
         step={JSON.stringify(totalSteps[activeStep])}
         translations={JSON.stringify(translations)}
         from-travel-mode={previous?.travel_mode ?? ''}
