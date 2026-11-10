@@ -48,11 +48,14 @@ const libraries = [
             },
             emptyOutDir: false,
             rollupOptions: {
-                external: ['react', 'react-dom'],
+                // Subpaths such as react/jsx-runtime must come from the host app too. A bundled JSX runtime
+                // creates elements that a host running a different React major refuses to render.
+                external: [/^react(-dom)?(\/.*)?$/],
                 output: {
                     globals: {
                         react: 'React',
-                        'react-dom': 'ReactDOM'
+                        'react-dom': 'ReactDOM',
+                        'react/jsx-runtime': 'ReactJSXRuntime'
                     }
                 }
             }
