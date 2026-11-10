@@ -1,4 +1,4 @@
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import mapsIndoorsInstanceState from '../atoms/mapsIndoorsInstanceState';
 import solutionState from '../atoms/solutionState';
 
@@ -7,8 +7,8 @@ import solutionState from '../atoms/solutionState';
  */
 const useSetMaxZoomLevel = () => {
 
-    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
-    const solution = useRecoilValue(solutionState);
+    const mapsIndoorsInstance = useAtomValue(mapsIndoorsInstanceState);
+    const solution = useAtomValue(solutionState);
 
     const setMaxZoomLevel = () => {
         if (mapsIndoorsInstance && solution) {

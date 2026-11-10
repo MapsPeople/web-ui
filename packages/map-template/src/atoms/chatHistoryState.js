@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const chatHistoryState = atom({
-    key: 'chatHistoryState',
-    default: []
-});
+const chatHistoryState = atom([]);
 
 export default chatHistoryState;

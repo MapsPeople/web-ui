@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import mapsIndoorsInstanceState from '../atoms/mapsIndoorsInstanceState';
 import isMapReadyState from '../atoms/isMapReadyState';
 import notificationMessageState from '../atoms/notificationMessageState';
@@ -25,9 +25,9 @@ const HARD_TIMEOUT_MS = 60000;
  * @returns {{ phase: string, progress: number, showSplash: boolean, isFading: boolean }}
  */
 export function useMapLoadingProgress({ mapsindoorsSDKAvailable, appConfig }) {
-    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
-    const isMapReady = useRecoilValue(isMapReadyState);
-    const loadError = useRecoilValue(notificationMessageState);
+    const mapsIndoorsInstance = useAtomValue(mapsIndoorsInstanceState);
+    const isMapReady = useAtomValue(isMapReadyState);
+    const loadError = useAtomValue(notificationMessageState);
     const [progress, setProgress] = useState(INITIAL_PROGRESS);
     const [showSplash, setShowSplash] = useState(true);
     const [isFading, setIsFading] = useState(false);

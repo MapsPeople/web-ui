@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import mapsIndoorsInstanceState from '../atoms/mapsIndoorsInstanceState';
 
 /**
@@ -8,7 +8,7 @@ import mapsIndoorsInstanceState from '../atoms/mapsIndoorsInstanceState';
  * @param {string} apiKey
  */
 const useLiveData = (apiKey) => {
-    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
+    const mapsIndoorsInstance = useAtomValue(mapsIndoorsInstanceState);
     const liveDataManager = useRef();
 
     const [enabledLiveDataDomainTypes, setEnabledLiveDataDomainTypes] = useState([]);

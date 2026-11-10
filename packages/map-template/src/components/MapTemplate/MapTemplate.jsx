@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useLayoutEffect, useRef } from 'react';
 import { useState } from 'react';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { defineCustomElements } from '@mapsindoors/components/dist/components/index.js';
 import i18n from 'i18next';
 import initI18n from '../../i18n/initialize.js';
@@ -157,43 +157,43 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     const [userSelectedLanguage, setUserSelectedLanguage] = useState(false);
     const [mapOptions, setMapOptions] = useState({ brandingColor: primaryColor });
-    const setApiKey = useSetRecoilState(apiKeyState);
-    const setGmApiKey = useSetRecoilState(gmApiKeyState);
-    const setMapboxAccessToken = useSetRecoilState(mapboxAccessTokenState);
-    const [isMapReady, setMapReady] = useRecoilState(isMapReadyState);
-    const setVenuesInSolution = useSetRecoilState(venuesInSolutionState);
-    const [venueList, setVenueList] = useRecoilState(venueListState);
-    const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
-    const categories = useRecoilValue(categoriesState);
-    const setLocationId = useSetRecoilState(locationIdState);
-    const [color, setPrimaryColor] = useRecoilState(primaryColorState);
-    const setLogo = useSetRecoilState(logoState);
-    const setGmMapId = useSetRecoilState(gmMapIdState);
-    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
-    const [currentLanguage, setCurrentLanguage] = useRecoilState(languageState);
-    const setKioskLocation = useSetRecoilState(kioskLocationState);
-    const setKioskOriginLocationId = useSetRecoilState(kioskOriginLocationIdState);
-    const setTimeoutValue = useSetRecoilState(timeoutState);
+    const setApiKey = useSetAtom(apiKeyState);
+    const setGmApiKey = useSetAtom(gmApiKeyState);
+    const setMapboxAccessToken = useSetAtom(mapboxAccessTokenState);
+    const [isMapReady, setMapReady] = useAtom(isMapReadyState);
+    const setVenuesInSolution = useSetAtom(venuesInSolutionState);
+    const [venueList, setVenueList] = useAtom(venueListState);
+    const [currentLocation, setCurrentLocation] = useAtom(currentLocationState);
+    const categories = useAtomValue(categoriesState);
+    const setLocationId = useSetAtom(locationIdState);
+    const [color, setPrimaryColor] = useAtom(primaryColorState);
+    const setLogo = useSetAtom(logoState);
+    const setGmMapId = useSetAtom(gmMapIdState);
+    const mapsIndoorsInstance = useAtomValue(mapsIndoorsInstanceState);
+    const [currentLanguage, setCurrentLanguage] = useAtom(languageState);
+    const setKioskLocation = useSetAtom(kioskLocationState);
+    const setKioskOriginLocationId = useSetAtom(kioskOriginLocationIdState);
+    const setTimeoutValue = useSetAtom(timeoutState);
     const isInactive = useInactive(); // Hook to detect if user is inactive. Used in combination with timeout prop to reset the Map Template to initial values after a specified time.
     const [kioskFullReloadEnabled, setKioskFullReloadEnabled] = useState(false); // Resolved from enableKioskFullReload prop or appConfig.appSettings.enableKioskFullReload
     const [kioskFullReloadTime, setKioskFullReloadTime] = useState(undefined); // Resolved from kioskReloadTime prop or appConfig.appSettings.kioskReloadTime (seconds, default 600)
     useKioskReload(kioskFullReloadEnabled, kioskFullReloadTime); // Triggers window.location.reload() after inactivity in kiosk mode
-    const setSupportsUrlParameters = useSetRecoilState(supportsUrlParametersState);
-    const setUseKeyboard = useSetRecoilState(useKeyboardState);
-    const setMiTransitionLevel = useSetRecoilState(miTransitionLevelState);
-    const setSelectedCategory = useSetRecoilState(selectedCategoryState);
-    const setSearchAllVenues = useSetRecoilState(searchAllVenuesState);
-    const setCategory = useSetRecoilState(categoryState);
-    const setHideNonMatches = useSetRecoilState(hideNonMatchesState);
-    const setshowExternalIDs = useSetRecoilState(showExternalIDsState);
-    const setShowRoadNames = useSetRecoilState(showRoadNamesState);
-    const setSearchExternalLocations = useSetRecoilState(searchExternalLocationsState);
-    const setCenter = useSetRecoilState(centerState);
+    const setSupportsUrlParameters = useSetAtom(supportsUrlParametersState);
+    const setUseKeyboard = useSetAtom(useKeyboardState);
+    const setMiTransitionLevel = useSetAtom(miTransitionLevelState);
+    const setSelectedCategory = useSetAtom(selectedCategoryState);
+    const setSearchAllVenues = useSetAtom(searchAllVenuesState);
+    const setCategory = useSetAtom(categoryState);
+    const setHideNonMatches = useSetAtom(hideNonMatchesState);
+    const setshowExternalIDs = useSetAtom(showExternalIDsState);
+    const setShowRoadNames = useSetAtom(showRoadNamesState);
+    const setSearchExternalLocations = useSetAtom(searchExternalLocationsState);
+    const setCenter = useSetAtom(centerState);
     const [viewModeSwitchVisible, setViewModeSwitchVisible] = useState();
     const mapClickActionRef = useRef();
-    const setWayfindingLocation = useSetRecoilState(wayfindingLocationState);
-    const [wayfindingOriginHighlightLocation, setWayfindingOriginHighlightLocation] = useRecoilState(wayfindingOriginHighlightLocationState);
-    const [qrCodeLink, setQrCodeLink] = useRecoilState(qrCodeLinkState);
+    const setWayfindingLocation = useSetAtom(wayfindingLocationState);
+    const [wayfindingOriginHighlightLocation, setWayfindingOriginHighlightLocation] = useAtom(wayfindingOriginHighlightLocationState);
+    const [qrCodeLink, setQrCodeLink] = useAtom(qrCodeLinkState);
 
     const [showVenueSelector, setShowVenueSelector] = useState(true);
     const [showPositionControl, setShowPositionControl] = useState(true);
@@ -204,22 +204,22 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [isMapPositionInvestigating, setIsMapPositionInvestigating] = useState(false);
 
     // The filtered locations by external id, if present.
-    const setFilteredLocationsByExternalID = useSetRecoilState(filteredLocationsByExternalIDState);
+    const setFilteredLocationsByExternalID = useSetAtom(filteredLocationsByExternalIDState);
 
     // The filtered locations that the user sets when selecting a category/location.
-    const [filteredLocations, setFilteredLocations] = useRecoilState(filteredLocationsState);
+    const [filteredLocations, setFilteredLocations] = useAtom(filteredLocationsState);
 
     // Holds a copy of the initially filtered locations.
     const [initialFilteredLocations, setInitialFilteredLocations] = useState();
 
-    const [appConfig, setAppConfig] = useRecoilState(appConfigState);
-    const setSolution = useSetRecoilState(solutionState);
+    const [appConfig, setAppConfig] = useAtom(appConfigState);
+    const setSolution = useSetAtom(solutionState);
 
-    const setTileStyle = useSetRecoilState(tileStyleState);
-    const setStartZoomLevel = useSetRecoilState(startZoomLevelState);
+    const setTileStyle = useSetAtom(tileStyleState);
+    const setStartZoomLevel = useSetAtom(startZoomLevelState);
 
-    const setBearing = useSetRecoilState(bearingState);
-    const setPitch = useSetRecoilState(pitchState);
+    const setBearing = useSetAtom(bearingState);
+    const setPitch = useSetAtom(pitchState);
 
     const isDesktop = useIsDesktop();
     const resetState = useReset();
@@ -228,7 +228,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     // Indicate if the MapsIndoors JavaScript SDK is available.
     const [mapsindoorsSDKAvailable, setMapsindoorsSDKAvailable] = useState(false);
 
-    const showLegendDialog = useRecoilValue(isLegendDialogVisibleState);
+    const showLegendDialog = useAtomValue(isLegendDialogVisibleState);
 
     // The reset count is used to add a new key to the sidebar or bottomsheet, forcing it to re-render from scratch when resetting the Map Template.
     const [resetCount, setResetCount] = useState(0);
@@ -236,7 +236,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const [setCurrentVenueName, updateCategories] = useCurrentVenue();
 
     const finishRoute = useOnRouteFinished();
-    const setErrorMessage = useSetRecoilState(notificationMessageState);
+    const setErrorMessage = useSetAtom(notificationMessageState);
 
     const isKiosk = useIsKioskContext();
     useMapsPeopleLogoLink(!isKiosk, mapsIndoorsInstance);
@@ -330,7 +330,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     }, []);
 
     /*
-     * React on changes in the currentLanguage (from Recoil).
+     * React on changes in the currentLanguage (from Jotai).
      * If it is undefined, try to use the browser language. It will fall back to English if the language is not supported.
      */
     useEffect(() => {

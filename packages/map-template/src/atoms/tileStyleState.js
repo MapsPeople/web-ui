@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const tileStyleState = atom({
-    key: 'tileStyle',
-    default: null
-});
+const tileStyleState = atom(null);
 
 export default tileStyleState;

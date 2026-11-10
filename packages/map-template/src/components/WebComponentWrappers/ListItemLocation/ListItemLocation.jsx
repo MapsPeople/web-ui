@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import mapsIndoorsInstanceState from '../../../atoms/mapsIndoorsInstanceState';
 import { useTranslation } from 'react-i18next';
 import './ListItemLocation.scss';
@@ -32,9 +32,9 @@ function ListItemLocation({ location, locationClicked, icon, isHovered, disableH
     const { t } = useTranslation();
     const elementRef = useRef();
 
-    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
+    const mapsIndoorsInstance = useAtomValue(mapsIndoorsInstanceState);
 
-    const showExternalIDs = useRecoilValue(showExternalIDsState);
+    const showExternalIDs = useAtomValue(showExternalIDsState);
 
     useEffect(() => {
         const clickHandler = customEvent => {

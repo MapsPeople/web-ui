@@ -1,6 +1,6 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useAtom, useSetAtom } from 'jotai';
 import substepsToggledState from '../../../atoms/substepsToggledState';
 import triggerSubstepsState from '../../../atoms/triggerSubstepsState';
 import { useIsKioskContext } from '../../../hooks/useIsKioskContext';
@@ -11,8 +11,8 @@ const RouteInstructionsStepHeader = forwardRef(function RouteInstructionsStepHea
     const elementRef = useRef();
 
     const { t } = useTranslation();
-    const [substepsOpen, setSubstepsOpen] = useRecoilState(substepsToggledState);
-    const setTriggerSubsteps = useSetRecoilState(triggerSubstepsState);
+    const [substepsOpen, setSubstepsOpen] = useAtom(substepsToggledState);
+    const setTriggerSubsteps = useSetAtom(triggerSubstepsState);
     const isKioskContext = useIsKioskContext();
 
     useImperativeHandle(ref, () => ({

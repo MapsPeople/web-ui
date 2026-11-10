@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import './ChatSearchResults.scss';
 import PropTypes from 'prop-types';
 import ChatListItemLocation from '../ChatListItemLocation/ChatListItemLocation';
@@ -27,11 +27,11 @@ const DEFAULT_LOCATIONS_TO_SHOW = 3;
 const ChatSearchResults = ({ locations, distanceResults, onShowRoute }) => {
     const [isExpanded, setIsExpanded] = useState(false);
 
-    // Recoil state for location handling
-    const setCurrentLocation = useSetRecoilState(currentLocationState);
-    const setIsLocationClicked = useSetRecoilState(isLocationClickedState);
-    const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
-    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
+    // Jotai state for location handling
+    const setCurrentLocation = useSetAtom(currentLocationState);
+    const setIsLocationClicked = useSetAtom(isLocationClickedState);
+    const [currentVenueName, setCurrentVenueName] = useAtom(currentVenueNameState);
+    const mapsIndoorsInstance = useAtomValue(mapsIndoorsInstanceState);
     const isDesktop = useIsDesktop();
 
     // Declared before the early return so hook order stays consistent across renders.

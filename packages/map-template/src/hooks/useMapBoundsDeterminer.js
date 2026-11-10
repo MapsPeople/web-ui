@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import { useRecoilValue, useRecoilState } from 'recoil';
+import { useAtomValue, useAtom } from 'jotai';
 import getDesktopPaddingBottom from '../helpers/GetDesktopPaddingBottom';
 
-// Recoil atoms
+// Jotai atoms
 import bearingState from '../atoms/bearingState';
 import kioskOriginLocationIdState from '../atoms/kioskOriginLocationIdState';
 import locationIdState from '../atoms/locationIdState';
@@ -43,20 +43,20 @@ const useMapBoundsDeterminer = () => {
     const isDesktop = useIsDesktop();
     const isInactive = useInactive();
 
-    const bearing = useRecoilValue(bearingState);
-    const kioskOriginLocationId = useRecoilValue(kioskOriginLocationIdState);
-    const locationId = useRecoilValue(locationIdState);
-    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
-    const pitch = useRecoilValue(pitchState);
-    const startZoomLevel = useRecoilValue(startZoomLevelState);
-    const venuesInSolution = useRecoilValue(venuesInSolutionState);
-    const currentPitch = useRecoilValue(currentPitchSelector);
-    const venueWasSelected = useRecoilValue(venueWasSelectedState);
-    const wayfindingOriginHighlightLocation = useRecoilValue(wayfindingOriginHighlightLocationState);
+    const bearing = useAtomValue(bearingState);
+    const kioskOriginLocationId = useAtomValue(kioskOriginLocationIdState);
+    const locationId = useAtomValue(locationIdState);
+    const mapsIndoorsInstance = useAtomValue(mapsIndoorsInstanceState);
+    const pitch = useAtomValue(pitchState);
+    const startZoomLevel = useAtomValue(startZoomLevelState);
+    const venuesInSolution = useAtomValue(venuesInSolutionState);
+    const currentPitch = useAtomValue(currentPitchSelector);
+    const venueWasSelected = useAtomValue(venueWasSelectedState);
+    const wayfindingOriginHighlightLocation = useAtomValue(wayfindingOriginHighlightLocationState);
     const [kioskLocationDisplayRuleWasChanged, setKioskLocationDisplayRuleWasChanged] = useState(false);
-    const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
-    const isMapReady = useRecoilState(isMapReadyState);
-    const [center,] = useRecoilState(centerState);
+    const [currentVenueName, setCurrentVenueName] = useAtom(currentVenueNameState);
+    const isMapReady = useAtom(isMapReadyState);
+    const [center,] = useAtom(centerState);
     // Store kiosk location info for cleanup
     const [kioskOriginLocationInfo, setKioskOriginLocationInfo] = useState({ id: null, originalRule: null });
     const [originalMapCenter, setOriginalMapCenter] = useState(null);

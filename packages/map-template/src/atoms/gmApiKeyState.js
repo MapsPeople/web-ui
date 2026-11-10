@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const gmApiKeyState = atom({
-    key: 'gmApiKey',
-    default: null
-});
+const gmApiKeyState = atom(null);
 
 export default gmApiKeyState;

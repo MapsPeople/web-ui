@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const shuttleBusOnState = atom({
-    key: 'shuttleBusOn',
-    default: false
-});
+const shuttleBusOnState = atom(false);
 
 export default shuttleBusOnState;

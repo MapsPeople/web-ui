@@ -1,4 +1,4 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
 /**
  * Lightweight venue descriptors for all venues in the current solution.
@@ -9,9 +9,6 @@ import { atom } from 'recoil';
  *
  * @type {{ id: string, name: string, displayName: string, image: string|undefined }[]}
  */
-const venueListState = atom({
-    key: 'venueList',
-    default: []
-});
+const venueListState = atom([]);
 
 export default venueListState;

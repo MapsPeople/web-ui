@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const triggerSubstepsState = atom({
-    key: 'triggerSubsteps',
-    default: false
-});
+const triggerSubstepsState = atom(false);
 
 export default triggerSubstepsState;

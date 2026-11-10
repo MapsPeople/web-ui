@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import mapsIndoorsInstanceState from '../atoms/mapsIndoorsInstanceState';
 import isMapReadyState from '../atoms/isMapReadyState';
 
@@ -9,8 +9,8 @@ import isMapReadyState from '../atoms/isMapReadyState';
 const useNear = () => {
     const [near, setNear] = useState();
 
-    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
-    const mapReady = useRecoilValue(isMapReadyState);
+    const mapsIndoorsInstance = useAtomValue(mapsIndoorsInstanceState);
+    const mapReady = useAtomValue(isMapReadyState);
 
     useEffect(() => {
         function centerHandler() {

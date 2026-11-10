@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import getLocationPoint from '../helpers/GetLocationPoint';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import directionsResponseState from '../atoms/directionsResponseState';
 import directionsLoadingState from '../atoms/directionsLoadingState';
 import hasFoundRouteState from '../atoms/hasFoundRouteState';
@@ -17,11 +17,11 @@ let directionsRequestsInFlight = 0;
 const useDirectionsInfo = (originLocation, destinationLocation, directionsService, travelMode, accessibilityOn) => {
     const [totalDistance, setTotalDistance] = useState()
     const [totalTime, setTotalTime] = useState();
-    const [hasFoundRoute, setHasFoundRoute] = useRecoilState(hasFoundRouteState);
-    const setDirectionsResponse = useSetRecoilState(directionsResponseState);
-    const setDirectionsLoading = useSetRecoilState(directionsLoadingState);
+    const [hasFoundRoute, setHasFoundRoute] = useAtom(hasFoundRouteState);
+    const setDirectionsResponse = useSetAtom(directionsResponseState);
+    const setDirectionsLoading = useSetAtom(directionsLoadingState);
     const [areDirectionsReady, setAreDirectionReady] = useState();
-    const shuttleBusOn = useRecoilValue(shuttleBusOnState);
+    const shuttleBusOn = useAtomValue(shuttleBusOnState);
 
     useEffect(() => {
         setAreDirectionReady(false);

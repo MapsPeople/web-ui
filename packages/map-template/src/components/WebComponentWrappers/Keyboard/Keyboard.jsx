@@ -1,5 +1,5 @@
 import { useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import languageState from '../../../atoms/languageState';
 import PropTypes from 'prop-types';
 
@@ -15,7 +15,7 @@ const Keyboard = forwardRef(function KeyboardComponent(props, ref) {
     const { searchInputElement } = props;
     const elementRef = useRef();
 
-    const language = useRecoilValue(languageState);
+    const language = useAtomValue(languageState);
 
     /**
      * Methods that can be triggered on the mi-keyboard element.

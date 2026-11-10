@@ -11,7 +11,7 @@
 import { lazy, Suspense, useRef, useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Sheet } from 'react-modal-sheet';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useAtom, useSetAtom } from 'jotai';
 import { snapPoints } from '../../constants/snapPoints';
 import currentLocationState from '../../atoms/currentLocationState';
 import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
@@ -63,9 +63,9 @@ function BottomSheet({ directionsFromLocation, directionsToLocation, pushAppView
     const [sheetMountPoint, setSheetMountPoint] = useState(null);
     const { handleSnap, isAtMaxSnap } = useSnapState(currentAppView);
     const isOpen = currentAppView !== appViews.VENUE_SELECTOR;
-    const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
-    const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
-    const setLocationId = useSetRecoilState(locationIdState);
+    const [currentLocation, setCurrentLocation] = useAtom(currentLocationState);
+    const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useAtom(filteredLocationsByExternalIDState);
+    const setLocationId = useSetAtom(locationIdState);
     const handleChatLocations = useChatLocations();
     const handleChatShowRoute = useChatDirections(pushAppView, appViews);
 

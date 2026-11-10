@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const languageState = atom({
-    key: 'language',
-    default: undefined
-});
+const languageState = atom(undefined);
 
 export default languageState;

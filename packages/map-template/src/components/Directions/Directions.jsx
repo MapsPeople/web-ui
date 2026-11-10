@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import './Directions.scss';
 import { useTranslation } from 'react-i18next';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import ArrowRight from '../../assets/arrow-right.svg?react';
 import ArrowLeft from '../../assets/arrow-left.svg?react';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
@@ -65,45 +65,45 @@ function Directions({ isOpen, onBack, onSetSize, onRouteFinished }) {
 
     const [totalTime, setTotalTime] = useState();
 
-    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
+    const mapsIndoorsInstance = useAtomValue(mapsIndoorsInstanceState);
 
-    const travelMode = useRecoilValue(travelModeState);
+    const travelMode = useAtomValue(travelModeState);
 
-    const directions = useRecoilValue(directionsResponseState);
+    const directions = useAtomValue(directionsResponseState);
 
-    const directionsLoading = useRecoilValue(directionsLoadingState);
+    const directionsLoading = useAtomValue(directionsLoadingState);
 
-    const [activeStep, setActiveStep] = useRecoilState(activeStepState);
+    const [activeStep, setActiveStep] = useAtom(activeStepState);
 
     const [previous, setPrevious] = useState();
 
-    const [substepsOpen, setSubstepsOpen] = useRecoilState(substepsToggledState);
+    const [substepsOpen, setSubstepsOpen] = useAtom(substepsToggledState);
 
-    const kioskLocation = useRecoilValue(kioskLocationState);
+    const kioskLocation = useAtomValue(kioskLocationState);
     
-    const wayfindingOriginHighlightLocation = useRecoilValue(wayfindingOriginHighlightLocationState);
+    const wayfindingOriginHighlightLocation = useAtomValue(wayfindingOriginHighlightLocationState);
 
     const isDesktop = useIsDesktop();
 
-    const setQRCodeLink = useSetRecoilState(qrCodeLinkState)
+    const setQRCodeLink = useSetAtom(qrCodeLinkState)
 
-    const isDestinationStep = useRecoilValue(isDestinationStepState);
+    const isDestinationStep = useAtomValue(isDestinationStepState);
 
-    const primaryColor = useRecoilValue(primaryColorState);
+    const primaryColor = useAtomValue(primaryColorState);
 
     const isKioskContext = useIsKioskContext();
 
-    const showExternalIDs = useRecoilValue(showExternalIDsState);
+    const showExternalIDs = useAtomValue(showExternalIDsState);
 
-    const baseShareLink = useRecoilValue(baseLinkSelector);
+    const baseShareLink = useAtomValue(baseLinkSelector);
 
-    const currentLocation = useRecoilValue(currentLocationState);
+    const currentLocation = useAtomValue(currentLocationState);
 
-    const shuttleBusOn = useRecoilValue(shuttleBusOnState);
+    const shuttleBusOn = useAtomValue(shuttleBusOnState);
 
-    const appConfig = useRecoilValue(appConfigState);
+    const appConfig = useAtomValue(appConfigState);
 
-    const mapType = useRecoilValue(mapTypeState);
+    const mapType = useAtomValue(mapTypeState);
 
     useEffect(() => {
         return () => {

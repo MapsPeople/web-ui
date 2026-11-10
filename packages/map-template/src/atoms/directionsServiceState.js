@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const directionsServiceState = atom({
-    key: 'directionsService',
-    default: null
-});
+const directionsServiceState = atom(null);
 
 export default directionsServiceState;

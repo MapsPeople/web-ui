@@ -14,7 +14,7 @@ import mapTypeState from '../../atoms/mapTypeState';
 import { mapTypes } from '../../constants/mapTypes';
 import { goTo } from '../../hooks/useMapBoundsDeterminer';
 import * as turf from '@turf/turf';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import getDesktopPaddingBottom from '../../helpers/GetDesktopPaddingBottom';
 
 /**
@@ -24,12 +24,12 @@ import getDesktopPaddingBottom from '../../helpers/GetDesktopPaddingBottom';
 function ResetKioskViewButton() {
     const portalContainer = usePortalTarget('.reset-view-portal');
     const isKiosk = useIsKioskContext();
-    const kioskOriginLocationId = useRecoilValue(kioskOriginLocationIdState);
-    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
-    const startZoomLevel = useRecoilValue(startZoomLevelState);
-    const bearing = useRecoilValue(bearingState);
-    const currentPitch = useRecoilValue(currentPitchSelector);
-    const mapType = useRecoilValue(mapTypeState);
+    const kioskOriginLocationId = useAtomValue(kioskOriginLocationIdState);
+    const mapsIndoorsInstance = useAtomValue(mapsIndoorsInstanceState);
+    const startZoomLevel = useAtomValue(startZoomLevelState);
+    const bearing = useAtomValue(bearingState);
+    const currentPitch = useAtomValue(currentPitchSelector);
+    const mapType = useAtomValue(mapTypeState);
     const { t } = useTranslation();
 
     /**
