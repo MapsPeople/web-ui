@@ -103,6 +103,10 @@ const ru = {
     // Language Selector
     'Select language': 'Выбрать язык',
     'Close language selector': 'Закрыть выбор языка',
+    // Role Selector
+    'Select App User Role': 'Выбрать App User Role',
+    'Close App User Role selector': 'Закрыть выбор App User Role',
+    'No role': 'Без роли',
     // Accessibility
     'Increase text size to 200%': 'Увеличить размер текста до 200%',
     'Decrease text size to 100%': 'Уменьшить размер текста до 100%',

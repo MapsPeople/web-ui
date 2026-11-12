@@ -103,6 +103,10 @@ const ko = {
     // Language Selector
     'Select language': '언어 선택',
     'Close language selector': '언어 선택기 닫기',
+    // Role Selector
+    'Select App User Role': 'App User Role 선택',
+    'Close App User Role selector': 'App User Role 선택기 닫기',
+    'No role': '역할 없음',
     // Accessibility
     'Increase text size to 200%': '글자 크기를 200%로 키우기',
     'Decrease text size to 100%': '글자 크기를 100%로 줄이기',

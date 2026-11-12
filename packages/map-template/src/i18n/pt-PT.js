@@ -103,6 +103,10 @@ const ptPT = {
     // Language Selector
     'Select language': 'Selecionar idioma',
     'Close language selector': 'Fechar o seletor de idioma',
+    // Role Selector
+    'Select App User Role': 'Selecionar App User Role',
+    'Close App User Role selector': 'Fechar o seletor de App User Role',
+    'No role': 'Nenhuma função',
     // Accessibility
     'Increase text size to 200%': 'Aumentar o tamanho do texto para 200%',
     'Decrease text size to 100%': 'Diminuir o tamanho do texto para 100%',

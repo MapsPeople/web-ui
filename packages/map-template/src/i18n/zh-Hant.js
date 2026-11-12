@@ -103,6 +103,10 @@ const zhHant = {
       // Language Selector
       'Select language': '選擇語言',
       'Close language selector': '關閉語言選擇器',
+      // Role Selector
+      'Select App User Role': '選擇 App User Role',
+      'Close App User Role selector': '關閉 App User Role 選擇器',
+      'No role': '無角色',
       // Accessibility
       'Increase text size to 200%': '將文字大小增加至 200%',
       'Decrease text size to 100%': '將文字大小減少至 100%',

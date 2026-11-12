@@ -1006,7 +1006,15 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                     }}
                     devicePosition={devicePosition}
                 />
-                <RoleSelector appUserRoles={appUserRoles} />
+                <RoleSelector
+                    appUserRoles={appUserRoles}
+                    onRoleChange={() => {
+                        // Categories only list those found on Locations the active role can see.
+                        if (categories.length > 0) {
+                            updateCategories();
+                        }
+                    }}
+                />
             </div>
         </GeminiProvider>
     );

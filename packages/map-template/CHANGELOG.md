@@ -5,11 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.99.39] - 2026-11-10
+## [1.99.39] - 2026-11-13
 
 ### Added
 
-- A button on the map for switching between the App User Roles of the solution, so the map shows what each role can see and access. It is only shown in the MapsIndoors CMS View tab: when the Map Template runs in an iframe, it posts `{ type: 'mi-map-ready' }` to the parent page, and shows the button only if a page on mapsindoors.com answers with `{ type: 'mi-role-selector' }`. Public maps are unchanged. The button is hidden when the solution has no App User Roles.
+- Added a button for switching App User Roles in the MapsIndoors CMS View tab, so the map shows what each role can see and access. When the Map Template runs in an iframe, it posts `{ type: 'mi-map-ready' }` to the parent page and shows the button only after a `{ type: 'mi-role-selector' }` reply from a page on mapsindoors.com, or from localhost/127.0.0.1 for local development. Public maps are unchanged, the button is hidden when the solution has no App User Roles, and its texts are translated.
 
 ## [1.99.38] - 2026-11-13
 

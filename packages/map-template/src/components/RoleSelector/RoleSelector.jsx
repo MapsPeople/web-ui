@@ -4,28 +4,32 @@ import { createPortal } from 'react-dom';
 import { useRecoilValue } from 'recoil';
 import solutionState from '../../atoms/solutionState';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
+import { useOptionalTranslation } from '../../hooks/useOptionalTranslation';
 import { usePortalTarget } from '../../hooks/usePortalTarget';
 import UserIcon from '../../assets/user.svg?react';
 // Same look as the language selector, so it reuses its styles.
 import '../LanguageSelector/LanguageSelector.scss';
 
-// Pages on mapsindoors.com (the CMS) and local development may enable the role selector.
+// Origins that may enable the role selector, in every build: https pages on mapsindoors.com,
+// and localhost or 127.0.0.1 on any port for local development.
 const ALLOWED_ORIGIN = /^(https:\/\/([a-z0-9-]+\.)+mapsindoors\.com|http:\/\/(localhost|127\.0\.0\.1)(:\d+)?)$/;
 
 RoleSelector.propTypes = {
-    appUserRoles: PropTypes.arrayOf(PropTypes.string)
+    appUserRoles: PropTypes.arrayOf(PropTypes.string),
+    onRoleChange: PropTypes.func
 };
 
 /**
  * Button with a list that switches the active App User Role, so the map shows what that role can see and access.
- * Only shown when a MapsIndoors page that embeds the map (the CMS View tab) asks for it,
+ * Only shown after the embedding page answers the map's ready message with `mi-role-selector`,
  * and only when the solution has App User Roles.
  *
  * @param {Object} props
  * @param {string[]} [props.appUserRoles] - Role names applied on load. The first match is preselected.
+ * @param {function} [props.onRoleChange] - Callback that fires after a role is applied, so data built for the previous role can be refreshed.
  * @returns {JSX.Element|null}
  */
-function RoleSelector({ appUserRoles }) {
+function RoleSelector({ appUserRoles, onRoleChange }) {
     const [isVisible, setIsVisible] = useState(false);
     const [roles, setRoles] = useState([]);
     const [selectedRoleId, setSelectedRoleId] = useState('');
@@ -35,6 +39,8 @@ function RoleSelector({ appUserRoles }) {
     const portalContainer = usePortalTarget('.role-selector-portal');
     const solution = useRecoilValue(solutionState);
     const isDesktop = useIsDesktop();
+    // Mounted before i18n is initialized, which useTranslation does not survive.
+    const t = useOptionalTranslation();
 
     // Tell the embedding page the map is ready, and show the selector if it answers from an allowed origin.
     useEffect(() => {
@@ -54,8 +60,16 @@ function RoleSelector({ appUserRoles }) {
         // Wait for the solution: it is loaded after the API key is set, which the roles request needs.
         if (!isVisible || !solution) return;
         window.mapsindoors.services.SolutionsService.getUserRoles().then(userRoles => {
+            const matches = userRoles.filter(role => appUserRoles?.includes(role.name));
             setRoles(userRoles);
-            setSelectedRoleId(userRoles.find(role => appUserRoles?.includes(role.name))?.id ?? '');
+            setSelectedRoleId(matches[0]?.id ?? '');
+            // The selector shows one active role, so when several matched, apply only the preselected one.
+            if (matches.length > 1) {
+                window.mapsindoors.MapsIndoors.setUserRoles([matches[0]]);
+                onRoleChange?.();
+            }
+        }).catch(error => {
+            console.error('Error getting App User Roles:', error);
         });
     }, [isVisible, solution, appUserRoles]);
 
@@ -73,12 +87,13 @@ function RoleSelector({ appUserRoles }) {
 
     if (!isVisible || roles.length === 0 || !portalContainer) return null;
 
-    const options = [{ id: '', name: 'No role' }, ...roles];
+    const options = [{ id: '', name: t('No role') }, ...roles];
 
     function selectRole(roleId) {
         setSelectedRoleId(roleId);
         setIsExpanded(false);
         window.mapsindoors.MapsIndoors.setUserRoles(roles.filter(role => role.id === roleId));
+        onRoleChange?.();
     }
 
     const toggleButton = (
@@ -88,7 +103,7 @@ function RoleSelector({ appUserRoles }) {
             onClick={() => setIsExpanded(prev => !prev)}
             aria-haspopup="listbox"
             aria-expanded={isExpanded}
-            aria-label="Select App User Role"
+            aria-label={t('Select App User Role')}
             title={options.find(role => role.id === selectedRoleId)?.name}
         >
             <UserIcon />
@@ -124,10 +139,10 @@ function RoleSelector({ appUserRoles }) {
                         <div className="language-selector-overlay__backdrop" onClick={() => setIsExpanded(false)}></div>
                         <div className="language-selector__container">
                             <div className="language-selector-overlay__header">
-                                <button className="language-selector-overlay__exit-button" onClick={() => setIsExpanded(false)} aria-label="Close App User Role selector">
+                                <button className="language-selector-overlay__exit-button" onClick={() => setIsExpanded(false)} aria-label={t('Close App User Role selector')}>
                                     ×
                                 </button>
-                                <span>Select App User Role</span>
+                                <span>{t('Select App User Role')}</span>
                             </div>
                             {roleList}
                         </div>

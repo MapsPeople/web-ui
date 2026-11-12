@@ -103,6 +103,10 @@ const ceb = {
     // Language Selector
     'Select language': 'Pagpili og pinulongan',
     'Close language selector': 'Isira ang tigpili sa pinulongan',
+    // Role Selector
+    'Select App User Role': 'Pagpili og App User Role',
+    'Close App User Role selector': 'Isira ang tigpili sa App User Role',
+    'No role': 'Walay tahas',
     // Accessibility
     'Increase text size to 200%': 'Padak-a ang teksto ngadto sa 200%',
     'Decrease text size to 100%': 'Pagamya ang teksto ngadto sa 100%',
