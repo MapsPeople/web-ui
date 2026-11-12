@@ -346,6 +346,7 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
                         <h2 className="location-info__name">
                             {location.properties.name}
                         </h2>
+                        {/* Boolean props must be strings: React 19 removes the attribute for false, which leaves the Stencil prop at its true default. */}
                         <mi-location-info level={t('Level')} ref={locationInfoElement} show-external-id={String(showExternalIDs)} show-floor={String(showFloor)} />
                     </div>
                     <div className="location-info__actions">
