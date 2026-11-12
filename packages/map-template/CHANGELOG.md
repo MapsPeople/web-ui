@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- The web component (`mapsindoors-webcomponent.es.js`) now runs on React 19. It bundles its own React, so it works the same on host pages using React 18, React 19 or no React.
+- The React component (`mapsindoors-react.es.js`) declares `react` and `react-dom` `^18.0.0 || ^19.0.0` as peer dependencies and uses the host app's React, including `react/jsx-runtime`. The peer dependencies are optional, so projects that only use the web component don't need to install React.
+
+### Removed
+
+- The UMD build of the React component (`mapsindoors-react.umd.js`). It could not load, because it required a `ReactJSXRuntime` global that React does not provide. Use the ES module build (`mapsindoors-react.es.js`).
+
 ## [1.99.37] - 2026-11-05
 
 ### Added
