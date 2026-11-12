@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atomWithReset } from 'jotai/utils';
 
-const substepsToggledState = atom({
-    key: 'substepsToggled',
-    default: false
-});
+const substepsToggledState = atomWithReset(false);
 
 export default substepsToggledState;

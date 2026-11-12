@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useAtom, useAtomValue } from 'jotai';
 import { useTranslation } from 'react-i18next';
 import './QRCodeDialog.scss';
 import qrCodeLinkState from '../../atoms/qrCodeLinkState';
@@ -11,10 +11,10 @@ import QRCode from 'qrcode';
  */
 function QRCodeDialog() {
     const { t } = useTranslation();
-    const [QRCodeLink, setQRCodeLink] = useRecoilState(qrCodeLinkState);
+    const [QRCodeLink, setQRCodeLink] = useAtom(qrCodeLinkState);
     const elementRef = useRef()
 
-    const primaryColor = useRecoilValue(primaryColorState);
+    const primaryColor = useAtomValue(primaryColorState);
 
     useEffect(() => {
         const options = {

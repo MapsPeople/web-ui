@@ -1,9 +1,6 @@
-import { atom } from 'recoil';
+import { atomWithReset } from 'jotai/utils';
 import { travelModes } from '../constants/travelModes';
 
-const travelModeState = atom({
-    key: 'travelMode',
-    default: travelModes.WALKING
-});
+const travelModeState = atomWithReset(travelModes.WALKING);
 
 export default travelModeState;

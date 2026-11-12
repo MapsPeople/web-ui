@@ -1,5 +1,5 @@
 import { act, render, screen } from '@testing-library/react';
-import { RecoilRoot, useSetRecoilState } from 'recoil';
+import { createStore, Provider, useSetAtom } from 'jotai';
 import SplashScreenContainer from './SplashScreenContainer';
 import appConfigState from '../../atoms/appConfigState';
 import notificationMessageState from '../../atoms/notificationMessageState';
@@ -11,19 +11,20 @@ describe('SplashScreenContainer', () => {
         const controls = {};
 
         function ErrorControls() {
-            controls.setError = useSetRecoilState(notificationMessageState);
+            controls.setError = useSetAtom(notificationMessageState);
             return null;
         }
 
+        const store = createStore();
+        store.set(appConfigState, {});
+        store.set(primaryColorState, '#005655');
+        store.set(logoState, 'https://example.com/logo.png');
+
         render(
-            <RecoilRoot initializeState={({ set }) => {
-                set(appConfigState, {});
-                set(primaryColorState, '#005655');
-                set(logoState, 'https://example.com/logo.png');
-            }}>
+            <Provider store={store}>
                 <ErrorControls />
                 <SplashScreenContainer mapsindoorsSDKAvailable={true} />
-            </RecoilRoot>
+            </Provider>
         );
 
         expect(screen.getByRole('status')).toBeInTheDocument();

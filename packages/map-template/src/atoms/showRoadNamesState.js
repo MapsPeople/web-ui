@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const showRoadNamesState = atom({
-    key: 'showRoadNames',
-    default: true
-});
+const showRoadNamesState = atom(true);
 
 export default showRoadNamesState;

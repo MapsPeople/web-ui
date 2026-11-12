@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const logoState = atom({
-    key: 'logo',
-    default: undefined
-});
+const logoState = atom(undefined);
 
 export default logoState;

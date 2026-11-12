@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import './RouteInstructions.scss';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useAtomValue, useSetAtom } from 'jotai';
 import directionsResponseState from '../../atoms/directionsResponseState';
 import activeStepState from '../../atoms/activeStep';
 import RouteInstructionsStep from '../WebComponentWrappers/RouteInstructionsStep/RouteInstructionsStep';
@@ -30,13 +30,13 @@ function RouteInstructions({ steps, previous, originLocation, isOpen }) {
 
     const routeInstructionsRef = useRef();
 
-    const activeStep = useRecoilValue(activeStepState);
+    const activeStep = useAtomValue(activeStepState);
 
-    const directions = useRecoilValue(directionsResponseState);
+    const directions = useAtomValue(directionsResponseState);
 
-    const substepsOpen = useRecoilValue(substepsToggledState);
+    const substepsOpen = useAtomValue(substepsToggledState);
 
-    const setIsDestinationStep = useSetRecoilState(isDestinationStepState);
+    const setIsDestinationStep = useSetAtom(isDestinationStepState);
 
     /**
      * Get the zoom and the center of the destination step.

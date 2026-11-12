@@ -1,6 +1,6 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import useNear from '../../../hooks/useNear';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useAtomValue, useSetAtom } from 'jotai';
 import userPositionState from '../../../atoms/userPositionState';
 import languageState from '../../../atoms/languageState';
 import searchInputState from '../../../atoms/searchInputState';
@@ -31,10 +31,10 @@ const SearchField = forwardRef(function SearchFieldComponent(props, ref) {
     const pendingDisplayText = useRef(null);
     const isComponentReady = useRef(false);
 
-    const userPosition = useRecoilValue(userPositionState);
-    const language = useRecoilValue(languageState);
+    const userPosition = useAtomValue(userPositionState);
+    const language = useAtomValue(languageState);
 
-    const setSearchInput = useSetRecoilState(searchInputState)
+    const setSearchInput = useSetAtom(searchInputState)
 
     const mapboxPlacesSessionToken = useMapboxPlacesSessionToken();
 
@@ -46,9 +46,9 @@ const SearchField = forwardRef(function SearchFieldComponent(props, ref) {
     /** Instruct the search field to search for Locations near the map center. */
     const searchNear = useNear();
 
-    const currentVenueName = useRecoilValue(currentVenueNameState);
+    const currentVenueName = useAtomValue(currentVenueNameState);
 
-    const searchAllVenues = useRecoilValue(searchAllVenuesState);
+    const searchAllVenues = useAtomValue(searchAllVenuesState);
 
     /**
      * Methods that can be triggered on the mi-search element.

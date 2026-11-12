@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const filteredLocationsState = atom({
-    key: 'filteredLocations',
-    default: undefined
-});
+const filteredLocationsState = atom(undefined);
 
 export default filteredLocationsState;

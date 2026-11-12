@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const useAppTitleState = atom({
-    key: 'useAppTitle',
-    default: false
-});
+const useAppTitleState = atom(false);
 
 export default useAppTitleState;

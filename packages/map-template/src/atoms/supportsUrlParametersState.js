@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const supportsUrlParametersState = atom({
-    key: 'supportsUrlParameters',
-    default: false
-});
+const supportsUrlParametersState = atom(false);
 
 export default supportsUrlParametersState;

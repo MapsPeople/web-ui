@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { CSSTransition } from 'react-transition-group';
 import './VenueSelector.scss';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { usePortalTarget } from '../../hooks/usePortalTarget';
 import venueListState from '../../atoms/venueListState';
 import BuildingIcon from '../../assets/building.svg?react';
@@ -33,12 +33,12 @@ function VenueSelector({ onOpen, onClose, active }) {
     const { t } = useTranslation();
 
     const venueSelectorContentRef = useRef(null);
-    const venueList = useRecoilValue(venueListState);
-    const setVenueWasSelected = useSetRecoilState(venueWasSelectedState);
+    const venueList = useAtomValue(venueListState);
+    const setVenueWasSelected = useSetAtom(venueWasSelectedState);
 
-    const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
+    const [currentVenueName, setCurrentVenueName] = useAtom(currentVenueNameState);
 
-    const setIsLocationClicked = useSetRecoilState(isLocationClickedState);
+    const setIsLocationClicked = useSetAtom(isLocationClickedState);
 
     const portalTarget = usePortalTarget('.venue-selector-portal');
 

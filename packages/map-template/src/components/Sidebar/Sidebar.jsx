@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect } from 'react';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import currentLocationState from '../../atoms/currentLocationState';
 import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
 import Modal from './Modal/Modal';
@@ -45,10 +45,10 @@ Sidebar.propTypes = {
  *
  */
 function Sidebar({ directionsFromLocation, directionsToLocation, pushAppView, currentAppView, appViews, onRouteFinished }) {
-    const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
-    const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useRecoilState(filteredLocationsByExternalIDState);
-    const setLocationId = useSetRecoilState(locationIdState);
-    const kioskLocation = useRecoilValue(kioskLocationState);
+    const [currentLocation, setCurrentLocation] = useAtom(currentLocationState);
+    const [filteredLocationsByExternalIDs, setFilteredLocationsByExternalID] = useAtom(filteredLocationsByExternalIDState);
+    const setLocationId = useSetAtom(locationIdState);
+    const kioskLocation = useAtomValue(kioskLocationState);
 
     // Use chat hooks for handling chat interactions
     const handleChatLocations = useChatLocations();

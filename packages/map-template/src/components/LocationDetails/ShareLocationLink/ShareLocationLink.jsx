@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useAtomValue, useSetAtom } from 'jotai';
 import ClickAwayListener from 'react-click-away-listener';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
@@ -30,15 +30,15 @@ function ShareLocationLink({ location, buttonClassName }) {
 
     const { t } = useTranslation();
     const [shareDialogueIsOpen, setShareDialogueIsOpen] = useState(false);
-    const shareLink = useRecoilValue(shareLinkSelector);
+    const shareLink = useAtomValue(shareLinkSelector);
     const [locationShareLink, setLocationShareLink] = useState();
-    const supportsUrlParameters = useRecoilValue(supportsUrlParametersState);
+    const supportsUrlParameters = useAtomValue(supportsUrlParametersState);
     const [showQRCodeButton, setShowQRCodeButton] = useState(false);
     const [showCopyButton, setShowCopyButton] = useState(false);
-    const kioskLocation = useRecoilValue(kioskLocationState);
+    const kioskLocation = useAtomValue(kioskLocationState);
 
-    const setQrCodeLink = useSetRecoilState(qrCodeLinkState);
-    const setNotificationMessage = useSetRecoilState(notificationMessageState);
+    const setQrCodeLink = useSetAtom(qrCodeLinkState);
+    const setNotificationMessage = useSetAtom(notificationMessageState);
 
     const isDesktop = useIsDesktop();
 

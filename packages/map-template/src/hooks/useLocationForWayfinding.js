@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import userPositionState from '../atoms/userPositionState';
 import positionControlState from '../atoms/positionControlState';
 import generateMyPositionLocation from '../helpers/MyPositionLocation';
@@ -13,8 +13,8 @@ import generateMyPositionLocation from '../helpers/MyPositionLocation';
  */
 const useLocationForWayfinding = (locationID) => {
     const [location, setLocation] = useState();
-    const userPosition = useRecoilValue(userPositionState);
-    const positionControl = useRecoilValue(positionControlState);
+    const userPosition = useAtomValue(userPositionState);
+    const positionControl = useAtomValue(positionControlState);
 
     useEffect(() => {
         if (positionControl && locationID) {

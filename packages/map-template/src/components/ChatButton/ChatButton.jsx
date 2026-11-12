@@ -1,6 +1,6 @@
 import { createPortal } from 'react-dom';
 import i18n from 'i18next';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import PropTypes from 'prop-types';
 import chatHistoryState from '../../atoms/chatHistoryState';
 import primaryColorState from '../../atoms/primaryColorState';
@@ -20,8 +20,8 @@ ChatButton.propTypes = {
  */
 function ChatButton({ pushAppView, currentAppView, appViews }) {
     const portalContainer = usePortalTarget('.chat-button-portal');
-    const chatHistory = useRecoilValue(chatHistoryState);
-    const primaryColor = useRecoilValue(primaryColorState);
+    const chatHistory = useAtomValue(chatHistoryState);
+    const primaryColor = useAtomValue(primaryColorState);
 
     // Check if there is any chat history
     const hasChatHistory = chatHistory && chatHistory.length > 0;

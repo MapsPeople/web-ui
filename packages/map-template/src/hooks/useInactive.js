@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import isMapReadyState from '../atoms/isMapReadyState';
 import timeoutState from '../atoms/timoutState';
 
@@ -13,8 +13,8 @@ import timeoutState from '../atoms/timoutState';
 export function useInactive() {
     const [isInactive, setIsInactive] = useState(false);
 
-    const isMapReady = useRecoilValue(isMapReadyState);
-    const timeout = useRecoilValue(timeoutState);
+    const isMapReady = useAtomValue(isMapReadyState);
+    const timeout = useAtomValue(timeoutState);
 
     useEffect(() => {
         if (!isMapReady || !timeout) {

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import mapsIndoorsInstanceState from '../../../atoms/mapsIndoorsInstanceState';
@@ -43,8 +43,8 @@ function formatWalkingDuration(seconds, t) {
  */
 function ChatListItemLocation({ location, locationClicked, durationSeconds, onRouteClick }) {
     const { t } = useTranslation();
-    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
-    const showExternalIDs = useRecoilValue(showExternalIDsState);
+    const mapsIndoorsInstance = useAtomValue(mapsIndoorsInstanceState);
+    const showExternalIDs = useAtomValue(showExternalIDsState);
     const locationInfoRef = useRef(null);
 
     const selectable = location?.properties?.locationSettings?.selectable !== false;
@@ -113,7 +113,7 @@ function ChatListItemLocation({ location, locationClicked, durationSeconds, onRo
                     <mi-location-info
                         level={t('Level')}
                         ref={locationInfoRef}
-                        show-external-id={showExternalIDs}
+                        show-external-id={String(showExternalIDs)}
                     />
                     {durationLabel && (
                         <div className="chat-list-item-location__duration">

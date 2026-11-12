@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atomWithReset } from 'jotai/utils';
 
-const qrCodeLinkState = atom({
-    key: 'qrCodeLink',
-    default: null
-});
+const qrCodeLinkState = atomWithReset(null);
 
 export default qrCodeLinkState;

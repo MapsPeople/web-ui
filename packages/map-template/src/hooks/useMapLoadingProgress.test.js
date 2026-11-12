@@ -1,6 +1,6 @@
 import { renderHook, act } from '@testing-library/react';
 import PropTypes from 'prop-types';
-import { RecoilRoot, useSetRecoilState } from 'recoil';
+import { createStore, Provider, useSetAtom } from 'jotai';
 import { useMapLoadingProgress } from './useMapLoadingProgress';
 import mapsIndoorsInstanceState from '../atoms/mapsIndoorsInstanceState';
 import isMapReadyState from '../atoms/isMapReadyState';
@@ -27,15 +27,21 @@ function createSdkInstance(initialProgress = { phase: 'fetching_locations', prog
     };
 }
 
+function createStoreWith(instance, isMapReady) {
+    const store = createStore();
+    store.set(mapsIndoorsInstanceState, instance);
+    store.set(isMapReadyState, isMapReady);
+    return store;
+}
+
 function wrapperWith(instance, isMapReady = false) {
+    const store = createStoreWith(instance, isMapReady);
+
     function Wrapper({ children }) {
         return (
-            <RecoilRoot initializeState={({ set }) => {
-                set(mapsIndoorsInstanceState, instance);
-                set(isMapReadyState, isMapReady);
-            }}>
+            <Provider store={store}>
                 {children}
-            </RecoilRoot>
+            </Provider>
         );
     }
 
@@ -48,19 +54,18 @@ function wrapperWith(instance, isMapReady = false) {
 
 function wrapperWithReadyControls(instance, controls, isMapReady = false) {
     function ReadyControls() {
-        controls.setReady = useSetRecoilState(isMapReadyState);
+        controls.setReady = useSetAtom(isMapReadyState);
         return null;
     }
 
+    const store = createStoreWith(instance, isMapReady);
+
     function Wrapper({ children }) {
         return (
-            <RecoilRoot initializeState={({ set }) => {
-                set(mapsIndoorsInstanceState, instance);
-                set(isMapReadyState, isMapReady);
-            }}>
+            <Provider store={store}>
                 <ReadyControls />
                 {children}
-            </RecoilRoot>
+            </Provider>
         );
     }
 
@@ -291,19 +296,18 @@ describe('useMapLoadingProgress', () => {
         const controls = {};
 
         function ErrorControls() {
-            controls.setError = useSetRecoilState(notificationMessageState);
+            controls.setError = useSetAtom(notificationMessageState);
             return null;
         }
 
+        const store = createStoreWith(instance, false);
+
         function Wrapper({ children }) {
             return (
-                <RecoilRoot initializeState={({ set }) => {
-                    set(mapsIndoorsInstanceState, instance);
-                    set(isMapReadyState, false);
-                }}>
+                <Provider store={store}>
                     <ErrorControls />
                     {children}
-                </RecoilRoot>
+                </Provider>
             );
         }
 

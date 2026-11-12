@@ -8,7 +8,7 @@ import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
 import venueListState from '../../atoms/venueListState';
 import './ViewSelector.scss';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import { useTranslation } from 'react-i18next';
 import { createPortal } from 'react-dom';
 
@@ -33,9 +33,9 @@ function ViewSelector({ isViewSelectorDisabled, isViewSelectorVisible }) {
     const [buildingsData, setBuildingsData] = useState([]);
     const [venueId, setVenueId] = useState(null);
     const isDesktop = useIsDesktop();
-    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
-    const currentVenueName = useRecoilValue(currentVenueNameState);
-    const venueList = useRecoilValue(venueListState);
+    const mapsIndoorsInstance = useAtomValue(mapsIndoorsInstanceState);
+    const currentVenueName = useAtomValue(currentVenueNameState);
+    const venueList = useAtomValue(venueListState);
     const viewSelectorMountPoint = '.view-selector-portal';
     const portalContainer = usePortalTarget(viewSelectorMountPoint);
     const buildingListRef = useRef(null);

@@ -1,6 +1,6 @@
 import './Search.scss';
 import { useRef, useState, useEffect } from 'react';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import appConfigState from '../../atoms/appConfigState';
 import categoriesState from '../../atoms/categoriesState';
 import currentVenueNameState from '../../atoms/currentVenueNameState';
@@ -77,7 +77,7 @@ Search.propTypes = {
  * @returns
  */
 function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
-    const appConfig = useRecoilValue(appConfigState);
+    const appConfig = useAtomValue(appConfigState);
 
     const { t } = useTranslation();
 
@@ -93,55 +93,55 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
     const keyboardRef = useRef();
 
     const [revealedResults, setRevealedResults] = useState({ locations: [], count: 0, sortAlphabetically: false, fitMapBounds: false });
-    const [searchResults, setSearchResults] = useRecoilState(searchResultsState);
-    const categories = useRecoilValue(categoriesState);
-    const primaryColor = useRecoilValue(primaryColorState);
-    const useKeyboard = useRecoilValue(useKeyboardState);
+    const [searchResults, setSearchResults] = useAtom(searchResultsState);
+    const categories = useAtomValue(categoriesState);
+    const primaryColor = useAtomValue(primaryColorState);
+    const useKeyboard = useAtomValue(useKeyboardState);
 
     /** Indicate if search results have been found */
     const [showNotFoundMessage, setShowNotFoundMessage] = useState(false);
 
-    const [selectedCategory, setSelectedCategory] = useRecoilState(selectedCategoryState);
+    const [selectedCategory, setSelectedCategory] = useAtom(selectedCategoryState);
 
     const [hoveredLocation, setHoveredLocation] = useState();
 
-    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
-    const mapType = useRecoilValue(mapTypeState);
-    const setFilteredLocations = useSetRecoilState(filteredLocationsState);
+    const mapsIndoorsInstance = useAtomValue(mapsIndoorsInstanceState);
+    const mapType = useAtomValue(mapTypeState);
+    const setFilteredLocations = useSetAtom(filteredLocationsState);
 
-    const [currentLocation, setCurrentLocation] = useRecoilState(currentLocationState);
+    const [currentLocation, setCurrentLocation] = useAtom(currentLocationState);
 
-    const setIsLocationClicked = useSetRecoilState(isLocationClickedState);
+    const setIsLocationClicked = useSetAtom(isLocationClickedState);
 
-    const setVenuesInSolution = useSetRecoilState(venuesInSolutionState);
+    const setVenuesInSolution = useSetAtom(venuesInSolutionState);
 
-    const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
+    const [currentVenueName, setCurrentVenueName] = useAtom(currentVenueNameState);
 
-    const currentLanguage = useRecoilValue(languageState);
+    const currentLanguage = useAtomValue(languageState);
 
     const isDesktop = useIsDesktop();
 
-    const kioskLocation = useRecoilValue(kioskLocationState);
+    const kioskLocation = useAtomValue(kioskLocationState);
 
     const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
 
-    const searchInput = useRecoilValue(searchInputState);
+    const searchInput = useAtomValue(searchInputState);
     const { setInitialMessage, } = useInitialChatMessage();
     const { enabled: isAiChatEnabled } = useGemini();
 
     const isKioskContext = useIsKioskContext();
 
-    const setShowLegendDialog = useSetRecoilState(isLegendDialogVisibleState);
+    const setShowLegendDialog = useSetAtom(isLegendDialogVisibleState);
 
     const [showLegendButton, setShowLegendButton] = useState(false);
 
-    const legendSections = useRecoilValue(legendSortedFieldsSelector);
+    const legendSections = useAtomValue(legendSortedFieldsSelector);
 
-    const searchAllVenues = useRecoilValue(searchAllVenuesState);
+    const searchAllVenues = useAtomValue(searchAllVenuesState);
 
-    const venueList = useRecoilValue(venueListState);
+    const venueList = useAtomValue(venueListState);
 
-    const initialVenueName = useRecoilValue(initialVenueNameState);
+    const initialVenueName = useAtomValue(initialVenueNameState);
 
     const [isInputFieldInFocus, setIsInputFieldInFocus] = useState(false);
 

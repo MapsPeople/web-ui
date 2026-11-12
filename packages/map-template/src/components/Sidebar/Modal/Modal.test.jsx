@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { RecoilRoot } from 'recoil';
+import { Provider } from 'jotai';
 import Modal from './Modal';
 
 describe('Modal', () => {
@@ -26,9 +26,9 @@ describe('Modal', () => {
 
     test('survives a mutation record delivered after unmount', () => {
         const { unmount } = render(
-            <RecoilRoot>
+            <Provider>
                 <Modal isOpen={true}><p>Content</p></Modal>
-            </RecoilRoot>
+            </Provider>
         );
 
         unmount();

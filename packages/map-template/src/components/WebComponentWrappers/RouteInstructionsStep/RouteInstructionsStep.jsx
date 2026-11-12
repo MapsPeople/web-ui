@@ -1,6 +1,6 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useAtom, useSetAtom } from 'jotai';
 import substepsToggledState from '../../../atoms/substepsToggledState';
 import triggerSubstepsState from '../../../atoms/triggerSubstepsState';
 import { useIsKioskContext } from '../../../hooks/useIsKioskContext';
@@ -24,8 +24,8 @@ const RouteInstructionsStep = forwardRef(function RouteInstructionsStepComponent
 
     const { t } = useTranslation();
 
-    const [substepsOpen, setSubstepsOpen] = useRecoilState(substepsToggledState);
-    const setTriggerSubsteps = useSetRecoilState(triggerSubstepsState);
+    const [substepsOpen, setSubstepsOpen] = useAtom(substepsToggledState);
+    const setTriggerSubsteps = useSetAtom(triggerSubstepsState);
 
     const isKioskContext = useIsKioskContext();
 
@@ -99,7 +99,7 @@ const RouteInstructionsStep = forwardRef(function RouteInstructionsStepComponent
 
     return <mi-route-instructions-step
         ref={elementRef}
-        show-toggle-button={!isKioskContext}
+        show-toggle-button={String(!isKioskContext)}
         step={JSON.stringify(totalSteps[activeStep])}
         translations={JSON.stringify(translations)}
         destination-location={directions?.destinationLocation.properties.name}

@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atomWithReset } from 'jotai/utils';
 
-const searchResultsState = atom({
-    key: 'searchResults',
-    default: []
-});
+const searchResultsState = atomWithReset([]);
 
 export default searchResultsState;
