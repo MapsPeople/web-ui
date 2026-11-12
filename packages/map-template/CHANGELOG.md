@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-- The UMD build of the React component (`mapsindoors-react.umd.js`). It could not load, because it required a `ReactJSXRuntime` global that React does not provide. Use the ES module build (`mapsindoors-react.es.js`).
+- **Breaking:** Removed the UMD build of the React component (`mapsindoors-react.umd.js`). Use the ES module build (`mapsindoors-react.es.js`) instead.
 
 ## [1.99.37] - 2026-11-05
 
