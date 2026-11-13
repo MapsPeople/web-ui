@@ -103,6 +103,10 @@ const zhHans = {
     // Language Selector
     'Select language': '选择语言',
     'Close language selector': '关闭语言选择器',
+    // Role Selector
+    'Select App User Role': '选择 App User Role',
+    'Close App User Role selector': '关闭 App User Role 选择器',
+    'No role': '无角色',
     // Accessibility
     'Increase text size to 200%': '将文本大小增加到 200%',
     'Decrease text size to 100%': '将文本大小减少到 100%',

@@ -565,7 +565,7 @@ function Search({ onSetSize, isOpen, isSheetExpanded, onOpenChat }) {
      * Closes search when clicking outside the search component.
      */
     useEffect(() => {
-        const IGNORE_CLOSE_ELEMENTS = ['.mi-floor-selector', '.view-mode-switch', '.mi-my-position', '.view-selector__toggle-button', '.building-list', '.mapboxgl-ctrl-bottom-right', '.gmnoprint', '.language-selector-portal'];
+        const IGNORE_CLOSE_ELEMENTS = ['.mi-floor-selector', '.view-mode-switch', '.mi-my-position', '.view-selector__toggle-button', '.building-list', '.mapboxgl-ctrl-bottom-right', '.gmnoprint', '.language-selector-portal', '.role-selector-portal'];
 
         const handleOutsideClick = (event) => {
             const searchEl = searchRef.current;

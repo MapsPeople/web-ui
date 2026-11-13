@@ -103,6 +103,10 @@ const ja = {
     // Language Selector
     'Select language': '言語を選択',
     'Close language selector': '言語選択を閉じる',
+    // Role Selector
+    'Select App User Role': 'App User Roleを選択',
+    'Close App User Role selector': 'App User Role選択を閉じる',
+    'No role': 'ロールなし',
     // Accessibility
     'Increase text size to 200%': '文字サイズを200%に拡大',
     'Decrease text size to 100%': '文字サイズを100%に戻す',

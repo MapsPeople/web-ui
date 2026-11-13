@@ -103,6 +103,10 @@ const tl = {
     // Language Selector
     'Select language': 'Pumili ng wika',
     'Close language selector': 'Isara ang tagapili ng wika',
+    // Role Selector
+    'Select App User Role': 'Pumili ng App User Role',
+    'Close App User Role selector': 'Isara ang tagapili ng App User Role',
+    'No role': 'Walang tungkulin',
     // Accessibility
     'Increase text size to 200%': 'Palakihin ang teksto sa 200%',
     'Decrease text size to 100%': 'Paliitin ang teksto sa 100%',

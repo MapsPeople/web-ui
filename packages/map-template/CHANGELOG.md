@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.99.39] - 2026-11-13
+
+### Added
+
+- Added a button for switching App User Roles in the MapsIndoors CMS View tab, so the map shows what each role can see and access. When the Map Template runs in an iframe, it posts `{ type: 'mi-map-ready' }` to the parent page and shows the button only after a `{ type: 'mi-role-selector' }` reply from a page on mapsindoors.com, or from localhost/127.0.0.1 for local development. Public maps are unchanged, the button is hidden when the solution has no App User Roles, and its texts are translated.
+
+### Changed
+
+- Updated the MapsIndoors Web SDK to version 4.62.2.
+
 ## [1.99.38] - 2026-11-13
 
 ### Fixed
