@@ -9,6 +9,9 @@ import searchResultsState from '../atoms/searchResultsState';
 import searchInputState from '../atoms/searchInputState';
 import initialVenueNameState from '../atoms/initialVenueNameState';
 import venueListState from '../atoms/venueListState';
+import floorState from '../atoms/floorState';
+import locationIdState from '../atoms/locationIdState';
+import kioskOriginLocationIdState from '../atoms/kioskOriginLocationIdState';
 
 /**
  * Hook to handle the current Venue in the app based on the venue prop or other ways to set the Venue.
@@ -29,6 +32,10 @@ export const useCurrentVenue = () => {
     const searchInput = useAtomValue(searchInputState);
     const [initialVenueName, setInitialVenueName] = useAtom(initialVenueNameState);
     const syncedVenueIdRef = useRef(null);
+    const floor = useAtomValue(floorState);
+    const locationId = useAtomValue(locationIdState);
+    const kioskOriginLocationId = useAtomValue(kioskOriginLocationIdState);
+    const initialFloorAppliedRef = useRef(false);
     
     /*
      * Responsible for setting the Venue state whenever venueName changes (and all Venues in the Solution are loaded).
@@ -67,6 +74,15 @@ export const useCurrentVenue = () => {
             window.mapsindoors.MapsIndoors.addVenuesToSync(fullVenue.id);
             syncedVenueIdRef.current = fullVenue.id;
             mapsIndoorsInstance.setVenue(fullVenue);
+            // setVenue resets the floor to the Venue's default floor. Apply the floor prop right after it,
+            // in the same tick, so the map loads directly on that floor (the SDK queues setFloor until the map is ready).
+            // Only on the first Venue load: later Venue switches should use the Venue's default floor.
+            if (!initialFloorAppliedRef.current) {
+                initialFloorAppliedRef.current = true;
+                if (floor !== null && floor !== undefined && !locationId && !kioskOriginLocationId) {
+                    mapsIndoorsInstance.setFloor(floor);
+                }
+            }
             updateCategories();
             setSearchResults([]);
             if (searchInput) searchInput.value = '';
