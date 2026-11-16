@@ -1,9 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const solutionState = atom({
-    key: 'solution',
-    default: null,
-    dangerouslyAllowMutability: true // Solution info needs mutability since it contains methods.
-});
+const solutionState = atom(null);
 
 export default solutionState;

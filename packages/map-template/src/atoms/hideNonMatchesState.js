@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const hideNonMatchesState = atom({
-    key: 'hideNonMatches',
-    default: false
-});
+const hideNonMatchesState = atom(false);
 
 export default hideNonMatchesState;

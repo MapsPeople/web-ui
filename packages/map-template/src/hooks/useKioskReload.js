@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import { useIsKioskContext } from './useIsKioskContext';
 import isMapReadyState from '../atoms/isMapReadyState';
 
@@ -8,7 +8,7 @@ const MIN_RELOAD_TIME = 300;
 
 export function useKioskReload(enabled, timerSeconds) {
     const isKiosk = useIsKioskContext();
-    const isMapReady = useRecoilValue(isMapReadyState);
+    const isMapReady = useAtomValue(isMapReadyState);
 
     useEffect(() => {
         if (!enabled || !isKiosk || !isMapReady) {

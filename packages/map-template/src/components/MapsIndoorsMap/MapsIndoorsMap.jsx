@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { RecoilRoot } from 'recoil';
+import { Provider } from 'jotai';
 import MapTemplate from '../MapTemplate/MapTemplate.jsx';
 import getBooleanValue from '../../helpers/GetBooleanValue.js';
 import PropTypes from 'prop-types';
@@ -193,9 +193,9 @@ function MapsIndoorsMap(props) {
     }, [props]);
 
     return (
-        <RecoilRoot>
+        <Provider>
             {mapTemplateProps && <MapTemplate {...mapTemplateProps}></MapTemplate>}
-        </RecoilRoot>
+        </Provider>
     )
 }
 

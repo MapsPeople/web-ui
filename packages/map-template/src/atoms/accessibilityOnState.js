@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atomWithReset } from 'jotai/utils';
 
-const accessibilityOnState = atom({
-    key: 'accessibilityOn',
-    default: false
-});
+const accessibilityOnState = atomWithReset(false);
 
 export default accessibilityOnState;

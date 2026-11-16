@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atomWithReset } from 'jotai/utils';
 
-const showQRCodeDialogState = atom({
-    key: 'showQRCodeDialog',
-    default: false
-});
+const showQRCodeDialogState = atomWithReset(false);
 
 export default showQRCodeDialogState;

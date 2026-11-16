@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const startZoomLevelState = atom({
-    key: 'startZoomLevel',
-    default: null
-});
+const startZoomLevelState = atom(null);
 
 export default startZoomLevelState;

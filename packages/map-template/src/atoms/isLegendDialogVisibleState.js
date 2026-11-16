@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atomWithReset } from 'jotai/utils';
 
-const isLegendDialogVisibleState = atom({
-    key: 'isLegendDialogVisible',
-    default: false
-});
+const isLegendDialogVisibleState = atomWithReset(false);
 
 export default isLegendDialogVisibleState;

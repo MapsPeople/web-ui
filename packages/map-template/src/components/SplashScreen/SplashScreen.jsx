@@ -1,4 +1,4 @@
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import PropTypes from 'prop-types';
 import primaryColorState from '../../atoms/primaryColorState';
 import logoState from '../../atoms/logoState';
@@ -20,8 +20,8 @@ const STAGE_LABELS = {
  * current load stage so large solutions do not appear as an empty map.
  */
 function SplashScreen({ phase = 'initializing', progress = 0, isFading = false }) {
-    const primaryColor = useRecoilValue(primaryColorState);
-    const logo = useRecoilValue(logoState);
+    const primaryColor = useAtomValue(primaryColorState);
+    const logo = useAtomValue(logoState);
     const t = useOptionalTranslation();
 
     const percent = Math.round(Math.min(1, Math.max(0, progress)) * 100);

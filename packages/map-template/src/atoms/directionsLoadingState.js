@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atomWithReset } from 'jotai/utils';
 
-const directionsLoadingState = atom({
-    key: 'directionsLoading',
-    default: false
-});
+const directionsLoadingState = atomWithReset(false);
 
 export default directionsLoadingState;

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 import { useGemini } from '../../providers/GeminiProvider';
-import { useRecoilValue, useRecoilState } from 'recoil';
+import { useAtomValue, useAtom } from 'jotai';
 import chatHistoryState from '../../atoms/chatHistoryState';
 import { useInitialChatMessage } from '../../hooks/useInitialChatMessage';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
@@ -24,11 +24,11 @@ import { useTranslation } from 'react-i18next';
 
 function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     const { t } = useTranslation();
-    const primaryColor = useRecoilValue(primaryColorState);
-    const apiKey = useRecoilValue(apiKeyState);
-    const userPosition = useRecoilValue(userPositionState);
-    const currentVenueName = useRecoilValue(currentVenueNameState);
-    const venueList = useRecoilValue(venueListState);
+    const primaryColor = useAtomValue(primaryColorState);
+    const apiKey = useAtomValue(apiKeyState);
+    const userPosition = useAtomValue(userPositionState);
+    const currentVenueName = useAtomValue(currentVenueNameState);
+    const venueList = useAtomValue(venueListState);
     const isDesktop = useIsDesktop();
     const chatWindowRef = useRef(null);
     const { getInitialMessage, clearInitialMessage } = useInitialChatMessage();
@@ -38,11 +38,11 @@ function ChatWindow({ isVisible, onClose, onSearchResults, onShowRoute }) {
     // Use Gemini provider
     const { generateResponse, isLoading, sessionStatus, resetSession } = useGemini();
 
-    // Use Recoil for chat history
-    const [chatHistory, setChatHistory] = useRecoilState(chatHistoryState);
+    // Use Jotai for chat history
+    const [chatHistory, setChatHistory] = useAtom(chatHistoryState);
 
     // Location sharing consent state
-    const [locationShareConsent, setLocationShareConsent] = useRecoilState(userLocationShareState);
+    const [locationShareConsent, setLocationShareConsent] = useAtom(userLocationShareState);
 
     // Persisted in sessionStorage to survive navigation-triggered remounts; intentionally separate from the cookie banner.
     const [usageConsentAccepted, setUsageConsentAccepted] = useState(

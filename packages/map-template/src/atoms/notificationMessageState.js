@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atomWithReset } from 'jotai/utils';
 
-const notificationMessageState = atom({
-    key: 'notificationMessage',
-    default: null
-});
+const notificationMessageState = atomWithReset(null);
 
 export default notificationMessageState;

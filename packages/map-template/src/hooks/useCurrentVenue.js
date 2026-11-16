@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import venuesInSolutionState from '../atoms/venuesInSolutionState';
 import currentVenueNameState from '../atoms/currentVenueNameState';
 import mapsIndoorsInstanceState from '../atoms/mapsIndoorsInstanceState';
@@ -19,15 +19,15 @@ import venueListState from '../atoms/venueListState';
  */
 export const useCurrentVenue = () => {
 
-    const [currentVenueName, setCurrentVenueName] = useRecoilState(currentVenueNameState);
-    const [venuesInSolution, setVenuesInSolution] = useRecoilState(venuesInSolutionState);
-    const venueList = useRecoilValue(venueListState);
-    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
-    const appConfig = useRecoilValue(appConfigState);
-    const setCategories = useSetRecoilState(categoriesState);
-    const setSearchResults = useSetRecoilState(searchResultsState);
-    const searchInput = useRecoilValue(searchInputState);
-    const [initialVenueName, setInitialVenueName] = useRecoilState(initialVenueNameState);
+    const [currentVenueName, setCurrentVenueName] = useAtom(currentVenueNameState);
+    const [venuesInSolution, setVenuesInSolution] = useAtom(venuesInSolutionState);
+    const venueList = useAtomValue(venueListState);
+    const mapsIndoorsInstance = useAtomValue(mapsIndoorsInstanceState);
+    const appConfig = useAtomValue(appConfigState);
+    const setCategories = useSetAtom(categoriesState);
+    const setSearchResults = useSetAtom(searchResultsState);
+    const searchInput = useAtomValue(searchInputState);
+    const [initialVenueName, setInitialVenueName] = useAtom(initialVenueNameState);
     const syncedVenueIdRef = useRef(null);
     
     /*

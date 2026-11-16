@@ -1,19 +1,23 @@
 import { act, render, screen } from '@testing-library/react';
-import { RecoilRoot } from 'recoil';
+import { createStore, Provider } from 'jotai';
 import SplashScreen from './SplashScreen';
 import initI18n from '../../i18n/initialize.js';
 import primaryColorState from '../../atoms/primaryColorState';
 import logoState from '../../atoms/logoState';
 
 function renderSplash(props) {
-    return render(
-        <RecoilRoot initializeState={({ set }) => {
-            set(primaryColorState, '#005655');
-            set(logoState, 'https://example.com/logo.png');
-        }}>
-            <SplashScreen {...props} />
-        </RecoilRoot>
+    const store = createStore();
+    store.set(primaryColorState, '#005655');
+    store.set(logoState, 'https://example.com/logo.png');
+
+    const splash = splashProps => (
+        <Provider store={store}>
+            <SplashScreen {...splashProps} />
+        </Provider>
     );
+
+    const result = render(splash(props));
+    return { ...result, rerender: nextProps => result.rerender(splash(nextProps)) };
 }
 
 describe('SplashScreen', () => {
@@ -38,17 +42,7 @@ describe('SplashScreen', () => {
         expect(screen.getByRole('status')).toHaveTextContent('Drawing the map');
         expect(screen.queryByText('Adding 3D models')).not.toBeInTheDocument();
 
-        rerender(
-            <RecoilRoot initializeState={({ set }) => {
-                set(primaryColorState, '#005655');
-                set(logoState, 'https://example.com/logo.png');
-            }}>
-                <SplashScreen
-                    phase="loading_3d_models"
-                    progress={0.88}
-                />
-            </RecoilRoot>
-        );
+        rerender({ phase: 'loading_3d_models', progress: 0.88 });
 
         expect(screen.getByRole('status')).toHaveTextContent('Adding 3D models');
         expect(screen.queryByText('Adding 2D models')).not.toBeInTheDocument();

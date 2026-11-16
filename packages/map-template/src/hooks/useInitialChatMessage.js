@@ -5,7 +5,7 @@ let initialChatMessage = '';
 
 /**
  * Hook to manage the initial chat message from search.
- * Uses module-level state to avoid Recoil overhead for transient data.
+ * Uses module-level state to avoid Jotai overhead for transient data.
  * 
  * @returns {object} Object with getInitialMessage, setInitialMessage, and clearInitialMessage functions
  */

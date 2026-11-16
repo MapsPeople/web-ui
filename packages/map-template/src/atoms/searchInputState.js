@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const searchInputState = atom({
-    key: 'searchInput',
-    default: undefined
-});
+const searchInputState = atom(undefined);
 
 export default searchInputState;

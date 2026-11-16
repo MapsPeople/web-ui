@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useSetRecoilState, useRecoilValue } from 'recoil';
+import { useSetAtom, useAtomValue } from 'jotai';
 import filteredLocationsState from '../atoms/filteredLocationsState';
 import directionsServiceState from '../atoms/directionsServiceState';
 import directionsResponseState from '../atoms/directionsResponseState';
@@ -44,10 +44,10 @@ async function getLeftPadding(isDesktop, kioskLocation) {
  * @returns {function} handleChatLocations - Callback accepting an array of Location objects
  */
 export const useChatLocations = () => {
-    const setFilteredLocations = useSetRecoilState(filteredLocationsState);
-    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
-    const currentVenueName = useRecoilValue(currentVenueNameState);
-    const kioskLocation = useRecoilValue(kioskLocationState);
+    const setFilteredLocations = useSetAtom(filteredLocationsState);
+    const mapsIndoorsInstance = useAtomValue(mapsIndoorsInstanceState);
+    const currentVenueName = useAtomValue(currentVenueNameState);
+    const kioskLocation = useAtomValue(kioskLocationState);
     const isDesktop = useIsDesktop();
 
     const handleChatLocations = useCallback(async (locations) => {
@@ -134,12 +134,12 @@ function getOriginType(origin) {
  * @returns {function} handleChatShowRoute - Callback function to handle showing route
  */
 export const useChatDirections = (pushAppView, appViews) => {
-    const directionsService = useRecoilValue(directionsServiceState);
-    const setDirectionsResponse = useSetRecoilState(directionsResponseState);
-    const setHasFoundRoute = useSetRecoilState(hasFoundRouteState);
-    const travelMode = useRecoilValue(travelModeState);
-    const accessibilityOn = useRecoilValue(accessibilityOnState);
-    const shuttleBusOn = useRecoilValue(shuttleBusOnState);
+    const directionsService = useAtomValue(directionsServiceState);
+    const setDirectionsResponse = useSetAtom(directionsResponseState);
+    const setHasFoundRoute = useSetAtom(hasFoundRouteState);
+    const travelMode = useAtomValue(travelModeState);
+    const accessibilityOn = useAtomValue(accessibilityOnState);
+    const shuttleBusOn = useAtomValue(shuttleBusOnState);
     const fitDirectionsRouteToViewport = useDirectionsRouteViewportFit();
 
     const handleChatShowRoute = useCallback(async (directionIds) => {

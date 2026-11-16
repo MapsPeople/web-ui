@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import mapTypeState from '../atoms/mapTypeState';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import { mapTypes } from '../constants/mapTypes';
 
 /**
@@ -11,7 +11,7 @@ import { mapTypes } from '../constants/mapTypes';
  * @returns {boolean} Returns `true` if the user clicked outside MapsIndoors data, `false` otherwise.
  */
 export default function useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOpen) {
-    const mapType = useRecoilValue(mapTypeState);
+    const mapType = useAtomValue(mapTypeState);
     const [clickedOutside, setClickedOutside] = useState(false);
     const map = mapsIndoorsInstance.getMap();
 

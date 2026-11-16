@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const gmMapIdState = atom({
-    key: 'gmMapId',
-    default: null
-});
+const gmMapIdState = atom(null);
 
 export default gmMapIdState;

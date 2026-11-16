@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const pitchState = atom({
-    key: 'pitch',
-    default: null
-});
+const pitchState = atom(null);
 
 export default pitchState;

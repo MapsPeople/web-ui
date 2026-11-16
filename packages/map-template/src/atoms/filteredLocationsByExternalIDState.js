@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const filteredLocationsByExternalIDState = atom({
-    key: 'filteredLocationsByExternalID',
-    default: undefined
-});
+const filteredLocationsByExternalIDState = atom(undefined);
 
 export default filteredLocationsByExternalIDState;

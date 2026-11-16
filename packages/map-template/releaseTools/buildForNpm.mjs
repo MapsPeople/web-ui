@@ -44,17 +44,13 @@ const libraries = [
                 entry: path.resolve(__dirname, 'reactcomponent.js'),
                 name: 'MapTemplateReact', // unused, but required
                 fileName: format => `mapsindoors-react.${format}.js`,
-                formats: ['es', 'umd']
+                formats: ['es']
             },
             emptyOutDir: false,
             rollupOptions: {
-                external: ['react', 'react-dom'],
-                output: {
-                    globals: {
-                        react: 'React',
-                        'react-dom': 'ReactDOM'
-                    }
-                }
+                // Subpaths such as react/jsx-runtime must come from the host app too. A bundled JSX runtime
+                // creates elements that a host running a different React major refuses to render.
+                external: [/^react(-dom)?(\/.*)?$/]
             }
         },
         plugins: [

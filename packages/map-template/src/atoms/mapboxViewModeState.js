@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atomWithReset } from 'jotai/utils';
 
-const mapboxViewModeState = atom({
-    key: 'mapboxViewMode',
-    default: null
-});
+const mapboxViewModeState = atomWithReset(null);
 
 export default mapboxViewModeState;

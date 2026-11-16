@@ -1,4 +1,5 @@
-import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { useResetAtom } from 'jotai/utils';
 import activeStepState from '../atoms/activeStep';
 import currentLocationState from '../atoms/currentLocationState';
 import directionsResponseState from '../atoms/directionsResponseState';
@@ -20,32 +21,32 @@ import currentVenueNameState from '../atoms/currentVenueNameState';
 import userPositionState from '../atoms/userPositionState';
 
 /**
- * Reset a number of Recoil atoms to initial values.
+ * Reset a number of Jotai atoms to initial values.
  *
  * @returns {function} - Call this to reset.
  */
 export function useReset() {
 
-    const initialVenueName = useRecoilValue(initialVenueNameState);
-    const setCurrentVenueName = useSetRecoilState(currentVenueNameState);
+    const initialVenueName = useAtomValue(initialVenueNameState);
+    const setCurrentVenueName = useSetAtom(currentVenueNameState);
 
-    const activeStep = useResetRecoilState(activeStepState);
-    const currentLocation = useResetRecoilState(currentLocationState);
-    const directionsResponse = useResetRecoilState(directionsResponseState);
-    const directionsLoading = useResetRecoilState(directionsLoadingState);
-    const hasFoundRoute = useResetRecoilState(hasFoundRouteState);
-    const isLocationClicked = useResetRecoilState(isLocationClickedState);
-    const notificationMessage = useResetRecoilState(notificationMessageState);
-    const showQRCodeDialog = useResetRecoilState(showQRCodeDialogState);
-    const qrCodeLink = useResetRecoilState(qrCodeLinkState);
-    const substepsToggled = useResetRecoilState(substepsToggledState);
-    const travelMode = useResetRecoilState(travelModeState);
-    const searchResults = useResetRecoilState(searchResultsState);
-    const accessibilityOn = useResetRecoilState(accessibilityOnState);
-    const isLegendDialogVisible  = useResetRecoilState(isLegendDialogVisibleState);
-    const mapboxViewMode = useResetRecoilState(mapboxViewModeState);
-    const venueWasSelected = useResetRecoilState(venueWasSelectedState);
-    const userPosition = useResetRecoilState(userPositionState);
+    const activeStep = useResetAtom(activeStepState);
+    const currentLocation = useResetAtom(currentLocationState);
+    const directionsResponse = useResetAtom(directionsResponseState);
+    const directionsLoading = useResetAtom(directionsLoadingState);
+    const hasFoundRoute = useResetAtom(hasFoundRouteState);
+    const isLocationClicked = useResetAtom(isLocationClickedState);
+    const notificationMessage = useResetAtom(notificationMessageState);
+    const showQRCodeDialog = useResetAtom(showQRCodeDialogState);
+    const qrCodeLink = useResetAtom(qrCodeLinkState);
+    const substepsToggled = useResetAtom(substepsToggledState);
+    const travelMode = useResetAtom(travelModeState);
+    const searchResults = useResetAtom(searchResultsState);
+    const accessibilityOn = useResetAtom(accessibilityOnState);
+    const isLegendDialogVisible  = useResetAtom(isLegendDialogVisibleState);
+    const mapboxViewMode = useResetAtom(mapboxViewModeState);
+    const venueWasSelected = useResetAtom(venueWasSelectedState);
+    const userPosition = useResetAtom(userPositionState);
 
     return () => {
         qrCodeLink();

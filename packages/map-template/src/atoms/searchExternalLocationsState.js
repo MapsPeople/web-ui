@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const searchExternalLocationsState = atom({
-    key: 'searchExternalLocations',
-    default: true
-});
+const searchExternalLocationsState = atom(true);
 
 export default searchExternalLocationsState;

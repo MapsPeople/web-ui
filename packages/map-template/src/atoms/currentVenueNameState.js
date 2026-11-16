@@ -1,4 +1,4 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
 /**
  * Holds the name (Administrative ID) of the current Venue.
@@ -6,9 +6,6 @@ import { atom } from 'recoil';
  *
  * @type {null | string}
  */
-const currentVenueNameState = atom({
-    key: 'currentVenueName',
-    default: null
-});
+const currentVenueNameState = atom(null);
 
 export default currentVenueNameState;

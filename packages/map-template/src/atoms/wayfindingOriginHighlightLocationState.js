@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const wayfindingOriginHighlightLocationState = atom({
-    key: 'wayfindingOriginHighlightLocation',
-    default: null
-});
+const wayfindingOriginHighlightLocationState = atom(null);
 
 export default wayfindingOriginHighlightLocationState;

@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const mapboxAccessTokenState = atom({
-    key: 'mapboxAccessToken',
-    default: null
-});
+const mapboxAccessTokenState = atom(null);
 
 export default mapboxAccessTokenState;

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { createPortal } from 'react-dom';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import solutionState from '../../atoms/solutionState';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
 import { useOptionalTranslation } from '../../hooks/useOptionalTranslation';
@@ -37,7 +37,7 @@ function RoleSelector({ appUserRoles, onRoleChange }) {
     const dropdownRef = useRef(null);
     const toggleButtonRef = useRef(null);
     const portalContainer = usePortalTarget('.role-selector-portal');
-    const solution = useRecoilValue(solutionState);
+    const solution = useAtomValue(solutionState);
     const isDesktop = useIsDesktop();
     // Mounted before i18n is initialized, which useTranslation does not survive.
     const t = useOptionalTranslation();

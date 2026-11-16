@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const isMapReadyState = atom({
-    key: 'isMapReady',
-    default: false
-});
+const isMapReadyState = atom(false);
 
 export default isMapReadyState;

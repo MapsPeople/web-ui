@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atomWithReset } from 'jotai/utils';
 
-const activeStepState = atom({
-    key: 'activeStep',
-    default: 0
-});
+const activeStepState = atomWithReset(0);
 
 export default activeStepState;

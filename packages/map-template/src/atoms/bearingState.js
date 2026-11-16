@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const bearingState = atom({
-    key: 'bearing',
-    default: 0
-});
+const bearingState = atom(0);
 
 export default bearingState;

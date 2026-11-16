@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import './LegendDialog.scss';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useAtom, useAtomValue } from 'jotai';
 import primaryColorState from '../../atoms/primaryColorState';
 import isLegendDialogVisibleState from '../../atoms/isLegendDialogVisibleState';
 import { useTranslation } from 'react-i18next';
@@ -13,9 +13,9 @@ import legendSortedFieldsSelector from '../../selectors/legendSortedFieldsSelect
  */
 function LegendDialog() {
     const { t } = useTranslation();
-    const primaryColorProp = useRecoilValue(primaryColorState);
+    const primaryColorProp = useAtomValue(primaryColorState);
 
-    const legendSections = useRecoilValue(legendSortedFieldsSelector);
+    const legendSections = useAtomValue(legendSortedFieldsSelector);
 
     const isKioskContext = useIsKioskContext();
 
@@ -25,7 +25,7 @@ function LegendDialog() {
 
     const scrollButtonsRef = useRef();
 
-    const [showLegendDialog, setShowLegendDialog] = useRecoilState(isLegendDialogVisibleState);
+    const [showLegendDialog, setShowLegendDialog] = useAtom(isLegendDialogVisibleState);
 
     const [isLegendScrollable, setIsLegendScrollable] = useState(false);
 

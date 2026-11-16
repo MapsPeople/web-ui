@@ -1,4 +1,4 @@
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useAtom, useAtomValue } from 'jotai';
 import './Accessibility.scss';
 import primaryColorState from '../../atoms/primaryColorState';
 import accessibilityOnState from '../../atoms/accessibilityOnState';
@@ -17,9 +17,9 @@ Accessibility.propTypes = {
  *
  */
 function Accessibility({ onAccessibilityChanged }) {
-    const primaryColor = useRecoilValue(primaryColorState);
+    const primaryColor = useAtomValue(primaryColorState);
 
-    const [accessibilityOn, setAccessibilityOn] = useRecoilState(accessibilityOnState);
+    const [accessibilityOn, setAccessibilityOn] = useAtom(accessibilityOnState);
 
     /**
      * Handle changes in the Accessibility component.

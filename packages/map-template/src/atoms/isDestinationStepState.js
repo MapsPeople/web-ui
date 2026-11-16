@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const isDestinationStepState = atom({
-    key: 'isDestinationStep',
-    default: false
-});
+const isDestinationStepState = atom(false);
 
 export default isDestinationStepState;

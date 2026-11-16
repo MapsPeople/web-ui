@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const apiKeyState = atom({
-    key: 'apiKey',
-    default: null
-});
+const apiKeyState = atom(null);
 
 export default apiKeyState;

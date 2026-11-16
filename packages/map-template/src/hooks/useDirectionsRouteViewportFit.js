@@ -1,4 +1,4 @@
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import mapsIndoorsInstanceState from '../atoms/mapsIndoorsInstanceState';
 import kioskLocationState from '../atoms/kioskLocationState';
 import getDesktopPaddingLeft from '../helpers/GetDesktopPaddingLeft';
@@ -17,8 +17,8 @@ import { useIsDesktop } from './useIsDesktop';
  *   route step geometries into view.
  */
 export function useDirectionsRouteViewportFit() {
-    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
-    const kioskLocation = useRecoilValue(kioskLocationState);
+    const mapsIndoorsInstance = useAtomValue(mapsIndoorsInstanceState);
+    const kioskLocation = useAtomValue(kioskLocationState);
     const isDesktop = useIsDesktop();
 
     return async (directionsResult) => {

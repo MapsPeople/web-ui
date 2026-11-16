@@ -1,9 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const positionControlState = atom({
-    key: 'positionControl',
-    default: null,
-    dangerouslyAllowMutability: true // A MapsIndoors PositonControl contains state. Needs mutability.
-});
+const positionControlState = atom(null);
 
 export default positionControlState;

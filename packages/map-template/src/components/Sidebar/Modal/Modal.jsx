@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import './Modal.scss';
 import kioskLocationState from '../../../atoms/kioskLocationState';
 import PropTypes from 'prop-types';
@@ -23,7 +23,7 @@ function Modal({ children, isOpen }) {
 
     /** Boolean for controlling the "full" CSS class modifier */
     const [fullHeight, setFullHeight] = useState(false);
-    const kioskLocation = useRecoilValue(kioskLocationState);
+    const kioskLocation = useAtomValue(kioskLocationState);
 
     const modalRef = useRef();
     const contentRef = useRef();

@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const kioskOriginLocationIdState = atom({
-    key: 'kioskOriginLocationId',
-    default: undefined
-});
+const kioskOriginLocationIdState = atom(undefined);
 
 export default kioskOriginLocationIdState;

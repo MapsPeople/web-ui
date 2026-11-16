@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const selectedCategoryState = atom({
-    key: 'selectedCategory',
-    default: undefined
-});
+const selectedCategoryState = atom(undefined);
 
 export default selectedCategoryState;

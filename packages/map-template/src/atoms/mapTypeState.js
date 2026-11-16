@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const mapTypeState = atom({
-    key: 'mapType',
-    default: undefined
-});
+const mapTypeState = atom(undefined);
 
 export default mapTypeState;

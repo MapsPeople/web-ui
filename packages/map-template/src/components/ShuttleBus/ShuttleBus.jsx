@@ -1,4 +1,4 @@
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useAtom, useAtomValue } from 'jotai';
 import { useTranslation } from 'react-i18next';
 import './ShuttleBus.scss';
 import primaryColorState from '../../atoms/primaryColorState';
@@ -10,9 +10,9 @@ import appConfigState from '../../atoms/appConfigState';
  */
 function ShuttleBus() {
     const { t } = useTranslation();
-    const primaryColor = useRecoilValue(primaryColorState);
-    const appConfig = useRecoilValue(appConfigState)
-    const [shuttleBusOn, setShuttleBusOn] = useRecoilState(shuttleBusOnState);
+    const primaryColor = useAtomValue(primaryColorState);
+    const appConfig = useAtomValue(appConfigState)
+    const [shuttleBusOn, setShuttleBusOn] = useAtom(shuttleBusOnState);
 
     /**
      * Handle changes in the Shuttle Bus component.

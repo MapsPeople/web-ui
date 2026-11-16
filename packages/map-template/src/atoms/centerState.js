@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const centerState = atom({
-    key: 'center',
-    default: null
-});
+const centerState = atom(null);
 
 export default centerState;

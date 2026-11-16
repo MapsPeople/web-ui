@@ -5,7 +5,7 @@ import CloseIcon from '../../assets/close.svg?react';
 import ClockIcon from '../../assets/clock.svg?react';
 import WalkingIcon from '../../assets/walk.svg?react';
 import SwitchIcon from '../../assets/switch.svg?react';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import userPositionState from '../../atoms/userPositionState';
 import directionsServiceState from '../../atoms/directionsServiceState';
 import currentLocationState from '../../atoms/currentLocationState';
@@ -106,19 +106,19 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     const fromFieldRef = useRef();
     const sharingInProgressRef = useRef(false);
 
-    const directionsService = useRecoilValue(directionsServiceState);
-    const userPosition = useRecoilValue(userPositionState);
-    const currentLocation = useRecoilValue(currentLocationState);
-    const selectedMapType = useRecoilValue(mapTypeState);
-    const primaryColor = useRecoilValue(primaryColorState);
-    const [wayfindingLocation, setWayfindingLocation] = useRecoilState(wayfindingLocationState);
-    const [wayfindingOriginHighlightLocation, setWayfindingOriginHighlightLocation] = useRecoilState(wayfindingOriginHighlightLocationState);
+    const directionsService = useAtomValue(directionsServiceState);
+    const userPosition = useAtomValue(userPositionState);
+    const currentLocation = useAtomValue(currentLocationState);
+    const selectedMapType = useAtomValue(mapTypeState);
+    const primaryColor = useAtomValue(primaryColorState);
+    const [wayfindingLocation, setWayfindingLocation] = useAtom(wayfindingLocationState);
+    const [wayfindingOriginHighlightLocation, setWayfindingOriginHighlightLocation] = useAtom(wayfindingOriginHighlightLocationState);
 
     const [activeSearchField, setActiveSearchField] = useState();
     const [isSharing, setIsSharing] = useState(false);
 
     /** Indicate if a route has been found */
-    const setHasFoundRoute = useSetRecoilState(hasFoundRouteState);
+    const setHasFoundRoute = useSetAtom(hasFoundRouteState);
 
     /** Indicate if search results have been found */
     const [hasSearchResults, setHasSearchResults] = useState(true);
@@ -132,32 +132,32 @@ function Wayfinding({ onStartDirections, onBack, directionsToLocation, direction
     const [destinationLocation, setDestinationLocation] = useState();
     const [originLocation, setOriginLocation] = useState();
 
-    const accessibilityOn = useRecoilValue(accessibilityOnState);
-    const directionsLoading = useRecoilValue(directionsLoadingState);
+    const accessibilityOn = useAtomValue(accessibilityOnState);
+    const directionsLoading = useAtomValue(directionsLoadingState);
 
     const [hasGooglePlaces, setHasGooglePlaces] = useState(false);
 
-    const [travelMode, setTravelMode] = useRecoilState(travelModeState);
+    const [travelMode, setTravelMode] = useAtom(travelModeState);
 
     /** Indicate if the option to choose My Position should be shown */
     const [showMyPositionOption, setShowMyPositionOption] = useState(false);
 
-    const mapboxAccessToken = useRecoilValue(mapboxAccessTokenState);
+    const mapboxAccessToken = useAtomValue(mapboxAccessTokenState);
 
-    const distanceUnitSystem = useRecoilValue(distanceUnitSystemSelector);
+    const distanceUnitSystem = useAtomValue(distanceUnitSystemSelector);
 
     const [totalDistance, totalTime, hasFoundRoute, areDirectionsReady] = useDirectionsInfo(originLocation, destinationLocation, directionsService, travelMode, accessibilityOn)
 
-    const searchExternalLocations = useRecoilValue(searchExternalLocationsState);
+    const searchExternalLocations = useAtomValue(searchExternalLocationsState);
 
-    const appConfig = useRecoilValue(appConfigState);
-    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
-    const apiKey = useRecoilValue(apiKeyState);
-    const kioskLocation = useRecoilValue(kioskLocationState);
-    const supportsUrlParameters = useRecoilValue(supportsUrlParametersState);
-    const currentVenueName = useRecoilValue(currentVenueNameState);
-    const initialVenueName = useRecoilValue(initialVenueNameState);
-    const setNotificationMessage = useSetRecoilState(notificationMessageState);
+    const appConfig = useAtomValue(appConfigState);
+    const mapsIndoorsInstance = useAtomValue(mapsIndoorsInstanceState);
+    const apiKey = useAtomValue(apiKeyState);
+    const kioskLocation = useAtomValue(kioskLocationState);
+    const supportsUrlParameters = useAtomValue(supportsUrlParametersState);
+    const currentVenueName = useAtomValue(currentVenueNameState);
+    const initialVenueName = useAtomValue(initialVenueNameState);
+    const setNotificationMessage = useSetAtom(notificationMessageState);
 
     // API availability checks only. Framed embeds are gated separately because
     // browser Permissions Policy can still block share/copy at call time.

@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atomWithReset } from 'jotai/utils';
 
-const currentLocationState = atom({
-    key: 'currentLocation',
-    default: null
-});
+const currentLocationState = atomWithReset(null);
 
 export default currentLocationState;

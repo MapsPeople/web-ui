@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atomWithReset } from 'jotai/utils';
 
-const hasFoundRouteState = atom({
-    key: 'hasFoundRoute',
-    default: true
-});
+const hasFoundRouteState = atomWithReset(true);
 
 export default hasFoundRouteState;

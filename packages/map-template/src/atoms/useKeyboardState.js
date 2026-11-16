@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const useKeyboardState = atom({
-    key: 'useKeyboard',
-    default: false
-});
+const useKeyboardState = atom(false);
 
 export default useKeyboardState;

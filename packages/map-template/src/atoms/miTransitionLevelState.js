@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const miTransitionLevelState = atom({
-    key: 'miTransitionLevel',
-    default: undefined
-});
+const miTransitionLevelState = atom(undefined);
 
 export default miTransitionLevelState;

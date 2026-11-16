@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import mapsIndoorsInstanceState from '../atoms/mapsIndoorsInstanceState';
 
 /**
@@ -10,7 +10,7 @@ import mapsIndoorsInstanceState from '../atoms/mapsIndoorsInstanceState';
  *   app's Venue state (venue selector, categories, search scope) in sync with the SDK.
  */
 export const useSyncToLocationContext = (targetLocation, setCurrentVenueName) => {
-    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
+    const mapsIndoorsInstance = useAtomValue(mapsIndoorsInstanceState);
 
     useEffect(() => {
         if (!mapsIndoorsInstance || !targetLocation) return;
@@ -33,7 +33,7 @@ export const useSyncToLocationContext = (targetLocation, setCurrentVenueName) =>
             /**  
              * Keep the app's Venue state in sync (selector, categories, search scope). The direct 
              * setVenue below still runs because the SDK's own building_changed handler can otherwise
-             * override the recoil-driven venue.
+             * override the atom-driven venue.
             */
             setCurrentVenueName(targetVenue.name);
 

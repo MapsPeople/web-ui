@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, useCallback, useLayoutEffect } from
 import './LocationDetails.scss';
 import { useTranslation } from 'react-i18next';
 import CloseIcon from '../../assets/close.svg?react';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import mapsIndoorsInstanceState from '../../atoms/mapsIndoorsInstanceState';
 import currentLocationState from '../../atoms/currentLocationState';
 import { useIsVerticalOverflow } from '../../hooks/useIsVerticalOverflow';
@@ -68,8 +68,8 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
     // Holds the MapsIndoors DisplayRule for the location
     const [locationDisplayRule, setLocationDisplayRule] = useState(null);
 
-    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
-    const location = useRecoilValue(currentLocationState);
+    const mapsIndoorsInstance = useAtomValue(mapsIndoorsInstanceState);
+    const location = useAtomValue(currentLocationState);
     const locationAdditionalDetails = location?.properties?.additionalDetails;
     // Get the first opening hours detail that is active
     const openingHours = locationAdditionalDetails?.find(detail => detail.key.toLowerCase().includes('openinghours') && detail.active === true)?.openingHours;
@@ -77,11 +77,11 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
     // Check if the content of the Location details is overflowing
     const [isOverflowing, initialOverflow] = useIsVerticalOverflow(location, locationDetailsElement);
 
-    const primaryColor = useRecoilValue(primaryColorState);
+    const primaryColor = useAtomValue(primaryColorState);
 
-    const kioskLocation = useRecoilValue(kioskLocationState);
+    const kioskLocation = useAtomValue(kioskLocationState);
 
-    const directionsService = useRecoilValue(directionsServiceState);
+    const directionsService = useAtomValue(directionsServiceState);
 
     const [destinationLocation, setDestinationLocation] = useState();
     const [originLocation, setOriginLocation] = useState();
@@ -89,17 +89,17 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
 
     const isDesktop = useIsDesktop();
 
-    const travelMode = useRecoilValue(travelModeState);
+    const travelMode = useAtomValue(travelModeState);
 
-    const accessibilityOn = useRecoilValue(accessibilityOnState);
+    const accessibilityOn = useAtomValue(accessibilityOnState);
 
     const [, , hasFoundRoute] = useDirectionsInfo(originLocation, destinationLocation, directionsService, travelMode, accessibilityOn)
 
-    const showExternalIDs = useRecoilValue(showExternalIDsState);
+    const showExternalIDs = useAtomValue(showExternalIDsState);
 
     const clickedOutsideMapsIndoorsData = useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOpen);
 
-    const appConfig = useRecoilValue(appConfigState);
+    const appConfig = useAtomValue(appConfigState);
 
     const isWayfindingDisabled = appConfig?.appSettings?.excludeFromUI?.includes('wayfindingDisabled');
     
@@ -346,7 +346,8 @@ function LocationDetails({ onBack, onStartWayfinding, onSetSize, onStartDirectio
                         <h2 className="location-info__name">
                             {location.properties.name}
                         </h2>
-                        <mi-location-info level={t('Level')} ref={locationInfoElement} show-external-id={showExternalIDs} show-floor={showFloor} />
+                        {/* Boolean props must be strings: React 19 removes the attribute for false, which leaves the Stencil prop at its true default. */}
+                        <mi-location-info level={t('Level')} ref={locationInfoElement} show-external-id={String(showExternalIDs)} show-floor={String(showFloor)} />
                     </div>
                     <div className="location-info__actions">
                         <ShareLocationLink buttonClassName="location-info__button" location={location} />

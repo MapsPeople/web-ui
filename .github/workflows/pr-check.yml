@@ -30,6 +30,10 @@ jobs:
       - name: Build
         run: npx lerna run build
 
+      - name: Build map-template for npm
+        working-directory: packages/map-template
+        run: npm run build-for-npm
+
       - name: Check for stale generated files
         run: test -z "$(git status --porcelain)" || { git status --porcelain; git diff; exit 1; }
 

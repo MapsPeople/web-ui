@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const searchAllVenuesState = atom({
-    key: 'searchAllVenues',
-    default: false
-});
+const searchAllVenuesState = atom(false);
 
 export default searchAllVenuesState;

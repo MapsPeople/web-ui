@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const categoriesState = atom({
-    key: 'categories',
-    default: []
-});
+const categoriesState = atom([]);
 
 export default categoriesState;

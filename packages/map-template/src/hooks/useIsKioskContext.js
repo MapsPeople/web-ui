@@ -1,4 +1,4 @@
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import kioskLocationState from '../atoms/kioskLocationState';
 import { useIsDesktop } from './useIsDesktop';
 
@@ -7,7 +7,7 @@ import { useIsDesktop } from './useIsDesktop';
  */
 export const useIsKioskContext = () => {
 
-    const kioskLocation = useRecoilValue(kioskLocationState);
+    const kioskLocation = useAtomValue(kioskLocationState);
 
     const isDesktop = useIsDesktop();
 

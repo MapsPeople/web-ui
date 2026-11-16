@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { RecoilRoot, useRecoilValue } from 'recoil';
+import { createStore, Provider, useAtomValue } from 'jotai';
 import ShareLocationLink from './ShareLocationLink';
 import supportsUrlParametersState from '../../../atoms/supportsUrlParametersState';
 import notificationMessageState from '../../../atoms/notificationMessageState';
@@ -18,7 +18,7 @@ jest.mock('../../../assets/share.svg?react', () => () => null, {
 jest.mock('../../../hooks/useIsDesktop', () => ({ useIsDesktop: () => true }));
 
 function NotificationProbe() {
-    const notificationMessage = useRecoilValue(notificationMessageState);
+    const notificationMessage = useAtomValue(notificationMessageState);
     return (
         <output data-testid="notification">
             {JSON.stringify(notificationMessage)}
@@ -27,16 +27,15 @@ function NotificationProbe() {
 }
 
 function renderShareLocationLink() {
+    const store = createStore();
+    store.set(supportsUrlParametersState, true);
+    store.set(apiKeyState, 'test-key');
+
     return render(
-        <RecoilRoot
-            initializeState={({ set }) => {
-                set(supportsUrlParametersState, true);
-                set(apiKeyState, 'test-key');
-            }}
-        >
+        <Provider store={store}>
             <ShareLocationLink location={{ id: 'location-1' }} />
             <NotificationProbe />
-        </RecoilRoot>
+        </Provider>
     );
 }
 

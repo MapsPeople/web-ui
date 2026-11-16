@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import './Categories.scss';
 import categoriesState from '../../../atoms/categoriesState';
 import { snapPoints } from '../../../constants/snapPoints';
@@ -44,23 +44,23 @@ Categories.propTypes = {
  */
 function Categories({ onSetSize, getFilteredLocations, searchFieldRef, isOpen, topLevelCategory, handleBack, selectedCategoriesArray, categoryOrientation }) {
 
-    const categories = useRecoilValue(categoriesState);
+    const categories = useAtomValue(categoriesState);
 
     const isDesktop = useIsDesktop();
 
-    const [selectedCategory, setSelectedCategory] = useRecoilState(selectedCategoryState);
+    const [selectedCategory, setSelectedCategory] = useAtom(selectedCategoryState);
 
-    const setSearchResults = useSetRecoilState(searchResultsState);
+    const setSearchResults = useSetAtom(searchResultsState);
 
-    const setFilteredLocations = useSetRecoilState(filteredLocationsState);
+    const setFilteredLocations = useSetAtom(filteredLocationsState);
 
     const [activeCategory, setActiveCategory] = useState();
 
-    const isBottomSheetLoaded = useRecoilValue(isBottomSheetLoadedState);
+    const isBottomSheetLoaded = useAtomValue(isBottomSheetLoadedState);
 
-    const category = useRecoilValue(categoryState);
+    const category = useAtomValue(categoryState);
 
-    const mapsIndoorsInstance = useRecoilValue(mapsIndoorsInstanceState);
+    const mapsIndoorsInstance = useAtomValue(mapsIndoorsInstanceState);
 
     const clickedOutsideMapsIndoorsData = useOutsideMapsIndoorsDataClick(mapsIndoorsInstance, isOpen);
 

@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atomWithReset } from 'jotai/utils';
 
-const directionsResponseState = atom({
-    key: 'directionsResponse',
-    default: null
-});
+const directionsResponseState = atomWithReset(null);
 
 export default directionsResponseState;

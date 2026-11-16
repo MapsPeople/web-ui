@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atomWithReset } from 'jotai/utils';
 
-const userPositionState = atom({
-    key: 'userPosition',
-    default: null
-});
+const userPositionState = atomWithReset(null);
 
 export default userPositionState;

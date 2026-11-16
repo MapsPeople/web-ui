@@ -1,5 +1,5 @@
 import { memo, useCallback, useState, useMemo, useEffect } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import './OpeningHours.scss';
@@ -27,7 +27,7 @@ OpeningHours.propTypes = {
 function OpeningHours({ openingHours, isMondayFirstDayOfTheWeek = true, onExpand }) {
     const { t } = useTranslation();
     const [isExpanded, setIsExpanded] = useState(false);
-    const currentLanguage = useRecoilValue(languageState);
+    const currentLanguage = useAtomValue(languageState);
     const languageToUse = currentLanguage ?? navigator.language;
 
     /**

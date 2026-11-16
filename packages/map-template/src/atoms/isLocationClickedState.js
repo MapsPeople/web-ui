@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atomWithReset } from 'jotai/utils';
 
-const isLocationClickedState = atom({
-    key: 'isLocationClicked',
-    default: false
-});
+const isLocationClickedState = atomWithReset(false);
 
 export default isLocationClickedState;

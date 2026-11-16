@@ -1,4 +1,4 @@
-import { useRecoilValue } from 'recoil';
+import { useAtomValue } from 'jotai';
 import notificationMessageState from '../../../atoms/notificationMessageState';
 import { useEffect, useRef } from 'react';
 import './Notification.scss';
@@ -9,7 +9,7 @@ import './Notification.scss';
  */
 function Notification() {
 
-    const notificationMessage = useRecoilValue(notificationMessageState);
+    const notificationMessage = useAtomValue(notificationMessageState);
     const elementRef = useRef()
 
     useEffect(() => {

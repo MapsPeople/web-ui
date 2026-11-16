@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const showExternalIDsState = atom({
-    key: 'showExternalIDs',
-    default: false
-});
+const showExternalIDsState = atom(false);
 
 export default showExternalIDsState;

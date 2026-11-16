@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const timeoutState = atom({
-    key: 'timeout',
-    default: undefined
-});
+const timeoutState = atom(undefined);
 
 export default timeoutState;

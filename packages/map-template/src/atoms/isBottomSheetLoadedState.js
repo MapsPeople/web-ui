@@ -1,8 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const isBottomSheetLoadedState = atom({
-    key: 'isBottomSheetLoaded',
-    default: false
-});
+const isBottomSheetLoadedState = atom(false);
 
 export default isBottomSheetLoadedState;

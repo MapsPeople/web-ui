@@ -1,9 +1,5 @@
-import { atom } from 'recoil';
+import { atom } from 'jotai';
 
-const mapsIndoorsInstanceState = atom({
-    key: 'mapsIndoorsInstance',
-    default: null,
-    dangerouslyAllowMutability: true // A MapsIndoors instance contains state. Needs mutability.
-});
+const mapsIndoorsInstanceState = atom(null);
 
 export default mapsIndoorsInstanceState;
