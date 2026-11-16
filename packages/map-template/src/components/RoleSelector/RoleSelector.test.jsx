@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, act } from '@testing-library/react';
-import { RecoilRoot } from 'recoil';
+import { createStore, Provider } from 'jotai';
 import RoleSelector from './RoleSelector';
 import solutionState from '../../atoms/solutionState';
 import initI18n from '../../i18n/initialize.js';
@@ -10,10 +10,12 @@ jest.mock('../../hooks/useIsDesktop', () => ({ useIsDesktop: () => true }));
 const roles = [{ id: 'role-1', name: 'Patient' }, { id: 'role-2', name: 'Employee' }];
 
 function renderRoleSelector(props = {}, solution = { id: 'solution-1' }) {
+    const store = createStore();
+    store.set(solutionState, solution);
     return render(
-        <RecoilRoot initializeState={({ set }) => set(solutionState, solution)}>
+        <Provider store={store}>
             <RoleSelector {...props} />
-        </RecoilRoot>
+        </Provider>
     );
 }
 
