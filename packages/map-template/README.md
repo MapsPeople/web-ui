@@ -202,7 +202,7 @@ The supported query parameters are the following:
 29. `center` - Specifies the coordinates where the map should load, represented as latitude and longitude values separated by a comma. If the specified coordinates intersect with a Venue, that Venue will be set as the current Venue.
 30. `useAppTitle` - Specifies if the Map Template should set the document title as defined in the App Config.
 31. `showMapMarkers` - Specifies if the base map-specific markers are shown or not.
-32. `floor` - Used like this `floor=20`. The floor index to show when the map loads. Ignored if `locationId` or `kioskOriginLocationId` is set. If no building in the Venue has that floor, the Venue's default floor is used and a warning is logged to the console.
+32. `floor` - Used like this `floor=20`. The floor index to show when the map loads. Ignored if `locationId` or `kioskOriginLocationId` is set. If no building in the Venue has that floor, the Venue's default floor is used and a warning is logged to the console. In a Venue with several buildings, if the building in view doesn't have that floor, its default floor is shown.
 
 **Note!** All the query parameters need to be separated with the `&` symbol, without any spaces in between.
 **Note!** When using parameters such as `directionsTo`, `directionsFrom`, `locationId`, `externalIDs`, and `tileStyle` make sure you are using the correct `apiKey` parameter to which they belong.
