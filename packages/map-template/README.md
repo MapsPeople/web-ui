@@ -125,7 +125,7 @@ Note that when using the React component, the properties should conform to JSX p
 |`external-IDs`|`externalIDs`|`array`|Array of external IDs which filters the map and shows a list of locations. Because of the way browsers work, you can not use External IDs with the `,`, `&`, `#` and `+`, character in them, as they are interpreted by the browser in a particular way. |
 |`tile-style`|`tileStyle`|`string`|Name of Tile Style to display on the map. |
 |`start-zoom-level`|`startZoomLevel`|`number`|The initial zoom level of the map. |
-|`floor`|`floor`|`number`|The floor index to show when the map loads. Ignored if `locationId` or `kioskOriginLocationId` is set. |
+|`floor`|`floor`|`number`|The floor index to show when the map loads. Ignored if `locationId` or `kioskOriginLocationId` is set. If no building in the Venue has that floor, the Venue's default floor is used and a warning is logged to the console. In a Venue with several buildings, if the building in view doesn't have that floor, its default floor is shown. |
 |`supports-url-parameters`|`supportsUrlParameters`|`bool`|Indicates if the Map Template supports URL parameters. |
 |`gm-map-id`|`gmMapId`|`string`|The Google Maps Map ID associated with a specific map style or feature. |
 |`pitch`|`pitch`|`number`|The pitch (Mapbox) or tilt (Google) value of the map. The value of the pitch can be between 0-85 degrees on a Mapbox map. |
