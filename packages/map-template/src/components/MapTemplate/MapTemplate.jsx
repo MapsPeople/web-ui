@@ -68,6 +68,7 @@ import { useOnRouteFinished } from '../../hooks/useOnRouteFinished.js';
 import notificationMessageState from '../../atoms/notificationMessageState.js';
 import { GeminiProvider } from '../../providers/GeminiProvider';
 import ChatButton from '../ChatButton/ChatButton';
+import RoleSelector from '../RoleSelector/RoleSelector';
 import { useIsKioskContext } from '../../hooks/useIsKioskContext.js';
 import { useKioskReload } from '../../hooks/useKioskReload.js';
 import { useMapsPeopleLogoLink } from '../../hooks/useMapsPeopleLogoLink.js';
@@ -275,8 +276,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             const miSdkApiTag = document.createElement('script');
             miSdkApiTag.setAttribute('type', 'text/javascript');
             // Remember to update the root index.html with the same version / integrity
-            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.62.0/mapsindoors-4.62.0.js.gz');
-            miSdkApiTag.setAttribute('integrity', 'sha384-VlYZ4tZb5vE0YL9sDnMExqD1eM/DT9r6FK5kB8IyU5Bi5EeHw+KMuEmbjMEWyr3c');
+            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.62.2/mapsindoors-4.62.2.js.gz');
+            miSdkApiTag.setAttribute('integrity', 'sha384-GszyvrNAQFU8r5H0IKs34MUMdNhGrpWRoQ04cZxPFxgqqpQ4/I2pn1duNrvJkWCp');
             miSdkApiTag.setAttribute('crossorigin', 'anonymous');
             document.body.appendChild(miSdkApiTag);
             miSdkApiTag.onload = () => {
@@ -1004,6 +1005,15 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
                         setUserSelectedLanguage(true);
                     }}
                     devicePosition={devicePosition}
+                />
+                <RoleSelector
+                    appUserRoles={appUserRoles}
+                    onRoleChange={() => {
+                        // Categories only list those found on Locations the active role can see.
+                        if (categories.length > 0) {
+                            updateCategories();
+                        }
+                    }}
                 />
             </div>
         </GeminiProvider>

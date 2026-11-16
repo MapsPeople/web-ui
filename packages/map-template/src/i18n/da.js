@@ -103,6 +103,10 @@ const da = {
     // Language Selector
     'Select language': 'Vælg sprog',
     'Close language selector': 'Luk sprogvælger',
+    // Role Selector
+    'Select App User Role': 'Vælg App User Role',
+    'Close App User Role selector': 'Luk App User Role-vælger',
+    'No role': 'Ingen rolle',
     // Accessibility
     'Increase text size to 200%': 'Forøg tekststørrelse til 200%',
     'Decrease text size to 100%': 'Formindsk tekststørrelse til 100%',

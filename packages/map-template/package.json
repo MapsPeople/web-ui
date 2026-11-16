@@ -1,7 +1,7 @@
 {
   "name": "@mapsindoors/map-template",
   "description": "Get a MapsIndoors map up and running in less than 10 mins.",
-  "version": "1.99.37",
+  "version": "1.99.39",
   "private": false,
   "files": [
     "dist/**"
@@ -28,7 +28,7 @@
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "jotai": "^3.0.2",
-    "mapbox-gl": "^3.33.0",
+    "mapbox-gl": "^3.35.0",
     "prop-types": "^15.8.1",
     "qrcode": "^1.5.3",
     "react": "^19.3.1",

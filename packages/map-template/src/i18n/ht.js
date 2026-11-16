@@ -103,6 +103,10 @@ const ht = {
     // Language Selector
     'Select language': 'Chwazi lang',
     'Close language selector': 'Fèmen seleksyon lang lan',
+    // Role Selector
+    'Select App User Role': 'Chwazi App User Role',
+    'Close App User Role selector': 'Fèmen seleksyon App User Role la',
+    'No role': 'Okenn wòl',
     // Accessibility
     'Increase text size to 200%': 'Ogmante gwosè tèks la a 200%',
     'Decrease text size to 100%': 'Diminye gwosè tèks la a 100%',

@@ -103,6 +103,10 @@ const fr = {
     // Language Selector
     'Select language': 'Sélectionner langue',
     'Close language selector': 'Fermer le sélecteur de langue',
+    // Role Selector
+    'Select App User Role': 'Sélectionner App User Role',
+    'Close App User Role selector': 'Fermer le sélecteur d\'App User Role',
+    'No role': 'Aucun rôle',
     // Accessibility
     'Increase text size to 200%': 'Augmenter la taille du texte à 200%',
     'Decrease text size to 100%': 'Réduire la taille du texte à 100%',

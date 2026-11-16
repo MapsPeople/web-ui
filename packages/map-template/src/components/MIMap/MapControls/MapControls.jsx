@@ -14,6 +14,7 @@ const UI_ELEMENTS = {
     venueSelector: { key: 'venue-selector', className: 'venue-selector-portal' },
     viewSelector: { key: 'view-selector', className: 'view-selector-portal' },
     languageSelector: { key: 'language-selector', className: 'language-selector-portal' },
+    roleSelector: { key: 'role-selector', className: 'role-selector-portal' },
     viewModeSwitch: { key: 'viewmode-switch', className: 'viewmode-switch-portal' },
     myPosition: { key: 'my-position', className: 'my-position-element-portal' },
     floorSelector: { key: 'floor-selector', className: 'floor-selector-portal' },
@@ -276,6 +277,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
                             <MapZoomControl mapType={mapType} mapInstance={mapInstance} />
                         )}
                         {uiElements.languageSelector}
+                        {uiElements.roleSelector}
                         {shouldRenderElement('textSizeButton') && (
                             <TextSizeButton mapsIndoorsInstance={mapsIndoorsInstance} />
                         )}
@@ -295,6 +297,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
                         {uiElements.venueSelector}
                         {uiElements.viewSelector}
                         {uiElements.languageSelector}
+                        {uiElements.roleSelector}
                         {uiElements.viewModeSwitch}
                         {uiElements.myPosition}
                         {uiElements.floorSelector}
@@ -316,6 +319,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
                     {uiElements.venueSelector}
                     {uiElements.viewSelector}
                     {uiElements.languageSelector}
+                    {uiElements.roleSelector}
                     {uiElements.viewModeSwitch}
                     {uiElements.myPosition}
                     {uiElements.chatButton}
@@ -341,6 +345,7 @@ function MapControls({ mapType, mapsIndoorsInstance, mapInstance, onPositionCont
                     {uiElements.viewModeSwitch}
                     {uiElements.viewSelector}
                     {uiElements.languageSelector}
+                    {uiElements.roleSelector}
                 </div>
                 <div className="map-controls-right-column mobile-column">
                     {uiElements.myPosition}

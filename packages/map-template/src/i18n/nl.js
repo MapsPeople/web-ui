@@ -103,6 +103,10 @@ const nl = {
     // Language Selector
     'Select language': 'Selecteer taal',
     'Close language selector': 'Taalselector sluiten',
+    // Role Selector
+    'Select App User Role': 'Selecteer App User Role',
+    'Close App User Role selector': 'App User Role-selector sluiten',
+    'No role': 'Geen rol',
     // Accessibility
     'Increase text size to 200%': 'Tekstgrootte verhogen naar 200%',
     'Decrease text size to 100%': 'Tekstgrootte verlagen naar 100%',
