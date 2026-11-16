@@ -162,7 +162,7 @@ function MapsIndoorsMap(props) {
             directionsTo: props.supportsUrlParameters && directionsToQueryParameter ? directionsToQueryParameter : props.directionsTo,
             tileStyle: props.supportsUrlParameters && tileStyleQueryParameter ? tileStyleQueryParameter : props.tileStyle,
             startZoomLevel: props.supportsUrlParameters && startZoomLevelQueryParameter ? startZoomLevelQueryParameter : props.startZoomLevel,
-            floor: props.supportsUrlParameters && floorQueryParameter !== null ? Number(floorQueryParameter) : props.floor,
+            floor: props.supportsUrlParameters && floorQueryParameter ? Number(floorQueryParameter) : props.floor,
             pitch: props.supportsUrlParameters && pitchQueryParameter ? pitchQueryParameter : props.pitch,
             bearing: props.supportsUrlParameters && bearingQueryParameter ? bearingQueryParameter : props.bearing,
             gmApiKey: props.supportsUrlParameters && gmApiKeyQueryParameter ? gmApiKeyQueryParameter : props.gmApiKey,
