@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- The `floor` prop and `floor` URL parameter (for example `?floor=20`) open the map on the given floor index without selecting a Location. The floor is applied while the map loads, so it doesn't visibly switch floors afterwards. It is ignored when `locationId` or `kioskOriginLocationId` is set, and only applies to the first Venue that loads.
+- The `floor` prop and `floor` URL parameter (for example `?floor=20`) open the map on the given floor index without selecting a Location. The floor is applied while the map loads, so it doesn't visibly switch floors afterwards. It is ignored when `locationId` or `kioskOriginLocationId` is set, and only applies to the first Venue that loads. If no building in the Venue has that floor, the Venue's default floor is used and a warning is logged to the console.
 
 ## [2.0.0] - 2026-11-16
 

@@ -74,13 +74,23 @@ export const useCurrentVenue = () => {
             window.mapsindoors.MapsIndoors.addVenuesToSync(fullVenue.id);
             syncedVenueIdRef.current = fullVenue.id;
             mapsIndoorsInstance.setVenue(fullVenue);
-            // setVenue resets the floor to the Venue's default floor. Apply the floor prop right after it,
-            // in the same tick, so the map loads directly on that floor (the SDK queues setFloor until the map is ready).
+            // setVenue resets the floor to the Venue's default floor, so apply the floor prop after it.
+            // The SDK queues setFloor until the map is ready, so if the lookup below resolves before that,
+            // the map loads directly on that floor.
             // Only on the first Venue load: later Venue switches should use the Venue's default floor.
             if (!initialFloorAppliedRef.current) {
                 initialFloorAppliedRef.current = true;
                 if (floor !== null && floor !== undefined && !locationId && !kioskOriginLocationId) {
-                    mapsIndoorsInstance.setFloor(floor);
+                    // Only pass floors that exist in the Venue to the SDK: an unknown floor index breaks it.
+                    // Otherwise keep the Venue's default floor that setVenue applied.
+                    window.mapsindoors.services.VenuesService.getBuildings(fullVenue.id).then(buildings => {
+                        if (mapsIndoorsInstance.getVenue()?.id !== fullVenue.id) return;
+                        if (buildings.some(building => building.floors?.[floor])) {
+                            mapsIndoorsInstance.setFloor(floor);
+                        } else {
+                            console.warn(`[MapTemplate] Floor ${floor} does not exist in Venue "${fullVenue.name}". Using the Venue's default floor.`);
+                        }
+                    });
                 }
             }
             updateCategories();
