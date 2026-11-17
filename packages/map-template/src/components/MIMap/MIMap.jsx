@@ -24,6 +24,7 @@ MIMap.propTypes = {
     resetUICounter: PropTypes.number,
     mapOptions: PropTypes.object,
     onInitialized: PropTypes.func,
+    onDeallocated: PropTypes.func,
     gmMapId: PropTypes.string,
     devicePosition: PropTypes.object,
     isKiosk: PropTypes.bool
@@ -46,11 +47,12 @@ MIMap.propTypes = {
  * @param {Object} [props.mapOptions] - Options for instantiating and styling the map. In addition to map specific options, it can also contain a brandingColor prop (hex string) and a fitBoundsPadding object ({top: number, right: number, bottom: number, left: number }).
  * @param {function} [props.onInitialized] - Callback for when the MapsIndoors instance (https://app.mapsindoors.com/mapsindoors/js/sdk/latest/docs/mapsindoors.MapsIndoors.html)
  *    and position control and knowledge of the View mode switch is ready. The instance, position control and boolean for if the view mode switch is active is given as payload.
+ * @param {function} [props.onDeallocated] - Callback for when the MapsIndoors instance is deallocated because it was replaced or the map unmounted. The deallocated instance is given as payload.
  * @param {string} [props.gmMapId] - The Google Maps Map ID for custom styling.
  * @param {object} [props.devicePosition] - Device position object with coords and timestamp for custom positioning.
  * @param {boolean} [props.isKiosk] - Set to true to enable kiosk layout
  */
-function MIMap({ apiKey, mapType, gmApiKey, mapboxAccessToken, center, zoom, bounds, bearing, pitch, resetUICounter, mapOptions, onInitialized, gmMapId, devicePosition, isKiosk }) {
+function MIMap({ apiKey, mapType, gmApiKey, mapboxAccessToken, center, zoom, bounds, bearing, pitch, resetUICounter, mapOptions, onInitialized, onDeallocated, gmMapId, devicePosition, isKiosk }) {
     const [mapsIndoorsInstance, setMapsIndoorsInstance] = useState();
     const [positionControl, setPositionControl] = useState();
     const [viewModeSwitchVisible, setViewModeSwitchVisible] = useState();
@@ -136,6 +138,7 @@ function MIMap({ apiKey, mapType, gmApiKey, mapboxAccessToken, center, zoom, bou
                 window.mapsIndoorsInstance = undefined;
             }
             mapsIndoorsInstance.deallocate?.();
+            onDeallocated?.(mapsIndoorsInstance);
         };
     }, [mapsIndoorsInstance]);
 

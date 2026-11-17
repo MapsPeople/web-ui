@@ -44,7 +44,8 @@ describe('MIMap', () => {
     });
 
     it('deallocates the MapsIndoors instance when it unmounts', async () => {
-        const { unmount } = render(<MIMap apiKey="api-key" mapType={mapTypes.Mapbox} />);
+        const onDeallocated = jest.fn();
+        const { unmount } = render(<MIMap apiKey="api-key" mapType={mapTypes.Mapbox} onDeallocated={onDeallocated} />);
 
         await waitFor(() => expect(window.mapsindoors.MapsIndoors).toHaveBeenCalledTimes(1));
         window.mapsIndoorsInstance = mapsIndoorsInstance;
@@ -53,6 +54,7 @@ describe('MIMap', () => {
         unmount();
 
         expect(mapsIndoorsInstance.deallocate).toHaveBeenCalledTimes(1);
+        expect(onDeallocated).toHaveBeenCalledWith(mapsIndoorsInstance);
         expect(window.mapsIndoorsInstance).toBeUndefined();
     });
 });
