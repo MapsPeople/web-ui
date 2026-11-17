@@ -29,6 +29,7 @@ import filteredLocationsState from '../../atoms/filteredLocationsState';
 import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByExternalIDState';
 import kioskOriginLocationIdState from '../../atoms/kioskOriginLocationIdState.js';
 import startZoomLevelState from '../../atoms/startZoomLevelState';
+import floorState from '../../atoms/floorState';
 import primaryColorState from '../../atoms/primaryColorState';
 import logoState from '../../atoms/logoState';
 import gmMapIdState from '../../atoms/gmMapIdState';
@@ -91,6 +92,7 @@ MapTemplate.propTypes = {
     externalIDs: PropTypes.arrayOf(PropTypes.string),
     tileStyle: PropTypes.string,
     startZoomLevel: PropTypes.number,
+    floor: PropTypes.number,
     bearing: PropTypes.number,
     pitch: PropTypes.number,
     gmMapId: PropTypes.string,
@@ -132,6 +134,7 @@ MapTemplate.propTypes = {
  * @param {array} [props.externalIDs] - Filter locations shown on the map based on the external IDs.
  * @param {string} [props.tileStyle] - Tile style name to change the interface of the map.
  * @param {number} [props.startZoomLevel] - The initial zoom level of the map.
+ * @param {number} [props.floor] - The floor index to show when the map loads. Ignored if locationId or kioskOriginLocationId is set.
  * @param {number} [props.bearing] - The bearing of the map as a number. Not recommended for Google Maps with 2D Models.
  * @param {number} [props.pitch] - The pitch of the map as a number. Not recommended for Google Maps with 2D Models.
  * @param {string} [props.gmMapId] - The Google Maps Map ID associated with a specific map style or feature.
@@ -154,7 +157,7 @@ MapTemplate.propTypes = {
  * @param {boolean} [props.enableKioskFullReload] - If true, the page will fully reload after a period of inactivity in kiosk mode. Can also be set in the MapsIndoors App Config as "enableKioskFullReload" under "appSettings".
  * @param {number} [props.kioskReloadTime] - Number of seconds of inactivity before a full page reload is triggered in kiosk mode. Defaults to 600 (10 minutes). Can also be set in the MapsIndoors App Config as "kioskReloadTime" under "appSettings".
  */
-function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations, center, useAppTitle, showMapMarkers, mapboxMapStyle, devicePosition, enableKioskFullReload, kioskReloadTime }) {
+function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, primaryColor, logo, appUserRoles, directionsFrom, directionsTo, externalIDs, tileStyle, startZoomLevel, floor, bearing, pitch, gmMapId, useMapProviderModule, kioskOriginLocationId, language, supportsUrlParameters, useKeyboard, timeout, miTransitionLevel, category, searchAllVenues, hideNonMatches, showRoadNames, showExternalIDs, searchExternalLocations, center, useAppTitle, showMapMarkers, mapboxMapStyle, devicePosition, enableKioskFullReload, kioskReloadTime }) {
 
     const [userSelectedLanguage, setUserSelectedLanguage] = useState(false);
     const [mapOptions, setMapOptions] = useState({ brandingColor: primaryColor });
@@ -218,6 +221,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
     const setTileStyle = useSetAtom(tileStyleState);
     const setStartZoomLevel = useSetAtom(startZoomLevelState);
+    const setFloor = useSetAtom(floorState);
 
     const setBearing = useSetAtom(bearingState);
     const setPitch = useSetAtom(pitchState);
@@ -613,6 +617,13 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         setStartZoomLevel(startZoomLevel ?? appConfig?.appSettings?.startZoomLevel);
     }, [startZoomLevel, appConfig]);
+
+    /*
+     * React on changes in the floor prop.
+     */
+    useEffect(() => {
+        setFloor(floor);
+    }, [floor]);
 
     /*
      * React on changes in the pitch prop. If not defined, check if it is defined in app config.

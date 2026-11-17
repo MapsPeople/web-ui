@@ -18,6 +18,7 @@ MapsIndoorsMap.propTypes = {
     externalIDs: PropTypes.arrayOf(PropTypes.string),
     tileStyle: PropTypes.string,
     startZoomLevel: PropTypes.number,
+    floor: PropTypes.number,
     pitch: PropTypes.number,
     bearing: PropTypes.number,
     supportsUrlParameters: PropTypes.bool,
@@ -59,6 +60,7 @@ MapsIndoorsMap.propTypes = {
  * @param {array} [props.externalIDs] - Filter locations shown on the map based on the external IDs.
  * @param {string} [props.tileStyle] - Tile style name to change the interface of the map.
  * @param {number} [props.startZoomLevel] - The initial zoom level of the map.
+ * @param {number} [props.floor] - The floor index to show when the map loads. Ignored if locationId or kioskOriginLocationId is set.
  * @param {number} [props.pitch] - The pitch of the map as a number. Not recommended for Google Maps with 2D Models.
  * @param {number} [props.bearing] - The bearing of the map as a number. Not recommended for Google Maps with 2D Models.
  * @param {boolean} [props.supportsUrlParameters] - If you want to support URL Parameters to configure the Map Template.
@@ -114,6 +116,7 @@ function MapsIndoorsMap(props) {
         const directionsToQueryParameter = queryStringParams.get('directionsTo');
         const tileStyleQueryParameter = queryStringParams.get('tileStyle');
         const startZoomLevelQueryParameter = Number(queryStringParams.get('startZoomLevel'));
+        const floorQueryParameter = queryStringParams.get('floor');
         const pitchQueryParameter = Number(queryStringParams.get('pitch'));
         const bearingQueryParameter = Number(queryStringParams.get('bearing'));
         const gmApiKeyQueryParameter = queryStringParams.get('gmApiKey');
@@ -159,6 +162,7 @@ function MapsIndoorsMap(props) {
             directionsTo: props.supportsUrlParameters && directionsToQueryParameter ? directionsToQueryParameter : props.directionsTo,
             tileStyle: props.supportsUrlParameters && tileStyleQueryParameter ? tileStyleQueryParameter : props.tileStyle,
             startZoomLevel: props.supportsUrlParameters && startZoomLevelQueryParameter ? startZoomLevelQueryParameter : props.startZoomLevel,
+            floor: props.supportsUrlParameters && floorQueryParameter ? Number(floorQueryParameter) : props.floor,
             pitch: props.supportsUrlParameters && pitchQueryParameter ? pitchQueryParameter : props.pitch,
             bearing: props.supportsUrlParameters && bearingQueryParameter ? bearingQueryParameter : props.bearing,
             gmApiKey: props.supportsUrlParameters && gmApiKeyQueryParameter ? gmApiKeyQueryParameter : props.gmApiKey,
