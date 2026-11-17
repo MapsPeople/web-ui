@@ -85,6 +85,16 @@ export const useCurrentVenue = () => {
         }
     }, [mapsIndoorsInstance, currentVenueName, venuesInSolution, appConfig]);
 
+    /*
+     * Remove the synced Venue when the Map Template unmounts.
+     * The SDK keeps the Venues to sync globally, and a leftover Venue limits getVenues() to that Venue for the next Map Template mounted on the page.
+     */
+    useEffect(() => () => {
+        if (syncedVenueIdRef.current) {
+            window.mapsindoors?.MapsIndoors?.removeVenuesToSync(syncedVenueIdRef.current);
+        }
+    }, []);
+
     /**
      * Used when there is no set venue.
      * Calculates which venue to set based on number of venues and alphabetic order.
