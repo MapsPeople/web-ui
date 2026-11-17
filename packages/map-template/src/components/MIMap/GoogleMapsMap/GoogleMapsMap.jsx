@@ -64,6 +64,7 @@ function GoogleMapsMap({ apiKey, onInitialized, center, zoom, bounds, heading, t
     }, [mapViewInstance, center, zoom, heading, tilt, bounds, mapOptions]);
 
     useEffect(() => {
+        let isCancelled = false;
         const loader = new GoogleMapsApiLoader({
             apiKey: apiKey,
             version: 'quarterly',
@@ -71,6 +72,8 @@ function GoogleMapsMap({ apiKey, onInitialized, center, zoom, bounds, heading, t
         });
 
         loader.load().then(() => {
+            // The map may have unmounted while the Google Maps API was loading. Its MapsIndoors instance would then never be deallocated.
+            if (isCancelled) return;
 
             // Initialize Google Maps MapView
             const mapViewOptions = {
@@ -95,6 +98,10 @@ function GoogleMapsMap({ apiKey, onInitialized, center, zoom, bounds, heading, t
 
             onInitialized(mapView);
         });
+
+        return () => {
+            isCancelled = true;
+        };
     }, []);
 
     return <div className="mapsindoors-map google-maps-map-container" id="map"></div>
