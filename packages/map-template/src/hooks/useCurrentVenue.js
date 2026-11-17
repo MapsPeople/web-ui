@@ -9,6 +9,9 @@ import searchResultsState from '../atoms/searchResultsState';
 import searchInputState from '../atoms/searchInputState';
 import initialVenueNameState from '../atoms/initialVenueNameState';
 import venueListState from '../atoms/venueListState';
+import floorState from '../atoms/floorState';
+import locationIdState from '../atoms/locationIdState';
+import kioskOriginLocationIdState from '../atoms/kioskOriginLocationIdState';
 
 /**
  * Hook to handle the current Venue in the app based on the venue prop or other ways to set the Venue.
@@ -29,6 +32,10 @@ export const useCurrentVenue = () => {
     const searchInput = useAtomValue(searchInputState);
     const [initialVenueName, setInitialVenueName] = useAtom(initialVenueNameState);
     const syncedVenueIdRef = useRef(null);
+    const floor = useAtomValue(floorState);
+    const locationId = useAtomValue(locationIdState);
+    const kioskOriginLocationId = useAtomValue(kioskOriginLocationIdState);
+    const initialFloorAppliedRef = useRef(false);
     
     /*
      * Responsible for setting the Venue state whenever venueName changes (and all Venues in the Solution are loaded).
@@ -67,6 +74,25 @@ export const useCurrentVenue = () => {
             window.mapsindoors.MapsIndoors.addVenuesToSync(fullVenue.id);
             syncedVenueIdRef.current = fullVenue.id;
             mapsIndoorsInstance.setVenue(fullVenue);
+            // setVenue resets the floor to the Venue's default floor, so apply the floor prop after it.
+            // The SDK queues setFloor until the map is ready, so if the lookup below resolves before that,
+            // the map loads directly on that floor.
+            // Only on the first Venue load: later Venue switches should use the Venue's default floor.
+            if (!initialFloorAppliedRef.current) {
+                initialFloorAppliedRef.current = true;
+                if (floor !== null && floor !== undefined && !locationId && !kioskOriginLocationId) {
+                    // Only pass floors that exist in the Venue to the SDK: an unknown floor index breaks it.
+                    // Otherwise keep the Venue's default floor that setVenue applied.
+                    window.mapsindoors.services.VenuesService.getBuildings(fullVenue.id).then(buildings => {
+                        if (mapsIndoorsInstance.getVenue()?.id !== fullVenue.id) return;
+                        if (buildings.some(building => building.floors?.[floor])) {
+                            mapsIndoorsInstance.setFloor(floor);
+                        } else {
+                            console.warn(`[MapTemplate] Floor ${floor} does not exist in Venue "${fullVenue.name}". Using the Venue's default floor.`);
+                        }
+                    });
+                }
+            }
             updateCategories();
             setSearchResults([]);
             if (searchInput) searchInput.value = '';

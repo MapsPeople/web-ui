@@ -21,6 +21,7 @@ const WebMapsIndoorsMap = r2wc(MapsIndoorsMap, {
         externalIDs: 'json',
         tileStyle: 'string',
         startZoomLevel: 'number',
+        floor: 'number',
         gmMapId: 'string',
         supportsUrlParameters: 'boolean',
         bearing: 'number',
