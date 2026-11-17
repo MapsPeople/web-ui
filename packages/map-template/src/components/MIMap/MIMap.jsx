@@ -125,6 +125,21 @@ function MIMap({ apiKey, mapType, gmApiKey, mapboxAccessToken, center, zoom, bou
     }
 
     /*
+     * Deallocate the MapsIndoors instance when it is replaced or the map unmounts.
+     * The SDK registers listeners on its global config for every instance, so without this they pile up when the Map Template is mounted again.
+     */
+    useEffect(() => {
+        if (!mapsIndoorsInstance) return undefined;
+
+        return () => {
+            if (window.mapsIndoorsInstance === mapsIndoorsInstance) {
+                window.mapsIndoorsInstance = undefined;
+            }
+            mapsIndoorsInstance.deallocate?.();
+        };
+    }, [mapsIndoorsInstance]);
+
+    /*
      * Execute the onInitialized callback when both the MapsIndoors instance and the position control is ready.
      */
     useEffect(() => {
