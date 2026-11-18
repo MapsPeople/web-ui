@@ -115,12 +115,37 @@ describe('useMapBoundsDeterminer', () => {
 
         const kioskLocationRequest = createDeferred();
         window.mapsindoors.services.LocationsService.getLocation.mockReturnValue(kioskLocationRequest.promise);
+        window.mapsindoors.services.LocationsService.getLocation.mockClear();
         act(() => store.set(kioskOriginLocationIdState, undefined));
-        expect(window.mapsindoors.services.LocationsService.getLocation).toHaveBeenLastCalledWith(kioskLocation.id);
+        expect(window.mapsindoors.services.LocationsService.getLocation).toHaveBeenCalledTimes(1);
+        expect(window.mapsindoors.services.LocationsService.getLocation).toHaveBeenCalledWith(kioskLocation.id);
 
         unmount();
         await act(async () => kioskLocationRequest.resolve(kioskLocation));
 
         expect(mapsIndoorsInstance.setDisplayRule).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not reset the kiosk Location Display Rule on a replaced MapsIndoors instance', async () => {
+        useIsDesktop.mockReturnValue(true);
+        window.mapsindoors.services.LocationsService.getLocation.mockResolvedValue(kioskLocation);
+        store.set(kioskOriginLocationIdState, kioskLocation.id);
+
+        renderUseMapBoundsDeterminer(store);
+        await waitFor(() => expect(mapsIndoorsInstance.setDisplayRule).toHaveBeenCalledTimes(1));
+
+        const kioskLocationRequest = createDeferred();
+        window.mapsindoors.services.LocationsService.getLocation.mockReturnValue(kioskLocationRequest.promise);
+        window.mapsindoors.services.LocationsService.getLocation.mockClear();
+        act(() => store.set(kioskOriginLocationIdState, undefined));
+        expect(window.mapsindoors.services.LocationsService.getLocation).toHaveBeenCalledTimes(1);
+        expect(window.mapsindoors.services.LocationsService.getLocation).toHaveBeenCalledWith(kioskLocation.id);
+
+        const replacingMapsIndoorsInstance = createMapsIndoorsInstance();
+        act(() => store.set(mapsIndoorsInstanceState, replacingMapsIndoorsInstance));
+        await act(async () => kioskLocationRequest.resolve(kioskLocation));
+
+        expect(mapsIndoorsInstance.setDisplayRule).toHaveBeenCalledTimes(1);
+        expect(replacingMapsIndoorsInstance.setDisplayRule).not.toHaveBeenCalled();
     });
 });
