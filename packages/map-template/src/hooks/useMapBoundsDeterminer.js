@@ -61,6 +61,19 @@ const useMapBoundsDeterminer = () => {
     const [kioskOriginLocationInfo, setKioskOriginLocationInfo] = useState({ id: null, originalRule: null });
     const [originalMapCenter, setOriginalMapCenter] = useState(null);
     const determineMapBoundsKeyRef = useRef(0);
+    const isUnmountedRef = useRef(false);
+
+    /*
+     * The MapsIndoors instance is deallocated when the map unmounts, so Location lookups that finish after that must not use it.
+     */
+    useEffect(() => {
+        isUnmountedRef.current = false;
+
+        return () => {
+            isUnmountedRef.current = true;
+            determineMapBoundsKeyRef.current++;
+        };
+    }, []);
 
     /**
      * If the app is inactive, run code to reset to initial map position.
@@ -92,6 +105,7 @@ const useMapBoundsDeterminer = () => {
         // If kioskOriginLocationId was set and is now removed, revert display rule
         if (!kioskOriginLocationId && kioskOriginLocationInfo.id && mapsIndoorsInstance && kioskLocationDisplayRuleWasChanged) {
             window.mapsindoors.services.LocationsService.getLocation(kioskOriginLocationInfo.id).then(kioskLocation => {
+                if (isUnmountedRef.current) return;
                 if (kioskLocation) {
                     // Apply original display rule or remove custom rule
                     mapsIndoorsInstance.setDisplayRule(kioskLocation.id, kioskOriginLocationInfo.originalRule || null);

@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The Map Template cleans up after itself when it unmounts, so it can be mounted again on the same page, for example when a single-page app shows it on more than one route. It deallocates its MapsIndoors instance, removes its Venue from the SDK's Venues to sync and releases its Live Data manager, also when the API key changes. With an SDK that has `LiveDataManager.deallocate()`, mounting it again no longer adds up `userroles_changed` listeners and the MaxListenersExceededWarning that follows; older SDKs only unsubscribe from Live Data.
 - Mounting the Map Template again on the same page loads the map and switches Venue when the `venue` prop changes. Previously the Venue of an earlier Map Template stayed in the SDK's Venues to sync, so only that Venue could be loaded, and the map could stay empty.
 - Fixed the Map Template leaving a MapsIndoors instance behind when it unmounts with a Google Maps map before the Google Maps API has finished loading.
+- Fixed the Map Template still panning its removed map, or resetting the kiosk Location's Display Rule on it, when it unmounts while the Location to show is still loading.
 
 ## [2.0.1] - 2026-11-16
 
