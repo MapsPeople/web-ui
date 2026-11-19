@@ -72,6 +72,9 @@ const useMapBoundsDeterminer = () => {
 
         return () => {
             currentMapsIndoorsInstanceRef.current = null;
+            if (kioskDisplayRuleInstanceRef.current === mapsIndoorsInstance) {
+                kioskDisplayRuleInstanceRef.current = null;
+            }
         };
     }, [mapsIndoorsInstance]);
 
