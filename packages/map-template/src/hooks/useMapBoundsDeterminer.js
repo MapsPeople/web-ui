@@ -53,7 +53,6 @@ const useMapBoundsDeterminer = () => {
     const currentPitch = useAtomValue(currentPitchSelector);
     const venueWasSelected = useAtomValue(venueWasSelectedState);
     const wayfindingOriginHighlightLocation = useAtomValue(wayfindingOriginHighlightLocationState);
-    const [kioskLocationDisplayRuleWasChanged, setKioskLocationDisplayRuleWasChanged] = useState(false);
     const [currentVenueName, setCurrentVenueName] = useAtom(currentVenueNameState);
     const isMapReady = useAtom(isMapReadyState);
     const [center,] = useAtom(centerState);
@@ -62,6 +61,8 @@ const useMapBoundsDeterminer = () => {
     const [originalMapCenter, setOriginalMapCenter] = useState(null);
     const determineMapBoundsKeyRef = useRef(0);
     const currentMapsIndoorsInstanceRef = useRef(null);
+    // The MapsIndoors instance that has the kiosk Location Display Rule override. A replacing instance does not have it yet.
+    const kioskDisplayRuleInstanceRef = useRef(null);
 
     /*
      * The MapsIndoors instance is deallocated when it is replaced or the map unmounts, so Location lookups that finish after that must not use it.
@@ -108,13 +109,13 @@ const useMapBoundsDeterminer = () => {
         );
 
         // If kioskOriginLocationId was set and is now removed, revert display rule
-        if (!kioskOriginLocationId && kioskOriginLocationInfo.id && mapsIndoorsInstance && kioskLocationDisplayRuleWasChanged) {
+        if (!kioskOriginLocationId && kioskOriginLocationInfo.id && mapsIndoorsInstance && kioskDisplayRuleInstanceRef.current === mapsIndoorsInstance) {
             window.mapsindoors.services.LocationsService.getLocation(kioskOriginLocationInfo.id).then(kioskLocation => {
                 if (currentMapsIndoorsInstanceRef.current !== mapsIndoorsInstance) return;
                 if (kioskLocation) {
                     // Apply original display rule or remove custom rule
                     mapsIndoorsInstance.setDisplayRule(kioskLocation.id, kioskOriginLocationInfo.originalRule || null);
-                    setKioskLocationDisplayRuleWasChanged(false);
+                    kioskDisplayRuleInstanceRef.current = null;
                 }
             });
             setKioskOriginLocationInfo({ id: null, originalRule: null });
@@ -297,7 +298,7 @@ const useMapBoundsDeterminer = () => {
      * @param {object} kioskLocation
      */
     function setKioskDisplayRule(kioskLocation) {
-        if (kioskLocationDisplayRuleWasChanged) return; // Don't set Display Rule more than once.
+        if (kioskDisplayRuleInstanceRef.current === mapsIndoorsInstance) return; // Don't set Display Rule more than once.
 
         const displayRule = mapsIndoorsInstance.getDisplayRule(kioskLocation);
         displayRule.visible = true;
@@ -308,7 +309,7 @@ const useMapBoundsDeterminer = () => {
         displayRule.clickable = false;
         mapsIndoorsInstance.setDisplayRule(kioskLocation.id, displayRule);
 
-        setKioskLocationDisplayRuleWasChanged(true);
+        kioskDisplayRuleInstanceRef.current = mapsIndoorsInstance;
     }
 
     /**

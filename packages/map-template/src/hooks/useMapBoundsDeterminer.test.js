@@ -147,5 +147,26 @@ describe('useMapBoundsDeterminer', () => {
 
         expect(mapsIndoorsInstance.setDisplayRule).toHaveBeenCalledTimes(1);
         expect(replacingMapsIndoorsInstance.setDisplayRule).not.toHaveBeenCalled();
+
+        window.mapsindoors.services.LocationsService.getLocation.mockResolvedValue(kioskLocation);
+        act(() => store.set(kioskOriginLocationIdState, kioskLocation.id));
+
+        await waitFor(() => expect(replacingMapsIndoorsInstance.setDisplayRule).toHaveBeenCalledTimes(1));
+        expect(replacingMapsIndoorsInstance.setDisplayRule).toHaveBeenCalledWith(kioskLocation.id, expect.objectContaining({ clickable: false }));
+    });
+
+    it('sets the kiosk Location Display Rule on a MapsIndoors instance that replaces one in kiosk mode', async () => {
+        useIsDesktop.mockReturnValue(true);
+        window.mapsindoors.services.LocationsService.getLocation.mockResolvedValue(kioskLocation);
+        store.set(kioskOriginLocationIdState, kioskLocation.id);
+
+        renderUseMapBoundsDeterminer(store);
+        await waitFor(() => expect(mapsIndoorsInstance.setDisplayRule).toHaveBeenCalledTimes(1));
+
+        const replacingMapsIndoorsInstance = createMapsIndoorsInstance();
+        act(() => store.set(mapsIndoorsInstanceState, replacingMapsIndoorsInstance));
+
+        await waitFor(() => expect(replacingMapsIndoorsInstance.setDisplayRule).toHaveBeenCalledTimes(1));
+        expect(replacingMapsIndoorsInstance.setDisplayRule).toHaveBeenCalledWith(kioskLocation.id, expect.objectContaining({ clickable: false }));
     });
 });
