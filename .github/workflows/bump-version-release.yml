@@ -213,6 +213,12 @@ jobs:
         if: steps.changed-files-map-template.outputs.any_changed == 'true'
         run: npm ci && npx lerna run build && cd packages/map-template && npm run build-for-npm
 
+      # release.sh pulls main again, so record the commit the published dist was built from.
+      - name: Record built commit
+        id: built-commit
+        if: steps.changed-files-map-template.outputs.any_changed == 'true'
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
       # Set the git config in order to commit the changes later.
       # The name and email here is for the GitHub Actions user.
       - name: Set git config
@@ -236,6 +242,7 @@ jobs:
 
       - name: "Authenticate on Google Cloud Storage"
         if: steps.changed-files-map-template.outputs.any_changed == 'true' && vars.MAP_DEV_BUCKET != ''
+        continue-on-error: true
         uses: google-github-actions/auth@v2
         with:
           service_account: ${{ secrets.GCP_SA_EMAIL }}
@@ -243,16 +250,29 @@ jobs:
 
       - name: "Set up Cloud SDK"
         if: steps.changed-files-map-template.outputs.any_changed == 'true' && vars.MAP_DEV_BUCKET != ''
+        continue-on-error: true
         uses: "google-github-actions/setup-gcloud@v2"
 
       # Pin the shell to the version just published so its dev SDK pin and the template come from the same commit.
       - name: Deploy dev shell to map.dev
         if: steps.changed-files-map-template.outputs.any_changed == 'true' && vars.MAP_DEV_BUCKET != ''
+        continue-on-error: true
         working-directory: packages/map-template
         env:
           MAP_DEV_BUCKET: ${{ vars.MAP_DEV_BUCKET }}
+          BUILT_SHA: ${{ steps.built-commit.outputs.sha }}
         run: |
           VERSION=$(node -p "require('./package.json').version")
+          git show "$BUILT_SHA:packages/map-template/dev-shell/index.html" > dev-shell/index.html
+          attempt=0
+          until npm view "@mapsindoors/map-template@${VERSION}" version > /dev/null 2>&1; do
+            attempt=$((attempt + 1))
+            if [ "$attempt" -ge 30 ]; then
+              echo "@mapsindoors/map-template@${VERSION} is still not on npm after 5 minutes"
+              exit 1
+            fi
+            sleep 10
+          done
           sed -i "s#@mapsindoors/map-template@stable/#@mapsindoors/map-template@${VERSION}/#" dev-shell/index.html
           grep -q "@mapsindoors/map-template@${VERSION}/" dev-shell/index.html
           ./deploy-dev-shell.sh "$MAP_DEV_BUCKET"
