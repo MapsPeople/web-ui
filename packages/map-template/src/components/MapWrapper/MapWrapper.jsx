@@ -182,9 +182,10 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
      * highlight() call would land mid-transition and the badges would be wiped by the subsequent render (this is what caused MS-3809 — externalIDs
      * dots never appeared on first load). Same idle-wait pattern as the selectLocation flow at MapTemplate.jsx.
      * Re-apply on floor_changed so highlight badges and filter state stay in sync with the visible floor (SDK does not refresh them automatically).
+     * Without a map type, MIMap is not rendered and has already deallocated the instance, even though this render still holds it.
      */
     useEffect(() => {
-        if (!mapsIndoorsInstance || !isMapReady) return undefined;
+        if (!mapsIndoorsInstance || !isMapReady || !mapType) return undefined;
 
         const applyFilterOrHighlight = () => {
             const locations = filteredLocations || filteredLocationsByExternalIDs;
@@ -344,6 +345,15 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
         onViewModeSwitchKnown(viewModeSwitchVisible);
     }
 
+    /**
+     * Stop sharing a MapsIndoors instance once MIMap has deallocated it, unless it was already replaced by a newer one.
+     *
+     * @param {object} miInstance
+     */
+    const onDeallocated = (miInstance) => {
+        setMapsIndoorsInstance(currentInstance => currentInstance === miInstance ? null : currentInstance);
+    }
+
     /*
      * React on changes in the tile style prop.
      */
@@ -381,6 +391,7 @@ function MapWrapper({ onLocationClick, onMapPositionKnown, useMapProviderModule,
             mapboxAccessToken={mapType === mapTypes.Mapbox ? mapboxAccessToken : undefined}
             gmApiKey={mapType === mapTypes.Google ? gmApiKey : undefined}
             onInitialized={onInitialized}
+            onDeallocated={onDeallocated}
             resetUICounter={resetCount}
             mapOptions={mapOptions}
             gmMapId={gmMapId}

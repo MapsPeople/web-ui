@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
 import { useAtomValue } from 'jotai';
 import mapsIndoorsInstanceState from '../atoms/mapsIndoorsInstanceState';
 
@@ -9,38 +9,48 @@ import mapsIndoorsInstanceState from '../atoms/mapsIndoorsInstanceState';
  */
 const useLiveData = (apiKey) => {
     const mapsIndoorsInstance = useAtomValue(mapsIndoorsInstanceState);
-    const liveDataManager = useRef();
 
-    const [enabledLiveDataDomainTypes, setEnabledLiveDataDomainTypes] = useState([]);
-
+    /*
+     * Handle enabling and disabling of MapsIndoors Live Data.
+     *
+     * Will instantiate a new LiveDataManager whenever the API key or MapsIndoors instance changes,
+     * and enable the Live Data domain types that are available for the solution.
+     * The LiveDataManager is released when they change or the Map Template unmounts,
+     * so a removed map does not keep receiving updates or leave listeners on the SDK behind.
+     */
     useEffect(() => {
-        /*
-         * Handle enabling and disabling of MapsIndoors Live Data.
-         *
-         * Will instantiate a new LiveDataManager whenever API key changes,
-         * and will handle disabling any existing Live Data before enabling the Live Data
-         * domain types that are available for the solution.
-         */
+        if (!mapsIndoorsInstance || !apiKey) return undefined;
+
+        const liveDataManager = new window.mapsindoors.LiveDataManager(mapsIndoorsInstance);
+        const enabledLiveDataDomainTypes = [];
+        let isReleased = false;
+
         const show = async () => {
-            if (mapsIndoorsInstance && apiKey) {
-
-                // First, unsubscribe any existing live data domains
-                for (const domainType of enabledLiveDataDomainTypes) {
-                    liveDataManager.current.disableLiveData(domainType);
+            const activeDomainTypes = await liveDataManager.LiveDataInfo.activeDomainTypes();
+            for (const domainType of activeDomainTypes) {
+                if (isReleased) return;
+                await liveDataManager.enableLiveData(domainType);
+                enabledLiveDataDomainTypes.push(domainType);
+                if (isReleased && !liveDataManager.deallocate) {
+                    liveDataManager.disableLiveData(domainType);
                 }
-
-                liveDataManager.current = new window.mapsindoors.LiveDataManager(mapsIndoorsInstance);
-                const activeDomainTypes = await liveDataManager.current.LiveDataInfo.activeDomainTypes();
-                for (const domainType of activeDomainTypes) {
-                    await liveDataManager.current.enableLiveData(domainType);
-                }
-                setEnabledLiveDataDomainTypes(activeDomainTypes);
             }
         };
 
         show();
-    }, [apiKey, mapsIndoorsInstance]); /* eslint-disable-line react-hooks/exhaustive-deps */
-    // We ignore eslint warnings about missing dependencies because changes enabledLiveDataDomainTypes should not trigger re-run.
+
+        return () => {
+            isReleased = true;
+            // SDK versions before LiveDataManager.deallocate() can only disable the domains.
+            if (liveDataManager.deallocate) {
+                liveDataManager.deallocate();
+            } else {
+                for (const domainType of enabledLiveDataDomainTypes) {
+                    liveDataManager.disableLiveData(domainType);
+                }
+            }
+        };
+    }, [apiKey, mapsIndoorsInstance]);
 };
 
 export default useLiveData;
