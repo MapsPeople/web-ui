@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [2.0.2] - 2026-11-20
 
 ### Fixed
 
@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Mounting the Map Template again on the same page loads the map and switches Venue when the `venue` prop changes. Previously the Venue of an earlier Map Template stayed in the SDK's Venues to sync, so only that Venue could be loaded, and the map could stay empty.
 - Fixed the Map Template leaving a MapsIndoors instance behind when it unmounts with a Google Maps map before the Google Maps API has finished loading.
 - Fixed the Map Template still panning its removed map, or resetting the kiosk Location's Display Rule on it, when it unmounts while the Location to show is still loading.
+
+### Changed
+
+- Updated the MapsIndoors Web SDK to version 4.62.3.
 
 ## [2.0.1] - 2026-11-16
 
