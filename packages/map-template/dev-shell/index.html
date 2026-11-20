@@ -11,7 +11,7 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#005655">
-    <script src="https://app.mapsindoors.com/mapsindoors/js/sdk/dev/4.62.3/mapsindoors-4.62.3.js.gz" integrity="sha384-qA37rtmUWUqbimkb0atkDxqerRmbIaMZPXkxttpaIgHWKDstiM3hLT0TmHQShhf+" crossorigin="anonymous"></script>
+    <script src="https://app.mapsindoors.com/mapsindoors/js/sdk/dev/4.62.3/mapsindoors-4.62.3.js.gz" integrity="sha384-qA37rtmUWUqbimkb0atkDxqerRmbIaMZPXkxttpaIgHWKDstiM3hLT0TmHQShhf+" crossorigin="anonymous" onerror="window.miDevSdkFailed = true"></script>
     <script type="module"
         src="https://cdn.jsdelivr.net/npm/@mapsindoors/map-template@stable/dist/mapsindoors-webcomponent.es.min.js"></script>
     <style>
@@ -31,6 +31,13 @@
     <mapsindoors-map
         use-app-title="true"
         supports-url-parameters=true></mapsindoors-map>
+    <script>
+        // Runs before the deferred template module, which would otherwise load the prod SDK and call the prod API.
+        if (window.miDevSdkFailed) {
+            document.querySelector('mapsindoors-map').remove();
+            document.body.append('The dev SDK failed to load, so the map is disabled instead of falling back to the production API.');
+        }
+    </script>
 </body>
 
 </html>
