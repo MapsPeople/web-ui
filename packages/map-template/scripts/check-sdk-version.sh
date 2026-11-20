@@ -24,7 +24,7 @@ fi
 
 dev_sdk_url="https://app.mapsindoors.com/mapsindoors/js/sdk/dev/$dev_shell_version"
 dev_shell_integrity=$(grep -oE 'integrity="sha384-[A-Za-z0-9+/=]+"' dev-shell/index.html | grep -oE 'sha384-[A-Za-z0-9+/=]+' | head -n 1)
-if ! published_sri_file=$(curl -fsS "$dev_sdk_url/sri-hash.txt"); then
+if ! published_sri_file=$(curl -fsS --retry 3 --retry-all-errors "$dev_sdk_url/sri-hash.txt"); then
     echo "No dev SDK published for $dev_shell_version at $dev_sdk_url"
     exit 1
 fi
@@ -35,7 +35,7 @@ if [ "$dev_shell_integrity" != "$published_integrity" ]; then
     exit 1
 fi
 
-if ! curl -fsSI -o /dev/null "$dev_sdk_url/mapsindoors-$dev_shell_version.js.gz"; then
+if ! curl -fsSI --retry 3 --retry-all-errors -o /dev/null "$dev_sdk_url/mapsindoors-$dev_shell_version.js.gz"; then
     echo "Dev SDK bundle missing at $dev_sdk_url/mapsindoors-$dev_shell_version.js.gz"
     exit 1
 fi
