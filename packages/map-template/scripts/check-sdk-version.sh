@@ -40,5 +40,20 @@ if ! curl -fsSI --retry 3 --retry-all-errors -o /dev/null "$dev_sdk_url/mapsindo
     exit 1
 fi
 
+prod_sdk_url="https://app.mapsindoors.com/mapsindoors/js/sdk/$template_version"
+template_integrity=$(grep -oE "'integrity', 'sha384-[A-Za-z0-9+/=]+'" src/components/MapTemplate/MapTemplate.jsx | grep -oE 'sha384-[A-Za-z0-9+/=]+' | head -n 1)
+root_integrity=$(grep -oE 'integrity="sha384-[A-Za-z0-9+/=]+"' index.html | grep -oE 'sha384-[A-Za-z0-9+/=]+' | head -n 1)
+if ! published_prod_sri_file=$(curl -fsS --retry 3 --retry-all-errors "$prod_sdk_url/sri-hash.txt"); then
+    echo "No SDK published for $template_version at $prod_sdk_url"
+    exit 1
+fi
+published_prod_integrity=$(echo "$published_prod_sri_file" | tr -d '[:space:]')
+
+if [ "$template_integrity" != "$published_prod_integrity" ] || [ "$root_integrity" != "$published_prod_integrity" ]; then
+    echo "SDK integrity mismatch: MapTemplate.jsx has '$template_integrity', index.html has '$root_integrity', $prod_sdk_url/sri-hash.txt has '$published_prod_integrity'"
+    exit 1
+fi
+
 echo "SDK version match: $template_version"
+echo "SDK integrity match: $published_prod_integrity"
 echo "Dev SDK integrity match: $dev_shell_integrity"
