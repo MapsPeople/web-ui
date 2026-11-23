@@ -8,6 +8,7 @@ import currentVenueNameState from '../atoms/currentVenueNameState';
 import venuesInSolutionState from '../atoms/venuesInSolutionState';
 import locationIdState from '../atoms/locationIdState';
 import kioskOriginLocationIdState from '../atoms/kioskOriginLocationIdState';
+import centerState from '../atoms/centerState';
 
 jest.mock('./useIsDesktop', () => ({ useIsDesktop: jest.fn() }));
 jest.mock('../helpers/GetDesktopPaddingBottom', () => ({ __esModule: true, default: () => Promise.resolve(0) }));
@@ -29,6 +30,8 @@ function createDeferred() {
 
 function createMapsIndoorsInstance() {
     const mapView = {
+        isReady: true,
+        once: jest.fn(),
         getCenter: jest.fn(() => ({ lat: 55, lng: 10 })),
         setCenter: jest.fn(),
         tilt: jest.fn(),
@@ -103,6 +106,86 @@ describe('useMapBoundsDeterminer', () => {
 
         expect(mapsIndoorsInstance.setFloor).not.toHaveBeenCalled();
         expect(mapsIndoorsInstance.goTo).not.toHaveBeenCalled();
+    });
+
+    it('sets the Location floor once the map is ready, so the default floor does not replace it', async () => {
+        const mapView = mapsIndoorsInstance.getMapView();
+        mapView.isReady = false;
+        window.mapsindoors.services.LocationsService.getLocation.mockResolvedValue(location);
+        store.set(locationIdState, location.id);
+
+        renderUseMapBoundsDeterminer(store);
+        await waitFor(() => expect(mapsIndoorsInstance.goTo).toHaveBeenCalledTimes(1));
+        expect(mapView.once).toHaveBeenCalledWith('ready', expect.any(Function));
+        expect(mapsIndoorsInstance.setFloor).not.toHaveBeenCalled();
+
+        mapView.isReady = true;
+        mapView.once.mock.calls[0][1]();
+
+        await waitFor(() => expect(mapsIndoorsInstance.setFloor).toHaveBeenCalledWith(location.properties.floor));
+    });
+
+    it.each([
+        ['locationId', () => store.set(locationIdState, location.id), location],
+        ['locationId and center', () => {
+            store.set(locationIdState, location.id);
+            store.set(centerState, '10,55');
+        }, location],
+        ['kioskOriginLocationId', () => {
+            useIsDesktop.mockReturnValue(true);
+            store.set(kioskOriginLocationIdState, kioskLocation.id);
+        }, kioskLocation]
+    ])('does not set the floor from %s when the map gets ready after unmount', async (_, setUp, loadedLocation) => {
+        const mapView = mapsIndoorsInstance.getMapView();
+        mapView.isReady = false;
+        window.mapsindoors.services.LocationsService.getLocation.mockResolvedValue(loadedLocation);
+        setUp();
+
+        const { unmount } = renderUseMapBoundsDeterminer(store);
+        await waitFor(() => expect(mapView.once).toHaveBeenCalledWith('ready', expect.any(Function)));
+        unmount();
+
+        mapView.isReady = true;
+        await act(async () => mapView.once.mock.calls[0][1]());
+
+        expect(mapsIndoorsInstance.setFloor).not.toHaveBeenCalled();
+    });
+
+    it('sets the Location floor once the map is ready when the center prop is set', async () => {
+        const mapView = mapsIndoorsInstance.getMapView();
+        mapView.isReady = false;
+        window.mapsindoors.services.LocationsService.getLocation.mockResolvedValue(location);
+        store.set(locationIdState, location.id);
+        store.set(centerState, '10,55');
+
+        renderUseMapBoundsDeterminer(store);
+        await waitFor(() => expect(mapsIndoorsInstance.setZoom).toHaveBeenCalledTimes(1));
+        expect(mapView.once).toHaveBeenCalledWith('ready', expect.any(Function));
+        expect(mapsIndoorsInstance.setFloor).not.toHaveBeenCalled();
+
+        mapView.isReady = true;
+        mapView.once.mock.calls[0][1]();
+
+        await waitFor(() => expect(mapsIndoorsInstance.setFloor).toHaveBeenCalledWith(location.properties.floor));
+    });
+
+    it('sets the kiosk Location floor once the map is ready and still shows the kiosk Location right away', async () => {
+        useIsDesktop.mockReturnValue(true);
+        const mapView = mapsIndoorsInstance.getMapView();
+        mapView.isReady = false;
+        window.mapsindoors.services.LocationsService.getLocation.mockResolvedValue(kioskLocation);
+        store.set(kioskOriginLocationIdState, kioskLocation.id);
+
+        renderUseMapBoundsDeterminer(store);
+        await waitFor(() => expect(mapsIndoorsInstance.goTo).toHaveBeenCalledTimes(1));
+        expect(mapsIndoorsInstance.setDisplayRule).toHaveBeenCalledTimes(1);
+        expect(mapView.once).toHaveBeenCalledWith('ready', expect.any(Function));
+        expect(mapsIndoorsInstance.setFloor).not.toHaveBeenCalled();
+
+        mapView.isReady = true;
+        mapView.once.mock.calls[0][1]();
+
+        await waitFor(() => expect(mapsIndoorsInstance.setFloor).toHaveBeenCalledWith(kioskLocation.properties.floor));
     });
 
     it('does not reset the kiosk Location Display Rule when the kiosk Location loads after unmount', async () => {
