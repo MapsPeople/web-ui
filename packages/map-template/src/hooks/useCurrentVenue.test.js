@@ -8,6 +8,7 @@ import venuesInSolutionState from '../atoms/venuesInSolutionState';
 import venueListState from '../atoms/venueListState';
 import appConfigState from '../atoms/appConfigState';
 import floorState from '../atoms/floorState';
+import directionsFromState from '../atoms/directionsFromState';
 
 const venue = { id: 'venue-1', name: 'Campus' };
 
@@ -21,10 +22,11 @@ function createMapsIndoorsInstance() {
     };
 }
 
-function renderUseCurrentVenue(mapsIndoorsInstance = { setVenue: jest.fn() }, floor = null) {
+function renderUseCurrentVenue(mapsIndoorsInstance = { setVenue: jest.fn() }, floor = null, directionsFrom = undefined) {
     const store = createStore();
     store.set(mapsIndoorsInstanceState, mapsIndoorsInstance);
     store.set(floorState, floor);
+    store.set(directionsFromState, directionsFrom);
     store.set(currentVenueNameState, venue.name);
     store.set(venuesInSolutionState, [venue]);
     store.set(venueListState, [venue]);
@@ -110,6 +112,18 @@ describe('useCurrentVenue', () => {
         mapView.isReady = true;
         await act(async () => mapView.once.mock.calls[0][1]());
 
+        expect(mapsIndoorsInstance.setFloor).not.toHaveBeenCalled();
+    });
+
+    it('does not apply the floor prop when directionsFrom is set', async () => {
+        const mapsIndoorsInstance = createMapsIndoorsInstance();
+        const mapView = mapsIndoorsInstance.getMapView();
+
+        renderUseCurrentVenue(mapsIndoorsInstance, '20', 'location-1');
+        await waitFor(() => expect(mapsIndoorsInstance.setVenue).toHaveBeenCalledWith(venue));
+
+        expect(window.mapsindoors.services.VenuesService.getBuildings).not.toHaveBeenCalled();
+        expect(mapView.once).not.toHaveBeenCalled();
         expect(mapsIndoorsInstance.setFloor).not.toHaveBeenCalled();
     });
 });

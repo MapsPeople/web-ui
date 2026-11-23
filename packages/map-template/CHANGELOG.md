@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.3] - 2026-11-22
 
+### Changed
+
+- Made the `floor` prop and URL parameter ignored when `directionsFrom` is set, as they already are with `locationId` and `kioskOriginLocationId`.
+
 ### Fixed
 
 - Fixed the `floor`, `locationId` and `kioskOriginLocationId` props and URL parameters sometimes opening the map on the Venue's default floor instead of the requested floor on a first visit (empty browser cache).

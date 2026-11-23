@@ -12,6 +12,7 @@ import venueListState from '../atoms/venueListState';
 import floorState from '../atoms/floorState';
 import locationIdState from '../atoms/locationIdState';
 import kioskOriginLocationIdState from '../atoms/kioskOriginLocationIdState';
+import directionsFromState from '../atoms/directionsFromState';
 import setFloorWhenMapReady from '../helpers/setFloorWhenMapReady';
 
 /**
@@ -36,6 +37,7 @@ export const useCurrentVenue = () => {
     const floor = useAtomValue(floorState);
     const locationId = useAtomValue(locationIdState);
     const kioskOriginLocationId = useAtomValue(kioskOriginLocationIdState);
+    const directionsFrom = useAtomValue(directionsFromState);
     const initialFloorAppliedRef = useRef(false);
     const currentMapsIndoorsInstanceRef = useRef(null);
     
@@ -92,7 +94,7 @@ export const useCurrentVenue = () => {
             // Only on the first Venue load: later Venue switches should use the Venue's default floor.
             if (!initialFloorAppliedRef.current) {
                 initialFloorAppliedRef.current = true;
-                if (floor !== null && floor !== undefined && !locationId && !kioskOriginLocationId) {
+                if (floor !== null && floor !== undefined && !locationId && !kioskOriginLocationId && !directionsFrom) {
                     // Only pass floors that exist in the Venue to the SDK: an unknown floor index breaks it.
                     // Otherwise keep the Venue's default floor that setVenue applied.
                     window.mapsindoors.services.VenuesService.getBuildings(fullVenue.id).then(buildings => {
