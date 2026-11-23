@@ -40,6 +40,8 @@ function createMapsIndoorsInstance() {
 
     return {
         getMapView: () => mapView,
+        // The building in view doesn't have the Locations' floors: Location links still set their floor.
+        getBuilding: jest.fn(() => ({ floors: { 0: {} } })),
         setFloor: jest.fn(),
         setZoom: jest.fn(),
         goTo: jest.fn(),

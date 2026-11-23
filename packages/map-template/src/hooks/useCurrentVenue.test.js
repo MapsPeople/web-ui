@@ -18,6 +18,7 @@ function createMapsIndoorsInstance() {
         setVenue: jest.fn(),
         getVenue: jest.fn(() => venue),
         getMapView: () => mapView,
+        getBuilding: jest.fn(),
         setFloor: jest.fn()
     };
 }
@@ -124,6 +125,20 @@ describe('useCurrentVenue', () => {
 
         expect(window.mapsindoors.services.VenuesService.getBuildings).not.toHaveBeenCalled();
         expect(mapView.once).not.toHaveBeenCalled();
+        expect(mapsIndoorsInstance.setFloor).not.toHaveBeenCalled();
+    });
+
+    it('keeps the default floor of the building in view when it does not have the floor prop', async () => {
+        const mapsIndoorsInstance = createMapsIndoorsInstance();
+        const mapView = mapsIndoorsInstance.getMapView();
+        mapsIndoorsInstance.getBuilding.mockReturnValue({ floors: { 0: {} } });
+
+        renderUseCurrentVenue(mapsIndoorsInstance, '20');
+        await waitFor(() => expect(mapView.once).toHaveBeenCalledWith('ready', expect.any(Function)));
+
+        mapView.isReady = true;
+        await act(async () => mapView.once.mock.calls[0][1]());
+
         expect(mapsIndoorsInstance.setFloor).not.toHaveBeenCalled();
     });
 });

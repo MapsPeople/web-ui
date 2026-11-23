@@ -100,9 +100,10 @@ export const useCurrentVenue = () => {
                     window.mapsindoors.services.VenuesService.getBuildings(fullVenue.id).then(buildings => {
                         if (mapsIndoorsInstance.getVenue()?.id !== fullVenue.id) return;
                         if (buildings.some(building => building.floors?.[floor])) {
-                            setFloorWhenMapReady(mapsIndoorsInstance, floor, () =>
-                                currentMapsIndoorsInstanceRef.current === mapsIndoorsInstance && mapsIndoorsInstance.getVenue()?.id === fullVenue.id
-                            );
+                            const isCurrent = () =>
+                                currentMapsIndoorsInstanceRef.current === mapsIndoorsInstance && mapsIndoorsInstance.getVenue()?.id === fullVenue.id;
+                            // A building in view that doesn't have the floor keeps its default floor.
+                            setFloorWhenMapReady(mapsIndoorsInstance, floor, isCurrent, true);
                         } else {
                             console.warn(`[MapTemplate] Floor ${floor} does not exist in Venue "${fullVenue.name}". Using the Venue's default floor.`);
                         }

@@ -17,6 +17,7 @@ function createMapsIndoorsInstance(mapView, phase = 'initializing') {
     return Object.assign(new EventEmitter(), {
         getMapView: () => mapView,
         getLoadingProgress: () => ({ phase }),
+        getBuilding: jest.fn(),
         getFloor: jest.fn(),
         setFloor: jest.fn()
     });
@@ -205,6 +206,53 @@ describe('setFloorWhenMapReady', () => {
 
             expect(() => mapsIndoorsInstance.emit('building_changed', buildingWithFloor)).not.toThrow();
             expect(warn).toHaveBeenCalledWith('[MapTemplate] Could not set floor 20.', error);
+        });
+    });
+
+    describe.each([
+        ['the map view is ready', true],
+        ['the map view gets ready', false]
+    ])('with a building in view when %s', (_, isReady) => {
+        // The building in view is only known once the map view is ready, so it is set after the call on the deferred path.
+        async function setFloorWithBuildingInView(building, onlyIfBuildingInViewHasFloor) {
+            const mapView = createMapView(isReady);
+            const mapsIndoorsInstance = createMapsIndoorsInstance(mapView);
+            mapsIndoorsInstance.getBuilding.mockReturnValue(isReady ? building : undefined);
+
+            setFloorWhenMapReady(mapsIndoorsInstance, '20', () => true, onlyIfBuildingInViewHasFloor);
+            mapsIndoorsInstance.getBuilding.mockReturnValue(building);
+            mapView.emit('ready');
+            await flushMicrotasks();
+
+            return mapsIndoorsInstance;
+        }
+
+        it('does not set the floor when the building in view lacks it, but sets it once a building that has it comes into focus', async () => {
+            const mapsIndoorsInstance = await setFloorWithBuildingInView(buildingWithoutFloor, true);
+            expect(mapsIndoorsInstance.setFloor).not.toHaveBeenCalled();
+
+            mapsIndoorsInstance.getFloor.mockReturnValue('0');
+            mapsIndoorsInstance.emit('building_changed', buildingWithFloor);
+
+            expect(mapsIndoorsInstance.setFloor).toHaveBeenCalledWith('20');
+        });
+
+        it('sets the floor when the building in view has it', async () => {
+            const mapsIndoorsInstance = await setFloorWithBuildingInView(buildingWithFloor, true);
+
+            expect(mapsIndoorsInstance.setFloor).toHaveBeenCalledWith('20');
+        });
+
+        it('sets the floor when no building is in view yet', async () => {
+            const mapsIndoorsInstance = await setFloorWithBuildingInView(undefined, true);
+
+            expect(mapsIndoorsInstance.setFloor).toHaveBeenCalledWith('20');
+        });
+
+        it('sets the floor whatever the building in view when not asked to check it', async () => {
+            const mapsIndoorsInstance = await setFloorWithBuildingInView(buildingWithoutFloor);
+
+            expect(mapsIndoorsInstance.setFloor).toHaveBeenCalledWith('20');
         });
     });
 });

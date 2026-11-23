@@ -5,12 +5,19 @@
  * @param {object} mapsIndoorsInstance - MapsIndoors instance.
  * @param {string|number} floor - Floor index to set.
  * @param {function} isCurrent - Checked before setting the floor later; return false to skip it and stop keeping the floor.
+ * @param {boolean} [onlyIfBuildingInViewHasFloor] - Skip the floor while the building in view doesn't have it; it is still set if a building that has it comes into focus during loading.
+ *   With no building in view yet the floor is set: the SDK switches to a building's default floor itself when it picks one without it.
  */
-export default function setFloorWhenMapReady(mapsIndoorsInstance, floor, isCurrent) {
+export default function setFloorWhenMapReady(mapsIndoorsInstance, floor, isCurrent, onlyIfBuildingInViewHasFloor = false) {
+    const applyFloor = () => {
+        const building = onlyIfBuildingInViewHasFloor ? mapsIndoorsInstance.getBuilding() : null;
+        if (!building || building.floors?.[floor]) mapsIndoorsInstance.setFloor(floor);
+        keepFloorWhileLoading(mapsIndoorsInstance, floor, isCurrent);
+    };
+
     const mapView = mapsIndoorsInstance.getMapView();
     if (!mapView || mapView.isReady) {
-        mapsIndoorsInstance.setFloor(floor);
-        keepFloorWhileLoading(mapsIndoorsInstance, floor, isCurrent);
+        applyFloor();
         return;
     }
 
@@ -19,9 +26,7 @@ export default function setFloorWhenMapReady(mapsIndoorsInstance, floor, isCurre
     mapView.once('ready', () => {
         Promise.resolve()
             .then(() => {
-                if (!isCurrent()) return;
-                mapsIndoorsInstance.setFloor(floor);
-                keepFloorWhileLoading(mapsIndoorsInstance, floor, isCurrent);
+                if (isCurrent()) applyFloor();
             })
             .catch(error => warnFloorNotSet(floor, error));
     });

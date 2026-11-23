@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.4] - 2026-11-23
+
+### Fixed
+
+- Fixed the floor selector having no active floor when the `floor` prop or URL parameter asks for a floor that the building in view doesn't have. That building's default floor is now shown, as documented.
+
 ## [2.0.3] - 2026-11-22
 
 ### Changed
