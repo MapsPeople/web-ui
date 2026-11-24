@@ -7,9 +7,6 @@ import { resolveChatApiUrl } from './resolveChatApiUrl';
 const GeminiContext = createContext();
 
 const API_BASE_URL = resolveChatApiUrl(import.meta.env.VITE_CHAT_API_URL);
-if (!API_BASE_URL) {
-    console.error('VITE_CHAT_API_URL is not set, so chat requests will fail. Set it at build time (see .env.example).');
-}
 const DEBUG = import.meta.env.VITE_GEMINI_DEBUG === 'true';
 
 // Server token limit warnings: APPROACHING from 75% used, CRITICAL from 90%
@@ -42,6 +39,11 @@ export function GeminiProvider({ children, enabled }) {
 
     // Helper function to create or get session
     const ensureSession = useCallback(async (apiKey) => {
+        // Every chat request starts here, so an unset URL never reaches fetch as a relative path
+        if (!API_BASE_URL) {
+            throw new Error('VITE_CHAT_API_URL is not set. Set it at build time (see .env.example).');
+        }
+
         // Check if we need to create a new session
         const needsNewSession =
             !sessionIdRef.current ||
