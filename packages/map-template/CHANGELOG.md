@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Made the `floor` prop and URL parameter ignored when `directionsFrom` is set, as they already are with `locationId` and `kioskOriginLocationId`.
+- Updated the MapsIndoors Web SDK to version 4.62.4.
 
 ### Fixed
 
