@@ -30,6 +30,7 @@ import filteredLocationsByExternalIDState from '../../atoms/filteredLocationsByE
 import kioskOriginLocationIdState from '../../atoms/kioskOriginLocationIdState.js';
 import startZoomLevelState from '../../atoms/startZoomLevelState';
 import floorState from '../../atoms/floorState';
+import directionsFromState from '../../atoms/directionsFromState';
 import primaryColorState from '../../atoms/primaryColorState';
 import logoState from '../../atoms/logoState';
 import gmMapIdState from '../../atoms/gmMapIdState';
@@ -134,7 +135,7 @@ MapTemplate.propTypes = {
  * @param {array} [props.externalIDs] - Filter locations shown on the map based on the external IDs.
  * @param {string} [props.tileStyle] - Tile style name to change the interface of the map.
  * @param {number} [props.startZoomLevel] - The initial zoom level of the map.
- * @param {number} [props.floor] - The floor index to show when the map loads. Ignored if locationId or kioskOriginLocationId is set.
+ * @param {number} [props.floor] - The floor index to show when the map loads. Ignored if locationId, kioskOriginLocationId or directionsFrom is set.
  * @param {number} [props.bearing] - The bearing of the map as a number. Not recommended for Google Maps with 2D Models.
  * @param {number} [props.pitch] - The pitch of the map as a number. Not recommended for Google Maps with 2D Models.
  * @param {string} [props.gmMapId] - The Google Maps Map ID associated with a specific map style or feature.
@@ -222,6 +223,7 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     const setTileStyle = useSetAtom(tileStyleState);
     const setStartZoomLevel = useSetAtom(startZoomLevelState);
     const setFloor = useSetAtom(floorState);
+    const setDirectionsFrom = useSetAtom(directionsFromState);
 
     const setBearing = useSetAtom(bearingState);
     const setPitch = useSetAtom(pitchState);
@@ -280,8 +282,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
             const miSdkApiTag = document.createElement('script');
             miSdkApiTag.setAttribute('type', 'text/javascript');
             // Remember to update the root index.html with the same version / integrity
-            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.62.3/mapsindoors-4.62.3.js.gz');
-            miSdkApiTag.setAttribute('integrity', 'sha384-P4ZCQF0EzVVP+wN76T7fDcbCyRi/+mE9kv2PzqOzc59HHnJ6BkzqQTaPjjodc8x9');
+            miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.62.4/mapsindoors-4.62.4.js.gz');
+            miSdkApiTag.setAttribute('integrity', 'sha384-+EJMwnpYJOPY9QkoEL1JMjf+Pcqd8dyu2l+SWBghAeCwuoTld0Xdq2H/DzlBrA3o');
             miSdkApiTag.setAttribute('crossorigin', 'anonymous');
             document.body.appendChild(miSdkApiTag);
             miSdkApiTag.onload = () => {
@@ -624,6 +626,13 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
     useEffect(() => {
         setFloor(floor);
     }, [floor]);
+
+    /*
+     * React on changes in the directionsFrom prop.
+     */
+    useEffect(() => {
+        setDirectionsFrom(directionsFrom);
+    }, [directionsFrom]);
 
     /*
      * React on changes in the pitch prop. If not defined, check if it is defined in app config.

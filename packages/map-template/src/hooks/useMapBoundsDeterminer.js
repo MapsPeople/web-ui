@@ -25,6 +25,7 @@ import { useIsDesktop } from './useIsDesktop';
 import currentPitchSelector from '../selectors/currentPitch';
 import centerState from '../atoms/centerState';
 import isNullOrUndefined from '../helpers/isNullOrUndefined';
+import setFloorWhenMapReady from '../helpers/setFloorWhenMapReady';
 
 // Turf
 import * as turf from '@turf/turf';
@@ -137,7 +138,7 @@ const useMapBoundsDeterminer = () => {
                         // Set the floor to the one that the Location belongs to.
                         const locationFloor = kioskLocation.properties.floor;
                         try {
-                            mapsIndoorsInstance.setFloor(locationFloor);
+                            setFloorWhenMapReady(mapsIndoorsInstance, locationFloor, () => determineMapBoundsKeyRef.current === key);
                         } catch (e) {
                             // Mapbox terrain may not be initialized yet during early map load (e.g. after a full page reload).
                             return;
@@ -167,7 +168,7 @@ const useMapBoundsDeterminer = () => {
                         if (determineMapBoundsKeyRef.current !== key) return;
                         if (location) {
                             const locationFloor = location.properties.floor;
-                            mapsIndoorsInstance.setFloor(locationFloor);
+                            setFloorWhenMapReady(mapsIndoorsInstance, locationFloor, () => determineMapBoundsKeyRef.current === key);
                             // When locationId is defined and center prop is defined, set centerPoint to be center prop.
                             if (isDesktop) {
                                 getDesktopPaddingLeft().then(desktopPaddingLeft => {
@@ -192,7 +193,7 @@ const useMapBoundsDeterminer = () => {
                         if (location) {
                             // Set the floor to the one that the Location belongs to.
                             const locationFloor = location.properties.floor;
-                            mapsIndoorsInstance.setFloor(locationFloor);
+                            setFloorWhenMapReady(mapsIndoorsInstance, locationFloor, () => determineMapBoundsKeyRef.current === key);
 
                             if (isDesktop) {
                                 getDesktopPaddingLeft().then(desktopPaddingLeft => {
