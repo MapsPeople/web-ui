@@ -1,11 +1,15 @@
 import { createContext, useContext, useCallback, useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { processFunctionData } from './processFunctionData';
+import { resolveChatApiUrl } from './resolveChatApiUrl';
 
 // Create the context
 const GeminiContext = createContext();
 
-const API_BASE_URL = 'http://localhost:4000';
+const API_BASE_URL = resolveChatApiUrl(import.meta.env.VITE_CHAT_API_URL);
+if (!API_BASE_URL) {
+    console.error('VITE_CHAT_API_URL is not set, so chat requests will fail. Set it at build time (see .env.example).');
+}
 const DEBUG = import.meta.env.VITE_GEMINI_DEBUG === 'true';
 
 // Server token limit warnings: APPROACHING from 75% used, CRITICAL from 90%
