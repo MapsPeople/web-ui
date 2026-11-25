@@ -12,6 +12,8 @@ import venueListState from '../atoms/venueListState';
 import floorState from '../atoms/floorState';
 import locationIdState from '../atoms/locationIdState';
 import kioskOriginLocationIdState from '../atoms/kioskOriginLocationIdState';
+import directionsFromState from '../atoms/directionsFromState';
+import setFloorWhenMapReady from '../helpers/setFloorWhenMapReady';
 
 /**
  * Hook to handle the current Venue in the app based on the venue prop or other ways to set the Venue.
@@ -35,8 +37,21 @@ export const useCurrentVenue = () => {
     const floor = useAtomValue(floorState);
     const locationId = useAtomValue(locationIdState);
     const kioskOriginLocationId = useAtomValue(kioskOriginLocationIdState);
+    const directionsFrom = useAtomValue(directionsFromState);
     const initialFloorAppliedRef = useRef(false);
+    const currentMapsIndoorsInstanceRef = useRef(null);
     
+    /*
+     * The MapsIndoors instance is deallocated when it is replaced or the map unmounts, so a floor applied later must not use it.
+     */
+    useEffect(() => {
+        currentMapsIndoorsInstanceRef.current = mapsIndoorsInstance;
+
+        return () => {
+            currentMapsIndoorsInstanceRef.current = null;
+        };
+    }, [mapsIndoorsInstance]);
+
     /*
      * Responsible for setting the Venue state whenever venueName changes (and all Venues in the Solution are loaded).
      */
@@ -74,19 +89,21 @@ export const useCurrentVenue = () => {
             window.mapsindoors.MapsIndoors.addVenuesToSync(fullVenue.id);
             syncedVenueIdRef.current = fullVenue.id;
             mapsIndoorsInstance.setVenue(fullVenue);
-            // setVenue resets the floor to the Venue's default floor, so apply the floor prop after it.
-            // The SDK queues setFloor until the map is ready, so if the lookup below resolves before that,
-            // the map loads directly on that floor.
+            // setVenue resets the floor to the Venue's default floor, so apply the floor prop after it,
+            // and only once the map is ready so the SDK's default floor does not replace it.
             // Only on the first Venue load: later Venue switches should use the Venue's default floor.
             if (!initialFloorAppliedRef.current) {
                 initialFloorAppliedRef.current = true;
-                if (floor !== null && floor !== undefined && !locationId && !kioskOriginLocationId) {
+                if (floor !== null && floor !== undefined && !locationId && !kioskOriginLocationId && !directionsFrom) {
                     // Only pass floors that exist in the Venue to the SDK: an unknown floor index breaks it.
                     // Otherwise keep the Venue's default floor that setVenue applied.
                     window.mapsindoors.services.VenuesService.getBuildings(fullVenue.id).then(buildings => {
                         if (mapsIndoorsInstance.getVenue()?.id !== fullVenue.id) return;
                         if (buildings.some(building => building.floors?.[floor])) {
-                            mapsIndoorsInstance.setFloor(floor);
+                            const isCurrent = () =>
+                                currentMapsIndoorsInstanceRef.current === mapsIndoorsInstance && mapsIndoorsInstance.getVenue()?.id === fullVenue.id;
+                            // A building in view that doesn't have the floor keeps its default floor.
+                            setFloorWhenMapReady(mapsIndoorsInstance, floor, isCurrent, true);
                         } else {
                             console.warn(`[MapTemplate] Floor ${floor} does not exist in Venue "${fullVenue.name}". Using the Venue's default floor.`);
                         }

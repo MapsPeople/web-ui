@@ -208,9 +208,19 @@ jobs:
           # Despite the package name including this scope, it's also necessary to set here
           scope: "@mapsindoors"
 
+      # The map template has no default chat server URL, so a release must not build without one.
+      - name: Check chat server URL
+        if: steps.changed-files-map-template.outputs.any_changed == 'true'
+        env:
+          VITE_CHAT_API_URL: ${{ secrets.VITE_CHAT_API_URL }}
+        run: |
+          if [ -z "$VITE_CHAT_API_URL" ]; then echo "::error::The repository secret VITE_CHAT_API_URL is not set. Add it under Settings > Secrets and variables > Actions > Secrets > New repository secret, named VITE_CHAT_API_URL."; exit 1; fi
+
       # Build the project to ensure it's up to date. If this steps fails, the job fails.
       - name: Build
         if: steps.changed-files-map-template.outputs.any_changed == 'true'
+        env:
+          VITE_CHAT_API_URL: ${{ secrets.VITE_CHAT_API_URL }}
         run: npm ci && npx lerna run build && cd packages/map-template && npm run build-for-npm
 
       # release.sh pulls main again, so record the commit the published dist was built from.

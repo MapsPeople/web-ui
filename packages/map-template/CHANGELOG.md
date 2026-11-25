@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.4] - 2026-11-24
+
+### Changed
+
+- Made the `floor` prop and URL parameter ignored when `directionsFrom` is set, as they already are with `locationId` and `kioskOriginLocationId`.
+- Updated the MapsIndoors Web SDK to version 4.62.4.
+
+### Fixed
+
+- Fixed the chat sending its requests to a local development address instead of the MapsIndoors chat server. The chat server URL is now set when the Map Template is built.
+- Fixed the `floor`, `locationId` and `kioskOriginLocationId` props and URL parameters sometimes opening the map on the Venue's default floor instead of the requested floor on a first visit (empty browser cache).
+- Fixed the floor selector having no active floor when the `floor` prop or URL parameter asks for a floor that the building in view doesn't have. That building's default floor is now shown, as documented.
+
 ## [2.0.2] - 2026-11-20
 
 ### Fixed
