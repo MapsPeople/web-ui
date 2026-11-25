@@ -281,7 +281,8 @@ function MapTemplate({ apiKey, gmApiKey, mapboxAccessToken, venue, locationId, p
 
             const miSdkApiTag = document.createElement('script');
             miSdkApiTag.setAttribute('type', 'text/javascript');
-            // Remember to update the root index.html with the same version / integrity
+            // Keep the root index.html on the same version / integrity, and dev-shell/index.html on the same version
+            // with the dev SDK's integrity (sdk/dev/<version>/sri-hash.txt). scripts/check-sdk-version.sh checks both.
             miSdkApiTag.setAttribute('src', 'https://app.mapsindoors.com/mapsindoors/js/sdk/4.62.4/mapsindoors-4.62.4.js.gz');
             miSdkApiTag.setAttribute('integrity', 'sha384-+EJMwnpYJOPY9QkoEL1JMjf+Pcqd8dyu2l+SWBghAeCwuoTld0Xdq2H/DzlBrA3o');
             miSdkApiTag.setAttribute('crossorigin', 'anonymous');
