@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import setFloorWhenMapReady from './setFloorWhenMapReady';
+import setFloorWhenMapReady, { keepFloorUntilBuildingInView } from './setFloorWhenMapReady';
 
 function createMapView(isReady) {
     const listeners = [];
@@ -254,5 +254,77 @@ describe('setFloorWhenMapReady', () => {
 
             expect(mapsIndoorsInstance.setFloor).toHaveBeenCalledWith('20');
         });
+    });
+});
+
+describe('keepFloorUntilBuildingInView', () => {
+    let mapsIndoorsInstance;
+
+    beforeEach(() => {
+        mapsIndoorsInstance = createMapsIndoorsInstance(createMapView(true), 'complete');
+        mapsIndoorsInstance.getFloor.mockReturnValue('0');
+    });
+
+    it('sets the floor when the building comes into view after loading is complete', () => {
+        keepFloorUntilBuildingInView(mapsIndoorsInstance, '20', 'target', () => true);
+
+        mapsIndoorsInstance.emit('building_changed', { id: 'other', floors: { 0: {} } });
+        expect(mapsIndoorsInstance.setFloor).not.toHaveBeenCalled();
+
+        mapsIndoorsInstance.emit('building_changed', { id: 'target', ...buildingWithFloor });
+        expect(mapsIndoorsInstance.setFloor).toHaveBeenCalledWith('20');
+    });
+
+    it('stops after the building came into view once', () => {
+        keepFloorUntilBuildingInView(mapsIndoorsInstance, '20', 'target', () => true);
+
+        mapsIndoorsInstance.emit('building_changed', { id: 'target', ...buildingWithFloor });
+        mapsIndoorsInstance.emit('building_changed', { id: 'other', floors: { 0: {} } });
+        mapsIndoorsInstance.emit('building_changed', { id: 'target', ...buildingWithFloor });
+
+        expect(mapsIndoorsInstance.setFloor).toHaveBeenCalledTimes(1);
+        expect(mapsIndoorsInstance.listenerCount('building_changed')).toBe(0);
+    });
+
+    it('does not set the floor when it is already set', () => {
+        mapsIndoorsInstance.getFloor.mockReturnValue('20');
+        keepFloorUntilBuildingInView(mapsIndoorsInstance, '20', 'target', () => true);
+
+        mapsIndoorsInstance.emit('building_changed', { id: 'target', ...buildingWithFloor });
+
+        expect(mapsIndoorsInstance.setFloor).not.toHaveBeenCalled();
+    });
+
+    it('does not wait when the building is already in view on the floor', () => {
+        mapsIndoorsInstance.getBuilding.mockReturnValue({ id: 'target', ...buildingWithFloor });
+        mapsIndoorsInstance.getFloor.mockReturnValue('20');
+
+        keepFloorUntilBuildingInView(mapsIndoorsInstance, '20', 'target', () => true);
+
+        expect(mapsIndoorsInstance.listenerCount('building_changed')).toBe(0);
+    });
+
+    it('stops without setting the floor once it is no longer current', () => {
+        keepFloorUntilBuildingInView(mapsIndoorsInstance, '20', 'target', () => false);
+
+        mapsIndoorsInstance.emit('building_changed', { id: 'target', ...buildingWithFloor });
+
+        expect(mapsIndoorsInstance.setFloor).not.toHaveBeenCalled();
+        expect(mapsIndoorsInstance.listenerCount('building_changed')).toBe(0);
+    });
+
+    it('does nothing without a building ID', () => {
+        keepFloorUntilBuildingInView(mapsIndoorsInstance, '20', undefined, () => true);
+
+        expect(mapsIndoorsInstance.listenerCount('building_changed')).toBe(0);
+    });
+
+    it('warns instead of throwing when setting the floor fails', () => {
+        const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+        mapsIndoorsInstance.setFloor.mockImplementation(() => { throw new Error('terrain'); });
+        keepFloorUntilBuildingInView(mapsIndoorsInstance, '20', 'target', () => true);
+
+        expect(() => mapsIndoorsInstance.emit('building_changed', { id: 'target', ...buildingWithFloor })).not.toThrow();
+        expect(warn).toHaveBeenCalled();
     });
 });

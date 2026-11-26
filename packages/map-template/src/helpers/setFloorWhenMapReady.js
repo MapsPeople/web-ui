@@ -57,6 +57,36 @@ function keepFloorWhileLoading(mapsIndoorsInstance, floor, isCurrent) {
     mapsIndoorsInstance.addListener('content_ready', stop);
 }
 
+/**
+ * Sets the floor again when the given building comes into view, once.
+ * Use it when the camera moves to a Location: on the way there the SDK switches to the default floor of each
+ * building it passes that lacks this floor, and after the initial load nothing else sets the floor again.
+ * This happens when the map switches to another Venue after the first Venue finished loading.
+ *
+ * @param {object} mapsIndoorsInstance - MapsIndoors instance.
+ * @param {string|number} floor - Floor index to set.
+ * @param {string} buildingId - ID of the building the floor belongs to. Nothing happens without it.
+ * @param {function} isCurrent - Return false to stop waiting for the building.
+ */
+export function keepFloorUntilBuildingInView(mapsIndoorsInstance, floor, buildingId, isCurrent) {
+    if (!buildingId) return;
+    if (mapsIndoorsInstance.getBuilding()?.id === buildingId && mapsIndoorsInstance.getFloor() === String(floor)) return;
+
+    const stop = () => mapsIndoorsInstance.removeListener('building_changed', onBuildingChanged);
+    const onBuildingChanged = building => {
+        if (!isCurrent()) return stop();
+        if (building?.id !== buildingId) return;
+        stop();
+        if (mapsIndoorsInstance.getFloor() === String(floor)) return;
+        try {
+            mapsIndoorsInstance.setFloor(floor);
+        } catch (error) {
+            warnFloorNotSet(floor, error);
+        }
+    };
+    mapsIndoorsInstance.addListener('building_changed', onBuildingChanged);
+}
+
 function warnFloorNotSet(floor, error) {
     console.warn(`[MapTemplate] Could not set floor ${floor}.`, error);
 }
