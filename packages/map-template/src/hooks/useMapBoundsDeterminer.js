@@ -25,7 +25,7 @@ import { useIsDesktop } from './useIsDesktop';
 import currentPitchSelector from '../selectors/currentPitch';
 import centerState from '../atoms/centerState';
 import isNullOrUndefined from '../helpers/isNullOrUndefined';
-import setFloorWhenMapReady from '../helpers/setFloorWhenMapReady';
+import setFloorWhenMapReady, { keepFloorUntilBuildingInView } from '../helpers/setFloorWhenMapReady';
 
 // Turf
 import * as turf from '@turf/turf';
@@ -139,6 +139,7 @@ const useMapBoundsDeterminer = () => {
                         const locationFloor = kioskLocation.properties.floor;
                         try {
                             setFloorWhenMapReady(mapsIndoorsInstance, locationFloor, () => determineMapBoundsKeyRef.current === key);
+                            keepFloorUntilBuildingInView(mapsIndoorsInstance, locationFloor, kioskLocation.properties.buildingId, () => determineMapBoundsKeyRef.current === key);
                         } catch (e) {
                             // Mapbox terrain may not be initialized yet during early map load (e.g. after a full page reload).
                             return;
@@ -194,6 +195,7 @@ const useMapBoundsDeterminer = () => {
                             // Set the floor to the one that the Location belongs to.
                             const locationFloor = location.properties.floor;
                             setFloorWhenMapReady(mapsIndoorsInstance, locationFloor, () => determineMapBoundsKeyRef.current === key);
+                            keepFloorUntilBuildingInView(mapsIndoorsInstance, locationFloor, location.properties.buildingId, () => determineMapBoundsKeyRef.current === key);
 
                             if (isDesktop) {
                                 getDesktopPaddingLeft().then(desktopPaddingLeft => {

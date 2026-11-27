@@ -1,3 +1,4 @@
+import { EventEmitter } from 'events';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import PropTypes from 'prop-types';
 import { createStore, Provider } from 'jotai';
@@ -38,16 +39,17 @@ function createMapsIndoorsInstance() {
         rotate: jest.fn()
     };
 
-    return {
+    return Object.assign(new EventEmitter(), {
         getMapView: () => mapView,
         // The building in view doesn't have the Locations' floors: Location links still set their floor.
         getBuilding: jest.fn(() => ({ floors: { 0: {} } })),
+        getFloor: jest.fn(() => '0'),
         setFloor: jest.fn(),
         setZoom: jest.fn(),
         goTo: jest.fn(),
         getDisplayRule: jest.fn(() => ({ iconSize: { width: 10, height: 10 } })),
         setDisplayRule: jest.fn()
-    };
+    });
 }
 
 function renderUseMapBoundsDeterminer(store) {
@@ -125,6 +127,45 @@ describe('useMapBoundsDeterminer', () => {
         mapView.once.mock.calls[0][1]();
 
         await waitFor(() => expect(mapsIndoorsInstance.setFloor).toHaveBeenCalledWith(location.properties.floor));
+    });
+
+    it.each([
+        ['locationId', () => store.set(locationIdState, location.id), location],
+        ['kioskOriginLocationId', () => {
+            useIsDesktop.mockReturnValue(true);
+            store.set(kioskOriginLocationIdState, kioskLocation.id);
+        }, kioskLocation]
+    ])('sets the %s floor again when its building comes into view after the Venue already finished loading', async (_, setUp, loadedLocation) => {
+        const locationInBuilding = { ...loadedLocation, properties: { ...loadedLocation.properties, buildingId: 'building-with-location' } };
+        window.mapsindoors.services.LocationsService.getLocation.mockResolvedValue(locationInBuilding);
+        setUp();
+
+        renderUseMapBoundsDeterminer(store);
+        await waitFor(() => expect(mapsIndoorsInstance.setFloor).toHaveBeenCalledWith(loadedLocation.properties.floor));
+        mapsIndoorsInstance.setFloor.mockClear();
+
+        // On the way to the Location the SDK passes a building without the floor and switches to its default floor.
+        act(() => mapsIndoorsInstance.emit('building_changed', { id: 'building-on-the-way', floors: { 0: {} } }));
+        expect(mapsIndoorsInstance.setFloor).not.toHaveBeenCalled();
+
+        act(() => mapsIndoorsInstance.emit('building_changed', { id: 'building-with-location', floors: { 0: {}, 10: {} } }));
+        expect(mapsIndoorsInstance.setFloor).toHaveBeenCalledWith(loadedLocation.properties.floor);
+    });
+
+    it('does not keep the floor of a locationId with center after the user picks another Location', async () => {
+        const locationInBuilding = { ...location, properties: { ...location.properties, floor: '20', buildingId: 'building-with-location' } };
+        window.mapsindoors.services.LocationsService.getLocation.mockResolvedValue(locationInBuilding);
+        store.set(locationIdState, locationInBuilding.id);
+        store.set(centerState, '10,55');
+
+        renderUseMapBoundsDeterminer(store);
+        await waitFor(() => expect(mapsIndoorsInstance.setFloor).toHaveBeenCalledWith('20'));
+        mapsIndoorsInstance.setFloor.mockClear();
+
+        // The camera stays on the center point, so the Location's building may never come into view. Another Location on floor 10 is then picked,
+        // and when the first Location's building comes into view it must not switch the map back to floor 20.
+        act(() => mapsIndoorsInstance.emit('building_changed', { id: 'building-with-location', floors: { 0: {}, 10: {}, 20: {} } }));
+        expect(mapsIndoorsInstance.setFloor).not.toHaveBeenCalled();
     });
 
     it.each([

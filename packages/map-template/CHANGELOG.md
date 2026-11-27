@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.6] - 2026-11-26
+
+### Fixed
+
+- Fixed the `locationId` and `kioskOriginLocationId` props and URL parameters sometimes opening the map on the default floor instead of the Location's floor when the Location is in another Venue than the one the map loads first.
+
 ## [2.0.4] - 2026-11-24
 
 ### Changed
