@@ -170,7 +170,6 @@ const useMapBoundsDeterminer = () => {
                         if (location) {
                             const locationFloor = location.properties.floor;
                             setFloorWhenMapReady(mapsIndoorsInstance, locationFloor, () => determineMapBoundsKeyRef.current === key);
-                            keepFloorUntilBuildingInView(mapsIndoorsInstance, locationFloor, location.properties.buildingId, () => determineMapBoundsKeyRef.current === key);
                             // When locationId is defined and center prop is defined, set centerPoint to be center prop.
                             if (isDesktop) {
                                 getDesktopPaddingLeft().then(desktopPaddingLeft => {

@@ -129,13 +129,19 @@ describe('useMapBoundsDeterminer', () => {
         await waitFor(() => expect(mapsIndoorsInstance.setFloor).toHaveBeenCalledWith(location.properties.floor));
     });
 
-    it('sets the Location floor again when its building comes into view after the Venue already finished loading', async () => {
-        const locationInBuilding = { ...location, properties: { ...location.properties, buildingId: 'building-with-location' } };
+    it.each([
+        ['locationId', () => store.set(locationIdState, location.id), location],
+        ['kioskOriginLocationId', () => {
+            useIsDesktop.mockReturnValue(true);
+            store.set(kioskOriginLocationIdState, kioskLocation.id);
+        }, kioskLocation]
+    ])('sets the %s floor again when its building comes into view after the Venue already finished loading', async (_, setUp, loadedLocation) => {
+        const locationInBuilding = { ...loadedLocation, properties: { ...loadedLocation.properties, buildingId: 'building-with-location' } };
         window.mapsindoors.services.LocationsService.getLocation.mockResolvedValue(locationInBuilding);
-        store.set(locationIdState, locationInBuilding.id);
+        setUp();
 
         renderUseMapBoundsDeterminer(store);
-        await waitFor(() => expect(mapsIndoorsInstance.setFloor).toHaveBeenCalledWith(location.properties.floor));
+        await waitFor(() => expect(mapsIndoorsInstance.setFloor).toHaveBeenCalledWith(loadedLocation.properties.floor));
         mapsIndoorsInstance.setFloor.mockClear();
 
         // On the way to the Location the SDK passes a building without the floor and switches to its default floor.
@@ -143,7 +149,23 @@ describe('useMapBoundsDeterminer', () => {
         expect(mapsIndoorsInstance.setFloor).not.toHaveBeenCalled();
 
         act(() => mapsIndoorsInstance.emit('building_changed', { id: 'building-with-location', floors: { 0: {}, 10: {} } }));
-        expect(mapsIndoorsInstance.setFloor).toHaveBeenCalledWith(location.properties.floor);
+        expect(mapsIndoorsInstance.setFloor).toHaveBeenCalledWith(loadedLocation.properties.floor);
+    });
+
+    it('does not keep the floor of a locationId with center after the user picks another Location', async () => {
+        const locationInBuilding = { ...location, properties: { ...location.properties, floor: '20', buildingId: 'building-with-location' } };
+        window.mapsindoors.services.LocationsService.getLocation.mockResolvedValue(locationInBuilding);
+        store.set(locationIdState, locationInBuilding.id);
+        store.set(centerState, '10,55');
+
+        renderUseMapBoundsDeterminer(store);
+        await waitFor(() => expect(mapsIndoorsInstance.setFloor).toHaveBeenCalledWith('20'));
+        mapsIndoorsInstance.setFloor.mockClear();
+
+        // The camera stays on the center point, so the Location's building may never come into view. Another Location on floor 10 is then picked,
+        // and when the first Location's building comes into view it must not switch the map back to floor 20.
+        act(() => mapsIndoorsInstance.emit('building_changed', { id: 'building-with-location', floors: { 0: {}, 10: {}, 20: {} } }));
+        expect(mapsIndoorsInstance.setFloor).not.toHaveBeenCalled();
     });
 
     it.each([
